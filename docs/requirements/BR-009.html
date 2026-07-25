@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BR-009.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h2 id="br-009-waar-de-ontbrekende-beslissingen-ertoe-doen">BR-009: waar de ontbrekende beslissingen ertoe doen</h2>
+<p>Stel dat een atleet het volgende invoert:</p>
+<ul>
+<li><strong>FTP fietsen:</strong> 250 W</li>
+<li><strong>Omslagpunt hartslag fietsen:</strong> 182 bpm</li>
+<li><strong>Drempeltempo hardlopen:</strong> 4:30/km</li>
+<li><strong>CSS zwemmen:</strong> 1:42/100 m</li>
+</ul>
+<p>Voordat de backend deze waarden accepteert of zones genereert, zijn er antwoorden nodig op het volgende:</p>
+<h3 id="klinische-minimum--en-maximumwaarden">Klinische minimum- en maximumwaarden</h3>
+<p><strong>Use case:</strong> de atleet voert per ongeluk 2.500 W in in plaats van 250 W.</p>
+<p><strong>Opties:</strong></p>
+<ul>
+<li><strong>Harde grenzen (<em>hard ranges</em>):</strong> weiger waarden buiten de goedgekeurde limieten.</li>
+<li><strong>Zachte grenzen (<em>soft ranges</em>):</strong> accepteer waarden, maar vereis bevestiging of beoordeling.</li>
+<li><strong>Leeftijds-/geslachtsafhankelijke grenzen:</strong> nauwkeuriger, maar vereist klinisch goedgekeurde invoer en regels.</li>
+</ul>
+<p><strong>Aanbevolen:</strong> brede, harde veiligheidslimieten plus een beoordelingsstatus voor ongebruikelijke maar mogelijke waarden.</p>
+<h3 id="formules-voor-zonegrenzen">Formules voor zonegrenzen</h3>
+<p><strong>Use case:</strong> FTP is 250 W en de backend moet Zone 1–5 genereren.</p>
+<p><strong>Opties:</strong></p>
+<ul>
+<li>Vaste percentages van FTP/CSS/LTHR.</li>
+<li>Directe zonegrenzen die door de atleet worden ingevoerd.</li>
+<li>Verschillende formules afhankelijk van het testprotocol.</li>
+<li>Geen automatische berekening in MVP; vereis handmatige grenzen.</li>
+</ul>
+<p>Een beoordeelde formule is vereist voor elke discipline en metriek voordat de automatische zonegeneratie kan draaien.</p>
+<h3 id="exacte-eigenaarschap-van-zonegrenzen">Exacte eigenaarschap van zonegrenzen</h3>
+<p><strong>Use case:</strong> Zone 2 eindigt op 200 W en Zone 3 begint op 200 W. Welke zone bevat precies 200 W?</p>
+<p><strong>Opties:</strong></p>
+<ul>
+<li><strong>Ondergrens inclusief:</strong> Zone 3 bevat 200 W, gebruikmakend van intervallen zoals [200, 225).</li>
+<li><strong>Bovengrens inclusief:</strong> Zone 2 bevat 200 W, gebruikmakend van intervallen zoals (175, 200].</li>
+<li>Behandel gelijkheid als ambigu en vereis een correctie.</li>
+</ul>
+<p><strong>Aanbevolen:</strong> ondergrens inclusief en bovengrens exclusief, behalve voor de bovengrens van de allerhoogste zone.</p>
+<h3 id="invoerconversie-en-precisie">Invoerconversie en precisie</h3>
+<p><strong>Use case:</strong> de ene atleet voert 4:30/km in, terwijl een andere 270 seconden/km verstuurt.</p>
+<p><strong>Opties:</strong></p>
+<ul>
+<li>De UI accepteert geformatteerd tempo, maar de API accepteert alleen canonieke numerieke seconden.</li>
+<li>De API accepteert meerdere formaten en converteert deze.</li>
+<li>Sla hele seconden, tienden van seconden of een hogere precisie op.</li>
+</ul>
+<p><strong>Aanbevolen:</strong> verwerk gebruiksvriendelijke formaten aan de buitenkant (<em>boundary</em>), sla canonieke <code>Decimal</code>-seconden op en definieer de afronding voor de weergave afzonderlijk.</p>
+<h3 id="terugvalzones-fallback-zones">Terugvalzones (<em>fallback zones</em>)</h3>
+<p><strong>Use case:</strong> een nieuwe atleet heeft geen geldige FTP-, CSS- of drempeltest.</p>
+<p><strong>Opties:</strong></p>
+<ul>
+<li>Vereis een test voordat zones worden aangemaakt.</li>
+<li>Genereer expliciet niet-gevalideerde terugvalzones op basis van goedgekeurde biometrische gegevens.</li>
+<li>Sta tijdelijk trainingen toe op basis van alleen RPE (ervaren zwaarte) of alleen hartslag.</li>
+<li>Sta handmatige zone-invoer toe met expliciete bevestiging van de atleet.</li>
+</ul>
+<p>De exacte terugvalformule en de vereiste invoer hiervoor hebben klinische goedkeuring nodig. Elke door het systeem berekende vervanging moet de status 'in behandeling' (<em>pending</em>) behouden.</p>
+<hr>
+<h3 id="andere-onopgeloste-beslissingen-voor-fase-3">Andere onopgeloste beslissingen voor Fase 3</h3>
+<ul>
+<li><strong>50/50-gelijkspel bij gemengde trainingen:</strong> als de duur van lage en hoge intensiteit gelijk is, classificeer de training dan als hoog, classificeer als laag, splits de tijdsduur, of weiger deze als ambigu. Momenteel faalt het systeem veilig (<em>fails closed</em>).</li>
+<li><strong>BR-003 percentageweergave:</strong> beslis of atleten hele percentages zien, één decimaal, of alleen exacte minuten. Interne berekeningen blijven in alle gevallen exact.</li>
+<li><strong>BR-006 tijdsinterpretatie:</strong> beslis of “48/72 uur” de werkelijk verstreken tijd betekent of één/twee volledige lokale rustkalenderdagen. Dit verschilt bij de overgang naar zomertijd/wintertijd en bij trainingen die op verschillende tijdstippen van de dag zijn gepland. Momenteel is de werkelijk verstreken tijd geïmplementeerd.</li>
+<li><strong>BR-007 ontbrekende of nul-belasting in week 4:</strong> beslis of een week met een werkelijke nul-belasting leidt tot een hersteldoel van nul, terugvalt op de 42-daagse basellijn, of een beoordeling op blessure/ziekte vereist. Ontbrekende gegevens falen momenteel veilig (<em>fails closed</em>).</li>
+<li><strong>BR-010 blessurelevenscyclus:</strong> definieer welke bevestigde statussen leiden tot verminderd volume, uitgeschakelde intensiteit, of een volledige blokkade van een discipline; hoe lang beperkingen actief blijven; en of ze automatisch verlopen of alleen via vrijgave door de atleet.</li>
+<li><strong>BR-010 herverdeling bij nul-aandeel:</strong> wanneer twee overgebleven disciplines allebei nul geplande belasting hadden, beslis dan of er gebruik wordt gemaakt van een gelijke verdeling, een doelspecifieke standaardverdeling, of dat er een beoordeling vereist is. Momenteel is een beoordeling vereist.</li>
+<li><strong>Eigenaarschap van klinische goedkeuring:</strong> bepaal wie bevoegd is om klinische marges en formules goed te keuren en hoe die goedkeuring wordt vastgelegd. Het aangeleverde bewijs toont de productintentie aan, maar noemt geen klinische beoordelaar.</li>
+</ul>
+
+</body>
+</html>
