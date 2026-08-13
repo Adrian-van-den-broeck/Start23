@@ -1,0 +1,3 @@
+-- Reviewed catalog data is versioned in migrations.
+-- This file intentionally remains empty so `supabase db reset` has a valid
+-- configured seed target without duplicating immutable application seed data.

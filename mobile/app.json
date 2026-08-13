@@ -1,15 +1,20 @@
 {
   "expo": {
-    "name": "mobile",
+    "name": "Start23",
     "slug": "start23",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.adrivdbs.start23",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.adrivdbs.start23",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -18,6 +23,7 @@
       },
       "predictiveBackGestureEnabled": false
     },
+    "scheme": "start23",
     "web": {
       "favicon": "./assets/favicon.png"
     },
@@ -26,6 +32,11 @@
         "projectId": "57a06d4f-7405-432b-9b63-a3753c1ebf88"
       }
     },
-    "owner": "adrivdbs-team"
+    "owner": "adrivdbs-team",
+    "plugins": [
+      "expo-status-bar",
+      "expo-secure-store",
+      "expo-splash-screen"
+    ]
   }
 }

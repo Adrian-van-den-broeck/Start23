@@ -2,9 +2,19 @@
 
 ## Status
 
-This document proposes the logical domain model for Start23. Entity names,
-columns, and state machines are subject to migration design and resolution of
-the open requirements. No database schema has been implemented.
+This document defines the logical domain model for Start23. Phase 2 implements
+the base athlete profile. The hosted Phase 4 base and hardening migrations
+implement profile biometrics, onboarding sessions, triathlon history, the
+primary A-race goal, versioned zones, zone proposals, and fingerprinted initial
+planning requests. The hosted Phase 5 migration implements the immutable
+workout catalog and private template load records. The local, not-yet-applied
+Phase 6 migration implements weekly plans, immutable plan revisions, planned-
+workout snapshots, qualitative warnings, typed plan proposals, and private
+workout/revision load records. The local Phase 7 and Phase 8 migrations add
+canonical activities/private realized load and the structured weekly context,
+restriction, outside-activity, maintenance, rest-day, and RPE-audit entities
+described below. These local migrations are not yet applied to hosted
+Supabase; later entities remain subject to their phase-specific design.
 
 Related documents:
 
@@ -65,11 +75,10 @@ Managed by Supabase Auth. Its UUID is the canonical athlete identity.
 
 One-to-one with `auth.users`.
 
-Proposed fields:
+Implemented Phase 6 fields:
 
 - `athlete_id`;
 - `date_of_birth` or a documented alternative;
-- `sex_or_physiology_input`, subject to product and clinical review;
 - `height_cm`;
 - `weight_kg`;
 - `resting_heart_rate_bpm`;
@@ -79,14 +88,25 @@ Proposed fields:
 - `onboarding_status`;
 - timestamps and revision.
 
-Open question: the source requirements ask for age and binary sex inputs. The
-storage and validation policy must be resolved before implementation.
+The MVP deliberately stores no sex/gender/physiology-category field and does
+not estimate FTP from a binary coefficient. A later purpose-limited
+physiological profile would require separate legal and clinical approval.
 
 ### `onboarding_sessions`
 
 Allows onboarding to be resumed and records which steps have been confirmed.
 It must not be treated as an active physiological configuration until
 completion.
+
+### `initial_plan_requests`
+
+Queues Phase 6 plan generation after onboarding. Every pending request stores a
+canonical JSON snapshot of the confirmed profile, training history, primary
+goal, and active zone versions plus an MD5 content fingerprint used as the
+input revision. Database triggers refresh the snapshot while the request is
+pending whenever one of those inputs changes. Consuming or cancelling the
+request preserves the captured snapshot and fingerprint for audit and
+idempotency.
 
 ### `training_history_entries`
 
@@ -157,7 +177,10 @@ Proposed fields:
 - `version`;
 - setup method: `manual`, `test`, or `fallback`;
 - lifecycle status: `pending`, `active`, `superseded`, or `rejected`;
-- `validated`;
+- provenance source: `athlete_entered`, `field_test`, `wearable_import`, or
+  `estimated`;
+- validation state: `unreviewed`, `confirmed_by_athlete`, or
+  `protocol_validated`;
 - `fallback_active`;
 - `needs_testing`;
 - `needs_validation_test`;
@@ -179,43 +202,54 @@ Examples:
 - running LTHR in BPM;
 - heart-rate zone lower/upper boundaries.
 
-Canonical units and precision must be specified before migrations.
+Ruleset 3 fixes the canonical units and whole-second pace precision. Exact
+Cycling speed is not a zone metric. Average/maximum speed may be retained as
+bike activity telemetry; it does not drive zone validation or planning.
 
 ## Athlete context
 
-### `injuries`
+### `injury_restrictions`
 
 Represents athlete-reported injury context by discipline.
 
-Proposed fields:
+Implemented Phase 8 fields:
 
 - `athlete_id`, `discipline`;
-- state and severity;
+- functional restriction status and allowed intensity;
 - reported source;
-- start date and optional end date;
+- start and mandatory seven-day review timestamps;
 - confirmation timestamp;
-- optional notes;
+- optional attributable professional advice and its timestamp;
+- explicit athlete plan choice (`keep_blocked`, `train_low_only`, or
+  `resume_unrestricted`);
 - cleared timestamp.
 
-The clinical meaning of severity, clearance, and whether any load may be
-redistributed remains unresolved.
+Start23 uses functional restriction status and allowed intensity, not diagnosis
+or severity. The locked Phase 8 model is documented in the Phase 0-7 decision
+register. A restriction is reviewed after seven days and never silently
+cleared; automatic load redistribution is disabled.
 
-### `availability_blocks`
+### Check-in availability
 
-Represents dates or time windows on which the athlete cannot train. Timezone is
-required for correct calendar behavior.
+Phase 8 snapshots blocked local dates inside a revisioned
+`weekly_checkin_contexts.payload`. It deterministically derives availability
+only for the requested athlete-local Monday-Sunday week. Strenuous planned
+outside activities remove their local date from generated availability. Plan
+revisions retain the exact derived window snapshot.
 
-### `athlete_state`
+### Temporary athlete state
 
-Stores current confirmed context flags such as fatigue warning or agenda
-stress. A source and expiry are required so temporary context does not persist
-indefinitely.
+Confirmed check-in context stores fatigue, missed-workout reasons, blocked
+dates, outside sport, and restrictions. Every version records source
+`structured_form`, a fingerprint, and expiry at the end of its local week so
+temporary context does not persist indefinitely.
 
 ## Workout catalog
 
 ### `workout_templates`
 
-Immutable or versioned catalog item.
+Immutable versioned catalog item. A stable `template_key` groups versions and
+the highest version is current; published versions are never updated in place.
 
 Proposed fields:
 
@@ -227,20 +261,27 @@ Proposed fields:
 - training phase tags;
 - required zone metrics;
 - fallback compatibility;
-- active catalog version;
+- stable template key and positive version;
 - server-internal precomputed planned TSS.
 
-Public workout representations omit the planned TSS field.
+The public template structure is stored separately from
+`private.workout_template_loads`. Authenticated athlete roles have read-only
+access to the public tables and no access to the private schema. Public workout
+representations omit the planned TSS field. A service-role-only RPC returns the
+complete durable representation to the restricted backend planning repository;
+the service role has no direct private-table access.
 
 ### `workout_segments`
 
-Ordered workout instructions with duration or distance, zone target, RPE target,
-and recovery description.
+Ordered workout instructions with positive duration, optional distance, zone
+target, expected RPE, and technique metadata. Segment durations and distances
+must reconcile to their immutable template version.
 
 ### `workout_tags`
 
-Supports phase, goal, equipment, test, injury compatibility, and other catalog
-filtering without embedding provider or presentation logic in the planner.
+Phase 5 implements normalized training-phase and zone-requirement tags plus an
+explicit fallback-compatibility value. Broader goal, equipment, test, and
+injury tags remain later catalog extensions.
 
 ## Plans and schedules
 
@@ -251,20 +292,20 @@ Stable identity for an athlete and ISO-like training week.
 Proposed fields:
 
 - `id`, `athlete_id`, `week_start`;
-- macrocycle and mesocycle references;
 - active revision;
 - lifecycle state;
-- recovery/taper indicators;
 - user timezone;
-- server-internal aggregate planned and realized TSS;
-- overshoot and warning summaries.
+- timestamps.
 
-A database constraint should prevent multiple active weekly plans for the same
-athlete and week.
+A unique constraint prevents multiple stable weekly plans for the same athlete
+and week. The active revision is a deferred composite foreign key.
 
 ### `plan_revisions`
 
-Versioned content of a weekly plan.
+Versioned content of a weekly plan. Phase, target basis, optional taper period,
+input/generation fingerprints, check-in identity, confirmed blocked and
+low-only disciplines, and availability are snapshotted with the revision.
+Hidden target and planned load are stored in `private.plan_revision_loads`.
 
 Proposed states:
 
@@ -291,7 +332,9 @@ Proposed fields:
 - source: athlete-selected, auto-planned, imported, or system-adjusted;
 - server-internal planned TSS snapshot.
 
-The snapshot protects historical plans from later catalog edits.
+The snapshot protects historical plans from later catalog edits. Hidden load
+is stored separately in `private.planned_workout_loads`; public planned-workout
+rows contain no TSS column.
 
 ### `plan_warnings`
 
@@ -311,34 +354,46 @@ message. They do not include TSS.
 
 ### `activities`
 
-Canonical completed activity.
-
-Proposed fields:
+Canonical completed activity. Phase 7 persists:
 
 - `id`, `athlete_id`;
-- optional `planned_workout_id`;
-- provider and provider activity ID;
+- optional `planned_workout_id`; a Phase 8 planned outside activity links to
+  its canonical completion from `planned_external_activities`;
+- canonical source and athlete-scoped idempotency key/fingerprint;
 - discipline;
 - start time and timezone;
 - duration, distance, and elevation;
 - RPE and RPE submission time;
 - match status;
 - processing state;
-- server-internal realized TSS.
+- qualitative result/message and an optional pending-correction reference.
 
-An imported activity may be unmatched. Provider uniqueness constraints prevent
-duplicate activity creation.
+An activity may be unmatched. In Phase 7, matching is only an explicit owned,
+active `planned_workout_id`; discipline must agree and one planned workout can
+be matched only once. Automatic time-proximity, brick, and multisport matching
+are deferred. Canonical request fingerprinting prevents duplicate creation.
+
+Server-internal realized TSS is stored separately in
+`private.activity_loads`, with no direct Data API grant. It is calculated from
+actual RPE and actual duration and is available only to bounded service
+operations and the planning engine. RPE can be corrected only during the
+activity's athlete-local Monday-Sunday week. `activity_rpe_revisions` stores
+the previous/new value and result; after that local week the score is
+immutable.
 
 ### `activity_metrics`
 
-Stores derived summaries such as average/max heart rate, normalized power,
-average pace, interval summaries, data quality, and canonical calculation
-inputs.
+Stores optional safe summaries such as average/max heart rate, normalized
+power, average pace, and low/high intensity minutes. Raw samples and interval
+telemetry are not accepted by the Phase 7 canonical-summary contract.
 
 ### `activity_files`
 
 Stores private Storage bucket/path, content type, checksum, parser version, and
 retention metadata for FIT/TCX or related files.
+
+This entity remains deferred until Phase 9; Phase 7 creates no file or raw
+telemetry storage path.
 
 Per-sample telemetry should remain in compressed private objects unless a
 defined query requires normalized PostgreSQL storage. TimescaleDB is explicitly
@@ -369,14 +424,32 @@ resulting activity.
 
 ### `weekly_checkins`
 
-One check-in session for an athlete/week, with status and associated prior/next
-weekly plans.
+One idempotent check-in per athlete/local Monday week, with athlete timezone,
+current context revision, lifecycle state, and eventual pending plan proposal.
+
+### `weekly_checkin_contexts`
+
+Immutable revisioned structured-form context. A draft is superseded on edit;
+the exact fingerprint must be explicitly confirmed before it can affect a
+pending plan. Confirmed versions persist source and expiry.
+
+### `planned_external_activities`
+
+An outside sport confirmed during check-in, with planned local time, duration,
+discipline, strenuous/recurring flags, and an optional later canonical
+activity completion. Actual duration and RPE live only on that activity.
+
+### `goal_maintenance_states`
+
+An explicit achieved-goal state. While active, deterministic planning holds
+load on build weeks, retains the four-build/one-recovery rhythm, and never
+applies normal progression.
 
 ### `context_candidates`
 
-Stores schema-validated context extracted by the LLM or entered through a
-structured form. Candidate context is not active until confirmed where it can
-cause a critical plan change.
+Reserved for the later constrained-LLM phase. Phase 8 does not use an external
+AI provider; its structured form writes `weekly_checkin_contexts` directly and
+still requires separate context confirmation.
 
 ### `coach_messages`
 
@@ -444,12 +517,12 @@ views are introduced, they must obey RLS and omit hidden fields.
 
 ## Open domain decisions
 
-- Meaning and duration of `injury_blocked` and `fatigue_warning`.
-- BR-009 numeric clinical ranges, zone-boundary equality ownership, accepted
-  input conversions, stored precision, and fallback formulas.
-- Athlete-facing display precision for exact BR-003 percentages.
-- Category ownership for an exact dominant-duration tie in a mixed workout.
-- Activity-to-plan matching rules, including bricks and multisport activities.
+- Concrete versioned BR-009 soft-range records and a complete reviewed Zone
+  1-5 model. Phase 8.5 now has official Start23 field-test and submaximal
+  calibration protocols, but their threshold formulas do not define percentage
+  bands or all pace-rounding rules; calculated boundaries remain fail-closed.
+- Automatic activity-to-plan matching rules, including proximity, bricks, and
+  multisport activities.
 - Non-race macrocycles and goal-specific intensity ratios.
 - Retention, deletion, export, and consent requirements for health and GPS data.
 
@@ -460,7 +533,25 @@ Resolved for MVP:
 - orchestration precedence is injury, taper, recovery, debt, progression,
   intensity/anti-stack, then availability;
 - validation-test approval never authorizes a later zone update.
+- Phase 7 matching is explicit planned-workout selection or unmatched; one
+  planned workout can be matched once and the discipline must agree.
+- Phase 8 allows auditable RPE correction only during the activity's current
+  athlete-local week; identical values remain idempotent and later weeks are
+  immutable.
+- Exact mixed-workout ties classify as high intensity while exact segment
+  minutes remain available for BR-003 arithmetic.
+- Athlete UI uses complementary half-up whole percentages plus exact minutes.
+- Shared zone boundaries belong to the physiologically more intense zone.
+- Cycling speed is bike activity telemetry only, never a zone/planning metric.
+- The MVP collects no sex/gender/physiology category and performs no binary FTP
+  estimate.
+- Functional injury restrictions replace medical severity, and automatic
+  injury-load redistribution is disabled.
 - canonical zone units are CSS seconds/100 m, FTP watts, threshold heart rate
   BPM, run threshold pace seconds/km, and run LTHR BPM;
 - `phase-3-ruleset-1` approves calculation policy for BR-002, BR-003, BR-004,
   BR-006, BR-007, BR-008, and BR-010.
+- `phase-3-ruleset-2` historically added BR-009 soft-range review, input
+  conversion, contiguous boundaries, and unreviewed Karvonen fallback.
+- `phase-3-ruleset-3` records the accepted Phase 0-7 decisions; named qualified
+  production approval remains required.

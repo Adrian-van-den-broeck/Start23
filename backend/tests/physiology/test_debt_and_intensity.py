@@ -6,16 +6,17 @@ import pytest
 
 from app.modules.physiology.debt import (
     calculate_intensity_debt,
+    calculate_reliable_intensity_debt,
     calculate_volume_debt,
 )
 from app.modules.physiology.intensity import (
     STANDARD_RACE_INTENSITY_TARGET,
-    IntensityDominanceTieError,
     IntensitySegment,
     WorkoutIntensity,
     calculate_time_distribution,
     classify_segment,
     classify_workout,
+    display_time_distribution,
     intensive_duration_warning,
 )
 from app.modules.physiology.models import (
@@ -158,6 +159,11 @@ def test_segment_requires_zone_or_swim_technique() -> None:
         _segment("10")
 
 
+def test_workout_requires_positive_total_duration() -> None:
+    with pytest.raises(ValueError, match="positive total duration"):
+        WorkoutIntensity((_segment("0", TrainingZone.ZONE_1),))
+
+
 def test_mixed_workout_uses_dominant_category() -> None:
     low_dominant = WorkoutIntensity(
         (_segment("40", TrainingZone.ZONE_2), _segment("20", TrainingZone.ZONE_4))
@@ -166,13 +172,12 @@ def test_mixed_workout_uses_dominant_category() -> None:
     assert classify_workout(low_dominant) is IntensityBucket.LOW
 
 
-def test_exact_mixed_workout_tie_fails_closed() -> None:
+def test_exact_mixed_workout_tie_is_conservatively_high() -> None:
     tied = WorkoutIntensity(
         (_segment("10", TrainingZone.ZONE_1), _segment("10", TrainingZone.ZONE_3))
     )
 
-    with pytest.raises(IntensityDominanceTieError, match="require an approved"):
-        classify_workout(tied)
+    assert classify_workout(tied) is IntensityBucket.HIGH
 
 
 def test_weekly_distribution_assigns_whole_mixed_workouts() -> None:
@@ -192,6 +197,47 @@ def test_weekly_distribution_assigns_whole_mixed_workouts() -> None:
     assert result.low_fraction.value == Decimal("0.75")
     assert result.high_fraction is not None
     assert result.high_fraction.value == Decimal("0.25")
+
+
+def test_display_distribution_uses_half_up_and_complementary_percentages() -> None:
+    result = calculate_time_distribution(
+        (
+            WorkoutIntensity((_segment("82.5", TrainingZone.ZONE_1),)),
+            WorkoutIntensity((_segment("17.5", TrainingZone.ZONE_4),)),
+        )
+    )
+
+    display = display_time_distribution(result)
+
+    assert display.low_percent == 83
+    assert display.high_percent == 17
+    assert display.low_percent + display.high_percent == 100
+    assert display.low_minutes.value == Decimal("82.5")
+    assert display.high_minutes.value == Decimal("17.5")
+
+
+def test_realized_intensity_debt_requires_sixty_percent_reliable_coverage() -> None:
+    insufficient = calculate_reliable_intensity_debt(
+        planned_high=_duration("20"),
+        planned_total=_duration("100"),
+        realized_high=_duration("30"),
+        realized_classified=_duration("59"),
+        realized_total=_duration("100"),
+    )
+    exact = calculate_reliable_intensity_debt(
+        planned_high=_duration("20"),
+        planned_total=_duration("100"),
+        realized_high=_duration("30"),
+        realized_classified=_duration("60"),
+        realized_total=_duration("100"),
+    )
+
+    assert insufficient.evaluated is False
+    assert insufficient.result is None
+    assert exact.evaluated is True
+    assert exact.result is not None
+    assert exact.result.debt.value == Decimal("0.30")
+    assert exact.result.corrected_high_fraction.value == Decimal("0.05")
 
 
 def test_empty_week_is_not_evaluated_instead_of_returning_zero_over_zero() -> None:

@@ -1,5 +1,6 @@
 """Tests for the locked Phase 0 rule precedence."""
 
+from datetime import date
 from uuid import UUID
 
 import pytest
@@ -19,6 +20,9 @@ from app.modules.physiology.precedence import (
 from app.modules.physiology.specification import (
     PHASE_3_DRAFT_SPECIFICATION,
     PHASE_3_RULESET_V1,
+    PHASE_3_RULESET_V2,
+    PHASE_3_RULESET_V3,
+    PhysiologyProductionReviewRequired,
     PhysiologySpecification,
     PhysiologySpecificationNotApproved,
     SpecificationStatus,
@@ -118,7 +122,12 @@ def test_decision_run_records_approved_ruleset_version() -> None:
     ]
 
 
-def test_phase_3_ruleset_approves_evidenced_rules_but_excludes_zones() -> None:
+def test_ruleset_three_fails_closed_for_production_until_board_approval() -> None:
+    with pytest.raises(PhysiologyProductionReviewRequired):
+        PHASE_3_RULESET_V3.require_production_review(as_of=date(2026, 8, 11))
+
+
+def test_phase_3_ruleset_v1_remains_immutable_and_excludes_zones() -> None:
     assert PHASE_3_RULESET_V1.approved_rules == frozenset(
         {
             RuleId.SOFT_BOUNDARIES,
@@ -131,3 +140,10 @@ def test_phase_3_ruleset_approves_evidenced_rules_but_excludes_zones() -> None:
         }
     )
     assert RuleId.DISCIPLINE_ZONES not in PHASE_3_RULESET_V1.approved_rules
+
+
+def test_phase_3_ruleset_v2_adds_approved_zone_policy() -> None:
+    assert PHASE_3_RULESET_V2.version == RulesetVersion("phase-3-ruleset-2")
+    assert PHASE_3_RULESET_V2.approved_rules == (
+        PHASE_3_RULESET_V1.approved_rules | {RuleId.DISCIPLINE_ZONES}
+    )

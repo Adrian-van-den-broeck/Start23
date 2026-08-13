@@ -4,9 +4,14 @@
 
 This document defines the backend architecture for Start23. The FastAPI
 foundation, health/readiness, structured errors, logging, Supabase token
-verification, and the Phase 3 deterministic physiology calculation layer are
-implemented. Domain persistence and application orchestration remain proposed;
-BR-009 clinical validation remains fail-closed.
+verification, Phase 3 deterministic physiology, Phase 4 onboarding, the
+Phase 5 workout catalog, and the Phase 6 weekly-planning application are
+implemented locally. The Phase 4 base and hardening migrations and the Phase 5
+catalog migration are applied in hosted Supabase and pass linked schema lint.
+The Phase 6 migration is applied and verified in hosted development; the Phase
+7 migration remains local and unexecuted. The accepted Phase 0-7 physiology
+decisions are included in `phase-3-ruleset-3`, with production activation
+gated on a named qualified Physiology Rules Review Board approval.
 
 - Architecture style: modular monolith
 - Application framework: Python with FastAPI
@@ -157,7 +162,7 @@ Contains framework-independent deterministic Python rules:
 - taper calculation;
 - activity-load calculation;
 - RPE/load match classification;
-- injury redistribution;
+- functional injury restrictions and the zero-redistribution MVP policy;
 - progress and zone-evaluation calculations.
 
 This module must not import FastAPI, database sessions, provider SDKs, or LLM
@@ -172,12 +177,14 @@ apply an unapproved system-generated revision to an active plan.
 ### Activities
 
 Owns canonical activity records, planned-workout matching, RPE, telemetry
-summaries, internal realized TSS, and match-matrix status.
+summaries, planned-outside-activity completion, current-local-week RPE
+correction/audit, internal realized TSS, and match-matrix status.
 
 ### Check-ins
 
 Owns weekly check-ins, structured athlete context, availability, injuries,
-fatigue, and confirmation of LLM-extracted context.
+fatigue, missed-workout reasons, recurring/outside sport, context expiry, and
+explicit structured-form confirmation. Phase 8 has no LLM dependency.
 
 ### Proposals
 
@@ -244,10 +251,11 @@ An approval transaction must:
 7. write an audit record;
 8. commit all state changes together.
 
-Direct user actions, such as manually moving a workout, require a separately
-defined policy. The current requirements suggest that an explicit user action
-may be applied while returning a warning, but the final boundary between a
-direct action and approval of a generated proposal is unresolved.
+Phase 6 implements the locked direct-action policy. A verified owner calendar
+move applies immediately as a new immutable active revision when its revision
+precondition and hard injury/week validations pass. Anti-stack and confirmed-
+availability outcomes are returned and persisted as qualitative warnings.
+System-generated schedule changes still produce pending revisions.
 
 ## Scheduled processing
 
@@ -267,6 +275,13 @@ Scheduled processing must be:
 No Celery worker or Redis queue is required. During early MVP phases, explicit
 user-triggered generation may replace automatic schedules.
 
+Phase 8 adds a service-only, retry-idempotent local-Monday database entrypoint
+that opens due check-ins according to each completed athlete profile's IANA
+timezone. A Railway/Supabase schedule still has to invoke that entrypoint in a
+deployed environment. Plan generation occurs only after the athlete confirms
+the structured context and remains idempotent by athlete, local week, check-in,
+and input fingerprint; it never bypasses pending proposal approval.
+
 ## TSS privacy boundary
 
 TSS is required for internal calculations but prohibited from all mobile-facing
@@ -284,6 +299,13 @@ Required controls:
   forbidden field names and aliases;
 - review observability tooling so payload capture cannot unintentionally expose
   physiological data.
+
+Phase 6 stores per-workout and aggregate revision load snapshots in
+`private.planned_workout_loads` and `private.plan_revision_loads`. Generated
+plan persistence and direct-move copying use narrowly granted service-only
+RPCs; approval/rejection remain owner-scoped security-invoker transactions.
+Every public plan, deck, proposal, warning, and calendar model is mapped
+without those private values.
 
 ## Error handling and concurrency
 
@@ -346,6 +368,14 @@ Resolved decisions:
 - authenticated database access uses the Supabase Data API with the caller
   token so RLS retains `auth.uid()` context;
 - atomic athlete operations use narrowly granted `SECURITY INVOKER` RPCs;
+- generated fallback persistence and internal planning-catalog reads use
+  separate service-only repositories and narrowly granted `SECURITY DEFINER`
+  RPCs; the Supabase secret key remains server-only;
 - direct athlete calendar moves apply with qualitative soft warnings;
-- Phase 7 begins with a limited canonical activity-summary input;
+- Phase 7 uses a limited authenticated canonical activity-summary input with
+  explicit planned-workout matching, UUID/fingerprint idempotency, private
+  realized-load persistence, and qualitative public output; Phase 8 permits
+  auditable correction only within the activity's athlete-local week;
+- qualifying activity outcomes create only typed pending plan revisions, never
+  an automatic active-plan or zone mutation;
 - the mobile client upgrades to Expo SDK 57 before mobile implementation.

@@ -2,6 +2,7 @@
 
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
+from zoneinfo import ZoneInfoNotFoundError
 
 import pytest
 
@@ -82,6 +83,36 @@ def test_recovery_target_allows_approved_40_to_60_percent_range() -> None:
         calculate_recovery_target(
             week_four_planned=_load("100"),
             factor=Decimal("0.61"),
+        )
+
+
+@pytest.mark.parametrize("week_number", [0, -1])
+def test_forward_cycle_rejects_invalid_week_numbers(week_number: int) -> None:
+    with pytest.raises(ValueError, match="positive"):
+        forward_mesocycle_phase(week_number)
+
+
+@pytest.mark.parametrize(
+    ("week_number", "total_weeks"),
+    [(1, 0), (0, 8), (9, 8)],
+)
+def test_retrospective_cycle_rejects_invalid_horizons(
+    week_number: int,
+    total_weeks: int,
+) -> None:
+    with pytest.raises(ValueError):
+        retrospective_mesocycle_phase(
+            week_number=week_number,
+            total_weeks_to_a_race=total_weeks,
+        )
+
+
+@pytest.mark.parametrize("factor", [Decimal("0.39"), Decimal("NaN")])
+def test_recovery_target_rejects_invalid_factors(factor: Decimal) -> None:
+    with pytest.raises(ValueError, match="between 0.40 and 0.60"):
+        calculate_recovery_target(
+            week_four_planned=_load("100"),
+            factor=factor,
         )
 
 
@@ -178,3 +209,27 @@ def test_athlete_week_is_monday_to_sunday_in_local_timezone() -> None:
         sunday_utc,
         timezone_name="Europe/Amsterdam",
     ) == (date(2026, 7, 27), date(2026, 8, 2))
+
+
+def test_race_requires_identifier_and_timezone_aware_start() -> None:
+    aware = datetime(2026, 8, 1, tzinfo=timezone.utc)
+    with pytest.raises(ValueError, match="identifier cannot be blank"):
+        RaceEvent(" ", RacePriority.A, aware)
+    with pytest.raises(ValueError, match="timezone-aware"):
+        RaceEvent("race", RacePriority.A, datetime(2026, 8, 1))
+
+
+def test_athlete_week_rejects_naive_instant() -> None:
+    with pytest.raises(ValueError, match="timezone-aware"):
+        athlete_week_bounds(
+            datetime(2026, 7, 26, 22, 30),
+            timezone_name="Europe/Amsterdam",
+        )
+
+
+def test_athlete_week_rejects_unknown_timezone() -> None:
+    with pytest.raises(ZoneInfoNotFoundError, match="No time zone found"):
+        athlete_week_bounds(
+            datetime(2026, 7, 26, 22, 30, tzinfo=timezone.utc),
+            timezone_name="Not/A_Timezone",
+        )

@@ -122,7 +122,10 @@ def test_personalized_load_snapshot_is_expected_rpe_times_hours() -> None:
     assert result.value == Decimal("12")
 
 
-@pytest.mark.parametrize("expected_rpe", [Decimal("0.99"), Decimal("10.01")])
+@pytest.mark.parametrize(
+    "expected_rpe",
+    [Decimal("0.99"), Decimal("10.01"), Decimal("NaN")],
+)
 def test_personalized_snapshot_rejects_invalid_rpe(
     expected_rpe: Decimal,
 ) -> None:

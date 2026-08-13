@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 from app.modules.physiology.models import InternalLoad, RuleId, RulesetVersion
 from app.modules.physiology.progression import WeeklyLoad, calculate_42_day_average
 from app.modules.physiology.specification import (
-    PHASE_3_RULESET_V1,
+    PHASE_3_RULESET_V3,
     PhysiologySpecification,
 )
 
@@ -71,7 +71,7 @@ def calculate_taper_baseline(
     samples: tuple[WeeklyLoad, ...],
     *,
     as_of: date,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> InternalLoad | None:
     """Use available 42-day data while excluding recovery-week samples."""
     specification.require_approved(frozenset({RuleId.TAPER}))
@@ -89,7 +89,7 @@ def calculate_taper_target(
     priority: RacePriority,
     period: TaperPeriod | None,
     baseline: InternalLoad,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> TaperTarget | None:
     """Calculate A/B taper targets; C-races intentionally return no taper."""
     specification.require_approved(frozenset({RuleId.TAPER}))
@@ -116,7 +116,7 @@ def calculate_taper_target(
 def select_controlling_race(
     races: tuple[RaceEvent, ...],
     *,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> RaceEvent | None:
     """Select highest priority, then earliest race, then stable identifier."""
     specification.require_approved(frozenset({RuleId.TAPER}))
@@ -136,7 +136,7 @@ def athlete_week_bounds(
     instant: datetime,
     *,
     timezone_name: str,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> tuple[date, date]:
     """Return Monday-Sunday dates in the athlete's IANA timezone."""
     specification.require_approved(frozenset({RuleId.TAPER}))

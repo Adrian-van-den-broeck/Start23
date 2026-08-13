@@ -5,8 +5,12 @@
 This document defines the security boundaries for the Start23 Expo client,
 FastAPI backend, Supabase platform, wearable providers, and LLM provider.
 FastAPI token verification, token-derived identity, safe authentication
-errors, and token-redaction conventions are implemented. Database RLS and
-Storage controls await their respective migrations.
+errors, token-redaction conventions, and the Phase 4 base RLS schema are
+implemented. The Phase 4 forward hardening and Phase 5 catalog migrations are
+applied in hosted Supabase and pass linked schema lint. The local Phase 6
+migration adds forced-RLS planning tables and private load snapshots but has
+not been applied. Its pgTAP suite and real-token end-to-end verification remain
+pending. Storage controls await their respective migration.
 
 Related documents:
 
@@ -167,12 +171,41 @@ Atomic critical changes use narrowly granted `SECURITY INVOKER` database
 functions invoked with the same user token. They derive ownership from
 `auth.uid()` and do not accept an authoritative athlete ID. `SECURITY DEFINER`
 and service-role access are excluded from this normal athlete path. Privileged
-credentials, if later required for webhooks or maintenance, use separate
-restricted repositories and cross-athlete tests.
+credentials use separate restricted repositories and cross-athlete tests.
+
+Two narrow privileged paths are now defined. FastAPI uses a server-only
+Supabase secret key to persist Python-generated fallback zones through
+`save_fallback_zone_profile` and to read the TSS-bearing durable workout
+catalog through `get_workout_catalog_for_planning`. Both functions are
+`SECURITY DEFINER`, explicitly reject non-`service_role` callers, have
+`EXECUTE` revoked from `PUBLIC`, `anon`, and `authenticated`, and expose no
+general table mutation surface. The secret key is sent only as the Data API
+`apikey`; it is never forwarded to or stored by the Expo client.
+
+The fallback RPC accepts the verified athlete identifier only from this trusted
+repository. It forces the estimated fallback method, unreviewed provenance, and
+ruleset version before delegating to the same invariant-preserving zone
+transaction. Direct athlete-token fallback RPC calls are rejected. Hosted
+probes verify anonymous denial and positive server-only execution for both
+privileged paths without leaving test rows.
 
 Supabase grants and RLS are treated as separate controls. Exposed objects
 receive explicit minimum grants because automatic Data API exposure is being
 removed from Supabase defaults.
+
+## Physiology production governance
+
+`phase-3-ruleset-3` is approved for deterministic local development but is not
+eligible for production activation until a named, qualified human reviewer is
+recorded through the Physiology Rules Review Board. The approval record must
+identify the reviewer, evidence set, ruleset version, decision, and review and
+next-review dates. An LLM cannot act as reviewer, approve soft clinical ranges,
+or satisfy this gate. Missing, expired, or rejected approval fails closed.
+
+The MVP deliberately omits sex/gender/physiology-category data and makes no
+binary-coefficient FTP estimate. Injury data is minimized to functional
+restriction, allowed intensity, affected discipline, timing, source, and
+review state; Start23 does not infer a diagnosis or clinical severity.
 
 ## Critical-object authorization
 
@@ -181,6 +214,12 @@ Critical objects include:
 - active zone profiles;
 - active weekly-plan revisions;
 - system-generated changes to active calendar workouts.
+
+Phase 8 weekly context is sensitive owner data rather than an automatically
+active planning mutation. It is stored behind forced RLS and explicit grants;
+direct table writes are trigger-blocked, exact structured context must be
+fingerprint-confirmed, and only then may the backend create a separate pending
+plan revision. Restriction review never silently clears a prior state.
 
 Required controls:
 
@@ -213,12 +252,39 @@ Controls:
 - add recursive response tests for prohibited field names;
 - provide the LLM only qualitative rule outcomes.
 
+Phase 5 stores template planned load in
+`private.workout_template_loads`. The `anon`, `authenticated`, and
+`service_role` roles receive no table access, while authenticated athletes can
+only select the separate public catalog structure. The FastAPI catalog response
+is mapped field-by-field into TSS-free Pydantic models. Phase 6 obtains the
+durable TSS-bearing representation only through the service-role-only planning
+catalog RPC; the service role retains no direct table privilege.
+
+Phase 6 stores plan load snapshots in two additional private tables with no
+direct `anon`, `authenticated`, or `service_role` table privilege. Generated
+plan persistence and direct-move snapshot copying are service-only RPCs that
+explicitly verify the `service_role` claim and accept the athlete identifier
+only from the token-verifying FastAPI repository. Plan approval and rejection
+are security-invoker RPCs that retain `auth.uid()` ownership context and lock
+the proposal, revision, and stable plan before applying a stale-safe decision.
+
+Phase 7 stores realized activity load only in `private.activity_loads`, which
+has no direct API-role grant. Canonical create/read/list operations derive the
+athlete from `auth.uid()` and expose an explicit TSS-free JSON projection.
+FastAPI performs deterministic activity processing and calls only a bounded
+service-only completion RPC with the already verified athlete ID. That RPC may
+create a typed pending correction revision, but cannot activate it; the normal
+owner-scoped proposal approval remains mandatory. Activity API/OpenAPI tests
+recursively reject planned and realized TSS aliases.
+
 The final policy should clarify whether staff/admin tools may show TSS. Until
 then, no user-facing or general support endpoint should expose it.
 
 ## Supabase Storage
 
-Raw activities and GPS files use private buckets.
+When Phase 9 introduces raw activities and GPS files, they must use private
+buckets. Phase 7 accepts canonical summaries only and creates no raw-file
+storage path.
 
 Required controls:
 
@@ -255,6 +321,10 @@ Provider behavior must be documented separately for the first selected MVP
 integration.
 
 ## LLM boundary
+
+The Phase 8 structured check-in does not invoke an LLM. Its form payload is
+strictly validated and separately confirmed. The following boundary applies
+only when the later constrained coach is introduced.
 
 Permitted LLM operations:
 

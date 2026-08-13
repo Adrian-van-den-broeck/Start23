@@ -1,16 +1,23 @@
 # Start23 backend
 
-FastAPI foundation, Supabase access-token authentication, and the deterministic
-Phase 3 physiology core for the Start23 modular monolith.
+FastAPI foundation, Supabase access-token authentication, the deterministic
+physiology core, onboarding, the reviewed workout catalog, and weekly planning
+for the Start23 modular monolith.
 
 The backend contains configuration, structured logging, health endpoints,
 local verification of Supabase user access tokens, and pure Python physiology
 rules for debt, intensity, progression, anti-stack timing, recovery, taper,
-zone structure, and confirmed-injury redistribution. It does not contain
-database models, Supabase data access, LLM integrations, background workers,
-or application-layer plan mutation. Draft rules fail closed, and BR-009
-clinical validation is excluded from `phase-3-ruleset-1` until its limits are
-approved.
+zone structure, and confirmed-injury redistribution. Phase 4 adds owner-scoped
+Supabase Data API access, profiles, triathlon history, one primary A-race goal,
+versioned manual/fallback zones with atomic proposal decisions, resumable
+onboarding, and an initial planning request. Phase 5 adds an immutable workout
+catalog with private load storage. Phase 6 adds deterministic pending weekly
+plans, explicit approval/rejection, revisioned direct athlete moves, eligible
+workout decks, and a TSS-free calendar. It does not contain LLM integrations,
+background workers, activity ingestion, or realized-load orchestration. Draft
+rules fail closed.
+`phase-3-ruleset-2` adds BR-009 soft-range review, canonical input conversion,
+manual boundary validation, and explicitly unvalidated Karvonen fallback.
 
 All API errors use a stable `{"error": ...}` envelope and include a generated
 request ID in both the response body and `X-Request-ID` header. Request-provided
@@ -59,6 +66,8 @@ The endpoints are then available at:
 - `http://127.0.0.1:8000/api/v1/health`
 - `http://127.0.0.1:8000/api/v1/ready`
 - `http://127.0.0.1:8000/api/v1/me`
+- `http://127.0.0.1:8000/api/v1/onboarding`
+- `http://127.0.0.1:8000/api/v1/me/profile`
 
 ## Configuration
 
@@ -71,9 +80,12 @@ A local `.env` file is optional and ignored by Git and Docker.
 | `START23_LOG_LEVEL` | `INFO` | Application log level |
 | `START23_API_V1_PREFIX` | `/api/v1` | Versioned API prefix |
 | `START23_SUPABASE_URL` | Start23 Supabase URL | Project used to determine issuer and JWKS URL |
+| `START23_SUPABASE_PUBLISHABLE_KEY` | empty | Public application key used with the caller token for RLS-preserving Data API requests |
+| `START23_SUPABASE_SECRET_KEY` | empty | Server-only secret key used exclusively for trusted fallback persistence and the private planning-catalog RPC |
 | `START23_SUPABASE_JWT_AUDIENCE` | `authenticated` | Required user-token audience |
 | `START23_SUPABASE_JWKS_CACHE_SECONDS` | `300` | Bounded JWKS cache lifetime; maximum 600 |
 | `START23_SUPABASE_JWKS_TIMEOUT_SECONDS` | `5` | JWKS network timeout; maximum 30 |
+| `START23_SUPABASE_DATA_API_TIMEOUT_SECONDS` | `10` | Data API request timeout; maximum 30 |
 
 ## Authentication
 
@@ -99,8 +111,9 @@ request paths, query strings, headers, or bodies are not trusted.
 
 The `EXPO_PUBLIC_SUPABASE_KEY` publishable key is a public client credential,
 not a user JWT. It is not used for backend ES256 verification and must not be
-sent as the bearer token. No service-role or Supabase secret key is required by
-this authentication phase.
+sent as the bearer token. `START23_SUPABASE_SECRET_KEY` is a separate
+server-only credential. It is sent only in the Data API `apikey` header for the
+narrow service-role RPCs and must never be added to the Expo environment.
 
 ## Tests and quality checks
 

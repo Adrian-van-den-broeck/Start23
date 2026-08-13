@@ -3,9 +3,13 @@
 ## Status
 
 The architecture and state-semantics portion of Phase 0 is approved.
-`phase-3-ruleset-1` now approves BR-002, BR-003, BR-004, BR-006, BR-007,
-BR-008, and BR-010 calculations. BR-009 clinical ranges and policy remain a
-hard gate and are not inferred.
+`phase-3-ruleset-1` approves BR-002, BR-003, BR-004, BR-006, BR-007, BR-008,
+and BR-010 calculations. The BR-009 follow-up evidence supplied on 2026-07-26
+adds discipline-zone policy in `phase-3-ruleset-2`. Ruleset 1 remains
+immutable for historical decisions. The twelve decisions accepted on
+2026-08-11 are locked in `phase-3-ruleset-3`; rulesets 1 and 2 remain immutable
+for historical records. Ruleset 3 is local-development approved but requires a
+named qualified Physiology Rules Review Board approval before production.
 
 ## Locked decisions
 
@@ -127,12 +131,13 @@ integration when authentication is added to the mobile app.
 ## Physiological specification gate
 
 The evidence recorded in
-`physiology-formula-specification.md` opened the gate for the rules explicitly
-listed in `phase-3-ruleset-1`. Their calculations are implemented with exact
-arithmetic and boundary fixtures.
+`physiology-formula-specification.md` opens the local calculation gate for every
+rule listed in `phase-3-ruleset-3`. Calculations use exact arithmetic and
+example, boundary, and invalid-input fixtures.
 
-The gate remains closed for BR-009 clinical validation and fallback formulas.
-It also remains closed for any edge not explicitly approved, including an
-exact low/high tie in BR-003. The production ruleset excludes BR-009, missing
-clinical limits raise an error, and the tie case fails closed. A new reviewed
-ruleset version is required to activate either policy.
+BR-009 uses attributable versioned soft review ranges: outlying, expired, or
+unconfigured values require review instead of hard rejection. Estimated
+Karvonen fallback profiles remain explicitly unreviewed. Exact mixed-workout
+ties belong to high intensity, and a shared zone boundary belongs to the more
+intense zone. Automatic injury-load redistribution is disabled. A new reviewed
+ruleset version is required to activate any further physiological policy.

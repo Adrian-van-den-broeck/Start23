@@ -10,7 +10,7 @@ from app.modules.physiology.models import (
     RulesetVersion,
 )
 from app.modules.physiology.specification import (
-    PHASE_3_RULESET_V1,
+    PHASE_3_RULESET_V3,
     PhysiologySpecification,
 )
 
@@ -54,7 +54,7 @@ class AntiStackViolation:
 def find_anti_stack_violations(
     workouts: tuple[ScheduledWorkout, ...],
     *,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> tuple[AntiStackViolation, ...]:
     """Compare high-intensity workout starts as absolute UTC instants."""
     specification.require_approved(frozenset({RuleId.ANTI_STACK}))

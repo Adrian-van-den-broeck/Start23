@@ -12,7 +12,7 @@ from app.modules.physiology.models import (
     RulesetVersion,
 )
 from app.modules.physiology.specification import (
-    PHASE_3_RULESET_V1,
+    PHASE_3_RULESET_V3,
     PhysiologySpecification,
 )
 
@@ -56,7 +56,7 @@ def calculate_42_day_average(
     as_of: date,
     exclude_recovery_weeks: bool = False,
     rule_id: RuleId = RuleId.PROGRESSIVE_LOAD,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> InternalLoad | None:
     """Average available weekly snapshots whose starts fall in the latest 42 days."""
     specification.require_approved(frozenset({rule_id}))
@@ -84,7 +84,7 @@ def calculate_progressive_target(
     prior_planned: InternalLoad,
     prior_realized: InternalLoad,
     baseline: InternalLoad | None,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> ProgressionResult:
     """Use regular 10% growth at >=80%; otherwise use the 42-day baseline."""
     specification.require_approved(frozenset({RuleId.PROGRESSIVE_LOAD}))
@@ -112,7 +112,7 @@ def snapshot_personalized_load(
     *,
     expected_rpe: Decimal,
     duration: DurationMinutes,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> InternalLoad:
     """Snapshot personalized planned load as expected RPE times duration hours."""
     specification.require_approved(frozenset({RuleId.PROGRESSIVE_LOAD}))

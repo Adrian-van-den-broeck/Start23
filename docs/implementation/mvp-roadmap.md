@@ -16,6 +16,7 @@ Related documents:
 - [Business-rule traceability](../requirements/business-rule-traceability.md)
 - [Phase 0 decision lock](../requirements/phase-0-decision-lock.md)
 - [Database migration workflow](database-migrations.md)
+- [Backend zone calculation and calibration](backend-zone-calculation.md)
 
 ## MVP outcome
 
@@ -23,7 +24,9 @@ The phase-one MVP should support a narrow, safe, end-to-end loop:
 
 1. an athlete authenticates;
 2. completes structured onboarding;
-3. configures a primary race-oriented goal and discipline zones;
+3. configures a primary race-oriented goal and, per discipline, enters known
+   zones, follows a reviewed estimation route, or explicitly continues with
+   RPE guidance while zones are unknown;
 4. receives a deterministic, TSS-hidden weekly-plan proposal;
 5. explicitly approves it;
 6. schedules or moves workouts with qualitative warnings;
@@ -39,16 +42,19 @@ The LLM and multiple wearable providers are not required to prove this loop.
 
 Architecture and state semantics are locked in the Phase 0 decision document.
 Physiological formulas for BR-002, BR-003, BR-004, BR-006, BR-007, BR-008, and
-BR-010 are approved as `phase-3-ruleset-1`. BR-009 canonical units are known,
-but clinical limits, zone-boundary policy, conversion precision, and fallback
-formulas remain a hard gate for production zone validation.
+BR-010 are approved as `phase-3-ruleset-1`. BR-009 follow-up evidence adds
+soft-range review, input conversion, boundary ownership, and unvalidated
+Karvonen fallback in `phase-3-ruleset-2`. The twelve decisions accepted on
+2026-08-11 are implemented in `phase-3-ruleset-3`. Amendments accepted on
+2026-08-13 are recorded in the Phase 0-7 decision register but are not part of
+ruleset 3 until explicitly implemented and tested. Production remains gated on
+a named qualified physiology reviewer.
 
 ### Scope
 
 - Approve rule-precedence order. **Locked**
 - Define all physiological formulas, canonical units, rounding, and equality
-  boundaries. **Approved for the Phase 3 ruleset except BR-009 and the exact
-  BR-003 dominant-category tie**
+  boundaries. **Approved for ruleset 3; exact BR-003 ties are high intensity**
 - Reconcile BR-001 approval with automatic changes described in UC-03.
   **Locked**
 - Reconcile soft boundaries with filtering and blocking language. **Locked**
@@ -65,7 +71,7 @@ formulas remain a hard gate for production zone validation.
 
 - Reviewed rule decision table.
 - Approved formula specification with example fixtures. **Complete for
-  ruleset-1; BR-009 remains explicitly excluded**
+  ruleset 3; production use remains review-gated**
 - Approved public TSS prohibition.
 - Approved phase-one provider/import choice.
 - No unresolved contradiction that changes database or API state semantics.
@@ -124,11 +130,10 @@ remain pending.
 
 ### Status
 
-In progress. The pure Python calculation layer for BR-002, BR-003, BR-004,
-BR-006, BR-007, BR-008, and BR-010 is implemented and verified under
-`phase-3-ruleset-1`. BR-009 canonical metric and boundary structures are
-implemented, but production clinical validation remains fail-closed because
-its numeric limits and policy are not approved.
+Implemented and verified for the pure calculation scope. BR-002, BR-003,
+BR-004, BR-006, BR-007, BR-008, BR-009, and BR-010 run under
+`phase-3-ruleset-3`. Persistence, plan/zone proposals, and athlete-facing APIs
+belong to later phases.
 
 ### Scope
 
@@ -140,8 +145,8 @@ Implement pure Python value objects and approved portions of:
 - BR-006 anti-stack intervals;
 - BR-007 recovery-week calculation;
 - BR-008 A-race taper calculation;
-- BR-009 zone value validation (structural only until clinical approval);
-- BR-010 injury redistribution.
+- BR-009 zone value validation and estimated/unreviewed fallback;
+- BR-010 functional injury restrictions and zero automatic redistribution.
 
 BR-001 and BR-005 are enforced by application and API layers but receive their
 own tests.
@@ -162,54 +167,96 @@ own tests.
 - Internal load values reject invalid input and are hidden from object
   representations.
 - Purity test forbids FastAPI, database, Supabase, and LLM imports.
-- TSS-free dashboard/proposal design preview. The source still declares Expo
-  SDK 54, so the locked SDK 57 upgrade remains pending before further mobile
-  implementation.
+- TSS-free dashboard/proposal design preview; the later Phase 3.5 transition
+  upgraded and verified the Android development route on Expo SDK 57.
 - Strict-above-110% volume debt and discipline-specific intensity debt.
-- Duration-based low/high classification with dominant-workout allocation.
+- Current implementation: duration-based low/high classification with
+  dominant-workout allocation. Decision 1 now supersedes this for the full
+  catalog: the imported `Emmer (80/20)` value is authoritative for a complete
+  training's weekly bucket, while interval zones remain authoritative for
+  execution and private TSS.
 - Available weekly-sample 42-day baseline, progression, and expected-RPE
   snapshot.
 - Same-discipline 72/48-hour anti-stack validation using absolute instants.
 - Forward and retrospective recovery cycles with taper precedence.
 - A/B/C taper targets, athlete-local weeks, and race-priority overlap handling.
-- Fail-closed zone validation scaffolding with canonical units.
-- Confirmed-injury 80% proportional redistribution calculation.
+- Canonical discipline-zone value objects and versioned review outcomes.
+- Soft-range review without hard rejection, strict pace input conversion,
+  higher-intensity boundary ownership, and estimated/unreviewed
+  Tanaka/Karvonen fallback. Cycling speed is activity telemetry only.
+- Functional injury restrictions, seven-day recheck without auto-clear, and
+  zero automatic redistribution. The historical 80% calculation is isolated
+  as analytics only.
 - Example, equality, invalid-input, missing-data, DST, purity, and precedence
   tests.
 
-### Remaining Phase 3 decisions
+### Remaining Phase 3 operational gates
 
-- Approve BR-009 numeric clinical ranges, exact zone boundaries, equality
-  ownership, input conversions, stored precision, and fallback formulas.
-- Define which category owns an exact low/high duration tie in a mixed workout;
-  the current implementation fails closed.
-- Confirm the formal clinical-review role for the supplied rule evidence.
+- Appoint the named qualified accountable reviewer for the Physiology Rules
+  Review Board and record the first production approval/review date.
+- Supply complete versioned BR-009 soft-range records if product wants
+  configured plausibility warnings. Missing configuration remains an accepted
+  warning state, never a hard rejection.
+- Define and review an official Start23 calibration protocol before the backend
+  may calculate complete FTP/CSS/LTHR zone profiles or claim
+  `protocol_validated`. `Start23_Fysiologische_TSS_Logica.pdf` defines IF and
+  TSS/sTSS per interval but does not define the deterministic mapping from
+  training execution plus TSE feedback to CSS, FTP, LTHR, pace, or Zone 1-5.
+
+### Review record: 2026-07-26
+
+Result: the isolated deterministic calculation scope passes the Phase 3 exit
+criteria under historical `phase-3-ruleset-2`; the accepted 2026-08-11
+follow-up decisions are implemented and verified in `phase-3-ruleset-3`.
+
+- Formula tests cover approved examples, equality boundaries, invalid input,
+  explicit zero versus missing data, both daylight-saving transitions, and
+  unresolved cases through fail-closed or review outcomes.
+- The physiology module remains framework- and I/O-independent; architecture
+  tests reject FastAPI, database, Supabase, HTTP, Redis, Celery, and LLM client
+  imports.
+- Precedence and draft-specification failure are tested.
+- Decision records and calculation results retain a stable ruleset version.
+- The full backend tests, Ruff lint/format checks, and strict mypy checks pass.
+- Phase 3 intentionally contains no persistence, Supabase access, route
+  handlers, active plan/zone mutation, or athlete-facing TSS.
+
+The remaining decisions above do not change the implemented result for already
+approved inputs. They remain explicit gates for the affected application or
+presentation paths.
 
 ## Phase 3.5: Expo development-build transition
 
 ### Status
 
-Pending. The mobile project remains on Expo SDK 54 so the current design
-preview can run in the App Store version of Expo Go on a physical iPhone.
+Complete for the primary Android development route. On 2026-07-27, the project
+was upgraded and validated incrementally on SDK 55, 56, and 57. The SDK 57
+Android development build was compiled, installed, and launched on a local
+Android 15 emulator. It connected to local Metro through an ADB port bridge and
+rendered the existing TSS-free design preview.
+
+Expo Doctor, dependency alignment, and strict TypeScript checks pass. VS Code
+tasks are available to start the configured Android Virtual Device and run the
+development client against local Metro. Physical-iPhone verification remains
+pending because EAS reports no Apple team for `adrivdbs-team`; this is now a
+later iOS compatibility check rather than a blocker for Phase 4 mobile work.
 
 This phase does not block Phase 3 backend work. It is a gate before Phase 4
 mobile implementation. Phase 4 backend work may proceed independently.
 
 ### Scope
 
-- Continue using SDK 54 and Expo Go only for the current UI prototype and basic
-  API experiments.
-- Choose the iOS development-build route:
-  - EAS development build for a physical iPhone with Apple signing; or
-  - wait until the App Store Expo Go version supports the target SDK.
-- Add `expo-dev-client` when the development-build route is available.
+- Use an Android emulator as the primary local development route.
+- Retain the EAS development-build route for later physical-iPhone validation
+  when an Apple Developer team and device registration are available.
+- Add `expo-dev-client`.
 - Upgrade Expo incrementally from SDK 54 to 55, 56, and then 57.
 - At every upgrade step:
   - align Expo, React, React Native, and Expo-managed package versions;
   - run Expo's dependency repair and diagnostics;
   - run strict TypeScript compilation;
   - launch the application and verify the existing design preview.
-- Create and install the SDK 57 iOS development build.
+- Create and install the SDK 57 Android development build.
 - Verify that the development build connects to the local Metro server and can
   call the configured backend without exposing privileged credentials.
 - Stop using Expo Go as the primary Start23 development runtime after this
@@ -220,77 +267,422 @@ mobile implementation. Phase 4 backend work may proceed independently.
 - `mobile/package.json` and the resolved Expo configuration report SDK 57.
 - Expo dependency diagnostics pass.
 - Strict TypeScript compilation passes.
-- The SDK 57 development build is installed and launches on the physical
-  iPhone.
+- The SDK 57 development build is installed and launches on the local Android
+  emulator.
 - Local Metro updates load in the development build.
 - The existing TSS-free design preview renders correctly.
 - No service-role key, database password, or backend secret is present in the
   mobile bundle.
 
-### Contingency
+### Later iOS verification
 
-If an iOS development build cannot yet be installed, keep the mobile project
-on SDK 54 and continue backend work. Do not partially upgrade the project to an
-SDK that the available iPhone runtime cannot open.
+Create and install an SDK 57 iOS development build after Apple signing and
+physical-device registration are available. Expo Go compatibility on that
+device is no longer the project SDK constraint.
 
 ## Phase 4: onboarding, goals, and zones
+
+### Status
+
+In progress. The Phase 4 database migration, FastAPI application slice, and
+Expo onboarding client are implemented and locally verified at the unit,
+contract, lint/type, and dependency-diagnostic levels.
+
+The original Phase 4 migration and forward hardening migration
+`20260728133728_phase_4_5_review_hardening.sql` are applied in hosted Supabase.
+The linked database linter reports no schema errors, and anonymous Data API
+probes confirm that owner data and service-only RPCs remain inaccessible. An
+in-memory server-side secret-key probe confirms that the fallback RPC accepts
+service authorization and rejects a nonexistent athlete without a write. The
+updated pgTAP suite has not run because this workstation has no available
+Docker/`pg_prove` runtime. Real two-session Auth/Data API isolation, Android
+runtime rendering of the new flow, and an end-to-end completion against the
+hardened hosted persistence therefore remain pending.
 
 ### Scope
 
 - Begin mobile implementation only after the Phase 3.5 exit criteria pass.
-- Athlete profile and biometrics.
-- Triathlon-discipline training history.
-- One primary race-oriented A goal.
-- Manual discipline-specific zones.
-- Approved fallback-zone path clearly marked unvalidated.
-- Resumable onboarding state.
-- Initial plan proposal trigger.
+  **Complete**
+- Athlete profile and biometrics. **Implemented**
+- Triathlon-discipline training history. **Implemented**
+- One primary race-oriented A goal. **Implemented**
+- Manual discipline-specific zones. **Implemented**
+- Approved fallback-zone path clearly marked estimated/unreviewed. **Implemented for
+  bike and run**
+- Pre-question per discipline asking whether the athlete knows the relevant
+  threshold, before rendering threshold/zone inputs. **Decided; implementation
+  pending**
+- Known-threshold route: accept the threshold alone or threshold plus five
+  boundaries. Empty boundaries are calculated by a reviewed deterministic
+  discipline protocol and must not produce `422`. **Decided; protocol/review
+  and implementation pending**
+- Unknown-threshold route: perform standard, safely executable calibration
+  training through the Week-1 plan, then combine its eligible realized data
+  with the athlete-entered TSE feeling score. The result creates a pending
+  threshold/zone proposal for athlete confirmation. **Decided; exact TSE
+  scale/RPE relationship, deterministic conversion protocol, review, and
+  implementation pending**
+- Three-piste mobile selector per discipline: A manual known values, B
+  automatic calibration/test, C biometric fallback. **Selector implemented;
+  A is functional, C is functional for bike/run, B and swim fallback fail
+  visibly and safely until their reviewed contracts exist**
+- Resumable onboarding state. **Implemented**
+- Initial plan proposal trigger. **Implemented as a pending Phase 6 planning
+  request; decision 42's reviewed standard Week-1 selection and CSS/zone
+  personalization remain pending**
 
 ### Exit criteria
 
-- Onboarding validates all required inputs.
-- One active zone version per discipline.
-- Generated zone changes cannot bypass proposal approval.
-- Public responses contain no TSS.
+- Onboarding validates all required inputs. **Locally verified**
+- One active zone version per discipline. **Migration constraint is hosted and
+  API tests pass; hosted pgTAP behavior verification pending**
+- Generated zone changes cannot bypass proposal approval. **Locally verified;
+  first confirmed setup activates, later versions stay pending**
+- Public responses contain no TSS. **OpenAPI contract verified**
+
+### Implemented groundwork
+
+- Extended owner profiles with date of birth, height, weight, resting heart
+  rate, motivation, and IANA timezone input without accepting an authoritative
+  request `user_id`.
+- Added owner-scoped onboarding sessions, swim/bike/run history, one active
+  race-oriented A goal, versioned zone profiles/metrics/boundaries,
+  zone-update proposals, and pending initial-plan requests.
+- Added explicit grants and forced RLS to every new public table.
+- Added `SECURITY INVOKER` RPCs for atomic history replacement, goal writes,
+  zone-version creation, and onboarding completion. Critical tables also use
+  trigger-enforced RPC write context so ordinary Data API table writes cannot
+  bypass lifecycle rules.
+- Added a FastAPI Data API repository that forwards the verified user access
+  token with the publishable key, retaining `auth.uid()` RLS context for normal
+  athlete operations.
+- Added a separate service-only fallback RPC and repository. Direct
+  athlete-token fallback persistence is rejected; the trusted RPC forces the
+  estimated/unreviewed state and ruleset around boundaries generated by
+  deterministic Python.
+- Initial planning requests now retain and fingerprint the complete confirmed
+  profile, goal, history, and active-zone input. Pending requests refresh when
+  those inputs change and preserve the snapshot after consumption.
+- Resting-heart-rate transport validation now matches PostgreSQL's positive
+  `smallint` range, so oversized input is rejected as `422` before persistence.
+- The Phase 4 pgTAP suite now asserts only Phase 4 table presence instead of
+  depending on later Phase 5 tables.
+- Added TSS-free profile, onboarding, history, goal, zone, fallback, and
+  completion endpoints under `/api/v1`.
+- Reused `phase-3-ruleset-3` Python validation for discipline matching,
+  contiguous boundaries, whole-second pace values, soft-range review, and
+  Tanaka/Karvonen fallback generation.
+- Added API tests for invalid input, resumability, two-athlete isolation,
+  single-goal behavior, one active zone per discipline, pending replacement
+  behavior, stale-safe atomic approval/rejection, fallback labeling, incomplete
+  completion, and idempotent planning requests.
+- Replaced the static mobile entry route with SDK 57 authentication and
+  onboarding screens. Access tokens remain in memory; only the refresh token
+  is persisted with `expo-secure-store`. The mobile client talks only to
+  FastAPI for domain data.
+- Added authenticated, server-resumed profile, history, primary-goal,
+  discipline-zone, fallback, review, and completion screens.
+
+### Phase 4 implementation differences and remaining work
+
+- Phase 6 owns weekly plans and plan revisions, so Phase 4 completion creates
+  an idempotent `initial_plan_requests` row rather than a prematurely typed
+  `change_proposals` plan target. Phase 6 must consume this row and create the
+  actual pending plan revision/proposal.
+- The current active fallback formula is heart-rate based. It is available for
+  bike and run and is explicitly estimated/unreviewed; no swim fallback was
+  invented. Phase 8.5 now accepts CSS or another discipline threshold without
+  requiring optional Zone 1-5 boundaries, exposes reviewed field tests, and
+  evaluates their approved threshold formulas. Calculated boundaries remain
+  `pending_protocol` because the supplied approved protocol bundle does not
+  define a complete Zone 1-5 model. Week-1 calibration preserves same-block
+  objective data plus canonical 1-10 RPE and never manufactures a threshold.
+- Decision 42 supersedes the source `reported sport hours * 40` Week-1
+  initialization. Week 1 uses a reviewed standard Start23 selection. Known
+  CSS/thresholds and zones personalize its execution difficulty; unknown values
+  use the safe calibration route above. Training history remains context and a
+  safety input, not a direct Week-1 budget formula.
+- The current profile does not collect sex/gender/physiology category. The
+  2026-08-13 decision permits an optional physiological-sex input, separate
+  from gender identity, solely for the chosen `226 - age` female / `220 - age`
+  male maximum-heart-rate fallback. That formula requires clinical and
+  privacy/legal review plus a new ruleset and forward migration before use. It
+  is never used for an FTP estimate.
+- Product soft-range thresholds remain unconfigured. Structurally valid manual
+  values are accepted with `soft_range_not_configured` review, as locked in
+  ruleset 3. Future ranges require full evidence/reviewer/version metadata.
+- Athlete-facing manual zone input uses canonical units. Cycling speed is
+  activity telemetry only and is not a zone or planning input.
+- The zone form originally checked only each interval's width, so it allowed
+  numerically ascending swim-pace zones that the deterministic inverse-pace
+  rule correctly rejected with `422`. The client now validates direction,
+  cross-zone continuity, and whole pace seconds before submission and explains
+  that Z1 is slowest while values decrease toward Z5.
+- Run the updated Phase 4 pgTAP suite when Docker/`pg_prove` is available, then
+  verify the FastAPI flow with two real Auth sessions.
+- Configure the mobile public Supabase/API environment values and run the new
+  flow in a rebuilt Android SDK 57 development client that includes
+  `expo-secure-store`. Physical-iPhone verification remains subject to the
+  Phase 3.5 signing dependency.
+- After aligning to Expo `57.0.11`, React Native `0.86.2`, and applying the
+  available non-breaking audit fix, `npm audit --omit=dev` still reports 19
+  Expo/Metro toolchain findings (11 high and 8 moderate) through `image-size`
+  and `xcode -> uuid`. npm offers only forced fixes that downgrade or otherwise
+  break the SDK 57 dependency set, so they were not applied. Recheck when Expo
+  publishes compatible patched transitive dependencies.
 
 ## Phase 5: workout catalog
 
+### Status
+
+Implemented and locally verified for the Python domain, public FastAPI
+contract, migration review, lint, typing, and automated backend tests. The
+Supabase migration is applied in the hosted project and the linked database
+linter reports no schema errors. Hosted table statistics confirm seven public
+template versions, seven private load rows, 21 segments, 14 phase tags, and
+seven zone requirements. A server-side secret-key probe confirms that the
+restricted planning RPC returns all seven rows with their private load fields.
+Its pgTAP suite has not run because this workstation has no available
+Docker/`pg_prove` runtime.
+
 ### Scope
 
-- Versioned swim, bike, and run templates.
-- Workout segments, duration/distance, zones, and expected RPE.
-- Low/high intensity classification.
-- Training-phase and fallback compatibility tags.
-- Server-internal precomputed planned TSS.
-- Small reviewed seed set, not 500+ workouts.
+- Versioned swim, bike, and run templates. **Implemented**
+- Workout segments, duration/distance, zones, and expected RPE. **Implemented**
+- Low/high intensity classification. **Implemented with the approved BR-003
+  classifier; an exact mixed-duration tie is high intensity**
+- Training-phase and fallback compatibility tags. **Implemented**
+- Server-internal precomputed planned TSS. **Implemented**
+- Small reviewed seed set, not 500+ workouts. **Implemented as seven immutable
+  versions representing six current templates**
 
 ### Exit criteria
 
-- Catalog validation rejects incomplete or inconsistent templates.
-- Public workout models omit planned TSS.
+- Catalog validation rejects incomplete or inconsistent templates. **Locally
+  verified**
+- Public workout models omit planned TSS. **OpenAPI and response verified**
 - Historical planned-workout snapshots remain stable after catalog versioning.
+  **Domain snapshot and immutable-version persistence verified locally;
+  Phase 6 still owns planned-workout row persistence**
+
+### Implemented groundwork
+
+- Added an immutable workout domain with deterministic aggregate validation for
+  segment ordering, totals, RPE ranges, discipline-specific technique,
+  fallback compatibility, and declared intensity.
+- Added two reviewed current templates per discipline and one retained earlier
+  run-template version to exercise catalog versioning.
+- Added normalized phase and zone-requirement tags and explicit unreviewed
+  heart-rate-fallback compatibility.
+- Precomputed internal load with the approved expected-RPE midpoint multiplied
+  by duration in hours and retained the ruleset/calculation method in private
+  persistence.
+- Added `GET /api/v1/workout-catalog`, protected by verified bearer identity,
+  with explicit TSS-free Pydantic response mapping.
+- Added immutable snapshot creation for later Phase 6 plan revisions so a
+  catalog version change does not alter captured duration, segments, RPE, or
+  internal load.
+- Added a migration with read-only authenticated access to public structure,
+  forced RLS, immutable version triggers, and a private load table inaccessible
+  to athlete-facing database roles.
+- Added a service-role-only planning-catalog RPC and restricted backend
+  repository. It exposes the durable catalog, including internal load, to
+  server planning code without granting direct private-table access.
+- Added an automated field-by-field parity test between every Python catalog
+  version and the SQL seed. The test identified and corrected three rounded SQL
+  load constants to the exact deterministic `Decimal` values.
+- Added an intentionally empty `supabase/seed.sql`; reviewed immutable catalog
+  data remains migration-owned while the configured reset seed path is valid.
+- Added unit, API, OpenAPI, and pgTAP coverage proportional to the catalog and
+  load-confidentiality risks.
+
+### Phase 5 implementation differences and remaining work
+
+- The roadmap did not prescribe how reviewed seed load values are calculated.
+  Phase 5 uses the already approved BR-004 personalized snapshot formula with
+  the midpoint of the template RPE range; it does not invent a separate TSS
+  model.
+- The runtime FastAPI catalog uses the validated reviewed Python catalog, while
+  the matching SQL migration is the durable source intended for Phase 6
+  planning queries. A field-by-field automated parity test now prevents these
+  reviewed representations from drifting. Moving seed ingestion to a single
+  build artifact can still be considered if the catalog grows.
+- Run `phase_5_workout_catalog_test.sql` when Docker/`pg_prove` is available.
+  The automated Python/SQL parity test already compares the complete reviewed
+  hosted migration seed definition with the validated Python catalog.
+- Phase 6 must persist the snapshot fields on planned workouts. Phase 5 proves
+  the immutable snapshot behavior without prematurely creating Phase 6 plan
+  tables.
 
 ## Phase 6: weekly planning and approval
 
+### Status
+
+Implemented and locally verified for the deterministic Python planning domain,
+public FastAPI contract, owner-scoped repository transport, migration review,
+lint, formatting, typing, and automated backend tests. A 2026-08-09 review
+hardened decision retries, plan validation, public conflict codes, and the
+athlete-facing Expo flow. The migration is now applied to hosted `start23-dev`
+(`isfumhgqphieoayqahjv`). The rollback-only
+hosted pgTAP suite passes all 30 assertions, including RLS, hidden-load access,
+idempotency, stale decisions, owner isolation, and direct moves. Two confirmed
+real Auth sessions also verified that each athlete can read exactly their own
+Phase 6 fixture through the Data API and cannot read the other athlete's row.
+A small forward migration, `20260809225626_phase_6_advisor_indexes.sql`, adds
+the covering foreign-key indexes identified by the first hosted advisor run;
+the subsequent run reports no remaining Phase 6 unindexed foreign keys.
+
 ### Scope
 
-- Weekly-plan and revision persistence.
-- Deterministic target and recovery/taper context.
-- Workout-deck selection.
-- Auto-schedule proposal.
-- Anti-stack and soft-boundary warnings.
-- Structured availability and injury exclusion.
-- Pending proposal approval/rejection.
-- Public calendar response.
+- Weekly-plan and revision persistence. **Implemented**
+- Deterministic target and recovery/taper context. **Implemented with the
+  pre-Phase-7 target limitation below**
+- Workout-deck selection. **Implemented**
+- Auto-schedule proposal. **Implemented**
+- Anti-stack and soft-boundary warnings. **Implemented**
+- Structured availability and injury exclusion. **Implemented as
+  revision-scoped confirmed context**
+- Pending proposal approval/rejection. **Implemented**
+- Public calendar response. **Implemented**
 
 ### Exit criteria
 
-- System-generated plan changes remain pending.
-- Approval is atomic, owner-scoped, and stale-safe.
-- Manual schedule behavior follows the Phase 0 decision.
-- All plan/calendar responses pass the TSS-leak contract tests.
+- System-generated plan changes remain pending. **Locally verified**
+- Approval is atomic, owner-scoped, and stale-safe. **Locally and hosted pgTAP
+  verified**
+- Manual schedule behavior follows the Phase 0 decision. **Locally and hosted
+  pgTAP verified**
+- All plan/calendar responses pass the TSS-leak contract tests. **Locally
+  verified**
+
+### Implemented groundwork
+
+- Added a framework-independent `planning` domain that resolves base, build,
+  recovery, and A-race T-2/T-1 context using the approved Phase 3 rules.
+- Added strict workout-deck filtering by training phase, confirmed injury,
+  active zone capability, and fallback compatibility.
+- Added deterministic discipline-covering deck selection and availability-
+  window scheduling with no more than three consecutive rest days. Generated
+  schedules fail closed when catalog coverage, availability, rest-day, or
+  anti-stack constraints cannot be satisfied.
+- Added qualitative intensity-distribution, catalog-capacity, injury-
+  exclusion, anti-stack, and availability warnings without exposing hidden
+  load values.
+- Added immutable `weekly_plans`, `plan_revisions`, `planned_workouts`, and
+  `plan_warnings` persistence with forced owner RLS. Planned-workout
+  presentation, segment, RPE, schedule, and catalog-version fields are
+  snapshotted by value.
+- Added separate `private.planned_workout_loads` and
+  `private.plan_revision_loads` tables. Athlete-facing and general Data API
+  roles receive no direct access.
+- Added a narrowly granted service-only generated-plan RPC. It copies hidden
+  load from the durable catalog, validates the Python result against that
+  snapshot, consumes the fingerprinted onboarding request, and is idempotent
+  for the same athlete/week/generation fingerprint.
+- Added security-invoker owner approval and rejection RPCs. Approval locks the
+  proposal, target revision, and stable plan, verifies the expected base,
+  supersedes the old active revision, applies the exact pending revision, and
+  marks the proposal applied in one transaction.
+- Added direct athlete moves through the verified FastAPI path. A move applies
+  immediately as a new immutable active revision, rejects stale revisions and
+  confirmed-injury conflicts, and retains non-blocking qualitative warnings.
+- Added TSS-free plan, eligible-deck, validation, proposal-list/detail,
+  schedule-proposal, direct-move, and calendar endpoints under `/api/v1`.
+- Plan layout validation now accepts only owned workout IDs and proposed
+  timestamps against an expected revision. Discipline and intensity always
+  come from the immutable server snapshot.
+- Plan approval and rejection retries are idempotent for the same proposal and
+  exact base precondition. Planning conflicts retain stable public error codes.
+- Unified plan and zone decisions behind the existing typed
+  `/change-proposals/{id}/approve|reject` endpoints without weakening the
+  existing zone state machine.
+- Added domain, API, owner-isolation, stale-approval, rejection, direct-move,
+  repository-transport, OpenAPI, seed-parity, and pgTAP coverage.
+
+### Phase 6 implementation differences and remaining work
+
+- Before Phase 7, canonical realized weekly load did not exist. The first plan
+  therefore used the closest eligible reviewed catalog deck as its
+  deterministic hidden baseline and later regular weeks held prior planned
+  load. Phase 7 now supplies canonical realized load and replaces that hold
+  whenever realized history exists; the safe hold remains the intentional
+  missing-history fallback. Recovery and taper factors remain unchanged.
+- The documented separate `PUT /weekly-plans/{plan_id}/selections` draft step
+  is consolidated into `POST /weekly-plans/{plan_id}/schedule-proposals`,
+  whose request contains explicit eligible template IDs and availability.
+  The resulting system schedule is still a typed pending revision.
+- Availability is retained as explicit per-revision windows rather than a
+  cross-week `availability_blocks` aggregate. This is sufficient for Phase 6
+  scheduling and manual-move warnings; Phase 8 still owns durable check-in
+  context, source, and expiry semantics.
+- Confirmed blocked disciplines are hard-excluded and automatic BR-010
+  redistribution is now explicitly disabled for the MVP. Removed load is not
+  replaced; Phase 8 will persist the locked functional restriction states and
+  explicit clearance flow.
+- The Phase 5 catalog did not contain a base/recovery bike workout compatible
+  with the FTP setup used by the Phase 4 mobile flow. Phase 6 adds one reviewed
+  immutable power-guided aerobic bike template, bringing the pending migrated
+  catalog to eight versions across seven logical templates, with complete
+  Python/SQL parity coverage.
+- The current small runtime catalog cannot produce a complete multi-discipline
+  taper and a taper-week triathlon request therefore fails closed with
+  `catalog_coverage_unsatisfied`; taper generation also fails closed without a
+  prior build-load baseline. Decision 41 requires Phase 8 to reassess taper
+  coverage from the available 160-row `Trainingen START23.v01` export before
+  concluding that new training definitions are needed. That file has no
+  explicit taper flag, so taper eligibility, import validation, and a full
+  runtime fixture remain pending.
+- The runtime planner still selects forward cycle position from the number of
+  prior plans. Decision 43 supersedes that behavior for a race: the event date
+  always anchors backward cycle alignment. A non-race goal begins at cycle week
+  1 and uses only its own later Phase 12 rules.
+- Hosted `start23-dev` now contains both the main Phase 6 migration and the
+  advisor-index follow-up. The hosted pgTAP suite passes 30/30, and two real
+  Auth sessions pass owner/cross-owner Data API isolation. The test accounts
+  and one minimal owned weekly-plan fixture per account remain in the
+  development project; their credentials are handed off outside the repository.
+- Athlete-facing Expo plan generation/review, explicit approval/rejection,
+  eligible-deck selection, replacement schedule proposals, and active calendar
+  screens are implemented and pass strict TypeScript checks. Runtime Android
+  verification against the hosted Phase 6 migration remains pending.
+
+### Phase 6 review record: 2026-08-09 through 2026-08-10
+
+- Backend tests cover idempotent repeated decisions, stable stale-conflict
+  codes, owner-scoped deck reads, and validation that rejects client-supplied
+  discipline/intensity classifications or incomplete workout sets.
+- The migration returns the original public result for repeated approval or
+  rejection without another state transition; pgTAP covers both retries.
+- Public HTTP errors can retain allowlisted domain codes without echoing raw
+  database messages or hidden load values.
+- Ruff lint/format, strict mypy, the complete backend suite, and mobile strict
+  TypeScript are the local completion gate for this repair.
+- Hosted migration history, pgTAP execution, and two-real-session Data API
+  isolation are verified. The advisor's Phase 6 foreign-key findings were
+  resolved by a forward migration. The project-level leaked-password
+  protection warning and two pre-existing Phase 4 foreign-key index notices
+  remain outside this Phase 6 schema repair. Android runtime verification
+  remains an external gate.
+- The first real-account Android login reached the intake route but could not
+  load it because no local FastAPI process or API reverse bridge was active.
+  The VS Code Android task now starts FastAPI as a process task with a separate
+  argument array, which also handles workspace paths containing spaces, waits
+  for application startup, and configures both the Metro `8081` and API `8000`
+  reverse bridges before opening the development client. This is local runtime
+  orchestration; the mobile client continues to send the verified Supabase
+  access token only to FastAPI and receives no backend secret.
 
 ## Phase 7: activity and RPE feedback
+
+### Status
+
+Implemented and verified locally on 2026-08-11. The FastAPI activity contract,
+deterministic match matrix, private realized-load persistence, BR-002/BR-004
+planning integration, pending correction revisions, and mobile capture/RPE
+flow are complete. The migration and rollback-only pgTAP suite are prepared
+but have not been applied to hosted Supabase or executed locally because this
+workstation has no Docker/PostgreSQL test runtime. Real-account Android
+verification therefore remains open.
 
 ### Scope
 
@@ -310,13 +702,128 @@ SDK that the available iPhone runtime cannot open.
 - Public activity responses and messages omit realized and planned TSS.
 - No correction is applied without approval.
 
+### Implemented
+
+- Added authenticated canonical-summary create/list/read endpoints and an
+  immutable first-RPE endpoint under `/api/v1/activities`.
+- Added owner-scoped `activities` and `activity_metrics` persistence with
+  forced RLS and explicit authenticated grants. Internal realized load is
+  isolated in `private.activity_loads`; public database helpers, Pydantic
+  models, OpenAPI, messages, and mobile types omit planned and realized TSS.
+- Activity creation uses an athlete-scoped UUID idempotency key plus a canonical
+  request fingerprint. Replaying the same request returns the original record;
+  reusing the key for different content is a conflict.
+- Supported matching is intentionally explicit: the athlete chooses an owned,
+  active planned workout, or records the activity as extra/unmatched. A
+  planned workout can be matched only once and its discipline must agree.
+- Realized session load is calculated deterministically as actual RPE times
+  actual duration in hours. Classification implements the reviewed matrix:
+  hidden fatigue for RPE 7+ on a low-intensity workout, strict-above-115%
+  overshoot, inclusive +/-10% plus expected-RPE perfect match, deviation, and
+  unplanned load.
+- Qualifying hidden-fatigue, overshoot, and unplanned outcomes can create a
+  typed pending plan revision which cancels only eligible future
+  high-intensity workouts. The current active plan remains unchanged until the
+  existing proposal approval endpoint is called.
+- Weekly planning now consumes private realized weekly history. BR-002 debt is
+  evaluated first; otherwise BR-004 uses the available-sample 42-day realized
+  baseline and its approved 80% progression boundary. Missing realized history
+  retains the Phase 6 planned-load hold.
+- Reliable realized low/high activity minutes now drive BR-003 intensity debt
+  at 60% or greater classified coverage. Unknown time is excluded, recovery
+  and taper take precedence, and the correction is used only for the first
+  following non-recovery week.
+- Added a mobile activity screen for explicit planned/extra selection,
+  duration/distance capture, retry-safe idempotency, pending RPE prompts,
+  qualitative outcomes, and pending-correction notices.
+- Added pure calculation, API, repository transport, cross-owner, idempotency,
+  immutable-RPE, recursive hidden-TSS, planning-integration, and pgTAP tests.
+  The complete backend suite passes 235 tests; Ruff, strict mypy, and mobile
+  strict TypeScript are completion gates.
+
+### Implementation differences and remaining work
+
+- Direct FIT/TCX upload, raw telemetry/file persistence, provider identity,
+  webhooks, and automatic imports remain deferred to Phase 9 as locked in the
+  Phase 0 input decision. Phase 7 accepts only a validated canonical summary.
+- Automatic proximity matching, bricks, multisport activities, and ambiguous
+  discipline matching remain deferred because no reviewed policy exists.
+  Omitting `planned_workout_id` is therefore safely and visibly unmatched.
+- Hidden fatigue is evaluated before load overshoot. With the approved
+  session-RPE load proxy, evaluating overshoot first would make the distinct
+  high-RPE-on-easy-session safety outcome unreachable.
+- Phase 8 supersedes Phase 7's first-score immutability: RPE may be corrected,
+  with an audit trail, during the activity's current athlete-local
+  Monday-Sunday week and becomes immutable when that week ends. A missing RPE
+  remains missing until the proposed but dimensionally invalid `RPE = TSS`
+  statement is replaced by a precise, reviewed rule.
+- The current correction policy removes future high-intensity work only; it
+  does not invent replacement workouts or change zones. Phase 8 can add richer
+  corrections after structured availability, fatigue, and injury context is
+  confirmed.
+- Hosted migration application, database advisors, rollback-only pgTAP, two
+  real-token isolation checks, and emulator/device end-to-end verification are
+  still required. No production or hosted change was applied automatically.
+
 ## Phase 8: structured weekly check-in
+
+### Status
+
+Core application work was implemented and locally verified on 2026-08-13.
+The structured FastAPI/mobile flow, deterministic planning amendments, and
+local Supabase migration/pgTAP suite are prepared. Phase 8 is still `in
+progress`, because the reviewed standard Week-1/TSE conversion protocol and
+reviewed taper labels do not exist, the local SQL runtime is unavailable, and
+no hosted migration or device verification was performed. Phase 8 now also
+owns the explicitly accepted planning-completion work below.
 
 ### Scope
 
 - Blocked days.
 - Confirmed injury disciplines.
+- Weekly re-evaluation of every active injury restriction, with attributable
+  physician advice and an explicit athlete plan choice; never auto-clear.
 - Fatigue and missed-workout reasons.
+- Start-of-week confirmation of recurring sports or strenuous activities
+  outside the Start23 plan.
+- Add an extra planned activity to the current week and later record its actual
+  duration and RPE; only private realized load may influence the next proposal.
+- Detect a completely inactive completed week and base the restart proposal on
+  the most recent four complete local weeks, including the zero week, without
+  10% progression for that restart week.
+- Explicit achieved-goal maintenance state: no 10% load progression, while the
+  four-build/one-recovery rhythm and reviewed 80/20 distribution remain.
+- When every goal discipline is blocked, create a safe, TSS-free, pending
+  rest-only revision. Do not return a normal planning error, redistribute load,
+  or activate it without athlete confirmation.
+- Add an athlete-facing move/reschedule action. It must stay within the existing
+  athlete-local Monday-Sunday week, carry the expected revision, fail stale
+  changes safely, and show qualitative recovery/restriction/spacing warnings.
+- Represent each intentionally empty plan date explicitly as a public rest day
+  in the API and mobile calendar, distinct from missing planning data and with
+  no private load value.
+- Recalculate the remaining workout deck after each selection against the exact
+  selected set and expected revision. The server is authoritative; a dedicated
+  endpoint or an updated pending-plan response may provide the recalculation.
+- Generate weekly proposals using athlete-local Monday-Sunday semantics. The
+  local-Monday trigger and post-check-in trigger must be idempotent for the same
+  athlete and local week; the final behavior must not use a blind UTC week.
+- For race goals, align every partial training horizon backward from the event
+  date. For non-race goals, retain a cycle-week-1 start and leave goal-specific
+  execution to Phase 12.
+- Use a reviewed standard Week-1 training selection. Known CSS/thresholds and
+  zones personalize execution difficulty; unknown values use safe calibration
+  training and athlete-entered TSE feedback to create only a pending zone
+  proposal. Do not use reported hours multiplied by 40 as the Week-1 target.
+- On app open, show a prominent but non-blocking reminder for completed
+  activities missing required RPE/TSE feedback. Keep it visible and deep-link
+  it to the activity until feedback or an explicit terminal state exists.
+- Reassess taper coverage from the available 160-row
+  `Trainingen START23.v01` export. Define reviewed taper eligibility for
+  existing rows, validate their bucket/discipline/duration/zone data, and add no
+  new training definitions unless that review proves coverage is insufficient.
+  A full triathlon taper remains unsupported until catalog coverage and a
+  runtime fixture pass.
 - Next-week plan proposal.
 - No natural-language LLM dependency.
 
@@ -324,7 +831,171 @@ SDK that the available iPhone runtime cannot open.
 
 - Confirmed context has source and expiry.
 - Injury and availability affect only pending plan revisions.
+- An all-disciplines-blocked case produces a pending rest-only revision and no
+  public TSS.
+- An athlete can move a workout within the same local week with revision
+  preconditions and qualitative warnings; cross-week and stale moves fail.
+- Approved plan calendars expose explicit rest days without exposing load.
+- Deck eligibility changes deterministically after selection and cannot be
+  bypassed with a stale revision.
+- Weekly generation is idempotent and tested around athlete-local week and
+  timezone boundaries.
+- Race fixtures prove that the event date, rather than prior-plan count,
+  determines cycle position; non-race fixtures begin at week 1 without race
+  rules.
+- Week-1 fixtures prove the known-zone and unknown-zone calibration routes. A
+  TSE-derived proposal cannot activate zones and cannot be implemented until
+  the reviewed conversion protocol and TSE/RPE definition exist.
+- Missing-feedback reminders are visible on app open, non-blocking, persistent,
+  and TSS-free.
+- Reviewed existing-catalog taper rows pass validation and a full swim/bike/run
+  taper planning fixture before taper support is called complete.
 - Check-in can be completed without an external AI provider.
+
+### Implemented
+
+- Added a no-LLM structured weekly check-in with one idempotent record per
+  athlete/local week. Context edits are immutable revisions with source
+  `structured_form`, bounded local-week expiry, a canonical fingerprint, and
+  a separate exact-fingerprint confirmation step.
+- Added blocked dates, fatigue, missed-workout reasons, explicit recurring
+  sport confirmation, and planned outside activities. A strenuous outside
+  activity blocks its local planning date. It can later be linked atomically
+  to a canonical activity with actual duration and the existing RPE flow; only
+  private realized load reaches later planning.
+- Added durable functional restrictions with a seven-day review timestamp,
+  allowed intensity (`none` or `low_only`), attributable professional advice,
+  and an explicit athlete choice. Every active discipline must be reviewed;
+  time passing never clears a restriction and removed load is never
+  redistributed.
+- Added deterministic low-only catalog filtering and a safe all-goal-
+  disciplines-blocked result. That result is a zero-load, TSS-free, pending
+  rest-only revision with seven explicit restriction-rest days; athlete
+  approval is still required.
+- Added exact inactive-restart behavior: when the immediately preceding
+  completed local week has zero activities, the target is the mean of the most
+  recent four complete local weeks including explicit zero weeks, with no 10%
+  progression. Persistence now projects up to six consecutive completed local
+  weeks after the athlete's earliest plan/activity evidence, including weeks
+  without a plan.
+- Added explicit achieved-goal maintenance persistence and mobile confirmation.
+  Build weeks hold the latest approved load, the 4+1 recovery rhythm remains,
+  and catalog selection retains the reviewed weekly low/high policy without
+  progression.
+- Race cycle position is now derived backward from the event-date week and no
+  longer from the number of prior plans. The current public goal contract
+  remains race-only and does not apply race rules to a disguised non-race goal.
+- Fixed catalog bucket ownership in weekly 80/20 allocation: the immutable
+  template bucket now classifies the complete workout, while segment zones
+  remain execution detail. Added deterministic selection-aware deck
+  recalculation against exact selected IDs and an expected plan revision.
+- Added public intentional rest days to plan/calendar responses. They are
+  distinguished from missing data and contain no load values.
+- Exposed the existing stale-safe, same-local-week move behavior in mobile.
+  The app validates the entire proposed layout first, displays qualitative
+  recovery/restriction/spacing warnings, and then requires an explicit move
+  action with the expected revision.
+- Added an app-open, non-blocking, TSS-free missing-RPE reminder that deep-links
+  to activity feedback. RPE can now be corrected with an audit trail only
+  during the activity's athlete-local Monday-Sunday week; later corrections
+  fail closed.
+- Added a service-only local-Monday entrypoint that opens due check-ins from
+  each athlete's IANA timezone and is retry-idempotent. Confirmed-context plan
+  generation is independently idempotent by athlete, week, check-in, input,
+  availability, restriction, and selection fingerprint.
+- Added forced-RLS tables, explicit grants, RPC-only write enforcement,
+  owner-scoped athlete operations, narrow service-only planning operations,
+  repository/OpenAPI/privacy tests, and a rollback-only Phase 8 pgTAP suite.
+  The complete backend suite passes 254 tests; Ruff, formatting, strict mypy,
+  the source-catalog audit, and mobile strict TypeScript pass locally.
+
+### Implementation differences and remaining work
+
+- Phase 8.5 implements the reviewed field-test and Week-1 protocol registry,
+  canonical 1-10 RPE/TSE meaning, immutable observations, deterministic
+  threshold formulas, and safe provisional/RPE-only outcomes. The existing
+  regular planned-workout DTO still requires Zone 1-5 segments, so normal-plan
+  selection of the zone-independent calibration protocols remains a separate
+  exit gate. The implementation does not use reported hours multiplied by 40
+  and does not invent a Zone 1-5 conversion.
+- A non-race cycle-week-1 runtime fixture is not implemented because the public
+  goal model is intentionally still race-only. Goal-type selection and
+  non-race execution remain Phase 12 work; Phase 8 only removes prior-plan
+  count from race anchoring and does not invent a non-race macrocycle.
+- The 160-row source-catalog audit is recorded in
+  `phase-8-taper-catalog-review.md`. All IDs, disciplines, buckets, RPE values,
+  zones, segment order, and supplied totals validate, but all 60 swim rows omit
+  total duration and the export contains no reviewed taper marker. Treating
+  `Herstel` or `Techniek` as taper approval would invent physiology. No rows
+  were imported or relabelled, no new workouts were added, and full triathlon
+  taper remains fail-closed.
+- The local-Monday database entrypoint opens the structured check-in; it cannot
+  create a plan before the athlete confirms context. A deployed
+  Railway/Supabase schedule still has to invoke it. Post-confirmation plan
+  generation is user-triggered in the current mobile flow and idempotent.
+- Correcting RPE expires any stale pending correction revision and updates the
+  private realized load/audit row. It does not automatically manufacture a
+  replacement current-week correction proposal after the corrected score;
+  richer automatic correction policy still lacks a reviewed rule.
+- The migration was created through Supabase CLI but remains local and
+  unapplied. `supabase db reset --local --no-seed` was attempted and failed
+  because Docker and Podman are absent. The Phase 8 SQL/pgTAP suite, database
+  advisors, hosted application, two-real-token isolation, and Android/iOS
+  runtime flows remain external verification gates.
+- The RPE reminder has no explicit terminal/dismissed state because no such
+  product rule exists. It remains visible until RPE is supplied, which is the
+  safe Phase 8 behavior.
+- Named qualified clinical/physiology production approval remains missing.
+  Local deterministic tests do not substitute for that production gate.
+
+## Phase 8.5: zone intake, field tests, and Week-1 calibration
+
+Detailed decisions, implemented actions, formulas, and remaining gates are in
+[Backend zone calculation, field tests, and Week-1 calibration](backend-zone-calculation.md).
+
+### Status
+
+Backend core implemented and locally verified. The forward migration and
+rollback-only pgTAP suite are present but not executed because this workstation
+has no Supabase CLI/PostgreSQL/Docker runtime. No hosted or production change
+was made.
+
+### Scope
+
+- Four explicit per-discipline setup routes: known values, field test,
+  calibration week, and RPE-only. **Implemented in FastAPI and persistence**
+- Partial known thresholds with optional Zone 1-5 profiles; empty optional
+  boundaries do not produce `422`. **Implemented**
+- Reviewed run threshold, bike FTP, bike threshold-HR, and swim CSS field-test
+  evaluation. **Implemented for threshold estimates**
+- Reviewed submaximal Week-1 protocols with same-block objective metrics,
+  block RPE, and session RPE. **Implemented for immutable observations and
+  safe status evaluation**
+- Immutable owner-scoped observations and service-only generated evaluation
+  persistence. **Implemented locally**
+- Threshold and zone changes remain separate pending lifecycles. **Threshold
+  results remain pending; calculated zone versions fail closed until a complete
+  zone model is approved**
+- Zone-independent calibration protocol selection in the normal weekly plan.
+  **Pending because the current planned-workout segment contract requires a
+  Zone 1-5 value**
+- Android setup, protocol execution, feedback, and result screens. **Pending**
+
+### Exit criteria
+
+- The seven approved CSV protocols and every segment match the Python registry.
+  **Verified by fixture-parity tests**
+- CSS/FTP/LTHR/threshold pace are produced only by their own valid reviewed
+  field tests. **Verified**
+- Submaximal calibration cannot produce a threshold. **Verified**
+- Missing session RPE blocks evaluation but not observation/activity storage.
+  **Verified in domain/API tests; database runtime pending**
+- RPE-only is a valid onboarding configuration and creates no zone profile.
+  **Implemented; hosted flow pending**
+- Public APIs and tables contain no TSS/private-load fields. **OpenAPI/backend
+  tests pass; pgTAP pending**
+- Complete Zone 1-5 calculation remains unavailable until formulas, canonical
+  rounding, reviewer metadata, and production review are approved. **Locked**
 
 ## Phase 9: one wearable integration
 
@@ -345,6 +1016,19 @@ SDK that the available iPhone runtime cannot open.
 - Provider failure does not corrupt plan or activity state.
 
 ## Phase 10: constrained LLM coach
+
+### Status
+
+Configuration groundwork added on 2026-07-27. The backend can load an OpenAI
+API credential from `START23_OPENAI_API_KEY`; the local value is stored only in
+the Git-ignored `backend/.env`, and the committed example remains blank.
+Provider calls, model selection, structured prompts, privacy/retention review,
+and model-assisted scheduling behavior are not implemented yet.
+
+The eventual integration may extract schema-validated context and explain
+deterministic planning recommendations. Phase 6 remains responsible for
+creating schedules, and every proposed plan or revision must remain pending
+until the user explicitly confirms it.
 
 ### Scope
 
@@ -375,6 +1059,61 @@ SDK that the available iPhone runtime cannot open.
 - Outlier behavior is deterministic.
 - No zone is changed without the approved confirmation sequence.
 
+## Phase 12: non-race planning modes
+
+This is the new final functional phase requested on 2026-08-13. The product
+option remains visible as planned/coming later until its deterministic rules
+are approved; it must not masquerade as a supported race plan before then.
+
+### Scope
+
+- Goal-type selection clearly distinguishes a dated race/event from a non-race
+  personal goal. Race goals are date-anchored and handled by the race planner;
+  non-race goals start their own cycle at week 1.
+- Non-race goal selection, including general fitness, weight loss, and other
+  explicitly approved goal families.
+- Goal-specific macrocycles, maintenance rules, intensity targets, progression
+  and recovery behavior.
+- Workout-catalog coverage and deterministic eligibility for each supported
+  goal family.
+- Pending proposal and athlete-confirmation flow identical in safety semantics
+  to race planning.
+
+### Exit criteria
+
+- Every exposed goal family has a reviewed deterministic rule table and catalog
+  coverage.
+- Unsupported goals are shown as unavailable/coming later, not silently mapped
+  onto race rules.
+- Public plan responses continue to omit planned and realized TSS.
+- No plan becomes active without athlete confirmation.
+
+### Final deployment and security handoff
+
+These are end-of-MVP deployment gates, not blockers for continuing Phase 6 and
+later development locally:
+
+- Railway is not required during local development. When a local backend flow
+  first calls either service-only Supabase RPC, configure the modern
+  `sb_secret_...` value only in the Git-ignored `backend/.env` as
+  `START23_SUPABASE_SECRET_KEY`. Never add it to a mobile environment or commit
+  it.
+- Before the first Railway deployment, open the FastAPI service's
+  **Variables** tab, add `START23_SUPABASE_SECRET_KEY` with the modern Supabase
+  secret key, review the staged change, and deploy it. Keep the existing
+  `START23_SUPABASE_URL` and `START23_SUPABASE_PUBLISHABLE_KEY` scoped to that
+  backend service as well.
+- Security note: during the Phase 4/5 hosted review, the Supabase CLI printed
+  the legacy `service_role` JWT in local command output even though secret
+  reveal was not requested. The value was not committed or copied into
+  application configuration, but retained execution logs must be treated as a
+  possible disclosure. Before production release, confirm that no component
+  still uses the legacy `anon` or `service_role` keys, disable the legacy keys
+  under **Supabase Dashboard -> Settings -> API Keys**, and verify the backend,
+  mobile client, and integrations use only the modern publishable/secret keys.
+  Do not rotate JWT signing keys without a separate rollout plan because that
+  can invalidate active credentials.
+
 ## Phase-one MVP inclusion
 
 Included:
@@ -403,7 +1142,8 @@ Included:
 - Gamification, XP, and Pacing Points.
 - 500+ workout catalog.
 - Other-sport load modelling.
-- Weight-loss, muscle-gain, and general-fitness plan generation.
+- Weight-loss, muscle-gain, and general-fitness plan generation before the new
+  Phase 12 rule/catalog gates are satisfied.
 - Fasted-training recommendations.
 - Advanced swimrun redistribution.
 - Rich GPS maps and telemetry analytics.
@@ -427,25 +1167,54 @@ Every phase must:
 ## Current status
 
 - Phase 0 architecture/state decisions: `locked`
-- Phase 0 physiological specification: `ruleset-1 approved except BR-009`
+- Phase 0 physiological specification: `ruleset-3 implemented for local MVP;
+  named qualified production review pending`
 - Phase 1 backend foundation: `implemented; locally verified`
 - Phase 2 authentication: `verified`
 - Phase 2 persistence and hosted RLS: `hosted schema/RLS verified; FastAPI
   persistence and real-token integration pending`
-- Phase 3 deterministic core: `ruleset-1 calculations verified; BR-009
-  clinical validation blocked`
-- Phase 3.5 mobile development-build transition: `pending; SDK 54 retained for
-  physical-iPhone Expo Go until the SDK 57 development build is available`
-- Phase 4 through 11: `not started`
+- Phase 3 deterministic core: `ruleset-3 pure calculations implemented and
+  verified`
+- Phase 3.5 mobile development-build transition: `SDK 57 Android development
+  build installed, launched, and connected to local Metro`
+- Phase 4 onboarding, goals, and zones: `implemented and review-hardened
+  locally and migrated in hosted Supabase; pgTAP, real-token isolation, and
+  mobile runtime verification pending`
+- Phase 5 workout catalog: `implemented locally and migrated in hosted
+  Supabase; pgTAP verification pending`
+- Phase 6 weekly planning and approval: `implemented, migrated, and verified
+  locally plus hosted pgTAP/real-token isolation; taper-catalog and Android
+  runtime verification pending`
+- Phase 7 activity and RPE feedback: `implemented and verified locally;
+  hosted migration/pgTAP, real-token isolation, and Android runtime pending`
+- Phase 8 structured weekly check-in: `core implemented and verified locally;
+  taper review plus SQL/hosted/device gates remain`
+- Phase 8.5 zone intake, field tests, and Week-1 calibration: `backend core and
+  approved-fixture parity implemented locally; planner/mobile and database
+  runtime gates remain`
+- Phase 9, Phase 11, and Phase 12: `not started`
+- Phase 10 constrained LLM coach: `backend-only credential plumbing added;
+  provider integration and model-assisted behavior not started`
 
 ## Unresolved roadmap decisions
 
-- BR-009 clinical limits and policy remain a hard gate before zone-validation
-  activation.
-- The SDK 57 transition depends on an installable iOS development build or a
-  compatible App Store Expo Go release. Until then, SDK 54 is the intentional
-  physical-iPhone development version.
+- BR-009 persistence, ownership, active-version constraints, pending
+  replacement behavior, and atomic decisions are implemented and migrated;
+  hosted real-token behavior verification remains open.
+- Physical-iPhone SDK 57 validation depends on Apple signing and device
+  registration, but no longer blocks Android-led Phase 4 mobile development.
 - The phase-one activity input is a canonical authenticated summary; the first
   wearable provider for Phase 9 remains unresolved.
-- Non-race goals require separate deterministic rules before entering scope.
-- Injury redistribution requires clinical and product-policy review.
+- Non-race goals are assigned to the new final Phase 12 and require separate
+  deterministic rules and catalog coverage before becoming selectable as
+  supported plans.
+- The functional injury policy, zero-redistribution MVP rule, durable Phase 8
+  persistence, weekly review UI, low-only filtering, and rest-only pending plan
+  are implemented; named clinical production approval remains open.
+- Current-week RPE correction/audit, achieved-goal maintenance, and the exact
+  four-complete-week restart baseline are implemented. Phase 8.5 defines RPE
+  in this flow as canonical 1-10 RPE and implements reviewed field-test
+  threshold formulas plus safe submaximal calibration. A complete deterministic
+  conversion from those thresholds/observations to Zone 1-5 remains undefined
+  and fail-closed. Zone-independent normal-plan selection, mobile screens,
+  hosted verification, and named clinical production approval remain open.

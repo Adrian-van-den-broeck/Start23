@@ -1,7 +1,7 @@
 """BR-003 deterministic time-based intensity classification."""
 
 from dataclasses import dataclass
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 
 from app.modules.physiology.models import (
     DurationMinutes,
@@ -12,7 +12,7 @@ from app.modules.physiology.models import (
     TrainingZone,
 )
 from app.modules.physiology.specification import (
-    PHASE_3_RULESET_V1,
+    PHASE_3_RULESET_V3,
     PhysiologySpecification,
 )
 
@@ -45,10 +45,6 @@ class WorkoutIntensity:
             raise ValueError("A workout requires positive total duration.")
 
 
-class IntensityDominanceTieError(ValueError):
-    """Raised because exact mixed-workout ties have no approved bucket."""
-
-
 @dataclass(frozen=True, slots=True)
 class TimeDistribution:
     """Exact weekly low/high duration distribution."""
@@ -59,6 +55,16 @@ class TimeDistribution:
     high_duration: DurationMinutes
     low_fraction: Fraction | None
     high_fraction: Fraction | None
+
+
+@dataclass(frozen=True, slots=True)
+class DisplayTimeDistribution:
+    """Stable athlete-facing whole percentages plus exact detail minutes."""
+
+    low_percent: int
+    high_percent: int
+    low_minutes: DurationMinutes
+    high_minutes: DurationMinutes
 
 
 @dataclass(frozen=True, slots=True)
@@ -78,7 +84,7 @@ STANDARD_RACE_INTENSITY_TARGET = IntensityTarget(
 def classify_segment(
     segment: IntensitySegment,
     *,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> IntensityBucket:
     """Classify canonical zones and swim technique into low/high buckets."""
     specification.require_approved(frozenset({RuleId.TIME_INTENSITY}))
@@ -92,9 +98,9 @@ def classify_segment(
 def classify_workout(
     workout: WorkoutIntensity,
     *,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> IntensityBucket:
-    """Classify by dominant segment duration and fail closed on exact ties."""
+    """Classify by dominant duration; exact ties conservatively belong to high."""
     specification.require_approved(frozenset({RuleId.TIME_INTENSITY}))
     low = sum(
         (
@@ -114,17 +120,13 @@ def classify_workout(
         ),
         Decimal(0),
     )
-    if high == low:
-        raise IntensityDominanceTieError(
-            "Exact mixed-workout intensity ties require an approved policy."
-        )
-    return IntensityBucket.HIGH if high > low else IntensityBucket.LOW
+    return IntensityBucket.HIGH if high >= low else IntensityBucket.LOW
 
 
 def calculate_time_distribution(
     workouts: tuple[WorkoutIntensity, ...],
     *,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> TimeDistribution:
     """Assign whole workout duration to its dominant category and aggregate."""
     specification.require_approved(frozenset({RuleId.TIME_INTENSITY}))
@@ -164,11 +166,34 @@ def calculate_time_distribution(
     )
 
 
+def display_time_distribution(
+    distribution: TimeDistribution,
+) -> DisplayTimeDistribution:
+    """Round low half-up and derive high as its complement so totals equal 100."""
+    if (
+        not distribution.evaluated
+        or distribution.low_fraction is None
+        or distribution.high_fraction is None
+    ):
+        raise ValueError("An evaluated intensity distribution is required.")
+    low_percent = int(
+        (distribution.low_fraction.value * Decimal(100)).quantize(
+            Decimal(1), rounding=ROUND_HALF_UP
+        )
+    )
+    return DisplayTimeDistribution(
+        low_percent=low_percent,
+        high_percent=100 - low_percent,
+        low_minutes=distribution.low_duration,
+        high_minutes=distribution.high_duration,
+    )
+
+
 def intensive_duration_warning(
     *,
     planned: DurationMinutes,
     realized: DurationMinutes,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> bool:
     """Warn only when realized intensive duration is strictly over planned +30%."""
     specification.require_approved(frozenset({RuleId.TIME_INTENSITY}))

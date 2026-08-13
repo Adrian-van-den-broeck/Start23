@@ -2,9 +2,11 @@
 
 ## Status
 
-This document defines the client and integration API surface. Foundation and
-identity operations are implemented; later domain endpoint shapes remain
-proposals subject to the open decisions listed below.
+This document defines the client and integration API surface. Foundation,
+identity, Phase 4 onboarding, the Phase 5 workout catalog, Phase 6 weekly
+planning/calendar, and the Phase 7 canonical activity/RPE loop are implemented
+locally. Later domain endpoint shapes remain proposals subject to the open
+decisions listed below.
 
 Related documents:
 
@@ -55,6 +57,26 @@ Implemented foundation operations:
 | `GET /api/v1/health` | Public | Versioned liveness |
 | `GET /api/v1/ready` | Public | Versioned readiness |
 | `GET /api/v1/me` | Bearer token | Verified token identity |
+
+Implemented Phase 4 operations:
+
+| Operation | Purpose |
+|---|---|
+| `GET/PATCH /api/v1/me/profile` | Read or update profile and biometrics |
+| `GET /api/v1/onboarding` | Read resumable onboarding state |
+| `PUT /api/v1/me/training-history` | Atomically replace swim/bike/run history |
+| `POST /api/v1/me/goals` | Create the primary race-oriented A goal |
+| `PUT /api/v1/me/goals/{goal_id}` | Update the owned primary goal |
+| `PUT /api/v1/me/zones/{discipline}` | Save first active or later pending zones |
+| `POST /api/v1/onboarding/complete` | Complete onboarding and queue initial planning |
+| `POST /api/v1/change-proposals/{proposal_id}/approve` | Atomically apply an owned, stale-safe zone replacement |
+| `POST /api/v1/change-proposals/{proposal_id}/reject` | Reject an owned zone replacement |
+
+Implemented Phase 5 operation:
+
+| Operation | Purpose |
+|---|---|
+| `GET /api/v1/workout-catalog` | Return the latest reviewed template versions with segments, tags, zone requirements, and no internal load |
 
 All `/v1/...` domain paths retained in the proposal tables below are historical
 shorthand and resolve under the authoritative `/api/v1/...` base path when
@@ -128,10 +150,15 @@ May include schedule, total duration, low/high time percentages, warnings,
 recovery/taper labels, proposal state, and workout cards. It must not contain
 planned or realized TSS totals.
 
+Primary intensity display uses complementary whole percentages (low rounded
+half-up, high derived as `100 - low`). The same response carries exact low/high
+minutes for detail display; exact decimal ratios remain internal.
+
 ### Activity representation
 
-May include duration, distance, zones, RPE, provider, match status, and
-qualitative result. It must not contain realized or matched planned TSS.
+May include duration, distance, safe metric summaries, RPE, match status,
+qualitative result, and a pending-correction reference. It must not contain
+realized or matched planned TSS.
 
 ## UC-01: onboarding and baseline
 
@@ -143,13 +170,17 @@ qualitative result. It must not contain realized or matched planned TSS.
 | `PUT /v1/me/training-history` | Replace confirmed weekly history entries | Canonical minutes |
 | `POST /v1/me/goals` | Create a SMART goal | Validate priority, date, metric, feasibility |
 | `PUT /v1/me/goals/{goal_id}` | Update an owned goal | Macrocycle impact may require a proposal |
-| `PUT /v1/me/zones/{discipline}` | Submit explicit manual/fallback setup | Direct user confirmation semantics are open |
+| `PUT /v1/me/zones/{discipline}` | Submit explicit manual/fallback setup | Explicitly confirmed initial setup may create the first active version; calculated replacements may not |
 | `POST /v1/onboarding/complete` | Validate completion and create initial planning proposal | Does not silently activate a plan |
 | `POST /v1/integrations/{provider}/oauth/start` | Start provider connection | Returns provider authorization information |
 | Provider callback | Complete provider OAuth | Server-side secret handling |
 
 `POST /v1/onboarding/complete` should return public onboarding state and, when
 enough data exists, a reference to an initial pending plan proposal.
+The underlying `initial_plan_requests` record retains a server-side canonical
+input snapshot and content fingerprint. Phase 6 uses that fingerprint as the
+input revision; neither the snapshot nor its physiological details need to be
+added to the completion response.
 
 ## UC-02: weekly planning
 
@@ -157,27 +188,36 @@ enough data exists, a reference to an initial pending plan proposal.
 |---|---|---|
 | `POST /v1/weekly-plans/proposals` | Generate a pending weekly plan | Idempotent per athlete/week/input revision |
 | `GET /v1/weekly-plans/{plan_id}` | Read active or explicitly selected revision | Public fields only |
-| `GET /v1/weekly-plans/{plan_id}/deck` | Get eligible workout cards | Filtering happens server-side |
-| `PUT /v1/weekly-plans/{plan_id}/selections` | Save athlete selections to a draft revision | Must not modify an active revision in place |
+| `GET /v1/weekly-plans/{plan_id}/deck` | Get eligible workout cards | Expected revision and exact selected IDs drive authoritative recalculation |
 | `POST /v1/weekly-plans/{plan_id}/schedule-proposals` | Auto-schedule selected workouts | Returns pending proposal |
 | `POST /v1/weekly-plans/{plan_id}/validate` | Validate a draft or explicit user layout | Returns qualitative warnings |
-| `PATCH /v1/planned-workouts/{workout_id}` | Explicit athlete schedule edit | Warning-versus-proposal semantics unresolved |
-| `GET /v1/calendar?from=...&to=...` | Read public calendar events | Athlete timezone |
+| `PATCH /v1/planned-workouts/{workout_id}` | Explicit athlete schedule edit | Applies a new active revision; returns soft warnings |
+| `GET /v1/calendar?from=...&to=...` | Read public workouts and intentional rest days | Athlete timezone; no private load |
 
 Workout-deck responses may return low/high time-bucket information but no hidden
 TSS budget.
+
+Phase 6 consolidates explicit template selection into the
+`schedule-proposals` request instead of persisting a separate mutable draft
+through `PUT /selections`.
+
+Layout validation submits the expected plan revision plus only owned workout
+IDs and proposed timestamps. Discipline and intensity are read from the
+immutable server snapshot; client-supplied classifications are rejected.
 
 ## UC-03: activity execution and feedback
 
 | Operation | Purpose | Critical notes |
 |---|---|---|
-| `POST /v1/activity-imports` | Submit a direct FIT/TCX or supported import | Prefer signed upload for large files |
-| `GET /v1/activity-imports/{import_id}` | Read import status | Sanitized parsing errors |
+| `POST /v1/activities` | Submit a canonical completed-activity summary | UUID `Idempotency-Key`; optional owned planned-workout or planned-outside-activity ID |
 | `GET /v1/activities` | List owned activities | Public fields only |
 | `GET /v1/activities/{activity_id}` | Read activity summary | No realized TSS |
 | `GET /v1/activities/pending-rpe` | List completed activities awaiting RPE | Does not block unrelated reads by default |
-| `PUT /v1/activities/{activity_id}/rpe` | Record RPE from 1 through 10 | Idempotent replacement policy must be defined |
-| Provider webhook endpoints | Receive provider events | Signature verification and idempotency |
+| `PUT /v1/activities/{activity_id}/rpe` | Record or correct RPE from 1 through 10 | Correction is audited only during the activity's athlete-local week; exact retry is idempotent |
+
+FIT/TCX upload, import-status resources, and provider webhook endpoints remain
+Phase 9 concerns. They must eventually map into this same canonical activity
+service rather than introduce a second calculation path.
 
 After an activity is processed, the service may create a pending correction
 proposal. The activity response can link to the proposal and include a
@@ -188,14 +228,35 @@ qualitative explanation, but cannot disclose internal TSS values.
 | Operation | Purpose | Critical notes |
 |---|---|---|
 | `POST /v1/checkins` | Start or resume the athlete's weekly check-in | One open check-in per week |
+| `GET /v1/checkins/{checkin_id}` | Resume owned check-in state | Owner-scoped; source/expiry included |
 | `PUT /v1/checkins/{checkin_id}/context` | Submit structured availability, fatigue, and injuries | Preferred phase-one path |
-| `POST /v1/checkins/{checkin_id}/messages` | Add a coach conversation turn | LLM extraction/explanation only |
-| `GET /v1/checkins/{checkin_id}/context-candidate` | Read extracted structured candidate | Candidate is not active |
 | `POST /v1/checkins/{checkin_id}/context-confirmation` | Confirm or correct candidate context | Required before critical effects |
 | `POST /v1/checkins/{checkin_id}/plan-proposals` | Generate next plan from confirmed context | Deterministic engine |
+| `GET /v1/me/injury-restrictions` | Read active functional restrictions and review dates | Never auto-clears |
+| `GET /v1/planned-external-activities` | List planned outside sport and completion state | Actual duration/RPE are canonical activity fields |
+| `POST /v1/me/goals/{goal_id}/achievement` | Explicitly enter achieved-goal maintenance | No automatic goal inference |
 
-LLM output cannot itself represent approval. Approval must be an authenticated,
-unambiguous operation linked to a specific proposal and revision.
+Phase 8 uses only the structured form and has no external AI dependency. A
+later LLM output still cannot represent confirmation or approval. Both actions
+must be authenticated and unambiguously linked to exact context/proposal
+revisions.
+
+## Phase 8.5: zone setup and calibration
+
+| Operation | Purpose | Critical notes |
+|---|---|---|
+| `GET /v1/onboarding/zone-options` | List known values, field test, calibration week, and RPE-only | Authenticated; no physiological mutation |
+| `PUT /v1/onboarding/disciplines/{discipline}/setup` | Save one resumable setup route | Owner derived from token; optional boundaries may be empty |
+| `GET /v1/calibration/protocols/{discipline}` | List reviewed active test/calibration segments | Versioned RPE, duration, and distance contract |
+| `POST /v1/calibration/observations` | Save a segment observation | Immutable; exact retry idempotent; conflicting retry returns `409` |
+| `POST /v1/calibration/evaluate` | Evaluate owned observations | Pure deterministic engine; generated persistence is service-only |
+| `GET /v1/calibration/status` | Resume setup and evaluation state | Owner-scoped; no TSS/private load |
+
+A valid field test may return pending threshold estimates, but it returns
+`zone_status=pending_protocol` and no calculated boundaries until a complete
+reviewed Zone 1-5 model exists. Submaximal Week-1 calibration cannot return a
+threshold. See
+[backend-zone-calculation.md](../implementation/backend-zone-calculation.md).
 
 ## UC-05: zone evaluation
 
@@ -208,7 +269,7 @@ Client operations:
 |---|---|---|
 | `GET /v1/change-proposals?kind=zone_update` | List pending zone revisions | Public explanation only |
 | `GET /v1/change-proposals?kind=validation_test` | List pending test-scheduling proposals | No automatic calendar mutation |
-| Proposal approve/reject operations | Decide the proposal | Separate zone confirmation policy unresolved |
+| Proposal approve/reject operations | Decide the proposal | Test scheduling and a calculated zone revision require separate approvals |
 
 ## Proposal operations
 
@@ -234,7 +295,7 @@ state. A mismatched base revision returns `409 proposal_stale`.
 
 Idempotency is required for:
 
-- activity import initiation;
+- canonical activity creation;
 - provider webhook processing;
 - plan generation for a week/input revision;
 - proposal approval and rejection;
@@ -249,19 +310,24 @@ Idempotency-Key: <client-generated-uuid>
 The backend scopes the key to athlete, operation, and a bounded retention
 period. Reusing a key with a different payload returns a conflict.
 
+Phase 6 plan generation additionally has content-fingerprint idempotency.
+Plan approval and rejection are naturally idempotent by proposal ID and exact
+base precondition: retrying the same completed decision returns the original
+public result without another state transition.
+
 ## Versioning and concurrency
 
 Plan and zone responses include public revision numbers. Critical writes submit
 the expected revision. The backend never uses last-write-wins for an approval.
 
-Direct user schedule edits also need a revision precondition:
+Direct user schedule edits use a request-body revision precondition:
 
-```http
-If-Match: "plan-revision-4"
+```json
+{
+  "expected_revision": 4,
+  "scheduled_at": "2026-08-05T07:00:00+02:00"
+}
 ```
-
-The exact HTTP precondition mechanism may instead be a request-body revision,
-but only one consistent approach should be selected.
 
 ## Contract validation requirements
 
@@ -276,11 +342,10 @@ but only one consistent approach should be selected.
 
 ## Open API decisions
 
-- Whether RPE is editable and whether the prompt can be dismissed.
+- Whether a pending RPE prompt can reach an explicit terminal/dismissed state;
+  until then the Phase 8 app-open reminder remains visible.
 - Exact resource-disclosure behavior: `403` versus `404`.
 - First provider and its callback/webhook paths.
-- Whether ratios and warnings are returned as plan fields or dedicated
-  validation resources.
 
 Resolved for MVP:
 
@@ -288,4 +353,10 @@ Resolved for MVP:
   decision lock;
 - direct athlete calendar edits apply with qualitative soft warnings;
 - Phase 7 accepts a canonical activity summary, so FIT/TCX upload is deferred;
+- RPE is correctable with an audit trail only during its athlete-local week;
+  after that week it is immutable and exact retry remains idempotent;
+- Phase 7 matching is an explicit owned planned-workout selection; automatic
+  proximity, brick, and multisport matching are deferred;
+- ratios, exact intensity minutes, and qualitative warnings are fields on the
+  weekly-plan representation;
 - test scheduling and a calculated zone update require separate approvals.

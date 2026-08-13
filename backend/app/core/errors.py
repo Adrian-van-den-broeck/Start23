@@ -102,16 +102,27 @@ async def handle_http_exception(
     if not isinstance(exception, HTTPException):
         raise exception
 
-    message = (
-        exception.detail
-        if isinstance(exception.detail, str)
-        else "The request could not be completed."
-    )
+    code = _http_error_code(exception.status_code)
+    message = "The request could not be completed."
+    details: dict[str, Any] | None = None
+    if isinstance(exception.detail, str):
+        message = exception.detail
+    elif isinstance(exception.detail, Mapping):
+        supplied_code = exception.detail.get("code")
+        supplied_message = exception.detail.get("message")
+        supplied_details = exception.detail.get("details")
+        if isinstance(supplied_code, str) and supplied_code:
+            code = supplied_code
+        if isinstance(supplied_message, str) and supplied_message:
+            message = supplied_message
+        if isinstance(supplied_details, dict):
+            details = supplied_details
     return _error_response(
         request,
         status_code=exception.status_code,
-        code=_http_error_code(exception.status_code),
+        code=code,
         message=message,
+        details=details,
         headers=exception.headers,
     )
 

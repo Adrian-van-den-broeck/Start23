@@ -1,0 +1,62 @@
+"""Supabase transport tests for trusted and athlete-scoped onboarding calls."""
+
+import asyncio
+from uuid import uuid4
+
+import httpx
+
+from app.core.config import Settings
+from app.modules.onboarding.repository import SupabaseOnboardingRepository
+
+
+def test_fallback_rpc_uses_only_the_server_secret_key() -> None:
+    athlete_id = uuid4()
+    captured: httpx.Request | None = None
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal captured
+        captured = request
+        return httpx.Response(
+            200,
+            json={
+                "profile_id": str(uuid4()),
+                "version": 1,
+                "status": "active",
+                "proposal_id": None,
+            },
+        )
+
+    async def exercise() -> None:
+        async with httpx.AsyncClient(
+            transport=httpx.MockTransport(handler),
+        ) as client:
+            repository = SupabaseOnboardingRepository(
+                Settings(
+                    environment="test",
+                    supabase_publishable_key="sb_publishable_test",
+                    supabase_secret_key="sb_secret_test",
+                ),
+                client=client,
+            )
+            await repository.save_fallback_zone_profile(
+                athlete_id,
+                {
+                    "discipline": "bike",
+                    "boundaries": [
+                        {
+                            "zone_number": zone_number,
+                            "lower_value": str(90 + zone_number * 10),
+                            "upper_value": str(100 + zone_number * 10),
+                        }
+                        for zone_number in range(1, 6)
+                    ],
+                },
+            )
+
+    asyncio.run(exercise())
+
+    assert captured is not None
+    assert captured.url.path.endswith("/rest/v1/rpc/save_fallback_zone_profile")
+    assert captured.headers["apikey"] == "sb_secret_test"
+    assert "authorization" not in captured.headers
+    assert b"p_athlete_id" in captured.content

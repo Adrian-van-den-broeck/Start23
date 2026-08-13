@@ -1,0 +1,113 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start23: Start Android emulator",
+      "type": "shell",
+      "command": "Start-Process -FilePath \"${env:ANDROID_HOME}\\emulator\\emulator.exe\" -ArgumentList '-avd','${input:androidAvd}','-no-snapshot-load'",
+      "options": {
+        "env": {
+          "ANDROID_USER_HOME": "${env:USERPROFILE}\\.android"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start23: Stop Android emulator",
+      "type": "shell",
+      "command": "& \"${env:ANDROID_HOME}\\platform-tools\\adb.exe\" emu kill",
+      "options": {
+        "env": {
+          "ANDROID_USER_HOME": "${env:USERPROFILE}\\.android"
+        }
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start23: Start backend",
+      "type": "process",
+      "command": "${workspaceFolder}\\backend\\.venv\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "uvicorn",
+        "app.main:app",
+        "--reload",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}\\backend"
+      },
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": {
+        "owner": "start23-backend",
+        "pattern": {
+          "regexp": "^(?!)$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*Uvicorn running on.*",
+          "endsPattern": ".*Application startup complete.*"
+        }
+      }
+    },
+    {
+      "label": "Start23: Configure Android bridges",
+      "type": "shell",
+      "command": "& \"${env:ANDROID_HOME}\\platform-tools\\adb.exe\" reverse tcp:8081 tcp:8081; & \"${env:ANDROID_HOME}\\platform-tools\\adb.exe\" reverse tcp:8000 tcp:8000",
+      "options": {
+        "env": {
+          "ANDROID_USER_HOME": "${env:USERPROFILE}\\.android"
+        }
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start23: Run Android app",
+      "type": "shell",
+      "command": "npm run android -- --localhost",
+      "options": {
+        "cwd": "${workspaceFolder}\\mobile",
+        "env": {
+          "NODE_OPTIONS": "--dns-result-order=ipv4first"
+        }
+      },
+      "dependsOn": [
+        "Start23: Start backend",
+        "Start23: Configure Android bridges"
+      ],
+      "dependsOrder": "sequence",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "androidAvd",
+      "type": "promptString",
+      "description": "Android Virtual Device name",
+      "default": "Pixel_4_API_35"
+    }
+  ]
+}

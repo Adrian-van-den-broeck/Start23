@@ -22,6 +22,10 @@ from app.modules.physiology.precedence import (
 from app.modules.physiology.specification import (
     PHASE_3_DRAFT_SPECIFICATION,
     PHASE_3_RULESET_V1,
+    PHASE_3_RULESET_V2,
+    PHASE_3_RULESET_V3,
+    PhysiologyProductionReview,
+    PhysiologyProductionReviewRequired,
     PhysiologySpecification,
     PhysiologySpecificationNotApproved,
     SpecificationStatus,
@@ -30,6 +34,8 @@ from app.modules.physiology.specification import (
 __all__ = [
     "PHASE_3_DRAFT_SPECIFICATION",
     "PHASE_3_RULESET_V1",
+    "PHASE_3_RULESET_V2",
+    "PHASE_3_RULESET_V3",
     "ConstraintStage",
     "DecisionRun",
     "Discipline",
@@ -40,6 +46,8 @@ __all__ = [
     "InternalLoad",
     "PhysiologySpecification",
     "PhysiologySpecificationNotApproved",
+    "PhysiologyProductionReview",
+    "PhysiologyProductionReviewRequired",
     "RuleEvaluation",
     "RuleId",
     "RulesetVersion",

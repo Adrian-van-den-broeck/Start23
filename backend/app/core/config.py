@@ -3,7 +3,7 @@
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import AnyHttpUrl, Field, field_validator
+from pydantic import AnyHttpUrl, Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 Environment = Literal["local", "test", "staging", "production"]
@@ -25,10 +25,14 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     api_v1_prefix: str = "/api/v1"
     supabase_url: AnyHttpUrl = AnyHttpUrl("https://isfumhgqphieoayqahjv.supabase.co")
+    supabase_publishable_key: str = ""
+    supabase_secret_key: SecretStr = SecretStr("")
     supabase_jwt_audience: Literal["authenticated"] = "authenticated"
     supabase_jwt_algorithm: Literal["ES256"] = "ES256"
     supabase_jwks_cache_seconds: int = Field(default=300, ge=60, le=600)
     supabase_jwks_timeout_seconds: float = Field(default=5.0, gt=0, le=30)
+    supabase_data_api_timeout_seconds: float = Field(default=10.0, gt=0, le=30)
+    openai_api_key: SecretStr = SecretStr("")
 
     @property
     def supabase_jwt_issuer(self) -> str:
@@ -59,6 +63,16 @@ class Settings(BaseSettings):
         if value != "/" and value.endswith("/"):
             raise ValueError("api_v1_prefix must not end with '/'")
         return value
+
+    @model_validator(mode="after")
+    def require_deployed_supabase_keys(self) -> "Settings":
+        """Fail deployment startup when either required Data API key is absent."""
+        if self.environment in {"staging", "production"}:
+            if not self.supabase_publishable_key.strip():
+                raise ValueError("supabase_publishable_key is required when deployed")
+            if not self.supabase_secret_key.get_secret_value().strip():
+                raise ValueError("supabase_secret_key is required when deployed")
+        return self
 
 
 @lru_cache

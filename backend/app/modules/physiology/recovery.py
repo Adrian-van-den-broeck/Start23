@@ -6,7 +6,7 @@ from enum import Enum
 
 from app.modules.physiology.models import InternalLoad, RuleId, RulesetVersion
 from app.modules.physiology.specification import (
-    PHASE_3_RULESET_V1,
+    PHASE_3_RULESET_V3,
     PhysiologySpecification,
 )
 
@@ -35,7 +35,7 @@ class RecoveryTarget:
 def forward_mesocycle_phase(
     week_number: int,
     *,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> WeekPhase:
     """Return build for weeks 1-4 and recovery for each fifth week."""
     specification.require_approved(frozenset({RuleId.RECOVERY_CYCLE}))
@@ -50,7 +50,7 @@ def retrospective_mesocycle_phase(
     *,
     week_number: int,
     total_weeks_to_a_race: int,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> WeekPhase:
     """Align recovery weeks backward from the A-race week."""
     specification.require_approved(frozenset({RuleId.RECOVERY_CYCLE}))
@@ -66,7 +66,7 @@ def resolve_week_phase(
     *,
     recovery_due: bool,
     taper_due: bool,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> WeekPhase:
     """Apply the approved rule that taper overrides recovery."""
     specification.require_approved(frozenset({RuleId.RECOVERY_CYCLE}))
@@ -79,7 +79,7 @@ def calculate_recovery_target(
     *,
     week_four_planned: InternalLoad,
     factor: Decimal = _RECOVERY_FACTOR,
-    specification: PhysiologySpecification = PHASE_3_RULESET_V1,
+    specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> RecoveryTarget:
     """Calculate an exact recovery target within the approved 40%-60% range."""
     specification.require_approved(frozenset({RuleId.RECOVERY_CYCLE}))

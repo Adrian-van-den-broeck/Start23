@@ -143,10 +143,46 @@ def test_absolute_instants_prevent_dst_from_changing_elapsed_spacing() -> None:
     assert result[0].actual_interval == timedelta(hours=47)
 
 
+def test_fall_dst_transition_uses_49_elapsed_hours() -> None:
+    amsterdam = ZoneInfo("Europe/Amsterdam")
+    first = datetime(2026, 10, 24, 10, tzinfo=amsterdam)
+    second = datetime(2026, 10, 26, 10, tzinfo=amsterdam)
+
+    result = find_anti_stack_violations(
+        (
+            _workout("first", Discipline.BIKE, first),
+            _workout("second", Discipline.BIKE, second),
+        )
+    )
+
+    assert result == ()
+    assert second.astimezone(timezone.utc) - first.astimezone(
+        timezone.utc
+    ) == timedelta(hours=49)
+
+
 def test_workout_start_must_be_timezone_aware() -> None:
     with pytest.raises(ValueError, match="timezone-aware"):
         _workout(
             "naive",
             Discipline.RUN,
             datetime(2026, 1, 1, 8),
+        )
+
+
+def test_workout_identifier_cannot_be_blank() -> None:
+    with pytest.raises(ValueError, match="identifier cannot be blank"):
+        _workout(
+            " ",
+            Discipline.RUN,
+            datetime(2026, 1, 1, 8, tzinfo=timezone.utc),
+        )
+
+
+def test_workout_requires_at_least_one_discipline() -> None:
+    with pytest.raises(ValueError, match="at least one discipline"):
+        _workout(
+            "empty",
+            frozenset(),
+            datetime(2026, 1, 1, 8, tzinfo=timezone.utc),
         )

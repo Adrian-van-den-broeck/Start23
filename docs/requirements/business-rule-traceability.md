@@ -3,9 +3,10 @@
 ## Status and purpose
 
 This document maps BR-001 through BR-010 to the modular-monolith
-implementation. Foundation, authentication, and the Phase 3 pure calculation
-layer exist. Business persistence and athlete-facing rule APIs do not yet
-exist.
+implementation. Foundation, authentication, the Phase 3 calculation layer,
+Phase 4 onboarding/zones, Phase 5 catalog persistence, Phase 6 weekly planning,
+and the Phase 7 canonical activity/RPE loop exist locally. Phase 7 hosted
+migration, pgTAP, real-token, and Android runtime verification remain pending.
 
 Status vocabulary:
 
@@ -17,9 +18,11 @@ Status vocabulary:
 BR-002, BR-003, BR-004, BR-006, BR-007, BR-008, BR-009, and BR-010 are `In
 progress`: their Phase 3 calculation or validation structures exist, but
 application, persistence, and public-contract acceptance criteria are not met.
-BR-001 and BR-005 remain `Not implemented` until their application, database,
-and contract-test requirements exist. Domain paths written as `/v1/...` are
-historical shorthand for the authoritative `/api/v1/...` base path.
+BR-001 and BR-005 are now `In progress`: plan and zone proposals plus the
+planning TSS boundary exist; Phase 7 now covers pending activity corrections
+and activity TSS privacy, while later check-in/coach surfaces are not complete.
+Domain paths written as `/v1/...` are historical shorthand for
+the authoritative `/api/v1/...` base path.
 
 Related documents:
 
@@ -36,7 +39,7 @@ Status: `Verified` for the isolated calculation scope
 
 The framework-independent `physiology` module provides stable BR identifiers,
 server-internal load values, versioned specification records, fail-closed
-approval checks, the locked Phase 0 precedence order, and ruleset-1
+approval checks, the locked Phase 0 precedence order, and ruleset-3
 calculations. Architecture tests prevent FastAPI, database, Supabase, and LLM
 imports. Rule tests cover examples, equality boundaries, invalid input,
 missing data, timezones, and DST.
@@ -49,15 +52,15 @@ proposals, or athlete-facing responses. The per-rule status therefore remains
 
 | Rule | Primary module | Current status |
 |---|---|---|
-| BR-001 Full autonomy | `proposals` | Not implemented |
+| BR-001 Full autonomy | `proposals` | In progress |
 | BR-002 Soft boundaries | `physiology`, `planning` | In progress |
 | BR-003 80/20 principle | `physiology`, `goals` | In progress |
 | BR-004 10% progression | `physiology`, `planning` | In progress |
-| BR-005 Hidden TSS | `api`, `planning`, `activities` | Not implemented |
+| BR-005 Hidden TSS | `api`, `planning`, `activities` | In progress |
 | BR-006 Anti-stack | `physiology`, `planning` | In progress |
 | BR-007 4+1 mesocycle | `physiology`, `goals`, `planning` | In progress |
 | BR-008 Tapering | `physiology`, `goals`, `planning` | In progress |
-| BR-009 Discipline zones | `zones`, `physiology` | In progress, fail-closed |
+| BR-009 Discipline zones | `zones`, `physiology` | In progress |
 | BR-010 Injury redistribution | `checkins`, `physiology`, `planning` | In progress |
 
 ## BR-001: Full autonomy
@@ -113,10 +116,14 @@ proposals, or athlete-facing responses. The per-rule status therefore remains
 
 ### Current implementation status
 
-`Not implemented`
+`Implemented locally for zone and weekly-plan proposals; hosted Phase 6
+verification pending`
 
-Open decision: whether an explicit drag-and-drop calendar edit applies directly
-with warnings or is represented as a user-authored revision.
+Phase 6 adds typed pending plan revisions, owner-scoped proposal reads, atomic
+stale-safe approval/rejection, and immutable supersession. Direct athlete
+calendar moves follow the locked exception: FastAPI verifies the explicit
+action and revision, then applies a new active athlete-authored revision with
+qualitative warnings. Chat text has no approval path.
 
 ## BR-002: Soft boundaries
 
@@ -174,9 +181,14 @@ with warnings or is represented as a user-authored revision.
 Implemented and unit-tested in `physiology/debt.py`: strict-above-110%
 activation, exact-threshold behavior, next-week debt, the 600/680 fixture,
 planned-load projection, 5% intensity floor, injured-discipline zero exception,
-and non-exceptional zero/negative-target review. Phase 6 still must persist
-internal debt, place the correction, enforce rest-day scheduling, create a
-pending revision, and expose only qualitative warnings.
+and non-exceptional zero/negative-target review. An unsafe non-positive result
+now produces only a typed pending `manual_review_recovery` plan; a repeated
+unsafe result requires qualified escalation. Phase 6 persists private
+weekly targets and loads, enforces the three-consecutive-rest-day scheduling
+limit, and exposes only qualitative target/capacity warnings. Phase 7 supplies
+private realized weekly load, evaluates debt before progression, and creates a
+typed pending corrective revision for qualifying activity outcomes; it never
+changes the active plan automatically. Hosted SQL verification remains open.
 
 ## BR-003: 80/20 principle
 
@@ -207,19 +219,24 @@ pending revision, and expose only qualitative warnings.
 
 ### Required validations
 
-- Classify Zone 1/2 and swim technique as low intensity.
-- Classify Zone 3/4/5 as high intensity.
+- Require the imported `Emmer (80/20)` value for every catalog training and
+  map `80%` to the complete quieter-bucket duration and `20%` to the complete
+  intensive-bucket duration.
+- Preserve Zone 1-5 and swim-technique interval detail for execution and
+  private TSS, without using interval dominance to overwrite `Emmer`.
 - Calculate the ratio from duration in minutes.
 - Select only an approved deterministic goal-specific target ratio.
 - Validate that every workout template has a valid bucket.
-- Define handling for mixed-zone workouts and partial segments.
+- Reject missing or invalid declared buckets, not a valid bucket merely because
+  its interval-duration dominance differs.
 - Keep ratio corrections distinct from TSS volume calculations.
 
 ### Required unit tests
 
-- Low/high classification for all supported zones.
-- Swim-technique classification.
-- Mixed-segment duration allocation.
+- Import and validate both `80%` and `20%` catalog rows across swim, bike, and
+  run.
+- Mixed-zone workouts retain their declared `Emmer` while their interval zones
+  remain unchanged.
 - Standard 80/20 target.
 - Deferred non-race 90/10 and swimrun 75/25 targets are not activated.
 - Empty-week and zero-duration behavior.
@@ -232,12 +249,15 @@ pending revision, and expose only qualitative warnings.
 
 `In progress`
 
-Implemented and unit-tested in `physiology/intensity.py`: all zone buckets,
-swim technique, standard 80/20 target, dominant-workout allocation,
-duration-based weekly ratios, empty-week `not_evaluated`, and the
-strictly-above-30% intensive-duration warning. Exact dominant-duration ties
-fail closed pending policy. Athlete-facing percentage precision and deck
-integration remain pending.
+Current code is implemented and unit-tested in `physiology/intensity.py` with
+segment-derived dominant-workout allocation. Decision 1 supersedes that
+behavior for the full `Trainingen START23.v01` catalog: its explicit `Emmer
+(80/20)` must be imported and remain authoritative. The current implementation
+and tests therefore require later correction. Phase 7 accepts partial classified
+activity minutes, requires at least 60% reliable coverage, excludes unknown
+time from the ratio, and applies realized intensity debt only to the first
+following non-recovery week. Taper/recovery take precedence. Public plans show
+complementary half-up whole percentages plus exact low/high minutes.
 
 ## BR-004: 10% progressive load and predefined planned TSS
 
@@ -291,11 +311,16 @@ integration remain pending.
 `In progress`
 
 Implemented and unit-tested in `physiology/progression.py`: exact 80%
-regular-growth boundary, planned-load anchor, available-sample 42-day
-weekly arithmetic mean, explicit-zero-week inclusion, missing-week exclusion,
-no-history failure, and expected-RPE-times-hours snapshots. Template persistence,
-historical snapshots, decision orchestration, and public TSS contract coverage
-remain for later phases.
+regular-growth boundary, planned-load anchor, available-sample 42-day weekly
+arithmetic mean, explicit-zero-week inclusion, missing-week exclusion,
+no-history failure, and expected-RPE-times-hours snapshots. Phase 5 adds
+immutable template persistence, private precomputed load, version-stable domain
+snapshots, and a TSS-free public workout contract. Phase 6 persists immutable
+planned-workout and aggregate revision load snapshots. Phase 7 adds canonical
+realized activity load and weekly projection: regular weeks evaluate BR-002
+first, then use the available-sample 42-day realized baseline and approved 80%
+progression boundary. Missing realized history deliberately retains the prior
+planned-load hold rather than assuming adherence.
 
 ## BR-005: Hidden TSS
 
@@ -346,10 +371,19 @@ remain for later phases.
 
 ### Current implementation status
 
-`Not implemented`
+`In progress`
 
-Open decision: whether a tightly controlled internal staff tool may ever
-display TSS. The current safe default is no user-facing exposure.
+Phase 5 implements the workout-catalog slice: hidden load is separated into a
+private schema without `anon`, `authenticated`, or `service_role` table access;
+internal dataclasses hide load from representations; public workout models map
+only explicit safe fields; and recursive OpenAPI plus response tests reject TSS
+keys. Phase 6 extends this boundary to private planned-workout and revision
+load snapshots and TSS-free plan, deck, proposal, warning, error, and calendar
+contracts. Phase 7 adds `private.activity_loads`, grant/RLS
+tests, service-only processing RPCs, TSS-free activity
+Pydantic/OpenAPI/response contracts, and recursive API tests. Coach, export,
+notification, and observability surfaces remain future gates; hosted database
+verification is still pending.
 
 ## BR-006: Anti-stack rule
 
@@ -404,8 +438,8 @@ display TSS. The current safe default is no user-facing exposure.
 Implemented and unit-tested in `physiology/anti_stack.py`: same-discipline
 start-to-start elapsed intervals, exact 72/48-hour boundaries, brick
 participation, low-intensity exclusion, timezone-aware input, and absolute-time
-DST handling. Phase 6 must reuse it for deck filtering, scheduler constraints,
-and non-blocking manual-move warnings.
+DST handling. Phase 6 reuses it as a generated-schedule constraint and as a
+non-blocking qualitative warning for direct athlete moves.
 
 ## BR-007: 4+1 mesocycle
 
@@ -456,9 +490,11 @@ and non-blocking manual-move warnings.
 
 Implemented and unit-tested in `physiology/recovery.py`: forward 4+1 cycles,
 the supplied eight-week retrospective fixture, taper override, default 60%
-target, and allowed 40%-60% constrained factor. Phase 6 must supply a valid
-week-4 snapshot, apply higher-precedence constraints, schedule at most three
-consecutive rest days, and keep generated revisions pending.
+target, and allowed 40%-60% constrained factor. Phase 6 uses the prior active
+week-4 planned snapshot, keeps recovery schedules pending, and rejects
+generated placement that would create more than three consecutive rest days.
+Retrospective partial-block orchestration still needs runtime fixtures beyond
+the pure Phase 3 calculation.
 
 ## BR-008: Tapering
 
@@ -512,8 +548,10 @@ consecutive rest days, and keep generated revisions pending.
 Implemented and unit-tested in `physiology/taper.py`: available 42-day
 build-only baseline, A-race 60%/35%, B-race full-week 50%, C-race no taper,
 Monday-Sunday athlete-local weeks, goal-priority overlap, and taper-over-
-recovery precedence. Phase 6 must persist race/load history, account for race
-load internally without exposing TSS, and create pending taper revisions.
+recovery precedence. Phase 6 reads private active-plan load history, resolves
+A-race T-2/T-1 context before recovery, and keeps generated taper revisions
+pending. Runtime multi-discipline taper generation currently fails closed
+because reviewed swim and bike taper templates are not yet available.
 
 ## BR-009: Discipline-specific zone management
 
@@ -545,10 +583,22 @@ load internally without exposing TSS, and create pending taper revisions.
 - Cycling FTP uses watts and cycling threshold heart rate uses BPM.
 - Running threshold pace and LTHR use canonical units.
 - Discipline-specific required fields cannot be mixed.
-- Manual, test, and fallback setup methods are explicit.
-- Numeric ranges and zone ordering are physiologically reviewed.
+- Manual, calibration-training, and fallback setup methods are explicit.
+- Numeric ranges are soft and produce review rather than rejection.
+- Missing soft-range configuration produces review.
+- Manual profiles contain five contiguous, lower-inclusive zones.
+- Pace and swim CSS input is converted to canonical whole seconds.
+- Cycling speed input uses exact kilometres per hour.
+- Fallback zones use approved Tanaka and Karvonen calculations.
+- Estimated fallback profiles remain explicitly unreviewed.
 - Only one active version exists per athlete/discipline.
 - Generated updates remain pending.
+- For an unknown threshold, combine a reviewed standard calibration workout,
+  eligible realized measurements, and athlete-entered TSE feedback only through
+  an approved deterministic mapping.
+- Define the TSE scale and whether it is the existing RPE field or a separate
+  input. A feeling score alone cannot generate dimensional CSS, watts, pace, or
+  BPM without the approved workout/measurement conversion.
 
 ### Required unit tests
 
@@ -558,21 +608,41 @@ load internally without exposing TSS, and create pending taper revisions.
 - Unit conversion and rounding.
 - Zone boundary ordering.
 - Manual setup produces the approved active/pending behavior.
-- Fallback profile remains flagged unvalidated.
+- Estimated fallback profile remains flagged unreviewed.
 - Generated zone revision does not replace the active version.
 - Approval supersedes the prior version atomically.
 - Cross-athlete access is rejected.
+- TSE/calibration results remain pending and cannot replace active zones before
+  explicit athlete approval.
 
 ### Current implementation status
 
-`In progress, fail-closed`
+`Implemented locally; hosted persistence verification pending`
 
-Implemented in `physiology/zones.py`: canonical metric kinds, discipline
-matching, positive finite values, explicit clinical-range structures, complete
-Zones 1-5 ordering, overlap checks, and missing-limit errors. Tests prove the
-production ruleset cannot activate BR-009. Numeric ranges, endpoint ownership,
-input conversion, stored precision, fallback formulas/inputs, and calculated
-replacement approval remain blocking.
+Implemented and unit-tested in `physiology/zones.py` under
+`phase-3-ruleset-3`: canonical metric kinds, discipline matching, attributable
+versioned soft-range review, missing/expired-range review, strict pace
+parsing/formatting, semantic higher-intensity boundary ownership, and estimated
+unreviewed Tanaka/Karvonen fallback zones. Cycling speed is excluded from zone
+logic and accepted only as bounded bike activity telemetry. Phase 4 persists
+versioned owner-scoped
+profiles in its pending migration: first explicitly confirmed profiles
+activate, later versions remain pending with a proposal, approval is
+stale-safe and atomic, rejection leaves the base active, and two-athlete API
+tests enforce owner isolation. Hosted migration/RLS verification remains
+pending. Numeric soft-range thresholds remain configurable product data and
+never become hard rejection limits.
+
+Phase 8.5 adds the four explicit discipline setup routes, canonical 1-10
+RPE/TSE semantics, reviewed field-test threshold formulas, immutable
+same-block calibration observations, and safe provisional/RPE-only results.
+The seven protocol definitions are parity-tested against the approved CSV
+bundle. Valid field tests remain pending athlete-confirmation results and use
+`zone_status=pending_protocol`; no calculated Zone 1-5 boundaries exist because
+the supplied protocols do not define a complete zone model. Submaximal Week-1
+calibration cannot produce CSS, FTP, LTHR, bike threshold HR, or run threshold
+pace. Full decisions and gates are in
+[backend-zone-calculation.md](../implementation/backend-zone-calculation.md).
 
 ## BR-010: Injury rules and redistribution
 
@@ -607,7 +677,8 @@ replacement approval remain blocking.
 - Injury discipline and state are confirmed.
 - All affected-discipline workouts are removed from the proposed current/next
   week scope.
-- Redistribution uses the approved 0.8 coefficient.
+- Automatic redistribution is zero in the MVP; the historical 0.8 calculation
+  remains analysis-only.
 - Remaining disciplines and capacity are valid.
 - Multiple or all-discipline injuries have safe defined behavior.
 - Injury can expire or be explicitly cleared.
@@ -619,7 +690,8 @@ replacement approval remain blocking.
 
 - Single run injury removes run workouts from proposed scope.
 - Bike and swim injury variants.
-- Redistributed internal load uses coefficient 0.8.
+- MVP planning redistributes exactly zero removed load.
+- The historical 0.8 analysis remains isolated from planning.
 - No remaining discipline results in no redistribution.
 - Multiple injuries follow the approved safe policy.
 - Injury plus recovery/taper/debt precedence.
@@ -633,12 +705,13 @@ replacement approval remain blocking.
 
 `In progress`
 
-Implemented and unit-tested in `physiology/injury.py`: confirmed-context gate,
-fixed 0.80 coefficient, proportional existing-share allocation, one remaining
-discipline, all-discipline rest, and ambiguous zero-share review. The function
-has no side effects and returns a calculation for a later pending revision.
-Phase 8 must define and persist severity/state, scope, expiry, intensity-only
-restrictions, explicit clearance, and proposal lifecycle.
+Implemented and unit-tested in `physiology/injury.py`: functional restriction
+states, allowed-intensity consistency, seven-day recheck without auto-clear,
+and the active zero-redistribution MVP policy. The legacy 0.80 calculation is
+retained only as an analytical function. Phase 6 hard-excludes confirmed
+blocked disciplines before deck selection and invents no replacement load.
+Phase 8 must persist the now-locked source, timing, clearance, alarm guidance,
+and proposal lifecycle; those are delivery tasks rather than open semantics.
 
 ## Traceability maintenance
 

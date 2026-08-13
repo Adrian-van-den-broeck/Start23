@@ -4,8 +4,15 @@ import ast
 from pathlib import Path
 
 _FORBIDDEN_IMPORT_ROOTS = {
+    "anthropic",
+    "asyncpg",
+    "celery",
     "fastapi",
+    "httpx",
     "openai",
+    "psycopg",
+    "redis",
+    "requests",
     "sqlalchemy",
     "supabase",
 }
