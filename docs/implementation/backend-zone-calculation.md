@@ -1,7 +1,7 @@
 # Backend zone calculation, field tests, and Week-1 calibration
 
-Status: `Phase 8.5 backend core implemented locally; database and production
-gates remain`
+Status: `Phase 8.5 backend and Expo functional cores implemented locally;
+planner, database, device, dependency, and production gates remain`
 
 Date: 2026-08-13
 
@@ -75,8 +75,10 @@ never returns CSS, FTP, bike threshold heart rate, LTHR, or run threshold pace.
 | `start23_week1_swim_calibration_v1` | Swim | `provisionally_calibrated` | Compute repetition pace as `elapsed_seconds / distance_meters * 100`; do not call it CSS. |
 
 The Python registry is parity-tested against every protocol and segment in the
-approved ZIP. A fixture change therefore fails tests until the versioned code
-contract is deliberately updated.
+committed approved index and seven CSV files. The ZIP named in the original
+decision record is absent from the repository, so the test reads those source
+files directly. A fixture change therefore still fails tests until the
+versioned code contract is deliberately updated.
 
 ### Pace rounding
 
@@ -198,6 +200,15 @@ TSS and does not use RPE to manufacture CSS, FTP, LTHR, or pace.
 - Extended onboarding state with explicit discipline setup records.
 - Added the optional pure `(220 - age)` Karvonen alternative without making an
   unsupported validation claim.
+- Added strict-TypeScript mobile setup for all four routes, including partial
+  known thresholds, optional athlete-entered boundaries, reviewed field-test
+  selection, calibration guidance selection, swim pool length, and RPE-only.
+- Added a mobile protocol/feedback/result flow that first creates an owned
+  canonical activity, records canonical session RPE, writes immutable segment
+  observations, and then calls deterministic evaluation. Threshold results
+  explicitly explain that no active Zone 1-5 profile was created.
+- Aligned the Expo SDK 57 patch set and verified 21/21 Expo Doctor checks plus
+  strict TypeScript.
 
 ## Remaining gates
 
@@ -205,15 +216,19 @@ The following work is not silently treated as complete:
 
 1. approve a full per-metric Zone 1-5 conversion model, including pace
    rounding and boundary ownership after rounding;
-2. connect calibration protocols to zone-independent planned-workout DTOs and
-   normal Week-1 planner selection (the current regular workout DTO assumes a
-   zone number);
+2. define an approved internal planned-load treatment, connect calibration
+   protocols to zone-independent planned-workout DTOs, and add normal Week-1
+   planner selection (the current regular workout DTO assumes a zone number);
 3. add threshold-result approve/reject semantics only when an approved zone
    model can create a real pending zone version;
-4. expose the four-route mobile UX and feedback screens;
-5. run the migration, pgTAP, database advisors, and two-real-token tests when a
+4. exercise the implemented mobile setup, protocol, feedback, and result flow
+   in Android/iOS development builds;
+5. resolve the remaining npm dependency advisories through an
+   upstream-compatible SDK 57 patch or separately reviewed SDK upgrade rather
+   than the audit tool's incompatible downgrade proposal;
+6. run the migration, pgTAP, database advisors, and two-real-token tests when a
    PostgreSQL/Docker or hosted development runtime is available;
-6. record named qualified production review and, for biometric alternatives,
+7. record named qualified production review and, for biometric alternatives,
    privacy/legal review.
 
 Until gate 1 is satisfied, `zone_status=pending_protocol` is the correct final

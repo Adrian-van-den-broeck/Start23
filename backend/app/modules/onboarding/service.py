@@ -65,6 +65,12 @@ class OnboardingService:
         )
 
     @staticmethod
+    def _discipline_setup(row: JsonObject) -> DisciplineSetupResponse:
+        return DisciplineSetupResponse.model_validate(
+            {key: row[key] for key in DisciplineSetupResponse.model_fields}
+        )
+
+    @staticmethod
     def _zone_profiles(state: JsonObject) -> tuple[ZoneProfileResponse, ...]:
         metric_by_profile = {
             str(row["zone_profile_id"]): row for row in state["zone_metrics"]
@@ -145,8 +151,7 @@ class OnboardingService:
         goal = cls._goal(goal_rows[0] if goal_rows else None)
         zones = cls._zone_profiles(raw)
         discipline_setups = tuple(
-            DisciplineSetupResponse.model_validate(row)
-            for row in raw.get("discipline_setups", [])
+            cls._discipline_setup(row) for row in raw.get("discipline_setups", [])
         )
         active_disciplines = {
             zone.discipline for zone in zones if zone.status == "active"

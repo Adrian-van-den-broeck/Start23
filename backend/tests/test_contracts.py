@@ -80,6 +80,11 @@ def test_openapi_contains_expected_foundation_paths(client: TestClient) -> None:
         "/api/v1/calibration/observations",
         "/api/v1/calibration/evaluate",
         "/api/v1/calibration/status",
+        "/api/v1/integrations/polar/oauth/start",
+        "/api/v1/integrations/polar/oauth/callback",
+        "/api/v1/integrations/polar",
+        "/api/v1/integrations/polar/imports",
+        "/api/v1/webhooks/polar",
     }
 
 

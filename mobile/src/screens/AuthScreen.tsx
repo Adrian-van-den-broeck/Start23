@@ -15,13 +15,37 @@ import { getSupabaseClient } from '../lib/supabase';
 import { colors, radius, spacing } from '../theme/tokens';
 
 export function AuthScreen() {
+  const [mode, setMode] = useState<'sign-in' | 'sign-up'>('sign-in');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
-  const submit = async (mode: 'sign-in' | 'sign-up') => {
+  const normalizedEmail = email.trim().toLowerCase();
+  const canSubmit =
+    normalizedEmail.length > 0 &&
+    password.length > 0 &&
+    (mode === 'sign-in' || passwordConfirmation.length > 0);
+
+  const selectMode = (nextMode: 'sign-in' | 'sign-up') => {
+    setMode(nextMode);
+    setPasswordConfirmation('');
+    setError(null);
+    setNotice(null);
+  };
+
+  const submit = async () => {
+    if (mode === 'sign-up' && password.length < 6) {
+      setError('Kies een wachtwoord van minimaal 6 tekens.');
+      return;
+    }
+    if (mode === 'sign-up' && password !== passwordConfirmation) {
+      setError('De wachtwoorden zijn niet gelijk.');
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setNotice(null);
@@ -29,13 +53,24 @@ export function AuthScreen() {
       const supabase = getSupabaseClient();
       const result =
         mode === 'sign-in'
-          ? await supabase.auth.signInWithPassword({ email, password })
-          : await supabase.auth.signUp({ email, password });
+          ? await supabase.auth.signInWithPassword({
+              email: normalizedEmail,
+              password,
+            })
+          : await supabase.auth.signUp({
+              email: normalizedEmail,
+              password,
+            });
       if (result.error) {
         throw result.error;
       }
       if (mode === 'sign-up' && !result.data.session) {
-        setNotice('Controleer je e-mail om je account te bevestigen.');
+        setMode('sign-in');
+        setPassword('');
+        setPasswordConfirmation('');
+        setNotice(
+          'Je account is aangemaakt. Controleer je e-mail en meld je daarna aan.',
+        );
       }
     } catch (caught) {
       setError(
@@ -59,7 +94,9 @@ export function AuthScreen() {
             <Text style={styles.eyebrow}>Start23</Text>
             <Text style={styles.title}>Train met richting.{'\n'}Beslis zelf.</Text>
             <Text style={styles.subtitle}>
-              Meld je aan om je veilige, hervatbare intake te starten.
+              {mode === 'sign-in'
+                ? 'Meld je aan om je veilige, hervatbare intake te starten.'
+                : 'Maak een account en begin daarna met je veilige intake.'}
             </Text>
           </View>
 
@@ -76,40 +113,65 @@ export function AuthScreen() {
             />
             <FormField
               autoCapitalize="none"
-              autoComplete="current-password"
+              autoComplete={
+                mode === 'sign-in' ? 'current-password' : 'new-password'
+              }
               label="Wachtwoord"
               onChangeText={setPassword}
               placeholder="Minimaal 6 tekens"
               secureTextEntry
               value={password}
             />
+            {mode === 'sign-up' ? (
+              <FormField
+                autoCapitalize="none"
+                autoComplete="new-password"
+                label="Herhaal wachtwoord"
+                onChangeText={setPasswordConfirmation}
+                placeholder="Nogmaals je wachtwoord"
+                secureTextEntry
+                value={passwordConfirmation}
+              />
+            ) : null}
 
             {error ? <Text style={styles.error}>{error}</Text> : null}
             {notice ? <Text style={styles.notice}>{notice}</Text> : null}
 
             <Pressable
               accessibilityRole="button"
-              disabled={loading || !email || !password}
-              onPress={() => void submit('sign-in')}
+              disabled={loading || !canSubmit}
+              onPress={() => void submit()}
               style={({ pressed }) => [
                 styles.primaryButton,
-                (loading || !email || !password) && styles.disabled,
+                (loading || !canSubmit) && styles.disabled,
                 pressed && styles.pressed,
               ]}
             >
               {loading ? (
                 <ActivityIndicator color={colors.white} />
               ) : (
-                <Text style={styles.primaryButtonText}>Aanmelden</Text>
+                <Text style={styles.primaryButtonText}>
+                  {mode === 'sign-in' ? 'Aanmelden' : 'Account maken'}
+                </Text>
               )}
             </Pressable>
             <Pressable
               accessibilityRole="button"
-              disabled={loading || !email || !password}
-              onPress={() => void submit('sign-up')}
-              style={styles.linkButton}
+              disabled={loading}
+              onPress={() =>
+                selectMode(mode === 'sign-in' ? 'sign-up' : 'sign-in')
+              }
+              style={({ pressed }) => [
+                styles.linkButton,
+                loading && styles.disabled,
+                pressed && styles.pressed,
+              ]}
             >
-              <Text style={styles.linkText}>Nieuw? Maak een account</Text>
+              <Text style={styles.linkText}>
+                {mode === 'sign-in'
+                  ? 'Nieuw? Maak een account'
+                  : 'Al een account? Aanmelden'}
+              </Text>
             </Pressable>
           </View>
 

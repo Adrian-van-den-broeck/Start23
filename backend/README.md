@@ -13,9 +13,11 @@ versioned manual/fallback zones with atomic proposal decisions, resumable
 onboarding, and an initial planning request. Phase 5 adds an immutable workout
 catalog with private load storage. Phase 6 adds deterministic pending weekly
 plans, explicit approval/rejection, revisioned direct athlete moves, eligible
-workout decks, and a TSS-free calendar. It does not contain LLM integrations,
-background workers, activity ingestion, or realized-load orchestration. Draft
-rules fail closed.
+workout decks, and a TSS-free calendar. Later local slices add canonical
+activity/RPE processing, weekly check-ins, field-test calibration, and the
+provisional Polar AccessLink Phase 9 backend. It does not contain LLM calls or
+a distributed worker service; provider webhook work uses persisted receipts
+and an in-process retry-safe background path. Draft rules fail closed.
 `phase-3-ruleset-2` adds BR-009 soft-range review, canonical input conversion,
 manual boundary validation, and explicitly unvalidated Karvonen fallback.
 
@@ -81,11 +83,17 @@ A local `.env` file is optional and ignored by Git and Docker.
 | `START23_API_V1_PREFIX` | `/api/v1` | Versioned API prefix |
 | `START23_SUPABASE_URL` | Start23 Supabase URL | Project used to determine issuer and JWKS URL |
 | `START23_SUPABASE_PUBLISHABLE_KEY` | empty | Public application key used with the caller token for RLS-preserving Data API requests |
-| `START23_SUPABASE_SECRET_KEY` | empty | Server-only secret key used exclusively for trusted fallback persistence and the private planning-catalog RPC |
+| `START23_SUPABASE_SECRET_KEY` | empty | Server-only secret key used exclusively for bounded trusted RPCs and private activity-file writes |
 | `START23_SUPABASE_JWT_AUDIENCE` | `authenticated` | Required user-token audience |
 | `START23_SUPABASE_JWKS_CACHE_SECONDS` | `300` | Bounded JWKS cache lifetime; maximum 600 |
 | `START23_SUPABASE_JWKS_TIMEOUT_SECONDS` | `5` | JWKS network timeout; maximum 30 |
 | `START23_SUPABASE_DATA_API_TIMEOUT_SECONDS` | `10` | Data API request timeout; maximum 30 |
+| `START23_POLAR_CLIENT_ID` | empty | Server-side Polar AccessLink OAuth client identifier |
+| `START23_POLAR_CLIENT_SECRET` | empty | Server-only Polar OAuth client secret |
+| `START23_POLAR_OAUTH_REDIRECT_URL` | local API callback | Exact registered callback URL |
+| `START23_POLAR_WEBHOOK_SECRET` | empty | Server-only HMAC-SHA256 webhook signing key |
+| `START23_POLAR_API_TIMEOUT_SECONDS` | `10` | Provider request timeout; maximum 30 |
+| `START23_POLAR_MAX_ACTIVITY_FILE_BYTES` | `26214400` | Maximum accepted Polar FIT object size |
 
 ## Authentication
 

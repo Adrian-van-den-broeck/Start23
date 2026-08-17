@@ -6,10 +6,12 @@ This document defines the backend architecture for Start23. The FastAPI
 foundation, health/readiness, structured errors, logging, Supabase token
 verification, Phase 3 deterministic physiology, Phase 4 onboarding, the
 Phase 5 workout catalog, and the Phase 6 weekly-planning application are
-implemented locally. The Phase 4 base and hardening migrations and the Phase 5
-catalog migration are applied in hosted Supabase and pass linked schema lint.
-The Phase 6 migration is applied and verified in hosted development; the Phase
-7 migration remains local and unexecuted. The accepted Phase 0-7 physiology
+implemented locally. Phase 8.5 also implements deterministic field-test and
+submaximal-calibration evaluation plus the Expo setup/execution flow locally.
+The Phase 4 base and hardening migrations and the Phase 5 catalog migration are
+applied in hosted Supabase and pass linked schema lint. The Phase 6 migration
+is applied and verified in hosted development; later migrations, including
+Phase 8.5, remain local and unexecuted. The accepted Phase 0-7 physiology
 decisions are included in `phase-3-ruleset-3`, with production activation
 gated on a named qualified Physiology Rules Review Board approval.
 
@@ -145,6 +147,14 @@ taper context. Non-race goal behavior remains an unresolved design area.
 Owns discipline-specific zone profiles, validation sources, fallback state,
 test-required state, versioning, and pending zone revisions.
 
+### Calibration
+
+Owns the four per-discipline setup routes, the reviewed protocol registry,
+immutable activity-linked segment observations, and deterministic field-test
+or submaximal outcomes. It can produce a pending threshold estimate but cannot
+invent Zone 1-5 boundaries or activate a zone profile. Protocol execution uses
+the canonical activity/RPE path and remains independent of the LLM.
+
 ### Workouts
 
 Owns the workout template catalog, segments, expected RPE, phase tags,
@@ -196,6 +206,12 @@ longer current.
 
 Contains adapters for wearable providers, FIT/TCX parsing, OAuth token handling,
 webhook verification, idempotency, and private Storage operations.
+
+Phase 9 implements a provisional Polar AccessLink adapter. It normalizes
+provider summaries into the existing activity input, verifies webhook HMACs
+and timestamps before persistence, keeps tokens behind service-only RPCs, and
+stores available FIT files in private Supabase Storage. Raw FIT parsing is not
+required for the current canonical-summary import and remains out of scope.
 
 ### Coach
 
@@ -361,7 +377,8 @@ entrypoints, but remains one codebase, one domain model, and one database.
 - Physiological formula details within the locked injury, taper, recovery,
   debt, progression, intensity, anti-stack, and availability precedence.
 - Athlete-timezone versus UTC ownership of scheduled plan generation.
-- Which wearable provider is supported first.
+- Production approval, credentials, and final callback domain for the
+  provisional Polar AccessLink provider.
 
 Resolved decisions:
 
@@ -378,4 +395,6 @@ Resolved decisions:
   auditable correction only within the activity's athlete-local week;
 - qualifying activity outcomes create only typed pending plan revisions, never
   an automatic active-plan or zone mutation;
+- Polar AccessLink is the provisional first Phase 9 adapter; its signed events
+  and bounded imports map to canonical activities and cannot mutate plans;
 - the mobile client upgrades to Expo SDK 57 before mobile implementation.

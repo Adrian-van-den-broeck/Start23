@@ -143,6 +143,11 @@ select is(
   'an explicitly empty RPE-only setup is persisted'
 );
 
+-- Each PostgREST RPC/table call has its own transaction. Clear the simulated
+-- RPC guard before exercising a direct table write in this shared pgTAP
+-- transaction so the assertion matches the hosted request boundary.
+select set_config('start23.critical_write', '', true);
+
 select throws_ok(
   $$
     insert into public.discipline_zone_setups (
@@ -337,7 +342,7 @@ select throws_ok(
     )
   $$,
   '42501',
-  'calibration records are immutable',
+  'permission denied for table calibration_evaluations',
   'persisted evaluation results cannot be rewritten'
 );
 

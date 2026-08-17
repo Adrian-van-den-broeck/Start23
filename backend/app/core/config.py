@@ -33,6 +33,18 @@ class Settings(BaseSettings):
     supabase_jwks_timeout_seconds: float = Field(default=5.0, gt=0, le=30)
     supabase_data_api_timeout_seconds: float = Field(default=10.0, gt=0, le=30)
     openai_api_key: SecretStr = SecretStr("")
+    polar_client_id: str = ""
+    polar_client_secret: SecretStr = SecretStr("")
+    polar_oauth_redirect_url: AnyHttpUrl = AnyHttpUrl(
+        "http://localhost:8000/api/v1/integrations/polar/oauth/callback"
+    )
+    polar_webhook_secret: SecretStr = SecretStr("")
+    polar_api_timeout_seconds: float = Field(default=10.0, gt=0, le=30)
+    polar_max_activity_file_bytes: int = Field(
+        default=25 * 1024 * 1024,
+        ge=1024,
+        le=100 * 1024 * 1024,
+    )
 
     @property
     def supabase_jwt_issuer(self) -> str:
@@ -72,6 +84,21 @@ class Settings(BaseSettings):
                 raise ValueError("supabase_publishable_key is required when deployed")
             if not self.supabase_secret_key.get_secret_value().strip():
                 raise ValueError("supabase_secret_key is required when deployed")
+        return self
+
+    @model_validator(mode="after")
+    def require_complete_polar_configuration(self) -> "Settings":
+        """Prevent partially configured OAuth or webhook authentication."""
+        values = (
+            self.polar_client_id.strip(),
+            self.polar_client_secret.get_secret_value().strip(),
+            self.polar_webhook_secret.get_secret_value().strip(),
+        )
+        if any(values) and not all(values):
+            raise ValueError(
+                "polar_client_id, polar_client_secret and polar_webhook_secret "
+                "must be configured together"
+            )
         return self
 
 

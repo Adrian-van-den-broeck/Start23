@@ -25,6 +25,11 @@ from app.modules.checkins.repository import (
     SupabaseCheckInRepository,
 )
 from app.modules.health.router import router as health_router
+from app.modules.integrations.polar import PolarAccessLinkClient, PolarProvider
+from app.modules.integrations.repository import (
+    IntegrationRepository,
+    SupabaseIntegrationRepository,
+)
 from app.modules.onboarding.repository import (
     OnboardingRepository,
     SupabaseOnboardingRepository,
@@ -48,6 +53,8 @@ def _lifespan(
     activity_repository: ActivityRepository,
     checkin_repository: CheckInRepository,
     calibration_repository: CalibrationRepository,
+    integration_repository: IntegrationRepository,
+    polar_provider: PolarProvider,
 ) -> Callable[[FastAPI], AbstractAsyncContextManager[None]]:
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -68,6 +75,8 @@ def _lifespan(
             activity_repository.aclose(),
             checkin_repository.aclose(),
             calibration_repository.aclose(),
+            integration_repository.aclose(),
+            polar_provider.aclose(),
         )
         logger.info(
             "Application stopped",
@@ -90,6 +99,8 @@ def create_app(
     activity_repository: ActivityRepository | None = None,
     checkin_repository: CheckInRepository | None = None,
     calibration_repository: CalibrationRepository | None = None,
+    integration_repository: IntegrationRepository | None = None,
+    polar_provider: PolarProvider | None = None,
 ) -> FastAPI:
     """Create and configure the Start23 FastAPI application."""
     app_settings = settings or get_settings()
@@ -111,6 +122,10 @@ def create_app(
     zone_calibration_repository = (
         calibration_repository or SupabaseCalibrationRepository(app_settings)
     )
+    wearable_integration_repository = (
+        integration_repository or SupabaseIntegrationRepository(app_settings)
+    )
+    polar_client = polar_provider or PolarAccessLinkClient(app_settings)
     application = FastAPI(
         title=app_settings.app_name,
         version=app_settings.app_version,
@@ -122,6 +137,8 @@ def create_app(
             completed_activity_repository,
             weekly_checkin_repository,
             zone_calibration_repository,
+            wearable_integration_repository,
+            polar_client,
         ),
     )
     application.state.settings = app_settings
@@ -134,6 +151,8 @@ def create_app(
     application.state.activity_repository = completed_activity_repository
     application.state.checkin_repository = weekly_checkin_repository
     application.state.calibration_repository = zone_calibration_repository
+    application.state.integration_repository = wearable_integration_repository
+    application.state.polar_provider = polar_client
     configure_error_handling(application)
     application.include_router(health_router)
     application.include_router(

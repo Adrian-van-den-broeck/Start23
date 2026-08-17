@@ -771,11 +771,12 @@ verification therefore remains open.
 
 Core application work was implemented and locally verified on 2026-08-13.
 The structured FastAPI/mobile flow, deterministic planning amendments, and
-local Supabase migration/pgTAP suite are prepared. Phase 8 is still `in
-progress`, because the reviewed standard Week-1/TSE conversion protocol and
-reviewed taper labels do not exist, the local SQL runtime is unavailable, and
-no hosted migration or device verification was performed. Phase 8 now also
-owns the explicitly accepted planning-completion work below.
+Supabase migration/pgTAP suite are prepared, and the migration is recorded in
+the linked hosted project. Phase 8 is still `in progress`, because the reviewed
+standard Week-1/TSE conversion protocol and reviewed taper labels do not exist,
+the Phase 8 pgTAP/real-token flows have not run, the local SQL runtime is
+unavailable, and no device verification was performed. Phase 8 now also owns
+the explicitly accepted planning-completion work below.
 
 ### Scope
 
@@ -937,11 +938,12 @@ owns the explicitly accepted planning-completion work below.
   private realized load/audit row. It does not automatically manufacture a
   replacement current-week correction proposal after the corrected score;
   richer automatic correction policy still lacks a reviewed rule.
-- The migration was created through Supabase CLI but remains local and
-  unapplied. `supabase db reset --local --no-seed` was attempted and failed
-  because Docker and Podman are absent. The Phase 8 SQL/pgTAP suite, database
-  advisors, hosted application, two-real-token isolation, and Android/iOS
-  runtime flows remain external verification gates.
+- The migration was created through Supabase CLI and is applied in the linked
+  hosted project. `supabase db reset --local --no-seed` was attempted and failed
+  because Docker and Podman are absent. The current linked schema passes
+  error-level lint and advisors ran, but the Phase 8 pgTAP suite,
+  two-real-token isolation, and Android/iOS runtime flows remain external
+  verification gates.
 - The RPE reminder has no explicit terminal/dismissed state because no such
   product rule exists. It remains visible until RPE is supplied, which is the
   safe Phase 8 behavior.
@@ -955,10 +957,12 @@ Detailed decisions, implemented actions, formulas, and remaining gates are in
 
 ### Status
 
-Backend core implemented and locally verified. The forward migration and
-rollback-only pgTAP suite are present but not executed because this workstation
-has no Supabase CLI/PostgreSQL/Docker runtime. No hosted or production change
-was made.
+Backend and Expo functional cores are implemented and locally verified. The
+forward migration is applied in the linked Supabase project and its rollback-only
+pgTAP suite passes all 18 assertions. The linked database linter reports no
+schema errors. The mobile flow passes strict TypeScript and all 21 Expo Doctor
+checks, but it has not been exercised in an Android/iOS development build. No
+provider or other production runtime was enabled by this schema verification.
 
 ### Scope
 
@@ -978,42 +982,167 @@ was made.
   zone model is approved**
 - Zone-independent calibration protocol selection in the normal weekly plan.
   **Pending because the current planned-workout segment contract requires a
-  Zone 1-5 value**
-- Android setup, protocol execution, feedback, and result screens. **Pending**
+  Zone 1-5 value and the approved fixtures define no internal planned-load rule
+  for inserting these protocols into normal target selection**
+- Android setup, protocol execution, feedback, and result screens.
+  **Implemented in strict TypeScript; emulator/device runtime pending**
 
 ### Exit criteria
 
 - The seven approved CSV protocols and every segment match the Python registry.
-  **Verified by fixture-parity tests**
+  **Verified against the seven individually committed CSV fixtures by
+  fixture-parity tests**
 - CSS/FTP/LTHR/threshold pace are produced only by their own valid reviewed
   field tests. **Verified**
 - Submaximal calibration cannot produce a threshold. **Verified**
 - Missing session RPE blocks evaluation but not observation/activity storage.
-  **Verified in domain/API tests; database runtime pending**
+  **Verified in domain/API tests and hosted pgTAP**
 - RPE-only is a valid onboarding configuration and creates no zone profile.
-  **Implemented; hosted flow pending**
+  **Implemented and hosted-persistence verified; real-token/mobile flow pending**
 - Public APIs and tables contain no TSS/private-load fields. **OpenAPI/backend
-  tests pass; pgTAP pending**
+  tests and hosted pgTAP pass**
 - Complete Zone 1-5 calculation remains unavailable until formulas, canonical
   rounding, reviewer metadata, and production review are approved. **Locked**
 
+### Implementation notes and remaining work
+
+- The approved ZIP named in the original decision record is not present in the
+  repository. The parity test now reads the committed protocol index and seven
+  committed CSV files directly; it still compares every protocol, segment,
+  duration/distance, and RPE range and does not weaken fixture coverage.
+- The mobile known-values route accepts one or both discipline thresholds and
+  optional boundaries. Complete athlete-entered boundaries first use the
+  existing manual-zone lifecycle, including active/pending proposal semantics,
+  and then store the resumable discipline setup. If the second request fails,
+  the valid zone version is retained and the setup request is safely retryable;
+  no direct active-zone write was added.
+- The mobile execution flow creates an owned canonical activity, records its
+  canonical 1-10 session RPE, writes immutable protocol observations, and only
+  then requests deterministic evaluation. Until the planner gate above is
+  resolved, this is an explicit standalone protocol execution and has no
+  fabricated `planned_workout_id`.
+- Expo SDK 57 patch dependencies were aligned to `expo ~57.0.14`,
+  `expo-dev-client ~57.0.13`, and `expo-splash-screen ~57.0.7`; Expo Doctor now
+  passes 21/21 checks. `npm audit` still reports 8 moderate and 11 high
+  upstream/transitive advisories with no critical finding. Its proposed
+  automatic fixes downgrade Expo/React Native across the locked SDK boundary,
+  so no breaking `audit fix` was applied; this needs an upstream-compatible
+  SDK 57 resolution or a separately reviewed upgrade.
+- The rollback-only pgTAP suite shares one transaction across simulated API
+  calls, while PostgREST gives each RPC or table request its own transaction.
+  The direct-write assertion therefore clears the RPC's transaction-local
+  critical-write guard before probing the table, and the evaluation
+  immutability assertion expects the stricter table-permission rejection that
+  occurs before the trigger.
+- The complete backend suite passes 303 tests; Ruff lint/format, strict mypy,
+  and mobile strict TypeScript pass. The hosted migration, 18-assertion pgTAP
+  suite, and linked error-level database lint pass. Two-real-token isolation,
+  Android/iOS runtime, dependency-advisory resolution, and named qualified
+  physiology production review remain open gates.
+
 ## Phase 9: one wearable integration
+
+### Status
+
+Backend functional core implemented locally on 2026-08-17 with Polar
+AccessLink v3 as the provisional first-provider candidate. The choice is based
+on its documented OAuth user lifecycle, HMAC-SHA256 webhook signatures,
+30-day post-registration exercise feed, and FIT/TCX export support. This is a
+technical implementation choice, not the still-required product, legal,
+privacy, and provider-terms approval for production.
+
+The Phase 9 migration was applied to the linked Supabase project on 2026-08-17.
+The linked ledger is aligned, the database linter reports no schema errors, and
+the rollback-only Phase 9 pgTAP suite passes all 23 assertions. This installs
+inactive schema, RPC, RLS, and private-bucket groundwork only; no Polar client,
+webhook, credential, athlete connection, or provider data processing was
+enabled.
+
+The local slice adds one-time OAuth state, server-confined provider tokens,
+provider user registration/deregistration, strict signed webhook intake,
+timestamp replay bounds and receipt idempotency, owner-scoped import status,
+a maximum 30-day historical import, canonical UC-03 activity creation, and a
+private size/content-type-bounded Supabase Storage bucket for available FIT
+files. Provider-specific mapping, HTTP-contract, failure-isolation, ownership,
+and TSS-confidentiality tests are included.
 
 ### Scope
 
-- One approved provider.
-- OAuth/token lifecycle.
-- Webhook verification and idempotency.
-- Historical import limited to approved range.
-- Private activity-file storage.
-- Provider-specific contract fixtures.
+- One approved provider. **Polar AccessLink implemented provisionally;
+  production approval pending**
+- OAuth/token lifecycle. **Implemented for Polar's authorization-code,
+  registration, long-lived access-token, and deregistration/revocation model**
+- Webhook verification and idempotency. **Implemented with Polar HMAC-SHA256,
+  a ten-minute timestamp window, unique payload receipts, and duplicate
+  suppression**
+- Historical import limited to approved range. **Implemented with a hard
+  one-to-30-day request bound; using Polar's provider-enforced rolling 30-day
+  availability remains product-approval-gated**
+- Private activity-file storage. **Implemented for available FIT files in a
+  non-public 25 MiB bucket with owner read RLS and server-only writes**
+- Provider-specific contract fixtures. **Implemented**
 
 ### Exit criteria
 
-- Disconnect/revocation behavior is tested.
-- Invalid/replayed webhooks are rejected.
-- Imported activities use the same canonical UC-03 path.
-- Provider failure does not corrupt plan or activity state.
+- Disconnect/revocation behavior is tested. **Locally verified**
+- Invalid/replayed webhooks are rejected. **Invalid events are rejected and
+  valid duplicates are acknowledged without reprocessing; locally verified**
+- Imported activities use the same canonical UC-03 path. **Locally verified**
+- Provider failure does not corrupt plan or activity state. **Locally
+  verified**
+
+### Phase 9 implementation differences and remaining work
+
+- Polar AccessLink is not yet an approved production processor. Before hosted
+  use, approve its terms, health/GPS legal basis, consent copy, retention and
+  deletion policy, regional-processing position, and brand/attribution
+  requirements; then register the real client and webhook.
+- The maximum historical window is 30 days because the selected AccessLink v3
+  exercise endpoint exposes only exercises uploaded after client registration
+  and within the last 30 days. Start23 additionally filters the athlete's
+  requested one-to-30-day window. No older backfill or automatic 30-day
+  calibration was invented.
+- Polar AccessLink v3 documents access tokens as long-lived until explicit
+  deregistration rather than a refresh-token rotation. The persistence model
+  accepts a provider expiry when supplied, but no unsupported refresh flow was
+  added. Disconnect first asks Polar to deregister/revoke; local token removal
+  occurs only after success or an already-revoked response so a transient
+  provider failure remains safely retryable.
+- A valid duplicate webhook is acknowledged as `duplicate` and excluded from
+  processing, rather than returning an error that would cause the provider to
+  retry it. Invalid signatures, stale timestamps, unsupported events, and
+  provider-controlled fetch URLs are rejected.
+- Webhook work is persisted before a FastAPI background task processes it.
+  The receipt/import state is retry-safe and failures are recorded, but a
+  deployed scheduled retry command is not yet configured. No Redis, Celery, or
+  second service was introduced.
+- FIT files are stored when Polar makes one available. A missing FIT export
+  does not invalidate the canonical summary. Storage metadata is owner-scoped;
+  a signed-download API, raw-file UI, maps, and telemetry analytics remain out
+  of MVP scope.
+- No Expo connection/import UI was added in this backend-first slice. The
+  OAuth start/callback, connection, disconnect, import, and import-status APIs
+  are ready for a later small mobile surface after provider approval.
+- The migration is applied to hosted Supabase and the 23-assertion rollback-only
+  pgTAP suite, owner policies, explicit grants, private 25 MiB bucket, and
+  linked error-level lint are verified. Real OAuth callback, webhook delivery,
+  two-session RLS, Storage transfer, Railway background execution, and
+  Android/iOS runtime verification still require provider credentials and
+  hosted rollout approval.
+- The linked Security Advisor has no error-level finding. It reports expected
+  warnings for the authenticated `start_polar_oauth`, `get_polar_connection`,
+  and `list_polar_imports` `SECURITY DEFINER` RPCs. Each revokes public/anonymous
+  execution, derives and checks `auth.uid()`, and returns owner-scoped data; a
+  production security review must either accept that deliberate boundary or
+  refactor the read-only RPCs. The project-level leaked-password protection
+  warning also remains open. Newly installed indexes are reported as unused
+  before production traffic, and the composite `activity_files` foreign key is
+  already covered by its unique `activity_id` lookup plus owner index, so no
+  redundant advisor-only index was added.
+- Local verification passes the complete 303-test backend suite, strict mypy,
+  and Ruff. Local Supabase lint still cannot run because the configured
+  PostgreSQL service at `127.0.0.1:54322` is unavailable; the linked hosted lint
+  passes with no schema errors.
 
 ## Phase 10: constrained LLM coach
 
@@ -1185,14 +1314,19 @@ Every phase must:
 - Phase 6 weekly planning and approval: `implemented, migrated, and verified
   locally plus hosted pgTAP/real-token isolation; taper-catalog and Android
   runtime verification pending`
-- Phase 7 activity and RPE feedback: `implemented and verified locally;
-  hosted migration/pgTAP, real-token isolation, and Android runtime pending`
+- Phase 7 activity and RPE feedback: `implemented and verified locally; hosted
+  migration applied; pgTAP, real-token isolation, and Android runtime pending`
 - Phase 8 structured weekly check-in: `core implemented and verified locally;
-  taper review plus SQL/hosted/device gates remain`
-- Phase 8.5 zone intake, field tests, and Week-1 calibration: `backend core and
-  approved-fixture parity implemented locally; planner/mobile and database
-  runtime gates remain`
-- Phase 9, Phase 11, and Phase 12: `not started`
+  hosted migration applied; taper review plus pgTAP/real-token/device gates
+  remain`
+- Phase 8.5 zone intake, field tests, and Week-1 calibration: `backend and
+  mobile functional cores plus approved-fixture parity implemented; hosted
+  migration/pgTAP/lint verified; planner, dependency-advisory, real-token,
+  physiology-review, and device-runtime gates remain`
+- Phase 9: `Polar backend functional core and hosted migration/pgTAP/lint
+  verified; provider/legal approval, real OAuth/webhook/storage, retry
+  scheduling, security-review choices, and mobile runtime remain pending`
+- Phase 11 and Phase 12: `not started`
 - Phase 10 constrained LLM coach: `backend-only credential plumbing added;
   provider integration and model-assisted behavior not started`
 
@@ -1203,8 +1337,9 @@ Every phase must:
   hosted real-token behavior verification remains open.
 - Physical-iPhone SDK 57 validation depends on Apple signing and device
   registration, but no longer blocks Android-led Phase 4 mobile development.
-- The phase-one activity input is a canonical authenticated summary; the first
-  wearable provider for Phase 9 remains unresolved.
+- The phase-one activity input is a canonical authenticated summary. Polar
+  AccessLink v3 is the provisional Phase 9 adapter and maps into that same
+  path; production provider/legal approval remains unresolved.
 - Non-race goals are assigned to the new final Phase 12 and require separate
   deterministic rules and catalog coverage before becoming selectable as
   supported plans.
@@ -1216,5 +1351,7 @@ Every phase must:
   in this flow as canonical 1-10 RPE and implements reviewed field-test
   threshold formulas plus safe submaximal calibration. A complete deterministic
   conversion from those thresholds/observations to Zone 1-5 remains undefined
-  and fail-closed. Zone-independent normal-plan selection, mobile screens,
-  hosted verification, and named clinical production approval remain open.
+  and fail-closed. Zone-independent normal-plan selection, real-token and mobile
+  device verification, upstream-compatible dependency-advisory resolution, and
+  named clinical production approval remain open. Phase 8.5 hosted migration,
+  pgTAP, and error-level lint are verified.

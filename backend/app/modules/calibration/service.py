@@ -280,7 +280,25 @@ class CalibrationService:
     ) -> DisciplineSetupResponse:
         values = self._setup_values(discipline, setup)
         row = await self._repository.save_setup(access_token, values)
-        return DisciplineSetupResponse.model_validate(row)
+        return self._discipline_setup_response(row)
+
+    @staticmethod
+    def _discipline_setup_response(row: JsonObject) -> DisciplineSetupResponse:
+        return DisciplineSetupResponse.model_validate(
+            {key: row[key] for key in DisciplineSetupResponse.model_fields}
+        )
+
+    @staticmethod
+    def _evaluation_response(row: JsonObject) -> CalibrationEvaluationResponse:
+        return CalibrationEvaluationResponse.model_validate(
+            {key: row[key] for key in CalibrationEvaluationResponse.model_fields}
+        )
+
+    @staticmethod
+    def _observation_response(row: JsonObject) -> CalibrationObservationResponse:
+        return CalibrationObservationResponse.model_validate(
+            {key: row[key] for key in CalibrationObservationResponse.model_fields}
+        )
 
     @staticmethod
     def _domain_observation(values: JsonObject) -> CalibrationObservation:
@@ -377,7 +395,7 @@ class CalibrationService:
             values,
             fingerprint,
         )
-        return CalibrationObservationResponse.model_validate(row)
+        return self._observation_response(row)
 
     async def evaluate(
         self,
@@ -432,7 +450,7 @@ class CalibrationService:
             payload,
             fingerprint,
         )
-        return CalibrationEvaluationResponse.model_validate(saved)
+        return self._evaluation_response(saved)
 
     async def status(
         self,
@@ -441,12 +459,9 @@ class CalibrationService:
     ) -> CalibrationStatusResponse:
         raw = await self._repository.fetch_status(access_token, athlete_id)
         return CalibrationStatusResponse(
-            setups=tuple(
-                DisciplineSetupResponse.model_validate(row) for row in raw["setups"]
-            ),
+            setups=tuple(self._discipline_setup_response(row) for row in raw["setups"]),
             evaluations=tuple(
-                CalibrationEvaluationResponse.model_validate(row)
-                for row in raw["evaluations"]
+                self._evaluation_response(row) for row in raw["evaluations"]
             ),
         )
 

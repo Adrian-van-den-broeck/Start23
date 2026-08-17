@@ -52,6 +52,79 @@ export type ZoneBoundary = {
   upper_value: string;
 };
 
+export type ZoneMetricKind =
+  | 'swim_css_seconds_per_100m'
+  | 'bike_ftp_watts'
+  | 'bike_threshold_heart_rate_bpm'
+  | 'run_threshold_pace_seconds_per_km'
+  | 'run_lthr_bpm';
+
+export type ZoneSetupRoute =
+  | 'known_values'
+  | 'field_test'
+  | 'calibration_week'
+  | 'rpe_only';
+
+export type GuidanceMode =
+  | 'power'
+  | 'heart_rate'
+  | 'combined'
+  | 'pace'
+  | 'rpe_only';
+
+export type KnownThreshold = {
+  metric_kind: ZoneMetricKind;
+  value: string;
+};
+
+export type KnownZoneProfile = {
+  metric_kind: ZoneMetricKind;
+  boundaries: ZoneBoundary[];
+};
+
+export type DisciplineSetupInput =
+  | {
+      setup_route: 'known_values';
+      guidance_mode: GuidanceMode;
+      thresholds: KnownThreshold[];
+      zone_profiles: KnownZoneProfile[];
+      pool_length_meters?: 25 | 50;
+    }
+  | {
+      setup_route: 'field_test';
+      guidance_mode: GuidanceMode;
+      protocol_id: string;
+      pool_length_meters?: 25 | 50;
+    }
+  | {
+      setup_route: 'calibration_week';
+      guidance_mode: GuidanceMode;
+      pool_length_meters?: 25 | 50;
+    }
+  | {
+      setup_route: 'rpe_only';
+      guidance_mode: 'rpe_only';
+    };
+
+export type DisciplineSetup = {
+  discipline: Discipline;
+  setup_route: ZoneSetupRoute;
+  guidance_mode: GuidanceMode;
+  setup_status: 'configured' | 'test_pending' | 'calibration_pending';
+  protocol_id: string | null;
+  pool_length_meters: 25 | 50 | null;
+  threshold_status: 'unknown' | 'user_provided';
+  zone_status: 'unknown' | 'user_provided' | 'pending_protocol';
+  source: 'user_provided' | 'field_test' | 'week1_calibration' | 'none';
+  validation_status: 'self_reported' | 'not_assessed';
+  confidence: 'not_assessed' | 'low' | 'medium';
+  known_thresholds: KnownThreshold[];
+  known_zone_profiles: KnownZoneProfile[];
+  revision: number;
+  created_at: string;
+  updated_at: string;
+};
+
 export type ZoneProfile = {
   id: string;
   discipline: Discipline;
@@ -86,8 +159,119 @@ export type OnboardingState = {
   training_history: TrainingHistoryEntry[];
   primary_goal: PrimaryRaceGoal | null;
   zones: ZoneProfile[];
+  discipline_setups: DisciplineSetup[];
   can_complete: boolean;
   initial_plan_request_id: string | null;
+};
+
+export type ZoneSetupOption = {
+  setup_route: ZoneSetupRoute;
+  label: string;
+  creates_threshold: boolean;
+  creates_zones: boolean;
+};
+
+export type CalibrationProtocolSegment = {
+  order: number;
+  segment_id: string;
+  purpose: string;
+  duration_seconds: number | null;
+  distance_meters: number | null;
+  target_rpe_min: number;
+  target_rpe_max: number;
+  optional: boolean;
+};
+
+export type CalibrationProtocol = {
+  protocol_id: string;
+  discipline: Discipline;
+  protocol_type: 'field_test' | 'submaximal_calibration';
+  version: number;
+  review_status: 'approved_active';
+  result_status_on_success:
+    | 'threshold_estimated'
+    | 'provisionally_calibrated';
+  guidance_modes: GuidanceMode[];
+  segments: CalibrationProtocolSegment[];
+};
+
+export type SwimRepetition = {
+  distance_meters: number;
+  elapsed_time_seconds: string;
+  rest_time_seconds: number;
+  completed: boolean;
+};
+
+export type CalibrationObservationInput = {
+  activity_id: string;
+  planned_workout_id?: string;
+  protocol_id: string;
+  discipline: Discipline;
+  segment_id: string;
+  performed_at: string;
+  completed: boolean;
+  interrupted: boolean;
+  quality_status: 'missing' | 'insufficient' | 'sufficient';
+  target_rpe: number;
+  reported_block_rpe?: number;
+  reported_session_rpe?: number;
+  steady_execution?: 'yes' | 'mostly' | 'no';
+  duration_seconds?: number;
+  distance_meters?: number;
+  average_heart_rate_bpm?: string;
+  ending_heart_rate_bpm?: string;
+  average_heart_rate_last_20min_bpm?: string;
+  average_power_watts?: string;
+  average_power_last_20min_watts?: string;
+  average_pace_seconds_per_km?: string;
+  elapsed_time_seconds?: string;
+  pool_length_meters?: 25 | 50;
+  stroke?: 'freestyle';
+  equipment?: 'none';
+  rest_time_seconds?: number;
+  data_completeness?: string;
+  stable_segment?: boolean;
+  power_source_calibrated?: boolean;
+  repetitions?: SwimRepetition[];
+};
+
+export type CalibrationObservation = CalibrationObservationInput & {
+  id: string;
+  fingerprint: string;
+  created_at: string;
+};
+
+export type ThresholdEstimate = {
+  metric_kind: ZoneMetricKind;
+  value: string;
+};
+
+export type CalibrationEvaluation = {
+  id: string;
+  activity_id: string;
+  protocol_id: string;
+  discipline: Discipline;
+  ruleset_version: string;
+  status:
+    | 'insufficient_data'
+    | 'rpe_only'
+    | 'provisionally_calibrated'
+    | 'threshold_estimated'
+    | 'insufficient_protocol';
+  threshold_status: 'unknown' | 'threshold_estimated';
+  zone_status: 'unknown' | 'provisionally_calibrated' | 'pending_protocol';
+  confidence: 'not_assessed' | 'low' | 'medium';
+  reason_codes: string[];
+  thresholds: ThresholdEstimate[];
+  requires_athlete_confirmation: boolean;
+  review_status: 'pending_athlete_confirmation' | 'not_applicable';
+  fingerprint: string;
+  created_at: string;
+};
+
+export type CalibrationStatus = {
+  setups: DisciplineSetup[];
+  evaluations: CalibrationEvaluation[];
 };
 
 export type OnboardingComplete = {

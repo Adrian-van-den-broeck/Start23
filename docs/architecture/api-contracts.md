@@ -172,8 +172,10 @@ realized or matched planned TSS.
 | `PUT /v1/me/goals/{goal_id}` | Update an owned goal | Macrocycle impact may require a proposal |
 | `PUT /v1/me/zones/{discipline}` | Submit explicit manual/fallback setup | Explicitly confirmed initial setup may create the first active version; calculated replacements may not |
 | `POST /v1/onboarding/complete` | Validate completion and create initial planning proposal | Does not silently activate a plan |
-| `POST /v1/integrations/{provider}/oauth/start` | Start provider connection | Returns provider authorization information |
-| Provider callback | Complete provider OAuth | Server-side secret handling |
+| `POST /v1/integrations/polar/oauth/start` | Start provisional Polar connection | One-time state; returns provider authorization URL |
+| `GET /v1/integrations/polar/oauth/callback` | Complete provider OAuth | Server-side code exchange, user registration, and token handling |
+| `GET /v1/integrations/polar` | Read connection metadata | Owner-scoped; no token/provider secret |
+| `DELETE /v1/integrations/polar` | Disconnect and revoke | Provider deregistration precedes local token removal |
 
 `POST /v1/onboarding/complete` should return public onboarding state and, when
 enough data exists, a reference to an initial pending plan proposal.
@@ -215,9 +217,11 @@ immutable server snapshot; client-supplied classifications are rejected.
 | `GET /v1/activities/pending-rpe` | List completed activities awaiting RPE | Does not block unrelated reads by default |
 | `PUT /v1/activities/{activity_id}/rpe` | Record or correct RPE from 1 through 10 | Correction is audited only during the activity's athlete-local week; exact retry is idempotent |
 
-FIT/TCX upload, import-status resources, and provider webhook endpoints remain
-Phase 9 concerns. They must eventually map into this same canonical activity
-service rather than introduce a second calculation path.
+Phase 9 adds `POST/GET /v1/integrations/polar/imports` and the signed
+`POST /v1/webhooks/polar` callback. Imported summaries are validated as the
+same `ActivitySummaryInput` and persisted in the existing canonical activity
+tables. Available raw FIT files are stored separately and never become a
+second physiological calculation path.
 
 After an activity is processed, the service may create a pending correction
 proposal. The activity response can link to the proposal and include a
@@ -257,6 +261,13 @@ A valid field test may return pending threshold estimates, but it returns
 reviewed Zone 1-5 model exists. Submaximal Week-1 calibration cannot return a
 threshold. See
 [backend-zone-calculation.md](../implementation/backend-zone-calculation.md).
+
+`POST /v1/calibration/observations` requires an owned canonical activity. The
+Expo flow therefore creates the activity through UC-03, records the same
+canonical 1-10 session RPE, writes immutable protocol segments, and only then
+requests evaluation. Until planner eligibility and load treatment are
+approved, standalone protocol execution omits `planned_workout_id` instead of
+fabricating a normal planned workout.
 
 ## UC-05: zone evaluation
 
@@ -345,7 +356,8 @@ Direct user schedule edits use a request-body revision precondition:
 - Whether a pending RPE prompt can reach an explicit terminal/dismissed state;
   until then the Phase 8 app-open reminder remains visible.
 - Exact resource-disclosure behavior: `403` versus `404`.
-- First provider and its callback/webhook paths.
+- Production approval and final public callback domain for the provisional
+  Polar provider.
 
 Resolved for MVP:
 
@@ -353,6 +365,8 @@ Resolved for MVP:
   decision lock;
 - direct athlete calendar edits apply with qualitative soft warnings;
 - Phase 7 accepts a canonical activity summary, so FIT/TCX upload is deferred;
+- Phase 9's provisional Polar adapter uses explicit OAuth and webhook paths,
+  a one-to-30-day history request, and the existing canonical activity model;
 - RPE is correctable with an audit trail only during its athlete-local week;
   after that week it is immutable and exact retry remains idempotent;
 - Phase 7 matching is an explicit owned planned-workout selection; automatic

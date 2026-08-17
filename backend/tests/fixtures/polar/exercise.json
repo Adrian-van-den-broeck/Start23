@@ -1,0 +1,18 @@
+{
+  "id": "2AC312F",
+  "upload_time": "2026-08-17T08:00:00.000Z",
+  "polar_user": "https://www.polaraccesslink.com/v3/users/475",
+  "device": "Polar Test Device",
+  "start_time": "2026-08-17T08:00:00",
+  "start_time_utc_offset": 120,
+  "duration": "PT1H2M30S",
+  "calories": 530,
+  "distance": 12500.4,
+  "heart_rate": {
+    "average": 149,
+    "maximum": 174
+  },
+  "sport": "RUNNING",
+  "detailed_sport_info": "RUNNING",
+  "has_route": true
+}

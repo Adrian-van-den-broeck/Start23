@@ -30,6 +30,10 @@ class RepositoryUnavailableError(RepositoryError):
     """Supabase could not complete the request."""
 
 
+class RepositorySchemaMismatchError(RepositoryUnavailableError):
+    """The configured Data API schema is behind the running backend."""
+
+
 class OnboardingRepository(Protocol):
     """Persistence surface used by the Phase 4 application service."""
 
@@ -189,7 +193,11 @@ class SupabaseOnboardingRepository:
             },
         )
 
-        if response.status_code == 404 or error_code == "P0002":
+        if error_code == "P0002":
+            raise RepositoryNotFoundError
+        if response.status_code == 404 and error_code == "PGRST205":
+            raise RepositorySchemaMismatchError
+        if response.status_code == 404:
             raise RepositoryNotFoundError
         if response.status_code in {400, 409, 422} or error_code in {
             "23505",
@@ -222,6 +230,32 @@ class SupabaseOnboardingRepository:
         if not isinstance(payload, list):
             raise RepositoryUnavailableError
         return [dict(row) for row in payload]
+
+    async def _select_optional(
+        self,
+        table: str,
+        access_token: str,
+        athlete_id: UUID,
+        *,
+        extra_params: Mapping[str, str] | None = None,
+    ) -> list[JsonObject]:
+        """Read a forward-schema table without blocking the earlier flow."""
+        try:
+            return await self._select(
+                table,
+                access_token,
+                athlete_id,
+                extra_params=extra_params,
+            )
+        except RepositorySchemaMismatchError:
+            logger.warning(
+                "Optional Supabase Data API table is not deployed",
+                extra={
+                    "event": "optional_supabase_table_unavailable",
+                    "table": table,
+                },
+            )
+            return []
 
     async def fetch_state(self, access_token: str, athlete_id: UUID) -> JsonObject:
         """Fetch rows in parallel with an explicit owner filter on every query."""
@@ -265,7 +299,7 @@ class SupabaseOnboardingRepository:
                 athlete_id,
                 extra_params={"order": "zone_number.asc"},
             ),
-            self._select(
+            self._select_optional(
                 "discipline_zone_setups",
                 access_token,
                 athlete_id,

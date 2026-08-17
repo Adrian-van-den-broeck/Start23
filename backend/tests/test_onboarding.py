@@ -17,8 +17,36 @@ from app.modules.onboarding.repository import (
     RepositoryConflictError,
     RepositoryNotFoundError,
 )
+from app.modules.onboarding.service import OnboardingService
 
 _NOW = datetime(2026, 7, 27, 12, tzinfo=timezone.utc)
+
+
+def test_discipline_setup_projection_omits_owner_identity() -> None:
+    setup = OnboardingService._discipline_setup(
+        {
+            "athlete_id": str(uuid4()),
+            "discipline": "swim",
+            "setup_route": "calibration_week",
+            "guidance_mode": "pace",
+            "setup_status": "calibration_pending",
+            "protocol_id": "start23_week1_swim_calibration_v1",
+            "pool_length_meters": 25,
+            "threshold_status": "unknown",
+            "zone_status": "unknown",
+            "source": "week1_calibration",
+            "validation_status": "not_assessed",
+            "confidence": "not_assessed",
+            "known_thresholds": [],
+            "known_zone_profiles": [],
+            "revision": 1,
+            "created_at": _NOW.isoformat(),
+            "updated_at": _NOW.isoformat(),
+        }
+    )
+
+    assert setup.discipline.value == "swim"
+    assert "athlete_id" not in setup.model_dump()
 
 
 class TokenVerifier:

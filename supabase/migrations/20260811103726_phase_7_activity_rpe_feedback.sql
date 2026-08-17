@@ -1,6 +1,10 @@
 -- Phase 7 canonical activity summaries, RPE feedback, hidden realized load,
 -- and approval-gated current-week corrections.
 
+alter table public.change_proposals
+  add constraint change_proposals_id_athlete_id_key
+  unique (id, athlete_id);
+
 create table public.activities (
   id uuid primary key default gen_random_uuid(),
   athlete_id uuid not null references auth.users (id) on delete cascade,

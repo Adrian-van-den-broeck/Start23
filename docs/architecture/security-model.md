@@ -9,7 +9,9 @@ errors, token-redaction conventions, and the Phase 4 base RLS schema are
 implemented. The Phase 4 forward hardening and Phase 5 catalog migrations are
 applied in hosted Supabase and pass linked schema lint. The local Phase 6
 migration adds forced-RLS planning tables and private load snapshots but has
-not been applied. Its pgTAP suite and real-token end-to-end verification remain
+not been applied. The local Phase 8.5 migration adds forced-RLS setup,
+observation, and evaluation tables plus bounded RPCs, but it also remains
+unapplied. Their pgTAP suites and real-token end-to-end verification remain
 pending. Storage controls await their respective migration.
 
 Related documents:
@@ -189,6 +191,13 @@ transaction. Direct athlete-token fallback RPC calls are rejected. Hosted
 probes verify anonymous denial and positive server-only execution for both
 privileged paths without leaving test rows.
 
+Phase 8.5 adds an owner-token `SECURITY INVOKER` observation path and a separate
+service-only `save_calibration_evaluation` RPC. The observation RPC verifies
+the referenced canonical activity belongs to `auth.uid()` and recomputes its
+stored payload fingerprint. The evaluation RPC rejects public/authenticated
+execution and accepts only the bounded deterministic result produced after
+FastAPI has verified the athlete token; it cannot activate a zone profile.
+
 Supabase grants and RLS are treated as separate controls. Exposed objects
 receive explicit minimum grants because automatic Data API exposure is being
 removed from Supabase defaults.
@@ -282,9 +291,10 @@ then, no user-facing or general support endpoint should expose it.
 
 ## Supabase Storage
 
-When Phase 9 introduces raw activities and GPS files, they must use private
-buckets. Phase 7 accepts canonical summaries only and creates no raw-file
-storage path.
+Phase 9 uses the private `activity-files` bucket for available Polar FIT files.
+Objects use athlete/activity/provider-entity paths, accept only the configured
+binary content type up to 25 MiB, and have SHA-256 metadata. Backend writes use
+the narrowly held secret key; owner reads remain subject to Storage RLS.
 
 Required controls:
 
@@ -317,8 +327,12 @@ Provider connections require:
 - rate-limit and backoff handling without Redis;
 - provider payload redaction in logs.
 
-Provider behavior must be documented separately for the first selected MVP
-integration.
+The provisional Polar integration uses one-time OAuth state, the minimum
+`accesslink.read_all` scope, server-confined access tokens, provider
+deregistration before local token deletion, HMAC-SHA256 verification, a
+ten-minute event timestamp window, unique receipt fingerprints, and a bounded
+30-day post-registration exercise import. Production processor/legal approval
+and real-credential verification remain required.
 
 ## LLM boundary
 
@@ -420,7 +434,8 @@ Before production, requirements are needed for:
 
 ## Open security decisions
 
-- First wearable provider and its security protocol.
+- Production processor/legal approval and final callback configuration for the
+  provisional Polar AccessLink provider.
 - Health-data and conversation retention periods.
 - LLM provider, data-processing agreement, and retention configuration.
 

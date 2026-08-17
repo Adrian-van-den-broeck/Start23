@@ -1,10 +1,17 @@
 import type {
   AthleteProfile,
   AvailabilityWindow,
+  CalibrationEvaluation,
+  CalibrationObservation,
+  CalibrationObservationInput,
+  CalibrationProtocol,
+  CalibrationStatus,
   CalendarResponse,
   ChangeProposal,
   CompletedActivity,
   Discipline,
+  DisciplineSetup,
+  DisciplineSetupInput,
   OnboardingComplete,
   OnboardingState,
   PlannedExternalActivity,
@@ -16,6 +23,7 @@ import type {
   WorkoutDeck,
   ZoneBoundary,
   ZoneProfile,
+  ZoneSetupOption,
 } from './types';
 
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, '');
@@ -33,15 +41,45 @@ type ErrorEnvelope = {
   };
 };
 
+class ApiRequestError extends Error {
+  constructor(
+    message: string,
+    readonly status: number | null,
+    readonly code: string | null,
+  ) {
+    super(message);
+    this.name = 'ApiRequestError';
+  }
+
+  get retryable(): boolean {
+    return (
+      this.status === null ||
+      this.status === 429 ||
+      (this.status >= 500 && this.status <= 599)
+    );
+  }
+}
+
 function validationMessage(body: ErrorEnvelope): string | null {
   if (body.error?.code !== 'validation_failed') return null;
+  const violations = body.error.details?.violations ?? [];
+  if (violations.length === 0) return null;
   const fields = new Set(
-    body.error.details?.violations
-      ?.flatMap((violation) => violation.location ?? [])
-      .filter((part) => part !== 'body') ?? [],
+    violations
+      .flatMap((violation) => violation.location ?? [])
+      .filter((part) => part !== 'body'),
   );
   if (fields.has('target_date')) {
     return 'Gebruik een toekomstige racedatum in het formaat JJJJ-MM-DD.';
+  }
+  if (fields.has('pool_length_meters')) {
+    return 'Kies een zwembadlengte van 25 of 50 meter.';
+  }
+  if (fields.has('guidance_mode')) {
+    return 'Kies een geldige begeleidingsvorm voor deze discipline.';
+  }
+  if (fields.has('setup_route')) {
+    return 'Kies opnieuw hoe je de trainingszones wilt instellen.';
   }
   return 'Controleer de ingevulde velden en probeer opnieuw.';
 }
@@ -54,28 +92,65 @@ async function request<T>(
   if (!apiBaseUrl) {
     throw new Error('Configureer EXPO_PUBLIC_API_BASE_URL.');
   }
-  const response = await fetch(`${apiBaseUrl}${path}`, {
-    ...options,
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${apiBaseUrl}${path}`, {
+      ...options,
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+  } catch {
+    throw new ApiRequestError(
+      'De Start23-server is niet bereikbaar. Controleer je verbinding en probeer opnieuw.',
+      null,
+      'network_unavailable',
+    );
+  }
   if (!response.ok) {
     const body = (await response.json().catch(() => ({}))) as ErrorEnvelope;
-    throw new Error(
+    const message =
       validationMessage(body) ??
-        body.error?.message ??
-        'De wijziging kon niet worden opgeslagen.',
+      (response.status === 401
+        ? 'Je sessie is verlopen. Meld je opnieuw aan.'
+        : response.status === 503
+          ? 'De Start23-server is tijdelijk niet beschikbaar. Probeer het zo opnieuw.'
+          : body.error?.message ?? 'De wijziging kon niet worden opgeslagen.');
+    throw new ApiRequestError(
+      message,
+      response.status,
+      body.error?.code ?? null,
     );
   }
   return (await response.json()) as T;
 }
 
-export function getOnboarding(accessToken: string): Promise<OnboardingState> {
-  return request(accessToken, '/api/v1/onboarding');
+function wait(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+export async function getOnboarding(
+  accessToken: string,
+): Promise<OnboardingState> {
+  const retryDelays = [400, 1200];
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      return await request(accessToken, '/api/v1/onboarding');
+    } catch (caught) {
+      const delay = retryDelays[attempt];
+      if (
+        !(caught instanceof ApiRequestError) ||
+        !caught.retryable ||
+        delay === undefined
+      ) {
+        throw caught;
+      }
+      await wait(delay);
+    }
+  }
 }
 
 export function saveProfile(
@@ -162,6 +237,67 @@ export function saveFallbackZones(
       confirmed: true,
     }),
   });
+}
+
+export function getZoneSetupOptions(
+  accessToken: string,
+): Promise<ZoneSetupOption[]> {
+  return request(accessToken, '/api/v1/onboarding/zone-options');
+}
+
+export function saveDisciplineSetup(
+  accessToken: string,
+  discipline: Discipline,
+  input: DisciplineSetupInput,
+): Promise<DisciplineSetup> {
+  return request(
+    accessToken,
+    `/api/v1/onboarding/disciplines/${discipline}/setup`,
+    {
+      method: 'PUT',
+      body: JSON.stringify(input),
+    },
+  );
+}
+
+export function listCalibrationProtocols(
+  accessToken: string,
+  discipline: Discipline,
+): Promise<CalibrationProtocol[]> {
+  return request(
+    accessToken,
+    `/api/v1/calibration/protocols/${discipline}`,
+  );
+}
+
+export function saveCalibrationObservation(
+  accessToken: string,
+  input: CalibrationObservationInput,
+): Promise<CalibrationObservation> {
+  return request(accessToken, '/api/v1/calibration/observations', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
+export function evaluateCalibration(
+  accessToken: string,
+  activityId: string,
+  protocolId: string,
+): Promise<CalibrationEvaluation> {
+  return request(accessToken, '/api/v1/calibration/evaluate', {
+    method: 'POST',
+    body: JSON.stringify({
+      activity_id: activityId,
+      protocol_id: protocolId,
+    }),
+  });
+}
+
+export function getCalibrationStatus(
+  accessToken: string,
+): Promise<CalibrationStatus> {
+  return request(accessToken, '/api/v1/calibration/status');
 }
 
 export function completeOnboarding(

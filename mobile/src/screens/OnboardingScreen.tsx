@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   completeOnboarding,
   getOnboarding,
+  saveDisciplineSetup,
   saveFallbackZones,
   saveManualZones,
   savePrimaryGoal,
@@ -23,6 +24,7 @@ import {
 import type {
   AthleteProfile,
   Discipline,
+  DisciplineSetupInput,
   OnboardingState,
   OnboardingStep,
   PrimaryRaceGoal,
@@ -31,6 +33,7 @@ import type {
 import { FormField } from '../components/FormField';
 import { StatusPill } from '../components/StatusPill';
 import { colors, radius, spacing } from '../theme/tokens';
+import { ZoneSetupStep } from './ZoneSetupStep';
 
 const stepLabels: Array<{ step: OnboardingStep; label: string }> = [
   { step: 'profile', label: 'Profiel' },
@@ -42,6 +45,7 @@ const stepLabels: Array<{ step: OnboardingStep; label: string }> = [
 
 type OnboardingScreenProps = {
   accessToken: string;
+  onOpenCalibration: () => void;
   onOpenPlanning: () => void;
   onSignOut: () => Promise<void>;
 };
@@ -927,6 +931,7 @@ function CompletedStep({
 
 export function OnboardingScreen({
   accessToken,
+  onOpenCalibration,
   onOpenPlanning,
   onSignOut,
 }: OnboardingScreenProps) {
@@ -1045,13 +1050,24 @@ export function OnboardingScreen({
             <Text style={styles.logo}>Start23</Text>
             <Text style={styles.headerCaption}>Veilige intake</Text>
           </View>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => void onSignOut()}
-            style={styles.signOut}
-          >
-            <Text style={styles.signOutText}>Afmelden</Text>
-          </Pressable>
+          <View style={styles.headerActions}>
+            {state.discipline_setups.some((setup) => setup.protocol_id) ? (
+              <Pressable
+                accessibilityRole="button"
+                onPress={onOpenCalibration}
+                style={styles.signOut}
+              >
+                <Text style={styles.signOutText}>Testen</Text>
+              </Pressable>
+            ) : null}
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => void onSignOut()}
+              style={styles.signOut}
+            >
+              <Text style={styles.signOutText}>Afmelden</Text>
+            </Pressable>
+          </View>
         </View>
 
         {step !== 'completed' ? (
@@ -1140,22 +1156,38 @@ export function OnboardingScreen({
             />
           ) : null}
           {step === 'zones' ? (
-            <ZonesStep
-              key={state.zones
-                .filter((zone) => zone.status === 'active')
-                .map((zone) => zone.id)
-                .join(':')}
-              onFallback={(discipline) =>
-                mutate(() => saveFallbackZones(accessToken, discipline))
-              }
-              onManual={(discipline, metricKind, metricValue, boundaries) =>
-                mutate(() =>
-                  saveManualZones(accessToken, discipline, {
-                    metric_kind: metricKind,
-                    metric_value: metricValue,
-                    boundaries,
-                  }),
-                )
+            <ZoneSetupStep
+              accessToken={accessToken}
+              key={[
+                ...state.zones.map((zone) => `${zone.id}:${zone.status}`),
+                ...state.discipline_setups.map(
+                  (setup) => `${setup.discipline}:${setup.revision}`,
+                ),
+              ].join(':')}
+              onSave={(discipline, input: DisciplineSetupInput) =>
+                mutate(async () => {
+                  if (
+                    input.setup_route === 'known_values' &&
+                    input.zone_profiles.length > 0
+                  ) {
+                    const zoneProfile = input.zone_profiles[0];
+                    const threshold = input.thresholds.find(
+                      (candidate) =>
+                        candidate.metric_kind === zoneProfile.metric_kind,
+                    );
+                    if (!threshold) {
+                      throw new Error(
+                        'Een Zone 1-5-profiel vereist dezelfde bekende drempelwaarde.',
+                      );
+                    }
+                    await saveManualZones(accessToken, discipline, {
+                      metric_kind: threshold.metric_kind,
+                      metric_value: threshold.value,
+                      boundaries: zoneProfile.boundaries,
+                    });
+                  }
+                  await saveDisciplineSetup(accessToken, discipline, input);
+                })
               }
               saving={saving}
               state={state}
@@ -1233,6 +1265,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     marginTop: 2,
+  },
+  headerActions: {
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   signOut: {
     padding: spacing.sm,

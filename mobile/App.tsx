@@ -16,6 +16,7 @@ import { AuthProvider, useAuth } from './src/auth/AuthProvider';
 import { listActivities } from './src/api/client';
 import { AuthScreen } from './src/screens/AuthScreen';
 import { ActivityScreen } from './src/screens/ActivityScreen';
+import { CalibrationScreen } from './src/screens/CalibrationScreen';
 import { CheckInScreen } from './src/screens/CheckInScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { PlanningScreen } from './src/screens/PlanningScreen';
@@ -24,7 +25,7 @@ import { colors, spacing } from './src/theme/tokens';
 function AppContent() {
   const { configurationError, loading, session, signOut } = useAuth();
   const [authenticatedView, setAuthenticatedView] = useState<
-    'onboarding' | 'planning' | 'activities' | 'checkin'
+    'onboarding' | 'planning' | 'activities' | 'checkin' | 'calibration'
   >('onboarding');
   const [pendingRpeCount, setPendingRpeCount] = useState(0);
 
@@ -93,10 +94,19 @@ function AppContent() {
         onSignOut={signOut}
       />
     );
+  } else if (authenticatedView === 'calibration') {
+    screen = (
+      <CalibrationScreen
+        accessToken={session.access_token}
+        onBack={() => setAuthenticatedView('onboarding')}
+        onSignOut={signOut}
+      />
+    );
   } else {
     screen = (
       <OnboardingScreen
         accessToken={session.access_token}
+        onOpenCalibration={() => setAuthenticatedView('calibration')}
         onOpenPlanning={() => setAuthenticatedView('planning')}
         onSignOut={signOut}
       />

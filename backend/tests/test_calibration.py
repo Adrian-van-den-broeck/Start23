@@ -55,6 +55,7 @@ class MemoryCalibrationRepository:
         discipline = str(values["discipline"])
         previous = self._setups[owner].get(discipline)
         row = {
+            "athlete_id": str(owner),
             **deepcopy(values),
             "revision": int(previous["revision"]) + 1 if previous else 1,
             "created_at": previous["created_at"] if previous else _NOW.isoformat(),
@@ -293,6 +294,25 @@ def test_css_only_known_value_does_not_require_zone_boundaries(
 
     assert response.status_code == 200, response.text
     assert response.json()["known_zone_profiles"] == []
+
+
+def test_swim_calibration_week_accepts_pace_and_pool_length(
+    calibration_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = calibration_context
+    response = client.put(
+        "/api/v1/onboarding/disciplines/swim/setup",
+        headers=_headers(),
+        json={
+            "setup_route": "calibration_week",
+            "guidance_mode": "pace",
+            "pool_length_meters": 25,
+        },
+    )
+
+    assert response.status_code == 200, response.text
+    assert response.json()["protocol_id"] == "start23_week1_swim_calibration_v1"
+    assert response.json()["setup_status"] == "calibration_pending"
 
 
 def test_rpe_only_is_explicit_empty_and_rejects_authoritative_user_id(
