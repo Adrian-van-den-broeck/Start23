@@ -17,6 +17,7 @@ Related documents:
 - [Phase 0 decision lock](../requirements/phase-0-decision-lock.md)
 - [Database migration workflow](database-migrations.md)
 - [Backend zone calculation and calibration](backend-zone-calculation.md)
+- [Phase 8.5 and 9 business decision brief](phase-8-5-and-9-business-decisions.md)
 
 ## MVP outcome
 
