@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from app.api.dependencies import get_access_token, get_authenticated_identity
 from app.core.errors import ErrorResponse
 from app.core.security import AuthenticatedIdentity
+from app.modules.coach.weekly_plan import WeeklyPlanCoach
 from app.modules.workouts.repository import PlanningCatalogUnavailableError
 
 from .domain import PlanningConstraintError
@@ -59,15 +60,25 @@ def get_planning_catalog_provider(request: Request) -> PlanningCatalogProvider:
     return provider
 
 
+def get_weekly_plan_coach(request: Request) -> WeeklyPlanCoach:
+    """Return the process-wide constrained qualitative coach."""
+    coach: WeeklyPlanCoach = request.app.state.weekly_plan_coach
+    return coach
+
+
 def get_planning_service(
     repository: Annotated[PlanningRepository, Depends(get_planning_repository)],
     catalog_provider: Annotated[
         PlanningCatalogProvider,
         Depends(get_planning_catalog_provider),
     ],
+    weekly_plan_coach: Annotated[
+        WeeklyPlanCoach,
+        Depends(get_weekly_plan_coach),
+    ],
 ) -> PlanningService:
     """Build one request-scoped planning application service."""
-    return PlanningService(repository, catalog_provider)
+    return PlanningService(repository, catalog_provider, weekly_plan_coach)
 
 
 def raise_planning_error(error: Exception) -> NoReturn:

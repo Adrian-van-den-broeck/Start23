@@ -88,7 +88,21 @@ class MemoryOnboardingRepository:
 
     async def fetch_state(self, access_token: str, athlete_id: UUID) -> JsonObject:
         assert athlete_id == self._owner(access_token)
-        return deepcopy(self._states[athlete_id])
+        state = deepcopy(self._states[athlete_id])
+        state["zone_proposals"] = [
+            {
+                "id": str(proposal_id),
+                "target_zone_profile_id": str(proposal["target_id"]),
+                "base_zone_profile_id": (
+                    str(proposal["base_id"])
+                    if proposal["base_id"] is not None
+                    else None
+                ),
+            }
+            for proposal_id, proposal in self._proposals.items()
+            if proposal["owner"] == athlete_id and proposal["state"] == "pending"
+        ]
+        return state
 
     async def upsert_profile(
         self,
@@ -261,6 +275,68 @@ class MemoryOnboardingRepository:
         )
         return await self.save_zone_profile(access_token, values)
 
+    async def save_calculated_zone_profile(
+        self,
+        athlete_id: UUID,
+        values: JsonObject,
+    ) -> JsonObject:
+        state = self._states[athlete_id]
+        profiles: list[JsonObject] = state["zone_profiles"]
+        discipline_profiles = [
+            profile
+            for profile in profiles
+            if profile["discipline"] == values["discipline"]
+        ]
+        active = next(
+            (
+                profile
+                for profile in discipline_profiles
+                if profile["status"] == "active"
+            ),
+            None,
+        )
+        profile_id = uuid4()
+        proposal_id = uuid4()
+        profile = {
+            "id": str(profile_id),
+            "athlete_id": str(athlete_id),
+            "discipline": values["discipline"],
+            "version": len(discipline_profiles) + 1,
+            "setup_method": "calculated",
+            "status": "pending",
+            "validated": False,
+            "fallback_active": False,
+            "needs_testing": False,
+            "requires_review": True,
+            "review_reason": "athlete_confirmation_required",
+            "ruleset_version": "start23-zone-model-1.0",
+            "zone_model_version": "start23-zone-model-1.0",
+            "source_method": values["source_method"],
+            "source_quality": values["source_quality"],
+            "calculated_at": _NOW.isoformat(),
+            "review_status": "pending_athlete_confirmation",
+            "reviewer_id": None,
+            "reviewed_at": None,
+            "evidence_version": "voorstel-start23-zone-1-5-rekenmodel-v1.0",
+            "effective_from": None,
+            "created_at": _NOW.isoformat(),
+            "metric_profiles": deepcopy(values["metric_profiles"]),
+        }
+        profiles.append(profile)
+        self._proposals[proposal_id] = {
+            "owner": athlete_id,
+            "target_id": profile_id,
+            "base_id": UUID(str(active["id"])) if active is not None else None,
+            "state": "pending",
+        }
+        return {
+            "profile_id": str(profile_id),
+            "version": profile["version"],
+            "status": "pending",
+            "proposal_id": str(proposal_id),
+            "base_zone_profile_id": (str(active["id"]) if active is not None else None),
+        }
+
     async def complete_onboarding(self, access_token: str) -> UUID:
         owner = self._owner(access_token)
         request_id = self._initial_requests.setdefault(owner, uuid4())
@@ -279,7 +355,7 @@ class MemoryOnboardingRepository:
         self,
         access_token: str,
         proposal_id: UUID,
-        expected_base_zone_profile_id: UUID,
+        expected_base_zone_profile_id: UUID | None,
     ) -> JsonObject:
         owner = self._owner(access_token)
         proposal = self._proposals.get(proposal_id)
@@ -292,25 +368,38 @@ class MemoryOnboardingRepository:
         if proposal["base_id"] != expected_base_zone_profile_id:
             raise RepositoryConflictError
         profiles: list[JsonObject] = self._states[owner]["zone_profiles"]
-        base = next(
-            profile for profile in profiles if profile["id"] == str(proposal["base_id"])
+        base = (
+            next(
+                profile
+                for profile in profiles
+                if profile["id"] == str(proposal["base_id"])
+            )
+            if proposal["base_id"] is not None
+            else None
         )
         target = next(
             profile
             for profile in profiles
             if profile["id"] == str(proposal["target_id"])
         )
-        if base["status"] != "active" or target["status"] != "pending":
+        if (base is not None and base["status"] != "active") or target[
+            "status"
+        ] != "pending":
             raise RepositoryConflictError
-        base["status"] = "superseded"
+        if base is not None:
+            base["status"] = "superseded"
         target["status"] = "active"
         target["effective_from"] = _NOW.isoformat()
+        if target["setup_method"] == "calculated":
+            target["review_status"] = "confirmed_by_athlete"
         proposal["state"] = "applied"
         return {
             "proposal_id": str(proposal_id),
             "state": "applied",
             "active_zone_profile_id": str(proposal["target_id"]),
-            "superseded_zone_profile_id": str(proposal["base_id"]),
+            "superseded_zone_profile_id": (
+                str(proposal["base_id"]) if proposal["base_id"] is not None else None
+            ),
         }
 
     async def reject_zone_proposal(
@@ -333,11 +422,15 @@ class MemoryOnboardingRepository:
             if profile["id"] == str(proposal["target_id"])
         )
         target["status"] = "rejected"
+        if target["setup_method"] == "calculated":
+            target["review_status"] = "rejected_by_athlete"
         proposal["state"] = "rejected"
         return {
             "proposal_id": str(proposal_id),
             "state": "rejected",
-            "active_zone_profile_id": str(proposal["base_id"]),
+            "active_zone_profile_id": (
+                str(proposal["base_id"]) if proposal["base_id"] is not None else None
+            ),
             "superseded_zone_profile_id": None,
         }
 
@@ -597,6 +690,53 @@ def test_first_zones_activate_and_replacement_remains_pending(
         )
         == 1
     )
+
+
+def test_known_thresholds_create_multi_metric_pending_zones_before_activation(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = onboarding_context
+    calculated = client.put(
+        "/api/v1/me/zones/run",
+        headers=_headers(),
+        json={
+            "setup_method": "calculated",
+            "confirmed": True,
+            "thresholds": [
+                {
+                    "metric_kind": "run_lthr_bpm",
+                    "value": 172,
+                },
+                {
+                    "metric_kind": "run_threshold_pace_seconds_per_km",
+                    "value": 290,
+                },
+            ],
+            "boundary_overrides": [],
+        },
+    )
+
+    assert calculated.status_code == 200, calculated.text
+    body = calculated.json()
+    assert body["profile"]["status"] == "pending"
+    assert body["profile"]["source"] == "athlete_entered"
+    assert body["profile"]["zone_model_version"] == "start23-zone-model-1.0"
+    assert len(body["profile"]["metric_profiles"]) == 2
+    assert body["profile"]["metric"]["metric_kind"] == (
+        "run_threshold_pace_seconds_per_km"
+    )
+    assert body["profile"]["boundaries"][0]["upper_value"] is None
+    assert body["proposal_id"] is not None
+
+    approved = client.post(
+        f"/api/v1/change-proposals/{body['proposal_id']}/approve",
+        headers=_headers(),
+        json={"expected_base_zone_profile_id": None},
+    )
+
+    assert approved.status_code == 200, approved.text
+    assert approved.json()["state"] == "applied"
+    assert approved.json()["superseded_zone_profile_id"] is None
 
 
 def test_zone_proposal_approval_is_owned_atomic_and_stale_safe(

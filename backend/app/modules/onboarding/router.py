@@ -275,7 +275,6 @@ async def approve_change_proposal(
                 proposal_id,
                 approval.expected_base_revision,
             )
-        assert approval.expected_base_zone_profile_id is not None
         return await onboarding_service.approve_zone_proposal(
             access_token,
             proposal_id,

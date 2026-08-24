@@ -17,6 +17,7 @@ import type {
   PlannedExternalActivity,
   PrimaryRaceGoal,
   TrainingHistoryEntry,
+  ThresholdDecision,
   WeeklyCheckIn,
   WeeklyPlan,
   WeeklyPlanProposal,
@@ -239,6 +240,27 @@ export function saveFallbackZones(
   });
 }
 
+export function saveCalculatedZones(
+  accessToken: string,
+  discipline: Discipline,
+  input: {
+    thresholds: Array<{ metric_kind: string; value: string }>;
+    boundary_overrides: Array<{
+      metric_kind: string;
+      boundaries: ZoneBoundary[];
+    }>;
+  },
+): Promise<{ profile: ZoneProfile; proposal_id: string | null }> {
+  return request(accessToken, `/api/v1/me/zones/${discipline}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      setup_method: 'calculated',
+      confirmed: true,
+      ...input,
+    }),
+  });
+}
+
 export function getZoneSetupOptions(
   accessToken: string,
 ): Promise<ZoneSetupOption[]> {
@@ -292,6 +314,31 @@ export function evaluateCalibration(
       protocol_id: protocolId,
     }),
   });
+}
+
+export function confirmCalibrationThreshold(
+  accessToken: string,
+  evaluationId: string,
+): Promise<ThresholdDecision> {
+  return request(
+    accessToken,
+    `/api/v1/calibration/evaluations/${evaluationId}/threshold/confirm`,
+    {
+      method: 'POST',
+      body: JSON.stringify({ confirmed: true }),
+    },
+  );
+}
+
+export function rejectCalibrationThreshold(
+  accessToken: string,
+  evaluationId: string,
+): Promise<ThresholdDecision> {
+  return request(
+    accessToken,
+    `/api/v1/calibration/evaluations/${evaluationId}/threshold/reject`,
+    { method: 'POST' },
+  );
 }
 
 export function getCalibrationStatus(
@@ -380,6 +427,42 @@ export function approvePlanProposal(
         expected_base_revision: expectedBaseRevision,
       }),
     },
+  );
+}
+
+export function approveZoneProposal(
+  accessToken: string,
+  proposalId: string,
+  expectedBaseZoneProfileId: string | null,
+): Promise<{
+  state: 'applied';
+  active_zone_profile_id: string;
+  superseded_zone_profile_id: string | null;
+}> {
+  return request(
+    accessToken,
+    `/api/v1/change-proposals/${proposalId}/approve`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        expected_base_zone_profile_id: expectedBaseZoneProfileId,
+      }),
+    },
+  );
+}
+
+export function rejectZoneProposal(
+  accessToken: string,
+  proposalId: string,
+): Promise<{
+  state: 'rejected';
+  active_zone_profile_id: string | null;
+  superseded_zone_profile_id: null;
+}> {
+  return request(
+    accessToken,
+    `/api/v1/change-proposals/${proposalId}/reject`,
+    { method: 'POST' },
   );
 }
 

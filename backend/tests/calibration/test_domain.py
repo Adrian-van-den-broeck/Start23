@@ -182,7 +182,7 @@ def test_protocol_registry_contains_all_approved_fixture_protocols() -> None:
     assert len(protocols_for_discipline(Discipline.RUN)) == 2
 
 
-def test_valid_run_test_estimates_pace_and_lthr_but_no_zones() -> None:
+def test_valid_run_test_estimates_thresholds_and_pending_zone_profiles() -> None:
     result = evaluate_protocol(
         protocol_id="start23_run_threshold_30min_v1",
         observations=_run_test(),
@@ -191,13 +191,19 @@ def test_valid_run_test_estimates_pace_and_lthr_but_no_zones() -> None:
     assert result.ruleset_version == CALIBRATION_RULESET_VERSION
     assert result.status is EvaluationStatus.THRESHOLD_ESTIMATED
     assert result.threshold_status is ThresholdStatus.ESTIMATED
-    assert result.zone_status is ZoneStatus.PENDING_PROTOCOL
+    assert result.zone_status is ZoneStatus.PENDING_ATHLETE_CONFIRMATION
     assert result.requires_athlete_confirmation is True
     assert [(value.metric_kind, value.value) for value in result.thresholds] == [
         (ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM, Decimal("290")),
         (ZoneMetricKind.RUN_LTHR_BPM, Decimal("172")),
     ]
-    assert result.reason_codes == ("zone_model_not_approved",)
+    assert result.reason_codes == ("zone_profile_pending_athlete_confirmation",)
+    assert [profile.metric.kind for profile in result.zone_profiles] == [
+        ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM,
+        ZoneMetricKind.RUN_LTHR_BPM,
+    ]
+    assert result.zone_profiles[0].is_primary is True
+    assert result.zone_profiles[0].boundaries[0].upper is None
 
 
 def test_run_lthr_is_never_extrapolated_from_easy_pace() -> None:
@@ -344,15 +350,16 @@ def test_css_formula_is_not_used_for_an_inconsistent_pace_relationship() -> None
     assert "pace_relationship_invalid" in result.reason_codes
 
 
-def test_css_fails_closed_when_canonical_whole_second_rounding_is_undefined() -> None:
+def test_css_uses_canonical_whole_second_half_up_rounding() -> None:
     result = evaluate_protocol(
         protocol_id="start23_swim_css_400_200_v1",
         observations=_swim_css_test(time_400="401", time_200="180"),
     )
 
-    assert result.status is EvaluationStatus.INSUFFICIENT_PROTOCOL
-    assert result.thresholds == ()
-    assert "pace_rounding_rule_not_approved" in result.reason_codes
+    assert result.status is EvaluationStatus.THRESHOLD_ESTIMATED
+    assert result.thresholds[0].value == Decimal("111")
+    assert result.zone_status is ZoneStatus.PENDING_ATHLETE_CONFIRMATION
+    assert result.zone_profiles[0].boundaries[0].upper is None
 
 
 def test_missing_session_rpe_prevents_evaluation_but_preserves_observations() -> None:

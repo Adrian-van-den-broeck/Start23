@@ -33,6 +33,8 @@ class Settings(BaseSettings):
     supabase_jwks_timeout_seconds: float = Field(default=5.0, gt=0, le=30)
     supabase_data_api_timeout_seconds: float = Field(default=10.0, gt=0, le=30)
     openai_api_key: SecretStr = SecretStr("")
+    openai_model: str = "gpt-5.6-luna"
+    openai_api_timeout_seconds: float = Field(default=8.0, gt=0, le=30)
     polar_client_id: str = ""
     polar_client_secret: SecretStr = SecretStr("")
     polar_oauth_redirect_url: AnyHttpUrl = AnyHttpUrl(
@@ -100,6 +102,15 @@ class Settings(BaseSettings):
                 "must be configured together"
             )
         return self
+
+    @field_validator("openai_model")
+    @classmethod
+    def validate_openai_model(cls, value: str) -> str:
+        """Require a non-empty provider model identifier."""
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("openai_model must not be empty")
+        return normalized
 
 
 @lru_cache

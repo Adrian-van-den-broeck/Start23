@@ -9,13 +9,15 @@ It distinguishes an accepted product/rules decision from later delivery or
 production-verification work. Decisions 1 through 12 were accepted on
 2026-08-11; decisions amended or added on 2026-08-13 are explicitly marked
 below. The existing deterministic implementation remains
-`phase-3-ruleset-3` until the amended physiology rules have been reviewed,
-versioned, implemented, and tested. No accepted decision is described as
+`phase-3-ruleset-3` until each amended rule is versioned, implemented, tested,
+and covered by its applicable review. No accepted decision is described as
 implemented merely because it appears in this register.
 
-Ruleset 3 is approved for local MVP development but cannot pass its
-production-readiness gate until a named qualified accountable reviewer records
-approval and a review date. The same gate applies to every later ruleset.
+Qualified physiological production review of the active rules and
+`start23-zone-model-1.0` was confirmed complete by the product owner on
+2026-08-24. Reviewer identity and the evidence dossier remain in the external
+product-governance record. The same review gate reopens for every later ruleset
+or material model change.
 
 ## Resolved on 2026-08-11
 
@@ -190,8 +192,9 @@ applicability, contraindications, tests, version, named approver, approval date,
 and next review date. An LLM cannot own or approve a rule.
 
 Implementation: rulesets carry evidence/applicability/test metadata and expose
-a fail-closed production-review check. A named accountable reviewer is not yet
-appointed, so production activation remains blocked operationally.
+a fail-closed production-review check. Appointment and sign-off for the active
+rules and zone model were confirmed complete on 2026-08-24; changed rules still
+fail closed until separately reviewed.
 
 ### 11. Injury semantics
 
@@ -224,10 +227,14 @@ Implementation: `apply_mvp_injury_policy` always redistributes zero; Phase 6
 planning already removes blocked disciplines without replacement. Tests keep
 the analytical 80% calculation separate from the active MVP policy.
 
-## Still open after these decisions
+## Resolved on 2026-08-24
 
-13. Appoint the named qualified accountable reviewer and record the first
-production approval/review date for ruleset 3.
+13. The product owner confirmed appointment of the qualified accountable
+reviewer and production sign-off for the active physiology rules and
+`start23-zone-model-1.0`. Personal identity and the evidence dossier are kept
+in the external product-governance record.
+
+## Still open after these decisions
 
 14. Define and review any concrete BR-009 soft-range records.
 

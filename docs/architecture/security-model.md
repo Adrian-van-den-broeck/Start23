@@ -204,12 +204,13 @@ removed from Supabase defaults.
 
 ## Physiology production governance
 
-`phase-3-ruleset-3` is approved for deterministic local development but is not
-eligible for production activation until a named, qualified human reviewer is
-recorded through the Physiology Rules Review Board. The approval record must
-identify the reviewer, evidence set, ruleset version, decision, and review and
-next-review dates. An LLM cannot act as reviewer, approve soft clinical ranges,
-or satisfy this gate. Missing, expired, or rejected approval fails closed.
+Qualified human review of the active `phase-3-ruleset-3` rules and
+`start23-zone-model-1.0` was confirmed complete by the product owner on
+2026-08-24. Reviewer identity, evidence, decision, and review-cycle metadata are
+retained in the external product-governance record rather than duplicated in
+source control. An LLM cannot act as reviewer, approve soft clinical ranges,
+or satisfy a new gate. Changed, expired, missing, or rejected approval still
+fails closed.
 
 The MVP deliberately omits sex/gender/physiology-category data and makes no
 binary-coefficient FTP estimate. Injury data is minimized to functional
@@ -337,8 +338,10 @@ and real-credential verification remain required.
 ## LLM boundary
 
 The Phase 8 structured check-in does not invoke an LLM. Its form payload is
-strictly validated and separately confirmed. The following boundary applies
-only when the later constrained coach is introduced.
+strictly validated and separately confirmed. A pulled-forward Phase 10 slice
+now invokes the constrained coach only after deterministic weekly-plan proposal
+creation, and only for a public explanation. Context extraction and clarifying
+questions remain future work under the same boundary.
 
 Permitted LLM operations:
 
@@ -366,6 +369,13 @@ Controls:
 - data minimization and redaction;
 - provider retention/training settings reviewed before production;
 - deterministic explanation facts supplied by the backend.
+
+The implemented weekly-plan adapter additionally uses a strict JSON output
+schema, sends no free athlete text, sets provider storage to false, applies a
+bounded timeout, exposes no tools, validates forbidden private-load language,
+and falls back to a local deterministic explanation. A service-only RPC may
+write that text once to an owned pending plan proposal; it cannot mutate or
+approve the target revision.
 
 ## Logging, audit, and monitoring
 

@@ -12,11 +12,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
+  approveZoneProposal,
   completeOnboarding,
   getOnboarding,
+  rejectZoneProposal,
+  saveCalculatedZones,
   saveDisciplineSetup,
-  saveFallbackZones,
-  saveManualZones,
   savePrimaryGoal,
   saveProfile,
   saveTrainingHistory,
@@ -834,9 +835,23 @@ type ReviewStepProps = {
   state: OnboardingState;
   saving: boolean;
   onComplete: () => Promise<void>;
+  onApproveZone: (
+    proposalId: string,
+    baseZoneProfileId: string | null,
+  ) => Promise<void>;
+  onRejectZone: (proposalId: string) => Promise<void>;
 };
 
-function ReviewStep({ state, saving, onComplete }: ReviewStepProps) {
+function ReviewStep({
+  state,
+  saving,
+  onComplete,
+  onApproveZone,
+  onRejectZone,
+}: ReviewStepProps) {
+  const pendingZones = state.zones.filter(
+    (zone) => zone.status === 'pending' && zone.proposal_id !== null,
+  );
   return (
     <StepFrame
       description="Afronden maakt geen trainingsplan actief. Het zet alleen een planningsverzoek klaar voor de volgende fase."
@@ -867,6 +882,36 @@ function ReviewStep({ state, saving, onComplete }: ReviewStepProps) {
           }/3 disciplines`}
         />
       </View>
+      {pendingZones.map((zone) => (
+        <View key={zone.id} style={styles.approvalNotice}>
+          <Text style={styles.approvalTitle}>
+            Zonevoorstel {zone.discipline}
+          </Text>
+          <Text style={styles.approvalText}>
+            {zone.metric_profiles.length > 1
+              ? `${zone.metric_profiles.length} metrische representaties`
+              : zone.metric?.metric_kind ?? 'Berekende zones'}{' '}
+            volgens {zone.zone_model_version}. De huidige zones veranderen pas
+            na jouw bevestiging.
+          </Text>
+          <ActionButton
+            disabled={saving}
+            label="Zones bevestigen"
+            onPress={() =>
+              void onApproveZone(
+                zone.proposal_id!,
+                zone.base_zone_profile_id,
+              )
+            }
+          />
+          <ActionButton
+            disabled={saving}
+            label="Zonevoorstel afwijzen"
+            onPress={() => void onRejectZone(zone.proposal_id!)}
+            secondary
+          />
+        </View>
+      ))}
       <View style={styles.approvalNotice}>
         <Text style={styles.approvalTitle}>Jij houdt de controle</Text>
         <Text style={styles.approvalText}>
@@ -1166,24 +1211,10 @@ export function OnboardingScreen({
               ].join(':')}
               onSave={(discipline, input: DisciplineSetupInput) =>
                 mutate(async () => {
-                  if (
-                    input.setup_route === 'known_values' &&
-                    input.zone_profiles.length > 0
-                  ) {
-                    const zoneProfile = input.zone_profiles[0];
-                    const threshold = input.thresholds.find(
-                      (candidate) =>
-                        candidate.metric_kind === zoneProfile.metric_kind,
-                    );
-                    if (!threshold) {
-                      throw new Error(
-                        'Een Zone 1-5-profiel vereist dezelfde bekende drempelwaarde.',
-                      );
-                    }
-                    await saveManualZones(accessToken, discipline, {
-                      metric_kind: threshold.metric_kind,
-                      metric_value: threshold.value,
-                      boundaries: zoneProfile.boundaries,
+                  if (input.setup_route === 'known_values') {
+                    await saveCalculatedZones(accessToken, discipline, {
+                      thresholds: input.thresholds,
+                      boundary_overrides: input.zone_profiles,
                     });
                   }
                   await saveDisciplineSetup(accessToken, discipline, input);
@@ -1195,8 +1226,20 @@ export function OnboardingScreen({
           ) : null}
           {step === 'review' ? (
             <ReviewStep
+              onApproveZone={(proposalId, baseZoneProfileId) =>
+                mutate(() =>
+                  approveZoneProposal(
+                    accessToken,
+                    proposalId,
+                    baseZoneProfileId,
+                  ),
+                )
+              }
               onComplete={() =>
                 mutate(() => completeOnboarding(accessToken))
+              }
+              onRejectZone={(proposalId) =>
+                mutate(() => rejectZoneProposal(accessToken, proposalId))
               }
               saving={saving}
               state={state}

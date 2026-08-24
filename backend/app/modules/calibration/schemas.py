@@ -117,7 +117,12 @@ class DisciplineSetupResponse(CalibrationPublicModel):
     protocol_id: str | None
     pool_length_meters: Literal[25, 50] | None
     threshold_status: Literal["unknown", "user_provided"]
-    zone_status: Literal["unknown", "user_provided", "pending_protocol"]
+    zone_status: Literal[
+        "unknown",
+        "user_provided",
+        "pending_protocol",
+        "pending_athlete_confirmation",
+    ]
     source: Literal["user_provided", "field_test", "week1_calibration", "none"]
     validation_status: Literal["self_reported", "not_assessed"]
     confidence: Confidence
@@ -236,6 +241,28 @@ class ThresholdEstimateResponse(CalibrationPublicModel):
     value: Decimal
 
 
+class CalculatedZoneBoundaryResponse(CalibrationPublicModel):
+    """One generated range; a null outer value means the range is open."""
+
+    zone_number: int = Field(ge=1, le=5)
+    lower_value: Decimal | None
+    upper_value: Decimal | None
+
+
+class CalculatedZoneMetricProfileResponse(CalibrationPublicModel):
+    """One metric representation inside a calculated discipline profile."""
+
+    metric_kind: ZoneMetricKind
+    source_value: Decimal = Field(gt=0)
+    is_primary: bool
+    boundary_source: Literal["model_derived", "athlete_entered"]
+    zone_model_version: Literal["start23-zone-model-1.0"]
+    boundaries: tuple[CalculatedZoneBoundaryResponse, ...] = Field(
+        min_length=5,
+        max_length=5,
+    )
+
+
 class CalibrationEvaluationResponse(CalibrationPublicModel):
     """Persisted fail-closed protocol outcome."""
 
@@ -250,10 +277,32 @@ class CalibrationEvaluationResponse(CalibrationPublicModel):
     confidence: Confidence
     reason_codes: tuple[str, ...]
     thresholds: tuple[ThresholdEstimateResponse, ...]
+    zone_model_version: Literal["start23-zone-model-1.0"] | None
+    zone_profiles: tuple[CalculatedZoneMetricProfileResponse, ...]
     requires_athlete_confirmation: bool
     review_status: Literal["pending_athlete_confirmation", "not_applicable"]
     fingerprint: str
     created_at: datetime
+
+
+class ThresholdConfirmationRequest(CalibrationPublicModel):
+    """Explicit athlete confirmation before a zone proposal is created."""
+
+    confirmed: Literal[True]
+
+
+class ThresholdDecisionResponse(CalibrationPublicModel):
+    """Immutable threshold decision and optional pending zone proposal."""
+
+    evaluation_id: UUID
+    state: Literal["accepted", "rejected"]
+    zone_profile_id: UUID | None
+    zone_proposal_id: UUID | None
+    base_zone_profile_id: UUID | None
+    decided_at: datetime
+    zone_proposal_state: (
+        Literal["pending", "approved", "rejected", "expired", "applied"] | None
+    ) = None
 
 
 class CalibrationStatusResponse(CalibrationPublicModel):
@@ -261,3 +310,4 @@ class CalibrationStatusResponse(CalibrationPublicModel):
 
     setups: tuple[DisciplineSetupResponse, ...]
     evaluations: tuple[CalibrationEvaluationResponse, ...]
+    threshold_decisions: tuple[ThresholdDecisionResponse, ...] = ()

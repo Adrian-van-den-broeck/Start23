@@ -655,6 +655,14 @@ export function PlanningScreen({
                       <Text style={styles.warningText}>{warning.message}</Text>
                     </View>
                   ))}
+                  {plan.proposal ? (
+                    <View style={styles.warning}>
+                      <Text style={styles.warningTitle}>Coachuitleg</Text>
+                      <Text style={styles.warningText}>
+                        {plan.proposal.public_explanation}
+                      </Text>
+                    </View>
+                  ) : null}
                   {plan.proposal?.state === 'pending' ? (
                     <View style={styles.decisionRow}>
                       <View style={styles.decisionButton}>

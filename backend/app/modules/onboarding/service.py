@@ -1,5 +1,7 @@
 """Phase 4 application service over deterministic physiology and persistence."""
 
+import hashlib
+import json
 from datetime import date
 from decimal import Decimal
 from uuid import UUID
@@ -10,6 +12,7 @@ from app.modules.onboarding.repository import JsonObject, OnboardingRepository
 from app.modules.onboarding.schemas import (
     AthleteProfileResponse,
     AthleteProfileUpdate,
+    CalculatedZoneSubmission,
     FallbackZoneSubmission,
     ManualZoneSubmission,
     OnboardingCompleteResponse,
@@ -19,7 +22,6 @@ from app.modules.onboarding.schemas import (
     PrimaryRaceGoalResponse,
     TrainingHistoryEntryResponse,
     TrainingHistoryReplace,
-    ZoneBoundaryInput,
     ZoneMetricResponse,
     ZoneProfileResponse,
     ZoneProposalDecisionResponse,
@@ -28,10 +30,13 @@ from app.modules.onboarding.schemas import (
 )
 from app.modules.physiology.models import Discipline, TrainingZone
 from app.modules.physiology.zones import (
+    ZONE_MODEL_VERSION,
+    CalculatedZoneMetricProfile,
     ZoneBoundary,
     ZoneMetric,
     assess_metric_with_soft_limits,
     calculate_karvonen_fallback,
+    calculate_zone_profiles,
     validate_zone_profile,
 )
 
@@ -81,50 +86,87 @@ class OnboardingService:
                 str(row["zone_profile_id"]),
                 [],
             ).append(row)
+        proposal_by_profile = {
+            str(row["target_zone_profile_id"]): row
+            for row in state.get("zone_proposals", [])
+            if row.get("target_zone_profile_id") is not None
+        }
 
         profiles: list[ZoneProfileResponse] = []
         for row in state["zone_profiles"]:
             profile_id = str(row["id"])
             metric_row = metric_by_profile.get(profile_id)
-            metric = (
-                ZoneMetricResponse.model_validate(
+            metric_profiles = list(row.get("metric_profiles") or [])
+            primary_profile = next(
+                (
+                    profile
+                    for profile in metric_profiles
+                    if bool(profile.get("is_primary"))
+                ),
+                metric_profiles[0] if metric_profiles else None,
+            )
+            metric: ZoneMetricResponse | None = None
+            if primary_profile is not None:
+                metric = ZoneMetricResponse.model_validate(
+                    {
+                        "metric_kind": primary_profile["metric_kind"],
+                        "value": primary_profile["source_value"],
+                    }
+                )
+            elif metric_row is not None:
+                metric = ZoneMetricResponse.model_validate(
                     {
                         "metric_kind": metric_row["metric_kind"],
                         "value": metric_row["value"],
                     }
                 )
-                if metric_row is not None
-                else None
+            raw_boundaries = (
+                list(primary_profile["boundaries"])
+                if primary_profile is not None
+                else boundaries_by_profile.get(profile_id, [])
             )
             boundaries = tuple(
-                ZoneBoundaryInput.model_validate(
-                    {
-                        "zone_number": boundary["zone_number"],
-                        "lower_value": boundary["lower_value"],
-                        "upper_value": boundary["upper_value"],
-                    }
-                )
+                {
+                    "zone_number": boundary["zone_number"],
+                    "lower_value": boundary.get("lower_value"),
+                    "upper_value": boundary.get("upper_value"),
+                }
                 for boundary in sorted(
-                    boundaries_by_profile.get(profile_id, []),
+                    raw_boundaries,
                     key=lambda value: int(value["zone_number"]),
                 )
             )
+            proposal = proposal_by_profile.get(profile_id)
+            stored_values = {
+                key: row[key]
+                for key in ZoneProfileResponse.model_fields
+                if key in row
+                and key
+                not in {
+                    "metric",
+                    "boundaries",
+                    "metric_profiles",
+                    "source",
+                    "validation_status",
+                    "proposal_id",
+                    "base_zone_profile_id",
+                }
+            }
             profiles.append(
                 ZoneProfileResponse.model_validate(
                     {
-                        **{
-                            key: row[key]
-                            for key in ZoneProfileResponse.model_fields
-                            if key
-                            not in {
-                                "metric",
-                                "boundaries",
-                                "source",
-                                "validation_status",
-                            }
-                        },
+                        **stored_values,
                         "metric": metric,
                         "boundaries": boundaries,
+                        "metric_profiles": metric_profiles,
+                        "proposal_id": (
+                            proposal.get("id") if proposal is not None else None
+                        ),
+                        "base_zone_profile_id": (
+                            proposal.get("base_zone_profile_id")
+                            if proposal is not None
+                            else None
+                        ),
                     }
                 )
             )
@@ -333,6 +375,116 @@ class OnboardingService:
         }
 
     @staticmethod
+    def _calculated_profile_payload(
+        profiles: tuple[CalculatedZoneMetricProfile, ...],
+        submission: CalculatedZoneSubmission,
+    ) -> list[JsonObject]:
+        overrides = {
+            profile.metric_kind: profile for profile in submission.boundary_overrides
+        }
+        if not set(overrides).issubset(
+            {threshold.metric_kind for threshold in submission.thresholds}
+        ):
+            raise OnboardingDomainError(
+                "Boundary overrides require the same confirmed threshold metric."
+            )
+        payload: list[JsonObject] = []
+        for profile in profiles:
+            override = overrides.get(profile.metric.kind)
+            boundaries: tuple[JsonObject, ...]
+            if override is not None:
+                manual_boundaries = tuple(
+                    ZoneBoundary(
+                        zone=TrainingZone(boundary.zone_number),
+                        lower=boundary.lower_value,
+                        upper=boundary.upper_value,
+                    )
+                    for boundary in override.boundaries
+                )
+                validate_zone_profile(
+                    metric_kind=profile.metric.kind,
+                    boundaries=manual_boundaries,
+                )
+                boundaries = tuple(
+                    {
+                        "zone_number": boundary.zone.value,
+                        "lower_value": str(boundary.lower),
+                        "upper_value": str(boundary.upper),
+                    }
+                    for boundary in manual_boundaries
+                )
+                boundary_source = "athlete_entered"
+            else:
+                boundaries = tuple(
+                    {
+                        "zone_number": boundary.zone.value,
+                        "lower_value": (
+                            str(boundary.lower) if boundary.lower is not None else None
+                        ),
+                        "upper_value": (
+                            str(boundary.upper) if boundary.upper is not None else None
+                        ),
+                    }
+                    for boundary in profile.boundaries
+                )
+                boundary_source = "model_derived"
+            payload.append(
+                {
+                    "metric_kind": profile.metric.kind.value,
+                    "source_value": str(profile.metric.value),
+                    "is_primary": profile.is_primary,
+                    "boundary_source": boundary_source,
+                    "zone_model_version": profile.zone_model_version.value,
+                    "boundaries": list(boundaries),
+                }
+            )
+        return payload
+
+    @classmethod
+    def _calculated_zone_values(
+        cls,
+        discipline: Discipline,
+        submission: CalculatedZoneSubmission,
+    ) -> JsonObject:
+        kinds = [threshold.metric_kind for threshold in submission.thresholds]
+        if len(set(kinds)) != len(kinds):
+            raise OnboardingDomainError("Known threshold metrics must be unique.")
+        try:
+            profiles = calculate_zone_profiles(
+                tuple(
+                    ZoneMetric(
+                        discipline=discipline,
+                        kind=threshold.metric_kind,
+                        value=threshold.value,
+                    )
+                    for threshold in submission.thresholds
+                )
+            )
+            metric_profiles = cls._calculated_profile_payload(profiles, submission)
+        except ValueError as error:
+            raise OnboardingDomainError(str(error)) from error
+        fingerprint_source = {
+            "discipline": discipline.value,
+            "zone_model_version": ZONE_MODEL_VERSION.value,
+            "metric_profiles": metric_profiles,
+        }
+        fingerprint = hashlib.sha256(
+            json.dumps(
+                fingerprint_source,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+        return {
+            "discipline": discipline.value,
+            "source_method": "athlete_entered",
+            "source_quality": "athlete_entered",
+            "metric_profiles": metric_profiles,
+            "input_fingerprint": fingerprint,
+            "calibration_evaluation_id": None,
+        }
+
+    @staticmethod
     def _age_on(date_of_birth: date, today: date) -> int:
         return (
             today.year
@@ -393,7 +545,7 @@ class OnboardingService:
         if isinstance(submission, ManualZoneSubmission):
             values = self._manual_zone_values(discipline, submission)
             result = await self._repository.save_zone_profile(access_token, values)
-        else:
+        elif isinstance(submission, FallbackZoneSubmission):
             profile = await self.get_profile(access_token, athlete_id)
             values = self._fallback_zone_values(
                 discipline,
@@ -401,6 +553,12 @@ class OnboardingService:
                 profile,
             )
             result = await self._repository.save_fallback_zone_profile(
+                athlete_id,
+                values,
+            )
+        else:
+            values = self._calculated_zone_values(discipline, submission)
+            result = await self._repository.save_calculated_zone_profile(
                 athlete_id,
                 values,
             )
@@ -440,9 +598,9 @@ class OnboardingService:
         self,
         access_token: str,
         proposal_id: UUID,
-        expected_base_zone_profile_id: UUID,
+        expected_base_zone_profile_id: UUID | None,
     ) -> ZoneProposalDecisionResponse:
-        """Apply exactly one pending replacement against its expected base."""
+        """Apply one pending profile against its exact active-or-empty base."""
         result = await self._repository.approve_zone_proposal(
             access_token,
             proposal_id,

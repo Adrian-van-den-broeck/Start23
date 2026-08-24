@@ -3,7 +3,7 @@
 from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from enum import Enum
 from re import fullmatch
 
@@ -61,6 +61,16 @@ class ZoneValidationState(str, Enum):
     PROTOCOL_VALIDATED = "protocol_validated"
 
 
+class ZoneSourceQuality(str, Enum):
+    """Evidence quality stored with a generated zone version."""
+
+    MEASURED_LAB = "measured_lab"
+    REVIEWED_FIELD_THRESHOLD = "reviewed_field_threshold"
+    ATHLETE_ENTERED = "athlete_entered"
+    ESTIMATED = "estimated"
+    UNKNOWN = "unknown"
+
+
 _METRIC_DISCIPLINE = {
     ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M: Discipline.SWIM,
     ZoneMetricKind.BIKE_FTP_WATTS: Discipline.BIKE,
@@ -78,6 +88,51 @@ _METRIC_DIRECTION = {
 _PACE_METRICS = {
     ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M,
     ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM,
+}
+ZONE_MODEL_VERSION = RulesetVersion("start23-zone-model-1.0")
+ZONE_MODEL_EVIDENCE_VERSION = "voorstel-start23-zone-1-5-rekenmodel-v1.0"
+_ZONE_MODEL_RATIOS = {
+    ZoneMetricKind.BIKE_FTP_WATTS: (
+        Decimal("0.56"),
+        Decimal("0.76"),
+        Decimal("0.91"),
+        Decimal("1.06"),
+    ),
+    ZoneMetricKind.BIKE_THRESHOLD_HEART_RATE_BPM: (
+        Decimal("0.85"),
+        Decimal("0.90"),
+        Decimal("0.95"),
+        Decimal("1.03"),
+    ),
+    ZoneMetricKind.RUN_LTHR_BPM: (
+        Decimal("0.85"),
+        Decimal("0.90"),
+        Decimal("0.95"),
+        Decimal("1.03"),
+    ),
+    ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM: (
+        Decimal("0.78"),
+        Decimal("0.88"),
+        Decimal("0.95"),
+        Decimal("1.02"),
+    ),
+    ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M: (
+        Decimal("0.78"),
+        Decimal("0.88"),
+        Decimal("0.95"),
+        Decimal("1.02"),
+    ),
+}
+_PRIMARY_METRIC_ORDER = {
+    Discipline.SWIM: (ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M,),
+    Discipline.BIKE: (
+        ZoneMetricKind.BIKE_FTP_WATTS,
+        ZoneMetricKind.BIKE_THRESHOLD_HEART_RATE_BPM,
+    ),
+    Discipline.RUN: (
+        ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM,
+        ZoneMetricKind.RUN_LTHR_BPM,
+    ),
 }
 _TANAKA_BASE = Decimal("208")
 _TANAKA_AGE_FACTOR = Decimal("0.7")
@@ -153,6 +208,50 @@ class ZoneBoundary:
             or self.upper <= self.lower
         ):
             raise ValueError("Zone boundary must be finite and increasing.")
+
+
+@dataclass(frozen=True, slots=True)
+class CalculatedZoneBoundary:
+    """One model-derived interval; ``None`` represents an open outer edge."""
+
+    zone: TrainingZone
+    lower: Decimal | None
+    upper: Decimal | None
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.zone, TrainingZone):
+            raise ValueError("Zone must be a TrainingZone value.")
+        if self.lower is None and self.upper is None:
+            raise ValueError("A calculated zone needs at least one boundary.")
+        if self.lower is not None and (not self.lower.is_finite() or self.lower < 0):
+            raise ValueError("Calculated lower boundaries must be non-negative.")
+        if self.upper is not None and (not self.upper.is_finite() or self.upper <= 0):
+            raise ValueError("Calculated upper boundaries must be positive.")
+        if (
+            self.lower is not None
+            and self.upper is not None
+            and self.upper <= self.lower
+        ):
+            raise ValueError("Calculated zone boundaries must be increasing.")
+
+
+@dataclass(frozen=True, slots=True)
+class CalculatedZoneMetricProfile:
+    """Five rounded ranges derived from one canonical threshold metric."""
+
+    metric: ZoneMetric
+    boundaries: tuple[CalculatedZoneBoundary, ...]
+    is_primary: bool
+    zone_model_version: RulesetVersion = ZONE_MODEL_VERSION
+
+
+@dataclass(frozen=True, slots=True)
+class CalculatedZoneClassification:
+    """Classification result including the FTP-only supramaximal marker."""
+
+    zone: TrainingZone
+    relative_intensity: Decimal
+    supramaximal: bool
 
 
 @dataclass(frozen=True, slots=True)
@@ -241,6 +340,182 @@ def _karvonen_result(
 def metric_direction(kind: ZoneMetricKind) -> ZoneScaleDirection:
     """Return whether intensity rises with or against the numeric value."""
     return _METRIC_DIRECTION[kind]
+
+
+def round_zone_boundary(value: Decimal) -> Decimal:
+    """Round one generated boundary once to its canonical whole-unit value."""
+    if not value.is_finite() or value < 0:
+        raise ValueError("Zone boundary input must be finite and non-negative.")
+    return value.quantize(Decimal(1), rounding=ROUND_HALF_UP)
+
+
+def validate_calculated_zone_profile(
+    profile: CalculatedZoneMetricProfile,
+) -> None:
+    """Validate five gap-free model ranges with open outer edges."""
+    boundaries = profile.boundaries
+    if [boundary.zone for boundary in boundaries] != list(TrainingZone):
+        raise ValueError("Zone boundaries must contain consecutive Zones 1 through 5.")
+    direction = metric_direction(profile.metric.kind)
+    if direction is ZoneScaleDirection.ASCENDING:
+        if boundaries[0].lower != 0 or boundaries[-1].upper is not None:
+            raise ValueError("Ascending calculated zones need open-ended Zone 5.")
+        if any(
+            previous.upper != current.lower
+            for previous, current in zip(boundaries, boundaries[1:], strict=False)
+        ):
+            raise ValueError("Ascending zone boundaries must be contiguous.")
+    else:
+        if boundaries[0].upper is not None or boundaries[-1].lower != 0:
+            raise ValueError("Descending calculated zones need open-ended Zone 1.")
+        if any(
+            previous.lower != current.upper
+            for previous, current in zip(boundaries, boundaries[1:], strict=False)
+        ):
+            raise ValueError("Descending zone boundaries must be contiguous.")
+    if profile.metric.kind in _PACE_METRICS and any(
+        value != value.to_integral_value()
+        for boundary in boundaries
+        for value in (boundary.lower, boundary.upper)
+        if value is not None
+    ):
+        raise ValueError("Pace zone boundaries must use whole seconds.")
+
+
+def calculate_zone_profile(
+    metric: ZoneMetric | None,
+    *,
+    zone_model_version: RulesetVersion = ZONE_MODEL_VERSION,
+    is_primary: bool = True,
+) -> CalculatedZoneMetricProfile:
+    """Convert one approved threshold to five canonical Start23 ranges."""
+    if metric is None:
+        raise ValueError("A threshold metric is required to calculate zones.")
+    if zone_model_version != ZONE_MODEL_VERSION:
+        raise ValueError("The requested zone model version is not active.")
+    ratios = _ZONE_MODEL_RATIOS[metric.kind]
+    if metric.kind in _PACE_METRICS:
+        cutoffs = tuple(round_zone_boundary(metric.value / ratio) for ratio in ratios)
+        if any(
+            previous <= current
+            for previous, current in zip(cutoffs, cutoffs[1:], strict=False)
+        ):
+            raise ValueError(
+                "Threshold is too low to produce distinct whole-second pace zones."
+            )
+        boundaries = (
+            CalculatedZoneBoundary(TrainingZone.ZONE_1, cutoffs[0], None),
+            CalculatedZoneBoundary(TrainingZone.ZONE_2, cutoffs[1], cutoffs[0]),
+            CalculatedZoneBoundary(TrainingZone.ZONE_3, cutoffs[2], cutoffs[1]),
+            CalculatedZoneBoundary(TrainingZone.ZONE_4, cutoffs[3], cutoffs[2]),
+            CalculatedZoneBoundary(TrainingZone.ZONE_5, Decimal(0), cutoffs[3]),
+        )
+    else:
+        cutoffs = tuple(round_zone_boundary(metric.value * ratio) for ratio in ratios)
+        if any(
+            previous >= current
+            for previous, current in zip(cutoffs, cutoffs[1:], strict=False)
+        ):
+            raise ValueError(
+                "Threshold is too low to produce distinct whole-unit zones."
+            )
+        boundaries = (
+            CalculatedZoneBoundary(TrainingZone.ZONE_1, Decimal(0), cutoffs[0]),
+            CalculatedZoneBoundary(TrainingZone.ZONE_2, cutoffs[0], cutoffs[1]),
+            CalculatedZoneBoundary(TrainingZone.ZONE_3, cutoffs[1], cutoffs[2]),
+            CalculatedZoneBoundary(TrainingZone.ZONE_4, cutoffs[2], cutoffs[3]),
+            CalculatedZoneBoundary(TrainingZone.ZONE_5, cutoffs[3], None),
+        )
+    profile = CalculatedZoneMetricProfile(
+        metric=metric,
+        boundaries=boundaries,
+        is_primary=is_primary,
+        zone_model_version=zone_model_version,
+    )
+    validate_calculated_zone_profile(profile)
+    return profile
+
+
+def calculate_zone_profiles(
+    metrics: tuple[ZoneMetric, ...],
+    *,
+    zone_model_version: RulesetVersion = ZONE_MODEL_VERSION,
+) -> tuple[CalculatedZoneMetricProfile, ...]:
+    """Calculate one multi-metric discipline profile in primary-first order."""
+    if not metrics:
+        raise ValueError("At least one threshold metric is required.")
+    disciplines = {metric.discipline for metric in metrics}
+    kinds = {metric.kind for metric in metrics}
+    if len(disciplines) != 1:
+        raise ValueError("Zone profile metrics must belong to one discipline.")
+    if len(kinds) != len(metrics):
+        raise ValueError("Zone profile metrics must be unique.")
+    discipline = next(iter(disciplines))
+    order = _PRIMARY_METRIC_ORDER[discipline]
+    ordered = tuple(sorted(metrics, key=lambda metric: order.index(metric.kind)))
+    return tuple(
+        calculate_zone_profile(
+            metric,
+            zone_model_version=zone_model_version,
+            is_primary=index == 0,
+        )
+        for index, metric in enumerate(ordered)
+    )
+
+
+def classify_calculated_zone_value(
+    *,
+    profile: CalculatedZoneMetricProfile,
+    value: Decimal,
+) -> CalculatedZoneClassification:
+    """Classify one value with rounded ranges and higher-intensity ownership."""
+    if not value.is_finite() or value <= 0:
+        raise ValueError("Zone classification value must be finite and positive.")
+    validate_calculated_zone_profile(profile)
+    direction = metric_direction(profile.metric.kind)
+    for boundary in profile.boundaries:
+        if direction is ZoneScaleDirection.ASCENDING:
+            lower_matches = boundary.lower is None or boundary.lower <= value
+            upper_matches = boundary.upper is None or value < boundary.upper
+        else:
+            lower_matches = boundary.lower is None or boundary.lower < value
+            upper_matches = boundary.upper is None or value <= boundary.upper
+        if lower_matches and upper_matches:
+            relative_intensity = (
+                value / profile.metric.value
+                if direction is ZoneScaleDirection.ASCENDING
+                else profile.metric.value / value
+            )
+            return CalculatedZoneClassification(
+                zone=boundary.zone,
+                relative_intensity=relative_intensity,
+                supramaximal=(
+                    profile.metric.kind is ZoneMetricKind.BIKE_FTP_WATTS
+                    and relative_intensity > Decimal("1.20")
+                ),
+            )
+    raise ValueError("Value falls outside the calculated zone profile.")
+
+
+def classify_calculated_zone_speed(
+    *,
+    profile: CalculatedZoneMetricProfile,
+    speed_meters_per_second: Decimal,
+) -> CalculatedZoneClassification:
+    """Classify pace/CSS from speed through the same canonical pace ranges."""
+    if profile.metric.kind not in _PACE_METRICS:
+        raise ValueError("Speed classification requires a pace or CSS profile.")
+    if not speed_meters_per_second.is_finite() or speed_meters_per_second <= 0:
+        raise ValueError("Speed must be finite and positive.")
+    distance_meters = (
+        Decimal(1000)
+        if profile.metric.kind is ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM
+        else Decimal(100)
+    )
+    return classify_calculated_zone_value(
+        profile=profile,
+        value=round_zone_boundary(distance_meters / speed_meters_per_second),
+    )
 
 
 def assess_metric_with_soft_limits(

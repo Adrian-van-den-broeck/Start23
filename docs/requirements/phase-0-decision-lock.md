@@ -8,8 +8,9 @@ and BR-010 calculations. The BR-009 follow-up evidence supplied on 2026-07-26
 adds discipline-zone policy in `phase-3-ruleset-2`. Ruleset 1 remains
 immutable for historical decisions. The twelve decisions accepted on
 2026-08-11 are locked in `phase-3-ruleset-3`; rulesets 1 and 2 remain immutable
-for historical records. Ruleset 3 is local-development approved but requires a
-named qualified Physiology Rules Review Board approval before production.
+for historical records. Qualified Physiology Rules Review Board approval of the
+active rules was confirmed complete by the product owner on 2026-08-24; any
+ruleset change requires a new review.
 
 ## Locked decisions
 

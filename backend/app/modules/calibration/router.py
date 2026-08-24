@@ -1,6 +1,7 @@
 """Authenticated zone-intake, field-test, and calibration routes."""
 
 from typing import Annotated, Any, NoReturn
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 
@@ -23,6 +24,8 @@ from app.modules.calibration.schemas import (
     CalibrationStatusResponse,
     DisciplineSetupInput,
     DisciplineSetupResponse,
+    ThresholdConfirmationRequest,
+    ThresholdDecisionResponse,
     ZoneOptionResponse,
 )
 from app.modules.calibration.service import (
@@ -167,6 +170,47 @@ async def evaluate_calibration(
             identity.user_id,
             evaluation,
         )
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.post(
+    "/calibration/evaluations/{evaluation_id}/threshold/confirm",
+    response_model=ThresholdDecisionResponse,
+    responses=error_responses,
+)
+async def confirm_calibration_threshold(
+    evaluation_id: UUID,
+    confirmation: ThresholdConfirmationRequest,
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[CalibrationService, Depends(get_calibration_service)],
+) -> ThresholdDecisionResponse:
+    """Confirm a threshold and create a separate pending zone proposal."""
+    del confirmation
+    try:
+        return await service.confirm_threshold(
+            access_token,
+            identity.user_id,
+            evaluation_id,
+        )
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.post(
+    "/calibration/evaluations/{evaluation_id}/threshold/reject",
+    response_model=ThresholdDecisionResponse,
+    responses=error_responses,
+)
+async def reject_calibration_threshold(
+    evaluation_id: UUID,
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[CalibrationService, Depends(get_calibration_service)],
+) -> ThresholdDecisionResponse:
+    """Reject a threshold without creating or changing a zone profile."""
+    try:
+        return await service.reject_threshold(identity.user_id, evaluation_id)
     except Exception as error:
         _raise_public_error(error)
 

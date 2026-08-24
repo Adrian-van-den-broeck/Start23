@@ -14,6 +14,7 @@ from app.core.security import AuthenticatedIdentity, InvalidAccessTokenError
 from app.main import create_app
 from app.modules.calibration.repository import (
     CalibrationRepositoryConflictError,
+    CalibrationRepositoryNotFoundError,
     JsonObject,
 )
 
@@ -44,6 +45,9 @@ class MemoryCalibrationRepository:
             owner: [] for owner in owners.values()
         }
         self._evaluations: dict[UUID, list[JsonObject]] = {
+            owner: [] for owner in owners.values()
+        }
+        self._decisions: dict[UUID, list[JsonObject]] = {
             owner: [] for owner in owners.values()
         }
 
@@ -144,6 +148,83 @@ class MemoryCalibrationRepository:
         self._evaluations[athlete_id].append(row)
         return deepcopy(row)
 
+    async def get_evaluation(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+        evaluation_id: UUID,
+    ) -> JsonObject:
+        if self._owner(access_token) != athlete_id:
+            raise CalibrationRepositoryNotFoundError
+        row = next(
+            (
+                row
+                for row in self._evaluations[athlete_id]
+                if row["id"] == str(evaluation_id)
+            ),
+            None,
+        )
+        if row is None:
+            raise CalibrationRepositoryNotFoundError
+        return deepcopy(row)
+
+    async def save_calculated_zone_profile(
+        self,
+        athlete_id: UUID,
+        values: JsonObject,
+    ) -> JsonObject:
+        evaluation_id = values.get("calibration_evaluation_id")
+        existing = next(
+            (
+                row
+                for row in self._decisions[athlete_id]
+                if row["evaluation_id"] == evaluation_id
+            ),
+            None,
+        )
+        if existing is not None:
+            return deepcopy(existing)
+        row = {
+            "evaluation_id": evaluation_id,
+            "state": "accepted",
+            "zone_profile_id": str(uuid4()),
+            "zone_proposal_id": str(uuid4()),
+            "base_zone_profile_id": None,
+            "decided_at": _NOW.isoformat(),
+        }
+        self._decisions[athlete_id].append(row)
+        return deepcopy(row)
+
+    async def reject_threshold(
+        self,
+        athlete_id: UUID,
+        evaluation_id: UUID,
+    ) -> JsonObject:
+        if not any(
+            row["id"] == str(evaluation_id) for row in self._evaluations[athlete_id]
+        ):
+            raise CalibrationRepositoryNotFoundError
+        existing = next(
+            (
+                row
+                for row in self._decisions[athlete_id]
+                if row["evaluation_id"] == str(evaluation_id)
+            ),
+            None,
+        )
+        if existing is not None:
+            return deepcopy(existing)
+        row = {
+            "evaluation_id": str(evaluation_id),
+            "state": "rejected",
+            "zone_profile_id": None,
+            "zone_proposal_id": None,
+            "base_zone_profile_id": None,
+            "decided_at": _NOW.isoformat(),
+        }
+        self._decisions[athlete_id].append(row)
+        return deepcopy(row)
+
     async def fetch_status(
         self,
         access_token: str,
@@ -153,6 +234,12 @@ class MemoryCalibrationRepository:
         return {
             "setups": deepcopy(list(self._setups[athlete_id].values())),
             "evaluations": deepcopy(self._evaluations[athlete_id]),
+            "threshold_decisions": deepcopy(self._decisions[athlete_id]),
+            "zone_proposals": [
+                {"id": row["zone_proposal_id"], "state": "pending"}
+                for row in self._decisions[athlete_id]
+                if row["zone_proposal_id"] is not None
+            ],
         }
 
     async def aclose(self) -> None:
@@ -274,7 +361,7 @@ def test_threshold_only_known_values_accept_empty_optional_zones(
 
     assert response.status_code == 200, response.text
     assert response.json()["threshold_status"] == "user_provided"
-    assert response.json()["zone_status"] == "pending_protocol"
+    assert response.json()["zone_status"] == "pending_athlete_confirmation"
     assert response.json()["validation_status"] == "self_reported"
 
 
@@ -394,7 +481,7 @@ def test_observation_retry_is_idempotent_and_conflicting_revision_is_rejected(
     assert changed.status_code == 409
 
 
-def test_valid_field_test_creates_only_pending_threshold_result(
+def test_valid_field_test_creates_pending_threshold_and_zone_candidates(
     calibration_context: tuple[TestClient, UUID, UUID],
 ) -> None:
     client, _, _ = calibration_context
@@ -413,12 +500,76 @@ def test_valid_field_test_creates_only_pending_threshold_result(
     body = response.json()
     assert body["status"] == "threshold_estimated"
     assert body["threshold_status"] == "threshold_estimated"
-    assert body["zone_status"] == "pending_protocol"
+    assert body["zone_status"] == "pending_athlete_confirmation"
     assert body["review_status"] == "pending_athlete_confirmation"
     assert body["requires_athlete_confirmation"] is True
-    assert "zone_model_not_approved" in body["reason_codes"]
-    assert "boundaries" not in body
+    assert "zone_profile_pending_athlete_confirmation" in body["reason_codes"]
+    assert body["zone_model_version"] == "start23-zone-model-1.0"
+    assert len(body["zone_profiles"]) == 2
+    assert body["zone_profiles"][0]["is_primary"] is True
+    assert body["zone_profiles"][0]["boundaries"][0]["upper_value"] is None
     assert "tss" not in response.text.lower()
+
+
+def test_threshold_confirmation_is_owned_idempotent_and_keeps_zones_pending(
+    calibration_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = calibration_context
+    activity_id = uuid4()
+    _save_run_test(client, activity_id)
+    evaluation = client.post(
+        "/api/v1/calibration/evaluate",
+        headers=_headers(),
+        json={
+            "activity_id": str(activity_id),
+            "protocol_id": "start23_run_threshold_30min_v1",
+        },
+    ).json()
+    path = f"/api/v1/calibration/evaluations/{evaluation['id']}/threshold/confirm"
+
+    other = client.post(
+        path,
+        headers=_headers("athlete-b"),
+        json={"confirmed": True},
+    )
+    accepted = client.post(path, headers=_headers(), json={"confirmed": True})
+    repeated = client.post(path, headers=_headers(), json={"confirmed": True})
+
+    assert other.status_code == 404
+    assert accepted.status_code == 200, accepted.text
+    assert accepted.json()["state"] == "accepted"
+    assert accepted.json()["zone_profile_id"] is not None
+    assert accepted.json()["zone_proposal_id"] is not None
+    assert accepted.json()["base_zone_profile_id"] is None
+    assert accepted.json()["zone_proposal_state"] == "pending"
+    assert repeated.json() == accepted.json()
+    status = client.get("/api/v1/calibration/status", headers=_headers()).json()
+    assert status["threshold_decisions"][0]["zone_proposal_state"] == "pending"
+
+
+def test_threshold_rejection_creates_no_zone_profile(
+    calibration_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = calibration_context
+    activity_id = uuid4()
+    _save_run_test(client, activity_id)
+    evaluation = client.post(
+        "/api/v1/calibration/evaluate",
+        headers=_headers(),
+        json={
+            "activity_id": str(activity_id),
+            "protocol_id": "start23_run_threshold_30min_v1",
+        },
+    ).json()
+
+    rejected = client.post(
+        f"/api/v1/calibration/evaluations/{evaluation['id']}/threshold/reject",
+        headers=_headers(),
+    )
+
+    assert rejected.status_code == 200
+    assert rejected.json()["state"] == "rejected"
+    assert rejected.json()["zone_profile_id"] is None
 
 
 def test_missing_session_rpe_blocks_evaluation_not_observation_persistence(
@@ -485,4 +636,8 @@ def test_status_is_cross_athlete_isolated(
 
     assert saved.status_code == 200
     assert len(status_a.json()["setups"]) == 1
-    assert status_b.json() == {"setups": [], "evaluations": []}
+    assert status_b.json() == {
+        "setups": [],
+        "evaluations": [],
+        "threshold_decisions": [],
+    }

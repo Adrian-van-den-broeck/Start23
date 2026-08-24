@@ -1,8 +1,8 @@
 """Deterministic evaluation of reviewed Start23 calibration protocols.
 
-This module intentionally stops at threshold estimates and observed provisional
-guidance.  The approved protocol fixtures do not define a complete Zone 1-5
-conversion model, so no calculated zone boundaries are produced here.
+Reviewed field-test thresholds are converted with the versioned Start23 Zone
+1-5 model.  Both the threshold and generated profile remain pending athlete
+confirmation; submaximal calibration still cannot manufacture a threshold.
 """
 
 from dataclasses import dataclass
@@ -11,9 +11,14 @@ from enum import Enum
 from typing import Final
 
 from app.modules.physiology.models import Discipline
-from app.modules.physiology.zones import ZoneMetricKind
+from app.modules.physiology.zones import (
+    CalculatedZoneMetricProfile,
+    ZoneMetric,
+    ZoneMetricKind,
+    calculate_zone_profiles,
+)
 
-CALIBRATION_RULESET_VERSION: Final = "start23-calibration-ruleset-v1"
+CALIBRATION_RULESET_VERSION: Final = "start23-calibration-ruleset-v2"
 
 
 class SetupRoute(str, Enum):
@@ -66,10 +71,12 @@ class ThresholdStatus(str, Enum):
 
 
 class ZoneStatus(str, Enum):
-    """Zone state; full calculated boundaries remain fail-closed."""
+    """Zone state without activating a generated profile."""
 
     UNKNOWN = "unknown"
     PROVISIONAL = "provisionally_calibrated"
+    PENDING_ATHLETE_CONFIRMATION = "pending_athlete_confirmation"
+    # Retained so historical v1 evaluations remain readable.
     PENDING_PROTOCOL = "pending_protocol"
 
 
@@ -231,6 +238,7 @@ class ProtocolEvaluation:
     confidence: Confidence
     reason_codes: tuple[str, ...]
     thresholds: tuple[ThresholdEstimate, ...] = ()
+    zone_profiles: tuple[CalculatedZoneMetricProfile, ...] = ()
     requires_athlete_confirmation: bool = False
 
 
@@ -422,9 +430,23 @@ def _result(
     thresholds: tuple[ThresholdEstimate, ...] = (),
 ) -> ProtocolEvaluation:
     threshold_estimated = bool(thresholds)
+    zone_profiles: tuple[CalculatedZoneMetricProfile, ...] = ()
     if threshold_estimated:
-        zone_status = ZoneStatus.PENDING_PROTOCOL
+        zone_profiles = calculate_zone_profiles(
+            tuple(
+                ZoneMetric(
+                    discipline=protocol.discipline,
+                    kind=threshold.metric_kind,
+                    value=threshold.value,
+                )
+                for threshold in thresholds
+            )
+        )
+        zone_status = ZoneStatus.PENDING_ATHLETE_CONFIRMATION
         confidence = Confidence.MEDIUM
+        reasons = tuple(
+            dict.fromkeys(reasons + ("zone_profile_pending_athlete_confirmation",))
+        )
     elif status is EvaluationStatus.PROVISIONALLY_CALIBRATED:
         zone_status = ZoneStatus.PROVISIONAL
         confidence = Confidence.LOW
@@ -445,6 +467,7 @@ def _result(
         confidence=confidence,
         reason_codes=reasons,
         thresholds=thresholds,
+        zone_profiles=zone_profiles,
         requires_athlete_confirmation=threshold_estimated,
     )
 
@@ -516,14 +539,9 @@ def _common_reasons(
     return tuple(dict.fromkeys(reasons))
 
 
-def _whole_seconds_or_reason(
-    value: Decimal,
-    reasons: list[str],
-) -> Decimal | None:
-    if value != value.to_integral_value():
-        reasons.append("pace_rounding_rule_not_approved")
-        return None
-    return value
+def _whole_seconds(value: Decimal) -> Decimal:
+    """Apply the approved canonical whole-second half-up rule once."""
+    return value.quantize(Decimal(1), rounding=ROUND_HALF_UP)
 
 
 def _evaluate_run_test(
@@ -544,17 +562,12 @@ def _evaluate_run_test(
         if test.average_pace_seconds_per_km is None:
             reasons.append("pace_data_missing")
         elif test.stable_segment is True:
-            pace = _whole_seconds_or_reason(
-                test.average_pace_seconds_per_km,
-                reasons,
-            )
-            if pace is not None:
-                thresholds.append(
-                    ThresholdEstimate(
-                        ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM,
-                        pace,
-                    )
+            thresholds.append(
+                ThresholdEstimate(
+                    ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM,
+                    _whole_seconds(test.average_pace_seconds_per_km),
                 )
+            )
         if test.average_heart_rate_last_20min_bpm is not None:
             if test.data_completeness is None or test.data_completeness < Decimal(
                 "0.95"
@@ -584,15 +597,9 @@ def _evaluate_run_test(
         "effort_below_protocol",
         "pace_instability_excessive",
         "pace_data_missing",
-        "pace_rounding_rule_not_approved",
     }
     if blocking.intersection(reasons):
-        status = (
-            EvaluationStatus.INSUFFICIENT_PROTOCOL
-            if "pace_rounding_rule_not_approved" in reasons
-            else EvaluationStatus.INSUFFICIENT_DATA
-        )
-        return _result(protocol, status, tuple(reasons))
+        return _result(protocol, EvaluationStatus.INSUFFICIENT_DATA, tuple(reasons))
     if not thresholds:
         return _result(
             protocol,
@@ -602,7 +609,7 @@ def _evaluate_run_test(
     return _result(
         protocol,
         EvaluationStatus.THRESHOLD_ESTIMATED,
-        tuple(reasons + ["zone_model_not_approved"]),
+        tuple(reasons),
         thresholds=tuple(thresholds),
     )
 
@@ -645,7 +652,7 @@ def _evaluate_bike_ftp_test(
     return _result(
         protocol,
         EvaluationStatus.THRESHOLD_ESTIMATED,
-        ("zone_model_not_approved",),
+        (),
         thresholds=(threshold,),
     )
 
@@ -684,7 +691,7 @@ def _evaluate_bike_hr_test(
     return _result(
         protocol,
         EvaluationStatus.THRESHOLD_ESTIMATED,
-        ("zone_model_not_approved",),
+        (),
         thresholds=(threshold,),
     )
 
@@ -738,28 +745,21 @@ def _evaluate_swim_css_test(
             reasons.append("pace_relationship_invalid")
         else:
             css = (time_400 - time_200) / Decimal(2)
-            whole_css = _whole_seconds_or_reason(css, reasons)
-            if whole_css is not None:
-                threshold = ThresholdEstimate(
-                    ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M,
-                    whole_css,
-                )
+            threshold = ThresholdEstimate(
+                ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M,
+                _whole_seconds(css),
+            )
     reasons = list(dict.fromkeys(reasons))
     if reasons or threshold is None:
-        status = (
-            EvaluationStatus.INSUFFICIENT_PROTOCOL
-            if "pace_rounding_rule_not_approved" in reasons
-            else EvaluationStatus.INSUFFICIENT_DATA
-        )
         return _result(
             protocol,
-            status,
+            EvaluationStatus.INSUFFICIENT_DATA,
             tuple(reasons or ["threshold_metric_missing"]),
         )
     return _result(
         protocol,
         EvaluationStatus.THRESHOLD_ESTIMATED,
-        ("zone_model_not_approved",),
+        (),
         thresholds=(threshold,),
     )
 

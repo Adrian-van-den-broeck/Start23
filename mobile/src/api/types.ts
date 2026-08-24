@@ -52,6 +52,12 @@ export type ZoneBoundary = {
   upper_value: string;
 };
 
+export type CalculatedZoneBoundary = {
+  zone_number: number;
+  lower_value: string | null;
+  upper_value: string | null;
+};
+
 export type ZoneMetricKind =
   | 'swim_css_seconds_per_100m'
   | 'bike_ftp_watts'
@@ -80,6 +86,15 @@ export type KnownThreshold = {
 export type KnownZoneProfile = {
   metric_kind: ZoneMetricKind;
   boundaries: ZoneBoundary[];
+};
+
+export type CalculatedZoneMetricProfile = {
+  metric_kind: ZoneMetricKind;
+  source_value: string;
+  is_primary: boolean;
+  boundary_source: 'model_derived' | 'athlete_entered';
+  zone_model_version: 'start23-zone-model-1.0';
+  boundaries: CalculatedZoneBoundary[];
 };
 
 export type DisciplineSetupInput =
@@ -114,7 +129,11 @@ export type DisciplineSetup = {
   protocol_id: string | null;
   pool_length_meters: 25 | 50 | null;
   threshold_status: 'unknown' | 'user_provided';
-  zone_status: 'unknown' | 'user_provided' | 'pending_protocol';
+  zone_status:
+    | 'unknown'
+    | 'user_provided'
+    | 'pending_protocol'
+    | 'pending_athlete_confirmation';
   source: 'user_provided' | 'field_test' | 'week1_calibration' | 'none';
   validation_status: 'self_reported' | 'not_assessed';
   confidence: 'not_assessed' | 'low' | 'medium';
@@ -129,10 +148,14 @@ export type ZoneProfile = {
   id: string;
   discipline: Discipline;
   version: number;
-  setup_method: 'manual' | 'fallback';
+  setup_method: 'manual' | 'fallback' | 'calculated';
   status: 'pending' | 'active' | 'superseded' | 'rejected' | 'expired';
-  source: 'athlete_entered' | 'estimated';
-  validation_status: 'confirmed_by_athlete' | 'unreviewed';
+  source: 'athlete_entered' | 'estimated' | 'reviewed_field_threshold';
+  validation_status:
+    | 'confirmed_by_athlete'
+    | 'unreviewed'
+    | 'pending_athlete_confirmation'
+    | 'rejected_by_athlete';
   fallback_active: boolean;
   needs_testing: boolean;
   requires_review: boolean;
@@ -140,15 +163,27 @@ export type ZoneProfile = {
     | 'within_soft_range'
     | 'outside_soft_range'
     | 'soft_range_not_configured'
-    | 'fallback_unvalidated';
+    | 'fallback_unvalidated'
+    | 'athlete_confirmation_required';
   ruleset_version: string;
+  zone_model_version: string | null;
+  source_method: string | null;
+  source_quality: string | null;
+  calculated_at: string | null;
+  review_status: string | null;
+  reviewer_id: string | null;
+  reviewed_at: string | null;
+  evidence_version: string | null;
   effective_from: string | null;
   created_at: string;
   metric: {
     metric_kind: string;
     value: string;
   } | null;
-  boundaries: ZoneBoundary[];
+  boundaries: CalculatedZoneBoundary[];
+  metric_profiles: CalculatedZoneMetricProfile[];
+  proposal_id: string | null;
+  base_zone_profile_id: string | null;
 };
 
 export type OnboardingState = {
@@ -259,19 +294,42 @@ export type CalibrationEvaluation = {
     | 'threshold_estimated'
     | 'insufficient_protocol';
   threshold_status: 'unknown' | 'threshold_estimated';
-  zone_status: 'unknown' | 'provisionally_calibrated' | 'pending_protocol';
+  zone_status:
+    | 'unknown'
+    | 'provisionally_calibrated'
+    | 'pending_protocol'
+    | 'pending_athlete_confirmation';
   confidence: 'not_assessed' | 'low' | 'medium';
   reason_codes: string[];
   thresholds: ThresholdEstimate[];
+  zone_model_version: 'start23-zone-model-1.0' | null;
+  zone_profiles: CalculatedZoneMetricProfile[];
   requires_athlete_confirmation: boolean;
   review_status: 'pending_athlete_confirmation' | 'not_applicable';
   fingerprint: string;
   created_at: string;
 };
 
+export type ThresholdDecision = {
+  evaluation_id: string;
+  state: 'accepted' | 'rejected';
+  zone_profile_id: string | null;
+  zone_proposal_id: string | null;
+  base_zone_profile_id: string | null;
+  decided_at: string;
+  zone_proposal_state:
+    | 'pending'
+    | 'approved'
+    | 'rejected'
+    | 'expired'
+    | 'applied'
+    | null;
+};
+
 export type CalibrationStatus = {
   setups: DisciplineSetup[];
   evaluations: CalibrationEvaluation[];
+  threshold_decisions: ThresholdDecision[];
 };
 
 export type OnboardingComplete = {

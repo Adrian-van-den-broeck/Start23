@@ -2,6 +2,12 @@
 
 Audit date: 2026-08-13  
 Audit scope: current workspace state, including uncommitted files  
+
+Update 2026-08-24: the product owner confirmed completion of qualified
+physiological production review for the active rules and
+`start23-zone-model-1.0`. References below to that review being blocked describe
+the original audit-date state and are superseded; other audit findings remain
+historical unless separately updated.
 Source documents:
 
 - `docs/Start23_Systeemoverzicht_BR.pdf` (20 pages)
@@ -89,7 +95,7 @@ Status meanings used below:
 | 0 | Lock contradictions, formulas, states, precedence, TSS boundary, and MVP input | **Partial / inconsistent** | Strong decision set, but partial-race alignment is simultaneously open and approved; recurring activities are both open and later resolved; older lock text contains stale implementation status. |
 | 1 | FastAPI foundation, configuration, probes, Railway packaging, CI | **Implemented locally** | Code and checks exist. Railway has not been deployed. The "no credentials committed" gate is violated by the root README. |
 | 2 | Verified identity and row isolation | **Partial** | JWT identity and profile/RLS schema exist. The roadmap still says FastAPI profile persistence is pending even though Phase 4 implements it. Full real-token FastAPI verification remains open. |
-| 3 | Pure deterministic physiology | **Partial / one incorrect rule path** | Pure modules and broad tests exist. BR-003 aggregate arithmetic conflicts with the latest decision register; retrospective mesocycle logic is not used by runtime planning. Production review remains correctly blocked. |
+| 3 | Pure deterministic physiology | **Partial / one incorrect rule path** | Pure modules and broad tests exist. BR-003 aggregate arithmetic conflicts with the latest decision register; retrospective mesocycle logic is not used by runtime planning. The production-review blocker recorded on the audit date was closed by the 2026-08-24 confirmation. |
 | 3.5 | Expo SDK 57 development-build transition | **Implemented for Android** | Package versions and TypeScript agree with SDK 57. iOS signing/device validation remains open. The Phase 0 lock still says SDK 54 is current. |
 | 4 | Onboarding, goal, history, and zones | **Partial** | Profile, triathlon history, one A-race goal, manual zones, unreviewed HR fallback, and resumability exist. Refined threshold/self-test/calibration flows, physiology-sex fallback, source initial-capacity behavior, other-sport context, and backward macroplanning do not. |
 | 5 | Workout catalog and private planned load | **Implemented for narrowed catalog** | Eight immutable versions across seven logical templates are represented after Phase 6. The 500+ library is explicitly deferred. Multi-discipline taper coverage is incomplete. |

@@ -280,9 +280,10 @@ UI; a due review never silently clears a restriction.
   - `phase-3-ruleset-2`: ruleset 1 plus BR-009.
 - `phase-3-ruleset-3`: ruleset 2 plus the twelve decisions accepted on
   2026-08-11.
-- Production governance: a Physiology Rules Review Board is required. A named
-  qualified accountable reviewer and dated approval have not yet been
-  recorded, so ruleset 3 is not production-ready.
+- Production governance: qualified physiological review of the active ruleset
+  and `start23-zone-model-1.0` was confirmed complete by the product owner on
+  2026-08-24. Reviewer identity and the evidence dossier are retained in the
+  external product-governance record; changed rules require a new review.
 - Deferred scenarios: non-race 90/10, swimrun 75/25, calculated zone
   replacement persistence
 - Implementation: deterministic Python modules with ruleset, boundary,

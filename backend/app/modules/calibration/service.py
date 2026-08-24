@@ -33,12 +33,16 @@ from app.modules.calibration.schemas import (
     KnownValuesSetup,
     ProtocolSegmentResponse,
     RpeOnlySetup,
+    ThresholdDecisionResponse,
     ZoneOptionResponse,
 )
 from app.modules.physiology.models import Discipline, TrainingZone
 from app.modules.physiology.zones import (
+    ZONE_MODEL_VERSION,
+    CalculatedZoneMetricProfile,
     ZoneBoundary,
     ZoneMetric,
+    calculate_zone_profiles,
     validate_zone_profile,
 )
 
@@ -92,13 +96,13 @@ class CalibrationService:
                 setup_route=SetupRoute.KNOWN_VALUES,
                 label="Ik ken mijn waarden",
                 creates_threshold=False,
-                creates_zones=False,
+                creates_zones=True,
             ),
             ZoneOptionResponse(
                 setup_route=SetupRoute.FIELD_TEST,
                 label="Ik wil mijn waarden testen",
                 creates_threshold=True,
-                creates_zones=False,
+                creates_zones=True,
             ),
             ZoneOptionResponse(
                 setup_route=SetupRoute.CALIBRATION_WEEK,
@@ -214,7 +218,9 @@ class CalibrationService:
         if isinstance(setup, KnownValuesSetup):
             CalibrationService._validate_known_values(discipline, setup)
             threshold_status = "user_provided" if setup.thresholds else "unknown"
-            zone_status = "user_provided" if setup.zone_profiles else "pending_protocol"
+            zone_status = (
+                "pending_athlete_confirmation" if setup.thresholds else "user_provided"
+            )
             source = "user_provided"
             validation_status = "self_reported"
             known_thresholds = [
@@ -290,9 +296,51 @@ class CalibrationService:
 
     @staticmethod
     def _evaluation_response(row: JsonObject) -> CalibrationEvaluationResponse:
-        return CalibrationEvaluationResponse.model_validate(
-            {key: row[key] for key in CalibrationEvaluationResponse.model_fields}
+        values = {
+            key: row[key]
+            for key in CalibrationEvaluationResponse.model_fields
+            if key in row
+        }
+        values.setdefault("zone_model_version", None)
+        values.setdefault("zone_profiles", [])
+        return CalibrationEvaluationResponse.model_validate(values)
+
+    @staticmethod
+    def _threshold_decision_response(row: JsonObject) -> ThresholdDecisionResponse:
+        return ThresholdDecisionResponse.model_validate(
+            {
+                key: row[key]
+                for key in ThresholdDecisionResponse.model_fields
+                if key in row
+            }
         )
+
+    @staticmethod
+    def _zone_profile_values(
+        profiles: tuple[CalculatedZoneMetricProfile, ...],
+    ) -> list[JsonObject]:
+        return [
+            {
+                "metric_kind": profile.metric.kind.value,
+                "source_value": str(profile.metric.value),
+                "is_primary": profile.is_primary,
+                "boundary_source": "model_derived",
+                "zone_model_version": profile.zone_model_version.value,
+                "boundaries": [
+                    {
+                        "zone_number": boundary.zone.value,
+                        "lower_value": (
+                            str(boundary.lower) if boundary.lower is not None else None
+                        ),
+                        "upper_value": (
+                            str(boundary.upper) if boundary.upper is not None else None
+                        ),
+                    }
+                    for boundary in profile.boundaries
+                ],
+            }
+            for profile in profiles
+        ]
 
     @staticmethod
     def _observation_response(row: JsonObject) -> CalibrationObservationResponse:
@@ -430,6 +478,10 @@ class CalibrationService:
                 }
                 for estimate in result.thresholds
             ],
+            "zone_model_version": (
+                ZONE_MODEL_VERSION.value if result.zone_profiles else None
+            ),
+            "zone_profiles": self._zone_profile_values(result.zone_profiles),
             "requires_athlete_confirmation": result.requires_athlete_confirmation,
             "review_status": (
                 "pending_athlete_confirmation"
@@ -452,16 +504,96 @@ class CalibrationService:
         )
         return self._evaluation_response(saved)
 
+    async def confirm_threshold(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+        evaluation_id: UUID,
+    ) -> ThresholdDecisionResponse:
+        """Confirm an owned threshold and create a still-pending zone profile."""
+        row = await self._repository.get_evaluation(
+            access_token,
+            athlete_id,
+            evaluation_id,
+        )
+        evaluation = self._evaluation_response(row)
+        if (
+            evaluation.status.value != "threshold_estimated"
+            or not evaluation.requires_athlete_confirmation
+            or not evaluation.thresholds
+        ):
+            raise CalibrationDomainError(
+                "Only a pending field-test threshold can be confirmed."
+            )
+        profiles = calculate_zone_profiles(
+            tuple(
+                ZoneMetric(
+                    discipline=evaluation.discipline,
+                    kind=threshold.metric_kind,
+                    value=threshold.value,
+                )
+                for threshold in evaluation.thresholds
+            )
+        )
+        profile_values = self._zone_profile_values(profiles)
+        fingerprint = _fingerprint(
+            {
+                "evaluation_id": str(evaluation.id),
+                "zone_model_version": ZONE_MODEL_VERSION.value,
+                "metric_profiles": profile_values,
+            }
+        )
+        saved = await self._repository.save_calculated_zone_profile(
+            athlete_id,
+            {
+                "discipline": evaluation.discipline.value,
+                "source_method": evaluation.protocol_id,
+                "source_quality": "reviewed_field_threshold",
+                "metric_profiles": profile_values,
+                "input_fingerprint": fingerprint,
+                "calibration_evaluation_id": str(evaluation.id),
+            },
+        )
+        return self._threshold_decision_response(
+            {"zone_proposal_state": "pending", **saved}
+        )
+
+    async def reject_threshold(
+        self,
+        athlete_id: UUID,
+        evaluation_id: UUID,
+    ) -> ThresholdDecisionResponse:
+        """Reject one pending field-test threshold without creating zones."""
+        saved = await self._repository.reject_threshold(
+            athlete_id,
+            evaluation_id,
+        )
+        return self._threshold_decision_response(saved)
+
     async def status(
         self,
         access_token: str,
         athlete_id: UUID,
     ) -> CalibrationStatusResponse:
         raw = await self._repository.fetch_status(access_token, athlete_id)
+        proposal_states = {
+            str(row["id"]): row["state"] for row in raw.get("zone_proposals", [])
+        }
         return CalibrationStatusResponse(
             setups=tuple(self._discipline_setup_response(row) for row in raw["setups"]),
             evaluations=tuple(
                 self._evaluation_response(row) for row in raw["evaluations"]
+            ),
+            threshold_decisions=tuple(
+                self._threshold_decision_response(
+                    {
+                        **row,
+                        "zone_proposal_state": proposal_states.get(
+                            str(row.get("zone_proposal_id"))
+                        ),
+                    }
+                )
+                for row in raw.get("threshold_decisions", [])
             ),
         )
 

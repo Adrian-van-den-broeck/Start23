@@ -77,6 +77,13 @@ class OnboardingRepository(Protocol):
     ) -> JsonObject:
         """Persist server-generated fallback zones through the trusted RPC."""
 
+    async def save_calculated_zone_profile(
+        self,
+        athlete_id: UUID,
+        values: JsonObject,
+    ) -> JsonObject:
+        """Persist model-derived zones as a service-only pending proposal."""
+
     async def complete_onboarding(self, access_token: str) -> UUID:
         """Validate persisted state and create a pending planning request."""
 
@@ -84,7 +91,7 @@ class OnboardingRepository(Protocol):
         self,
         access_token: str,
         proposal_id: UUID,
-        expected_base_zone_profile_id: UUID,
+        expected_base_zone_profile_id: UUID | None,
     ) -> JsonObject:
         """Atomically promote one stale-safe pending zone version."""
 
@@ -268,6 +275,7 @@ class SupabaseOnboardingRepository:
             metrics,
             boundaries,
             discipline_setups,
+            zone_proposals,
         ) = await asyncio.gather(
             self._select("athlete_profiles", access_token, athlete_id),
             self._select("onboarding_sessions", access_token, athlete_id),
@@ -305,6 +313,16 @@ class SupabaseOnboardingRepository:
                 athlete_id,
                 extra_params={"order": "discipline.asc"},
             ),
+            self._select(
+                "change_proposals",
+                access_token,
+                athlete_id,
+                extra_params={
+                    "kind": "eq.zone_update",
+                    "state": "eq.pending",
+                    "order": "created_at.desc",
+                },
+            ),
         )
         return {
             "profile": profiles[0] if profiles else None,
@@ -315,6 +333,7 @@ class SupabaseOnboardingRepository:
             "zone_metrics": metrics,
             "zone_boundaries": boundaries,
             "discipline_setups": discipline_setups,
+            "zone_proposals": zone_proposals,
         }
 
     async def upsert_profile(
@@ -407,6 +426,25 @@ class SupabaseOnboardingRepository:
             raise RepositoryUnavailableError
         return dict(result)
 
+    async def save_calculated_zone_profile(
+        self,
+        athlete_id: UUID,
+        values: JsonObject,
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/save_calculated_zone_profile",
+            "",
+            service=True,
+            json={
+                "p_athlete_id": str(athlete_id),
+                "p_profile": values,
+            },
+        )
+        if not isinstance(result, dict):
+            raise RepositoryUnavailableError
+        return dict(result)
+
     async def save_zone_profile(
         self,
         access_token: str,
@@ -438,7 +476,7 @@ class SupabaseOnboardingRepository:
         self,
         access_token: str,
         proposal_id: UUID,
-        expected_base_zone_profile_id: UUID,
+        expected_base_zone_profile_id: UUID | None,
     ) -> JsonObject:
         result = await self._request(
             "POST",
@@ -446,7 +484,11 @@ class SupabaseOnboardingRepository:
             access_token,
             json={
                 "p_proposal_id": str(proposal_id),
-                "p_expected_base_zone_profile_id": str(expected_base_zone_profile_id),
+                "p_expected_base_zone_profile_id": (
+                    str(expected_base_zone_profile_id)
+                    if expected_base_zone_profile_id is not None
+                    else None
+                ),
             },
         )
         if not isinstance(result, dict):

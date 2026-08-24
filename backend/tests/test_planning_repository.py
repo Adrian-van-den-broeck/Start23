@@ -57,6 +57,38 @@ def test_generated_plan_persistence_uses_only_the_server_secret() -> None:
     assert str(athlete_id).encode() in captured.content
 
 
+def test_coach_explanation_write_uses_bounded_service_rpc() -> None:
+    athlete_id = uuid4()
+    proposal_id = uuid4()
+    captured: httpx.Request | None = None
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal captured
+        captured = request
+        return httpx.Response(200, json="Veilig weekvoorstel ter controle.")
+
+    async def exercise() -> None:
+        async with httpx.AsyncClient(
+            transport=httpx.MockTransport(handler),
+        ) as client:
+            repository = SupabasePlanningRepository(_settings(), client=client)
+            await repository.set_plan_proposal_explanation(
+                athlete_id,
+                proposal_id,
+                "Veilig weekvoorstel ter controle.",
+            )
+
+    asyncio.run(exercise())
+
+    assert captured is not None
+    assert captured.url.path.endswith(
+        "/rest/v1/rpc/set_weekly_plan_proposal_explanation"
+    )
+    assert captured.headers["apikey"] == "sb_secret_test"
+    assert "authorization" not in captured.headers
+    assert str(proposal_id).encode() in captured.content
+
+
 def test_plan_reads_and_approval_preserve_the_caller_rls_token() -> None:
     requests: list[httpx.Request] = []
     plan_id = uuid4()

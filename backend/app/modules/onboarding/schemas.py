@@ -15,7 +15,13 @@ from pydantic import (
     model_validator,
 )
 
-from app.modules.calibration.schemas import DisciplineSetupResponse
+from app.modules.calibration.schemas import (
+    CalculatedZoneBoundaryResponse,
+    CalculatedZoneMetricProfileResponse,
+    DisciplineSetupResponse,
+    KnownThresholdInput,
+    KnownZoneProfileInput,
+)
 from app.modules.physiology.models import Discipline
 from app.modules.physiology.zones import ZoneMetricKind
 
@@ -195,8 +201,20 @@ class FallbackZoneSubmission(PublicModel):
     confirmed: Literal[True]
 
 
+class CalculatedZoneSubmission(PublicModel):
+    """Confirmed known thresholds with optional athlete-entered boundary overrides."""
+
+    setup_method: Literal["calculated"]
+    confirmed: Literal[True]
+    thresholds: tuple[KnownThresholdInput, ...] = Field(min_length=1, max_length=2)
+    boundary_overrides: tuple[KnownZoneProfileInput, ...] = Field(
+        default=(),
+        max_length=2,
+    )
+
+
 ZoneSubmission = Annotated[
-    ManualZoneSubmission | FallbackZoneSubmission,
+    ManualZoneSubmission | FallbackZoneSubmission | CalculatedZoneSubmission,
     Field(discriminator="setup_method"),
 ]
 
@@ -214,10 +232,19 @@ class ZoneProfileResponse(PublicModel):
     id: UUID
     discipline: Discipline
     version: int
-    setup_method: Literal["manual", "fallback"]
+    setup_method: Literal["manual", "fallback", "calculated"]
     status: Literal["pending", "active", "superseded", "rejected", "expired"]
-    source: Literal["athlete_entered", "estimated"]
-    validation_status: Literal["confirmed_by_athlete", "unreviewed"]
+    source: Literal[
+        "athlete_entered",
+        "estimated",
+        "reviewed_field_threshold",
+    ]
+    validation_status: Literal[
+        "confirmed_by_athlete",
+        "unreviewed",
+        "pending_athlete_confirmation",
+        "rejected_by_athlete",
+    ]
     fallback_active: bool
     needs_testing: bool
     requires_review: bool
@@ -226,12 +253,24 @@ class ZoneProfileResponse(PublicModel):
         "outside_soft_range",
         "soft_range_not_configured",
         "fallback_unvalidated",
+        "athlete_confirmation_required",
     ]
     ruleset_version: str
+    zone_model_version: str | None = None
+    source_method: str | None = None
+    source_quality: str | None = None
+    calculated_at: datetime | None = None
+    review_status: str | None = None
+    reviewer_id: str | None = None
+    reviewed_at: datetime | None = None
+    evidence_version: str | None = None
     effective_from: datetime | None
     created_at: datetime
     metric: ZoneMetricResponse | None
-    boundaries: tuple[ZoneBoundaryInput, ...]
+    boundaries: tuple[CalculatedZoneBoundaryResponse, ...]
+    metric_profiles: tuple[CalculatedZoneMetricProfileResponse, ...] = ()
+    proposal_id: UUID | None = None
+    base_zone_profile_id: UUID | None = None
 
     @model_validator(mode="before")
     @classmethod
@@ -240,10 +279,27 @@ class ZoneProfileResponse(PublicModel):
         if not isinstance(value, Mapping):
             return value
         result = dict(value)
-        manual = result.get("setup_method") == "manual"
-        result.setdefault("source", "athlete_entered" if manual else "estimated")
+        setup_method = result.get("setup_method")
+        source_quality = result.get("source_quality")
         result.setdefault(
-            "validation_status", "confirmed_by_athlete" if manual else "unreviewed"
+            "source",
+            (
+                source_quality
+                if setup_method == "calculated"
+                else "athlete_entered"
+                if setup_method == "manual"
+                else "estimated"
+            ),
+        )
+        result.setdefault(
+            "validation_status",
+            (
+                result.get("review_status")
+                if setup_method == "calculated"
+                else "confirmed_by_athlete"
+                if setup_method == "manual"
+                else "unreviewed"
+            ),
         )
         result.pop("validated", None)
         return result
@@ -259,7 +315,7 @@ class ZoneSubmissionResponse(PublicModel):
 class ZoneProposalApproval(PublicModel):
     """Stale-safe precondition for applying one zone replacement."""
 
-    expected_base_zone_profile_id: UUID
+    expected_base_zone_profile_id: UUID | None
 
 
 class ZoneProposalDecisionResponse(PublicModel):
@@ -267,7 +323,7 @@ class ZoneProposalDecisionResponse(PublicModel):
 
     proposal_id: UUID
     state: Literal["applied", "rejected"]
-    active_zone_profile_id: UUID
+    active_zone_profile_id: UUID | None
     superseded_zone_profile_id: UUID | None
 
 

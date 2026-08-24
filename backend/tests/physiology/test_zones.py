@@ -12,6 +12,8 @@ from app.modules.physiology.specification import (
     PhysiologySpecificationNotApproved,
 )
 from app.modules.physiology.zones import (
+    ZONE_MODEL_EVIDENCE_VERSION,
+    ZONE_MODEL_VERSION,
     ClinicalRange,
     ZoneBoundary,
     ZoneMetric,
@@ -24,10 +26,16 @@ from app.modules.physiology.zones import (
     assess_metric_with_soft_limits,
     calculate_age_220_karvonen_fallback,
     calculate_karvonen_fallback,
+    calculate_zone_profile,
+    calculate_zone_profiles,
+    classify_calculated_zone_speed,
+    classify_calculated_zone_value,
     classify_zone_value,
     format_pace_metric,
     metric_direction,
     parse_pace_metric,
+    round_zone_boundary,
+    validate_calculated_zone_profile,
     validate_zone_boundaries,
     validate_zone_profile,
 )
@@ -462,3 +470,305 @@ def test_karvonen_fallback_rejects_invalid_biometrics(
             age_years=age,
             resting_heart_rate_bpm=resting,
         )
+
+
+@pytest.mark.parametrize(
+    ("kind", "threshold", "expected_edges"),
+    [
+        (
+            ZoneMetricKind.BIKE_FTP_WATTS,
+            "200",
+            ("112", "152", "182", "212"),
+        ),
+        (
+            ZoneMetricKind.BIKE_THRESHOLD_HEART_RATE_BPM,
+            "200",
+            ("170", "180", "190", "206"),
+        ),
+        (
+            ZoneMetricKind.RUN_LTHR_BPM,
+            "200",
+            ("170", "180", "190", "206"),
+        ),
+        (
+            ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM,
+            "300",
+            ("385", "341", "316", "294"),
+        ),
+        (
+            ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M,
+            "100",
+            ("128", "114", "105", "98"),
+        ),
+    ],
+)
+def test_zone_model_v1_calculates_each_metric_with_open_outer_edges(
+    kind: ZoneMetricKind,
+    threshold: str,
+    expected_edges: tuple[str, str, str, str],
+) -> None:
+    discipline = {
+        ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M: Discipline.SWIM,
+        ZoneMetricKind.BIKE_FTP_WATTS: Discipline.BIKE,
+        ZoneMetricKind.BIKE_THRESHOLD_HEART_RATE_BPM: Discipline.BIKE,
+        ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM: Discipline.RUN,
+        ZoneMetricKind.RUN_LTHR_BPM: Discipline.RUN,
+    }[kind]
+    profile = calculate_zone_profile(
+        ZoneMetric(discipline=discipline, kind=kind, value=Decimal(threshold))
+    )
+
+    assert profile.zone_model_version == ZONE_MODEL_VERSION
+    assert ZONE_MODEL_EVIDENCE_VERSION.endswith("v1.0")
+    if metric_direction(kind) is ZoneScaleDirection.ASCENDING:
+        assert profile.boundaries[0].lower == 0
+        assert profile.boundaries[-1].upper is None
+        assert (
+            tuple(str(boundary.upper) for boundary in profile.boundaries[:-1])
+            == expected_edges
+        )
+    else:
+        assert profile.boundaries[0].upper is None
+        assert profile.boundaries[-1].lower == 0
+        assert (
+            tuple(str(boundary.lower) for boundary in profile.boundaries[:-1])
+            == expected_edges
+        )
+    validate_calculated_zone_profile(profile)
+
+
+def test_zone_model_rounds_half_up_once() -> None:
+    assert round_zone_boundary(Decimal("100.49")) == Decimal("100")
+    assert round_zone_boundary(Decimal("100.50")) == Decimal("101")
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("111", TrainingZone.ZONE_1),
+        ("112", TrainingZone.ZONE_2),
+        ("151", TrainingZone.ZONE_2),
+        ("152", TrainingZone.ZONE_3),
+        ("181", TrainingZone.ZONE_3),
+        ("182", TrainingZone.ZONE_4),
+        ("211", TrainingZone.ZONE_4),
+        ("212", TrainingZone.ZONE_5),
+        ("500", TrainingZone.ZONE_5),
+    ],
+)
+def test_generated_power_boundaries_assign_equality_to_higher_intensity(
+    value: str,
+    expected: TrainingZone,
+) -> None:
+    profile = calculate_zone_profile(_bike_ftp("200"))
+
+    assert (
+        classify_calculated_zone_value(profile=profile, value=Decimal(value)).zone
+        is expected
+    )
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("386", TrainingZone.ZONE_1),
+        ("385", TrainingZone.ZONE_2),
+        ("342", TrainingZone.ZONE_2),
+        ("341", TrainingZone.ZONE_3),
+        ("317", TrainingZone.ZONE_3),
+        ("316", TrainingZone.ZONE_4),
+        ("295", TrainingZone.ZONE_4),
+        ("294", TrainingZone.ZONE_5),
+        ("200", TrainingZone.ZONE_5),
+    ],
+)
+def test_generated_pace_boundaries_use_speed_direction_and_boundary_ownership(
+    value: str,
+    expected: TrainingZone,
+) -> None:
+    profile = calculate_zone_profile(
+        ZoneMetric(
+            discipline=Discipline.RUN,
+            kind=ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM,
+            value=Decimal("300"),
+        )
+    )
+
+    result = classify_calculated_zone_value(profile=profile, value=Decimal(value))
+
+    assert result.zone is expected
+    assert result.relative_intensity == Decimal("300") / Decimal(value)
+
+
+@pytest.mark.parametrize(
+    ("metric", "cutoffs"),
+    [
+        (_bike_ftp("200"), (112, 152, 182, 212)),
+        (
+            ZoneMetric(
+                Discipline.BIKE,
+                ZoneMetricKind.BIKE_THRESHOLD_HEART_RATE_BPM,
+                Decimal("200"),
+            ),
+            (170, 180, 190, 206),
+        ),
+        (
+            ZoneMetric(
+                Discipline.RUN,
+                ZoneMetricKind.RUN_LTHR_BPM,
+                Decimal("200"),
+            ),
+            (170, 180, 190, 206),
+        ),
+        (
+            ZoneMetric(
+                Discipline.RUN,
+                ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM,
+                Decimal("300"),
+            ),
+            (385, 341, 316, 294),
+        ),
+        (
+            ZoneMetric(
+                Discipline.SWIM,
+                ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M,
+                Decimal("100"),
+            ),
+            (128, 114, 105, 98),
+        ),
+    ],
+)
+def test_every_metric_owns_each_boundary_and_adjacent_unit(
+    metric: ZoneMetric,
+    cutoffs: tuple[int, int, int, int],
+) -> None:
+    profile = calculate_zone_profile(metric)
+    ascending = metric_direction(metric.kind) is ZoneScaleDirection.ASCENDING
+
+    for index, cutoff in enumerate(cutoffs):
+        lower_intensity_value = cutoff - 1 if ascending else cutoff + 1
+        higher_intensity_value = cutoff + 1 if ascending else cutoff - 1
+        lower_zone = TrainingZone(index + 1)
+        higher_zone = TrainingZone(index + 2)
+
+        assert (
+            classify_calculated_zone_value(
+                profile=profile,
+                value=Decimal(lower_intensity_value),
+            ).zone
+            is lower_zone
+        )
+        assert (
+            classify_calculated_zone_value(
+                profile=profile,
+                value=Decimal(cutoff),
+            ).zone
+            is higher_zone
+        )
+        assert (
+            classify_calculated_zone_value(
+                profile=profile,
+                value=Decimal(higher_intensity_value),
+            ).zone
+            is higher_zone
+        )
+
+
+@pytest.mark.parametrize(
+    ("kind", "discipline", "threshold", "distance", "values"),
+    [
+        (
+            ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM,
+            Discipline.RUN,
+            "300",
+            "1000",
+            (386, 385, 342, 341, 317, 316, 295, 294, 200),
+        ),
+        (
+            ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M,
+            Discipline.SWIM,
+            "100",
+            "100",
+            (129, 128, 115, 114, 106, 105, 99, 98, 80),
+        ),
+    ],
+)
+def test_speed_and_pace_classification_are_identical(
+    kind: ZoneMetricKind,
+    discipline: Discipline,
+    threshold: str,
+    distance: str,
+    values: tuple[int, ...],
+) -> None:
+    profile = calculate_zone_profile(ZoneMetric(discipline, kind, Decimal(threshold)))
+
+    for pace_value in values:
+        pace_result = classify_calculated_zone_value(
+            profile=profile,
+            value=Decimal(pace_value),
+        )
+        speed_result = classify_calculated_zone_speed(
+            profile=profile,
+            speed_meters_per_second=Decimal(distance) / Decimal(pace_value),
+        )
+
+        assert speed_result == pace_result
+
+
+def test_power_above_120_percent_is_supramaximal_but_stays_zone_5() -> None:
+    profile = calculate_zone_profile(_bike_ftp("200"))
+
+    at_cap = classify_calculated_zone_value(
+        profile=profile,
+        value=Decimal("240"),
+    )
+    above_cap = classify_calculated_zone_value(
+        profile=profile,
+        value=Decimal("241"),
+    )
+
+    assert at_cap.zone is TrainingZone.ZONE_5
+    assert at_cap.supramaximal is False
+    assert above_cap.zone is TrainingZone.ZONE_5
+    assert above_cap.supramaximal is True
+
+
+def test_multi_metric_profile_keeps_primary_execution_metric_first() -> None:
+    profiles = calculate_zone_profiles(
+        (
+            ZoneMetric(
+                Discipline.RUN,
+                ZoneMetricKind.RUN_LTHR_BPM,
+                Decimal("172"),
+            ),
+            ZoneMetric(
+                Discipline.RUN,
+                ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM,
+                Decimal("290"),
+            ),
+        )
+    )
+
+    assert [profile.metric.kind for profile in profiles] == [
+        ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM,
+        ZoneMetricKind.RUN_LTHR_BPM,
+    ]
+    assert [profile.is_primary for profile in profiles] == [True, False]
+
+
+def test_zone_model_rejects_missing_invalid_and_obsolete_inputs() -> None:
+    with pytest.raises(ValueError, match="required"):
+        calculate_zone_profile(None)
+    with pytest.raises(ValueError, match="not active"):
+        calculate_zone_profile(
+            _bike_ftp("200"),
+            zone_model_version=type(ZONE_MODEL_VERSION)("start23-zone-model-0.9"),
+        )
+    with pytest.raises(ValueError, match="distinct"):
+        calculate_zone_profile(_bike_ftp("1"))
+
+
+def test_zone_model_accepts_extreme_structurally_valid_threshold() -> None:
+    profile = calculate_zone_profile(_bike_ftp("100000000000000000000"))
+
+    assert profile.boundaries[-1].lower == Decimal("106000000000000000000")

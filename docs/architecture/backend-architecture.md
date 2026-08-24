@@ -12,8 +12,11 @@ The Phase 4 base and hardening migrations and the Phase 5 catalog migration are
 applied in hosted Supabase and pass linked schema lint. The Phase 6 migration
 is applied and verified in hosted development; later migrations, including
 Phase 8.5, remain local and unexecuted. The accepted Phase 0-7 physiology
-decisions are included in `phase-3-ruleset-3`, with production activation
-gated on a named qualified Physiology Rules Review Board approval.
+decisions are included in `phase-3-ruleset-3`; qualified production review of
+the active rules and zone model was confirmed complete on 2026-08-24. A
+pulled-forward Phase 10 slice adds a constrained OpenAI explanation after
+deterministic weekly-plan generation without giving the model mutation
+authority or private TSS data.
 
 - Architecture style: modular monolith
 - Application framework: Python with FastAPI
@@ -215,9 +218,12 @@ required for the current canonical-summary import and remains out of scope.
 
 ### Coach
 
-Calls the LLM with schema-constrained tasks. It receives sanitized,
-deterministically generated conclusions and cannot call an apply/update
-operation for a plan or zone.
+The implemented weekly-plan slice calls OpenAI Responses with a strict
+Pydantic-derived output schema after the deterministic planner has created a
+pending proposal. It receives only sanitized public plan facts, has no tools,
+uses a deterministic fallback, and can only fill bounded explanatory text. It
+cannot call an apply/update operation for a plan or zone. Structured context
+extraction and clarifying questions remain future Phase 10 work.
 
 ## Layering and dependency rules
 

@@ -15,9 +15,12 @@ catalog with private load storage. Phase 6 adds deterministic pending weekly
 plans, explicit approval/rejection, revisioned direct athlete moves, eligible
 workout decks, and a TSS-free calendar. Later local slices add canonical
 activity/RPE processing, weekly check-ins, field-test calibration, and the
-provisional Polar AccessLink Phase 9 backend. It does not contain LLM calls or
-a distributed worker service; provider webhook work uses persisted receipts
-and an in-process retry-safe background path. Draft rules fail closed.
+provisional Polar AccessLink Phase 9 backend. A pulled-forward Phase 10 slice
+uses the OpenAI Responses API only to explain an already deterministic pending
+week proposal from a strict TSS-free schema; provider failure falls back to a
+local explanation and cannot change the plan. It does not contain a distributed
+worker service; provider webhook work uses persisted receipts and an in-process
+retry-safe background path. Draft rules fail closed.
 `phase-3-ruleset-2` adds BR-009 soft-range review, canonical input conversion,
 manual boundary validation, and explicitly unvalidated Karvonen fallback.
 
@@ -88,6 +91,9 @@ A local `.env` file is optional and ignored by Git and Docker.
 | `START23_SUPABASE_JWKS_CACHE_SECONDS` | `300` | Bounded JWKS cache lifetime; maximum 600 |
 | `START23_SUPABASE_JWKS_TIMEOUT_SECONDS` | `5` | JWKS network timeout; maximum 30 |
 | `START23_SUPABASE_DATA_API_TIMEOUT_SECONDS` | `10` | Data API request timeout; maximum 30 |
+| `START23_OPENAI_API_KEY` | empty | Server-only OpenAI credential; without it the planner uses a deterministic local explanation |
+| `START23_OPENAI_MODEL` | `gpt-5.6-luna` | Configurable Responses API model for bounded Dutch coach explanations |
+| `START23_OPENAI_API_TIMEOUT_SECONDS` | `8` | Coach provider timeout; maximum 30 seconds |
 | `START23_POLAR_CLIENT_ID` | empty | Server-side Polar AccessLink OAuth client identifier |
 | `START23_POLAR_CLIENT_SECRET` | empty | Server-only Polar OAuth client secret |
 | `START23_POLAR_OAUTH_REDIRECT_URL` | local API callback | Exact registered callback URL |

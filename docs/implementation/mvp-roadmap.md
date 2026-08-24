@@ -48,8 +48,12 @@ soft-range review, input conversion, boundary ownership, and unvalidated
 Karvonen fallback in `phase-3-ruleset-2`. The twelve decisions accepted on
 2026-08-11 are implemented in `phase-3-ruleset-3`. Amendments accepted on
 2026-08-13 are recorded in the Phase 0-7 decision register but are not part of
-ruleset 3 until explicitly implemented and tested. Production remains gated on
-a named qualified physiology reviewer.
+ruleset 3 until explicitly implemented and tested. The separate Zone 1-5
+conversion model from `Voorstel Start23 Zone 1-5 rekenmodel v1.0` is implemented
+as `start23-zone-model-1.0` on 2026-08-24. On the same date, the product owner
+confirmed completion of qualified physiological production review for the
+active rules and zone model; reviewer identity and evidence remain in the
+external product-governance record. Material rule changes reopen that gate.
 
 ### Scope
 
@@ -193,16 +197,23 @@ own tests.
 
 ### Remaining Phase 3 operational gates
 
-- Appoint the named qualified accountable reviewer for the Physiology Rules
-  Review Board and record the first production approval/review date.
 - Supply complete versioned BR-009 soft-range records if product wants
   configured plausibility warnings. Missing configuration remains an accepted
   warning state, never a hard rejection.
-- Define and review an official Start23 calibration protocol before the backend
-  may calculate complete FTP/CSS/LTHR zone profiles or claim
-  `protocol_validated`. `Start23_Fysiologische_TSS_Logica.pdf` defines IF and
-  TSS/sTSS per interval but does not define the deterministic mapping from
-  training execution plus TSE feedback to CSS, FTP, LTHR, pace, or Zone 1-5.
+- Retain the completed production sign-off for the reviewed Start23 field-test
+  protocols and `start23-zone-model-1.0` in the external governance dossier.
+  The backend calculates pending FTP/CSS/LTHR/threshold-pace profiles
+  deterministically, but it neither derives a threshold from submaximal
+  calibration nor activates a calculated profile without the athlete's
+  separate confirmation.
+
+### Production review update: 2026-08-24
+
+The product owner confirmed that qualified physiological review and production
+sign-off of the active rules, field-test protocols, and
+`start23-zone-model-1.0` are complete. This closes the named-reviewer gate for
+those exact versions only; the source repository deliberately does not contain
+the reviewer's personal identity or the external evidence dossier.
 
 ### Review record: 2026-07-26
 
@@ -394,10 +405,12 @@ hardened hosted persistence therefore remain pending.
   bike and run and is explicitly estimated/unreviewed; no swim fallback was
   invented. Phase 8.5 now accepts CSS or another discipline threshold without
   requiring optional Zone 1-5 boundaries, exposes reviewed field tests, and
-  evaluates their approved threshold formulas. Calculated boundaries remain
-  `pending_protocol` because the supplied approved protocol bundle does not
-  define a complete Zone 1-5 model. Week-1 calibration preserves same-block
-  objective data plus canonical 1-10 RPE and never manufactures a threshold.
+  evaluates their approved threshold formulas. `start23-zone-model-1.0` now
+  converts confirmed FTP, bike threshold HR, run LTHR, threshold pace, or CSS
+  into complete pending Zone 1-5 profiles. Threshold confirmation and zone
+  activation are deliberately separate decisions. Week-1 calibration
+  preserves same-block objective data plus canonical 1-10 RPE and never
+  manufactures a threshold.
 - Decision 42 supersedes the source `reported sport hours * 40` Week-1
   initialization. Week 1 uses a reviewed standard Start23 selection. Known
   CSS/thresholds and zones personalize its execution difficulty; unknown values
@@ -918,8 +931,9 @@ the explicitly accepted planning-completion work below.
   threshold formulas, and safe provisional/RPE-only outcomes. The existing
   regular planned-workout DTO still requires Zone 1-5 segments, so normal-plan
   selection of the zone-independent calibration protocols remains a separate
-  exit gate. The implementation does not use reported hours multiplied by 40
-  and does not invent a Zone 1-5 conversion.
+  exit gate. The implementation does not use reported hours multiplied by 40.
+  Phase 8.5 now uses the separately versioned `start23-zone-model-1.0` for
+  complete, pending Zone 1-5 conversion from an accepted threshold.
 - A non-race cycle-week-1 runtime fixture is not implemented because the public
   goal model is intentionally still race-only. Goal-type selection and
   non-race execution remain Phase 12 work; Phase 8 only removes prior-plan
@@ -948,8 +962,9 @@ the explicitly accepted planning-completion work below.
 - The RPE reminder has no explicit terminal/dismissed state because no such
   product rule exists. It remains visible until RPE is supplied, which is the
   safe Phase 8 behavior.
-- Named qualified clinical/physiology production approval remains missing.
-  Local deterministic tests do not substitute for that production gate.
+- Qualified clinical/physiology production approval of the active versions was
+  confirmed complete on 2026-08-24. Local deterministic tests remain separate
+  implementation evidence and do not approve future rule changes.
 
 ## Phase 8.5: zone intake, field tests, and Week-1 calibration
 
@@ -958,12 +973,15 @@ Detailed decisions, implemented actions, formulas, and remaining gates are in
 
 ### Status
 
-Backend and Expo functional cores are implemented and locally verified. The
-forward migration is applied in the linked Supabase project and its rollback-only
-pgTAP suite passes all 18 assertions. The linked database linter reports no
-schema errors. The mobile flow passes strict TypeScript and all 21 Expo Doctor
-checks, but it has not been exercised in an Android/iOS development build. No
-provider or other production runtime was enabled by this schema verification.
+Backend and Expo functional cores, including `start23-zone-model-1.0`, are
+implemented and locally verified. The original Phase 8.5 migration remains
+applied in the linked Supabase project. The forward-only zone-model migration
+was also applied there on 2026-08-24; its 19-assertion rollback-only pgTAP suite
+passes against the linked database and remote error-level lint is clean. A local
+Supabase reset could not run because Docker and Podman are unavailable.
+The mobile flow passes strict TypeScript, but the new confirmation lifecycle
+has not been exercised in an Android/iOS development build. No provider or
+other production runtime was enabled by this implementation.
 
 ### Scope
 
@@ -978,9 +996,19 @@ provider or other production runtime was enabled by this schema verification.
   safe status evaluation**
 - Immutable owner-scoped observations and service-only generated evaluation
   persistence. **Implemented locally**
-- Threshold and zone changes remain separate pending lifecycles. **Threshold
-  results remain pending; calculated zone versions fail closed until a complete
-  zone model is approved**
+- Threshold and zone changes remain separate pending lifecycles. **Implemented:
+  a confirmed field-test threshold creates a still-pending calculated profile;
+  a second stale-safe athlete decision is required to activate it**
+- Five-zone conversion for bike FTP, bike threshold HR, run LTHR, run threshold
+  pace, and swim CSS with canonical whole-unit `ROUND_HALF_UP` boundaries,
+  higher-intensity equality ownership, inverse pace/speed handling, and an
+  FTP-only `>120%` supramaximal marker. **Implemented as
+  `start23-zone-model-1.0`**
+- Multi-metric discipline profiles, primary/secondary metric ordering, open
+  outer bounds, evidence/source/review provenance, immutable prior versions,
+  and explicit calculated-profile proposals. Swim RPE remains separate
+  execution feedback/context because v1.0 defines no numeric RPE-to-zone
+  boundary table. **Implemented locally**
 - Zone-independent calibration protocol selection in the normal weekly plan.
   **Pending because the current planned-workout segment contract requires a
   Zone 1-5 value and the approved fixtures define no internal planned-load rule
@@ -1002,8 +1030,10 @@ provider or other production runtime was enabled by this schema verification.
   **Implemented and hosted-persistence verified; real-token/mobile flow pending**
 - Public APIs and tables contain no TSS/private-load fields. **OpenAPI/backend
   tests and hosted pgTAP pass**
-- Complete Zone 1-5 calculation remains unavailable until formulas, canonical
-  rounding, reviewer metadata, and production review are approved. **Locked**
+- Complete Zone 1-5 candidates are deterministic and versioned, and never
+  auto-activate. **Implemented and covered by calculation/API tests; qualified
+  production review is complete, while hosted migration/pgTAP remains a
+  release gate**
 
 ### Implementation notes and remaining work
 
@@ -1012,11 +1042,20 @@ provider or other production runtime was enabled by this schema verification.
   committed CSV files directly; it still compares every protocol, segment,
   duration/distance, and RPE range and does not weaken fixture coverage.
 - The mobile known-values route accepts one or both discipline thresholds and
-  optional boundaries. Complete athlete-entered boundaries first use the
-  existing manual-zone lifecycle, including active/pending proposal semantics,
-  and then store the resumable discipline setup. If the second request fails,
-  the valid zone version is retained and the setup request is safely retryable;
-  no direct active-zone write was added.
+  optional boundary overrides. A confirmed known threshold is converted by the
+  model into a pending multi-metric profile and proposal; model-derived ranges
+  remain distinguishable from athlete overrides. The first profile also stays
+  pending, with an explicit null base-version precondition. No direct
+  active-zone write was added.
+- Field-test results store their versioned calculated candidates immutably.
+  Accepting the threshold records a separate decision and creates a pending
+  profile/proposal; rejecting it creates no profile. Approval then atomically
+  supersedes any active version. The mobile calibration screen exposes all
+  three choices without merging them into one action.
+- Provenance includes source metric/value/method and quality, model and evidence
+  version, calculated timestamp, athlete review state/timestamps, optional
+  reviewer identity, evaluation link, and deterministic input fingerprint.
+  Planned and realized TSS are absent from every new public DTO/table.
 - The mobile execution flow creates an owned canonical activity, records its
   canonical 1-10 session RPE, writes immutable protocol observations, and only
   then requests deterministic evaluation. Until the planner gate above is
@@ -1024,22 +1063,29 @@ provider or other production runtime was enabled by this schema verification.
   fabricated `planned_workout_id`.
 - Expo SDK 57 patch dependencies were aligned to `expo ~57.0.14`,
   `expo-dev-client ~57.0.13`, and `expo-splash-screen ~57.0.7`; Expo Doctor now
-  passes 21/21 checks. `npm audit` still reports 8 moderate and 11 high
-  upstream/transitive advisories with no critical finding. Its proposed
-  automatic fixes downgrade Expo/React Native across the locked SDK boundary,
-  so no breaking `audit fix` was applied; this needs an upstream-compatible
-  SDK 57 resolution or a separately reviewed upgrade.
+  passes 20/21 checks because it now expects the newer compatible patches
+  `expo ~57.0.16`, `expo-dev-client ~57.0.15`, and
+  `expo-splash-screen ~57.0.8`. Updating those packages is kept outside this
+  zone-model change. `npm audit` previously reported 8 moderate and 11 high
+  upstream/transitive advisories with no critical finding. No breaking
+  `audit fix` was applied; this needs an upstream-compatible SDK 57 resolution
+  or a separately reviewed upgrade.
 - The rollback-only pgTAP suite shares one transaction across simulated API
   calls, while PostgREST gives each RPC or table request its own transaction.
   The direct-write assertion therefore clears the RPC's transaction-local
   critical-write guard before probing the table, and the evaluation
   immutability assertion expects the stricter table-permission rejection that
   occurs before the trigger.
-- The complete backend suite passes 303 tests; Ruff lint/format, strict mypy,
-  and mobile strict TypeScript pass. The hosted migration, 18-assertion pgTAP
-  suite, and linked error-level database lint pass. Two-real-token isolation,
-  Android/iOS runtime, dependency-advisory resolution, and named qualified
-  physiology production review remain open gates.
+- The zone-model calculation, calibration, onboarding, repository, AI coach,
+  and mobile changes pass the complete backend suite (348 tests), Ruff, strict
+  mypy, and mobile strict TypeScript. Expo Doctor passes 20/21 checks with the three
+  patch-version differences above. The original hosted Phase 8.5
+  migration and 18-assertion pgTAP suite remain verified. The zone-model
+  migration and 19-assertion pgTAP suite are now hosted-verified as well.
+  Two-real-token isolation, Android/iOS runtime, and dependency-advisory
+  resolution remain open gates. Qualified physiology
+  production review of the active versions was confirmed complete on
+  2026-08-24.
 
 ## Phase 9: one wearable integration
 
@@ -1149,31 +1195,53 @@ and TSS-confidentiality tests are included.
 
 ### Status
 
-Configuration groundwork added on 2026-07-27. The backend can load an OpenAI
-API credential from `START23_OPENAI_API_KEY`; the local value is stored only in
-the Git-ignored `backend/.env`, and the committed example remains blank.
-Provider calls, model selection, structured prompts, privacy/retention review,
-and model-assisted scheduling behavior are not implemented yet.
+Pulled-forward slice implemented on 2026-08-24 so AI-assisted weekly-plan
+explanations are available before the rest of Phase 10. Phase 6 remains solely
+responsible for deterministic workout selection, physiology, placement, and
+creation of a pending schedule. After that pending proposal exists, the backend
+may call the OpenAI Responses API with a closed Pydantic schema containing only
+public plan facts and ask for a bounded Dutch explanation.
 
-The eventual integration may extract schema-validated context and explain
-deterministic planning recommendations. Phase 6 remains responsible for
-creating schedules, and every proposed plan or revision must remain pending
-until the user explicitly confirms it.
+The adapter uses Structured Outputs, `store: false`, a server-only
+`START23_OPENAI_API_KEY`, configurable `START23_OPENAI_MODEL` (default
+`gpt-5.6-luna`), and a bounded timeout. The provider receives no planned or
+realized TSS, other private load values, free athlete text, database tools, or
+mutation capability. Refusal, invalid output, timeout, provider failure, or a
+missing key produces a deterministic local explanation without failing plan
+creation. A service-only Supabase RPC can fill the public explanation exactly
+once while the proposal is pending; it cannot update workouts, zones, plan
+state, or approval state. The mobile planning screen shows the explanation next
+to the existing explicit approve/reject actions.
+
+The new migration was applied to linked Supabase on 2026-08-24. Remote
+error-level lint is clean; the rollback-only pgTAP suite executes successfully,
+and a separate read-only query confirms that only `service_role` can execute
+the explanation RPC. The Git-ignored backend environment contains a working
+OpenAI key, and a live non-personal Responses smoke test passed with
+`gpt-5.6-luna` and `store: false`. Privacy/DPA/retention approval remains a
+production gate. The local environment still lacks
+`START23_SUPABASE_SECRET_KEY`, so local FastAPI service-only planning calls need
+that separate secret before a complete weekly-plan E2E run can succeed.
 
 ### Scope
 
-- Structured context extraction.
-- Clarifying questions.
-- Explanation of deterministic recommendations.
-- Confirmation UI bound to a specific proposal.
+- Structured context extraction. **Pending beyond this pulled-forward slice**
+- Clarifying questions. **Pending beyond this pulled-forward slice**
+- Explanation of deterministic recommendations. **Implemented for weekly-plan
+  proposals with deterministic fallback**
+- Confirmation UI bound to a specific proposal. **Implemented by reusing the
+  existing pending proposal approval flow**
 
 ### Exit criteria
 
-- LLM output cannot invoke plan or zone mutation.
-- Extracted context is schema-validated.
-- Required context is confirmed before critical effects.
-- Prompts and responses contain no TSS.
-- Privacy and retention configuration is approved.
+- LLM output cannot invoke plan or zone mutation. **Implemented and tested**
+- Extracted context is schema-validated. **Not yet applicable; free-text
+  extraction remains pending**
+- Required context is confirmed before critical effects. **Implemented: the AI
+  runs only after deterministic proposal creation and cannot apply it**
+- Prompts and responses contain no TSS. **Implemented and contract-tested**
+- Privacy and retention configuration is approved. **Pending production gate;
+  API requests already set `store: false` and minimize disclosed data**
 
 ## Phase 11: zone progress evaluation
 
@@ -1297,8 +1365,8 @@ Every phase must:
 ## Current status
 
 - Phase 0 architecture/state decisions: `locked`
-- Phase 0 physiological specification: `ruleset-3 implemented for local MVP;
-  named qualified production review pending`
+- Phase 0 physiological specification: `ruleset-3 implemented; qualified
+  production review of active versions confirmed complete 2026-08-24`
 - Phase 1 backend foundation: `implemented; locally verified`
 - Phase 2 authentication: `verified`
 - Phase 2 persistence and hosted RLS: `hosted schema/RLS verified; FastAPI
@@ -1321,15 +1389,19 @@ Every phase must:
   hosted migration applied; taper review plus pgTAP/real-token/device gates
   remain`
 - Phase 8.5 zone intake, field tests, and Week-1 calibration: `backend and
-  mobile functional cores plus approved-fixture parity implemented; hosted
-  migration/pgTAP/lint verified; planner, dependency-advisory, real-token,
-  physiology-review, and device-runtime gates remain`
+  mobile functional cores, approved-fixture parity, and Zone 1-5 model v1.0
+  implemented; original and zone-model hosted migrations/pgTAP/lint verified;
+  planner, dependency-advisory, real-token, and device-runtime gates remain;
+  physiology review is complete`
 - Phase 9: `Polar backend functional core and hosted migration/pgTAP/lint
   verified; provider/legal approval, real OAuth/webhook/storage, retry
   scheduling, security-review choices, and mobile runtime remain pending`
+- Phase 10 constrained LLM coach: `weekly-plan explanation slice pulled
+  forward and implemented with Structured Outputs, TSS-free facts,
+  deterministic fallback, pending-only hosted persistence, mobile display, and
+  a successful live provider smoke test; privacy approval, local Supabase
+  backend-secret configuration, and context extraction remain`
 - Phase 11 and Phase 12: `not started`
-- Phase 10 constrained LLM coach: `backend-only credential plumbing added;
-  provider integration and model-assisted behavior not started`
 
 ## Unresolved roadmap decisions
 
@@ -1346,13 +1418,17 @@ Every phase must:
   supported plans.
 - The functional injury policy, zero-redistribution MVP rule, durable Phase 8
   persistence, weekly review UI, low-only filtering, and rest-only pending plan
-  are implemented; named clinical production approval remains open.
+  are implemented; qualified clinical production approval of the active rules
+  was confirmed complete on 2026-08-24.
 - Current-week RPE correction/audit, achieved-goal maintenance, and the exact
   four-complete-week restart baseline are implemented. Phase 8.5 defines RPE
   in this flow as canonical 1-10 RPE and implements reviewed field-test
-  threshold formulas plus safe submaximal calibration. A complete deterministic
-  conversion from those thresholds/observations to Zone 1-5 remains undefined
-  and fail-closed. Zone-independent normal-plan selection, real-token and mobile
-  device verification, upstream-compatible dependency-advisory resolution, and
-  named clinical production approval remain open. Phase 8.5 hosted migration,
-  pgTAP, and error-level lint are verified.
+  threshold formulas plus safe submaximal calibration. The complete
+  deterministic conversion from confirmed thresholds to Zone 1-5 is now
+  implemented as `start23-zone-model-1.0`, with separate pending threshold and
+  zone decisions. Zone-independent normal-plan selection, real-token and mobile
+  device verification, and upstream-compatible dependency-advisory resolution
+  remain open; deployment and pgTAP verification of the zone-model migration
+  are complete.
+  Qualified clinical production approval is complete. The original Phase 8.5
+  hosted migration, pgTAP, and error-level lint remain verified.

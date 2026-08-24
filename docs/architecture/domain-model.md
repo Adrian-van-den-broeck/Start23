@@ -589,5 +589,6 @@ Resolved for MVP:
   BR-006, BR-007, BR-008, and BR-010.
 - `phase-3-ruleset-2` historically added BR-009 soft-range review, input
   conversion, contiguous boundaries, and unreviewed Karvonen fallback.
-- `phase-3-ruleset-3` records the accepted Phase 0-7 decisions; named qualified
-  production approval remains required.
+- `phase-3-ruleset-3` records the accepted Phase 0-7 decisions; qualified
+  production approval of the active rules and `start23-zone-model-1.0` was
+  confirmed complete on 2026-08-24. Changed rules require a new review.

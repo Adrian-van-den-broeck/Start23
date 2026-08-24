@@ -88,7 +88,7 @@ const metricOptions: Record<Discipline, readonly MetricOption[]> = {
 
 const routeDescriptions: Record<ZoneSetupRoute, string> = {
   known_values:
-    'Bewaar een bekende drempelwaarde. Bestaande Zone 1-5-grenzen zijn optioneel.',
+    'Bevestig een bekende drempelwaarde. Start23 berekent een apart Zone 1-5-voorstel; bestaande grenzen kun je als override invoeren.',
   field_test:
     'Voer een beoordeelde maximale veldtest uit voor een drempelschatting.',
   calibration_week:
@@ -428,8 +428,9 @@ export function ZoneSetupStep({ accessToken, state, saving, onSave }: Props) {
         <View style={styles.panel}>
           <Text style={styles.panelTitle}>Bekende waarden</Text>
           <Text style={styles.panelText}>
-            Eén bekende drempel is genoeg. Laat de optionele grenzen leeg als
-            je ze niet betrouwbaar kent.
+            Eén bekende drempel is genoeg. Laat de optionele grenzen leeg om
+            het geversioneerde Start23-model te gebruiken. De zones blijven
+            daarna eerst een apart voorstel.
           </Text>
           {availableMetrics.map((option) => (
             <FormField
@@ -616,8 +617,9 @@ export function ZoneSetupStep({ accessToken, state, saving, onSave }: Props) {
             </View>
           ) : null}
           <Text style={styles.safetyText}>
-            Een geldige test kan alleen een drempel schatten. Zone 1-5 blijft
-            geblokkeerd tot een volledig beoordeeld zonemodel bestaat.
+            Een geldige test berekent een drempel en Zone 1-5-kandidaten. Je
+            bevestigt eerst de drempel en daarna het zoneprofiel; niets wordt
+            automatisch actief.
           </Text>
           <SaveButton
             disabled={!selectedProtocol}

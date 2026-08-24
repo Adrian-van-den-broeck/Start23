@@ -67,6 +67,14 @@ class PlanningRepository(Protocol):
     ) -> JsonObject:
         """Persist a deterministic plan as a typed pending proposal."""
 
+    async def set_plan_proposal_explanation(
+        self,
+        athlete_id: UUID,
+        proposal_id: UUID,
+        explanation: str,
+    ) -> str:
+        """Set qualitative text on an owned pending proposal, once."""
+
     async def fetch_plan(
         self,
         access_token: str,
@@ -313,6 +321,26 @@ class SupabasePlanningRepository:
         if not isinstance(result, dict):
             raise PlanningRepositoryUnavailableError
         return dict(result)
+
+    async def set_plan_proposal_explanation(
+        self,
+        athlete_id: UUID,
+        proposal_id: UUID,
+        explanation: str,
+    ) -> str:
+        result = await self._request(
+            "POST",
+            "rpc/set_weekly_plan_proposal_explanation",
+            service=True,
+            json={
+                "p_athlete_id": str(athlete_id),
+                "p_proposal_id": str(proposal_id),
+                "p_explanation": explanation,
+            },
+        )
+        if not isinstance(result, str):
+            raise PlanningRepositoryUnavailableError
+        return result
 
     async def fetch_plan(
         self,

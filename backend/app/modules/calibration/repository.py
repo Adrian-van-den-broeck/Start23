@@ -65,6 +65,28 @@ class CalibrationRepository(Protocol):
     ) -> JsonObject:
         """Persist a server-calculated evaluation through a service-only RPC."""
 
+    async def get_evaluation(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+        evaluation_id: UUID,
+    ) -> JsonObject:
+        """Read one exact owned immutable evaluation."""
+
+    async def save_calculated_zone_profile(
+        self,
+        athlete_id: UUID,
+        values: JsonObject,
+    ) -> JsonObject:
+        """Persist a generated profile and threshold decision as pending."""
+
+    async def reject_threshold(
+        self,
+        athlete_id: UUID,
+        evaluation_id: UUID,
+    ) -> JsonObject:
+        """Persist an immutable field-test threshold rejection."""
+
     async def fetch_status(
         self,
         access_token: str,
@@ -263,12 +285,66 @@ class SupabaseCalibrationRepository:
             raise CalibrationRepositoryUnavailableError
         return dict(result)
 
+    async def get_evaluation(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+        evaluation_id: UUID,
+    ) -> JsonObject:
+        rows = await self._select(
+            "calibration_evaluations",
+            access_token,
+            athlete_id,
+            extra_params={"id": f"eq.{evaluation_id}", "limit": "1"},
+        )
+        if not rows:
+            raise CalibrationRepositoryNotFoundError
+        return rows[0]
+
+    async def save_calculated_zone_profile(
+        self,
+        athlete_id: UUID,
+        values: JsonObject,
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/save_calculated_zone_profile",
+            "",
+            service=True,
+            json={
+                "p_athlete_id": str(athlete_id),
+                "p_profile": values,
+            },
+        )
+        if not isinstance(result, dict):
+            raise CalibrationRepositoryUnavailableError
+        return dict(result)
+
+    async def reject_threshold(
+        self,
+        athlete_id: UUID,
+        evaluation_id: UUID,
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/reject_calibration_threshold",
+            "",
+            service=True,
+            json={
+                "p_athlete_id": str(athlete_id),
+                "p_evaluation_id": str(evaluation_id),
+            },
+        )
+        if not isinstance(result, dict):
+            raise CalibrationRepositoryUnavailableError
+        return dict(result)
+
     async def fetch_status(
         self,
         access_token: str,
         athlete_id: UUID,
     ) -> JsonObject:
-        setups, evaluations = await asyncio.gather(
+        setups, evaluations, decisions, zone_proposals = await asyncio.gather(
             self._select(
                 "discipline_zone_setups",
                 access_token,
@@ -281,8 +357,28 @@ class SupabaseCalibrationRepository:
                 athlete_id,
                 extra_params={"order": "created_at.desc"},
             ),
+            self._select(
+                "calibration_threshold_decisions",
+                access_token,
+                athlete_id,
+                extra_params={"order": "decided_at.desc"},
+            ),
+            self._select(
+                "change_proposals",
+                access_token,
+                athlete_id,
+                extra_params={
+                    "kind": "eq.zone_update",
+                    "order": "created_at.desc",
+                },
+            ),
         )
-        return {"setups": setups, "evaluations": evaluations}
+        return {
+            "setups": setups,
+            "evaluations": evaluations,
+            "threshold_decisions": decisions,
+            "zone_proposals": zone_proposals,
+        }
 
     async def aclose(self) -> None:
         if self._owns_client:

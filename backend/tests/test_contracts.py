@@ -5,9 +5,11 @@ from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
+from pydantic import ValidationError
 
 from app.core.config import Settings
 from app.main import create_app
+from app.modules.planning.schemas import ProposalApprovalRequest
 
 _FORBIDDEN_LOAD_KEYS = {"tss", "ptss", "rtss", "plannedtss", "realizedtss"}
 
@@ -31,6 +33,16 @@ def _assert_no_forbidden_load_key(value: Any) -> None:
     elif isinstance(value, list):
         for nested_value in value:
             _assert_no_forbidden_load_key(nested_value)
+
+
+def test_nullable_zone_base_remains_typed_and_plan_base_cannot_be_null() -> None:
+    zone_approval = ProposalApprovalRequest(
+        expected_base_zone_profile_id=None,
+    )
+
+    assert zone_approval.expected_base_zone_profile_id is None
+    with pytest.raises(ValidationError):
+        ProposalApprovalRequest(expected_base_revision=None)
 
 
 def test_openapi_contains_expected_foundation_paths(client: TestClient) -> None:
@@ -79,6 +91,8 @@ def test_openapi_contains_expected_foundation_paths(client: TestClient) -> None:
         "/api/v1/calibration/protocols/{discipline}",
         "/api/v1/calibration/observations",
         "/api/v1/calibration/evaluate",
+        "/api/v1/calibration/evaluations/{evaluation_id}/threshold/confirm",
+        "/api/v1/calibration/evaluations/{evaluation_id}/threshold/reject",
         "/api/v1/calibration/status",
         "/api/v1/integrations/polar/oauth/start",
         "/api/v1/integrations/polar/oauth/callback",

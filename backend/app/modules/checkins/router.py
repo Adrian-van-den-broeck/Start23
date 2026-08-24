@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from app.api.dependencies import get_access_token, get_authenticated_identity
 from app.core.errors import ErrorResponse
 from app.core.security import AuthenticatedIdentity
+from app.modules.coach.weekly_plan import WeeklyPlanCoach
 from app.modules.planning.repository import PlanningRepository
 from app.modules.planning.schemas import WeeklyPlanProposalResponse
 from app.modules.planning.service import PlanningCatalogProvider, PlanningService
@@ -55,9 +56,10 @@ def get_checkin_service(
     catalog_provider: PlanningCatalogProvider = (
         request.app.state.planning_catalog_provider
     )
+    weekly_plan_coach: WeeklyPlanCoach = request.app.state.weekly_plan_coach
     return CheckInService(
         repository,
-        PlanningService(planning_repository, catalog_provider),
+        PlanningService(planning_repository, catalog_provider, weekly_plan_coach),
     )
 
 

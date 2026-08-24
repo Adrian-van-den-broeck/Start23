@@ -228,8 +228,8 @@ The following work is not silently treated as complete:
    than the audit tool's incompatible downgrade proposal;
 6. run the migration, pgTAP, database advisors, and two-real-token tests when a
    PostgreSQL/Docker or hosted development runtime is available;
-7. record named qualified production review and, for biometric alternatives,
-   privacy/legal review.
+7. retain the qualified production review confirmed complete on 2026-08-24;
+   biometric alternatives still require their separate privacy/legal review.
 
 Until gate 1 is satisfied, `zone_status=pending_protocol` is the correct final
 state for a valid field-test threshold estimate.

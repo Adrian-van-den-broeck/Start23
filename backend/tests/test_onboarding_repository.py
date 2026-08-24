@@ -120,3 +120,43 @@ def test_fallback_rpc_uses_only_the_server_secret_key() -> None:
     assert captured.headers["apikey"] == "sb_secret_test"
     assert "authorization" not in captured.headers
     assert b"p_athlete_id" in captured.content
+
+
+def test_calculated_zone_rpc_uses_only_the_server_secret_key() -> None:
+    athlete_id = uuid4()
+    captured: httpx.Request | None = None
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal captured
+        captured = request
+        return httpx.Response(
+            200,
+            json={
+                "profile_id": str(uuid4()),
+                "version": 1,
+                "status": "pending",
+                "proposal_id": str(uuid4()),
+            },
+        )
+
+    async def exercise() -> None:
+        async with httpx.AsyncClient(
+            transport=httpx.MockTransport(handler),
+        ) as client:
+            repository = SupabaseOnboardingRepository(_settings(), client=client)
+            await repository.save_calculated_zone_profile(
+                athlete_id,
+                {
+                    "discipline": "run",
+                    "source_method": "athlete_entered",
+                    "metric_profiles": [],
+                },
+            )
+
+    asyncio.run(exercise())
+
+    assert captured is not None
+    assert captured.url.path.endswith("/rest/v1/rpc/save_calculated_zone_profile")
+    assert captured.headers["apikey"] == "sb_secret_test"
+    assert "authorization" not in captured.headers
+    assert b"p_athlete_id" in captured.content

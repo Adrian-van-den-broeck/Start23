@@ -302,6 +302,25 @@ class MemoryPlanningRepository:
             "revision": revision,
         }
 
+    async def set_plan_proposal_explanation(
+        self,
+        athlete_id: UUID,
+        proposal_id: UUID,
+        explanation: str,
+    ) -> str:
+        if self._proposal_owners.get(proposal_id) != athlete_id:
+            raise PlanningRepositoryNotFoundError
+        proposal = self._proposals[proposal_id]
+        if proposal["state"] == "pending" and proposal["public_explanation"] in {
+            "A deterministic weekly plan is ready for review.",
+            "A rest-only weekly revision is ready for review.",
+        }:
+            proposal["public_explanation"] = explanation
+            for plan in self._plans.values():
+                if plan["proposal"]["id"] == str(proposal_id):
+                    plan["proposal"] = proposal
+        return str(proposal["public_explanation"])
+
     async def fetch_plan(
         self,
         access_token: str,
@@ -622,6 +641,15 @@ def test_generated_plan_remains_pending_is_idempotent_and_hides_tss(
     assert first["plan"]["active_revision"] is None
     assert repeated["proposal"]["id"] == first["proposal"]["id"]
     assert repeated["plan"]["id"] == first["plan"]["id"]
+    assert "weekvoorstel" in first["proposal"]["public_explanation"].lower()
+    assert (
+        first["plan"]["proposal"]["public_explanation"]
+        == first["proposal"]["public_explanation"]
+    )
+    assert (
+        repeated["proposal"]["public_explanation"]
+        == first["proposal"]["public_explanation"]
+    )
     serialized = json_normalized = str(first).lower().replace("_", "")
     assert "tss" not in serialized
     assert "plannedtss" not in json_normalized

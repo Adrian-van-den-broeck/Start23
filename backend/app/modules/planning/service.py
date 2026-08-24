@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import logging
 from collections.abc import Mapping
 from datetime import date, datetime, timedelta
 from decimal import Decimal
@@ -9,6 +10,13 @@ from typing import Any, Protocol
 from uuid import UUID
 from zoneinfo import ZoneInfo
 
+from app.modules.coach.weekly_plan import (
+    CoachProviderError,
+    CoachWorkoutFacts,
+    WeeklyPlanCoach,
+    WeeklyPlanCoachFacts,
+    deterministic_weekly_plan_explanation,
+)
 from app.modules.physiology.anti_stack import ScheduledWorkout
 from app.modules.physiology.models import (
     Discipline,
@@ -40,7 +48,7 @@ from .domain import (
     remaining_workout_deck,
     validate_manual_schedule,
 )
-from .repository import JsonObject, PlanningRepository
+from .repository import JsonObject, PlanningRepository, PlanningRepositoryError
 from .schemas import (
     CalendarResponse,
     ChangeProposalSummaryResponse,
@@ -103,9 +111,44 @@ class PlanningService:
         self,
         repository: PlanningRepository,
         catalog_provider: PlanningCatalogProvider,
+        weekly_plan_coach: WeeklyPlanCoach,
     ) -> None:
         self._repository = repository
         self._catalog_provider = catalog_provider
+        self._weekly_plan_coach = weekly_plan_coach
+
+    @staticmethod
+    def _coach_facts(
+        *,
+        week_start: date,
+        timezone_name: str,
+        draft: Any,
+    ) -> WeeklyPlanCoachFacts:
+        athlete_timezone = ZoneInfo(timezone_name)
+        workout_dates = {
+            workout.scheduled_at.astimezone(athlete_timezone).date()
+            for workout in draft.workouts
+        }
+        return WeeklyPlanCoachFacts(
+            week_start=week_start,
+            timezone=timezone_name,
+            phase=draft.target.phase,
+            workouts=tuple(
+                CoachWorkoutFacts(
+                    discipline=workout.discipline,
+                    name=workout.snapshot.name,
+                    scheduled_at=workout.scheduled_at,
+                    duration_minutes=workout.snapshot.duration_minutes,
+                    intensity=workout.snapshot.intensity_bucket,
+                )
+                for workout in draft.workouts
+            ),
+            rest_days=tuple(
+                current
+                for offset in range(7)
+                if (current := week_start + timedelta(days=offset)) not in workout_dates
+            ),
+        )
 
     @staticmethod
     def _planning_input(source: Mapping[str, Any]) -> JsonObject:
@@ -400,7 +443,7 @@ class PlanningService:
             selected_template_ids=selected_template_ids,
             checkin_id=checkin_id,
         )
-        return await self._repository.create_plan_proposal(
+        result = await self._repository.create_plan_proposal(
             athlete_id,
             self._proposal_payload(
                 request_id=request_id,
@@ -423,6 +466,40 @@ class PlanningService:
                 checkin_id=checkin_id,
             ),
         )
+        proposal_id = UUID(str(result["proposal_id"]))
+        coach_facts = self._coach_facts(
+            week_start=week_start,
+            timezone_name=timezone_name,
+            draft=draft,
+        )
+        try:
+            explanation = await self._weekly_plan_coach.explain(coach_facts)
+        except CoachProviderError:
+            logging.getLogger(__name__).warning(
+                "Weekly-plan coach unavailable; using deterministic explanation",
+                extra={
+                    "event": "weekly_plan_coach_fallback",
+                    "proposal_id": str(proposal_id),
+                },
+            )
+            explanation = deterministic_weekly_plan_explanation(coach_facts)
+        try:
+            await self._repository.set_plan_proposal_explanation(
+                athlete_id,
+                proposal_id,
+                explanation.public_explanation,
+            )
+        except PlanningRepositoryError:
+            # The plan is already safely pending. A missing explanation migration or
+            # transient metadata write must not turn an idempotent plan into an error.
+            logging.getLogger(__name__).warning(
+                "Weekly-plan explanation could not be persisted",
+                extra={
+                    "event": "weekly_plan_explanation_persistence_skipped",
+                    "proposal_id": str(proposal_id),
+                },
+            )
+        return result
 
     async def generate_initial_proposal(
         self,

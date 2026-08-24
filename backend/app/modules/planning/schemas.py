@@ -347,11 +347,13 @@ class ProposalApprovalRequest(PublicPlanningModel):
     @model_validator(mode="after")
     def require_one_precondition(self) -> "ProposalApprovalRequest":
         supplied = (
-            self.expected_base_revision is not None,
-            self.expected_base_zone_profile_id is not None,
+            "expected_base_revision" in self.model_fields_set,
+            "expected_base_zone_profile_id" in self.model_fields_set,
         )
         if sum(supplied) != 1:
             raise ValueError("Exactly one proposal precondition is required.")
+        if supplied[0] and self.expected_base_revision is None:
+            raise ValueError("A plan proposal requires a numeric base revision.")
         return self
 
 

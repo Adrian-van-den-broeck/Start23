@@ -12,10 +12,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
+  approveZoneProposal,
+  confirmCalibrationThreshold,
   createActivity,
   evaluateCalibration,
   getCalibrationStatus,
   listCalibrationProtocols,
+  rejectCalibrationThreshold,
   saveCalibrationObservation,
   submitActivityRpe,
 } from '../api/client';
@@ -28,6 +31,7 @@ import type {
   DisciplineSetup,
   GuidanceMode,
   SwimRepetition,
+  ThresholdDecision,
   ZoneMetricKind,
 } from '../api/types';
 import { FormField } from '../components/FormField';
@@ -112,8 +116,8 @@ const resultLabels: Record<CalibrationEvaluation['status'], string> = {
 };
 
 const reasonLabels: Record<string, string> = {
-  zone_model_not_approved:
-    'Een compleet beoordeeld Zone 1-5-model ontbreekt; er zijn geen zones aangemaakt.',
+  zone_profile_pending_athlete_confirmation:
+    'De drempel en berekende zones wachten op jouw afzonderlijke bevestigingen.',
   threshold_not_permitted_from_submaximal_calibration:
     'Een submaximale kalibratie mag geen drempel produceren.',
   sensor_data_missing:
@@ -310,6 +314,9 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
     {},
   );
   const [evaluations, setEvaluations] = useState<CalibrationEvaluation[]>([]);
+  const [thresholdDecisions, setThresholdDecisions] = useState<
+    ThresholdDecision[]
+  >([]);
   const [selectedProtocolId, setSelectedProtocolId] = useState<string | null>(
     null,
   );
@@ -325,6 +332,9 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
   const [activityId, setActivityId] = useState<string | null>(null);
   const [idempotencyKey, setIdempotencyKey] = useState(newIdempotencyKey);
   const [result, setResult] = useState<CalibrationEvaluation | null>(null);
+  const [thresholdDecision, setThresholdDecision] =
+    useState<ThresholdDecision | null>(null);
+  const [zonesActivated, setZonesActivated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -344,6 +354,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
     setSetups(protocolSetups);
     setProtocols(protocolMap);
     setEvaluations(status.evaluations);
+    setThresholdDecisions(status.threshold_decisions);
     setSelectedProtocolId((current) => {
       if (current && protocolMap[current]) return current;
       return protocolSetups[0]?.protocol_id ?? null;
@@ -393,6 +404,8 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
     setActivityId(null);
     setIdempotencyKey(newIdempotencyKey());
     setResult(null);
+    setThresholdDecision(null);
+    setZonesActivated(false);
     setStage('protocol');
   }, [selectedProtocolId]);
 
@@ -413,6 +426,17 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
         .sort((left, right) => right.created_at.localeCompare(left.created_at)),
     [evaluations, selectedProtocolId],
   );
+
+  const openPriorResult = (evaluation: CalibrationEvaluation) => {
+    const decision =
+      thresholdDecisions.find(
+        (candidate) => candidate.evaluation_id === evaluation.id,
+      ) ?? null;
+    setResult(evaluation);
+    setThresholdDecision(decision);
+    setZonesActivated(decision?.zone_proposal_state === 'applied');
+    setStage('result');
+  };
 
   const validateFeedback = (
     protocol: CalibrationProtocol,
@@ -668,6 +692,67 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
     }
   };
 
+  const confirmThreshold = async () => {
+    if (!result) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const decision = await confirmCalibrationThreshold(accessToken, result.id);
+      setThresholdDecision(decision);
+      await load();
+    } catch (caught) {
+      setError(
+        caught instanceof Error
+          ? caught.message
+          : 'De drempel kon niet worden bevestigd.',
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const rejectThreshold = async () => {
+    if (!result) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const decision = await rejectCalibrationThreshold(accessToken, result.id);
+      setThresholdDecision(decision);
+      await load();
+    } catch (caught) {
+      setError(
+        caught instanceof Error
+          ? caught.message
+          : 'De drempel kon niet worden afgewezen.',
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const activateZones = async () => {
+    if (!thresholdDecision?.zone_proposal_id) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await approveZoneProposal(
+        accessToken,
+        thresholdDecision.zone_proposal_id,
+        thresholdDecision.base_zone_profile_id,
+      );
+      setZonesActivated(true);
+      await load();
+    } catch (caught) {
+      setError(
+        caught instanceof Error
+          ? caught.message
+          : 'Het zonevoorstel kon niet worden bevestigd.',
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
   if (loading) {
     return (
       <SafeAreaView style={styles.centered}>
@@ -798,10 +883,20 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                     onPress={() => setStage('feedback')}
                   />
                   {priorResults.length > 0 ? (
-                    <Text style={styles.historyText}>
-                      {priorResults.length} eerdere evaluatie
-                      {priorResults.length === 1 ? '' : 's'} voor dit protocol.
-                    </Text>
+                    <View style={styles.segmentList}>
+                      <Text style={styles.historyText}>
+                        {priorResults.length} eerdere evaluatie
+                        {priorResults.length === 1 ? '' : 's'} voor dit protocol.
+                      </Text>
+                      {priorResults.slice(0, 3).map((evaluation) => (
+                        <ActionButton
+                          key={evaluation.id}
+                          label={`Bekijk ${new Date(evaluation.created_at).toLocaleDateString('nl-NL')}`}
+                          onPress={() => openPriorResult(evaluation)}
+                          secondary
+                        />
+                      ))}
+                    </View>
                   ) : null}
                 </View>
               ) : null}
@@ -1171,15 +1266,78 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                       <Text style={styles.resultMetricValue}>{threshold.value}</Text>
                     </View>
                   ))}
+                  {result.zone_profiles.map((profile) => (
+                    <View key={profile.metric_kind} style={styles.resultMetric}>
+                      <Text style={styles.resultMetricLabel}>
+                        {metricLabels[profile.metric_kind]}
+                        {profile.is_primary ? ' · primair' : ' · secundair'}
+                      </Text>
+                      {profile.boundaries.map((boundary) => (
+                        <Text key={boundary.zone_number} style={styles.reason}>
+                          Z{boundary.zone_number}: {boundary.lower_value ?? 'open'}
+                          {' – '}
+                          {boundary.upper_value ?? 'open'}
+                        </Text>
+                      ))}
+                    </View>
+                  ))}
                   {result.reason_codes.map((reason) => (
                     <Text key={reason} style={styles.reason}>
                       • {reasonLabels[reason] ?? reason.replaceAll('_', ' ')}
                     </Text>
                   ))}
-                  {result.requires_athlete_confirmation ? (
+                  {result.requires_athlete_confirmation && !thresholdDecision ? (
+                    <>
+                      <Text style={styles.safety}>
+                        Controleer eerst de gemeten drempel. Na bevestiging maakt
+                        Start23 een afzonderlijk, nog niet actief zonevoorstel.
+                      </Text>
+                      <ActionButton
+                        label="Drempel bevestigen"
+                        loading={busy}
+                        onPress={() => void confirmThreshold()}
+                      />
+                      <ActionButton
+                        disabled={busy}
+                        label="Drempel afwijzen"
+                        onPress={() => void rejectThreshold()}
+                        secondary
+                      />
+                    </>
+                  ) : null}
+                  {thresholdDecision?.state === 'accepted' &&
+                  thresholdDecision.zone_proposal_state === 'pending' &&
+                  !zonesActivated ? (
+                    <>
+                      <Text style={styles.safety}>
+                        De drempel is bevestigd. De berekende zones staan nog als
+                        voorstel klaar en wijzigen je actieve profiel niet.
+                      </Text>
+                      <ActionButton
+                        label="Zones bevestigen"
+                        loading={busy}
+                        onPress={() => void activateZones()}
+                      />
+                    </>
+                  ) : null}
+                  {thresholdDecision?.state === 'rejected' ? (
                     <Text style={styles.safety}>
-                      Deze drempel wacht op bevestigingssemantiek én een
-                      goedgekeurd Zone 1-5-model. Er is nu niets actief gemaakt.
+                      Je hebt de drempel afgewezen. Er is geen zoneprofiel
+                      aangemaakt of geactiveerd.
+                    </Text>
+                  ) : null}
+                  {thresholdDecision?.state === 'accepted' &&
+                  thresholdDecision.zone_proposal_state === 'rejected' ? (
+                    <Text style={styles.safety}>
+                      Je hebt de gemeten drempel behouden en het bijbehorende
+                      zonevoorstel afgewezen. Je eerdere actieve zones zijn niet
+                      gewijzigd.
+                    </Text>
+                  ) : null}
+                  {zonesActivated ? (
+                    <Text style={styles.safety}>
+                      Je bevestigde zoneprofiel is nu actief. De vorige versie is
+                      immutable bewaard als die bestond.
                     </Text>
                   ) : null}
                   <ActionButton

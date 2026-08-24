@@ -133,3 +133,56 @@ def test_observation_read_keeps_explicit_owner_protocol_activity_filters() -> No
     assert captured.url.params["protocol_id"] == ("eq.start23_run_threshold_30min_v1")
     assert rows[0]["id"] == str(observation_id)
     assert rows[0]["activity_id"] == str(activity_id)
+
+
+def test_threshold_lifecycle_separates_owner_read_and_service_writes() -> None:
+    requests: list[httpx.Request] = []
+    athlete_id = uuid4()
+    evaluation_id = uuid4()
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        if request.method == "GET":
+            return httpx.Response(200, json=[{"id": str(evaluation_id)}])
+        return httpx.Response(
+            200,
+            json={
+                "evaluation_id": str(evaluation_id),
+                "state": "accepted",
+                "zone_profile_id": str(uuid4()),
+                "zone_proposal_id": str(uuid4()),
+                "base_zone_profile_id": None,
+                "decided_at": "2026-08-24T15:00:00Z",
+            },
+        )
+
+    settings = Settings(
+        environment="test",
+        supabase_publishable_key="publishable",
+        supabase_secret_key=SecretStr("server-secret"),
+    )
+
+    async def exercise() -> None:
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            repository = SupabaseCalibrationRepository(settings, client=client)
+            await repository.get_evaluation(
+                "athlete-token",
+                athlete_id,
+                evaluation_id,
+            )
+            await repository.save_calculated_zone_profile(
+                athlete_id,
+                {"discipline": "run", "metric_profiles": []},
+            )
+            await repository.reject_threshold(athlete_id, evaluation_id)
+
+    asyncio.run(exercise())
+
+    assert requests[0].url.path.endswith("/rest/v1/calibration_evaluations")
+    assert requests[0].headers["Authorization"] == "Bearer athlete-token"
+    assert requests[0].url.params["athlete_id"] == f"eq.{athlete_id}"
+    assert requests[0].url.params["id"] == f"eq.{evaluation_id}"
+    assert requests[1].url.path.endswith("/rest/v1/rpc/save_calculated_zone_profile")
+    assert requests[2].url.path.endswith("/rest/v1/rpc/reject_calibration_threshold")
+    assert all(request.headers["apikey"] == "server-secret" for request in requests[1:])
+    assert all("Authorization" not in request.headers for request in requests[1:])
