@@ -8,7 +8,7 @@ from app.modules.checkins.domain import (
     AthletePlanChoice,
     RestrictionDecision,
     athlete_local_week_start,
-    availability_from_blocked_dates,
+    available_dates_from_blocked_dates,
     confirmed_restriction_sets,
     context_fingerprint,
 )
@@ -26,21 +26,19 @@ def test_local_week_uses_athlete_monday_not_utc_monday() -> None:
 
 
 def test_blocked_and_strenuous_dates_create_local_availability() -> None:
-    windows = availability_from_blocked_dates(
+    available_dates = available_dates_from_blocked_dates(
         week_start=date(2026, 8, 3),
-        timezone_name="Europe/Amsterdam",
         blocked_dates=frozenset({date(2026, 8, 4)}),
         strenuous_dates=frozenset({date(2026, 8, 6)}),
     )
 
-    assert [window.starts_at.date() for window in windows] == [
+    assert list(available_dates) == [
         date(2026, 8, 3),
         date(2026, 8, 5),
         date(2026, 8, 7),
         date(2026, 8, 8),
         date(2026, 8, 9),
     ]
-    assert all(window.starts_at.utcoffset() is not None for window in windows)
 
 
 def test_restrictions_split_blocked_and_low_only_without_diagnosis() -> None:

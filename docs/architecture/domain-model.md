@@ -18,6 +18,10 @@ Supabase; later entities remain subject to their phase-specific design.
 The local Phase 8.5 migration adds explicit discipline setup choices,
 activity-linked immutable calibration observations, and immutable generated
 evaluations. It is not yet applied to hosted Supabase.
+The local Phase 11 migration adds discipline test assignments and extends
+typed proposals with standalone validation-test targets; it is also unapplied.
+Phase 12 adds no entity or migration: its current capability catalog fails
+closed before persistence while non-race rules remain unapproved.
 
 Related documents:
 
@@ -155,6 +159,11 @@ Represents an event date, discipline profile, and race priority. A race event
 may support taper calculation. Non-race goals must not be forced into a race
 entity.
 
+Phase 12 therefore keeps the persisted MVP goal as race-only. Its capability
+model separately identifies `race_event` and `personal_goal`; general fitness,
+weight loss, and muscle gain are visible but unavailable, use a future
+cycle-week-1 anchor, and have no persistence path until reviewed rules exist.
+
 ### `macrocycles`
 
 Defines a goal-specific training horizon and records the ruleset used to
@@ -233,6 +242,31 @@ estimates with `zone_status=pending_protocol`; submaximal protocols may store
 provisional or RPE-only outcomes but never thresholds. These records are not
 active zone versions.
 
+### `discipline_test_assignments`
+
+Stores one owner-scoped, date-only reviewed field-test assignment. Its mode is
+`standalone` or `weekly_plan`; state is pending, scheduled, completed, rejected,
+or cancelled. Standalone assignments are targeted by a `validation_test`
+proposal. Integrated assignments reference the exact pending plan revision and
+plan proposal, and follow that proposal's decision. A partial unique index
+prevents multiple open tests for the same athlete and discipline.
+
+Run and bike protocols with complete duration contracts may be integrated.
+The distance-only swim CSS protocol has no approved planned duration/private
+load and is therefore standalone-only. Test completion produces protocol
+observations and, where the reviewed field-test rules permit, a pending
+threshold; it never directly changes `zone_profile_versions`.
+
+### RPE-guided workout targets
+
+`RpeTarget` is a planned-snapshot target for a discipline without an active
+profile. It contains a reviewed expected RPE range, deterministic low/high
+bucket, and the requirement to collect average heart rate in bpm after
+completion. It is mutually exclusive with a numeric zone target and with a
+protocol target. The catalog's zone version remains immutable; only the owned
+planned snapshot is projected. An RPE/heart-rate observation alone cannot
+manufacture a zone.
+
 ## Athlete context
 
 ### `injury_restrictions`
@@ -262,7 +296,10 @@ Phase 8 snapshots blocked local dates inside a revisioned
 `weekly_checkin_contexts.payload`. It deterministically derives availability
 only for the requested athlete-local Monday-Sunday week. Strenuous planned
 outside activities remove their local date from generated availability. Plan
-revisions retain the exact derived window snapshot.
+revisions retain the exact derived date snapshot. Phase 10 uses
+`available_dates date[]` and records provenance as `explicit`,
+`previous_week`, or `checkin`. Previous-week dates are shifted into the new
+week only after an explicit athlete request; absence never implies reuse.
 
 ### Temporary athlete state
 
@@ -331,7 +368,8 @@ and week. The active revision is a deferred composite foreign key.
 
 Versioned content of a weekly plan. Phase, target basis, optional taper period,
 input/generation fingerprints, check-in identity, confirmed blocked and
-low-only disciplines, and availability are snapshotted with the revision.
+low-only disciplines, available athlete-local dates, and availability
+provenance are snapshotted with the revision.
 Hidden target and planned load are stored in `private.plan_revision_loads`.
 
 Proposed states:
@@ -352,7 +390,7 @@ Belongs to a plan revision and references a versioned workout template.
 
 Proposed fields:
 
-- scheduled start and timezone;
+- authoritative athlete-local `scheduled_date`;
 - discipline and presentation snapshot;
 - expected duration, distance, zones, and RPE;
 - status;
@@ -361,7 +399,9 @@ Proposed fields:
 
 The snapshot protects historical plans from later catalog edits. Hidden load
 is stored separately in `private.planned_workout_loads`; public planned-workout
-rows contain no TSS column.
+rows contain no TSS column. A legacy internal timestamp may be retained as an
+athlete-local-noon compatibility projection for existing private relations; it
+is neither a prescribed training time nor exposed by a planning/calendar DTO.
 
 ### `plan_warnings`
 
@@ -481,9 +521,13 @@ applies normal progression.
 
 ### `context_candidates`
 
-Reserved for the later constrained-LLM phase. Phase 8 does not use an external
-AI provider; its structured form writes `weekly_checkin_contexts` directly and
-still requires separate context confirmation.
+No Phase 10 row is persisted. The constrained coach returns an ephemeral,
+schema-validated candidate containing only bounded dates/enums/text. The
+athlete may explicitly copy non-critical fields into the structured form;
+possible injury disciplines remain informational and require a manual
+restriction choice. Only the separately saved and confirmed
+`weekly_checkin_contexts` revision can affect deterministic planning. Durable
+candidate storage remains unavailable until privacy/retention approval.
 
 ### `coach_messages`
 
@@ -557,7 +601,10 @@ views are introduced, they must obey RLS and omit hidden fields.
   bands or all pace-rounding rules; calculated boundaries remain fail-closed.
 - Automatic activity-to-plan matching rules, including proximity, bricks, and
   multisport activities.
-- Non-race macrocycles and goal-specific intensity ratios.
+- Reviewed non-race macrocycles, maintenance entry/exit rules, goal-specific
+  time-based intensity ratios, progression/recovery rules, and workout-catalog
+  eligibility. Phase 12 exposes these goal families only as unavailable until
+  that complete versioned ruleset exists.
 - Retention, deletion, export, and consent requirements for health and GPS data.
 - Production approval of provisional Polar AccessLink processing and its
   retention/brand obligations.
@@ -592,3 +639,6 @@ Resolved for MVP:
 - `phase-3-ruleset-3` records the accepted Phase 0-7 decisions; qualified
   production approval of the active rules and `start23-zone-model-1.0` was
   confirmed complete on 2026-08-24. Changed rules require a new review.
+- `phase-10-ruleset-1` preserves the 72 elapsed-hour run rule and changes only
+  the 48-hour bike/swim rule to require two complete intervening athlete-local
+  rest dates. This material amendment reopens physiological production review.

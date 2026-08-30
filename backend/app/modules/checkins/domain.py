@@ -4,7 +4,7 @@ import hashlib
 import json
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, timedelta
 from enum import Enum
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -14,7 +14,6 @@ from app.modules.physiology.injury import (
     RestrictionStatus,
 )
 from app.modules.physiology.models import Discipline
-from app.modules.planning.domain import AvailabilityWindow
 
 
 class AthletePlanChoice(str, Enum):
@@ -106,28 +105,20 @@ def confirmed_restriction_sets(
     return blocked, low_only
 
 
-def availability_from_blocked_dates(
+def available_dates_from_blocked_dates(
     *,
     week_start: date,
-    timezone_name: str,
     blocked_dates: frozenset[date],
     strenuous_dates: frozenset[date] = frozenset(),
-) -> tuple[AvailabilityWindow, ...]:
-    """Create deterministic daytime windows for non-blocked local dates."""
+) -> tuple[date, ...]:
+    """Return explicit athlete-local dates left after confirmed exclusions."""
     if week_start.weekday() != 0:
         raise ValueError("The check-in week must start on Monday.")
     week_dates = {week_start + timedelta(days=offset) for offset in range(7)}
     if not blocked_dates <= week_dates or not strenuous_dates <= week_dates:
         raise ValueError("Weekly context dates must fall inside the check-in week.")
-    timezone = ZoneInfo(timezone_name)
     unavailable = blocked_dates | strenuous_dates
-    return tuple(
-        AvailabilityWindow(
-            starts_at=datetime.combine(day, time(hour=6), timezone),
-            ends_at=datetime.combine(day, time(hour=22), timezone),
-        )
-        for day in sorted(week_dates - unavailable)
-    )
+    return tuple(sorted(week_dates - unavailable))
 
 
 def context_fingerprint(payload: Mapping[str, Any]) -> str:

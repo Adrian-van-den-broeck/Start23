@@ -1,6 +1,6 @@
 """Validated, reviewed Phase 5 workout catalog."""
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from decimal import Decimal
 from enum import Enum
 from uuid import UUID
@@ -44,6 +44,48 @@ class FallbackCompatibility(str, Enum):
     INCOMPATIBLE = "incompatible"
 
 
+EXPLICIT_FIELD_TEST_PROTOCOL_IDS = frozenset(
+    {
+        "start23_run_threshold_30min_v1",
+        "start23_bike_ftp_30min_v1",
+        "start23_bike_fthr_20min_v1",
+        "start23_swim_css_400_200_v1",
+    }
+)
+
+
+@dataclass(frozen=True, slots=True)
+class ProtocolTarget:
+    """Zone-independent execution target from one reviewed protocol segment."""
+
+    protocol_id: str
+    segment_id: str
+    target_rpe_min: int
+    target_rpe_max: int
+    intensity_bucket: IntensityBucket
+    optional: bool = False
+
+    def __post_init__(self) -> None:
+        if not self.protocol_id.strip() or not self.segment_id.strip():
+            raise ValueError("A protocol target requires protocol and segment IDs.")
+        if not 1 <= self.target_rpe_min <= self.target_rpe_max <= 10:
+            raise ValueError("Protocol target RPE must be within 1 through 10.")
+
+
+@dataclass(frozen=True, slots=True)
+class RpeTarget:
+    """Zone-free execution target derived from a reviewed catalog segment."""
+
+    target_rpe_min: int
+    target_rpe_max: int
+    intensity_bucket: IntensityBucket
+    heart_rate_observation_required: bool = True
+
+    def __post_init__(self) -> None:
+        if not 1 <= self.target_rpe_min <= self.target_rpe_max <= 10:
+            raise ValueError("RPE target must be within 1 through 10.")
+
+
 @dataclass(frozen=True, slots=True)
 class WorkoutSegment:
     """One immutable, ordered catalog segment."""
@@ -52,8 +94,10 @@ class WorkoutSegment:
     name: str
     instructions: str
     duration_minutes: Decimal
-    zone: TrainingZone
     expected_rpe: int
+    zone_target: TrainingZone | None = None
+    protocol_target: ProtocolTarget | None = None
+    rpe_target: RpeTarget | None = None
     distance_meters: int | None = None
     is_swim_technique: bool = False
 
@@ -68,6 +112,33 @@ class WorkoutSegment:
             raise ValueError("Segment distance must be positive when supplied.")
         if not 1 <= self.expected_rpe <= 10:
             raise ValueError("Segment expected RPE must be between 1 and 10.")
+        target_count = sum(
+            target is not None
+            for target in (self.zone_target, self.protocol_target, self.rpe_target)
+        )
+        if target_count != 1:
+            raise ValueError(
+                "Every segment requires exactly one zone, protocol, or RPE target."
+            )
+        if self.protocol_target is not None and not (
+            self.protocol_target.target_rpe_min
+            <= self.expected_rpe
+            <= self.protocol_target.target_rpe_max
+        ):
+            raise ValueError("Segment RPE must fall within its protocol target.")
+        if self.rpe_target is not None and not (
+            self.rpe_target.target_rpe_min
+            <= self.expected_rpe
+            <= self.rpe_target.target_rpe_max
+        ):
+            raise ValueError("Segment RPE must fall within its RPE target.")
+
+    @property
+    def zone(self) -> TrainingZone:
+        """Backward-compatible access for true zone-target segments only."""
+        if self.zone_target is None:
+            raise ValueError("A protocol target deliberately has no training zone.")
+        return self.zone_target
 
 
 @dataclass(frozen=True, slots=True)
@@ -90,6 +161,7 @@ class WorkoutTemplate:
     fallback_compatibility: FallbackCompatibility
     segments: tuple[WorkoutSegment, ...]
     internal_planned_load: InternalLoad = field(repr=False)
+    explicit_scheduling_only: bool = False
 
     def __post_init__(self) -> None:
         if self.version < 1:
@@ -159,8 +231,15 @@ class WorkoutTemplate:
                 tuple(
                     IntensitySegment(
                         duration=DurationMinutes(segment.duration_minutes),
-                        zone=segment.zone,
+                        zone=segment.zone_target,
                         is_swim_technique=segment.is_swim_technique,
+                        explicit_bucket=(
+                            segment.protocol_target.intensity_bucket
+                            if segment.protocol_target is not None
+                            else segment.rpe_target.intensity_bucket
+                            if segment.rpe_target is not None
+                            else None
+                        ),
                     )
                     for segment in self.segments
                 )
@@ -206,6 +285,48 @@ def snapshot_template(template: WorkoutTemplate) -> PlannedWorkoutSnapshot:
     )
 
 
+def as_rpe_guided_template(template: WorkoutTemplate) -> WorkoutTemplate:
+    """Remove numeric zone targets while preserving reviewed RPE and private load.
+
+    Protocol-targeted segments already are zone-independent and remain unchanged.
+    This projection is deterministic and never alters the durable catalog version.
+    """
+
+    segments: list[WorkoutSegment] = []
+    for segment in template.segments:
+        if segment.protocol_target is not None or segment.rpe_target is not None:
+            segments.append(segment)
+            continue
+        assert segment.zone_target is not None
+        bucket = classify_workout(
+            WorkoutIntensity(
+                (
+                    IntensitySegment(
+                        duration=DurationMinutes(segment.duration_minutes),
+                        zone=segment.zone_target,
+                        is_swim_technique=segment.is_swim_technique,
+                    ),
+                )
+            )
+        )
+        segments.append(
+            replace(
+                segment,
+                instructions=(
+                    f"{segment.name}: volg RPE {segment.expected_rpe}; "
+                    "gebruik geen onbevestigde numerieke zones."
+                ),
+                zone_target=None,
+                rpe_target=RpeTarget(
+                    target_rpe_min=segment.expected_rpe,
+                    target_rpe_max=segment.expected_rpe,
+                    intensity_bucket=bucket,
+                ),
+            )
+        )
+    return replace(template, zone_requirements=(), segments=tuple(segments))
+
+
 def _segment(
     sequence: int,
     name: str,
@@ -221,10 +342,41 @@ def _segment(
         name=name,
         instructions=f"Complete {name.lower()} in Zone {zone}.",
         duration_minutes=Decimal(minutes),
-        zone=TrainingZone(zone),
+        zone_target=TrainingZone(zone),
         expected_rpe=rpe,
         distance_meters=distance,
         is_swim_technique=technique,
+    )
+
+
+def _protocol_segment(
+    sequence: int,
+    name: str,
+    minutes: str,
+    rpe_min: int,
+    rpe_max: int,
+    intensity_bucket: IntensityBucket,
+    *,
+    protocol_id: str,
+    segment_id: str,
+    purpose: str,
+    optional: bool = False,
+) -> WorkoutSegment:
+    """Create a reviewed instruction target without manufacturing a zone."""
+    return WorkoutSegment(
+        sequence=sequence,
+        name=name,
+        instructions=purpose,
+        duration_minutes=Decimal(minutes),
+        expected_rpe=(rpe_min + rpe_max) // 2,
+        protocol_target=ProtocolTarget(
+            protocol_id=protocol_id,
+            segment_id=segment_id,
+            target_rpe_min=rpe_min,
+            target_rpe_max=rpe_max,
+            intensity_bucket=intensity_bucket,
+            optional=optional,
+        ),
     )
 
 
@@ -241,16 +393,42 @@ def _template(
     fallback: FallbackCompatibility,
     segments: tuple[WorkoutSegment, ...],
     distance_meters: int | None = None,
+    explicit_scheduling_only: bool = False,
 ) -> WorkoutTemplate:
     duration = sum((segment.duration_minutes for segment in segments), Decimal(0))
-    minimum_rpe = min(segment.expected_rpe for segment in segments)
-    maximum_rpe = max(segment.expected_rpe for segment in segments)
+    minimum_rpe = min(
+        (
+            segment.protocol_target.target_rpe_min
+            if segment.protocol_target is not None
+            else segment.rpe_target.target_rpe_min
+            if segment.rpe_target is not None
+            else segment.expected_rpe
+        )
+        for segment in segments
+    )
+    maximum_rpe = max(
+        (
+            segment.protocol_target.target_rpe_max
+            if segment.protocol_target is not None
+            else segment.rpe_target.target_rpe_max
+            if segment.rpe_target is not None
+            else segment.expected_rpe
+        )
+        for segment in segments
+    )
     workout = WorkoutIntensity(
         tuple(
             IntensitySegment(
                 duration=DurationMinutes(segment.duration_minutes),
-                zone=segment.zone,
+                zone=segment.zone_target,
                 is_swim_technique=segment.is_swim_technique,
+                explicit_bucket=(
+                    segment.protocol_target.intensity_bucket
+                    if segment.protocol_target is not None
+                    else segment.rpe_target.intensity_bucket
+                    if segment.rpe_target is not None
+                    else None
+                ),
             )
             for segment in segments
         )
@@ -276,6 +454,7 @@ def _template(
         fallback_compatibility=fallback,
         segments=segments,
         internal_planned_load=load,
+        explicit_scheduling_only=explicit_scheduling_only,
     )
 
 
@@ -415,7 +594,232 @@ PHASE_6_CATALOG_ADDITIONS: tuple[WorkoutTemplate, ...] = (
     ),
 )
 
-CURRENT_CATALOG = REVIEWED_CATALOG + PHASE_6_CATALOG_ADDITIONS
+PHASE_8_5_PROTOCOL_ADDITIONS: tuple[WorkoutTemplate, ...] = (
+    _template(
+        id="54000000-0000-0000-0000-000000000008",
+        key="50000000-0000-0000-0000-000000000008",
+        version=1,
+        discipline=Discipline.BIKE,
+        name="Week-1 fietskalibratie",
+        description=(
+            "Submaximale fietskalibratie op protocol en RPE, zonder verzonnen zones."
+        ),
+        phases=(TrainingPhase.BASE,),
+        requirements=(),
+        fallback=FallbackCompatibility.INCOMPATIBLE,
+        segments=(
+            _protocol_segment(
+                1,
+                "Warming-up",
+                "15",
+                2,
+                3,
+                IntensityBucket.LOW,
+                protocol_id="start23_week1_bike_calibration_v1",
+                segment_id="warmup",
+                purpose="Rustig opwarmen volgens het kalibratieprotocol.",
+            ),
+            _protocol_segment(
+                2,
+                "Comfortabel blok",
+                "20",
+                3,
+                4,
+                IntensityBucket.LOW,
+                protocol_id="start23_week1_bike_calibration_v1",
+                segment_id="comfortable_20min",
+                purpose="Rijd comfortabel en gelijkmatig; registreer de observaties.",
+            ),
+            _protocol_segment(
+                3,
+                "Gestaag blok (optioneel)",
+                "10",
+                5,
+                6,
+                IntensityBucket.HIGH,
+                protocol_id="start23_week1_bike_calibration_v1",
+                segment_id="steady_10min_optional",
+                purpose="Voer alleen uit als het comfortabele blok goed voelde.",
+                optional=True,
+            ),
+            _protocol_segment(
+                4,
+                "Cooling-down",
+                "10",
+                1,
+                2,
+                IntensityBucket.LOW,
+                protocol_id="start23_week1_bike_calibration_v1",
+                segment_id="cooldown",
+                purpose="Rustig uitrijden en daarna sessie-RPE registreren.",
+            ),
+        ),
+    ),
+)
+
+PHASE_11_FIELD_TEST_ADDITIONS: tuple[WorkoutTemplate, ...] = (
+    _template(
+        id="55000000-0000-0000-0000-000000000009",
+        key="50000000-0000-0000-0000-000000000009",
+        version=1,
+        discipline=Discipline.RUN,
+        name="Loopdrempel 30-minuten veldtest",
+        description="Beoordeelde veldtest op protocol en RPE; alleen na dagkeuze.",
+        phases=(TrainingPhase.BASE, TrainingPhase.BUILD),
+        requirements=(),
+        fallback=FallbackCompatibility.INCOMPATIBLE,
+        explicit_scheduling_only=True,
+        segments=(
+            _protocol_segment(
+                1,
+                "Rustige opwarming",
+                "15",
+                2,
+                3,
+                IntensityBucket.LOW,
+                protocol_id="start23_run_threshold_30min_v1",
+                segment_id="warmup",
+                purpose="Rustig lopen; volledige zinnen mogelijk.",
+            ),
+            _protocol_segment(
+                2,
+                "Korte versnellingen",
+                "5",
+                5,
+                7,
+                IntensityBucket.HIGH,
+                protocol_id="start23_run_threshold_30min_v1",
+                segment_id="strides",
+                purpose="Korte gecontroleerde versnellingen; niet maximaal.",
+            ),
+            _protocol_segment(
+                3,
+                "30-minuten tijdrit",
+                "30",
+                8,
+                9,
+                IntensityBucket.HIGH,
+                protocol_id="start23_run_threshold_30min_v1",
+                segment_id="test_30min",
+                purpose="Zo hard mogelijk maar gelijkmatig; geen sprintstart.",
+            ),
+            _protocol_segment(
+                4,
+                "Uitlopen",
+                "10",
+                1,
+                2,
+                IntensityBucket.LOW,
+                protocol_id="start23_run_threshold_30min_v1",
+                segment_id="cooldown",
+                purpose="Zeer rustig uitlopen en sessie-RPE registreren.",
+            ),
+        ),
+    ),
+    _template(
+        id="55000000-0000-0000-0000-000000000010",
+        key="50000000-0000-0000-0000-000000000010",
+        version=1,
+        discipline=Discipline.BIKE,
+        name="Fiets FTP 30-minuten veldtest",
+        description="Beoordeelde vermogensveldtest; alleen na dagkeuze.",
+        phases=(TrainingPhase.BASE, TrainingPhase.BUILD),
+        requirements=(),
+        fallback=FallbackCompatibility.INCOMPATIBLE,
+        explicit_scheduling_only=True,
+        segments=(
+            _protocol_segment(
+                1,
+                "Opwarming",
+                "20",
+                2,
+                4,
+                IntensityBucket.LOW,
+                protocol_id="start23_bike_ftp_30min_v1",
+                segment_id="warmup",
+                purpose="Rustig opbouwen met korte gecontroleerde versnellingen.",
+            ),
+            _protocol_segment(
+                2,
+                "30-minuten vermogenstest",
+                "30",
+                8,
+                9,
+                IntensityBucket.HIGH,
+                protocol_id="start23_bike_ftp_30min_v1",
+                segment_id="test_30min",
+                purpose=(
+                    "Zo hard mogelijk maar gelijkmatig; vermijd pieken en vrijloop."
+                ),
+            ),
+            _protocol_segment(
+                3,
+                "Cooling-down",
+                "10",
+                1,
+                2,
+                IntensityBucket.LOW,
+                protocol_id="start23_bike_ftp_30min_v1",
+                segment_id="cooldown",
+                purpose="Zeer rustig uitfietsen en sessie-RPE registreren.",
+            ),
+        ),
+    ),
+    _template(
+        id="55000000-0000-0000-0000-000000000011",
+        key="50000000-0000-0000-0000-000000000011",
+        version=1,
+        discipline=Discipline.BIKE,
+        name="Fiets drempelhartslag veldtest",
+        description="Beoordeelde hartslagveldtest; alleen na dagkeuze.",
+        phases=(TrainingPhase.BASE, TrainingPhase.BUILD),
+        requirements=(),
+        fallback=FallbackCompatibility.INCOMPATIBLE,
+        explicit_scheduling_only=True,
+        segments=(
+            _protocol_segment(
+                1,
+                "Opwarming",
+                "20",
+                2,
+                4,
+                IntensityBucket.LOW,
+                protocol_id="start23_bike_fthr_20min_v1",
+                segment_id="warmup",
+                purpose="Rustig opbouwen met korte versnellingen.",
+            ),
+            _protocol_segment(
+                2,
+                "20-minuten tijdrit",
+                "20",
+                8,
+                9,
+                IntensityBucket.HIGH,
+                protocol_id="start23_bike_fthr_20min_v1",
+                segment_id="test_20min",
+                purpose="Gelijkmatige zware solo-inspanning; geen sprintstart.",
+            ),
+            _protocol_segment(
+                3,
+                "Cooling-down",
+                "10",
+                1,
+                2,
+                IntensityBucket.LOW,
+                protocol_id="start23_bike_fthr_20min_v1",
+                segment_id="cooldown",
+                purpose="Zeer rustig uitfietsen en sessie-RPE registreren.",
+            ),
+        ),
+    ),
+)
+
+CURRENT_CATALOG = (
+    REVIEWED_CATALOG
+    + PHASE_6_CATALOG_ADDITIONS
+    + PHASE_8_5_PROTOCOL_ADDITIONS
+    + PHASE_11_FIELD_TEST_ADDITIONS
+)
 
 
 def active_catalog(

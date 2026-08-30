@@ -273,6 +273,10 @@ complementary half-up whole percentages plus exact low/high minutes.
 - `weekly_plans`
 - `activities`
 - `activity_metrics`
+- `discipline_zone_setups`
+- `discipline_test_assignments`
+- `calibration_observations`
+- `calibration_evaluations`
 - `decision_runs`
 - `plan_warnings`
 
@@ -413,9 +417,11 @@ verification is still pending.
 - Identify high-intensity workouts by BR-003 classification.
 - Enforce at least 72 hours between high-intensity run workouts in generated
   schedules.
-- Enforce at least 48 hours between high-intensity bike workouts.
-- Enforce at least 48 hours between high-intensity swim workouts.
-- Define cross-discipline behavior and exact timestamp semantics.
+- Enforce two complete intervening athlete-local rest dates between
+  high-intensity bike workouts.
+- Enforce two complete intervening athlete-local rest dates between
+  high-intensity swim workouts.
+- Define cross-discipline behavior and exact date/time semantics.
 - Manual athlete violations create warnings rather than silent rejection if
   soft-boundary interpretation is approved.
 - Timezone and daylight-saving transitions are handled.
@@ -423,7 +429,7 @@ verification is still pending.
 ### Required unit tests
 
 - Run workouts at 71:59, 72:00, and above.
-- Bike/swim workouts at 47:59, 48:00, and above.
+- Bike/swim Wednesday-to-Friday rejection and Wednesday-to-Saturday success.
 - Low-intensity workouts do not trigger the rule.
 - Different-discipline combinations follow the approved policy.
 - Week-boundary and daylight-saving cases.
@@ -436,10 +442,12 @@ verification is still pending.
 `In progress`
 
 Implemented and unit-tested in `physiology/anti_stack.py`: same-discipline
-start-to-start elapsed intervals, exact 72/48-hour boundaries, brick
-participation, low-intensity exclusion, timezone-aware input, and absolute-time
-DST handling. Phase 6 reuses it as a generated-schedule constraint and as a
-non-blocking qualitative warning for direct athlete moves.
+72 elapsed hours for run, two complete intervening athlete-local dates for the
+48-hour bike/swim policy, brick participation, low-intensity exclusion, and
+DST fixtures in both directions. Phase 10 reuses the same function for
+generated date scheduling, pending-edit recalculation, validation, and the
+non-blocking qualitative warning for direct athlete moves. The rule is
+versioned as `phase-10-ruleset-1`; renewed production review remains open.
 
 ## BR-007: 4+1 mesocycle
 
@@ -573,9 +581,13 @@ because reviewed swim and bike taper templates are not yet available.
 - `PUT /v1/me/zones/swim`
 - `PUT /v1/me/zones/bike`
 - `PUT /v1/me/zones/run`
-- `GET /v1/change-proposals?kind=zone_update`
+- `GET /v1/change-proposals` or the discipline-specific profile projection
 - Proposal approve/reject operations
 - Activity/test processing through UC-03
+- `GET /v1/me/zone-profile`
+- `POST /v1/calibration/test-assignments`
+- `POST /v1/calibration/test-assignments/{proposal_id}/approve`
+- `POST /v1/calibration/test-assignments/{proposal_id}/reject`
 
 ### Required validations
 
@@ -593,6 +605,16 @@ because reviewed swim and bike taper templates are not yet available.
 - Estimated fallback profiles remain explicitly unreviewed.
 - Only one active version exists per athlete/discipline.
 - Generated updates remain pending.
+- Every discipline independently supports known values, a physician/lab
+  source, a reviewed field test, calibration training, or RPE-only guidance.
+- RPE-only and Week-1 calibration plans use explicit RPE segment targets and
+  never create fake zones; actual completion can include average HR in BPM.
+- When a reviewed reference BPM exists, tolerance is inclusive at +/-10 BPM
+  and remains an observation rather than a zone mutation.
+- A standalone test uses a pending `validation_test` proposal; an integrated
+  test uses a pending plan revision and an exact athlete-local date.
+- Calibration numbers remain hidden through Week 2 and remain hidden after it
+  unless a complete reviewed proposal is available for confirmation.
 - For an unknown threshold, combine a reviewed standard calibration workout,
   eligible realized measurements, and athlete-entered TSE feedback only through
   an approved deterministic mapping.
@@ -614,6 +636,9 @@ because reviewed swim and bike taper templates are not yet available.
 - Cross-athlete access is rejected.
 - TSE/calibration results remain pending and cannot replace active zones before
   explicit athlete approval.
+- Inclusive heart-rate tolerance boundaries at reference-10 and reference+10.
+- An explicit field-test workout cannot enter a generic plan without its exact
+  date and typed assignment.
 
 ### Current implementation status
 
@@ -643,6 +668,16 @@ the supplied protocols do not define a complete zone model. Submaximal Week-1
 calibration cannot produce CSS, FTP, LTHR, bike threshold HR, or run threshold
 pace. Full decisions and gates are in
 [backend-zone-calculation.md](../implementation/backend-zone-calculation.md).
+
+Phase 11 adds the TSS-free discipline profile history, explicit standalone and
+weekly-plan test assignment proposals, physician/lab provenance, shared
+RPE-guided planning, optional completion-time average HR, and the inclusive
+`abs(actual-reference) <= 10` observation. Numeric calibration output fails
+closed because no approved Week-2 evaluation/statistics contract exists yet;
+the UI continues to show RPE guidance. Integrated swim CSS remains standalone
+only because its reviewed distance protocol has no duration/load mapping.
+The local migration and rollback-only pgTAP suite are committed but have not
+been applied or executed against PostgreSQL.
 
 ## BR-010: Injury rules and redistribution
 

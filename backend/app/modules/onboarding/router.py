@@ -18,6 +18,7 @@ from app.modules.onboarding.repository import (
 from app.modules.onboarding.schemas import (
     AthleteProfileResponse,
     AthleteProfileUpdate,
+    GoalPlanningOptionResponse,
     OnboardingCompleteResponse,
     OnboardingStateResponse,
     PrimaryRaceGoalInput,
@@ -145,6 +146,19 @@ async def get_onboarding(
         return await service.get_state(access_token, identity.user_id)
     except Exception as error:
         _raise_public_error(error)
+
+
+@router.get(
+    "/onboarding/goal-options",
+    response_model=tuple[GoalPlanningOptionResponse, ...],
+    responses=error_responses,
+)
+async def get_goal_planning_options(
+    _: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[OnboardingService, Depends(get_onboarding_service)],
+) -> tuple[GoalPlanningOptionResponse, ...]:
+    """List reviewed race planning and fail-closed personal-goal modes."""
+    return service.goal_planning_options()
 
 
 @router.put(

@@ -10,6 +10,7 @@ from typing import Any, Protocol
 from uuid import UUID
 from zoneinfo import ZoneInfo
 
+from app.modules.calibration.domain import TestSchedulingMode, validate_test_schedule
 from app.modules.coach.weekly_plan import (
     CoachProviderError,
     CoachWorkoutFacts,
@@ -24,7 +25,7 @@ from app.modules.physiology.models import (
     InternalLoad,
     RuleId,
 )
-from app.modules.physiology.specification import PHASE_3_RULESET_V3
+from app.modules.physiology.specification import PHASE_10_RULESET_V1
 from app.modules.workouts.catalog import (
     TrainingPhase,
     WorkoutTemplate,
@@ -37,13 +38,13 @@ from app.modules.workouts.repository import (
 )
 
 from .domain import (
-    AvailabilityWindow,
     PlanLoadSample,
     PlanningConstraintError,
     PlanningTargetBasis,
     PlanningWarning,
     ZoneCapability,
     build_weekly_plan,
+    canonical_schedule_instant,
     eligible_workouts,
     remaining_workout_deck,
     validate_manual_schedule,
@@ -52,6 +53,8 @@ from .repository import JsonObject, PlanningRepository, PlanningRepositoryError
 from .schemas import (
     CalendarResponse,
     ChangeProposalSummaryResponse,
+    PendingWorkoutAlternativesResponse,
+    PendingWorkoutEditRequest,
     PlannedWorkoutMoveRequest,
     PlannedWorkoutResponse,
     PlanProposalDecisionResponse,
@@ -102,6 +105,11 @@ _ZONE_REQUIREMENT_BY_METRIC = {
     "run_threshold_pace_seconds_per_km": ZoneRequirement.PACE,
     "run_lthr_bpm": ZoneRequirement.HEART_RATE,
 }
+_RPE_GUIDANCE_PROTOCOL_BY_DISCIPLINE = {
+    Discipline.SWIM: "start23_week1_swim_calibration_v1",
+    Discipline.BIKE: "start23_week1_bike_calibration_v1",
+    Discipline.RUN: "start23_week1_run_calibration_v1",
+}
 
 
 class PlanningService:
@@ -118,17 +126,68 @@ class PlanningService:
         self._weekly_plan_coach = weekly_plan_coach
 
     @staticmethod
+    def _deck_item(template: WorkoutTemplate) -> WorkoutDeckItemResponse:
+        return WorkoutDeckItemResponse(
+            id=template.id,
+            template_key=template.template_key,
+            version=template.version,
+            discipline=template.discipline,
+            name=template.name,
+            description=template.description,
+            duration_minutes=template.duration_minutes,
+            distance_meters=template.distance_meters,
+            intensity_bucket=template.intensity_bucket,
+            expected_rpe_min=template.expected_rpe_min,
+            expected_rpe_max=template.expected_rpe_max,
+            segments=tuple(
+                {
+                    "sequence": segment.sequence,
+                    "name": segment.name,
+                    "instructions": segment.instructions,
+                    "duration_minutes": segment.duration_minutes,
+                    "distance_meters": segment.distance_meters,
+                    "zone_target": segment.zone_target,
+                    "protocol_target": (
+                        {
+                            "protocol_id": segment.protocol_target.protocol_id,
+                            "segment_id": segment.protocol_target.segment_id,
+                            "target_rpe_min": segment.protocol_target.target_rpe_min,
+                            "target_rpe_max": segment.protocol_target.target_rpe_max,
+                            "intensity_bucket": (
+                                segment.protocol_target.intensity_bucket
+                            ),
+                            "optional": segment.protocol_target.optional,
+                        }
+                        if segment.protocol_target is not None
+                        else None
+                    ),
+                    "rpe_target": (
+                        {
+                            "target_rpe_min": segment.rpe_target.target_rpe_min,
+                            "target_rpe_max": segment.rpe_target.target_rpe_max,
+                            "intensity_bucket": segment.rpe_target.intensity_bucket,
+                            "heart_rate_observation_required": (
+                                segment.rpe_target.heart_rate_observation_required
+                            ),
+                        }
+                        if segment.rpe_target is not None
+                        else None
+                    ),
+                    "expected_rpe": segment.expected_rpe,
+                    "is_swim_technique": segment.is_swim_technique,
+                }
+                for segment in template.segments
+            ),
+        )
+
+    @staticmethod
     def _coach_facts(
         *,
         week_start: date,
         timezone_name: str,
         draft: Any,
     ) -> WeeklyPlanCoachFacts:
-        athlete_timezone = ZoneInfo(timezone_name)
-        workout_dates = {
-            workout.scheduled_at.astimezone(athlete_timezone).date()
-            for workout in draft.workouts
-        }
+        workout_dates = {workout.scheduled_date for workout in draft.workouts}
         return WeeklyPlanCoachFacts(
             week_start=week_start,
             timezone=timezone_name,
@@ -137,7 +196,7 @@ class PlanningService:
                 CoachWorkoutFacts(
                     discipline=workout.discipline,
                     name=workout.snapshot.name,
-                    scheduled_at=workout.scheduled_at,
+                    scheduled_date=workout.scheduled_date,
                     duration_minutes=workout.snapshot.duration_minutes,
                     intensity=workout.snapshot.intensity_bucket,
                 )
@@ -208,21 +267,43 @@ class PlanningService:
                 requirements=frozenset({requirement}),
                 fallback_active=fallback_active,
             )
+        setups = snapshot.get("discipline_setups", [])
+        if not isinstance(setups, list):
+            raise PlanningDomainError("Discipline setup inputs are invalid.")
+        for setup in setups:
+            if not isinstance(setup, dict):
+                raise PlanningDomainError("A discipline setup input is invalid.")
+            try:
+                discipline = Discipline(str(setup["discipline"]))
+            except (KeyError, ValueError) as error:
+                raise PlanningDomainError(
+                    "A pending protocol setup is invalid."
+                ) from error
+            current = capabilities.get(discipline, ZoneCapability(frozenset()))
+            protocol_ids = current.protocol_ids
+            protocol_id = setup.get("protocol_id")
+            if setup.get("setup_status") in {"test_pending", "calibration_pending"}:
+                if not isinstance(protocol_id, str) or not protocol_id:
+                    raise PlanningDomainError("A pending protocol setup is invalid.")
+                protocol_ids |= frozenset({protocol_id})
+            route = str(setup.get("setup_route", ""))
+            rpe_guided = current.rpe_guided or (
+                discipline not in capabilities
+                and route in {"field_test", "calibration_week", "rpe_only"}
+            )
+            if rpe_guided:
+                protocol_ids |= frozenset(
+                    {_RPE_GUIDANCE_PROTOCOL_BY_DISCIPLINE[discipline]}
+                )
+            capabilities[discipline] = ZoneCapability(
+                requirements=current.requirements,
+                fallback_active=current.fallback_active,
+                protocol_ids=protocol_ids,
+                rpe_guided=rpe_guided,
+            )
         if not goal_disciplines:
             raise PlanningDomainError("The primary race requires a discipline.")
         return timezone_name, race_date, goal_disciplines, capabilities
-
-    @staticmethod
-    def _availability(
-        values: tuple[Any, ...],
-    ) -> tuple[AvailabilityWindow, ...]:
-        return tuple(
-            AvailabilityWindow(
-                starts_at=value.starts_at,
-                ends_at=value.ends_at,
-            )
-            for value in values
-        )
 
     @staticmethod
     def _load_samples(rows: tuple[JsonObject, ...]) -> tuple[PlanLoadSample, ...]:
@@ -285,22 +366,19 @@ class PlanningService:
         *,
         input_fingerprint: str,
         week_start: date,
-        availability: tuple[AvailabilityWindow, ...],
+        available_dates: tuple[date, ...],
+        availability_source: str,
         injuries: frozenset[Discipline],
         low_only_disciplines: frozenset[Discipline],
         selected_template_ids: tuple[UUID, ...] | None,
+        fixed_template_dates: Mapping[UUID, date] | None = None,
         checkin_id: UUID | None = None,
     ) -> str:
         canonical = {
             "input_fingerprint": input_fingerprint,
             "week_start": week_start.isoformat(),
-            "availability": [
-                {
-                    "starts_at": window.starts_at.isoformat(),
-                    "ends_at": window.ends_at.isoformat(),
-                }
-                for window in availability
-            ],
+            "available_dates": sorted(value.isoformat() for value in available_dates),
+            "availability_source": availability_source,
             "confirmed_injuries": sorted(item.value for item in injuries),
             "low_only_disciplines": sorted(item.value for item in low_only_disciplines),
             "checkin_id": str(checkin_id) if checkin_id is not None else None,
@@ -309,6 +387,13 @@ class PlanningService:
                 if selected_template_ids is not None
                 else None
             ),
+            "fixed_template_dates": {
+                str(template_id): scheduled_date.isoformat()
+                for template_id, scheduled_date in sorted(
+                    (fixed_template_dates or {}).items(),
+                    key=lambda item: str(item[0]),
+                )
+            },
         }
         return hashlib.sha256(
             json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode()
@@ -324,7 +409,8 @@ class PlanningService:
         expected_base_revision: int,
         week_start: date,
         timezone_name: str,
-        availability: tuple[AvailabilityWindow, ...],
+        available_dates: tuple[date, ...],
+        availability_source: str,
         injuries: frozenset[Discipline],
         low_only_disciplines: frozenset[Discipline],
         goal_disciplines: frozenset[Discipline],
@@ -357,18 +443,21 @@ class PlanningService:
             "low_only_disciplines": sorted(item.value for item in low_only_disciplines),
             "goal_disciplines": sorted(item.value for item in goal_disciplines),
             "checkin_id": str(checkin_id) if checkin_id is not None else None,
-            "availability": [
-                {
-                    "starts_at": window.starts_at.isoformat(),
-                    "ends_at": window.ends_at.isoformat(),
-                }
-                for window in availability
-            ],
+            # The legacy column keeps only date strings from Phase 10 onward.
+            "availability": sorted(value.isoformat() for value in available_dates),
+            "available_dates": sorted(value.isoformat() for value in available_dates),
+            "availability_source": availability_source,
             "workouts": [
                 {
                     "template_id": str(workout.snapshot.template_id),
                     "discipline": workout.discipline.value,
-                    "scheduled_at": workout.scheduled_at.isoformat(),
+                    "scheduled_date": workout.scheduled_date.isoformat(),
+                    # Internal compatibility projection for pre-Phase-10 activity
+                    # RPCs. It is never returned in the public plan/calendar DTO.
+                    "scheduled_at": canonical_schedule_instant(
+                        workout.scheduled_date,
+                        timezone_name=timezone_name,
+                    ).isoformat(),
                     "source": workout_source,
                 }
                 for workout in draft.workouts
@@ -388,7 +477,7 @@ class PlanningService:
                 for warning in draft.warnings
             ],
             "planned_tss": str(draft.planned_load.value),
-            "ruleset_version": PHASE_3_RULESET_V3.version.value,
+            "ruleset_version": PHASE_10_RULESET_V1.version.value,
         }
 
     async def _build_and_persist(
@@ -400,17 +489,30 @@ class PlanningService:
         plan_id: UUID | None,
         expected_base_revision: int,
         week_start: date,
-        availability: tuple[AvailabilityWindow, ...],
+        available_dates: tuple[date, ...],
+        availability_source: str,
         injuries: frozenset[Discipline],
         low_only_disciplines: frozenset[Discipline],
         selected_template_ids: tuple[UUID, ...] | None,
+        fixed_template_dates: Mapping[UUID, date] | None = None,
         checkin_id: UUID | None = None,
+        allow_explicit_test_selection: bool = False,
     ) -> JsonObject:
         snapshot = self._planning_input(input_source)
         timezone_name, race_date, disciplines, capabilities = self._context_values(
             snapshot
         )
         catalog = active_catalog(await self._catalog_provider.fetch_catalog())
+        if selected_template_ids is not None and not allow_explicit_test_selection:
+            selected_ids = set(selected_template_ids)
+            if any(
+                template.id in selected_ids and template.explicit_scheduling_only
+                for template in catalog
+            ):
+                raise PlanningConstraintError(
+                    "field_test_assignment_required",
+                    "Field-test workouts must use the typed test-assignment flow.",
+                )
         prior_loads = self._load_samples(
             await self._repository.fetch_load_history(athlete_id, week_start)
         )
@@ -424,8 +526,9 @@ class PlanningService:
             confirmed_injuries=injuries,
             low_only_disciplines=low_only_disciplines,
             zone_capabilities=capabilities,
-            availability=availability,
+            available_dates=available_dates,
             selected_template_ids=selected_template_ids,
+            fixed_template_dates=fixed_template_dates,
             maintenance_active=bool(input_source.get("maintenance_active", False)),
         )
         try:
@@ -437,10 +540,12 @@ class PlanningService:
         generation_fingerprint = self._generation_fingerprint(
             input_fingerprint=input_fingerprint,
             week_start=week_start,
-            availability=availability,
+            available_dates=available_dates,
+            availability_source=availability_source,
             injuries=injuries,
             low_only_disciplines=low_only_disciplines,
             selected_template_ids=selected_template_ids,
+            fixed_template_dates=fixed_template_dates,
             checkin_id=checkin_id,
         )
         result = await self._repository.create_plan_proposal(
@@ -453,7 +558,8 @@ class PlanningService:
                 expected_base_revision=expected_base_revision,
                 week_start=week_start,
                 timezone_name=timezone_name,
-                availability=availability,
+                available_dates=available_dates,
+                availability_source=availability_source,
                 injuries=injuries,
                 low_only_disciplines=low_only_disciplines,
                 goal_disciplines=disciplines,
@@ -515,6 +621,20 @@ class PlanningService:
             raise PlanningDomainError(
                 "Complete onboarding before generating the first weekly plan."
             )
+        if request.reuse_previous_week:
+            available_dates = await self._repository.fetch_previous_available_dates(
+                athlete_id,
+                request.week_start,
+            )
+            if not available_dates:
+                raise PlanningConstraintError(
+                    "previous_week_availability_unavailable",
+                    "No approved previous-week availability is available to copy.",
+                )
+            availability_source = "previous_week"
+        else:
+            available_dates = request.available_dates
+            availability_source = "explicit"
         result = await self._build_and_persist(
             athlete_id=athlete_id,
             input_source=source,
@@ -522,10 +642,15 @@ class PlanningService:
             plan_id=None,
             expected_base_revision=0,
             week_start=request.week_start,
-            availability=self._availability(request.availability),
+            available_dates=available_dates,
+            availability_source=availability_source,
             injuries=request.confirmed_injuries,
             low_only_disciplines=request.low_only_disciplines,
             selected_template_ids=request.selected_template_ids,
+            fixed_template_dates={
+                item.template_id: item.scheduled_date
+                for item in request.fixed_workout_dates
+            },
         )
         proposal_id = UUID(str(result["proposal_id"]))
         plan_id = UUID(str(result["plan_id"]))
@@ -568,10 +693,15 @@ class PlanningService:
             plan_id=plan_id,
             expected_base_revision=request.expected_base_revision,
             week_start=date.fromisoformat(str(context["week_start"])),
-            availability=self._availability(request.availability),
+            available_dates=request.available_dates,
+            availability_source="explicit",
             injuries=request.confirmed_injuries,
             low_only_disciplines=request.low_only_disciplines,
             selected_template_ids=request.selected_template_ids,
+            fixed_template_dates={
+                item.template_id: item.scheduled_date
+                for item in request.fixed_workout_dates
+            },
         )
         proposal_id = UUID(str(result["proposal_id"]))
         revision = int(result["revision"])
@@ -583,6 +713,114 @@ class PlanningService:
             plan=WeeklyPlanResponse.model_validate(plan),
         )
 
+    async def generate_integrated_field_test_proposal(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+        *,
+        plan_id: UUID,
+        expected_revision: int,
+        discipline: Discipline,
+        protocol_id: str,
+        scheduled_date: date,
+    ) -> WeeklyPlanProposalResponse:
+        """Replace one same-discipline workout with an exact-date field test."""
+        context = await self._repository.fetch_plan_context(athlete_id, plan_id)
+        active_revision = context.get("active_revision")
+        if active_revision is None or int(active_revision) != expected_revision:
+            raise PlanningConstraintError(
+                "proposal_stale",
+                "The plan changed after this test request was prepared.",
+            )
+        snapshot = self._planning_input(context)
+        timezone_name, _, _, _ = self._context_values(snapshot)
+        week_start = date.fromisoformat(str(context["week_start"]))
+        validate_test_schedule(
+            protocol_id=protocol_id,
+            discipline=discipline,
+            scheduling_mode=TestSchedulingMode.WEEKLY_PLAN,
+            scheduled_date=scheduled_date,
+            athlete_today=datetime.now(ZoneInfo(timezone_name)).date(),
+            plan_week_start=week_start,
+        )
+        current = WeeklyPlanResponse.model_validate(
+            await self._repository.fetch_plan(
+                access_token,
+                plan_id,
+                expected_revision,
+            )
+        )
+        if scheduled_date not in current.available_dates:
+            raise PlanningConstraintError(
+                "test_date_unavailable",
+                "The selected test date is not an available plan date.",
+            )
+        catalog = active_catalog(await self._catalog_provider.fetch_catalog())
+        test_templates = tuple(
+            template
+            for template in catalog
+            if template.discipline is discipline
+            and template.explicit_scheduling_only
+            and any(
+                segment.protocol_target is not None
+                and segment.protocol_target.protocol_id == protocol_id
+                for segment in template.segments
+            )
+        )
+        if len(test_templates) != 1:
+            raise PlanningDomainError(
+                "The reviewed field test has no unique plannable template."
+            )
+        replaceable = sorted(
+            (
+                workout
+                for workout in current.workouts
+                if workout.discipline is discipline and workout.status == "scheduled"
+            ),
+            key=lambda workout: (workout.scheduled_date, str(workout.id)),
+        )
+        if not replaceable:
+            raise PlanningConstraintError(
+                "test_discipline_missing",
+                "The active plan has no same-discipline workout to replace.",
+            )
+        replaced = replaceable[0]
+        test_template = test_templates[0]
+        selected_template_ids = tuple(
+            workout.template_id
+            for workout in current.workouts
+            if workout.id != replaced.id and workout.status == "scheduled"
+        ) + (test_template.id,)
+        result = await self._build_and_persist(
+            athlete_id=athlete_id,
+            input_source=context,
+            request_id=(
+                UUID(str(context["initial_plan_request_id"]))
+                if context.get("initial_plan_request_id") is not None
+                else None
+            ),
+            plan_id=plan_id,
+            expected_base_revision=expected_revision,
+            week_start=week_start,
+            available_dates=current.available_dates,
+            availability_source=current.availability_source,
+            injuries=current.confirmed_injuries,
+            low_only_disciplines=current.low_only_disciplines,
+            selected_template_ids=selected_template_ids,
+            fixed_template_dates={test_template.id: scheduled_date},
+            allow_explicit_test_selection=True,
+        )
+        proposal_id = UUID(str(result["proposal_id"]))
+        revision = int(result["revision"])
+        return WeeklyPlanProposalResponse(
+            proposal=ChangeProposalSummaryResponse.model_validate(
+                await self._repository.fetch_proposal(access_token, proposal_id)
+            ),
+            plan=WeeklyPlanResponse.model_validate(
+                await self._repository.fetch_plan(access_token, plan_id, revision)
+            ),
+        )
+
     async def generate_checkin_proposal(
         self,
         access_token: str,
@@ -591,7 +829,7 @@ class PlanningService:
         checkin_id: UUID,
         input_source: Mapping[str, Any],
         week_start: date,
-        availability: tuple[AvailabilityWindow, ...],
+        available_dates: tuple[date, ...],
         blocked_disciplines: frozenset[Discipline],
         low_only_disciplines: frozenset[Discipline],
     ) -> WeeklyPlanProposalResponse:
@@ -614,7 +852,8 @@ class PlanningService:
             plan_id=plan_id,
             expected_base_revision=expected_base_revision,
             week_start=week_start,
-            availability=availability,
+            available_dates=available_dates,
+            availability_source="checkin",
             injuries=blocked_disciplines,
             low_only_disciplines=low_only_disciplines,
             selected_template_ids=None,
@@ -682,6 +921,9 @@ class PlanningService:
             ),
             zone_capabilities=capabilities,
         )
+        deck = tuple(
+            template for template in deck if not template.explicit_scheduling_only
+        )
         if selected_template_ids:
             try:
                 target = InternalLoad(Decimal(str(context["target_tss"])))
@@ -698,34 +940,241 @@ class PlanningService:
             plan_id=plan_id,
             revision=revision,
             phase=phase,
-            templates=tuple(
-                WorkoutDeckItemResponse(
-                    id=template.id,
-                    template_key=template.template_key,
-                    version=template.version,
-                    discipline=template.discipline,
-                    name=template.name,
-                    description=template.description,
-                    duration_minutes=template.duration_minutes,
-                    distance_meters=template.distance_meters,
-                    intensity_bucket=template.intensity_bucket,
-                    expected_rpe_min=template.expected_rpe_min,
-                    expected_rpe_max=template.expected_rpe_max,
-                    segments=tuple(
-                        {
-                            "sequence": segment.sequence,
-                            "name": segment.name,
-                            "instructions": segment.instructions,
-                            "duration_minutes": segment.duration_minutes,
-                            "distance_meters": segment.distance_meters,
-                            "zone": segment.zone,
-                            "expected_rpe": segment.expected_rpe,
-                            "is_swim_technique": segment.is_swim_technique,
-                        }
-                        for segment in template.segments
-                    ),
-                )
-                for template in deck
+            templates=tuple(self._deck_item(template) for template in deck),
+        )
+
+    async def _pending_revision_edit_state(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+        plan_id: UUID,
+        revision: int,
+    ) -> tuple[JsonObject, WeeklyPlanResponse, tuple[WorkoutTemplate, ...]]:
+        context = await self._repository.fetch_plan_revision_context(
+            athlete_id,
+            plan_id,
+            revision,
+        )
+        plan = WeeklyPlanResponse.model_validate(
+            await self._repository.fetch_plan(access_token, plan_id, revision)
+        )
+        if plan.revision_state != "pending_approval" or plan.proposal is None:
+            raise PlanningConstraintError(
+                "pending_revision_required",
+                "Only an exact pending weekly-plan revision can be edited.",
+            )
+        if plan.proposal.state != "pending":
+            raise PlanningConstraintError(
+                "proposal_stale",
+                "The pending proposal has already been decided or replaced.",
+            )
+        snapshot = self._planning_input(context)
+        _, _, disciplines, capabilities = self._context_values(snapshot)
+        try:
+            phase = TrainingPhase(str(context["phase"]))
+            injuries = frozenset(
+                Discipline(str(value))
+                for value in context.get("confirmed_injuries", [])
+            )
+            low_only = frozenset(
+                Discipline(str(value))
+                for value in context.get("low_only_disciplines", [])
+            )
+        except (KeyError, ValueError) as error:
+            raise PlanningDomainError(
+                "Stored pending plan context is invalid."
+            ) from error
+        deck = eligible_workouts(
+            catalog=active_catalog(await self._catalog_provider.fetch_catalog()),
+            phase=phase,
+            goal_disciplines=disciplines,
+            confirmed_injuries=injuries,
+            low_only_disciplines=low_only,
+            zone_capabilities=capabilities,
+        )
+        deck = tuple(
+            template for template in deck if not template.explicit_scheduling_only
+        )
+        return context, plan, deck
+
+    async def _candidate_edit_is_valid(
+        self,
+        *,
+        athlete_id: UUID,
+        context: Mapping[str, Any],
+        selected_template_ids: tuple[UUID, ...],
+    ) -> bool:
+        try:
+            snapshot = self._planning_input(context)
+            timezone_name, race_date, disciplines, capabilities = self._context_values(
+                snapshot
+            )
+            week_start = date.fromisoformat(str(context["week_start"]))
+            build_weekly_plan(
+                week_start=week_start,
+                timezone_name=timezone_name,
+                race_date=race_date,
+                catalog=active_catalog(await self._catalog_provider.fetch_catalog()),
+                prior_loads=self._load_samples(
+                    await self._repository.fetch_load_history(athlete_id, week_start)
+                ),
+                goal_disciplines=disciplines,
+                confirmed_injuries=frozenset(
+                    Discipline(str(value))
+                    for value in context.get("confirmed_injuries", [])
+                ),
+                low_only_disciplines=frozenset(
+                    Discipline(str(value))
+                    for value in context.get("low_only_disciplines", [])
+                ),
+                zone_capabilities=capabilities,
+                available_dates=tuple(
+                    date.fromisoformat(str(value))
+                    for value in context.get("available_dates", [])
+                ),
+                selected_template_ids=selected_template_ids,
+                maintenance_active=bool(context.get("maintenance_active", False)),
+            )
+        except (PlanningConstraintError, PlanningDomainError, KeyError, ValueError):
+            return False
+        return True
+
+    async def get_pending_workout_alternatives(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+        plan_id: UUID,
+        workout_id: UUID,
+        expected_revision: int,
+    ) -> PendingWorkoutAlternativesResponse:
+        context, plan, deck = await self._pending_revision_edit_state(
+            access_token,
+            athlete_id,
+            plan_id,
+            expected_revision,
+        )
+        target = next(
+            (workout for workout in plan.workouts if workout.id == workout_id),
+            None,
+        )
+        if target is None:
+            raise PlanningConstraintError(
+                "pending_workout_stale",
+                "The workout is not part of the exact pending revision.",
+            )
+        current_ids = tuple(workout.template_id for workout in plan.workouts)
+        without_target = tuple(
+            template_id
+            for template_id in current_ids
+            if template_id != target.template_id
+        )
+        can_remove = await self._candidate_edit_is_valid(
+            athlete_id=athlete_id,
+            context=context,
+            selected_template_ids=without_target,
+        )
+        alternatives: list[WorkoutTemplate] = []
+        for candidate in deck:
+            if (
+                candidate.id in current_ids
+                or candidate.discipline is not target.discipline
+            ):
+                continue
+            if await self._candidate_edit_is_valid(
+                athlete_id=athlete_id,
+                context=context,
+                selected_template_ids=without_target + (candidate.id,),
+            ):
+                alternatives.append(candidate)
+        assert plan.proposal is not None
+        return PendingWorkoutAlternativesResponse(
+            plan_id=plan_id,
+            revision=expected_revision,
+            proposal_id=plan.proposal.id,
+            workout_id=workout_id,
+            can_remove=can_remove,
+            alternatives=tuple(self._deck_item(template) for template in alternatives),
+        )
+
+    async def edit_pending_workout(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+        plan_id: UUID,
+        workout_id: UUID,
+        request: PendingWorkoutEditRequest,
+    ) -> WeeklyPlanProposalResponse:
+        context, plan, _ = await self._pending_revision_edit_state(
+            access_token,
+            athlete_id,
+            plan_id,
+            request.expected_revision,
+        )
+        assert plan.proposal is not None
+        if plan.proposal.id != request.expected_proposal_id:
+            raise PlanningConstraintError(
+                "proposal_stale",
+                "The proposal changed after this edit was prepared.",
+            )
+        target = next(
+            (workout for workout in plan.workouts if workout.id == workout_id),
+            None,
+        )
+        if target is None:
+            raise PlanningConstraintError(
+                "pending_workout_stale",
+                "The workout is not part of the exact pending revision.",
+            )
+        selected_ids = tuple(
+            workout.template_id for workout in plan.workouts if workout.id != workout_id
+        )
+        if request.replacement_template_id is not None:
+            selected_ids += (request.replacement_template_id,)
+        if not await self._candidate_edit_is_valid(
+            athlete_id=athlete_id,
+            context=context,
+            selected_template_ids=selected_ids,
+        ):
+            raise PlanningConstraintError(
+                "replacement_not_eligible",
+                "The requested removal or replacement is not eligible for this "
+                "pending revision.",
+            )
+        available_dates = tuple(
+            date.fromisoformat(str(value))
+            for value in context.get("available_dates", [])
+        )
+        result = await self._build_and_persist(
+            athlete_id=athlete_id,
+            input_source=context,
+            request_id=(
+                UUID(str(context["initial_plan_request_id"]))
+                if context.get("initial_plan_request_id") is not None
+                else None
+            ),
+            plan_id=plan_id,
+            expected_base_revision=int(context.get("active_revision") or 0),
+            week_start=date.fromisoformat(str(context["week_start"])),
+            available_dates=available_dates,
+            availability_source=str(context.get("availability_source", "explicit")),
+            injuries=frozenset(
+                Discipline(str(value))
+                for value in context.get("confirmed_injuries", [])
+            ),
+            low_only_disciplines=frozenset(
+                Discipline(str(value))
+                for value in context.get("low_only_disciplines", [])
+            ),
+            selected_template_ids=selected_ids,
+        )
+        proposal_id = UUID(str(result["proposal_id"]))
+        revision = int(result["revision"])
+        return WeeklyPlanProposalResponse(
+            proposal=ChangeProposalSummaryResponse.model_validate(
+                await self._repository.fetch_proposal(access_token, proposal_id)
+            ),
+            plan=WeeklyPlanResponse.model_validate(
+                await self._repository.fetch_plan(access_token, plan_id, revision)
             ),
         )
 
@@ -756,7 +1205,10 @@ class PlanningService:
                     workout_id=str(workout.workout_id),
                     disciplines=frozenset({persisted[workout.workout_id].discipline}),
                     intensity=persisted[workout.workout_id].intensity_bucket,
-                    starts_at=workout.scheduled_at,
+                    starts_at=canonical_schedule_instant(
+                        workout.scheduled_date,
+                        timezone_name=plan.timezone,
+                    ),
                 )
                 for workout in request.workouts
             ),
@@ -804,9 +1256,11 @@ class PlanningService:
                 "injury_exclusion",
                 "A confirmed injured discipline cannot be scheduled.",
             )
-        athlete_timezone = ZoneInfo(plan.timezone)
-        local_date = request.scheduled_at.astimezone(athlete_timezone).date()
-        if not plan.week_start <= local_date <= plan.week_start + timedelta(days=6):
+        if not (
+            plan.week_start
+            <= request.scheduled_date
+            <= plan.week_start + timedelta(days=6)
+        ):
             raise PlanningConstraintError(
                 "schedule_outside_week",
                 "A workout move must remain inside its training week.",
@@ -817,9 +1271,15 @@ class PlanningService:
                 disciplines=frozenset({workout.discipline}),
                 intensity=workout.intensity_bucket,
                 starts_at=(
-                    request.scheduled_at
+                    canonical_schedule_instant(
+                        request.scheduled_date,
+                        timezone_name=plan.timezone,
+                    )
                     if workout.id == workout_id
-                    else workout.scheduled_at
+                    else canonical_schedule_instant(
+                        workout.scheduled_date,
+                        timezone_name=plan.timezone,
+                    )
                 ),
             )
             for workout in plan.workouts
@@ -830,23 +1290,17 @@ class PlanningService:
                 moved_workout_id=str(workout_id),
             )
         )
-        availability = context.get("availability")
-        if isinstance(availability, list):
-            duration = timedelta(minutes=float(moved.duration_minutes))
-            fits = any(
-                datetime.fromisoformat(str(window["starts_at"])) <= request.scheduled_at
-                and request.scheduled_at + duration
-                <= datetime.fromisoformat(str(window["ends_at"]))
-                for window in availability
-                if isinstance(window, dict)
-            )
-            if not fits:
+        available_dates = context.get("available_dates")
+        if isinstance(available_dates, list):
+            if request.scheduled_date.isoformat() not in {
+                str(value) for value in available_dates
+            }:
                 warnings.append(
                     PlanningWarning(
                         rule_id=RuleId.SOFT_BOUNDARIES,
                         code="outside_confirmed_availability",
                         message=(
-                            "This athlete move falls outside the availability "
+                            "This athlete move falls outside the available dates "
                             "confirmed for the plan."
                         ),
                     )
@@ -855,7 +1309,7 @@ class PlanningService:
             athlete_id,
             workout_id,
             request.expected_revision,
-            request.scheduled_at,
+            request.scheduled_date,
             [
                 {
                     "rule_id": warning.rule_id.value,
@@ -877,37 +1331,30 @@ class PlanningService:
     async def get_calendar(
         self,
         access_token: str,
-        from_datetime: datetime,
-        to_datetime: datetime,
+        from_date: date,
+        to_date: date,
     ) -> CalendarResponse:
-        if (
-            from_datetime.tzinfo is None
-            or from_datetime.utcoffset() is None
-            or to_datetime.tzinfo is None
-            or to_datetime.utcoffset() is None
-        ):
-            raise PlanningDomainError("Calendar boundaries must be timezone-aware.")
-        if to_datetime <= from_datetime:
+        if to_date <= from_date:
             raise PlanningDomainError("Calendar end must follow its start.")
-        if to_datetime - from_datetime > timedelta(days=93):
+        if to_date - from_date > timedelta(days=93):
             raise PlanningDomainError("Calendar ranges are limited to 93 days.")
         return CalendarResponse(
-            from_datetime=from_datetime,
-            to_datetime=to_datetime,
+            from_date=from_date,
+            to_date=to_date,
             workouts=tuple(
                 PlannedWorkoutResponse.model_validate(row)
                 for row in await self._repository.fetch_calendar(
                     access_token,
-                    from_datetime,
-                    to_datetime,
+                    from_date,
+                    to_date,
                 )
             ),
             rest_days=tuple(
                 RestDayResponse.model_validate(row)
                 for row in await self._repository.fetch_calendar_rest_days(
                     access_token,
-                    from_datetime,
-                    to_datetime,
+                    from_date,
+                    to_date,
                 )
             ),
         )

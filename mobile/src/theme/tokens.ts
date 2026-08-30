@@ -1,18 +1,26 @@
 export const colors = {
-  canvas: '#F3F1E9',
-  surface: '#FFFDF7',
-  surfaceMuted: '#E8ECE7',
-  ink: '#102A27',
-  inkMuted: '#60706B',
-  inkFaint: '#8A9893',
+  canvas: '#F4F2EC',
+  canvasDeep: '#EAEDE5',
+  surface: '#FFFEFA',
+  surfaceRaised: '#FFFFFF',
+  surfaceMuted: '#E9EEE8',
+  ink: '#102B28',
+  inkMuted: '#5D706B',
+  inkFaint: '#8D9A96',
   brand: '#123F39',
-  brandSoft: '#D8E7DF',
-  accent: '#FF6B4A',
-  accentSoft: '#FFE2D9',
+  brandDeep: '#082E2A',
+  brandMid: '#1D554D',
+  brandSoft: '#DCEBE3',
+  accent: '#F26749',
+  accentDark: '#C9482E',
+  accentSoft: '#FDE5DD',
+  highlight: '#E8B95B',
+  highlightSoft: '#F8EED6',
   danger: '#A23B2A',
   dangerSoft: '#FBE5DF',
   success: '#2D6A52',
-  line: '#D8DDD7',
+  line: '#D9E0DA',
+  lineStrong: '#C7D1CA',
   white: '#FFFFFF',
 } as const;
 
@@ -22,11 +30,44 @@ export const spacing = {
   md: 16,
   lg: 24,
   xl: 32,
+  xxl: 48,
 } as const;
 
 export const radius = {
+  xs: 8,
   sm: 12,
   md: 20,
   lg: 28,
+  xl: 36,
   pill: 999,
+} as const;
+
+export const shadows = {
+  card: {
+    elevation: 3,
+    shadowColor: colors.brandDeep,
+    shadowOffset: { height: 8, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 18,
+  },
+  floating: {
+    elevation: 8,
+    shadowColor: colors.brandDeep,
+    shadowOffset: { height: 12, width: 0 },
+    shadowOpacity: 0.14,
+    shadowRadius: 24,
+  },
+} as const;
+
+export const motion = {
+  duration: {
+    fast: 140,
+    base: 220,
+    slow: 360,
+  },
+  spring: {
+    damping: 18,
+    mass: 0.72,
+    stiffness: 230,
+  },
 } as const;

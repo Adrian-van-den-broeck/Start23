@@ -17,6 +17,9 @@ dependencies = [
     "uvicorn>=0.30,<1",
 ]
 
+[project.scripts]
+start23-retry-polar-imports = "app.jobs.retry_polar_imports:main"
+
 [project.optional-dependencies]
 dev = [
     "mypy>=1.13,<2",

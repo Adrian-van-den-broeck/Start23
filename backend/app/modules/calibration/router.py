@@ -24,15 +24,25 @@ from app.modules.calibration.schemas import (
     CalibrationStatusResponse,
     DisciplineSetupInput,
     DisciplineSetupResponse,
+    FieldTestSchedulingRequest,
+    FieldTestSchedulingResponse,
+    TestAssignmentDecisionRequest,
+    TestAssignmentDecisionResponse,
     ThresholdConfirmationRequest,
     ThresholdDecisionResponse,
     ZoneOptionResponse,
+    ZoneProfileStateResponse,
 )
 from app.modules.calibration.service import (
     CalibrationDomainError,
     CalibrationService,
 )
 from app.modules.physiology.models import Discipline
+from app.modules.planning.domain import PlanningConstraintError
+from app.modules.planning.repository import PlanningRepositoryError
+from app.modules.planning.router import get_planning_service, raise_planning_error
+from app.modules.planning.service import PlanningDomainError, PlanningService
+from app.modules.workouts.repository import PlanningCatalogUnavailableError
 
 router = APIRouter(tags=["calibration"])
 error_responses: dict[int | str, dict[str, Any]] = {
@@ -228,5 +238,117 @@ async def get_calibration_status(
     """Return only the verified athlete's setup and evaluation state."""
     try:
         return await service.status(access_token, identity.user_id)
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.post(
+    "/calibration/test-assignments",
+    response_model=FieldTestSchedulingResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses=error_responses,
+)
+async def schedule_field_test(
+    scheduling: FieldTestSchedulingRequest,
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[CalibrationService, Depends(get_calibration_service)],
+    planning: Annotated[PlanningService, Depends(get_planning_service)],
+) -> FieldTestSchedulingResponse:
+    """Create a pending standalone test or exact-date plan revision."""
+    try:
+        if scheduling.scheduling_mode.value == "standalone":
+            assignment = await service.schedule_standalone_test(
+                access_token,
+                identity.user_id,
+                scheduling,
+            )
+            return FieldTestSchedulingResponse(assignment=assignment)
+        assert scheduling.plan_id is not None
+        assert scheduling.expected_plan_revision is not None
+        plan_proposal = await planning.generate_integrated_field_test_proposal(
+            access_token,
+            identity.user_id,
+            plan_id=scheduling.plan_id,
+            expected_revision=scheduling.expected_plan_revision,
+            discipline=scheduling.discipline,
+            protocol_id=scheduling.protocol_id,
+            scheduled_date=scheduling.scheduled_date,
+        )
+        assignment = await service.save_integrated_test(
+            access_token,
+            scheduling,
+            target_plan_revision_id=plan_proposal.plan.revision_id,
+            plan_proposal_id=plan_proposal.proposal.id,
+        )
+        return FieldTestSchedulingResponse(
+            assignment=assignment,
+            plan_proposal=plan_proposal,
+        )
+    except (
+        PlanningCatalogUnavailableError,
+        PlanningConstraintError,
+        PlanningDomainError,
+        PlanningRepositoryError,
+    ) as error:
+        raise_planning_error(error)
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.post(
+    "/calibration/test-assignments/{proposal_id}/approve",
+    response_model=TestAssignmentDecisionResponse,
+    responses=error_responses,
+)
+async def approve_field_test(
+    proposal_id: UUID,
+    decision: TestAssignmentDecisionRequest,
+    access_token: Annotated[str, Depends(get_access_token)],
+    _: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[CalibrationService, Depends(get_calibration_service)],
+) -> TestAssignmentDecisionResponse:
+    """Apply a standalone date choice after explicit confirmation."""
+    try:
+        return await service.approve_test_assignment(
+            access_token,
+            proposal_id,
+            decision.expected_revision,
+        )
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.post(
+    "/calibration/test-assignments/{proposal_id}/reject",
+    response_model=TestAssignmentDecisionResponse,
+    responses=error_responses,
+)
+async def reject_field_test(
+    proposal_id: UUID,
+    access_token: Annotated[str, Depends(get_access_token)],
+    _: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[CalibrationService, Depends(get_calibration_service)],
+) -> TestAssignmentDecisionResponse:
+    """Reject a standalone date choice without scheduling it."""
+    try:
+        return await service.reject_test_assignment(access_token, proposal_id)
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.get(
+    "/me/zone-profile",
+    response_model=ZoneProfileStateResponse,
+    responses=error_responses,
+)
+async def get_zone_profile_state(
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[CalibrationService, Depends(get_calibration_service)],
+) -> ZoneProfileStateResponse:
+    """Return current, pending, and immutable prior values per discipline."""
+    try:
+        return await service.zone_profile_state(access_token, identity.user_id)
     except Exception as error:
         _raise_public_error(error)

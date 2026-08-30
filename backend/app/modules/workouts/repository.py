@@ -14,7 +14,9 @@ from app.modules.physiology.models import (
     TrainingZone,
 )
 from app.modules.workouts.catalog import (
+    EXPLICIT_FIELD_TEST_PROTOCOL_IDS,
     FallbackCompatibility,
+    ProtocolTarget,
     TrainingPhase,
     WorkoutSegment,
     WorkoutTemplate,
@@ -49,7 +51,34 @@ def parse_planning_catalog(
                         if segment.get("distance_meters") is not None
                         else None
                     ),
-                    zone=TrainingZone(int(segment["zone_number"])),
+                    zone_target=(
+                        TrainingZone(
+                            int(segment.get("zone_target", segment.get("zone_number")))
+                        )
+                        if segment.get("zone_target", segment.get("zone_number"))
+                        is not None
+                        else None
+                    ),
+                    protocol_target=(
+                        ProtocolTarget(
+                            protocol_id=str(segment["protocol_target"]["protocol_id"]),
+                            segment_id=str(segment["protocol_target"]["segment_id"]),
+                            target_rpe_min=int(
+                                segment["protocol_target"]["target_rpe_min"]
+                            ),
+                            target_rpe_max=int(
+                                segment["protocol_target"]["target_rpe_max"]
+                            ),
+                            intensity_bucket=IntensityBucket(
+                                str(segment["protocol_target"]["intensity_bucket"])
+                            ),
+                            optional=bool(
+                                segment["protocol_target"].get("optional", False)
+                            ),
+                        )
+                        if isinstance(segment.get("protocol_target"), dict)
+                        else None
+                    ),
                     expected_rpe=int(segment["expected_rpe"]),
                     is_swim_technique=bool(segment["is_swim_technique"]),
                 )
@@ -85,6 +114,15 @@ def parse_planning_catalog(
                     segments=segments,
                     internal_planned_load=InternalLoad(
                         Decimal(str(row["planned_tss"]))
+                    ),
+                    explicit_scheduling_only=bool(
+                        row.get("explicit_scheduling_only", False)
+                        or any(
+                            segment.protocol_target is not None
+                            and segment.protocol_target.protocol_id
+                            in EXPLICIT_FIELD_TEST_PROTOCOL_IDS
+                            for segment in segments
+                        )
                     ),
                 )
             )
@@ -130,7 +168,10 @@ class SupabaseWorkoutCatalogRepository:
 
         if not response.is_success:
             raise PlanningCatalogUnavailableError
-        payload = response.json()
+        # PostgREST serializes PostgreSQL numeric values as JSON numbers. Decode
+        # them directly to Decimal so private load snapshots remain bit-for-bit
+        # equal to the durable values checked by the persistence RPC.
+        payload = response.json(parse_float=Decimal)
         if not isinstance(payload, list) or any(
             not isinstance(row, dict) for row in payload
         ):

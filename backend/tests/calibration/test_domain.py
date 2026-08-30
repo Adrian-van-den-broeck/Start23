@@ -1,5 +1,6 @@
 """Deterministic field-test and Week-1 calibration tests."""
 
+from datetime import date
 from decimal import Decimal
 
 import pytest
@@ -10,16 +11,76 @@ from app.modules.calibration.domain import (
     CalibrationObservation,
     DataQuality,
     EvaluationStatus,
+    NumericZoneVisibility,
+    SetupRoute,
     SteadyExecution,
     SwimRepetition,
     ThresholdStatus,
     ZoneStatus,
     evaluate_protocol,
+    numeric_zone_visibility,
     pace_seconds_per_100m,
     protocols_for_discipline,
+    validate_test_schedule,
 )
+from app.modules.calibration.domain import TestSchedulingMode as SchedulingMode
 from app.modules.physiology.models import Discipline
 from app.modules.physiology.zones import ZoneMetricKind
+
+
+def test_date_only_test_schedule_accepts_today_and_rejects_past() -> None:
+    today = date(2026, 8, 26)
+
+    decision = validate_test_schedule(
+        protocol_id="start23_run_threshold_30min_v1",
+        discipline=Discipline.RUN,
+        scheduling_mode=SchedulingMode.STANDALONE,
+        scheduled_date=today,
+        athlete_today=today,
+    )
+
+    assert decision.scheduled_date == today
+    with pytest.raises(ValueError, match="cannot be in the past"):
+        validate_test_schedule(
+            protocol_id="start23_run_threshold_30min_v1",
+            discipline=Discipline.RUN,
+            scheduling_mode=SchedulingMode.STANDALONE,
+            scheduled_date=date(2026, 8, 25),
+            athlete_today=today,
+        )
+
+
+def test_integrated_swim_test_fails_closed_without_planned_duration() -> None:
+    with pytest.raises(ValueError, match="no approved planned-duration"):
+        validate_test_schedule(
+            protocol_id="start23_swim_css_400_200_v1",
+            discipline=Discipline.SWIM,
+            scheduling_mode=SchedulingMode.WEEKLY_PLAN,
+            scheduled_date=date(2026, 8, 27),
+            athlete_today=date(2026, 8, 26),
+            plan_week_start=date(2026, 8, 24),
+        )
+
+
+def test_calibration_week_hides_numbers_until_reviewed_week_2_gate() -> None:
+    assert (
+        numeric_zone_visibility(
+            setup_route=SetupRoute.CALIBRATION_WEEK,
+            has_active_profile=False,
+            week_2_evaluation_completed=False,
+            has_pending_complete_proposal=False,
+        )
+        is NumericZoneVisibility.WEEK_2_EVALUATION_PENDING
+    )
+    assert (
+        numeric_zone_visibility(
+            setup_route=SetupRoute.CALIBRATION_WEEK,
+            has_active_profile=False,
+            week_2_evaluation_completed=True,
+            has_pending_complete_proposal=True,
+        )
+        is NumericZoneVisibility.PROPOSAL_CONFIRMATION_PENDING
+    )
 
 
 def _observation(

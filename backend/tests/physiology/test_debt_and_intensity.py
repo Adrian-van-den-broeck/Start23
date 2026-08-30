@@ -154,6 +154,35 @@ def test_swim_technique_is_low_intensity() -> None:
     assert classify_segment(_segment("10", technique=True)) is IntensityBucket.LOW
 
 
+def test_reviewed_protocol_bucket_is_classified_without_fabricating_a_zone() -> None:
+    segment = IntensitySegment(
+        duration=_duration("10"),
+        explicit_bucket=IntensityBucket.HIGH,
+    )
+
+    assert segment.zone is None
+    assert classify_segment(segment) is IntensityBucket.HIGH
+
+
+def test_explicit_bucket_can_preserve_swim_technique_execution_detail() -> None:
+    segment = IntensitySegment(
+        duration=_duration("10"),
+        is_swim_technique=True,
+        explicit_bucket=IntensityBucket.LOW,
+    )
+
+    assert classify_segment(segment) is IntensityBucket.LOW
+
+
+def test_protocol_bucket_cannot_also_imply_a_zone() -> None:
+    with pytest.raises(ValueError, match="cannot imply a zone"):
+        IntensitySegment(
+            duration=_duration("10"),
+            zone=TrainingZone.ZONE_2,
+            explicit_bucket=IntensityBucket.LOW,
+        )
+
+
 def test_segment_requires_zone_or_swim_technique() -> None:
     with pytest.raises(ValueError, match="requires a zone"):
         _segment("10")

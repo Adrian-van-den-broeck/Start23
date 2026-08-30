@@ -2,7 +2,7 @@
 
 from collections.abc import Collection, Mapping
 from dataclasses import dataclass, field
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 from decimal import Decimal
 from enum import Enum
 from itertools import combinations, permutations
@@ -54,6 +54,7 @@ from app.modules.workouts.catalog import (
     TrainingPhase,
     WorkoutTemplate,
     ZoneRequirement,
+    as_rpe_guided_template,
     snapshot_template,
 )
 
@@ -84,30 +85,13 @@ class PlanningTargetBasis(str, Enum):
 
 
 @dataclass(frozen=True, slots=True)
-class AvailabilityWindow:
-    """One athlete-confirmed window in which training may be scheduled."""
-
-    starts_at: datetime
-    ends_at: datetime
-
-    def __post_init__(self) -> None:
-        if (
-            self.starts_at.tzinfo is None
-            or self.starts_at.utcoffset() is None
-            or self.ends_at.tzinfo is None
-            or self.ends_at.utcoffset() is None
-        ):
-            raise ValueError("Availability windows must be timezone-aware.")
-        if self.ends_at <= self.starts_at:
-            raise ValueError("Availability window end must follow its start.")
-
-
-@dataclass(frozen=True, slots=True)
 class ZoneCapability:
     """The template-driving capabilities of one active discipline zone."""
 
     requirements: frozenset[ZoneRequirement]
     fallback_active: bool = False
+    protocol_ids: frozenset[str] = frozenset()
+    rpe_guided: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -149,11 +133,11 @@ class SelectedWorkout:
 
 @dataclass(frozen=True, slots=True)
 class ProposedWorkout:
-    """One selected immutable workout with a deterministic start."""
+    """One selected immutable workout on an athlete-local calendar date."""
 
     discipline: Discipline
     snapshot: PlannedWorkoutSnapshot
-    scheduled_at: datetime
+    scheduled_date: date
 
 
 @dataclass(frozen=True, slots=True)
@@ -449,13 +433,28 @@ def eligible_workouts(
         capability = zone_capabilities.get(template.discipline)
         if capability is None:
             continue
-        if capability.fallback_active and (
-            template.fallback_compatibility is not FallbackCompatibility.COMPATIBLE
+        protocol_ids = {
+            segment.protocol_target.protocol_id
+            for segment in template.segments
+            if segment.protocol_target is not None
+        }
+        if protocol_ids and not protocol_ids.issubset(capability.protocol_ids):
+            continue
+        if (
+            capability.fallback_active
+            and not capability.rpe_guided
+            and (
+                template.fallback_compatibility is not FallbackCompatibility.COMPATIBLE
+            )
         ):
             continue
-        if not set(template.zone_requirements).issubset(capability.requirements):
+        if not capability.rpe_guided and not set(template.zone_requirements).issubset(
+            capability.requirements
+        ):
             continue
-        eligible.append(template)
+        eligible.append(
+            as_rpe_guided_template(template) if capability.rpe_guided else template
+        )
     return tuple(
         sorted(
             eligible,
@@ -525,6 +524,9 @@ def select_workouts(
             )
         chosen = tuple(by_id[template_id] for template_id in selected_template_ids)
     else:
+        deck = tuple(
+            template for template in deck if not template.explicit_scheduling_only
+        )
         candidates: list[tuple[WorkoutTemplate, ...]] = []
         for count in range(1, len(deck) + 1):
             for selection in combinations(deck, count):
@@ -590,53 +592,64 @@ def remaining_workout_deck(
     )
 
 
-def _inside_requested_week(
-    window: AvailabilityWindow,
+def canonical_schedule_instant(
+    scheduled_date: date,
     *,
-    week_start: date,
     timezone_name: str,
-) -> bool:
-    athlete_timezone = ZoneInfo(timezone_name)
-    local_start = window.starts_at.astimezone(athlete_timezone).date()
-    local_end = (
-        (window.ends_at - timedelta(microseconds=1)).astimezone(athlete_timezone).date()
-    )
-    return week_start <= local_start <= week_start + timedelta(
-        days=6
-    ) and week_start <= local_end <= week_start + timedelta(days=6)
+) -> datetime:
+    """Return an internal noon projection for legacy elapsed-hour comparisons.
+
+    The athlete-facing schedule owns only ``scheduled_date``. Noon is not a
+    prescribed training time; it is a stable internal projection that lets the
+    separately approved 72-hour rule remain elapsed-time based.
+    """
+
+    return datetime.combine(scheduled_date, time(hour=12), ZoneInfo(timezone_name))
 
 
 def schedule_workouts(
     *,
     selected: tuple[SelectedWorkout, ...],
-    availability: tuple[AvailabilityWindow, ...],
+    available_dates: tuple[date, ...],
     week_start: date,
     timezone_name: str,
+    fixed_template_dates: Mapping[UUID, date] | None = None,
 ) -> tuple[ProposedWorkout, ...]:
-    """Greedily place deterministic snapshots into explicit availability."""
-    if not availability:
+    """Place deterministic snapshots on explicit athlete-local dates."""
+    if not available_dates:
         raise PlanningConstraintError(
             "availability_required",
-            "At least one availability window is required for auto-scheduling.",
+            "At least one available date is required for auto-scheduling.",
         )
-    if any(
-        not _inside_requested_week(
-            window,
-            week_start=week_start,
-            timezone_name=timezone_name,
+    if len(set(available_dates)) != len(available_dates):
+        raise PlanningConstraintError(
+            "duplicate_available_date",
+            "Available dates must be unique.",
         )
-        for window in availability
-    ):
+    fixed = dict(fixed_template_dates or {})
+    selected_ids = {workout.snapshot.template_id for workout in selected}
+    if not set(fixed) <= selected_ids:
+        raise PlanningConstraintError(
+            "fixed_template_not_selected",
+            "A fixed workout date must reference an explicitly selected template.",
+        )
+    if len(set(fixed.values())) != len(fixed):
+        raise PlanningConstraintError(
+            "fixed_dates_conflict",
+            "Two fixed workouts cannot use the same training date.",
+        )
+    week_dates = {week_start + timedelta(days=offset) for offset in range(7)}
+    if not set(available_dates) <= week_dates:
         raise PlanningConstraintError(
             "availability_outside_week",
-            "Availability must fall entirely inside the requested athlete week.",
+            "Available dates must fall inside the requested athlete week.",
+        )
+    if not set(fixed.values()) <= set(available_dates):
+        raise PlanningConstraintError(
+            "fixed_date_unavailable",
+            "Every fixed workout date must be one of the available dates.",
         )
 
-    athlete_timezone = ZoneInfo(timezone_name)
-    windows_by_day: dict[date, list[AvailabilityWindow]] = {}
-    for window in sorted(availability, key=lambda item: item.starts_at):
-        local_day = window.starts_at.astimezone(athlete_timezone).date()
-        windows_by_day.setdefault(local_day, []).append(window)
     ordered = sorted(
         selected,
         key=lambda item: (
@@ -645,41 +658,27 @@ def schedule_workouts(
             str(item.snapshot.template_id),
         ),
     )
-    if len(windows_by_day) < len(ordered):
+    if len(available_dates) < len(ordered):
         raise PlanningConstraintError(
             "availability_unsatisfied",
             "The selected workouts require availability on more training days.",
         )
 
-    capacity_found = False
-    for assigned_days in permutations(sorted(windows_by_day), len(ordered)):
-        proposed: list[ProposedWorkout] = []
-        for workout, assigned_day in zip(ordered, assigned_days, strict=True):
-            duration = timedelta(minutes=float(workout.snapshot.duration_minutes))
-            fitting_window = next(
-                (
-                    candidate
-                    for candidate in windows_by_day[assigned_day]
-                    if candidate.starts_at + duration <= candidate.ends_at
-                ),
-                None,
-            )
-            if fitting_window is None:
-                break
-            proposed.append(
-                ProposedWorkout(
-                    discipline=workout.discipline,
-                    snapshot=workout.snapshot,
-                    scheduled_at=fitting_window.starts_at,
-                )
-            )
-        if len(proposed) != len(ordered):
+    for assigned_days in permutations(sorted(available_dates), len(ordered)):
+        if any(
+            fixed.get(workout.snapshot.template_id, assigned_day) != assigned_day
+            for workout, assigned_day in zip(ordered, assigned_days, strict=True)
+        ):
             continue
-        capacity_found = True
-        training_days = {
-            workout.scheduled_at.astimezone(athlete_timezone).date()
-            for workout in proposed
-        }
+        proposed = [
+            ProposedWorkout(
+                discipline=workout.discipline,
+                snapshot=workout.snapshot,
+                scheduled_date=assigned_day,
+            )
+            for workout, assigned_day in zip(ordered, assigned_days, strict=True)
+        ]
+        training_days = {workout.scheduled_date for workout in proposed}
         consecutive_rest = 0
         maximum_rest = 0
         for offset in range(7):
@@ -696,18 +695,16 @@ def schedule_workouts(
                     workout_id=str(workout.snapshot.template_id),
                     disciplines=frozenset({workout.discipline}),
                     intensity=workout.snapshot.intensity_bucket,
-                    starts_at=workout.scheduled_at,
+                    starts_at=canonical_schedule_instant(
+                        workout.scheduled_date,
+                        timezone_name=timezone_name,
+                    ),
                 )
                 for workout in proposed
             )
         )
         if not violations:
-            return tuple(sorted(proposed, key=lambda item: item.scheduled_at))
-    if not capacity_found:
-        raise PlanningConstraintError(
-            "availability_unsatisfied",
-            "The selected workouts do not fit the confirmed availability.",
-        )
+            return tuple(sorted(proposed, key=lambda item: item.scheduled_date))
     raise PlanningConstraintError(
         "rest_or_anti_stack_unsatisfied",
         "The generated schedule cannot satisfy rest-day and anti-stack constraints.",
@@ -742,8 +739,9 @@ def build_weekly_plan(
     confirmed_injuries: frozenset[Discipline],
     low_only_disciplines: frozenset[Discipline] = frozenset(),
     zone_capabilities: Mapping[Discipline, ZoneCapability],
-    availability: tuple[AvailabilityWindow, ...],
+    available_dates: tuple[date, ...],
     selected_template_ids: Collection[UUID] | None = None,
+    fixed_template_dates: Mapping[UUID, date] | None = None,
     maintenance_active: bool = False,
 ) -> WeeklyPlanDraft:
     """Build a deterministic, TSS-private plan ready to remain pending."""
@@ -779,20 +777,34 @@ def build_weekly_plan(
     # The first target must be seeded without fabricating realized load. Use the
     # latest eligible catalog's hidden load as a deterministic bootstrap.
     initial_candidates = tuple(
-        template
+        as_rpe_guided_template(template)
+        if zone_capabilities[template.discipline].rpe_guided
+        else template
         for template in catalog
         if template.discipline in uninjured
+        and not template.explicit_scheduling_only
         and not (
             template.discipline in low_only_disciplines
             and template.intensity_bucket is IntensityBucket.HIGH
         )
         and template.discipline in zone_capabilities
-        and set(template.zone_requirements).issubset(
-            zone_capabilities[template.discipline].requirements
-        )
+        and {
+            segment.protocol_target.protocol_id
+            for segment in template.segments
+            if segment.protocol_target is not None
+        }.issubset(zone_capabilities[template.discipline].protocol_ids)
         and (
-            not zone_capabilities[template.discipline].fallback_active
-            or template.fallback_compatibility is FallbackCompatibility.COMPATIBLE
+            zone_capabilities[template.discipline].rpe_guided
+            or (
+                set(template.zone_requirements).issubset(
+                    zone_capabilities[template.discipline].requirements
+                )
+                and (
+                    not zone_capabilities[template.discipline].fallback_active
+                    or template.fallback_compatibility
+                    is FallbackCompatibility.COMPATIBLE
+                )
+            )
         )
     )
     if not initial_candidates:
@@ -853,6 +865,19 @@ def build_weekly_plan(
         low_only_disciplines=low_only_disciplines,
         zone_capabilities=zone_capabilities,
     )
+    fixed_dates = dict(fixed_template_dates or {})
+    if selected_template_ids is not None:
+        selected_ids = set(selected_template_ids)
+        explicit_ids = {
+            template.id
+            for template in deck
+            if template.id in selected_ids and template.explicit_scheduling_only
+        }
+        if not explicit_ids <= set(fixed_dates):
+            raise PlanningConstraintError(
+                "explicit_test_date_required",
+                "Every explicitly scheduled field test requires an exact date.",
+            )
     selected = select_workouts(
         deck=deck,
         required_disciplines=uninjured,
@@ -862,9 +887,10 @@ def build_weekly_plan(
     )
     proposed = schedule_workouts(
         selected=selected,
-        availability=availability,
+        available_dates=available_dates,
         week_start=week_start,
         timezone_name=timezone_name,
+        fixed_template_dates=fixed_dates,
     )
     distribution = calculate_time_distribution(
         tuple(_workout_intensity(workout) for workout in proposed)
@@ -971,8 +997,15 @@ def validate_manual_schedule(
             rule_id=RuleId.ANTI_STACK,
             code="anti_stack_violation",
             message=(
-                f"Keep at least {violation.required_hours} hours between "
-                f"high-intensity {violation.discipline.value} workouts."
+                (
+                    "Keep two complete athlete-local rest dates between "
+                    f"high-intensity {violation.discipline.value} workouts."
+                )
+                if violation.required_complete_rest_dates is not None
+                else (
+                    f"Keep at least {violation.required_hours} hours between "
+                    f"high-intensity {violation.discipline.value} workouts."
+                )
             ),
         )
         for violation in violations

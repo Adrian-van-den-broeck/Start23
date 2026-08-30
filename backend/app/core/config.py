@@ -35,12 +35,20 @@ class Settings(BaseSettings):
     openai_api_key: SecretStr = SecretStr("")
     openai_model: str = "gpt-5.6-luna"
     openai_api_timeout_seconds: float = Field(default=8.0, gt=0, le=30)
+    physiology_review_record_id: str = ""
+    physiology_accountable_owner: str = ""
     polar_client_id: str = ""
     polar_client_secret: SecretStr = SecretStr("")
     polar_oauth_redirect_url: AnyHttpUrl = AnyHttpUrl(
         "http://localhost:8000/api/v1/integrations/polar/oauth/callback"
     )
     polar_webhook_secret: SecretStr = SecretStr("")
+    polar_legal_approved: bool = False
+    polar_privacy_approved: bool = False
+    polar_provider_terms_approved: bool = False
+    polar_operational_owner: str = ""
+    polar_raw_fit_retention_days: int | None = Field(default=None, ge=1)
+    polar_canonical_activity_retention_days: int | None = Field(default=None, ge=1)
     polar_api_timeout_seconds: float = Field(default=10.0, gt=0, le=30)
     polar_max_activity_file_bytes: int = Field(
         default=25 * 1024 * 1024,
@@ -89,6 +97,18 @@ class Settings(BaseSettings):
         return self
 
     @model_validator(mode="after")
+    def require_production_physiology_governance(self) -> "Settings":
+        """Keep production closed until one accountable qualified review exists."""
+        if self.environment == "production" and (
+            not self.physiology_review_record_id.strip()
+            or not self.physiology_accountable_owner.strip()
+        ):
+            raise ValueError(
+                "production requires a physiology review record and accountable owner"
+            )
+        return self
+
+    @model_validator(mode="after")
     def require_complete_polar_configuration(self) -> "Settings":
         """Prevent partially configured OAuth or webhook authentication."""
         values = (
@@ -101,6 +121,36 @@ class Settings(BaseSettings):
                 "polar_client_id, polar_client_secret and polar_webhook_secret "
                 "must be configured together"
             )
+        if self.environment == "production" and all(values):
+            if not (
+                self.polar_legal_approved
+                and self.polar_privacy_approved
+                and self.polar_provider_terms_approved
+            ):
+                raise ValueError(
+                    "production Polar requires legal, privacy and provider-terms "
+                    "approval"
+                )
+            if not self.polar_operational_owner.strip():
+                raise ValueError("production Polar requires an operational owner")
+            callback = self.polar_oauth_redirect_url
+            if callback.scheme != "https" or callback.host in {
+                "localhost",
+                "127.0.0.1",
+            }:
+                raise ValueError(
+                    "production Polar requires the final HTTPS backend callback"
+                )
+            if (
+                self.polar_raw_fit_retention_days is None
+                or self.polar_canonical_activity_retention_days is None
+                or self.polar_raw_fit_retention_days
+                >= self.polar_canonical_activity_retention_days
+            ):
+                raise ValueError(
+                    "production Polar requires shorter raw FIT retention than "
+                    "canonical activity retention"
+                )
         return self
 
     @field_validator("openai_model")

@@ -44,6 +44,15 @@ class IntegrationRepository(Protocol):
         self, athlete_id: UUID, import_id: UUID, payload: JsonObject
     ) -> JsonObject: ...
     async def list_imports(self, access_token: str) -> tuple[JsonObject, ...]: ...
+    async def prepare_import_retry(
+        self, athlete_id: UUID, import_id: UUID
+    ) -> JsonObject: ...
+    async def claim_due_import_retries(
+        self, limit: int
+    ) -> tuple[tuple[UUID, UUID], ...]: ...
+    async def get_import_retry_context(
+        self, athlete_id: UUID, import_id: UUID
+    ) -> JsonObject: ...
     async def import_activity(
         self,
         athlete_id: UUID,
@@ -246,6 +255,49 @@ class SupabaseIntegrationRepository:
         if not isinstance(result, list):
             raise IntegrationRepositoryError
         return tuple(dict(row) for row in result if isinstance(row, dict))
+
+    async def prepare_import_retry(
+        self, athlete_id: UUID, import_id: UUID
+    ) -> JsonObject:
+        result = await self._rpc(
+            "prepare_polar_import_retry",
+            {"p_athlete_id": str(athlete_id), "p_import_id": str(import_id)},
+            service=True,
+        )
+        if not isinstance(result, dict):
+            raise IntegrationRepositoryError
+        return dict(result)
+
+    async def claim_due_import_retries(
+        self, limit: int
+    ) -> tuple[tuple[UUID, UUID], ...]:
+        result = await self._rpc(
+            "claim_due_polar_import_retries",
+            {"p_limit": limit},
+            service=True,
+        )
+        if not isinstance(result, list):
+            raise IntegrationRepositoryError
+        try:
+            return tuple(
+                (UUID(str(row["athlete_id"])), UUID(str(row["import_id"])))
+                for row in result
+                if isinstance(row, dict)
+            )
+        except (KeyError, ValueError) as error:
+            raise IntegrationRepositoryError from error
+
+    async def get_import_retry_context(
+        self, athlete_id: UUID, import_id: UUID
+    ) -> JsonObject:
+        result = await self._rpc(
+            "get_polar_import_retry_context",
+            {"p_athlete_id": str(athlete_id), "p_import_id": str(import_id)},
+            service=True,
+        )
+        if not isinstance(result, dict):
+            raise IntegrationRepositoryError
+        return dict(result)
 
     async def import_activity(
         self,

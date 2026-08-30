@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from app.api.dependencies import get_access_token, get_authenticated_identity
 from app.core.errors import ErrorResponse
 from app.core.security import AuthenticatedIdentity
+from app.modules.coach.context import CheckInContextCoach
 from app.modules.coach.weekly_plan import WeeklyPlanCoach
 from app.modules.planning.repository import PlanningRepository
 from app.modules.planning.schemas import WeeklyPlanProposalResponse
@@ -22,7 +23,9 @@ from .repository import (
     CheckInRepositoryUnavailableError,
 )
 from .schemas import (
+    CheckInContextCandidateResponse,
     CheckInContextConfirmation,
+    CheckInContextExtractionRequest,
     CheckInContextUpdate,
     CheckInStartRequest,
     GoalAchievementRequest,
@@ -57,9 +60,11 @@ def get_checkin_service(
         request.app.state.planning_catalog_provider
     )
     weekly_plan_coach: WeeklyPlanCoach = request.app.state.weekly_plan_coach
+    context_coach: CheckInContextCoach = request.app.state.checkin_context_coach
     return CheckInService(
         repository,
         PlanningService(planning_repository, catalog_provider, weekly_plan_coach),
+        context_coach,
     )
 
 
@@ -132,6 +137,29 @@ async def get_weekly_checkin(
 ) -> WeeklyCheckInResponse:
     try:
         return await service.get(access_token, checkin_id)
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.post(
+    "/checkins/{checkin_id}/context-candidates",
+    response_model=CheckInContextCandidateResponse,
+    responses=error_responses,
+)
+async def extract_weekly_checkin_context_candidate(
+    checkin_id: UUID,
+    payload: CheckInContextExtractionRequest,
+    access_token: Annotated[str, Depends(get_access_token)],
+    _: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[CheckInService, Depends(get_checkin_service)],
+) -> CheckInContextCandidateResponse:
+    """Extract an inert candidate and optional clarifying questions."""
+    try:
+        return await service.extract_context_candidate(
+            access_token,
+            checkin_id,
+            payload,
+        )
     except Exception as error:
         _raise_public_error(error)
 

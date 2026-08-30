@@ -14,6 +14,7 @@ from app.modules.onboarding.schemas import (
     AthleteProfileUpdate,
     CalculatedZoneSubmission,
     FallbackZoneSubmission,
+    GoalPlanningOptionResponse,
     ManualZoneSubmission,
     OnboardingCompleteResponse,
     OnboardingStateResponse,
@@ -50,6 +51,48 @@ class OnboardingService:
 
     def __init__(self, repository: OnboardingRepository) -> None:
         self._repository = repository
+
+    @staticmethod
+    def goal_planning_options() -> tuple[GoalPlanningOptionResponse, ...]:
+        """Expose only reviewed planning capability; unsupported modes fail closed."""
+        return (
+            GoalPlanningOptionResponse(
+                goal_kind="race_event",
+                goal_family="race_event",
+                label="Wedstrijd of evenement",
+                availability="available",
+                requires_target_date=True,
+                cycle_anchor="race_date",
+                unavailable_reason=None,
+            ),
+            GoalPlanningOptionResponse(
+                goal_kind="personal_goal",
+                goal_family="general_fitness",
+                label="Algemene fitheid",
+                availability="coming_later",
+                requires_target_date=False,
+                cycle_anchor="cycle_week_1",
+                unavailable_reason="deterministic_rules_not_approved",
+            ),
+            GoalPlanningOptionResponse(
+                goal_kind="personal_goal",
+                goal_family="weight_loss",
+                label="Gewichtsverlies",
+                availability="coming_later",
+                requires_target_date=False,
+                cycle_anchor="cycle_week_1",
+                unavailable_reason="deterministic_rules_not_approved",
+            ),
+            GoalPlanningOptionResponse(
+                goal_kind="personal_goal",
+                goal_family="muscle_gain",
+                label="Spieropbouw",
+                availability="coming_later",
+                requires_target_date=False,
+                cycle_anchor="cycle_week_1",
+                unavailable_reason="deterministic_rules_not_approved",
+            ),
+        )
 
     @staticmethod
     def _profile(row: JsonObject | None) -> AthleteProfileResponse | None:
@@ -465,6 +508,7 @@ class OnboardingService:
             raise OnboardingDomainError(str(error)) from error
         fingerprint_source = {
             "discipline": discipline.value,
+            "source_quality": submission.source_quality,
             "zone_model_version": ZONE_MODEL_VERSION.value,
             "metric_profiles": metric_profiles,
         }
@@ -477,8 +521,12 @@ class OnboardingService:
         ).hexdigest()
         return {
             "discipline": discipline.value,
-            "source_method": "athlete_entered",
-            "source_quality": "athlete_entered",
+            "source_method": (
+                "physician_or_lab_reported"
+                if submission.source_quality == "measured_lab"
+                else "athlete_entered"
+            ),
+            "source_quality": submission.source_quality,
             "metric_profiles": metric_profiles,
             "input_fingerprint": fingerprint,
             "calibration_evaluation_id": None,

@@ -16,7 +16,12 @@ from .repository import (
     ActivityRepositoryNotFoundError,
     ActivityRepositoryUnavailableError,
 )
-from .schemas import ActivityResponse, ActivityRpeSubmission, ActivitySummaryInput
+from .schemas import (
+    ActivityMatchConfirmation,
+    ActivityResponse,
+    ActivityRpeSubmission,
+    ActivitySummaryInput,
+)
 from .service import ActivityDomainError, ActivityService
 
 router = APIRouter(tags=["activities"])
@@ -166,5 +171,23 @@ async def submit_activity_rpe(
 ) -> ActivityResponse:
     try:
         return await service.submit_rpe(identity.user_id, activity_id, submission)
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.put(
+    "/activities/{activity_id}/planned-workout-match",
+    response_model=ActivityResponse,
+    responses=error_responses,
+)
+async def confirm_activity_planned_workout_match(
+    activity_id: UUID,
+    confirmation: ActivityMatchConfirmation,
+    access_token: Annotated[str, Depends(get_access_token)],
+    _: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[ActivityService, Depends(get_activity_service)],
+) -> ActivityResponse:
+    try:
+        return await service.confirm_match(access_token, activity_id, confirmation)
     except Exception as error:
         _raise_public_error(error)

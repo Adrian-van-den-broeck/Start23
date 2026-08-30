@@ -5,7 +5,8 @@
 This document defines the client and integration API surface. Foundation,
 identity, Phase 4 onboarding, the Phase 5 workout catalog, Phase 6 weekly
 planning/calendar, and the Phase 7 canonical activity/RPE loop are implemented
-locally. Later domain endpoint shapes remain proposals subject to the open
+locally. Phase 12 adds a TSS-free, fail-closed goal capability contract; later
+non-race mutation and planning shapes remain proposals subject to the open
 decisions listed below.
 
 Related documents:
@@ -72,11 +73,24 @@ Implemented Phase 4 operations:
 | `POST /api/v1/change-proposals/{proposal_id}/approve` | Atomically apply an owned, stale-safe zone replacement |
 | `POST /api/v1/change-proposals/{proposal_id}/reject` | Reject an owned zone replacement |
 
+Implemented Phase 12 operation:
+
+| Operation | Purpose |
+|---|---|
+| `GET /api/v1/onboarding/goal-options` | Distinguish available dated race/event planning from personal-goal families that are explicitly coming later |
+
+The Phase 12 catalog is authenticated and contains only public capability
+metadata. `race_event` is date-required and race-date anchored. General
+fitness, weight loss, and muscle gain are cycle-week-1 modes but remain
+`coming_later` with `deterministic_rules_not_approved`; there is no non-race
+write or proposal endpoint. `POST /api/v1/me/goals` continues to accept only
+the strict race-goal schema and rejects a supplied non-race `goal_type`.
+
 Implemented Phase 5 operation:
 
 | Operation | Purpose |
 |---|---|
-| `GET /api/v1/workout-catalog` | Return the latest reviewed template versions with segments, tags, zone requirements, and no internal load |
+| `GET /api/v1/workout-catalog` | Return reviewed templates; each segment has exactly one `zone_target` or `protocol_target`, and no internal load |
 
 All `/v1/...` domain paths retained in the proposal tables below are historical
 shorthand and resolve under the authoritative `/api/v1/...` base path when
@@ -176,6 +190,9 @@ realized or matched planned TSS.
 | `GET /v1/integrations/polar/oauth/callback` | Complete provider OAuth | Server-side code exchange, user registration, and token handling |
 | `GET /v1/integrations/polar` | Read connection metadata | Owner-scoped; no token/provider secret |
 | `DELETE /v1/integrations/polar` | Disconnect and revoke | Provider deregistration precedes local token removal |
+| `POST /v1/integrations/polar/imports` | Import exactly 7, 14, or 30 days | 14 days is the default; UUID idempotency key required |
+| `GET /v1/integrations/polar/imports` | List owned imports | Includes bounded retry state; no credentials or TSS |
+| `POST /v1/integrations/polar/imports/{import_id}/retry` | Explicitly retry an owned failed import | Only while attempts remain; revoked credentials require OAuth instead |
 
 `POST /v1/onboarding/complete` should return public onboarding state and, when
 enough data exists, a reference to an initial pending plan proposal.
@@ -193,6 +210,8 @@ added to the completion response.
 | `GET /v1/weekly-plans/{plan_id}/deck` | Get eligible workout cards | Expected revision and exact selected IDs drive authoritative recalculation |
 | `POST /v1/weekly-plans/{plan_id}/schedule-proposals` | Auto-schedule selected workouts | Returns pending proposal |
 | `POST /v1/weekly-plans/{plan_id}/validate` | Validate a draft or explicit user layout | Returns qualitative warnings |
+| `GET /v1/weekly-plans/{plan_id}/pending-workouts/{workout_id}/alternatives` | Read valid replacement/removal options | Exact pending revision; server-authoritative recomputation |
+| `POST /v1/weekly-plans/{plan_id}/pending-workouts/{workout_id}/edit-proposals` | Replace or remove one pending workout | Exact proposal/revision preconditions; creates a new pending revision |
 | `PATCH /v1/planned-workouts/{workout_id}` | Explicit athlete schedule edit | Applies a new active revision; returns soft warnings |
 | `GET /v1/calendar?from=...&to=...` | Read public workouts and intentional rest days | Athlete timezone; no private load |
 
@@ -203,8 +222,11 @@ Phase 6 consolidates explicit template selection into the
 `schedule-proposals` request instead of persisting a separate mutable draft
 through `PUT /selections`.
 
-Layout validation submits the expected plan revision plus only owned workout
-IDs and proposed timestamps. Discipline and intensity are read from the
+Phase 10 proposal input contains either non-empty `available_dates` or the
+explicit `reuse_previous_week=true` action, never both. Plans and calendars
+return `scheduled_date`, not a planned instant or training hour. Layout
+validation submits the expected plan revision plus only owned workout IDs and
+proposed dates. Discipline and intensity are read from the
 immutable server snapshot; client-supplied classifications are rejected.
 
 ## UC-03: activity execution and feedback
@@ -216,12 +238,14 @@ immutable server snapshot; client-supplied classifications are rejected.
 | `GET /v1/activities/{activity_id}` | Read activity summary | No realized TSS |
 | `GET /v1/activities/pending-rpe` | List completed activities awaiting RPE | Does not block unrelated reads by default |
 | `PUT /v1/activities/{activity_id}/rpe` | Record or correct RPE from 1 through 10 | Correction is audited only during the activity's athlete-local week; exact retry is idempotent |
+| `PUT /v1/activities/{activity_id}/planned-workout-match` | Confirm one suggested planned-workout link | Explicit athlete action; owner, discipline and open match state are checked server-side |
 
-Phase 9 adds `POST/GET /v1/integrations/polar/imports` and the signed
+Phase 9 adds the Polar import/retry operations above and the signed
 `POST /v1/webhooks/polar` callback. Imported summaries are validated as the
 same `ActivitySummaryInput` and persisted in the existing canonical activity
 tables. Available raw FIT files are stored separately and never become a
-second physiological calculation path.
+second physiological calculation path. Import never automatically links a
+planned workout; a UI suggestion is inert until the athlete confirms it.
 
 After an activity is processed, the service may create a pending correction
 proposal. The activity response can link to the proposal and include a
@@ -233,6 +257,7 @@ qualitative explanation, but cannot disclose internal TSS values.
 |---|---|---|
 | `POST /v1/checkins` | Start or resume the athlete's weekly check-in | One open check-in per week |
 | `GET /v1/checkins/{checkin_id}` | Resume owned check-in state | Owner-scoped; source/expiry included |
+| `POST /v1/checkins/{checkin_id}/context-candidates` | Extract an inert structured candidate and clarifying questions | Bounded free text; no persistence, confirmation, plan, or zone mutation |
 | `PUT /v1/checkins/{checkin_id}/context` | Submit structured availability, fatigue, and injuries | Preferred phase-one path |
 | `POST /v1/checkins/{checkin_id}/context-confirmation` | Confirm or correct candidate context | Required before critical effects |
 | `POST /v1/checkins/{checkin_id}/plan-proposals` | Generate next plan from confirmed context | Deterministic engine |
@@ -240,10 +265,12 @@ qualitative explanation, but cannot disclose internal TSS values.
 | `GET /v1/planned-external-activities` | List planned outside sport and completion state | Actual duration/RPE are canonical activity fields |
 | `POST /v1/me/goals/{goal_id}/achievement` | Explicitly enter achieved-goal maintenance | No automatic goal inference |
 
-Phase 8 uses only the structured form and has no external AI dependency. A
-later LLM output still cannot represent confirmation or approval. Both actions
-must be authenticated and unambiguously linked to exact context/proposal
-revisions.
+Phase 10 optionally uses a schema-constrained provider to assist filling the
+Phase 8 structured form. Its result is ephemeral and cannot represent
+confirmation or approval. A possible injury mention is never translated into
+a restriction without the athlete's explicit structured choice. Confirmation
+and approval must be authenticated and unambiguously linked to exact
+context/proposal revisions.
 
 ## Phase 8.5: zone setup and calibration
 
@@ -269,6 +296,32 @@ requests evaluation. Until planner eligibility and load treatment are
 approved, standalone protocol execution omits `planned_workout_id` instead of
 fabricating a normal planned workout.
 
+## Phase 11: discipline profile and test scheduling
+
+| Operation | Purpose | Critical notes |
+|---|---|---|
+| `GET /v1/me/zone-profile` | Read current, pending, and immutable prior versions per discipline | TSS-free; calibration values remain hidden until the reviewed Week-2 gate permits a complete proposal |
+| `POST /v1/calibration/test-assignments` | Create a standalone or weekly-plan test proposal on an athlete-local date | Standalone supports all reviewed field tests; plan integration is fail-closed for distance-only swim CSS |
+| `POST /v1/calibration/test-assignments/{proposal_id}/approve` | Confirm a standalone test date | Exact assignment revision required |
+| `POST /v1/calibration/test-assignments/{proposal_id}/reject` | Reject a standalone test date | Does not schedule or change a plan |
+
+An integrated run/bike request creates a normal pending plan-revision proposal,
+fixes the selected test template to the exact requested date, and returns that
+proposal with the test assignment. The athlete uses the existing plan approval
+operation; applying or rejecting the plan synchronizes the test assignment.
+The route never prescribes an hour.
+
+`PUT /v1/activities/{activity_id}/rpe` additionally accepts optional
+`average_heart_rate_bpm`. It is required when the owned planned-workout snapshot
+contains an RPE target marked `heart_rate_observation_required`. The backend
+stores bpm as activity telemetry before completing RPE; it does not derive a
+threshold, zone, or plan mutation from that observation.
+
+Known-value setup and calculated-zone submission accept `source_quality` as
+`athlete_entered` or `measured_lab`. Measured provenance is persisted only by
+a narrow service-only calculated-profile RPC and still creates a pending zone
+proposal. The client cannot directly label a stored row or activate it.
+
 ## UC-05: zone evaluation
 
 The trigger is an internal scheduled command using the same application
@@ -278,8 +331,8 @@ Client operations:
 
 | Operation | Purpose | Critical notes |
 |---|---|---|
-| `GET /v1/change-proposals?kind=zone_update` | List pending zone revisions | Public explanation only |
-| `GET /v1/change-proposals?kind=validation_test` | List pending test-scheduling proposals | No automatic calendar mutation |
+| `GET /v1/change-proposals` | List typed pending zone revisions | Filter by `state`; the profile projection supplies discipline detail |
+| `GET /v1/change-proposals` | List typed zone, plan, and standalone validation-test proposals | Optional state filter; no automatic calendar mutation |
 | Proposal approve/reject operations | Decide the proposal | Test scheduling and a calculated zone revision require separate approvals |
 
 ## Proposal operations
@@ -336,7 +389,7 @@ Direct user schedule edits use a request-body revision precondition:
 ```json
 {
   "expected_revision": 4,
-  "scheduled_at": "2026-08-05T07:00:00+02:00"
+  "scheduled_date": "2026-08-05"
 }
 ```
 

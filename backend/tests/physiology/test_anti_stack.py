@@ -34,8 +34,6 @@ def _workout(
     ("discipline", "required_hours"),
     [
         (Discipline.RUN, 72),
-        (Discipline.BIKE, 48),
-        (Discipline.SWIM, 48),
     ],
 )
 def test_exact_anti_stack_boundary_is_allowed(
@@ -61,8 +59,6 @@ def test_exact_anti_stack_boundary_is_allowed(
     ("discipline", "required_hours"),
     [
         (Discipline.RUN, 72),
-        (Discipline.BIKE, 48),
-        (Discipline.SWIM, 48),
     ],
 )
 def test_one_minute_inside_anti_stack_boundary_is_a_violation(
@@ -107,6 +103,34 @@ def test_low_intensity_and_cross_discipline_workouts_do_not_stack() -> None:
     assert result == ()
 
 
+@pytest.mark.parametrize("discipline", [Discipline.BIKE, Discipline.SWIM])
+def test_48_hour_rule_requires_two_complete_local_rest_dates(
+    discipline: Discipline,
+) -> None:
+    amsterdam = ZoneInfo("Europe/Amsterdam")
+    wednesday = datetime(2026, 8, 5, 12, tzinfo=amsterdam)
+    friday = datetime(2026, 8, 7, 12, tzinfo=amsterdam)
+    saturday = datetime(2026, 8, 8, 12, tzinfo=amsterdam)
+
+    too_early = find_anti_stack_violations(
+        (
+            _workout("first", discipline, wednesday),
+            _workout("second", discipline, friday),
+        )
+    )
+    allowed = find_anti_stack_violations(
+        (
+            _workout("first", discipline, wednesday),
+            _workout("second", discipline, saturday),
+        )
+    )
+
+    assert len(too_early) == 1
+    assert too_early[0].required_complete_rest_dates == 2
+    assert too_early[0].actual_complete_rest_dates == 1
+    assert allowed == ()
+
+
 def test_brick_participates_in_each_of_its_disciplines() -> None:
     start = datetime(2026, 1, 1, 8, tzinfo=timezone.utc)
     brick = _workout(
@@ -123,14 +147,15 @@ def test_brick_participates_in_each_of_its_disciplines() -> None:
     )
 
     assert [(item.discipline, item.later_workout_id) for item in result] == [
-        (Discipline.RUN, "run")
+        (Discipline.RUN, "run"),
+        (Discipline.BIKE, "bike"),
     ]
 
 
-def test_absolute_instants_prevent_dst_from_changing_elapsed_spacing() -> None:
+def test_spring_dst_does_not_shorten_calendar_date_spacing() -> None:
     amsterdam = ZoneInfo("Europe/Amsterdam")
     first = datetime(2026, 3, 28, 10, tzinfo=amsterdam)
-    second = datetime(2026, 3, 30, 10, tzinfo=amsterdam)
+    second = datetime(2026, 3, 31, 10, tzinfo=amsterdam)
 
     result = find_anti_stack_violations(
         (
@@ -139,11 +164,13 @@ def test_absolute_instants_prevent_dst_from_changing_elapsed_spacing() -> None:
         )
     )
 
-    assert len(result) == 1
-    assert result[0].actual_interval == timedelta(hours=47)
+    assert result == ()
+    assert second.astimezone(timezone.utc) - first.astimezone(
+        timezone.utc
+    ) == timedelta(hours=71)
 
 
-def test_fall_dst_transition_uses_49_elapsed_hours() -> None:
+def test_fall_dst_does_not_replace_two_complete_rest_dates() -> None:
     amsterdam = ZoneInfo("Europe/Amsterdam")
     first = datetime(2026, 10, 24, 10, tzinfo=amsterdam)
     second = datetime(2026, 10, 26, 10, tzinfo=amsterdam)
@@ -155,7 +182,8 @@ def test_fall_dst_transition_uses_49_elapsed_hours() -> None:
         )
     )
 
-    assert result == ()
+    assert len(result) == 1
+    assert result[0].actual_complete_rest_dates == 1
     assert second.astimezone(timezone.utc) - first.astimezone(
         timezone.utc
     ) == timedelta(hours=49)

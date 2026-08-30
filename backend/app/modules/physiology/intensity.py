@@ -26,10 +26,19 @@ class IntensitySegment:
     duration: DurationMinutes
     zone: TrainingZone | None = None
     is_swim_technique: bool = False
+    explicit_bucket: IntensityBucket | None = None
 
     def __post_init__(self) -> None:
-        if self.zone is None and not self.is_swim_technique:
-            raise ValueError("A segment requires a zone or swim-technique flag.")
+        if self.explicit_bucket is not None and self.zone is not None:
+            raise ValueError("An explicit intensity bucket cannot imply a zone.")
+        if (
+            self.zone is None
+            and not self.is_swim_technique
+            and self.explicit_bucket is None
+        ):
+            raise ValueError(
+                "A segment requires a zone, swim-technique flag, or explicit bucket."
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -88,6 +97,8 @@ def classify_segment(
 ) -> IntensityBucket:
     """Classify canonical zones and swim technique into low/high buckets."""
     specification.require_approved(frozenset({RuleId.TIME_INTENSITY}))
+    if segment.explicit_bucket is not None:
+        return segment.explicit_bucket
     if segment.is_swim_technique:
         return IntensityBucket.LOW
     if segment.zone in {TrainingZone.ZONE_1, TrainingZone.ZONE_2}:

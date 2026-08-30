@@ -130,3 +130,26 @@ PHASE_3_RULESET_V3 = PhysiologySpecification(
     # A named qualified reviewer must be appointed before production activation.
     production_review=None,
 )
+
+
+# Phase 10 changes only BR-006's 48-hour bike/swim interpretation: it now
+# requires two complete intervening athlete-local rest dates. The separately
+# approved 72-hour run rule remains elapsed-time based. This development
+# ruleset deliberately has no production review; changing a physiological rule
+# reopens that gate.
+PHASE_10_RULESET_V1 = PhysiologySpecification(
+    version=RulesetVersion("phase-10-ruleset-1"),
+    status=SpecificationStatus.APPROVED,
+    approved_rules=PHASE_3_RULESET_V3.approved_rules,
+    evidence_references=(
+        "docs/implementation/mvp-roadmap.md#phase-10-athlete-controlled-weekly-planning-and-constrained-llm-coach",
+        "docs/requirements/physiology-formula-specification.md",
+    ),
+    applicability="Local MVP development for race-oriented adult triathletes.",
+    contraindications=PHASE_3_RULESET_V3.contraindications,
+    test_references=(
+        "backend/tests/physiology/test_anti_stack.py",
+        "backend/tests/test_planning_domain.py",
+    ),
+    production_review=None,
+)

@@ -4,4 +4,6 @@
 
 # Local runtime output and generated audit artifacts
 .runtime/
+.railway/
 tmp/
+mobile/dist/

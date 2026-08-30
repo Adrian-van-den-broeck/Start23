@@ -2,9 +2,11 @@
 
 import hashlib
 import json
+from datetime import datetime
 from decimal import Decimal
 from typing import Any
 from uuid import UUID
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from app.modules.calibration.domain import (
     CALIBRATION_RULESET_VERSION,
@@ -12,12 +14,16 @@ from app.modules.calibration.domain import (
     CalibrationObservation,
     DataQuality,
     GuidanceMode,
+    NumericZoneVisibility,
     ProtocolType,
     SetupRoute,
     SteadyExecution,
     SwimRepetition,
+    TestSchedulingMode,
     evaluate_protocol,
+    numeric_zone_visibility,
     protocols_for_discipline,
+    validate_test_schedule,
 )
 from app.modules.calibration.repository import CalibrationRepository, JsonObject
 from app.modules.calibration.schemas import (
@@ -29,12 +35,18 @@ from app.modules.calibration.schemas import (
     CalibrationStatusResponse,
     DisciplineSetupInput,
     DisciplineSetupResponse,
+    DisciplineZoneProfileResponse,
+    FieldTestSchedulingRequest,
     FieldTestSetup,
     KnownValuesSetup,
     ProtocolSegmentResponse,
     RpeOnlySetup,
+    TestAssignmentDecisionResponse,
+    TestAssignmentResponse,
     ThresholdDecisionResponse,
     ZoneOptionResponse,
+    ZoneProfileSnapshotResponse,
+    ZoneProfileStateResponse,
 )
 from app.modules.physiology.models import Discipline, TrainingZone
 from app.modules.physiology.zones import (
@@ -569,6 +581,279 @@ class CalibrationService:
             evaluation_id,
         )
         return self._threshold_decision_response(saved)
+
+    @staticmethod
+    def _test_assignment_response(
+        row: JsonObject,
+        proposal: JsonObject | None = None,
+    ) -> TestAssignmentResponse:
+        proposal_id = row.get("proposal_id")
+        proposal_state = row.get("proposal_state")
+        if proposal is not None:
+            proposal_id = proposal.get("id")
+            proposal_state = proposal.get("state")
+        return TestAssignmentResponse.model_validate(
+            {
+                **{
+                    key: row[key]
+                    for key in TestAssignmentResponse.model_fields
+                    if key in row
+                },
+                "proposal_id": proposal_id,
+                "proposal_state": proposal_state,
+            }
+        )
+
+    async def schedule_standalone_test(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+        request: FieldTestSchedulingRequest,
+    ) -> TestAssignmentResponse:
+        """Create a pending standalone test after athlete-local validation."""
+        if request.scheduling_mode is not TestSchedulingMode.STANDALONE:
+            raise CalibrationDomainError("This operation requires a standalone test.")
+        timezone_name = await self._repository.fetch_athlete_timezone(
+            access_token,
+            athlete_id,
+        )
+        try:
+            athlete_today = datetime.now(ZoneInfo(timezone_name)).date()
+        except ZoneInfoNotFoundError as error:
+            raise CalibrationDomainError("The athlete timezone is invalid.") from error
+        try:
+            validate_test_schedule(
+                protocol_id=request.protocol_id,
+                discipline=request.discipline,
+                scheduling_mode=request.scheduling_mode,
+                scheduled_date=request.scheduled_date,
+                athlete_today=athlete_today,
+            )
+        except ValueError as error:
+            raise CalibrationDomainError(str(error)) from error
+        row = await self._repository.create_test_assignment(
+            access_token,
+            {
+                "discipline": request.discipline.value,
+                "protocol_id": request.protocol_id,
+                "scheduling_mode": request.scheduling_mode.value,
+                "scheduled_date": request.scheduled_date.isoformat(),
+            },
+        )
+        return self._test_assignment_response(row)
+
+    async def save_integrated_test(
+        self,
+        access_token: str,
+        request: FieldTestSchedulingRequest,
+        *,
+        target_plan_revision_id: UUID,
+        plan_proposal_id: UUID,
+    ) -> TestAssignmentResponse:
+        """Attach a test assignment to an already-pending exact plan revision."""
+        if (
+            request.scheduling_mode is not TestSchedulingMode.WEEKLY_PLAN
+            or request.plan_id is None
+        ):
+            raise CalibrationDomainError("This operation requires an integrated test.")
+        row = await self._repository.save_integrated_test_assignment(
+            access_token,
+            {
+                "discipline": request.discipline.value,
+                "protocol_id": request.protocol_id,
+                "scheduling_mode": request.scheduling_mode.value,
+                "scheduled_date": request.scheduled_date.isoformat(),
+                "plan_id": str(request.plan_id),
+                "target_plan_revision_id": str(target_plan_revision_id),
+                "plan_proposal_id": str(plan_proposal_id),
+            },
+        )
+        return self._test_assignment_response(row)
+
+    async def approve_test_assignment(
+        self,
+        access_token: str,
+        proposal_id: UUID,
+        expected_revision: int,
+    ) -> TestAssignmentDecisionResponse:
+        row = await self._repository.approve_test_assignment(
+            access_token,
+            proposal_id,
+            expected_revision,
+        )
+        return TestAssignmentDecisionResponse.model_validate(row)
+
+    async def reject_test_assignment(
+        self,
+        access_token: str,
+        proposal_id: UUID,
+    ) -> TestAssignmentDecisionResponse:
+        row = await self._repository.reject_test_assignment(
+            access_token,
+            proposal_id,
+        )
+        return TestAssignmentDecisionResponse.model_validate(row)
+
+    @staticmethod
+    def _profile_snapshot(
+        row: JsonObject,
+        *,
+        metric: JsonObject | None,
+        boundaries: list[JsonObject],
+        proposal: JsonObject | None,
+        values_hidden: bool,
+    ) -> ZoneProfileSnapshotResponse:
+        metric_profiles = (
+            [] if values_hidden else list(row.get("metric_profiles") or [])
+        )
+        public_metric = None
+        if not values_hidden and metric is not None:
+            public_metric = {
+                "metric_kind": metric["metric_kind"],
+                "value": metric["value"],
+            }
+        public_boundaries = (
+            []
+            if values_hidden or metric_profiles
+            else [
+                {
+                    "zone_number": boundary["zone_number"],
+                    "lower_value": boundary.get("lower_value"),
+                    "upper_value": boundary.get("upper_value"),
+                }
+                for boundary in sorted(
+                    boundaries,
+                    key=lambda value: int(value["zone_number"]),
+                )
+            ]
+        )
+        return ZoneProfileSnapshotResponse.model_validate(
+            {
+                "id": row["id"],
+                "discipline": row["discipline"],
+                "version": row["version"],
+                "setup_method": row["setup_method"],
+                "status": row["status"],
+                "source_method": row.get("source_method") or row["setup_method"],
+                "source_quality": row.get("source_quality") or "unknown",
+                "review_status": row.get("review_status") or "unreviewed",
+                "reviewer_id": row.get("reviewer_id"),
+                "reviewed_at": row.get("reviewed_at"),
+                "effective_from": row.get("effective_from"),
+                "zone_model_version": row.get("zone_model_version"),
+                "evidence_version": row.get("evidence_version"),
+                "created_at": row["created_at"],
+                "values_hidden": values_hidden,
+                "metric_profiles": metric_profiles,
+                "metric": public_metric,
+                "boundaries": public_boundaries,
+                "proposal_id": proposal.get("id") if proposal else None,
+                "base_zone_profile_id": (
+                    proposal.get("base_zone_profile_id") if proposal else None
+                ),
+            }
+        )
+
+    async def zone_profile_state(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> ZoneProfileStateResponse:
+        """Build the immutable three-discipline profile projection."""
+        raw = await self._repository.fetch_zone_profile_state(access_token, athlete_id)
+        setup_by_discipline = {
+            Discipline(str(row["discipline"])): row for row in raw.get("setups", [])
+        }
+        profiles_by_discipline: dict[Discipline, list[JsonObject]] = {
+            discipline: [] for discipline in Discipline
+        }
+        for row in raw.get("zone_profiles", []):
+            profiles_by_discipline[Discipline(str(row["discipline"]))].append(row)
+        metric_by_profile = {
+            str(row["zone_profile_id"]): row for row in raw.get("zone_metrics", [])
+        }
+        boundaries_by_profile: dict[str, list[JsonObject]] = {}
+        for row in raw.get("zone_boundaries", []):
+            boundaries_by_profile.setdefault(str(row["zone_profile_id"]), []).append(
+                row
+            )
+        zone_proposal_by_profile = {
+            str(row["target_zone_profile_id"]): row
+            for row in raw.get("zone_proposals", [])
+            if row.get("target_zone_profile_id") is not None
+        }
+        test_proposals_by_assignment = {
+            str(row["target_test_assignment_id"]): row
+            for row in raw.get("test_proposals", [])
+            if row.get("target_test_assignment_id") is not None
+        }
+        test_proposals_by_id = {
+            str(row["id"]): row for row in raw.get("test_proposals", [])
+        }
+        assignments_by_discipline: dict[Discipline, list[TestAssignmentResponse]] = {
+            discipline: [] for discipline in Discipline
+        }
+        for row in raw.get("test_assignments", []):
+            proposal = test_proposals_by_assignment.get(str(row["id"]))
+            if proposal is None and row.get("plan_proposal_id") is not None:
+                proposal = test_proposals_by_id.get(str(row["plan_proposal_id"]))
+            assignments_by_discipline[Discipline(str(row["discipline"]))].append(
+                self._test_assignment_response(row, proposal)
+            )
+
+        discipline_states: list[DisciplineZoneProfileResponse] = []
+        for discipline in Discipline:
+            setup_row = setup_by_discipline.get(discipline)
+            setup = (
+                self._discipline_setup_response(setup_row)
+                if setup_row is not None
+                else None
+            )
+            rows = profiles_by_discipline[discipline]
+            active_row = next((row for row in rows if row["status"] == "active"), None)
+            pending_row = next(
+                (row for row in rows if row["status"] == "pending"),
+                None,
+            )
+            route = setup.setup_route if setup is not None else SetupRoute.RPE_ONLY
+            visibility = numeric_zone_visibility(
+                setup_route=route,
+                has_active_profile=active_row is not None,
+                # No reviewed Week-2 minimum-sample/outlier thresholds exist yet.
+                week_2_evaluation_completed=False,
+                has_pending_complete_proposal=pending_row is not None,
+            )
+
+            def snapshot(row: JsonObject) -> ZoneProfileSnapshotResponse:
+                profile_id = str(row["id"])
+                hide = row["status"] == "pending" and visibility in {
+                    NumericZoneVisibility.RPE_GUIDED,
+                    NumericZoneVisibility.WEEK_2_EVALUATION_PENDING,
+                }
+                return self._profile_snapshot(
+                    row,
+                    metric=metric_by_profile.get(profile_id),
+                    boundaries=boundaries_by_profile.get(profile_id, []),
+                    proposal=zone_proposal_by_profile.get(profile_id),
+                    values_hidden=hide,
+                )
+
+            discipline_states.append(
+                DisciplineZoneProfileResponse(
+                    discipline=discipline,
+                    setup=setup,
+                    numeric_zone_visibility=visibility,
+                    active_profile=(snapshot(active_row) if active_row else None),
+                    pending_profile=(snapshot(pending_row) if pending_row else None),
+                    prior_profiles=tuple(
+                        snapshot(row)
+                        for row in rows
+                        if row is not active_row and row is not pending_row
+                    ),
+                    test_assignments=tuple(assignments_by_discipline[discipline]),
+                )
+            )
+        return ZoneProfileStateResponse(disciplines=tuple(discipline_states))
 
     async def status(
         self,

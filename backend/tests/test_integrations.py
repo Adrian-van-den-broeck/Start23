@@ -12,11 +12,12 @@ import pytest
 
 from app.core.config import Settings
 from app.modules.integrations.polar import (
+    PolarAuthorizationError,
     PolarProviderError,
     PolarToken,
 )
 from app.modules.integrations.repository import IntegrationNotFoundError, JsonObject
-from app.modules.integrations.service import IntegrationService
+from app.modules.integrations.service import IntegrationService, retry_at
 
 _NOW = datetime(2026, 8, 17, 10, tzinfo=timezone.utc)
 _FIXTURE = Path(__file__).parent / "fixtures" / "polar" / "exercise.json"
@@ -116,6 +117,9 @@ class MemoryIntegrationRepository:
             "imported_count": 0,
             "skipped_count": 0,
             "failure_code": None,
+            "retry_count": 0,
+            "max_attempts": 4,
+            "next_attempt_at": None,
             "created_at": _NOW.isoformat(),
             "completed_at": None,
         }
@@ -135,6 +139,29 @@ class MemoryIntegrationRepository:
     async def list_imports(self, access_token: str) -> tuple[JsonObject, ...]:
         assert access_token == "athlete-token"
         return tuple(dict(row) for row in self.imports.values())
+
+    async def prepare_import_retry(
+        self, athlete_id: UUID, import_id: UUID
+    ) -> JsonObject:
+        row = self.imports[import_id]
+        row.update(
+            status="running",
+            failure_code=None,
+            completed_at=None,
+            next_attempt_at=None,
+            retry_count=int(row.get("retry_count", 0)) + 1,
+        )
+        return dict(row)
+
+    async def claim_due_import_retries(
+        self, limit: int
+    ) -> tuple[tuple[UUID, UUID], ...]:
+        return ()
+
+    async def get_import_retry_context(
+        self, athlete_id: UUID, import_id: UUID
+    ) -> JsonObject:
+        return dict(self.imports[import_id])
 
     async def import_activity(
         self,
@@ -197,6 +224,7 @@ class MemoryIntegrationRepository:
 class FakePolarProvider:
     def __init__(self) -> None:
         self.fail_list = False
+        self.fail_authorization = False
         self.fail_revoke = False
         self.revoked = False
 
@@ -213,6 +241,8 @@ class FakePolarProvider:
         return "475"
 
     async def list_exercises(self, token: str) -> tuple[JsonObject, ...]:
+        if self.fail_authorization:
+            raise PolarAuthorizationError
         if self.fail_list:
             raise PolarProviderError
         return (_exercise(),)
@@ -334,7 +364,61 @@ def test_provider_failure_marks_import_failed_without_activity_corruption() -> N
         )
 
     assert not repository.activities
-    assert next(iter(repository.imports.values()))["status"] == "failed"
+    failed = next(iter(repository.imports.values()))
+    assert failed["status"] == "failed"
+    assert failed["next_attempt_at"] is not None
+
+
+def test_retry_schedule_is_bounded_and_stops_after_four_total_attempts() -> None:
+    now = datetime(2026, 8, 26, 12, tzinfo=timezone.utc)
+
+    assert retry_at(retry_count=0, max_attempts=4, now=now) == now + timedelta(
+        minutes=5
+    )
+    assert retry_at(retry_count=1, max_attempts=4, now=now) == now + timedelta(
+        minutes=10
+    )
+    assert retry_at(retry_count=2, max_attempts=4, now=now) == now + timedelta(
+        minutes=20
+    )
+    assert retry_at(retry_count=3, max_attempts=4, now=now) is None
+
+
+def test_revoked_provider_token_requires_fresh_oauth_without_retry() -> None:
+    service, repository, provider = _service()
+    _connect(service, repository)
+    provider.fail_authorization = True
+
+    with pytest.raises(PolarAuthorizationError):
+        asyncio.run(
+            service.import_historical(
+                repository.athlete_id,
+                uuid4(),
+                14,
+                today=date(2026, 8, 26),
+            )
+        )
+
+    failed = next(iter(repository.imports.values()))
+    assert repository.connection_status == "reconnect_required"
+    assert not repository.connected
+    assert failed["failure_code"] == "reconnect_required"
+    assert failed["next_attempt_at"] is None
+
+
+def test_historical_import_accepts_only_the_three_product_choices() -> None:
+    service, repository, _ = _service()
+    _connect(service, repository)
+
+    with pytest.raises(ValueError, match="7, 14 or 30"):
+        asyncio.run(
+            service.import_historical(
+                repository.athlete_id,
+                uuid4(),
+                21,
+                today=date(2026, 8, 26),
+            )
+        )
 
 
 def test_identical_signed_webhook_is_recorded_once_and_not_reprocessed() -> None:

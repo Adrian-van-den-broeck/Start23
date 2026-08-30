@@ -1,7 +1,7 @@
 """Supabase persistence boundary for weekly planning."""
 
 from collections.abc import Mapping
-from datetime import date, datetime
+from datetime import date
 from typing import Any, Protocol
 from uuid import UUID
 
@@ -52,6 +52,21 @@ class PlanningRepository(Protocol):
         plan_id: UUID,
     ) -> JsonObject:
         """Fetch private generation context for a follow-up revision."""
+
+    async def fetch_plan_revision_context(
+        self,
+        athlete_id: UUID,
+        plan_id: UUID,
+        revision: int,
+    ) -> JsonObject:
+        """Fetch private context for one exact pending revision."""
+
+    async def fetch_previous_available_dates(
+        self,
+        athlete_id: UUID,
+        week_start: date,
+    ) -> tuple[date, ...]:
+        """Copy the prior active week's availability only on explicit request."""
 
     async def fetch_load_history(
         self,
@@ -117,7 +132,7 @@ class PlanningRepository(Protocol):
         athlete_id: UUID,
         workout_id: UUID,
         expected_revision: int,
-        scheduled_at: datetime,
+        scheduled_date: date,
         warnings: list[JsonObject],
     ) -> JsonObject:
         """Apply one explicit owner move as a new active revision."""
@@ -132,16 +147,16 @@ class PlanningRepository(Protocol):
     async def fetch_calendar(
         self,
         access_token: str,
-        from_datetime: datetime,
-        to_datetime: datetime,
+        from_date: date,
+        to_date: date,
     ) -> tuple[JsonObject, ...]:
         """Fetch owner-visible active calendar workout snapshots."""
 
     async def fetch_calendar_rest_days(
         self,
         access_token: str,
-        from_datetime: datetime,
-        to_datetime: datetime,
+        from_date: date,
+        to_date: date,
     ) -> tuple[JsonObject, ...]:
         """Fetch intentionally empty dates from owned active plans."""
 
@@ -286,6 +301,44 @@ class SupabasePlanningRepository:
             raise PlanningRepositoryUnavailableError
         return dict(payload)
 
+    async def fetch_plan_revision_context(
+        self,
+        athlete_id: UUID,
+        plan_id: UUID,
+        revision: int,
+    ) -> JsonObject:
+        payload = await self._request(
+            "POST",
+            "rpc/get_plan_revision_context_for_planning",
+            service=True,
+            json={
+                "p_athlete_id": str(athlete_id),
+                "p_plan_id": str(plan_id),
+                "p_revision": revision,
+            },
+        )
+        if not isinstance(payload, dict):
+            raise PlanningRepositoryNotFoundError
+        return dict(payload)
+
+    async def fetch_previous_available_dates(
+        self,
+        athlete_id: UUID,
+        week_start: date,
+    ) -> tuple[date, ...]:
+        payload = await self._request(
+            "POST",
+            "rpc/get_previous_week_available_dates",
+            service=True,
+            json={
+                "p_athlete_id": str(athlete_id),
+                "p_week_start": week_start.isoformat(),
+            },
+        )
+        if not isinstance(payload, list):
+            raise PlanningRepositoryUnavailableError
+        return tuple(date.fromisoformat(str(value)) for value in payload)
+
     async def fetch_load_history(
         self,
         athlete_id: UUID,
@@ -375,7 +428,7 @@ class SupabasePlanningRepository:
                     "id,kind,state,reason_codes,public_explanation,ruleset_version,"
                     "created_at,decided_at,applied_at,target_plan_revision_id,"
                     "decision_actor,base_plan_revision,target_zone_profile_id,"
-                    "base_zone_profile_id"
+                    "base_zone_profile_id,target_test_assignment_id"
                 ),
                 "id": f"eq.{proposal_id}",
                 "limit": "1",
@@ -395,7 +448,7 @@ class SupabasePlanningRepository:
                 "id,kind,state,reason_codes,public_explanation,ruleset_version,"
                 "created_at,decided_at,applied_at,target_plan_revision_id,"
                 "decision_actor,base_plan_revision,target_zone_profile_id,"
-                "base_zone_profile_id"
+                "base_zone_profile_id,target_test_assignment_id"
             ),
             "order": "created_at.desc",
         }
@@ -450,7 +503,7 @@ class SupabasePlanningRepository:
         athlete_id: UUID,
         workout_id: UUID,
         expected_revision: int,
-        scheduled_at: datetime,
+        scheduled_date: date,
         warnings: list[JsonObject],
     ) -> JsonObject:
         payload = await self._request(
@@ -461,7 +514,7 @@ class SupabasePlanningRepository:
                 "p_athlete_id": str(athlete_id),
                 "p_workout_id": str(workout_id),
                 "p_expected_revision": expected_revision,
-                "p_scheduled_at": scheduled_at.isoformat(),
+                "p_scheduled_date": scheduled_date.isoformat(),
                 "p_warnings": warnings,
             },
         )
@@ -487,16 +540,16 @@ class SupabasePlanningRepository:
     async def fetch_calendar(
         self,
         access_token: str,
-        from_datetime: datetime,
-        to_datetime: datetime,
+        from_date: date,
+        to_date: date,
     ) -> tuple[JsonObject, ...]:
         payload = await self._request(
             "POST",
             "rpc/get_calendar",
             access_token=access_token,
             json={
-                "p_from": from_datetime.isoformat(),
-                "p_to": to_datetime.isoformat(),
+                "p_from": from_date.isoformat(),
+                "p_to": to_date.isoformat(),
             },
         )
         if not isinstance(payload, list):
@@ -506,16 +559,16 @@ class SupabasePlanningRepository:
     async def fetch_calendar_rest_days(
         self,
         access_token: str,
-        from_datetime: datetime,
-        to_datetime: datetime,
+        from_date: date,
+        to_date: date,
     ) -> tuple[JsonObject, ...]:
         payload = await self._request(
             "POST",
             "rpc/get_calendar_rest_days",
             access_token=access_token,
             json={
-                "p_from": from_datetime.isoformat(),
-                "p_to": to_datetime.isoformat(),
+                "p_from": from_date.isoformat(),
+                "p_to": to_date.isoformat(),
             },
         )
         if not isinstance(payload, list):

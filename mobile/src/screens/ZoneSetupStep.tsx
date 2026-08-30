@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  Pressable,
   StyleSheet,
   Text,
   View,
@@ -23,6 +22,7 @@ import type {
   ZoneSetupRoute,
 } from '../api/types';
 import { FormField } from '../components/FormField';
+import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
 import { colors, radius, spacing } from '../theme/tokens';
 
@@ -92,9 +92,9 @@ const routeDescriptions: Record<ZoneSetupRoute, string> = {
   field_test:
     'Voer een beoordeelde maximale veldtest uit voor een drempelschatting.',
   calibration_week:
-    'Begin met een conservatieve submaximale Week-1-kalibratie.',
+    'Train met dezelfde veilige RPE-workouts; Start23 bewaart daarnaast geschikte objectieve kalibratie-observaties.',
   rpe_only:
-    'Train voorlopig uitsluitend met de eenduidige RPE-schaal van 1 tot 10.',
+    'Train met dezelfde veilige RPE-workouts, zonder extra kalibratie-observaties.',
 };
 
 const guidanceLabels: Record<GuidanceMode, string> = {
@@ -189,6 +189,8 @@ function SaveButton({
 
 type Props = {
   accessToken: string;
+  disciplineOverride?: Discipline;
+  profileMode?: boolean;
   state: OnboardingState;
   saving: boolean;
   onSave: (
@@ -197,7 +199,14 @@ type Props = {
   ) => Promise<void>;
 };
 
-export function ZoneSetupStep({ accessToken, state, saving, onSave }: Props) {
+export function ZoneSetupStep({
+  accessToken,
+  disciplineOverride,
+  profileMode = false,
+  state,
+  saving,
+  onSave,
+}: Props) {
   const configured = useMemo(
     () =>
       new Set<Discipline>([
@@ -209,7 +218,9 @@ export function ZoneSetupStep({ accessToken, state, saving, onSave }: Props) {
     [state.discipline_setups, state.zones],
   );
   const discipline =
-    disciplines.find((candidate) => !configured.has(candidate)) ?? 'run';
+    disciplineOverride ??
+    disciplines.find((candidate) => !configured.has(candidate)) ??
+    'run';
   const availableMetrics = metricOptions[discipline];
   const [options, setOptions] = useState<ZoneSetupOption[]>([]);
   const [protocols, setProtocols] = useState<CalibrationProtocol[]>([]);
@@ -219,6 +230,9 @@ export function ZoneSetupStep({ accessToken, state, saving, onSave }: Props) {
   const [knownValues, setKnownValues] = useState<
     Partial<Record<ZoneMetricKind, string>>
   >({});
+  const [knownValueSource, setKnownValueSource] = useState<
+    'athlete_entered' | 'measured_lab'
+  >('athlete_entered');
   const [includeBoundaries, setIncludeBoundaries] = useState(false);
   const [boundaryMetric, setBoundaryMetric] = useState<ZoneMetricKind>(
     availableMetrics[0].kind,
@@ -339,6 +353,7 @@ export function ZoneSetupStep({ accessToken, state, saving, onSave }: Props) {
     void onSave(discipline, {
       setup_route: 'known_values',
       guidance_mode: guidanceForKnownValues(availableMetrics, knownValues),
+      source_quality: knownValueSource,
       thresholds,
       zone_profiles: includeBoundaries
         ? [{ metric_kind: boundaryMetric, boundaries }]
@@ -371,7 +386,9 @@ export function ZoneSetupStep({ accessToken, state, saving, onSave }: Props) {
   return (
     <View style={styles.step}>
       <View>
-        <Text style={styles.eyebrow}>Stap 4 van 5</Text>
+        <Text style={styles.eyebrow}>
+          {profileMode ? 'Profiel bijwerken' : 'Stap 4 van 5'}
+        </Text>
         <Text style={styles.title}>Instellen voor {disciplineLabels[discipline]}</Text>
         <Text style={styles.description}>
           Kies één expliciete route. Drempels, voorlopige observaties en echte
@@ -432,6 +449,18 @@ export function ZoneSetupStep({ accessToken, state, saving, onSave }: Props) {
             het geversioneerde Start23-model te gebruiken. De zones blijven
             daarna eerst een apart voorstel.
           </Text>
+          <View accessibilityRole="radiogroup" style={styles.chips}>
+            <Chip
+              label="Zelf bekende waarde"
+              onPress={() => setKnownValueSource('athlete_entered')}
+              selected={knownValueSource === 'athlete_entered'}
+            />
+            <Chip
+              label="Gemeten door arts/lab"
+              onPress={() => setKnownValueSource('measured_lab')}
+              selected={knownValueSource === 'measured_lab'}
+            />
+          </View>
           {availableMetrics.map((option) => (
             <FormField
               hint={

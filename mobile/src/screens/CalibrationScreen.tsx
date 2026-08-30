@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -35,6 +34,7 @@ import type {
   ZoneMetricKind,
 } from '../api/types';
 import { FormField } from '../components/FormField';
+import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
 import { colors, radius, spacing } from '../theme/tokens';
 
@@ -262,6 +262,7 @@ function ActionButton({
     <Pressable
       accessibilityRole="button"
       disabled={disabled || loading}
+      haptic={secondary ? undefined : 'light'}
       onPress={onPress}
       style={({ pressed }) => [
         styles.action,

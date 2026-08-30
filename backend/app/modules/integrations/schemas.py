@@ -27,7 +27,9 @@ class OAuthCallbackResponse(IntegrationPublicModel):
 class ProviderConnectionResponse(IntegrationPublicModel):
     id: UUID
     provider: Literal["polar"]
-    status: Literal["connected", "disconnected", "revoked", "error"]
+    status: Literal[
+        "connected", "disconnected", "revoked", "reconnect_required", "error"
+    ]
     connected_at: datetime
     disconnected_at: datetime | None
     last_import_at: datetime | None
@@ -36,7 +38,7 @@ class ProviderConnectionResponse(IntegrationPublicModel):
 class HistoricalImportRequest(IntegrationPublicModel):
     """Polar exposes only the post-registration rolling 30-day exercise set."""
 
-    days: int = Field(default=30, ge=1, le=30)
+    days: Literal[7, 14, 30] = 14
 
 
 class ImportRunResponse(IntegrationPublicModel):
@@ -50,6 +52,9 @@ class ImportRunResponse(IntegrationPublicModel):
     imported_count: int = Field(ge=0)
     skipped_count: int = Field(ge=0)
     failure_code: str | None
+    retry_count: int = Field(default=0, ge=0)
+    max_attempts: int = Field(default=4, ge=1, le=8)
+    next_attempt_at: datetime | None = None
     created_at: datetime
     completed_at: datetime | None
 

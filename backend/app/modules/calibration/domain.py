@@ -6,6 +6,7 @@ confirmation; submaximal calibration still cannot manufacture a threshold.
 """
 
 from dataclasses import dataclass
+from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from enum import Enum
 from typing import Final
@@ -45,6 +46,22 @@ class ProtocolType(str, Enum):
 
     FIELD_TEST = "field_test"
     SUBMAXIMAL_CALIBRATION = "submaximal_calibration"
+
+
+class TestSchedulingMode(str, Enum):
+    """Athlete-selected placement for a reviewed field test."""
+
+    STANDALONE = "standalone"
+    WEEKLY_PLAN = "weekly_plan"
+
+
+class NumericZoneVisibility(str, Enum):
+    """Why numeric zones are visible or deliberately withheld."""
+
+    VISIBLE = "visible"
+    RPE_GUIDED = "rpe_guided"
+    WEEK_2_EVALUATION_PENDING = "week_2_evaluation_pending"
+    PROPOSAL_CONFIRMATION_PENDING = "proposal_confirmation_pending"
 
 
 class ProtocolReviewStatus(str, Enum):
@@ -242,6 +259,38 @@ class ProtocolEvaluation:
     requires_athlete_confirmation: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class TestScheduleDecision:
+    """Validated date-only placement without prescribing a training hour."""
+
+    protocol_id: str
+    discipline: Discipline
+    scheduling_mode: TestSchedulingMode
+    scheduled_date: date
+
+
+def numeric_zone_visibility(
+    *,
+    setup_route: SetupRoute,
+    has_active_profile: bool,
+    week_2_evaluation_completed: bool,
+    has_pending_complete_proposal: bool,
+) -> NumericZoneVisibility:
+    """Fail closed for calibration-derived numeric profiles through Week 2."""
+
+    if has_active_profile:
+        return NumericZoneVisibility.VISIBLE
+    if setup_route is not SetupRoute.CALIBRATION_WEEK:
+        if has_pending_complete_proposal:
+            return NumericZoneVisibility.PROPOSAL_CONFIRMATION_PENDING
+        return NumericZoneVisibility.RPE_GUIDED
+    if not week_2_evaluation_completed:
+        return NumericZoneVisibility.WEEK_2_EVALUATION_PENDING
+    if has_pending_complete_proposal:
+        return NumericZoneVisibility.PROPOSAL_CONFIRMATION_PENDING
+    return NumericZoneVisibility.RPE_GUIDED
+
+
 def _segment(
     order: int,
     segment_id: str,
@@ -395,6 +444,45 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         ),
     ),
 }
+
+
+def validate_test_schedule(
+    *,
+    protocol_id: str,
+    discipline: Discipline,
+    scheduling_mode: TestSchedulingMode,
+    scheduled_date: date,
+    athlete_today: date,
+    plan_week_start: date | None = None,
+) -> TestScheduleDecision:
+    """Validate a reviewed field-test choice against athlete-local dates."""
+
+    protocol = PROTOCOLS.get(protocol_id)
+    if (
+        protocol is None
+        or protocol.protocol_type is not ProtocolType.FIELD_TEST
+        or protocol.discipline is not discipline
+    ):
+        raise ValueError("The field-test protocol does not match the discipline.")
+    if scheduled_date < athlete_today:
+        raise ValueError("The athlete-local test date cannot be in the past.")
+    if scheduling_mode is TestSchedulingMode.WEEKLY_PLAN:
+        if discipline is Discipline.SWIM:
+            raise ValueError(
+                "The swim test has no approved planned-duration/load treatment."
+            )
+        if plan_week_start is None or plan_week_start.weekday() != 0:
+            raise ValueError("An integrated test requires its plan week.")
+        if not plan_week_start <= scheduled_date <= plan_week_start + timedelta(days=6):
+            raise ValueError("The integrated test date must fall inside the plan week.")
+    elif plan_week_start is not None:
+        raise ValueError("A standalone test does not reference a weekly plan.")
+    return TestScheduleDecision(
+        protocol_id=protocol_id,
+        discipline=discipline,
+        scheduling_mode=scheduling_mode,
+        scheduled_date=scheduled_date,
+    )
 
 
 def protocols_for_discipline(

@@ -26,6 +26,21 @@ from .schemas import (
 )
 
 _IMPORT_NAMESPACE = UUID("f957ef4d-3b54-44d7-9d62-cbe4992a07d1")
+_RETRY_BASE_DELAY = timedelta(minutes=5)
+_RETRY_MAX_DELAY = timedelta(hours=6)
+
+
+def retry_at(*, retry_count: int, max_attempts: int, now: datetime) -> datetime | None:
+    """Return the next bounded exponential retry instant, or stop permanently."""
+    if retry_count < 0 or max_attempts < 1 or retry_count >= max_attempts:
+        raise ValueError("Invalid import retry state.")
+    if retry_count >= max_attempts - 1:
+        return None
+    delay_seconds = min(
+        _RETRY_BASE_DELAY.total_seconds() * (2**retry_count),
+        _RETRY_MAX_DELAY.total_seconds(),
+    )
+    return now.astimezone(timezone.utc) + timedelta(seconds=delay_seconds)
 
 
 class IntegrationService:
@@ -151,8 +166,8 @@ class IntegrationService:
         *,
         today: date | None = None,
     ) -> ImportRunResponse:
-        if days < 1 or days > 30:
-            raise IntegrationPayloadError("Historical import must be 1 to 30 days.")
+        if days not in {7, 14, 30}:
+            raise IntegrationPayloadError("Historical import must be 7, 14 or 30 days.")
         range_end = today or datetime.now(timezone.utc).date()
         range_start = range_end - timedelta(days=days - 1)
         row = await self._repository.start_import(
@@ -166,7 +181,23 @@ class IntegrationService:
         )
         if row.get("status") in {"completed", "failed"}:
             return self._import_response(row)
+        return await self._run_historical_import(athlete_id, row)
+
+    async def _run_historical_import(
+        self,
+        athlete_id: UUID,
+        row: JsonObject,
+    ) -> ImportRunResponse:
         import_id = UUID(str(row["id"]))
+        try:
+            range_start = date.fromisoformat(str(row["range_start"]))
+            range_end = date.fromisoformat(str(row["range_end"]))
+            retry_count = int(row.get("retry_count", 0))
+            max_attempts = int(row.get("max_attempts", 4))
+        except (TypeError, ValueError) as error:
+            raise IntegrationPayloadError(
+                "Stored historical import is invalid."
+            ) from error
         discovered = imported = skipped = 0
         try:
             credentials = await self._repository.get_credentials(athlete_id)
@@ -214,6 +245,21 @@ class IntegrationService:
                     },
                 )
             )
+        except PolarAuthorizationError:
+            await self._repository.disconnect(athlete_id, "reconnect_required")
+            await self._repository.finish_import(
+                athlete_id,
+                import_id,
+                {
+                    "status": "failed",
+                    "discovered_count": discovered,
+                    "imported_count": imported,
+                    "skipped_count": skipped,
+                    "failure_code": "reconnect_required",
+                    "next_attempt_at": None,
+                },
+            )
+            raise
         except (
             PolarProviderError,
             IntegrationRepositoryError,
@@ -221,6 +267,11 @@ class IntegrationService:
             KeyError,
             ValueError,
         ):
+            next_attempt = retry_at(
+                retry_count=retry_count,
+                max_attempts=max_attempts,
+                now=datetime.now(timezone.utc),
+            )
             await self._repository.finish_import(
                 athlete_id,
                 import_id,
@@ -230,9 +281,32 @@ class IntegrationService:
                     "imported_count": imported,
                     "skipped_count": skipped,
                     "failure_code": "provider_unavailable",
+                    "next_attempt_at": (
+                        next_attempt.isoformat() if next_attempt is not None else None
+                    ),
                 },
             )
             raise
+
+    async def retry_historical(
+        self,
+        athlete_id: UUID,
+        import_id: UUID,
+    ) -> ImportRunResponse:
+        row = await self._repository.prepare_import_retry(athlete_id, import_id)
+        return await self._run_historical_import(athlete_id, row)
+
+    async def retry_due_imports(self, *, limit: int = 20) -> int:
+        claimed = await self._repository.claim_due_import_retries(limit)
+        completed = 0
+        for athlete_id, import_id in claimed:
+            row = await self._repository.get_import_retry_context(athlete_id, import_id)
+            try:
+                await self._run_historical_import(athlete_id, row)
+            except (PolarProviderError, IntegrationRepositoryError):
+                continue
+            completed += 1
+        return completed
 
     async def receive_webhook(
         self,
@@ -278,6 +352,18 @@ class IntegrationService:
                 exercise=exercise,
             )
             await self._repository.finish_webhook(receipt_id, status="processed")
+        except PolarAuthorizationError:
+            try:
+                context = await self._repository.get_webhook_context(receipt_id)
+                await self._repository.disconnect(
+                    UUID(str(context["athlete_id"])), "reconnect_required"
+                )
+            finally:
+                await self._repository.finish_webhook(
+                    receipt_id,
+                    status="failed",
+                    failure_code="reconnect_required",
+                )
         except Exception:
             await self._repository.finish_webhook(
                 receipt_id,

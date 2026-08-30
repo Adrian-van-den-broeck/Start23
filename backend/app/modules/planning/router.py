@@ -1,6 +1,6 @@
 """Authenticated weekly-planning, deck, calendar, and proposal routes."""
 
-from datetime import datetime
+from datetime import date
 from typing import Annotated, Any, Literal, NoReturn
 from uuid import UUID
 
@@ -23,6 +23,8 @@ from .repository import (
 from .schemas import (
     CalendarResponse,
     ChangeProposalSummaryResponse,
+    PendingWorkoutAlternativesResponse,
+    PendingWorkoutEditRequest,
     PlannedWorkoutMoveRequest,
     PlanValidationRequest,
     PlanValidationResponse,
@@ -211,6 +213,59 @@ async def create_schedule_proposal(
         raise_planning_error(error)
 
 
+@router.get(
+    "/weekly-plans/{plan_id}/pending-workouts/{workout_id}/alternatives",
+    response_model=PendingWorkoutAlternativesResponse,
+    responses=error_responses,
+)
+async def get_pending_workout_alternatives(
+    plan_id: UUID,
+    workout_id: UUID,
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[PlanningService, Depends(get_planning_service)],
+    expected_revision: Annotated[int, Query(ge=1)],
+) -> PendingWorkoutAlternativesResponse:
+    """Return valid removal/replacement choices for one exact pending revision."""
+    try:
+        return await service.get_pending_workout_alternatives(
+            access_token,
+            identity.user_id,
+            plan_id,
+            workout_id,
+            expected_revision,
+        )
+    except Exception as error:
+        raise_planning_error(error)
+
+
+@router.post(
+    "/weekly-plans/{plan_id}/pending-workouts/{workout_id}/edit-proposals",
+    response_model=WeeklyPlanProposalResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses=error_responses,
+)
+async def edit_pending_workout(
+    plan_id: UUID,
+    workout_id: UUID,
+    edit: PendingWorkoutEditRequest,
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[PlanningService, Depends(get_planning_service)],
+) -> WeeklyPlanProposalResponse:
+    """Create a new pending revision after one server-authoritative edit."""
+    try:
+        return await service.edit_pending_workout(
+            access_token,
+            identity.user_id,
+            plan_id,
+            workout_id,
+            edit,
+        )
+    except Exception as error:
+        raise_planning_error(error)
+
+
 @router.post(
     "/weekly-plans/{plan_id}/validate",
     response_model=PlanValidationResponse,
@@ -263,15 +318,15 @@ async def get_calendar(
     access_token: Annotated[str, Depends(get_access_token)],
     _: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
-    from_datetime: Annotated[datetime, Query(alias="from")],
-    to_datetime: Annotated[datetime, Query(alias="to")],
+    from_date: Annotated[date, Query(alias="from")],
+    to_date: Annotated[date, Query(alias="to")],
 ) -> CalendarResponse:
     """Read active owner calendar events in a bounded timezone-aware range."""
     try:
         return await service.get_calendar(
             access_token,
-            from_datetime,
-            to_datetime,
+            from_date,
+            to_date,
         )
     except Exception as error:
         raise_planning_error(error)

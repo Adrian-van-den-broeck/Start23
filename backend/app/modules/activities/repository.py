@@ -59,6 +59,13 @@ class ActivityRepository(Protocol):
         activity_id: UUID,
     ) -> JsonObject: ...
 
+    async def save_rpe_heart_rate_observation(
+        self,
+        athlete_id: UUID,
+        activity_id: UUID,
+        average_heart_rate_bpm: int,
+    ) -> None: ...
+
     async def complete_activity_rpe(
         self,
         athlete_id: UUID,
@@ -71,6 +78,13 @@ class ActivityRepository(Protocol):
         athlete_id: UUID,
         activity_id: UUID,
         payload: JsonObject,
+    ) -> JsonObject: ...
+
+    async def confirm_planned_workout_match(
+        self,
+        access_token: str,
+        activity_id: UUID,
+        planned_workout_id: UUID,
     ) -> JsonObject: ...
 
     async def aclose(self) -> None: ...
@@ -193,6 +207,23 @@ class SupabaseActivityRepository:
             raise ActivityRepositoryUnavailableError
         return dict(result)
 
+    async def save_rpe_heart_rate_observation(
+        self,
+        athlete_id: UUID,
+        activity_id: UUID,
+        average_heart_rate_bpm: int,
+    ) -> None:
+        await self._request(
+            "POST",
+            "rpc/save_rpe_heart_rate_observation",
+            service=True,
+            json={
+                "p_athlete_id": str(athlete_id),
+                "p_activity_id": str(activity_id),
+                "p_average_heart_rate_bpm": average_heart_rate_bpm,
+            },
+        )
+
     async def fetch_activity(self, access_token: str, activity_id: UUID) -> JsonObject:
         result = await self._request(
             "POST",
@@ -272,6 +303,25 @@ class SupabaseActivityRepository:
                 "p_athlete_id": str(athlete_id),
                 "p_activity_id": str(activity_id),
                 "p_payload": payload,
+            },
+        )
+        if not isinstance(result, dict):
+            raise ActivityRepositoryUnavailableError
+        return dict(result)
+
+    async def confirm_planned_workout_match(
+        self,
+        access_token: str,
+        activity_id: UUID,
+        planned_workout_id: UUID,
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/confirm_activity_planned_workout_match",
+            access_token=access_token,
+            json={
+                "p_activity_id": str(activity_id),
+                "p_planned_workout_id": str(planned_workout_id),
             },
         )
         if not isinstance(result, dict):

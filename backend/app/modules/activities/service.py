@@ -15,7 +15,12 @@ from app.modules.physiology.models import DurationMinutes, IntensityBucket, Inte
 from app.modules.physiology.specification import PHASE_3_RULESET_V3
 
 from .repository import ActivityRepository, JsonObject
-from .schemas import ActivityResponse, ActivityRpeSubmission, ActivitySummaryInput
+from .schemas import (
+    ActivityMatchConfirmation,
+    ActivityResponse,
+    ActivityRpeSubmission,
+    ActivitySummaryInput,
+)
 
 
 class ActivityDomainError(ValueError):
@@ -99,10 +104,24 @@ class ActivityService:
         activity_id: UUID,
         submission: ActivityRpeSubmission,
     ) -> ActivityResponse:
+        if submission.average_heart_rate_bpm is not None:
+            await self._repository.save_rpe_heart_rate_observation(
+                athlete_id,
+                activity_id,
+                submission.average_heart_rate_bpm,
+            )
         context = await self._repository.fetch_processing_context(
             athlete_id,
             activity_id,
         )
+        if (
+            context.get("requires_heart_rate_observation")
+            and context.get("average_heart_rate_bpm") is None
+        ):
+            raise ActivityDomainError(
+                "An assigned RPE-guided workout requires an average heart-rate "
+                "observation in bpm before session RPE can be completed."
+            )
         try:
             duration = DurationMinutes(Decimal(str(context["duration_minutes"])))
         except (KeyError, TypeError, ValueError) as error:
@@ -139,3 +158,18 @@ class ActivityService:
             )
         )
         return self._response(row)
+
+    async def confirm_match(
+        self,
+        access_token: str,
+        activity_id: UUID,
+        confirmation: ActivityMatchConfirmation,
+    ) -> ActivityResponse:
+        """Apply only the exact planned-workout match chosen by the athlete."""
+        return self._response(
+            await self._repository.confirm_planned_workout_match(
+                access_token,
+                activity_id,
+                confirmation.planned_workout_id,
+            )
+        )

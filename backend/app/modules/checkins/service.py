@@ -6,9 +6,15 @@ from typing import Any
 from uuid import UUID
 from zoneinfo import ZoneInfo
 
+from app.modules.coach.context import (
+    CheckInContextCoach,
+    CheckInContextFacts,
+    ContextCoachProviderError,
+    DisabledCheckInContextCoach,
+    deterministic_context_fallback,
+)
 from app.modules.physiology.injury import RestrictionStatus
 from app.modules.physiology.models import Discipline
-from app.modules.planning.domain import AvailabilityWindow
 from app.modules.planning.schemas import WeeklyPlanProposalResponse
 from app.modules.planning.service import PlanningService
 
@@ -16,13 +22,15 @@ from .domain import (
     AthletePlanChoice,
     RestrictionDecision,
     athlete_local_week_start,
-    availability_from_blocked_dates,
+    available_dates_from_blocked_dates,
     confirmed_restriction_sets,
     context_fingerprint,
 )
 from .repository import CheckInRepository
 from .schemas import (
+    CheckInContextCandidateResponse,
     CheckInContextConfirmation,
+    CheckInContextExtractionRequest,
     CheckInContextUpdate,
     GoalAchievementRequest,
     GoalMaintenanceResponse,
@@ -41,9 +49,11 @@ class CheckInService:
         self,
         repository: CheckInRepository,
         planning_service: PlanningService,
+        context_coach: CheckInContextCoach,
     ) -> None:
         self._repository = repository
         self._planning_service = planning_service
+        self._context_coach = context_coach
 
     @staticmethod
     def _response(row: Mapping[str, Any]) -> WeeklyCheckInResponse:
@@ -83,6 +93,48 @@ class CheckInService:
         checkin_id: UUID,
     ) -> WeeklyCheckInResponse:
         return self._response(await self._repository.fetch(access_token, checkin_id))
+
+    async def extract_context_candidate(
+        self,
+        access_token: str,
+        checkin_id: UUID,
+        request: CheckInContextExtractionRequest,
+    ) -> CheckInContextCandidateResponse:
+        """Return an inert candidate; never save or confirm check-in context."""
+
+        checkin = await self.get(access_token, checkin_id)
+        source = (
+            "deterministic_fallback"
+            if isinstance(self._context_coach, DisabledCheckInContextCoach)
+            else "llm"
+        )
+        try:
+            candidate = await self._context_coach.extract(
+                CheckInContextFacts(
+                    week_start=checkin.week_start,
+                    timezone=checkin.timezone,
+                    athlete_text=request.athlete_text,
+                )
+            )
+            week_dates = {
+                checkin.week_start + timedelta(days=offset) for offset in range(7)
+            }
+            if (
+                not set(candidate.blocked_dates) <= week_dates
+                or len(set(candidate.blocked_dates)) != len(candidate.blocked_dates)
+                or len(set(candidate.possible_injury_disciplines))
+                != len(candidate.possible_injury_disciplines)
+            ):
+                raise ContextCoachProviderError(
+                    "The extracted candidate falls outside the confirmed week."
+                )
+        except ContextCoachProviderError:
+            candidate = deterministic_context_fallback()
+            source = "deterministic_fallback"
+        return CheckInContextCandidateResponse(
+            source=source,
+            candidate=candidate,
+        )
 
     @staticmethod
     def _restriction(input_value: Any) -> RestrictionDecision:
@@ -154,7 +206,7 @@ class CheckInService:
         context: Mapping[str, Any],
     ) -> tuple[
         date,
-        tuple[AvailabilityWindow, ...],
+        tuple[date, ...],
         frozenset[Discipline],
         frozenset[Discipline],
     ]:
@@ -189,9 +241,8 @@ class CheckInService:
                 for item in payload.get("external_activities", [])
                 if item.get("strenuous") is True
             )
-            availability = availability_from_blocked_dates(
+            available_dates = available_dates_from_blocked_dates(
                 week_start=week_start,
-                timezone_name=timezone_name,
                 blocked_dates=frozenset(
                     date.fromisoformat(str(value))
                     for value in payload.get("blocked_dates", [])
@@ -202,12 +253,12 @@ class CheckInService:
             raise CheckInDomainError(
                 "Confirmed check-in context cannot drive planning."
             ) from error
-        if not availability and blocked != frozenset(Discipline):
+        if not available_dates and blocked != frozenset(Discipline):
             raise CheckInDomainError(
                 "At least one available date is required unless every discipline "
                 "is blocked."
             )
-        return week_start, availability, blocked, low_only
+        return week_start, available_dates, blocked, low_only
 
     async def generate_plan_proposal(
         self,
@@ -219,14 +270,14 @@ class CheckInService:
             athlete_id,
             checkin_id,
         )
-        week_start, availability, blocked, low_only = self._planning_inputs(context)
+        week_start, available_dates, blocked, low_only = self._planning_inputs(context)
         result = await self._planning_service.generate_checkin_proposal(
             access_token,
             athlete_id,
             checkin_id=checkin_id,
             input_source=context,
             week_start=week_start,
-            availability=availability,
+            available_dates=available_dates,
             blocked_disciplines=blocked,
             low_only_disciplines=low_only,
         )

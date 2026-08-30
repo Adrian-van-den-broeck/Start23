@@ -2,7 +2,7 @@
 
 import asyncio
 import json
-from datetime import date, datetime, timezone
+from datetime import date
 from decimal import Decimal
 
 import httpx
@@ -30,7 +30,7 @@ def _facts() -> WeeklyPlanCoachFacts:
             CoachWorkoutFacts(
                 discipline=Discipline.RUN,
                 name="Rustige duurloop",
-                scheduled_at=datetime(2026, 8, 25, 7, tzinfo=timezone.utc),
+                scheduled_date=date(2026, 8, 25),
                 duration_minutes=Decimal("45"),
                 intensity=IntensityBucket.LOW,
             ),

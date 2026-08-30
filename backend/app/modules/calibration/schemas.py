@@ -1,6 +1,6 @@
 """Strict TSS-free API contracts for zone setup and calibration."""
 
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from typing import Annotated, Literal
 from uuid import UUID
@@ -12,15 +12,18 @@ from app.modules.calibration.domain import (
     DataQuality,
     EvaluationStatus,
     GuidanceMode,
+    NumericZoneVisibility,
     ProtocolReviewStatus,
     ProtocolType,
     SetupRoute,
     SteadyExecution,
+    TestSchedulingMode,
     ThresholdStatus,
     ZoneStatus,
 )
 from app.modules.physiology.models import Discipline
 from app.modules.physiology.zones import ZoneMetricKind
+from app.modules.planning.schemas import WeeklyPlanProposalResponse
 
 
 class CalibrationPublicModel(BaseModel):
@@ -62,6 +65,7 @@ class KnownValuesSetup(CalibrationPublicModel):
 
     setup_route: Literal[SetupRoute.KNOWN_VALUES]
     guidance_mode: GuidanceMode
+    source_quality: Literal["athlete_entered", "measured_lab"] = "athlete_entered"
     thresholds: tuple[KnownThresholdInput, ...] = Field(default=(), max_length=2)
     zone_profiles: tuple[KnownZoneProfileInput, ...] = Field(default=(), max_length=2)
     pool_length_meters: Literal[25, 50] | None = None
@@ -311,3 +315,119 @@ class CalibrationStatusResponse(CalibrationPublicModel):
     setups: tuple[DisciplineSetupResponse, ...]
     evaluations: tuple[CalibrationEvaluationResponse, ...]
     threshold_decisions: tuple[ThresholdDecisionResponse, ...] = ()
+
+
+class FieldTestSchedulingRequest(CalibrationPublicModel):
+    """Date-only choice for a reviewed standalone or integrated field test."""
+
+    discipline: Discipline
+    protocol_id: str = Field(min_length=1, max_length=100)
+    scheduling_mode: TestSchedulingMode
+    scheduled_date: date
+    plan_id: UUID | None = None
+    expected_plan_revision: int | None = Field(default=None, ge=1)
+
+    @model_validator(mode="after")
+    def require_exact_plan_reference(self) -> "FieldTestSchedulingRequest":
+        integrated = self.scheduling_mode is TestSchedulingMode.WEEKLY_PLAN
+        if integrated != (self.plan_id is not None):
+            raise ValueError("Only an integrated test references a weekly plan.")
+        if integrated != (self.expected_plan_revision is not None):
+            raise ValueError(
+                "An integrated test requires the expected active plan revision."
+            )
+        return self
+
+
+class TestAssignmentResponse(CalibrationPublicModel):
+    """Owner-visible state for one explicitly scheduled validation test."""
+
+    id: UUID
+    discipline: Discipline
+    protocol_id: str
+    scheduling_mode: TestSchedulingMode
+    scheduled_date: date
+    state: Literal[
+        "pending_approval",
+        "scheduled",
+        "completed",
+        "rejected",
+        "cancelled",
+    ]
+    plan_id: UUID | None = None
+    target_plan_revision_id: UUID | None = None
+    plan_proposal_id: UUID | None = None
+    revision: int = Field(ge=1)
+    proposal_id: UUID
+    proposal_state: Literal["pending", "approved", "applied", "rejected", "expired"]
+    created_at: datetime
+    updated_at: datetime
+    decided_at: datetime | None = None
+
+
+class FieldTestSchedulingResponse(CalibrationPublicModel):
+    """Pending test assignment and, for integration, its pending plan revision."""
+
+    assignment: TestAssignmentResponse
+    plan_proposal: WeeklyPlanProposalResponse | None = None
+
+
+class TestAssignmentDecisionRequest(CalibrationPublicModel):
+    """Stale-safe precondition for a standalone test decision."""
+
+    expected_revision: int = Field(ge=1)
+
+
+class TestAssignmentDecisionResponse(CalibrationPublicModel):
+    """Atomic standalone test proposal result."""
+
+    proposal_id: UUID
+    state: Literal["applied", "rejected"]
+    test_assignment_id: UUID
+    test_assignment_state: Literal["scheduled", "rejected"]
+
+
+class ZoneProfileSnapshotResponse(CalibrationPublicModel):
+    """Immutable profile provenance with values hidden when policy requires it."""
+
+    id: UUID
+    discipline: Discipline
+    version: int = Field(ge=1)
+    setup_method: Literal["manual", "fallback", "calculated"]
+    status: Literal["pending", "active", "superseded", "rejected", "expired"]
+    source_method: str
+    source_quality: str
+    review_status: str
+    reviewer_id: str | None = None
+    reviewed_at: datetime | None = None
+    effective_from: datetime | None = None
+    zone_model_version: str | None = None
+    evidence_version: str | None = None
+    created_at: datetime
+    values_hidden: bool
+    metric_profiles: tuple[CalculatedZoneMetricProfileResponse, ...] = ()
+    metric: ThresholdEstimateResponse | None = None
+    boundaries: tuple[CalculatedZoneBoundaryResponse, ...] = ()
+    proposal_id: UUID | None = None
+    base_zone_profile_id: UUID | None = None
+
+
+class DisciplineZoneProfileResponse(CalibrationPublicModel):
+    """Current and prior state for one discipline on the profile page."""
+
+    discipline: Discipline
+    setup: DisciplineSetupResponse | None
+    numeric_zone_visibility: NumericZoneVisibility
+    active_profile: ZoneProfileSnapshotResponse | None
+    pending_profile: ZoneProfileSnapshotResponse | None
+    prior_profiles: tuple[ZoneProfileSnapshotResponse, ...]
+    test_assignments: tuple[TestAssignmentResponse, ...]
+
+
+class ZoneProfileStateResponse(CalibrationPublicModel):
+    """Complete three-discipline profile projection without private load."""
+
+    disciplines: tuple[DisciplineZoneProfileResponse, ...] = Field(
+        min_length=3,
+        max_length=3,
+    )

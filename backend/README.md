@@ -94,10 +94,18 @@ A local `.env` file is optional and ignored by Git and Docker.
 | `START23_OPENAI_API_KEY` | empty | Server-only OpenAI credential; without it the planner uses a deterministic local explanation |
 | `START23_OPENAI_MODEL` | `gpt-5.6-luna` | Configurable Responses API model for bounded Dutch coach explanations |
 | `START23_OPENAI_API_TIMEOUT_SECONDS` | `8` | Coach provider timeout; maximum 30 seconds |
+| `START23_PHYSIOLOGY_REVIEW_RECORD_ID` | empty | External review-record reference; required in production |
+| `START23_PHYSIOLOGY_ACCOUNTABLE_OWNER` | empty | One accountable qualified physiology reviewer; required in production |
 | `START23_POLAR_CLIENT_ID` | empty | Server-side Polar AccessLink OAuth client identifier |
 | `START23_POLAR_CLIENT_SECRET` | empty | Server-only Polar OAuth client secret |
 | `START23_POLAR_OAUTH_REDIRECT_URL` | local API callback | Exact registered callback URL |
 | `START23_POLAR_WEBHOOK_SECRET` | empty | Server-only HMAC-SHA256 webhook signing key |
+| `START23_POLAR_LEGAL_APPROVED` | `false` | Production legal gate for provider use |
+| `START23_POLAR_PRIVACY_APPROVED` | `false` | Production privacy gate for provider use |
+| `START23_POLAR_PROVIDER_TERMS_APPROVED` | `false` | Production provider-terms gate |
+| `START23_POLAR_OPERATIONAL_OWNER` | empty | Owner of registration, secrets, incidents, and callback changes |
+| `START23_POLAR_RAW_FIT_RETENTION_DAYS` | empty | Approved raw-file retention; must be shorter than canonical retention in production |
+| `START23_POLAR_CANONICAL_ACTIVITY_RETENTION_DAYS` | empty | Approved canonical-activity retention |
 | `START23_POLAR_API_TIMEOUT_SECONDS` | `10` | Provider request timeout; maximum 30 |
 | `START23_POLAR_MAX_ACTIVITY_FILE_BYTES` | `26214400` | Maximum accepted Polar FIT object size |
 
@@ -155,3 +163,11 @@ The image runs as a non-root user and reads Railway's `PORT` environment
 variable when provided. `railway.toml` selects the Dockerfile build and uses
 `/ready` as the deployment health check. Configure Railway's service root as
 `/backend` and its config path as `/backend/railway.toml`.
+
+Configure a separate Railway scheduled invocation against the same image for
+bounded Polar retries; it is a command in the existing monolith, not another
+worker architecture:
+
+```bash
+start23-retry-polar-imports
+```

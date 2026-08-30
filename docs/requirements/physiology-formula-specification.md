@@ -2,8 +2,8 @@
 
 ## Status
 
-`Approved and implemented for local MVP development - phase-3-ruleset-3;
-production review pending`
+`Implemented for local MVP development - phase-10-ruleset-1; renewed
+production review pending for the BR-006 amendment`
 
 The evidence supplied on 2026-07-25 approves deterministic calculation policy
 for BR-002, BR-003, BR-004, BR-006, BR-007, BR-008, and BR-010. The follow-up
@@ -123,23 +123,28 @@ multiplied by 40 to create the Week-1 target.
 
 ## BR-006: anti-stack intervals
 
-Approved calculation:
+Phase 10 calculation:
 
 - Require 72 elapsed hours between starts of high-intensity run workouts.
-- Require 48 elapsed hours between starts of high-intensity bike workouts.
-- Require 48 elapsed hours between starts of high-intensity swim workouts.
-- Exact equality is allowed; any shorter interval is a violation.
+- Require two complete intervening athlete-local rest dates between
+  high-intensity bike workouts.
+- Require two complete intervening athlete-local rest dates between
+  high-intensity swim workouts.
+- Wednesday followed by Saturday is therefore valid; Wednesday followed by
+  Friday is not. The separately approved run rule is unchanged.
+- Exact 72-hour equality is allowed for run; fewer than two intervening dates
+  is a violation for bike/swim.
 - Compare only workouts sharing the same discipline.
 - A brick participates in every discipline it contains.
 - Generated deck filtering and generated scheduling use the same rule.
 - Low-intensity workouts do not participate.
 
-Technical time interpretation:
+Technical date/time interpretation:
 
-- Compare timezone-aware starts as absolute UTC instants, while later APIs
-  display athlete-local times. This makes 48/72 mean actual elapsed hours and
-  prevents daylight-saving transitions from silently adding or removing an
-  hour.
+- Compare run starts as absolute UTC instants for the retained 72-hour rule.
+- Compare bike/swim schedule dates in the athlete-local calendar. DST cannot
+  add or remove a rest date. Planning contracts prescribe a date and no time;
+  the engine's local-noon instant is compatibility data only.
 - Manual athlete moves remain allowed with a qualitative warning in Phase 6.
 
 ## BR-007: build and recovery cycle
@@ -221,6 +226,17 @@ Approved input and review policy:
 - pace metrics are explicitly descending because faster pace has fewer
   seconds; watts and heart-rate metrics are ascending.
 
+Approved no-zone heart-rate observation policy:
+
+- an RPE-guided completion may store actual RPE and average heart rate in BPM;
+- compare heart rate only when that workout has an applicable reviewed
+  reference BPM; never fabricate a reference from an RPE target or zone;
+- the observation is within tolerance exactly when
+  `abs(actual_bpm - reference_bpm) <= 10`, so both boundary values are
+  included;
+- below, within, and above tolerance are qualitative observations only and
+  cannot create, replace, or activate a threshold or zone profile.
+
 Approved fallback:
 
 - estimate maximum heart rate with Tanaka:
@@ -245,6 +261,8 @@ Implementation notes:
   configuration, not hard rejection limits. Each record requires metric,
   discipline, unit, applicability, evidence, reviewer, validity dates, and
   ruleset version. No values are inferred in code.
+- The inclusive heart-rate observation comparison is deterministic and has no
+  persistence side effect beyond the underlying activity metric.
 
 ## BR-010: functional injury restrictions
 
@@ -280,10 +298,13 @@ UI; a due review never silently clears a restriction.
   - `phase-3-ruleset-2`: ruleset 1 plus BR-009.
 - `phase-3-ruleset-3`: ruleset 2 plus the twelve decisions accepted on
   2026-08-11.
+- `phase-10-ruleset-1`: ruleset 3 plus the Phase 10 bike/swim complete-local-
+  rest-date interpretation; the 72-hour run rule remains unchanged.
 - Production governance: qualified physiological review of the active ruleset
   and `start23-zone-model-1.0` was confirmed complete by the product owner on
   2026-08-24. Reviewer identity and the evidence dossier are retained in the
   external product-governance record; changed rules require a new review.
+  The Phase 10 BR-006 change therefore reopens this gate before production.
 - Deferred scenarios: non-race 90/10, swimrun 75/25, calculated zone
   replacement persistence
 - Implementation: deterministic Python modules with ruleset, boundary,

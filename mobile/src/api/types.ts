@@ -46,6 +46,20 @@ export type PrimaryRaceGoal = {
   updated_at: string;
 };
 
+export type GoalPlanningOption = {
+  goal_kind: 'race_event' | 'personal_goal';
+  goal_family:
+    | 'race_event'
+    | 'general_fitness'
+    | 'weight_loss'
+    | 'muscle_gain';
+  label: string;
+  availability: 'available' | 'coming_later';
+  requires_target_date: boolean;
+  cycle_anchor: 'race_date' | 'cycle_week_1';
+  unavailable_reason: 'deterministic_rules_not_approved' | null;
+};
+
 export type ZoneBoundary = {
   zone_number: number;
   lower_value: string;
@@ -101,6 +115,7 @@ export type DisciplineSetupInput =
   | {
       setup_route: 'known_values';
       guidance_mode: GuidanceMode;
+      source_quality: 'athlete_entered' | 'measured_lab';
       thresholds: KnownThreshold[];
       zone_profiles: KnownZoneProfile[];
       pool_length_meters?: 25 | 50;
@@ -150,7 +165,11 @@ export type ZoneProfile = {
   version: number;
   setup_method: 'manual' | 'fallback' | 'calculated';
   status: 'pending' | 'active' | 'superseded' | 'rejected' | 'expired';
-  source: 'athlete_entered' | 'estimated' | 'reviewed_field_threshold';
+  source:
+    | 'athlete_entered'
+    | 'measured_lab'
+    | 'estimated'
+    | 'reviewed_field_threshold';
   validation_status:
     | 'confirmed_by_athlete'
     | 'unreviewed'
@@ -332,15 +351,83 @@ export type CalibrationStatus = {
   threshold_decisions: ThresholdDecision[];
 };
 
+export type NumericZoneVisibility =
+  | 'visible'
+  | 'rpe_guided'
+  | 'week_2_evaluation_pending'
+  | 'proposal_confirmation_pending';
+
+export type TestSchedulingMode = 'standalone' | 'weekly_plan';
+
+export type TestAssignment = {
+  id: string;
+  discipline: Discipline;
+  protocol_id: string;
+  scheduling_mode: TestSchedulingMode;
+  scheduled_date: string;
+  state:
+    | 'pending_approval'
+    | 'scheduled'
+    | 'completed'
+    | 'rejected'
+    | 'cancelled';
+  plan_id: string | null;
+  target_plan_revision_id: string | null;
+  plan_proposal_id: string | null;
+  revision: number;
+  proposal_id: string;
+  proposal_state: 'pending' | 'approved' | 'applied' | 'rejected' | 'expired';
+  created_at: string;
+  updated_at: string;
+  decided_at: string | null;
+};
+
+export type FieldTestSchedulingResponse = {
+  assignment: TestAssignment;
+  plan_proposal: WeeklyPlanProposal | null;
+};
+
+export type ZoneProfileSnapshot = {
+  id: string;
+  discipline: Discipline;
+  version: number;
+  setup_method: 'manual' | 'fallback' | 'calculated';
+  status: 'pending' | 'active' | 'superseded' | 'rejected' | 'expired';
+  source_method: string;
+  source_quality: string;
+  review_status: string;
+  reviewer_id: string | null;
+  reviewed_at: string | null;
+  effective_from: string | null;
+  zone_model_version: string | null;
+  evidence_version: string | null;
+  created_at: string;
+  values_hidden: boolean;
+  metric_profiles: CalculatedZoneMetricProfile[];
+  metric: ThresholdEstimate | null;
+  boundaries: CalculatedZoneBoundary[];
+  proposal_id: string | null;
+  base_zone_profile_id: string | null;
+};
+
+export type DisciplineZoneProfile = {
+  discipline: Discipline;
+  setup: DisciplineSetup | null;
+  numeric_zone_visibility: NumericZoneVisibility;
+  active_profile: ZoneProfileSnapshot | null;
+  pending_profile: ZoneProfileSnapshot | null;
+  prior_profiles: ZoneProfileSnapshot[];
+  test_assignments: TestAssignment[];
+};
+
+export type ZoneProfileState = {
+  disciplines: DisciplineZoneProfile[];
+};
+
 export type OnboardingComplete = {
   onboarding: OnboardingState;
   initial_plan_request_id: string;
   initial_plan_request_status: 'pending';
-};
-
-export type AvailabilityWindow = {
-  starts_at: string;
-  ends_at: string;
 };
 
 export type WorkoutSegment = {
@@ -349,7 +436,21 @@ export type WorkoutSegment = {
   instructions: string;
   duration_minutes: string;
   distance_meters: number | null;
-  zone: number;
+  zone_target: number | null;
+  protocol_target: {
+    protocol_id: string;
+    segment_id: string;
+    target_rpe_min: number;
+    target_rpe_max: number;
+    intensity_bucket: 'low' | 'high';
+    optional: boolean;
+  } | null;
+  rpe_target: {
+    target_rpe_min: number;
+    target_rpe_max: number;
+    intensity_bucket: 'low' | 'high';
+    heart_rate_observation_required: true;
+  } | null;
   expected_rpe: number;
   is_swim_technique: boolean;
 };
@@ -377,8 +478,7 @@ export type PlannedWorkout = {
   expected_rpe_min: number;
   expected_rpe_max: number;
   segments: WorkoutSegment[];
-  scheduled_at: string;
-  timezone: string;
+  scheduled_date: string;
   source:
     | 'auto_planned'
     | 'athlete_selected'
@@ -395,7 +495,7 @@ export type RestDay = {
 
 export type ChangeProposal = {
   id: string;
-  kind: 'zone_update' | 'plan_revision';
+  kind: 'zone_update' | 'plan_revision' | 'validation_test';
   state: 'pending' | 'approved' | 'rejected' | 'expired' | 'applied';
   reason_codes: string[];
   public_explanation: string;
@@ -408,6 +508,7 @@ export type ChangeProposal = {
   base_plan_revision: number | null;
   target_zone_profile_id: string | null;
   base_zone_profile_id: string | null;
+  target_test_assignment_id: string | null;
 };
 
 export type WeeklyPlan = {
@@ -449,6 +550,8 @@ export type WeeklyPlan = {
   high_intensity_minutes: string;
   confirmed_injuries: Discipline[];
   low_only_disciplines: Discipline[];
+  available_dates: string[];
+  availability_source: 'explicit' | 'previous_week' | 'checkin';
   workouts: PlannedWorkout[];
   rest_days: RestDay[];
   warnings: PlanWarning[];
@@ -482,9 +585,18 @@ export type WorkoutDeck = {
   templates: WorkoutDeckItem[];
 };
 
+export type PendingWorkoutAlternatives = {
+  plan_id: string;
+  revision: number;
+  proposal_id: string;
+  workout_id: string;
+  can_remove: boolean;
+  alternatives: WorkoutDeckItem[];
+};
+
 export type CalendarResponse = {
-  from_datetime: string;
-  to_datetime: string;
+  from_date: string;
+  to_date: string;
   workouts: PlannedWorkout[];
   rest_days: RestDay[];
 };
@@ -556,6 +668,21 @@ export type WeeklyCheckIn = {
   context: WeeklyCheckInContext | null;
 };
 
+export type CheckInContextCandidate = {
+  blocked_dates: string[];
+  fatigue_level: FatigueLevel | null;
+  missed_workout_reasons: string[];
+  possible_injury_disciplines: Discipline[];
+  agenda_context: string[];
+  clarifying_questions: string[];
+};
+
+export type CheckInContextCandidateResponse = {
+  source: 'llm' | 'deterministic_fallback';
+  candidate: CheckInContextCandidate;
+  requires_structured_confirmation: true;
+};
+
 export type ActivityMetrics = {
   average_heart_rate_bpm: number | null;
   max_heart_rate_bpm: number | null;
@@ -593,4 +720,36 @@ export type CompletedActivity = {
   metrics: ActivityMetrics | null;
   created_at: string;
   updated_at: string;
+};
+
+export type PolarConnection = {
+  id: string;
+  provider: 'polar';
+  status:
+    | 'connected'
+    | 'disconnected'
+    | 'revoked'
+    | 'reconnect_required'
+    | 'error';
+  connected_at: string;
+  disconnected_at: string | null;
+  last_import_at: string | null;
+};
+
+export type PolarImportRun = {
+  id: string;
+  provider: 'polar';
+  kind: 'historical' | 'webhook';
+  status: 'running' | 'completed' | 'failed';
+  range_start: string | null;
+  range_end: string | null;
+  discovered_count: number;
+  imported_count: number;
+  skipped_count: number;
+  failure_code: string | null;
+  retry_count: number;
+  max_attempts: number;
+  next_attempt_at: string | null;
+  created_at: string;
+  completed_at: string | null;
 };

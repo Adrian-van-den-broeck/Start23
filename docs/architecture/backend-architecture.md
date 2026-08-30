@@ -8,10 +8,15 @@ verification, Phase 3 deterministic physiology, Phase 4 onboarding, the
 Phase 5 workout catalog, and the Phase 6 weekly-planning application are
 implemented locally. Phase 8.5 also implements deterministic field-test and
 submaximal-calibration evaluation plus the Expo setup/execution flow locally.
+Phase 11 locally adds the discipline profile/history projection, shared
+RPE-guided planning, and pending standalone or plan-integrated test scheduling.
+Phase 12 locally adds a fail-closed goal-mode capability catalog and an explicit
+Expo race/event versus personal-goal choice. Personal-goal generation remains
+disabled until its deterministic rule tables and catalog coverage are reviewed.
 The Phase 4 base and hardening migrations and the Phase 5 catalog migration are
 applied in hosted Supabase and pass linked schema lint. The Phase 6 migration
 is applied and verified in hosted development; later migrations, including
-Phase 8.5, remain local and unexecuted. The accepted Phase 0-7 physiology
+Phase 8.5 and Phase 11, remain local and unexecuted. The accepted Phase 0-7 physiology
 decisions are included in `phase-3-ruleset-3`; qualified production review of
 the active rules and zone model was confirmed complete on 2026-08-24. A
 pulled-forward Phase 10 slice adds a constrained OpenAI explanation after
@@ -143,7 +148,9 @@ physiological calculations to `physiology`.
 ### Goals
 
 Owns SMART goals, race events, A/B/C priority, macrocycles, mesocycles, and race
-taper context. Non-race goal behavior remains an unresolved design area.
+taper context. Phase 12 exposes general fitness, weight loss, and muscle gain
+as unavailable capabilities with a cycle-week-1 anchor; it cannot persist or
+plan them until separate reviewed deterministic rules exist.
 
 ### Zones
 
@@ -197,7 +204,9 @@ correction/audit, internal realized TSS, and match-matrix status.
 
 Owns weekly check-ins, structured athlete context, availability, injuries,
 fatigue, missed-workout reasons, recurring/outside sport, context expiry, and
-explicit structured-form confirmation. Phase 8 has no LLM dependency.
+explicit structured-form confirmation. Phase 10 may request a bounded
+ephemeral extraction candidate, but only the athlete-edited and separately
+confirmed structured context can reach planning.
 
 ### Proposals
 
@@ -218,12 +227,14 @@ required for the current canonical-summary import and remains out of scope.
 
 ### Coach
 
-The implemented weekly-plan slice calls OpenAI Responses with a strict
+The implemented coach calls OpenAI Responses with strict
 Pydantic-derived output schema after the deterministic planner has created a
 pending proposal. It receives only sanitized public plan facts, has no tools,
 uses a deterministic fallback, and can only fill bounded explanatory text. It
-cannot call an apply/update operation for a plan or zone. Structured context
-extraction and clarifying questions remain future Phase 10 work.
+cannot call an apply/update operation for a plan or zone. A separate bounded
+adapter extracts check-in text into an inert candidate and clarifying
+questions. It also has no tools, persists neither source nor output, and cannot
+save or confirm weekly context.
 
 ## Layering and dependency rules
 
@@ -278,6 +289,26 @@ move applies immediately as a new immutable active revision when its revision
 precondition and hard injury/week validations pass. Anti-stack and confirmed-
 availability outcomes are returned and persisted as qualitative warnings.
 System-generated schedule changes still produce pending revisions.
+
+Phase 10 pending-plan removal/replacement is not a direct active edit. The
+service reloads the exact proposal/revision and its private deterministic
+inputs, recomputes eligibility and layout server-side, and creates a new
+immutable pending revision. A stale revision or proposal ID fails closed.
+
+Phase 11 keeps test orchestration inside the modular monolith. Calibration
+validates protocol/discipline/date semantics, planning replaces one active
+same-discipline workout and owns deterministic layout/private load, and the
+calibration repository attaches the resulting pending revision to an owned
+test assignment. Standalone scheduling uses its own typed pending proposal.
+No test path calls a zone mutation; threshold confirmation and zone-profile
+approval remain separate existing operations.
+
+For a discipline with no active zone and a field-test, calibration, or RPE-only
+setup, planning projects immutable catalog zone segments into RPE targets while
+preserving reviewed duration, expected RPE, intensity ownership, and private
+load. The durable catalog is not rewritten. Protocol targets remain protocol
+targets. Explicit field-test templates are excluded from automatic selection
+and enter planning only after an exact athlete date choice.
 
 ## Scheduled processing
 
@@ -382,7 +413,6 @@ entrypoints, but remains one codebase, one domain model, and one database.
 
 - Physiological formula details within the locked injury, taper, recovery,
   debt, progression, intensity, anti-stack, and availability precedence.
-- Athlete-timezone versus UTC ownership of scheduled plan generation.
 - Production approval, credentials, and final callback domain for the
   provisional Polar AccessLink provider.
 
@@ -394,6 +424,9 @@ Resolved decisions:
 - generated fallback persistence and internal planning-catalog reads use
   separate service-only repositories and narrowly granted `SECURITY DEFINER`
   RPCs; the Supabase secret key remains server-only;
+- planned workouts are athlete-local dates; the date is authoritative and no
+  training time is prescribed. Date rules are DST-invariant, while realized
+  activities continue to carry their actual timestamp and timezone;
 - direct athlete calendar moves apply with qualitative soft warnings;
 - Phase 7 uses a limited authenticated canonical activity-summary input with
   explicit planned-workout matching, UUID/fingerprint idempotency, private

@@ -8,6 +8,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from app.modules.coach.context import CheckInContextCandidate
 from app.modules.physiology.injury import RestrictionStatus
 from app.modules.physiology.models import Discipline
 
@@ -120,6 +121,20 @@ class WeeklyCheckInResponse(PublicCheckInModel):
 class CheckInContextConfirmation(PublicCheckInModel):
     expected_revision: int = Field(ge=1)
     context_fingerprint: str = Field(pattern=r"^[a-f0-9]{64}$")
+
+
+class CheckInContextExtractionRequest(PublicCheckInModel):
+    """Bounded free text that can produce only an inert candidate."""
+
+    athlete_text: str = Field(min_length=1, max_length=1000)
+
+
+class CheckInContextCandidateResponse(PublicCheckInModel):
+    """Schema-validated suggestion that still requires structured confirmation."""
+
+    source: Literal["llm", "deterministic_fallback"]
+    candidate: CheckInContextCandidate
+    requires_structured_confirmation: Literal[True] = True
 
 
 class InjuryRestrictionResponse(PublicCheckInModel):

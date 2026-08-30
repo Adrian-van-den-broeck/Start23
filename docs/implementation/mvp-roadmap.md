@@ -28,12 +28,15 @@ The phase-one MVP should support a narrow, safe, end-to-end loop:
 3. configures a primary race-oriented goal and, per discipline, enters known
    zones, follows a reviewed estimation route, or explicitly continues with
    RPE guidance while zones are unknown;
-4. receives a deterministic, TSS-hidden weekly-plan proposal;
-5. explicitly approves it;
-6. schedules or moves workouts with qualitative warnings;
-7. records a completed activity and RPE;
-8. receives a pending corrective proposal when deterministic rules require one;
-9. completes a structured weekly check-in for the next week.
+4. receives a server-curated workout deck and fills the deterministic weekly
+   target by accepting workouts;
+5. optionally places the accepted workouts on a date-only calendar timeline or
+   asks the deterministic planner to place them;
+6. explicitly approves the resulting pending weekly-plan proposal;
+7. schedules or moves workouts with qualitative warnings;
+8. records a completed activity and RPE;
+9. receives a pending corrective proposal when deterministic rules require one;
+10. completes a structured weekly check-in for the next week.
 
 The LLM and multiple wearable providers are not required to prove this loop.
 
@@ -50,10 +53,11 @@ Karvonen fallback in `phase-3-ruleset-2`. The twelve decisions accepted on
 2026-08-13 are recorded in the Phase 0-7 decision register but are not part of
 ruleset 3 until explicitly implemented and tested. The separate Zone 1-5
 conversion model from `Voorstel Start23 Zone 1-5 rekenmodel v1.0` is implemented
-as `start23-zone-model-1.0` on 2026-08-24. On the same date, the product owner
-confirmed completion of qualified physiological production review for the
-active rules and zone model; reviewer identity and evidence remain in the
-external product-governance record. Material rule changes reopen that gate.
+as `start23-zone-model-1.0` on 2026-08-24. The decision of 2026-08-26 requires
+one qualified, accountable physiological reviewer and an identifiable external
+review record before production. Because neither identity nor record reference
+is present in the repository configuration, that production gate remains open.
+Material rule changes reopen it.
 
 ### Scope
 
@@ -200,20 +204,22 @@ own tests.
 - Supply complete versioned BR-009 soft-range records if product wants
   configured plausibility warnings. Missing configuration remains an accepted
   warning state, never a hard rejection.
-- Retain the completed production sign-off for the reviewed Start23 field-test
-  protocols and `start23-zone-model-1.0` in the external governance dossier.
+- Retain any prior review evidence for the Start23 field-test protocols and
+  `start23-zone-model-1.0` in the external governance dossier, and name one
+  qualified accountable reviewer before production.
   The backend calculates pending FTP/CSS/LTHR/threshold-pace profiles
   deterministically, but it neither derives a threshold from submaximal
   calibration nor activates a calculated profile without the athlete's
   separate confirmation.
 
-### Production review update: 2026-08-24
+### Production review update: 2026-08-26
 
-The product owner confirmed that qualified physiological review and production
-sign-off of the active rules, field-test protocols, and
-`start23-zone-model-1.0` are complete. This closes the named-reviewer gate for
-those exact versions only; the source repository deliberately does not contain
-the reviewer's personal identity or the external evidence dossier.
+The 2026-08-24 product-owner confirmation remains historical evidence, but the
+new governance decision requires one demonstrably qualified accountable
+reviewer plus the external review-record reference for the exact active rules,
+field-test protocols, and `start23-zone-model-1.0`. Production settings now
+require both an owner and record identifier. The gate is open until those
+values and the underlying evidence have been accepted.
 
 ### Review record: 2026-07-26
 
@@ -983,6 +989,13 @@ The mobile flow passes strict TypeScript, but the new confirmation lifecycle
 has not been exercised in an Android/iOS development build. No provider or
 other production runtime was enabled by this implementation.
 
+The 2026-08-26 decisions are implemented: planned segments now use exactly one
+of `zone_target` and `protocol_target`; the reviewed bike calibration protocol
+can be selected in a normal week-1 plan without fabricated zones. Soft ranges
+and a physiology-sex HR fallback are deferred, dependency advisories carry a
+temporary release-by-release risk acceptance, and real sessions/devices plus a
+named physiological reviewer remain hard production gates.
+
 ### Scope
 
 - Four explicit per-discipline setup routes: known values, field test,
@@ -1010,9 +1023,9 @@ other production runtime was enabled by this implementation.
   execution feedback/context because v1.0 defines no numeric RPE-to-zone
   boundary table. **Implemented locally**
 - Zone-independent calibration protocol selection in the normal weekly plan.
-  **Pending because the current planned-workout segment contract requires a
-  Zone 1-5 value and the approved fixtures define no internal planned-load rule
-  for inserting these protocols into normal target selection**
+  **Implemented through an exclusive `zone_target`/`protocol_target` contract;
+  the reviewed bike protocol is eligible while setup is pending and carries
+  explicit RPE plus qualitative intensity, never a fabricated zone**
 - Android setup, protocol execution, feedback, and result screens.
   **Implemented in strict TypeScript; emulator/device runtime pending**
 
@@ -1031,9 +1044,8 @@ other production runtime was enabled by this implementation.
 - Public APIs and tables contain no TSS/private-load fields. **OpenAPI/backend
   tests and hosted pgTAP pass**
 - Complete Zone 1-5 candidates are deterministic and versioned, and never
-  auto-activate. **Implemented and covered by calculation/API tests; qualified
-  production review is complete, while hosted migration/pgTAP remains a
-  release gate**
+  auto-activate. **Implemented and covered by calculation/API tests; the named
+  accountable physiological-review record remains a production gate**
 
 ### Implementation notes and remaining work
 
@@ -1058,9 +1070,10 @@ other production runtime was enabled by this implementation.
   Planned and realized TSS are absent from every new public DTO/table.
 - The mobile execution flow creates an owned canonical activity, records its
   canonical 1-10 session RPE, writes immutable protocol observations, and only
-  then requests deterministic evaluation. Until the planner gate above is
-  resolved, this is an explicit standalone protocol execution and has no
-  fabricated `planned_workout_id`.
+  then requests deterministic evaluation. The normal planner can now schedule
+  the reviewed bike calibration protocol with `protocol_target`; other
+  protocols remain standalone until their planner duration and target metadata
+  are reviewed. No fabricated zone or TSS field was added.
 - Expo SDK 57 patch dependencies were aligned to `expo ~57.0.14`,
   `expo-dev-client ~57.0.13`, and `expo-splash-screen ~57.0.7`; Expo Doctor now
   passes 20/21 checks because it now expects the newer compatible patches
@@ -1069,7 +1082,9 @@ other production runtime was enabled by this implementation.
   zone-model change. `npm audit` previously reported 8 moderate and 11 high
   upstream/transitive advisories with no critical finding. No breaking
   `audit fix` was applied; this needs an upstream-compatible SDK 57 resolution
-  or a separately reviewed upgrade.
+  or a separately reviewed upgrade. The 2026-08-26 decision temporarily
+  accepts this risk, forbids a breaking forced audit fix, and requires a fresh
+  documented assessment for every release.
 - The rollback-only pgTAP suite shares one transaction across simulated API
   calls, while PostgREST gives each RPC or table request its own transaction.
   The direct-write assertion therefore clears the RPC's transaction-local
@@ -1077,15 +1092,15 @@ other production runtime was enabled by this implementation.
   immutability assertion expects the stricter table-permission rejection that
   occurs before the trigger.
 - The zone-model calculation, calibration, onboarding, repository, AI coach,
-  and mobile changes pass the complete backend suite (348 tests), Ruff, strict
+  and mobile changes pass the complete backend suite (357 tests), Ruff, strict
   mypy, and mobile strict TypeScript. Expo Doctor passes 20/21 checks with the three
   patch-version differences above. The original hosted Phase 8.5
   migration and 18-assertion pgTAP suite remain verified. The zone-model
   migration and 19-assertion pgTAP suite are now hosted-verified as well.
-  Two-real-token isolation, Android/iOS runtime, and dependency-advisory
-  resolution remain open gates. Qualified physiology
-  production review of the active versions was confirmed complete on
-  2026-08-24.
+  Two-real-token isolation and physical-device runtime on every officially
+  supported platform remain hard release gates. Dependency advisories require
+  release-by-release acceptance; the named accountable physiology review
+  record remains an open production gate.
 
 ## Phase 9: one wearable integration
 
@@ -1097,6 +1112,14 @@ on its documented OAuth user lifecycle, HMAC-SHA256 webhook signatures,
 30-day post-registration exercise feed, and FIT/TCX export support. This is a
 technical implementation choice, not the still-required product, legal,
 privacy, and provider-terms approval for production.
+
+On 2026-08-26 Polar received a **conditional GO** as the first provider. The
+backend now blocks production Polar configuration until legal, privacy and
+provider-terms approvals, a final HTTPS callback, retention values and one
+operational owner are configured. The MVP adds the compact mobile Integrations
+screen, 7/14/30-day imports (14 default), bounded scheduled retries,
+`reconnect_required`, explicit activity-match confirmation and invoker/RLS
+read-only RPCs. No Polar production processing was thereby approved.
 
 The Phase 9 migration was applied to the linked Supabase project on 2026-08-17.
 The linked ledger is aligned, the database linter reports no schema errors, and
@@ -1115,16 +1138,15 @@ and TSS-confidentiality tests are included.
 
 ### Scope
 
-- One approved provider. **Polar AccessLink implemented provisionally;
-  production approval pending**
+- One approved provider. **Polar AccessLink conditionally selected;
+  production remains gated on legal/privacy/provider-terms approval**
 - OAuth/token lifecycle. **Implemented for Polar's authorization-code,
   registration, long-lived access-token, and deregistration/revocation model**
 - Webhook verification and idempotency. **Implemented with Polar HMAC-SHA256,
   a ten-minute timestamp window, unique payload receipts, and duplicate
   suppression**
-- Historical import limited to approved range. **Implemented with a hard
-  one-to-30-day request bound; using Polar's provider-enforced rolling 30-day
-  availability remains product-approval-gated**
+- Historical import limited to approved range. **Implemented with explicit
+  7/14/30-day choices, 14 days by default and a clear no->30-days message**
 - Private activity-file storage. **Implemented for available FIT files in a
   non-public 25 MiB bucket with owner read RLS and server-only writes**
 - Provider-specific contract fixtures. **Implemented**
@@ -1137,61 +1159,73 @@ and TSS-confidentiality tests are included.
 - Imported activities use the same canonical UC-03 path. **Locally verified**
 - Provider failure does not corrupt plan or activity state. **Locally
   verified**
+- Imports retry through a bounded scheduled monolith job. **Implemented as
+  `start23-retry-polar-imports`; Railway scheduling/monitoring remains a
+  deployment gate**
+- Imported activities are never silently linked. **A deterministic suggestion
+  requires explicit athlete confirmation**
 
 ### Phase 9 implementation differences and remaining work
 
-- Polar AccessLink is not yet an approved production processor. Before hosted
-  use, approve its terms, health/GPS legal basis, consent copy, retention and
-  deletion policy, regional-processing position, and brand/attribution
-  requirements; then register the real client and webhook.
+- Polar AccessLink has a conditional GO as first provider, not production
+  approval. Production startup with Polar credentials requires legal, privacy
+  and provider-terms approval. Consent, deletion, region and attribution
+  evidence remain release inputs.
 - The maximum historical window is 30 days because the selected AccessLink v3
   exercise endpoint exposes only exercises uploaded after client registration
   and within the last 30 days. Start23 additionally filters the athlete's
-  requested one-to-30-day window. No older backfill or automatic 30-day
-  calibration was invented.
+  explicit 7/14/30-day window, with 14 days as default. The mobile UI states
+  that more than 30 days is unavailable; no older backfill was invented.
 - Polar AccessLink v3 documents access tokens as long-lived until explicit
   deregistration rather than a refresh-token rotation. The persistence model
   accepts a provider expiry when supplied, but no unsupported refresh flow was
   added. Disconnect first asks Polar to deregister/revoke; local token removal
   occurs only after success or an already-revoked response so a transient
-  provider failure remains safely retryable.
+  provider failure remains safely retryable. Authorization rejection removes
+  the unusable credential, preserves prior activities and exposes
+  `reconnect_required` until the athlete grants fresh OAuth consent.
 - A valid duplicate webhook is acknowledged as `duplicate` and excluded from
   processing, rather than returning an error that would cause the provider to
   retry it. Invalid signatures, stale timestamps, unsupported events, and
   provider-controlled fetch URLs are rejected.
 - Webhook work is persisted before a FastAPI background task processes it.
-  The receipt/import state is retry-safe and failures are recorded, but a
-  deployed scheduled retry command is not yet configured. No Redis, Celery, or
-  second service was introduced.
+  Failed eligible imports use bounded exponential back-off and can be claimed
+  by `start23-retry-polar-imports` in the same monolith. No Redis, Celery, or
+  second service was introduced; the Railway schedule and alert remain to be
+  configured operationally.
 - FIT files are stored when Polar makes one available. A missing FIT export
   does not invalidate the canonical summary. Storage metadata is owner-scoped;
   a signed-download API, raw-file UI, maps, and telemetry analytics remain out
   of MVP scope.
-- No Expo connection/import UI was added in this backend-first slice. The
-  OAuth start/callback, connection, disconnect, import, and import-status APIs
-  are ready for a later small mobile surface after provider approval.
+- Expo now has one compact Integrations screen for connect, status, 7/14/30-day
+  import, retry, disconnect and privacy explanation. It exposes no TSS. An
+  imported activity can show a same-discipline time-near suggestion, but only
+  an explicit athlete action persists the planned-workout link.
 - The migration is applied to hosted Supabase and the 23-assertion rollback-only
   pgTAP suite, owner policies, explicit grants, private 25 MiB bucket, and
   linked error-level lint are verified. Real OAuth callback, webhook delivery,
   two-session RLS, Storage transfer, Railway background execution, and
   Android/iOS runtime verification still require provider credentials and
   hosted rollout approval.
-- The linked Security Advisor has no error-level finding. It reports expected
-  warnings for the authenticated `start_polar_oauth`, `get_polar_connection`,
-  and `list_polar_imports` `SECURITY DEFINER` RPCs. Each revokes public/anonymous
-  execution, derives and checks `auth.uid()`, and returns owner-scoped data; a
-  production security review must either accept that deliberate boundary or
-  refactor the read-only RPCs. The project-level leaked-password protection
-  warning also remains open. Newly installed indexes are reported as unused
-  before production traffic, and the composite `activity_files` foreign key is
-  already covered by its unique `activity_id` lookup plus owner index, so no
-  redundant advisor-only index was added.
-- Local verification passes the complete 303-test backend suite, strict mypy,
-  and Ruff. Local Supabase lint still cannot run because the configured
+- The new forward-only decision migration changes the read-only
+  `get_polar_connection` and `list_polar_imports` RPCs to `SECURITY INVOKER`,
+  explicit grants and owner RLS. Narrow credential/write operations retain
+  guarded definer boundaries. Migration `20260825225207` is now hosted and its
+  nine rollback-only pgTAP assertions pass. Project-level leaked-password
+  protection must be enabled before production. The advisor also reports the
+  deliberately bounded authenticated activity-match definer RPC alongside four
+  existing activity and one Polar definer warnings; each derives ownership from
+  `auth.uid()` and remains a reviewed exception rather than a general table
+  grant. Newly installed indexes are reported as unused before production
+  traffic, and the composite `activity_files` foreign key is already covered by
+  its unique `activity_id` lookup plus owner index, so no redundant advisor-only
+  index was added.
+- Local verification of this decision increment is recorded with the change;
+  local Supabase lint still cannot run because the configured
   PostgreSQL service at `127.0.0.1:54322` is unavailable; the linked hosted lint
   passes with no schema errors.
 
-## Phase 10: constrained LLM coach
+## Phase 10: athlete-controlled weekly planning and constrained LLM coach
 
 ### Status
 
@@ -1223,10 +1257,51 @@ production gate. The local environment still lacks
 `START23_SUPABASE_SECRET_KEY`, so local FastAPI service-only planning calls need
 that separate secret before a complete weekly-plan E2E run can succeed.
 
+The athlete-controlled planning scope added on 2026-08-26 is now implemented
+locally. Public planning uses athlete-local dates throughout; previous-week
+reuse is an explicit action; 48-hour bike/swim spacing means two complete
+intervening local rest dates; and the mobile proposal editor loads only
+server-authoritative choices for the exact pending proposal and revision. Each
+edit creates another immutable pending revision and expires the prior proposal.
+The separately approved 72-hour high-intensity run rule remains elapsed-time
+based inside the deterministic engine.
+
+The check-in now offers bounded free-text extraction into a strict inert
+candidate. The provider has no tools, uses `store: false`, and can suggest only
+blocked dates, fatigue, enumerated missed-workout reasons, possible injury
+disciplines, agenda context, and clarifying questions. Nothing is persisted or
+applied by extraction. The athlete must explicitly copy safe candidate fields
+into the structured form, choose any injury restriction themselves, save the
+form, and separately confirm it before a plan proposal can be created.
+
 ### Scope
 
-- Structured context extraction. **Pending beyond this pulled-forward slice**
-- Clarifying questions. **Pending beyond this pulled-forward slice**
+- Replace hour-based availability with athlete-local available dates. Ask for
+  available days for every new week and provide an explicit "same as previous
+  week" action; never infer reuse from silence. **Implemented**
+- Schedule a workout only on an athlete-local date. The plan says on which day
+  training is required, not at what time on that day. A test or calibration
+  session follows the same day-only scheduling contract. **Implemented for the
+  shared planner contract**
+- Interpret a 48-hour rest rule as two complete intervening athlete-local rest
+  dates. After a Wednesday workout, Saturday is the earliest next eligible day.
+  This changes the current elapsed-instant implementation for 48-hour cases; it
+  does not silently change a separately approved 72-hour rule. **Implemented as
+  `phase-10-ruleset-1`; production review is reopened for this material BR-006
+  change**
+- Let the athlete edit a pending week proposal by removing proposed workouts
+  and swiping through eligible replacements. Every removal/replacement must be
+  recalculated server-side against the exact pending revision, selected set,
+  availability, restrictions, spacing, phase, and zone/RPE capability.
+  **Implemented with accessible swipe and previous/next controls**
+- Retain the existing BR-004 low-completion behavior. At less than 80% of the
+  prior planned private load, use the available 42-day baseline; do not
+  automatically make the following week heavier or add missed work back. Any
+  later change to this rule requires a separately reviewed ruleset update.
+  **Retained and regression-tested**
+- Structured context extraction. **Implemented as an ephemeral, schema-bound
+  candidate with deterministic fallback and no mutation authority**
+- Clarifying questions. **Implemented inside the same bounded candidate**
 - Explanation of deterministic recommendations. **Implemented for weekly-plan
   proposals with deterministic fallback**
 - Confirmation UI bound to a specific proposal. **Implemented by reusing the
@@ -1234,28 +1309,253 @@ that separate secret before a complete weekly-plan E2E run can succeed.
 
 ### Exit criteria
 
+- Availability requests and plan/calendar DTOs contain dates, not training
+  times or availability hours; "same as previous week" copies only after an
+  explicit athlete action. **Verified in Python/API tests and mobile strict
+  TypeScript**
+- Timezone and daylight-saving fixtures prove the day-only schedule, and the
+  48-hour cases prove Wednesday-to-Saturday as the earliest valid placement.
+  **Verified, including spring-forward and fall-back fixtures**
+- Removing or swiping a workout cannot bypass server-authoritative eligibility,
+  stale-revision checks, spacing rules, or pending-plan approval.
+  **Verified for replacement, stale revision, and immutable next-proposal flow**
+- Low-completion fixtures preserve BR-004's 80% boundary and 42-day-baseline
+  fallback. No planned or realized TSS appears in the API, UI, LLM prompt,
+  logs, or messages. **Verified in deterministic and recursive contract tests**
 - LLM output cannot invoke plan or zone mutation. **Implemented and tested**
-- Extracted context is schema-validated. **Not yet applicable; free-text
-  extraction remains pending**
-- Required context is confirmed before critical effects. **Implemented: the AI
-  runs only after deterministic proposal creation and cannot apply it**
+- Extracted context is schema-validated. **Implemented with a closed Pydantic
+  schema and deterministic fallback**
+- Required context is confirmed before critical effects. **Implemented: the
+  candidate is inert, the structured context is separately saved and
+  confirmed, and every plan revision still requires approval**
 - Prompts and responses contain no TSS. **Implemented and contract-tested**
 - Privacy and retention configuration is approved. **Pending production gate;
   API requests already set `store: false` and minimize disclosed data**
 
-## Phase 11: zone progress evaluation
+### Phase 10 implementation differences and remaining work
+
+- Earlier Phase 6 SQL and private load relationships still use a timestamp.
+  The migration retains that internal column only as a compatibility projection
+  at athlete-local noon. It is not a prescribed training time and is omitted
+  from every planning/calendar DTO and mobile surface; `scheduled_date` is the
+  public and authoritative Phase 10 schedule value.
+- Historical Phase 6 availability snapshots did not record whether the athlete
+  typed or reused them. Backfilled rows therefore receive source `explicit`;
+  new rows record `explicit`, `previous_week`, or `checkin` accurately.
+- Context candidates and source text are deliberately not stored in
+  `context_candidates` or `coach_messages`. This minimizes sensitive retention
+  until privacy/DPA/retention policy explicitly approves durable storage.
+- Migration `20260826085242_phase_10_date_only_planning` was created and pushed
+  with pinned Supabase CLI `2.115.0`. The first hosted attempt found an invalid
+  target-table reference in the availability backfill and rolled the Phase 10
+  migration back before ledger registration. The backfill was changed to a
+  correlated `SET` subquery, the dry-run then contained only Phase 10, and the
+  retry applied successfully. Local and remote ledgers now align.
+- All 18 rollback-only Phase 10 pgTAP assertions pass against development.
+  `supabase test db --linked` still requires a local Docker `pg_prove` runner,
+  so the same committed SQL was executed directly with current CLI
+  `db query --linked --file`. Linked public/private error-level lint is clean;
+  advisors contain no error and no Phase 10-specific warning. Read-only hosted
+  checks confirm zero null date backfills, date-only move/calendar signatures,
+  removal of the public timestamp move signature, and service-only exact
+  revision context. Two-real-user isolation remains a release gate.
+- Expo SDK 57 mobile code passes strict TypeScript, but Android/iOS gesture,
+  accessibility, stale-edit, DST display, and physical-device runtime still
+  require device verification.
+- Local application verification passes all 360 backend tests, Ruff, strict
+  mypy, and mobile strict TypeScript. The only test warning is Starlette's
+  upstream `httpx` deprecation notice.
+- `phase-10-ruleset-1` changes BR-006 and intentionally reopens the named
+  physiological production-review gate. It does not inherit approval merely
+  because `phase-3-ruleset-3` was reviewed.
+
+## Phase 10.1: swipe-built week and calendar timeline
+
+### Status
+
+Planned on 2026-08-29. The implemented Phase 10 swipe editor replaces one
+workout inside an already generated proposal. It does not yet provide the
+deck-first flow below, in which the athlete accepts workouts until the complete
+weekly target is filled and only then chooses their calendar placement.
+
+### Product flow
+
+1. The deterministic planner calculates the athlete's weekly target before the
+   first card is shown, including the required workout count and composition.
+   The mobile UI shows progress such as `0 of 3 selected`; it never exposes
+   planned or realized TSS.
+2. The server returns one eligible workout card at a time. Swiping left passes
+   on that candidate for the current draft and does not reduce the weekly
+   target. Swiping right accepts it once and advances the progress counter.
+   For example, ten left swipes followed by three valid right swipes can fill a
+   three-workout week.
+3. When the target is complete, the athlete chooses either deterministic
+   automatic placement or `Plan on timeline`.
+4. The timeline shows the seven athlete-local dates and only valid available
+   date slots. The athlete moves through the selected workout cards and swipes
+   or places each card onto a date. Buttons and tap controls provide the same
+   actions for accessibility and precise correction.
+5. Completing either placement route creates a new immutable pending plan
+   revision. Neither a right swipe nor a calendar placement activates a plan;
+   the existing explicit approval step remains required.
 
 ### Scope
 
+- Add a server-authoritative swipe draft bound to the athlete, local week,
+  exact base revision, confirmed context, restrictions, availability, and
+  ruleset version. **Planned**
+- Keep the target workout count fixed for that draft. Passed cards do not count
+  toward it, and an accepted workout counts at most once. **Planned**
+- Recalculate every right swipe against the accepted set and the deterministic
+  weekly composition, phase, zone/RPE capability, injury, recovery, taper,
+  catalog, and private-load constraints. **Planned**
+- Do not immediately resurface a passed card in the same draft. Support undoing
+  the last swipe and resetting passed cards; if no eligible completion exists,
+  return a clear recoverable state rather than looping indefinitely. **Planned**
+- After selection, offer both deterministic automatic placement and manual
+  date-only placement on a horizontally navigable week timeline. **Planned**
+- Revalidate the complete layout server-side after every placement or move.
+  Invalid dates remain unavailable and qualitative warnings stay visible.
+  **Planned**
+- Preserve the current immutable pending-revision, stale-edit, explicit
+  approval, RLS, and TSS-confidentiality boundaries. **Planned**
+
+### Exit criteria
+
+- A fixture with ten left swipes and three valid right swipes produces exactly
+  a complete three-workout selection; none of the passed workouts is selected.
+- Left swipes never lower the weekly target, duplicate right swipes are
+  idempotent, and stale or cross-athlete drafts are rejected.
+- The app cannot mark a week complete based on count alone when its accepted
+  composition or deterministic private constraints are invalid.
+- The athlete can choose automatic placement or place every selected workout
+  on the seven-day timeline using gestures or equivalent accessible controls.
+- Date placement respects confirmed availability, restrictions, recovery,
+  taper, spacing, and athlete-local timezone rules, including DST fixtures.
+- Changing an accepted workout after scheduling invalidates or safely
+  recalculates its placement; an incomplete layout cannot be submitted.
+- The completed selection and layout create only a pending immutable proposal,
+  and activation still requires explicit athlete approval.
+- Public APIs, analytics, swipe state, calendar state, logs, and mobile screens
+  contain no planned or realized TSS.
+
+## Phase 11: discipline zone profile, testing, and progress evaluation
+
+### Status
+
+Implemented locally on 2026-08-28 on top of the Phase 8.5 calculation and
+approval foundations. Swim, bike, and run retain independent setup rows and
+zone-version histories. Zone-free disciplines receive deterministic RPE target
+snapshots with required completion-time average-heart-rate observations;
+neither input creates a threshold or zone. The Expo profile page shows active,
+pending, and immutable prior versions with provenance and allows later
+self-service known/physician-or-lab value entry or a reviewed test.
+
+Standalone tests create a separate pending `validation_test` proposal. Run and
+bike tests can instead replace one same-discipline workout in an exact-date
+pending weekly-plan revision. Both paths require explicit confirmation. The
+Phase 11 migration and 24-assertion rollback-only pgTAP suite are committed but
+have not been applied to hosted Supabase or executed locally: the local database
+service at `127.0.0.1:54322` did not respond to pinned CLI lint and the check was
+stopped without changing a hosted project.
+
+### Scope
+
+- Present the setup choice independently for swim, bike, and run: use known or
+  physician/lab-tested values, perform a reviewed field test, or continue
+  without a test using RPE-guided training.
+- Do not present "calibration week" and "RPE by feel" as two different workout
+  assignment behaviors. Both receive safe RPE-targeted workouts; calibration
+  additionally records eligible objective observations and provenance for a
+  possible later pending threshold/zone proposal.
+- When a field test is selected, offer an explicit choice between doing it now
+  as a standalone session or integrating it into the weekly plan. In both
+  routes the athlete chooses the athlete-local test date and no training hour
+  is prescribed.
+- When the athlete declines a test, prescribe the first week by target RPE
+  rather than fabricated heart-rate Zone 1-5 ranges. Each assigned workout has
+  an expected RPE; after completion the athlete records actual session RPE and
+  the required heart-rate observation in bpm. Interpret the measurement
+  tolerance as an inclusive +/-10 bpm around the applicable reviewed session
+  or protocol reference. This observation cannot by itself manufacture zones.
+- Show zone state per discipline on the profile page, including previously
+  entered values, source/provenance, review state, and active version. Preserve
+  immutable prior versions.
+- For the calibration route, keep numeric zones hidden in the profile through
+  the first two weeks. After Week 2, show them only when eligible reviewed data
+  produced a complete pending proposal and the athlete separately approved it;
+  otherwise show that the discipline remains RPE-guided/unknown.
+- On every discipline's zone page, allow the athlete at any later time to start
+  a reviewed test or enter physician/lab-tested values. Either route creates a
+  discipline-specific pending threshold/zone update and never mutates another
+  discipline.
 - Implement UC-05 only after statistical thresholds are approved.
 - Produce validation-test or zone-update proposals.
 - Reuse existing activity and approval workflows.
 
 ### Exit criteria
 
+- Swim, bike, and run can each use a different setup route without overwriting
+  one another.
+- Both no-test/RPE and calibration choices receive workouts, while workouts
+  without confirmed zones use RPE/protocol targets and never fabricated zone
+  targets.
+- Test-now and integrate-in-week routes are both covered, including explicit
+  day choice, same-week plan validation, and pending-plan approval where the
+  weekly plan changes.
+- Heart-rate observations use bpm and the inclusive +/-10 bpm tolerance has
+  deterministic tests at, inside, and immediately outside both boundaries.
+  Heart rate cannot influence a threshold, zone, or plan outside a reviewed
+  deterministic protocol.
+- Calibration-based numeric zones cannot appear before the completed Week-2
+  evaluation and cannot become active without the separate confirmation
+  sequence.
+- The profile exposes only TSS-free discipline zone state and supports later
+  physician/lab value entry or a new test through pending updates.
 - Minimum sample and data-quality requirements are tested.
 - Outlier behavior is deterministic.
 - No zone is changed without the approved confirmation sequence.
+
+### Phase 11 implementation differences and remaining work
+
+- **Implemented:** all three disciplines can independently choose known values,
+  a reviewed field test, calibration, or RPE-only guidance. The profile update
+  form explicitly distinguishes athlete-entered values from values reported as
+  physician/lab measured; the resulting calculated profile remains pending and
+  preserves `measured_lab` provenance.
+- **Implemented:** calibration and RPE-only use the same ordinary RPE-targeted
+  workout projection. Calibration retains its reviewed protocol and immutable
+  observation path as additional provenance; it does not fabricate a threshold.
+- **Implemented with one fail-closed exception:** standalone field tests support
+  swim, bike, and run. Exact-date weekly-plan integration supports the reviewed
+  duration-complete run and bike protocols. The CSS swim protocol has
+  distance-only segments and no approved planned duration/private-load
+  treatment, so integrated swim scheduling is rejected rather than inventing a
+  duration or hidden load. It remains available as a standalone date-only test.
+- **Implemented:** assigned RPE workouts expose an expected RPE target and
+  require actual session RPE plus average heart rate in bpm at completion. The
+  inclusive `reference - 10 <= observed <= reference + 10` calculation is pure
+  deterministic Python with tests at, inside, and immediately outside both
+  boundaries. No general-session reviewed reference is currently defined, so
+  the comparison is invoked only when future trusted protocol/session context
+  supplies one; stored heart rate remains an observation and never becomes a
+  zone input by itself.
+- **Fail-closed Week-2 behavior:** numeric calibration zones remain hidden.
+  There is no approved Week-2 completeness/minimum-sample/outlier ruleset, so
+  the application cannot truthfully mark the Week-2 evaluation complete or
+  reveal/activate a calibration-derived profile. Once such a reviewed ruleset
+  exists, only a complete pending proposal followed by the existing separate
+  approval may become active.
+- **Not implemented by design:** automatic UC-05 progress evaluation, minimum
+  sample thresholds, and outlier rejection remain gated on the statistical
+  decisions explicitly required by this phase. Existing reviewed field-test
+  protocol completeness and data-quality checks remain covered, but they are
+  not presented as UC-05 statistics.
+- **Verification:** Ruff, strict mypy, 378 backend tests, recursive TSS/OpenAPI
+  contracts, and Expo strict TypeScript pass. The new migration/pgTAP suite,
+  hosted lint/advisors, two-real-user RLS isolation, and Android/iOS runtime
+  remain explicit deployment gates. No production or hosted database mutation
+  was performed automatically.
 
 ## Phase 12: non-race planning modes
 
@@ -1263,19 +1563,31 @@ This is the new final functional phase requested on 2026-08-13. The product
 option remains visible as planned/coming later until its deterministic rules
 are approved; it must not masquerade as a supported race plan before then.
 
+### Status
+
+Partially implemented locally on 2026-08-28. The fail-closed goal-mode
+boundary is complete: the authenticated API and Expo onboarding now distinguish
+a dated race/event from personal goals, and general fitness, weight loss, and
+muscle gain are visibly marked as coming later. Non-race plan generation is
+not implemented because the required reviewed deterministic rule tables and
+workout-catalog eligibility decisions are not present in the repository.
+
 ### Scope
 
 - Goal-type selection clearly distinguishes a dated race/event from a non-race
   personal goal. Race goals are date-anchored and handled by the race planner;
-  non-race goals start their own cycle at week 1.
+  non-race goals start their own cycle at week 1. **Implemented as an explicit
+  capability boundary; only race/event is currently available.**
 - Non-race goal selection, including general fitness, weight loss, and other
-  explicitly approved goal families.
+  explicitly approved goal families. **Named families are visible as coming
+  later; none is selectable for planning.**
 - Goal-specific macrocycles, maintenance rules, intensity targets, progression
-  and recovery behavior.
+  and recovery behavior. **Deferred pending reviewed deterministic rules.**
 - Workout-catalog coverage and deterministic eligibility for each supported
-  goal family.
+  goal family. **Deferred with the non-race rules; race coverage is unchanged.**
 - Pending proposal and athlete-confirmation flow identical in safety semantics
-  to race planning.
+  to race planning. **Existing race safety semantics are unchanged; no
+  unsupported non-race proposal can be created.**
 
 ### Exit criteria
 
@@ -1285,6 +1597,36 @@ are approved; it must not masquerade as a supported race plan before then.
   onto race rules.
 - Public plan responses continue to omit planned and realized TSS.
 - No plan becomes active without athlete confirmation.
+
+### Phase 12 implementation differences and remaining work
+
+- Added authenticated `GET /api/v1/onboarding/goal-options` as the canonical,
+  TSS-free capability catalog. It returns race/event as `available`, anchored
+  to `race_date`, and the three named personal-goal families as
+  `coming_later`, anchored to `cycle_week_1`, with
+  `deterministic_rules_not_approved` as the explicit reason.
+- Expo onboarding requires an explicit race/event versus personal-goal choice.
+  Selecting personal goals shows the unavailable families and explanation; it
+  exposes no save or plan-generation action. An existing race goal resumes in
+  race/event mode.
+- The existing goal mutation intentionally remains the narrow
+  `PrimaryRaceGoalInput`. Extra or non-race `goal_type` input is rejected, so a
+  personal goal cannot be persisted as a disguised race. No database migration
+  or hosted Supabase mutation was required for this capability-only slice.
+- The full functional phase remains open. Product/physiology review must supply
+  versioned rule tables for each goal family, including macrocycle blocks,
+  maintenance entry/exit behavior, time-based intensity targets, progression,
+  recovery, and deterministic workout eligibility. Only after those rules and
+  catalog coverage are approved may a non-race persistence/proposal path be
+  added.
+- Verification passes for this slice: all 380 backend tests, Ruff lint, strict
+  mypy and Ruff formatting over the changed backend paths, recursive
+  TSS/OpenAPI contracts, and Expo strict TypeScript. Repository-wide Ruff
+  formatting still flags a pre-existing coach-prompt wrap, and repository-wide
+  mypy still flags pre-existing Phase 11-era test typing in `test_config.py` and
+  a calibration test double missing `save_integrated_test_assignment`; these
+  unrelated working-tree changes were not modified. Android/iOS runtime
+  verification remains outstanding. No hosted database mutation was performed.
 
 ### Final deployment and security handoff
 
@@ -1323,6 +1665,8 @@ Included:
 - manual and approved fallback zone configuration;
 - small curated workout catalog;
 - deterministic planning rules required for the selected scope;
+- swipe-built weekly workout selection with an optional date-only calendar
+  timeline;
 - pending plan revision and approval;
 - calendar and athlete rescheduling;
 - qualitative rule warnings;
@@ -1365,8 +1709,8 @@ Every phase must:
 ## Current status
 
 - Phase 0 architecture/state decisions: `locked`
-- Phase 0 physiological specification: `ruleset-3 implemented; qualified
-  production review of active versions confirmed complete 2026-08-24`
+- Phase 0 physiological specification: `ruleset-3 implemented; one qualified
+  accountable reviewer plus external review record required before production`
 - Phase 1 backend foundation: `implemented; locally verified`
 - Phase 2 authentication: `verified`
 - Phase 2 persistence and hosted RLS: `hosted schema/RLS verified; FastAPI
@@ -1391,17 +1735,32 @@ Every phase must:
 - Phase 8.5 zone intake, field tests, and Week-1 calibration: `backend and
   mobile functional cores, approved-fixture parity, and Zone 1-5 model v1.0
   implemented; original and zone-model hosted migrations/pgTAP/lint verified;
-  planner, dependency-advisory, real-token, and device-runtime gates remain;
-  physiology review is complete`
+  protocol_target planning implemented; dependency risk accepted per release;
+  named-review, real-token, and physical-device gates remain`
 - Phase 9: `Polar backend functional core and hosted migration/pgTAP/lint
-  verified; provider/legal approval, real OAuth/webhook/storage, retry
-  scheduling, security-review choices, and mobile runtime remain pending`
-- Phase 10 constrained LLM coach: `weekly-plan explanation slice pulled
-  forward and implemented with Structured Outputs, TSS-free facts,
-  deterministic fallback, pending-only hosted persistence, mobile display, and
-  a successful live provider smoke test; privacy approval, local Supabase
-  backend-secret configuration, and context extraction remain`
-- Phase 11 and Phase 12: `not started`
+  verified; conditional first-provider GO; integrations UI, bounded retry,
+  reconnect_required, explicit activity match, and invoker read RPCs added;
+  decision migration is hosted and its nine pgTAP assertions pass; approvals,
+  Railway schedule, leaked-password protection, and real two-user/device E2E
+  remain pending`
+- Phase 10 athlete-controlled weekly planning and constrained LLM coach:
+  `implemented and migrated to development: day-only availability/schedules/calendar, explicit
+  previous-week reuse, local-date 48-hour spacing, server-authoritative pending
+  removal/replacement with swipe UI, ephemeral context extraction/clarifying
+  questions, and constrained explanation; hosted 18-assertion pgTAP, ledger,
+  lint, advisor, and read-only contract verification pass; device/two-user E2E,
+  privacy approval, and renewed BR-006 physiological review remain gates`
+- Phase 10.1 swipe-built week and calendar timeline: `planned; deck-first
+  accept/pass selection, fixed weekly count, optional automatic or manual
+  date-only placement, and pending-plan approval remain to be implemented`
+- Phase 11 discipline zone profile, testing, and progress evaluation:
+  `implemented locally: independent discipline profile/history, unified
+  RPE-guided assignment, date-only standalone and run/bike integrated tests,
+  pending approvals, completion-time bpm observation, and later self-service;
+  integrated swim and automatic UC-05/Week-2 statistics remain fail-closed
+  pending approved duration/load and statistical thresholds; migration,
+  pgTAP, hosted lint/RLS, and device verification remain gates`
+- Phase 12: `not started`
 
 ## Unresolved roadmap decisions
 
@@ -1411,24 +1770,38 @@ Every phase must:
 - Physical-iPhone SDK 57 validation depends on Apple signing and device
   registration, but no longer blocks Android-led Phase 4 mobile development.
 - The phase-one activity input is a canonical authenticated summary. Polar
-  AccessLink v3 is the provisional Phase 9 adapter and maps into that same
-  path; production provider/legal approval remains unresolved.
+  AccessLink v3 is the conditionally selected Phase 9 adapter and maps into
+  that same path; legal, privacy and provider-terms approval remain a hard
+  production gate.
 - Non-race goals are assigned to the new final Phase 12 and require separate
   deterministic rules and catalog coverage before becoming selectable as
   supported plans.
 - The functional injury policy, zero-redistribution MVP rule, durable Phase 8
   persistence, weekly review UI, low-only filtering, and rest-only pending plan
-  are implemented; qualified clinical production approval of the active rules
-  was confirmed complete on 2026-08-24.
+  are implemented; the accountable physiology-review record remains required
+  before production.
 - Current-week RPE correction/audit, achieved-goal maintenance, and the exact
   four-complete-week restart baseline are implemented. Phase 8.5 defines RPE
   in this flow as canonical 1-10 RPE and implements reviewed field-test
   threshold formulas plus safe submaximal calibration. The complete
   deterministic conversion from confirmed thresholds to Zone 1-5 is now
   implemented as `start23-zone-model-1.0`, with separate pending threshold and
-  zone decisions. Zone-independent normal-plan selection, real-token and mobile
-  device verification, and upstream-compatible dependency-advisory resolution
-  remain open; deployment and pgTAP verification of the zone-model migration
-  are complete.
-  Qualified clinical production approval is complete. The original Phase 8.5
-  hosted migration, pgTAP, and error-level lint remain verified.
+  zone decisions. Zone-independent bike calibration selection is implemented
+  via `protocol_target`. Real-token and physical-device verification remain
+  hard gates; dependency advisories are reassessed and accepted per release
+  without a forced breaking audit fix. A qualified accountable physiology
+  reviewer and external review record remain required. The original Phase 8.5
+  hosted migration, pgTAP, and error-level lint remain verified; the new
+  decision migration is also hosted and its rollback-only pgTAP passes.
+- Decision 2026-08-26 retains BR-004 unchanged: below 80% of prior planned
+  private load, the planner uses the available 42-day baseline and does not
+  guarantee a heavier following week. A future change requires a new reviewed
+  ruleset decision.
+- Decision 2026-08-26 defines the requested heart-rate measurement tolerance as
+  inclusive +/-10 bpm. It remains observation context unless a reviewed
+  deterministic protocol explicitly uses it; it never creates zones by itself.
+- Phase 10 supersedes Phase 6's athlete-facing windows with explicit dates and
+  evaluates BR-006 bike/swim spacing as two complete intervening local rest
+  dates. The old timestamp remains private compatibility data only. Hosted
+  migration, pgTAP, ledger, lint, advisors and read-only contract checks pass;
+  two-user isolation and the renewed BR-006 production review remain open.

@@ -6,8 +6,14 @@ import {
   type TextInputProps,
   View,
 } from 'react-native';
+import Animated, {
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
-import { colors, radius, spacing } from '../theme/tokens';
+import { colors, motion, radius, spacing } from '../theme/tokens';
 
 type FormFieldProps = TextInputProps & {
   label: string;
@@ -15,23 +21,49 @@ type FormFieldProps = TextInputProps & {
   suffix?: ReactNode;
 };
 
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+
 export function FormField({
   label,
   hint,
   suffix,
+  onBlur,
+  onFocus,
   style,
   ...inputProps
 }: FormFieldProps) {
+  const focusProgress = useSharedValue(0);
+  const focusStyle = useAnimatedStyle(() => ({
+    borderColor: interpolateColor(
+      focusProgress.value,
+      [0, 1],
+      [colors.line, colors.brand],
+    ),
+  }));
+
   return (
     <View style={styles.group}>
       <View style={styles.labelRow}>
         <Text style={styles.label}>{label}</Text>
         {suffix}
       </View>
-      <TextInput
+      <AnimatedTextInput
         accessibilityLabel={label}
+        onBlur={(event) => {
+          focusProgress.value = withTiming(0, {
+            duration: motion.duration.fast,
+          });
+          onBlur?.(event);
+        }}
+        onFocus={(event) => {
+          focusProgress.value = withTiming(1, {
+            duration: motion.duration.fast,
+          });
+          onFocus?.(event);
+        }}
         placeholderTextColor={colors.inkFaint}
-        style={[styles.input, style]}
+        selectionColor={colors.accent}
+        style={[styles.input, focusStyle, style]}
         {...inputProps}
       />
       {hint ? <Text style={styles.hint}>{hint}</Text> : null}
@@ -54,13 +86,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   input: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceRaised,
     borderColor: colors.line,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     borderWidth: 1,
     color: colors.ink,
     fontSize: 16,
-    minHeight: 50,
+    minHeight: 54,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
   },

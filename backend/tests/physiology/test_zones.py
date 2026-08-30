@@ -15,6 +15,7 @@ from app.modules.physiology.zones import (
     ZONE_MODEL_EVIDENCE_VERSION,
     ZONE_MODEL_VERSION,
     ClinicalRange,
+    HeartRateToleranceStatus,
     ZoneBoundary,
     ZoneMetric,
     ZoneMetricKind,
@@ -23,6 +24,7 @@ from app.modules.physiology.zones import (
     ZoneScaleDirection,
     ZoneSoftRangeRule,
     ZoneValidationState,
+    assess_heart_rate_tolerance,
     assess_metric_with_soft_limits,
     calculate_age_220_karvonen_fallback,
     calculate_karvonen_fallback,
@@ -39,6 +41,40 @@ from app.modules.physiology.zones import (
     validate_zone_boundaries,
     validate_zone_profile,
 )
+
+
+@pytest.mark.parametrize(
+    ("observed_bpm", "expected"),
+    [
+        (89, HeartRateToleranceStatus.OUTSIDE_TOLERANCE),
+        (90, HeartRateToleranceStatus.WITHIN_TOLERANCE),
+        (91, HeartRateToleranceStatus.WITHIN_TOLERANCE),
+        (109, HeartRateToleranceStatus.WITHIN_TOLERANCE),
+        (110, HeartRateToleranceStatus.WITHIN_TOLERANCE),
+        (111, HeartRateToleranceStatus.OUTSIDE_TOLERANCE),
+    ],
+)
+def test_heart_rate_observation_uses_inclusive_ten_bpm_boundaries(
+    observed_bpm: int,
+    expected: HeartRateToleranceStatus,
+) -> None:
+    result = assess_heart_rate_tolerance(
+        observed_bpm=observed_bpm,
+        reference_bpm=100,
+    )
+
+    assert result.lower_inclusive_bpm == 90
+    assert result.upper_inclusive_bpm == 110
+    assert result.status is expected
+
+
+def test_heart_rate_observation_cannot_change_the_reviewed_tolerance() -> None:
+    with pytest.raises(ValueError, match="exactly 10 bpm"):
+        assess_heart_rate_tolerance(
+            observed_bpm=100,
+            reference_bpm=100,
+            tolerance_bpm=5,
+        )
 
 
 def _ascending_boundaries() -> tuple[ZoneBoundary, ...]:

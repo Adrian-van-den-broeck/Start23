@@ -1,9 +1,21 @@
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
 import * as SecureStore from 'expo-secure-store';
-import { useEffect, useMemo, useState } from 'react';
+import * as Haptics from 'expo-haptics';
+import {
+  type ComponentProps,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Pressable,
   Platform,
   ScrollView,
   StyleSheet,
@@ -11,13 +23,19 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  Carousel,
+  type CarouselRef,
+} from 'react-native-reanimated-carousel';
 
 import {
   approvePlanProposal,
   createScheduleProposal,
   createWeeklyPlanProposal,
+  editPendingWorkout,
   getCalendar,
   getOnboarding,
+  getPendingWorkoutAlternatives,
   getWeeklyPlan,
   getWorkoutDeck,
   markGoalAchieved,
@@ -26,17 +44,19 @@ import {
   validatePlanLayout,
 } from '../api/client';
 import type {
-  AvailabilityWindow,
   Discipline,
+  PendingWorkoutAlternatives,
   PlannedWorkout,
   PrimaryRaceGoal,
   RestDay,
   WeeklyPlan,
   WorkoutDeck,
 } from '../api/types';
+import { FadeInView } from '../components/FadeInView';
 import { FormField } from '../components/FormField';
+import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
-import { colors, radius, spacing } from '../theme/tokens';
+import { colors, radius, shadows, spacing } from '../theme/tokens';
 
 type PlanningScreenProps = {
   accessToken: string;
@@ -44,6 +64,8 @@ type PlanningScreenProps = {
   onBackToOnboarding: () => void;
   onOpenActivities: () => void;
   onOpenCheckIn: () => void;
+  onOpenIntegrations: () => void;
+  onOpenZoneProfile: (planId?: string, revision?: number) => void;
 };
 
 type ViewName = 'plan' | 'deck' | 'calendar';
@@ -88,33 +110,33 @@ function addDays(dateValue: string, days: number): Date {
   return value;
 }
 
-function availabilityFor(
+function availableDatesFor(
   weekStart: string,
   selectedDays: ReadonlySet<number>,
-  startTime: string,
-  endTime: string,
-): AvailabilityWindow[] {
-  const timePattern = /^([01]\d|2[0-3]):([0-5]\d)$/;
-  const startMatch = timePattern.exec(startTime);
-  const endMatch = timePattern.exec(endTime);
-  if (!startMatch || !endMatch) {
-    throw new Error('Gebruik tijden in het formaat UU:MM.');
-  }
+): string[] {
   return [...selectedDays]
     .sort((left, right) => left - right)
-    .map((dayOffset) => {
-      const startsAt = addDays(weekStart, dayOffset);
-      const endsAt = addDays(weekStart, dayOffset);
-      startsAt.setHours(Number(startMatch[1]), Number(startMatch[2]), 0, 0);
-      endsAt.setHours(Number(endMatch[1]), Number(endMatch[2]), 0, 0);
-      if (endsAt <= startsAt) {
-        throw new Error('De eindtijd moet na de starttijd liggen.');
-      }
-      return {
-        starts_at: startsAt.toISOString(),
-        ends_at: endsAt.toISOString(),
-      };
-    });
+    .map((dayOffset) => isoDate(addDays(weekStart, dayOffset)));
+}
+
+function dayOffsetsFor(weekStart: string, dates: string[]): Set<number> {
+  const start = new Date(`${weekStart}T12:00:00`);
+  return new Set(
+    dates.map((value) =>
+      Math.round(
+        (new Date(`${value}T12:00:00`).getTime() - start.getTime()) /
+          86_400_000,
+      ),
+    ),
+  );
+}
+
+function validDateInWeek(dateValue: string, weekStart: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) return false;
+  const parsed = new Date(`${dateValue}T12:00:00`);
+  if (Number.isNaN(parsed.getTime()) || isoDate(parsed) !== dateValue) return false;
+  const offset = dayOffsetsFor(weekStart, [dateValue]).values().next().value;
+  return typeof offset === 'number' && offset >= 0 && offset <= 6;
 }
 
 function ActionButton({
@@ -132,6 +154,7 @@ function ActionButton({
     <Pressable
       accessibilityRole="button"
       disabled={disabled}
+      haptic={secondary ? undefined : 'light'}
       onPress={onPress}
       style={[
         styles.action,
@@ -152,7 +175,7 @@ function ActionButton({
 }
 
 function WorkoutCard({ workout }: { workout: PlannedWorkout }) {
-  const scheduled = new Date(workout.scheduled_at);
+  const scheduled = new Date(`${workout.scheduled_date}T12:00:00`);
   return (
     <View style={styles.workoutCard}>
       <View style={styles.cardHeader}>
@@ -164,11 +187,6 @@ function WorkoutCard({ workout }: { workout: PlannedWorkout }) {
           {scheduled.toLocaleDateString('nl-NL', {
             weekday: 'short',
             day: 'numeric',
-          })}{' '}
-          ·{' '}
-          {scheduled.toLocaleTimeString('nl-NL', {
-            hour: '2-digit',
-            minute: '2-digit',
           })}
         </Text>
       </View>
@@ -182,17 +200,187 @@ function WorkoutCard({ workout }: { workout: PlannedWorkout }) {
   );
 }
 
+function PendingWorkoutEditor({
+  accessToken,
+  busy,
+  onEdited,
+  onError,
+  plan,
+  workout,
+}: {
+  accessToken: string;
+  busy: boolean;
+  onEdited: (updated: WeeklyPlan) => void;
+  onError: (message: string) => void;
+  plan: WeeklyPlan;
+  workout: PlannedWorkout;
+}) {
+  const [options, setOptions] = useState<PendingWorkoutAlternatives | null>(null);
+  const [optionIndex, setOptionIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const carouselRef = useRef<CarouselRef>(null);
+  const alternatives = options?.alternatives ?? [];
+  const selected = alternatives[optionIndex] ?? null;
+
+  const moveSelection = (direction: -1 | 1) => {
+    if (direction === -1) carouselRef.current?.prev({ animated: true });
+    else carouselRef.current?.next({ animated: true });
+  };
+
+  const load = async () => {
+    setLoading(true);
+    onError('');
+    try {
+      const result = await getPendingWorkoutAlternatives(
+        accessToken,
+        plan.id,
+        workout.id,
+        plan.revision,
+      );
+      setOptions(result);
+      setOptionIndex(0);
+    } catch (caught) {
+      onError(
+        caught instanceof Error
+          ? caught.message
+          : 'De vervangingen konden niet worden geladen.',
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const apply = async (replacementTemplateId: string | null) => {
+    if (!options) return;
+    setLoading(true);
+    onError('');
+    try {
+      const result = await editPendingWorkout(
+        accessToken,
+        plan.id,
+        workout.id,
+        {
+          expected_revision: options.revision,
+          expected_proposal_id: options.proposal_id,
+          replacement_template_id: replacementTemplateId,
+        },
+      );
+      onEdited(result.plan);
+      void Haptics.notificationAsync(
+        Haptics.NotificationFeedbackType.Success,
+      ).catch(() => undefined);
+    } catch (caught) {
+      onError(
+        caught instanceof Error
+          ? caught.message
+          : 'De wijziging kon niet als nieuw voorstel worden opgeslagen.',
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!options) {
+    return (
+      <View style={styles.editPanel}>
+        <ActionButton
+          disabled={busy || loading}
+          label={loading ? 'Opties laden...' : 'Training wijzigen'}
+          onPress={() => void load()}
+          secondary
+        />
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.editPanel}>
+      <Text style={styles.fieldLabel}>Geldige vervangingen</Text>
+      <Text style={styles.hint}>
+        Veeg naar links of rechts. De server heeft elke optie opnieuw getoetst
+        aan deze exacte revisie.
+      </Text>
+      {selected ? (
+        <Carousel
+          animation={{ type: 'spring', damping: 18, stiffness: 190 }}
+          data={alternatives}
+          keyExtractor={(item) => item.id}
+          layout={{
+            type: 'parallax',
+            adjacentScale: 0.92,
+            offset: 34,
+            scale: 0.96,
+          }}
+          onConfigurePanGesture={(gesture) => gesture.activeOffsetX([-12, 12])}
+          onSnapToItem={(index) => {
+            setOptionIndex(index);
+            void Haptics.selectionAsync().catch(() => undefined);
+          }}
+          ref={carouselRef}
+          renderItem={({ item, index }) => (
+            <View
+              accessibilityLabel={`Vervanging ${index + 1} van ${alternatives.length}`}
+              style={styles.swipeCard}
+            >
+              <Text style={styles.cardTitle}>{item.name}</Text>
+              <Text style={styles.cardDescription}>
+                {disciplineLabels[item.discipline]} · {Number(item.duration_minutes)} min · RPE{' '}
+                {item.expected_rpe_min}–{item.expected_rpe_max}
+              </Text>
+              <Text style={styles.hint}>
+                {index + 1} van {alternatives.length}
+              </Text>
+            </View>
+          )}
+          style={styles.carousel}
+        />
+      ) : (
+        <Text style={styles.hint}>Geen geldige vervanging voor deze training.</Text>
+      )}
+      {alternatives.length > 1 ? (
+        <View style={styles.decisionRow}>
+          <View style={styles.decisionButton}>
+            <ActionButton label="Vorige" onPress={() => moveSelection(-1)} secondary />
+          </View>
+          <View style={styles.decisionButton}>
+            <ActionButton label="Volgende" onPress={() => moveSelection(1)} secondary />
+          </View>
+        </View>
+      ) : null}
+      {selected ? (
+        <ActionButton
+          disabled={busy || loading}
+          label="Gebruik deze vervanging"
+          onPress={() => void apply(selected.id)}
+        />
+      ) : null}
+      {options.can_remove ? (
+        <ActionButton
+          disabled={busy || loading}
+          label="Training verwijderen"
+          onPress={() => void apply(null)}
+          secondary
+        />
+      ) : null}
+      <ActionButton label="Sluiten" onPress={() => setOptions(null)} secondary />
+    </View>
+  );
+}
+
 export function PlanningScreen({
   accessToken,
   onBackToOnboarding,
   onOpenActivities,
   onOpenCheckIn,
+  onOpenIntegrations,
+  onOpenZoneProfile,
   onSignOut,
 }: PlanningScreenProps) {
   const [view, setView] = useState<ViewName>('plan');
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const profileSheetRef = useRef<BottomSheetModal>(null);
   const [weekStart, setWeekStart] = useState(nextMonday);
-  const [startTime, setStartTime] = useState('07:00');
-  const [endTime, setEndTime] = useState('09:00');
+  const [reusePreviousWeek, setReusePreviousWeek] = useState(false);
   const [selectedDays, setSelectedDays] = useState<Set<number>>(
     () => new Set([0, 2, 5]),
   );
@@ -207,19 +395,42 @@ export function PlanningScreen({
   );
   const [calendarWorkouts, setCalendarWorkouts] = useState<PlannedWorkout[]>([]);
   const [calendarRestDays, setCalendarRestDays] = useState<RestDay[]>([]);
-  const [moveTimes, setMoveTimes] = useState<Record<string, string>>({});
+  const [moveDates, setMoveDates] = useState<Record<string, string>>({});
   const [primaryGoal, setPrimaryGoal] = useState<PrimaryRaceGoal | null>(null);
   const [maintenanceMarked, setMaintenanceMarked] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const availability = useMemo(() => {
-    try {
-      return availabilityFor(weekStart, selectedDays, startTime, endTime);
-    } catch {
-      return [];
+  const renderProfileBackdrop = useCallback(
+    (props: ComponentProps<typeof BottomSheetBackdrop>) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        opacity={0.35}
+        pressBehavior="close"
+      />
+    ),
+    [],
+  );
+
+  const toggleProfileSheet = () => {
+    if (profileMenuOpen) {
+      profileSheetRef.current?.dismiss();
+      return;
     }
-  }, [endTime, selectedDays, startTime, weekStart]);
+    profileSheetRef.current?.present();
+  };
+
+  const closeProfileSheetThen = (action: () => void) => {
+    profileSheetRef.current?.dismiss();
+    action();
+  };
+
+  const availableDates = useMemo(
+    () => availableDatesFor(weekStart, selectedDays),
+    [selectedDays, weekStart],
+  );
 
   useEffect(() => {
     if (Platform.OS === 'web') return;
@@ -232,6 +443,10 @@ export function PlanningScreen({
           if (mounted) {
             setPlan(restored);
             setWeekStart(restored.week_start);
+            setReusePreviousWeek(restored.availability_source === 'previous_week');
+            setSelectedDays(
+              dayOffsetsFor(restored.week_start, restored.available_dates),
+            );
             setInjuries(new Set(restored.confirmed_injuries));
             setSelectedTemplates(
               new Set(
@@ -272,6 +487,7 @@ export function PlanningScreen({
   };
 
   const toggleDay = (day: number) => {
+    setReusePreviousWeek(false);
     setSelectedDays((current) => {
       const next = new Set(current);
       if (next.has(day)) next.delete(day);
@@ -291,18 +507,15 @@ export function PlanningScreen({
 
   const generate = () =>
     run(async () => {
-      const windows = availabilityFor(
-        weekStart,
-        selectedDays,
-        startTime,
-        endTime,
-      );
-      if (windows.length === 0) {
+      const dates = availableDatesFor(weekStart, selectedDays);
+      if (!reusePreviousWeek && dates.length === 0) {
         throw new Error('Kies minstens één beschikbare trainingsdag.');
       }
       const result = await createWeeklyPlanProposal(accessToken, {
         week_start: weekStart,
-        availability: windows,
+        ...(reusePreviousWeek
+          ? { reuse_previous_week: true }
+          : { available_dates: dates }),
         confirmed_injuries: [...injuries],
       });
       await rememberPlanId(result.plan.id);
@@ -373,15 +586,16 @@ export function PlanningScreen({
 
   const moveWorkout = (workout: PlannedWorkout) => {
     if (!plan?.active_revision) return;
-    const scheduledAt = moveTimes[workout.id] ?? workout.scheduled_at;
-    if (Number.isNaN(new Date(scheduledAt).getTime())) {
-      setError('Gebruik een geldig ISO-tijdstip inclusief tijdzone.');
+    const scheduledDate = moveDates[workout.id] ?? workout.scheduled_date;
+    if (!validDateInWeek(scheduledDate, plan.week_start)) {
+      setError('Gebruik een geldige datum binnen deze planweek (JJJJ-MM-DD).');
       return;
     }
     void run(async () => {
       const workouts = plan.workouts.map((item) => ({
         workout_id: item.id,
-        scheduled_at: item.id === workout.id ? scheduledAt : item.scheduled_at,
+        scheduled_date:
+          item.id === workout.id ? scheduledDate : item.scheduled_date,
       }));
       const validation = await validatePlanLayout(
         accessToken,
@@ -394,12 +608,12 @@ export function PlanningScreen({
           accessToken,
           workout.id,
           plan.active_revision!,
-          scheduledAt,
+          scheduledDate,
         );
         setPlan(updated);
-        setMoveTimes((current) => ({
+        setMoveDates((current) => ({
           ...current,
-          [workout.id]: scheduledAt,
+          [workout.id]: scheduledDate,
         }));
       };
       if (validation.warnings.length === 0) {
@@ -441,12 +655,7 @@ export function PlanningScreen({
     void run(async () => {
       const result = await createScheduleProposal(accessToken, plan.id, {
         expected_base_revision: plan.active_revision!,
-        availability: availabilityFor(
-          weekStart,
-          selectedDays,
-          startTime,
-          endTime,
-        ),
+        available_dates: availableDatesFor(weekStart, selectedDays),
         confirmed_injuries: [...injuries],
         selected_template_ids: [...selectedTemplates],
       });
@@ -459,14 +668,12 @@ export function PlanningScreen({
   const openCalendar = () => {
     setView('calendar');
     void run(async () => {
-      const start = addDays(plan?.week_start ?? weekStart, 0);
-      start.setHours(0, 0, 0, 0);
-      const end = addDays(plan?.week_start ?? weekStart, 7);
-      end.setHours(0, 0, 0, 0);
+      const start = isoDate(addDays(plan?.week_start ?? weekStart, 0));
+      const end = isoDate(addDays(plan?.week_start ?? weekStart, 7));
       const result = await getCalendar(
         accessToken,
-        start.toISOString(),
-        end.toISOString(),
+        start,
+        end,
       );
       setCalendarWorkouts(result.workouts);
       setCalendarRestDays(result.rest_days);
@@ -476,35 +683,168 @@ export function PlanningScreen({
   return (
     <SafeAreaView edges={['top']} style={styles.safeArea}>
       <View style={styles.header}>
-        <View>
-          <Text style={styles.logo}>Start23</Text>
-          <Text style={styles.headerCaption}>Weekplanning</Text>
+        <View style={styles.brandLockup}>
+          <View style={styles.logoMark}>
+            <Text style={styles.logoMarkText}>23</Text>
+          </View>
+          <View>
+            <Text style={styles.logo}>Start23</Text>
+            <Text style={styles.headerCaption}>Jouw trainingsweek</Text>
+          </View>
         </View>
-        <View style={styles.headerActions}>
-          <Pressable accessibilityRole="button" onPress={onOpenCheckIn}>
-            <Text style={styles.link}>Wekelijkse check-in</Text>
+        <Pressable
+          accessibilityLabel="Profielmenu"
+          accessibilityRole="button"
+          accessibilityState={{ expanded: profileMenuOpen }}
+          haptic="selection"
+          onPress={toggleProfileSheet}
+          style={({ pressed }) => [
+            styles.profileControl,
+            pressed && styles.pressed,
+          ]}
+        >
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>JIJ</Text>
+          </View>
+          <View style={styles.profileControlCopy}>
+            <Text style={styles.profileControlTitle}>Profiel</Text>
+            <Text style={styles.profileControlMeta}>
+              {profileMenuOpen ? 'Sluiten' : 'Open menu'}
+            </Text>
+          </View>
+          <Text style={styles.profileChevron}>{profileMenuOpen ? '-' : '+'}</Text>
+        </Pressable>
+      </View>
+
+      <BottomSheetModal
+        backdropComponent={renderProfileBackdrop}
+        backgroundStyle={styles.profileSheetBackground}
+        enableDynamicSizing
+        handleIndicatorStyle={styles.profileSheetHandle}
+        onChange={(index) => setProfileMenuOpen(index >= 0)}
+        onDismiss={() => setProfileMenuOpen(false)}
+        ref={profileSheetRef}
+      >
+        <BottomSheetView style={styles.profileSheet}>
+          <View style={styles.profileMenuHeading}>
+            <View>
+              <Text style={styles.profileMenuEyebrow}>Persoonlijke ruimte</Text>
+              <Text style={styles.profileMenuTitle}>Alles over jouw setup</Text>
+            </View>
+            <View style={styles.profileStatus}>
+              <View style={styles.profileStatusDot} />
+              <Text style={styles.profileStatusText}>Actief</Text>
+            </View>
+          </View>
+          <View style={styles.profileMenuGrid}>
+            <Pressable
+              accessibilityRole="button"
+              haptic="selection"
+              onPress={() => closeProfileSheetThen(onBackToOnboarding)}
+              style={({ pressed }) => [
+                styles.profileMenuItem,
+                pressed && styles.pressed,
+              ]}
+            >
+              <Text style={styles.profileMenuItemCode}>P</Text>
+              <Text style={styles.profileMenuItemTitle}>Intakeprofiel</Text>
+              <Text style={styles.profileMenuItemMeta}>Gegevens en doel</Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              haptic="selection"
+              onPress={() => closeProfileSheetThen(onOpenIntegrations)}
+              style={({ pressed }) => [
+                styles.profileMenuItem,
+                pressed && styles.pressed,
+              ]}
+            >
+              <Text style={styles.profileMenuItemCode}>I</Text>
+              <Text style={styles.profileMenuItemTitle}>Integraties</Text>
+              <Text style={styles.profileMenuItemMeta}>Apps en data</Text>
+            </Pressable>
+          </View>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => {
+              profileSheetRef.current?.dismiss();
+              void onSignOut();
+            }}
+            style={({ pressed }) => [
+              styles.signOutButton,
+              pressed && styles.pressed,
+            ]}
+          >
+            <Text style={styles.signOutText}>Veilig afmelden</Text>
           </Pressable>
-          <Pressable accessibilityRole="button" onPress={onOpenActivities}>
-            <Text style={styles.link}>Training & RPE</Text>
-          </Pressable>
-          <Pressable accessibilityRole="button" onPress={() => void onSignOut()}>
-            <Text style={styles.link}>Afmelden</Text>
-          </Pressable>
-        </View>
+        </BottomSheetView>
+      </BottomSheetModal>
+
+      <View style={styles.quickActions}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={onOpenCheckIn}
+          style={({ pressed }) => [
+            styles.quickAction,
+            pressed && styles.quickActionPressed,
+          ]}
+        >
+          <View style={styles.quickActionIcon}>
+            <Text style={styles.quickActionIconText}>C</Text>
+          </View>
+          <Text style={styles.quickActionText}>Check-in</Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={onOpenActivities}
+          style={({ pressed }) => [
+            styles.quickAction,
+            pressed && styles.quickActionPressed,
+          ]}
+        >
+          <View style={[styles.quickActionIcon, styles.quickActionIconAccent]}>
+            <Text style={styles.quickActionIconText}>R</Text>
+          </View>
+          <Text style={styles.quickActionText}>Training & RPE</Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() =>
+            onOpenZoneProfile(plan?.id, plan?.active_revision ?? undefined)
+          }
+          style={({ pressed }) => [
+            styles.quickAction,
+            pressed && styles.quickActionPressed,
+          ]}
+        >
+          <View style={[styles.quickActionIcon, styles.quickActionIconGold]}>
+            <Text style={styles.quickActionIconText}>Z</Text>
+          </View>
+          <Text style={styles.quickActionText}>Mijn zones</Text>
+        </Pressable>
       </View>
 
       <View style={styles.tabs}>
-        <Pressable onPress={() => setView('plan')} style={styles.tab}>
+        <Pressable
+          onPress={() => setView('plan')}
+          style={[styles.tab, view === 'plan' && styles.tabActive]}
+        >
           <Text style={[styles.tabText, view === 'plan' && styles.tabTextActive]}>
             Voorstel
           </Text>
         </Pressable>
-        <Pressable onPress={openDeck} style={styles.tab}>
+        <Pressable
+          onPress={openDeck}
+          style={[styles.tab, view === 'deck' && styles.tabActive]}
+        >
           <Text style={[styles.tabText, view === 'deck' && styles.tabTextActive]}>
             Deck
           </Text>
         </Pressable>
-        <Pressable onPress={openCalendar} style={styles.tab}>
+        <Pressable
+          onPress={openCalendar}
+          style={[styles.tab, view === 'calendar' && styles.tabActive]}
+        >
           <Text
             style={[styles.tabText, view === 'calendar' && styles.tabTextActive]}
           >
@@ -520,6 +860,7 @@ export function PlanningScreen({
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {busy ? <ActivityIndicator color={colors.brand} /> : null}
 
+        <FadeInView key={view} style={styles.viewContent}>
         {view === 'plan' ? (
           <>
             {!plan ? (
@@ -527,7 +868,7 @@ export function PlanningScreen({
                 <StatusPill label="Jij bevestigt" tone="brand" />
                 <Text style={styles.title}>Wanneer kun je trainen?</Text>
                 <Text style={styles.body}>
-                  Kies je beschikbare dagen en tijd. Het resultaat blijft een
+                  Kies de volledige lokale datums waarop je kunt trainen. Het resultaat blijft een
                   voorstel totdat jij het goedkeurt.
                 </Text>
                 <FormField
@@ -560,22 +901,28 @@ export function PlanningScreen({
                     </Pressable>
                   ))}
                 </View>
-                <View style={styles.timeRow}>
-                  <View style={styles.timeField}>
-                    <FormField
-                      label="Vanaf"
-                      onChangeText={setStartTime}
-                      value={startTime}
-                    />
-                  </View>
-                  <View style={styles.timeField}>
-                    <FormField
-                      label="Tot"
-                      onChangeText={setEndTime}
-                      value={endTime}
-                    />
-                  </View>
-                </View>
+                <Pressable
+                  accessibilityRole="checkbox"
+                  accessibilityState={{ checked: reusePreviousWeek }}
+                  onPress={() => setReusePreviousWeek((current) => !current)}
+                  style={[
+                    styles.reuseChoice,
+                    reusePreviousWeek && styles.choiceActive,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.choiceText,
+                      reusePreviousWeek && styles.choiceTextActive,
+                    ]}
+                  >
+                    Zelfde beschikbare dagen als vorige week
+                  </Text>
+                </Pressable>
+                <Text style={styles.hint}>
+                  Hergebruik gebeurt alleen na deze expliciete keuze; ontbrekende
+                  vorige-weekdata wordt niet geraden.
+                </Text>
                 <Text style={styles.fieldLabel}>Bevestigde blessure</Text>
                 <View style={styles.choiceRow}>
                   {(['swim', 'bike', 'run'] as const).map((discipline) => (
@@ -596,7 +943,9 @@ export function PlanningScreen({
                   ))}
                 </View>
                 <ActionButton
-                  disabled={busy || availability.length === 0}
+                  disabled={
+                    busy || (!reusePreviousWeek && availableDates.length === 0)
+                  }
                   label="Maak weekvoorstel"
                   onPress={() => void generate()}
                 />
@@ -636,6 +985,14 @@ export function PlanningScreen({
                   <Text style={styles.hint}>
                     {Number(plan.low_intensity_minutes)} min rustig ·{' '}
                     {Number(plan.high_intensity_minutes)} min intensief
+                  </Text>
+                  <Text style={styles.hint}>
+                    Beschikbare datums: {plan.available_dates.join(', ')} · bron:{' '}
+                    {plan.availability_source === 'previous_week'
+                      ? 'expliciet hergebruikt'
+                      : plan.availability_source === 'checkin'
+                        ? 'bevestigde check-in'
+                        : 'zelf gekozen'}
                   </Text>
                   {primaryGoal ? (
                     <ActionButton
@@ -697,18 +1054,38 @@ export function PlanningScreen({
                 {plan.workouts.map((workout) => (
                   <View key={workout.id} style={styles.workoutStack}>
                     <WorkoutCard workout={workout} />
+                    {plan.revision_state === 'pending_approval' &&
+                    plan.proposal?.state === 'pending' ? (
+                      <PendingWorkoutEditor
+                        accessToken={accessToken}
+                        busy={busy}
+                        onEdited={(updated) => {
+                          setPlan(updated);
+                          setDeck(null);
+                          setEligibleTemplateIds(new Set());
+                          setSelectedTemplates(
+                            new Set(
+                              updated.workouts.map((item) => item.template_id),
+                            ),
+                          );
+                        }}
+                        onError={setError}
+                        plan={plan}
+                        workout={workout}
+                      />
+                    ) : null}
                     {plan.revision_state === 'active' ? (
                       <View style={styles.movePanel}>
                         <FormField
                           autoCapitalize="none"
-                          label="Nieuw tijdstip (ISO inclusief tijdzone)"
+                          label="Nieuwe datum (JJJJ-MM-DD)"
                           onChangeText={(value) =>
-                            setMoveTimes((current) => ({
+                            setMoveDates((current) => ({
                               ...current,
                               [workout.id]: value,
                             }))
                           }
-                          value={moveTimes[workout.id] ?? workout.scheduled_at}
+                          value={moveDates[workout.id] ?? workout.scheduled_date}
                         />
                         <ActionButton
                           disabled={busy}
@@ -797,6 +1174,7 @@ export function PlanningScreen({
             ))}
           </View>
         ) : null}
+        </FadeInView>
       </ScrollView>
     </SafeAreaView>
   );
@@ -809,25 +1187,180 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
+    paddingBottom: spacing.sm,
+    paddingTop: spacing.sm,
   },
-  logo: { color: colors.brand, fontSize: 22, fontWeight: '900' },
-  headerCaption: { color: colors.inkMuted, fontSize: 12, marginTop: 2 },
-  headerActions: { alignItems: 'flex-end', gap: spacing.xs },
-  link: { color: colors.brand, fontSize: 13, fontWeight: '800' },
-  tabs: {
-    borderBottomColor: colors.line,
-    borderBottomWidth: 1,
+  brandLockup: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
+  logoMark: {
+    alignItems: 'center',
+    backgroundColor: colors.brand,
+    borderRadius: radius.sm,
+    height: 40,
+    justifyContent: 'center',
+    transform: [{ rotate: '-4deg' }],
+    width: 40,
+  },
+  logoMarkText: { color: colors.white, fontSize: 12, fontWeight: '900' },
+  logo: {
+    color: colors.brand,
+    fontSize: 15,
+    fontWeight: '900',
+    letterSpacing: 1.1,
+    textTransform: 'uppercase',
+  },
+  headerCaption: { color: colors.inkMuted, fontSize: 11, marginTop: 1 },
+  profileControl: {
+    alignItems: 'center',
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.line,
+    borderRadius: radius.pill,
+    borderWidth: 1,
     flexDirection: 'row',
-    paddingHorizontal: spacing.lg,
+    gap: spacing.sm,
+    padding: 5,
+    paddingRight: spacing.sm,
   },
-  tab: { flex: 1, paddingVertical: spacing.sm },
-  tabText: { color: colors.inkMuted, textAlign: 'center' },
+  avatar: {
+    alignItems: 'center',
+    backgroundColor: colors.accentSoft,
+    borderRadius: radius.pill,
+    height: 34,
+    justifyContent: 'center',
+    width: 34,
+  },
+  avatarText: { color: colors.accentDark, fontSize: 9, fontWeight: '900' },
+  profileControlCopy: { display: 'flex' },
+  profileControlTitle: { color: colors.ink, fontSize: 11, fontWeight: '900' },
+  profileControlMeta: { color: colors.inkMuted, fontSize: 9, marginTop: 1 },
+  profileChevron: { color: colors.brand, fontSize: 16, fontWeight: '700' },
+  pressed: { opacity: 0.72, transform: [{ scale: 0.98 }] },
+  profileMenu: {
+    ...shadows.floating,
+    backgroundColor: colors.brandDeep,
+    borderRadius: radius.lg,
+    gap: spacing.md,
+    marginHorizontal: spacing.lg,
+    marginBottom: spacing.md,
+    padding: spacing.lg,
+  },
+  profileSheetBackground: { backgroundColor: colors.brandDeep },
+  profileSheetHandle: { backgroundColor: colors.brandSoft, width: 42 },
+  profileSheet: {
+    backgroundColor: colors.brandDeep,
+    gap: spacing.md,
+    padding: spacing.lg,
+    paddingBottom: spacing.xl,
+  },
+  profileMenuHeading: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  profileMenuEyebrow: {
+    color: colors.highlight,
+    fontSize: 9,
+    fontWeight: '900',
+    letterSpacing: 1.1,
+    textTransform: 'uppercase',
+  },
+  profileMenuTitle: {
+    color: colors.white,
+    fontSize: 19,
+    fontWeight: '900',
+    marginTop: 3,
+  },
+  profileStatus: {
+    alignItems: 'center',
+    backgroundColor: colors.brandMid,
+    borderRadius: radius.pill,
+    flexDirection: 'row',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  profileStatusDot: {
+    backgroundColor: colors.highlight,
+    borderRadius: radius.pill,
+    height: 6,
+    width: 6,
+  },
+  profileStatusText: { color: colors.white, fontSize: 9, fontWeight: '800' },
+  profileMenuGrid: { flexDirection: 'row', gap: spacing.sm },
+  profileMenuItem: {
+    backgroundColor: colors.brandMid,
+    borderRadius: radius.md,
+    flex: 1,
+    gap: 2,
+    padding: spacing.md,
+  },
+  profileMenuItemCode: {
+    color: colors.highlight,
+    fontSize: 11,
+    fontWeight: '900',
+    marginBottom: spacing.xs,
+  },
+  profileMenuItemTitle: { color: colors.white, fontSize: 13, fontWeight: '900' },
+  profileMenuItemMeta: { color: colors.brandSoft, fontSize: 10, marginTop: 2 },
+  signOutButton: {
+    alignItems: 'center',
+    borderColor: colors.brandMid,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    paddingVertical: spacing.sm,
+  },
+  signOutText: { color: colors.brandSoft, fontSize: 11, fontWeight: '800' },
+  quickActions: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+  },
+  quickAction: {
+    alignItems: 'center',
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.line,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flex: 1,
+    gap: spacing.xs,
+    minHeight: 70,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.sm,
+  },
+  quickActionPressed: { backgroundColor: colors.brandSoft, transform: [{ scale: 0.98 }] },
+  quickActionIcon: {
+    alignItems: 'center',
+    backgroundColor: colors.brandSoft,
+    borderRadius: radius.pill,
+    height: 26,
+    justifyContent: 'center',
+    width: 26,
+  },
+  quickActionIconAccent: { backgroundColor: colors.accentSoft },
+  quickActionIconGold: { backgroundColor: colors.highlightSoft },
+  quickActionIconText: { color: colors.brand, fontSize: 10, fontWeight: '900' },
+  quickActionText: { color: colors.ink, fontSize: 10, fontWeight: '800', textAlign: 'center' },
+  tabs: {
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.pill,
+    flexDirection: 'row',
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.sm,
+    padding: 4,
+  },
+  tab: { borderRadius: radius.pill, flex: 1, paddingVertical: spacing.sm },
+  tabActive: { ...shadows.card, backgroundColor: colors.surfaceRaised },
+  tabText: { color: colors.inkMuted, fontSize: 12, fontWeight: '700', textAlign: 'center' },
   tabTextActive: { color: colors.brand, fontWeight: '900' },
   content: { gap: spacing.md, padding: spacing.lg, paddingBottom: 80 },
+  viewContent: { gap: spacing.md },
   panel: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
+    ...shadows.card,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.white,
+    borderRadius: radius.lg,
+    borderWidth: 1,
     gap: spacing.md,
     padding: spacing.lg,
   },
@@ -847,8 +1380,13 @@ const styles = StyleSheet.create({
   choiceActive: { backgroundColor: colors.brand, borderColor: colors.brand },
   choiceText: { color: colors.ink, fontSize: 12, fontWeight: '700' },
   choiceTextActive: { color: colors.white },
-  timeRow: { flexDirection: 'row', gap: spacing.sm },
-  timeField: { flex: 1 },
+  reuseChoice: {
+    alignItems: 'center',
+    borderColor: colors.line,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    padding: spacing.md,
+  },
   choiceRow: { flexDirection: 'row', gap: spacing.sm },
   disciplineChoice: {
     backgroundColor: colors.surfaceMuted,
@@ -862,6 +1400,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.brand,
     borderRadius: radius.pill,
     padding: 14,
+    ...shadows.card,
   },
   actionSecondary: {
     backgroundColor: colors.surface,
@@ -872,8 +1411,11 @@ const styles = StyleSheet.create({
   actionText: { color: colors.white, fontSize: 14, fontWeight: '900' },
   actionSecondaryText: { color: colors.brand },
   workoutCard: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
+    ...shadows.card,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.white,
+    borderRadius: radius.lg,
+    borderWidth: 1,
     gap: spacing.sm,
     padding: spacing.lg,
   },
@@ -884,6 +1426,22 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     padding: spacing.md,
   },
+  editPanel: {
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.md,
+    gap: spacing.sm,
+    padding: spacing.md,
+  },
+  swipeCard: {
+    backgroundColor: colors.surface,
+    borderColor: colors.brand,
+    borderRadius: radius.sm,
+    borderWidth: 1,
+    gap: spacing.xs,
+    minHeight: 112,
+    padding: spacing.md,
+  },
+  carousel: { height: 132, width: '100%' },
   restDay: {
     backgroundColor: colors.surfaceMuted,
     borderRadius: radius.md,

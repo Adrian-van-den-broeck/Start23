@@ -304,6 +304,33 @@ def test_context_revision_and_week_dates_are_stale_safe(
     assert stale.json()["error"]["code"] == "checkin_context_stale"
 
 
+def test_context_extraction_fallback_is_inert_and_asks_for_clarification(
+    checkin_client: TestClient,
+) -> None:
+    started = checkin_client.post(
+        "/api/v1/checkins",
+        headers=_headers(),
+        json={"week_start": "2026-08-03"},
+    ).json()
+    response = checkin_client.post(
+        f"/api/v1/checkins/{started['id']}/context-candidates",
+        headers=_headers(),
+        json={"athlete_text": "Woensdag lukt niet en ik ben moe."},
+    )
+
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["source"] == "deterministic_fallback"
+    assert body["requires_structured_confirmation"] is True
+    assert body["candidate"]["clarifying_questions"]
+    resumed = checkin_client.get(
+        f"/api/v1/checkins/{started['id']}",
+        headers=_headers(),
+    ).json()
+    assert resumed["context"] is None
+    assert resumed["context_revision"] == 0
+
+
 def test_goal_achievement_is_explicit_and_owner_authenticated(
     checkin_client: TestClient,
 ) -> None:

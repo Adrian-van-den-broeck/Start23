@@ -2,6 +2,44 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Start23: Switch to local mode",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\scripts\\set-start23-mode.ps1",
+        "-Mode",
+        "local"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start23: Switch to production mode",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\scripts\\set-start23-mode.ps1",
+        "-Mode",
+        "production"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Start23: Start Android emulator",
       "type": "shell",
       "command": "Start-Process -FilePath \"${env:ANDROID_HOME}\\emulator\\emulator.exe\" -ArgumentList '-avd','${input:androidAvd}','-no-snapshot-load'",
@@ -34,20 +72,14 @@
     {
       "label": "Start23: Start backend",
       "type": "process",
-      "command": "${workspaceFolder}\\backend\\.venv\\Scripts\\python.exe",
+      "command": "powershell.exe",
       "args": [
-        "-m",
-        "uvicorn",
-        "app.main:app",
-        "--reload",
-        "--host",
-        "127.0.0.1",
-        "--port",
-        "8000"
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\scripts\\start-start23-backend.ps1"
       ],
-      "options": {
-        "cwd": "${workspaceFolder}\\backend"
-      },
       "isBackground": true,
       "presentation": {
         "reveal": "always",
@@ -60,7 +92,7 @@
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": ".*Uvicorn running on.*",
+          "beginsPattern": ".*Backend target:.*",
           "endsPattern": ".*Application startup complete.*"
         }
       }
@@ -95,6 +127,42 @@
         "Start23: Configure Android bridges"
       ],
       "dependsOrder": "sequence",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start23: Build Play Store AAB",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\scripts\\build-start23-playstore.ps1"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start23: Build Play Store AAB (com.adrivdbs.wombo)",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\scripts\\build-start23-playstore.ps1",
+        "-BuildProfile",
+        "wombo"
+      ],
       "presentation": {
         "reveal": "always",
         "panel": "dedicated"

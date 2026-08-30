@@ -6,7 +6,11 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
-from app.modules.workouts.catalog import PHASE_6_CATALOG_ADDITIONS, REVIEWED_CATALOG
+from app.modules.workouts.catalog import (
+    PHASE_11_FIELD_TEST_ADDITIONS,
+    PHASE_6_CATALOG_ADDITIONS,
+    REVIEWED_CATALOG,
+)
 
 _MIGRATION = (
     Path(__file__).resolve().parents[2]
@@ -20,6 +24,12 @@ _PHASE_6_MIGRATION = (
     / "migrations"
     / "20260729140000_phase_6_weekly_planning.sql"
 )
+_PHASE_11_MIGRATION = (
+    Path(__file__).resolve().parents[2]
+    / "supabase"
+    / "migrations"
+    / "20260826144239_phase_11_discipline_zone_profiles.sql"
+)
 
 
 def _insert_rows(
@@ -28,7 +38,7 @@ def _insert_rows(
 ) -> list[tuple[Any, ...]]:
     sql = migration.read_text(encoding="utf-8")
     match = re.search(
-        rf"insert into {re.escape(table)}\s*\([^;]+?\)\s*values\s*(.*?);",
+        rf"insert into {re.escape(table)}\s*\([^;]+?\)\s*values\s*(.*?\)\s*);",
         sql,
         flags=re.IGNORECASE | re.DOTALL,
     )
@@ -52,7 +62,7 @@ def _load_rows(migration: Path = _MIGRATION) -> set[tuple[str, Decimal]]:
     return {
         (template_id, Decimal(planned_tss))
         for template_id, planned_tss in re.findall(
-            r"\('([^']+)',\s*([0-9]+(?:\.[0-9]+)?)\s*,",
+            r"\(\s*'([^']+)',\s*([0-9]+(?:\.[0-9]+)?)\s*,",
             match.group(1),
         )
     }
@@ -194,3 +204,29 @@ def test_phase_6_catalog_addition_matches_its_durable_seed() -> None:
             _PHASE_6_MIGRATION,
         )
     } == {(str(template.id), template.internal_planned_load.value)}
+
+
+def test_phase_11_field_tests_match_durable_duration_and_load_seeds() -> None:
+    template_rows = _insert_rows("public.workout_templates", _PHASE_11_MIGRATION)
+    segment_rows = _insert_rows("public.workout_segments", _PHASE_11_MIGRATION)
+    load_rows = _load_rows(_PHASE_11_MIGRATION)
+
+    durable_durations = {
+        str(row[0]): _decimal(row[6]) for row in template_rows
+    }
+    durable_segment_durations: dict[str, Decimal] = {}
+    for row in segment_rows:
+        template_id = str(row[0])
+        durable_segment_durations[template_id] = (
+            durable_segment_durations.get(template_id, Decimal(0))
+            + _decimal(row[4])
+        )
+
+    for template in PHASE_11_FIELD_TEST_ADDITIONS:
+        template_id = str(template.id)
+        assert durable_durations[template_id] == template.duration_minutes
+        assert durable_segment_durations[template_id] == template.duration_minutes
+        assert (
+            template_id,
+            template.internal_planned_load.value,
+        ) in load_rows

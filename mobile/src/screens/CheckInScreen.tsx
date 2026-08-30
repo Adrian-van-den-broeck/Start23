@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,11 +12,13 @@ import {
   approvePlanProposal,
   confirmWeeklyCheckInContext,
   createCheckInPlanProposal,
+  extractWeeklyCheckInContextCandidate,
   saveWeeklyCheckInContext,
   startWeeklyCheckIn,
 } from '../api/client';
 import type {
   AthletePlanChoice,
+  CheckInContextCandidateResponse,
   Discipline,
   ExternalActivity,
   FatigueLevel,
@@ -26,6 +27,7 @@ import type {
   WeeklyPlan,
 } from '../api/types';
 import { FormField } from '../components/FormField';
+import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
 import { colors, radius, spacing } from '../theme/tokens';
 
@@ -83,6 +85,23 @@ function dateAtOffset(weekStart: string, offset: number): string {
   const value = new Date(`${weekStart}T12:00:00`);
   value.setDate(value.getDate() + offset);
   return isoDate(value);
+}
+
+function dayOffsetsForCandidate(
+  weekStart: string,
+  dates: string[],
+): Set<number> {
+  const start = new Date(`${weekStart}T12:00:00`);
+  return new Set(
+    dates
+      .map((value) =>
+        Math.round(
+          (new Date(`${value}T12:00:00`).getTime() - start.getTime()) /
+            86_400_000,
+        ),
+      )
+      .filter((offset) => offset >= 0 && offset <= 6),
+  );
 }
 
 function restrictionPayload(
@@ -143,6 +162,7 @@ function ActionButton({
     <Pressable
       accessibilityRole="button"
       disabled={disabled}
+      haptic={secondary ? undefined : 'light'}
       onPress={onPress}
       style={[
         styles.action,
@@ -185,6 +205,9 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
   const [externalStrenuous, setExternalStrenuous] = useState(true);
   const [externalRecurring, setExternalRecurring] = useState(false);
   const [proposalPlan, setProposalPlan] = useState<WeeklyPlan | null>(null);
+  const [contextText, setContextText] = useState('');
+  const [contextCandidate, setContextCandidate] =
+    useState<CheckInContextCandidateResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -252,6 +275,33 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
       },
     ]);
     setExternalName('');
+    setError(null);
+  };
+
+  const extractContext = () => {
+    if (!checkIn || !contextText.trim()) return;
+    void run(async () => {
+      setContextCandidate(
+        await extractWeeklyCheckInContextCandidate(
+          accessToken,
+          checkIn.id,
+          contextText.trim(),
+        ),
+      );
+    });
+  };
+
+  const useContextCandidate = () => {
+    if (!checkIn || !contextCandidate) return;
+    const candidate = contextCandidate.candidate;
+    setBlockedDays(
+      dayOffsetsForCandidate(checkIn.week_start, candidate.blocked_dates),
+    );
+    if (candidate.fatigue_level !== null) {
+      setFatigue(candidate.fatigue_level);
+    }
+    setReasons(new Set(candidate.missed_workout_reasons));
+    setContextCandidate(null);
     setError(null);
   };
 
@@ -362,6 +412,62 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
             <View style={styles.panel}>
               <StatusPill label="Gestructureerde bron" tone="brand" />
               <Text style={styles.title}>Week van {checkIn.week_start}</Text>
+              <FormField
+                label="Vertel kort wat er deze week speelt (optioneel)"
+                maxLength={1000}
+                multiline
+                onChangeText={setContextText}
+                placeholder="Bijvoorbeeld: woensdag kan ik niet en ik voel me behoorlijk vermoeid."
+                style={styles.contextInput}
+                value={contextText}
+              />
+              <ActionButton
+                disabled={busy || !contextText.trim()}
+                label="Maak invulvoorstel"
+                onPress={extractContext}
+                secondary
+              />
+              <Text style={styles.body}>
+                Dit maakt alleen een tijdelijk invulvoorstel. Controleer het en
+                bevestig daarna nog steeds het gestructureerde formulier.
+              </Text>
+              {contextCandidate ? (
+                <View style={styles.candidatePanel}>
+                  <Text style={styles.label}>Controleer het invulvoorstel</Text>
+                  <Text style={styles.body}>
+                    Geblokkeerde datums:{' '}
+                    {contextCandidate.candidate.blocked_dates.join(', ') || 'geen'}
+                    {'\n'}Vermoeidheid:{' '}
+                    {contextCandidate.candidate.fatigue_level
+                      ? fatigueLabels[contextCandidate.candidate.fatigue_level]
+                      : 'niet ingevuld'}
+                  </Text>
+                  {contextCandidate.candidate.agenda_context.map((line) => (
+                    <Text key={line} style={styles.body}>• {line}</Text>
+                  ))}
+                  {contextCandidate.candidate.possible_injury_disciplines.length > 0 ? (
+                    <Text style={styles.warning}>
+                      Mogelijke blessure genoemd voor:{' '}
+                      {contextCandidate.candidate.possible_injury_disciplines
+                        .map((discipline) => disciplineLabels[discipline])
+                        .join(', ')}. Kies de beperking hieronder zelf; die wordt
+                      niet automatisch aangepast.
+                    </Text>
+                  ) : null}
+                  {contextCandidate.candidate.clarifying_questions.map((question) => (
+                    <Text key={question} style={styles.warning}>Vraag: {question}</Text>
+                  ))}
+                  <ActionButton
+                    label="Neem datums, vermoeidheid en redenen over"
+                    onPress={useContextCandidate}
+                  />
+                  <ActionButton
+                    label="Negeer invulvoorstel"
+                    onPress={() => setContextCandidate(null)}
+                    secondary
+                  />
+                </View>
+              ) : null}
               <Text style={styles.body}>Welke dagen zijn volledig geblokkeerd?</Text>
               <View style={styles.rowWrap}>
                 {dayLabels.map((label, offset) => (
@@ -633,6 +739,13 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   subsection: { borderTopColor: colors.line, borderTopWidth: 1, gap: spacing.sm, paddingTop: spacing.md },
+  contextInput: { minHeight: 96, textAlignVertical: 'top' },
+  candidatePanel: {
+    backgroundColor: colors.brandSoft,
+    borderRadius: radius.sm,
+    gap: spacing.sm,
+    padding: spacing.md,
+  },
   title: { color: colors.ink, fontSize: 22, fontWeight: '900' },
   body: { color: colors.inkMuted, fontSize: 13, lineHeight: 19 },
   label: { color: colors.ink, fontSize: 13, fontWeight: '800' },

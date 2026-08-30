@@ -24,6 +24,7 @@ from app.modules.checkins.repository import (
     CheckInRepository,
     SupabaseCheckInRepository,
 )
+from app.modules.coach.context import CheckInContextCoach, build_checkin_context_coach
 from app.modules.coach.weekly_plan import WeeklyPlanCoach, build_weekly_plan_coach
 from app.modules.health.router import router as health_router
 from app.modules.integrations.polar import PolarAccessLinkClient, PolarProvider
@@ -57,6 +58,7 @@ def _lifespan(
     integration_repository: IntegrationRepository,
     polar_provider: PolarProvider,
     weekly_plan_coach: WeeklyPlanCoach,
+    checkin_context_coach: CheckInContextCoach,
 ) -> Callable[[FastAPI], AbstractAsyncContextManager[None]]:
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -80,6 +82,7 @@ def _lifespan(
             integration_repository.aclose(),
             polar_provider.aclose(),
             weekly_plan_coach.aclose(),
+            checkin_context_coach.aclose(),
         )
         logger.info(
             "Application stopped",
@@ -105,6 +108,7 @@ def create_app(
     integration_repository: IntegrationRepository | None = None,
     polar_provider: PolarProvider | None = None,
     weekly_plan_coach: WeeklyPlanCoach | None = None,
+    checkin_context_coach: CheckInContextCoach | None = None,
 ) -> FastAPI:
     """Create and configure the Start23 FastAPI application."""
     app_settings = settings or get_settings()
@@ -131,6 +135,7 @@ def create_app(
     )
     polar_client = polar_provider or PolarAccessLinkClient(app_settings)
     coach = weekly_plan_coach or build_weekly_plan_coach(app_settings)
+    context_coach = checkin_context_coach or build_checkin_context_coach(app_settings)
     application = FastAPI(
         title=app_settings.app_name,
         version=app_settings.app_version,
@@ -145,6 +150,7 @@ def create_app(
             wearable_integration_repository,
             polar_client,
             coach,
+            context_coach,
         ),
     )
     application.state.settings = app_settings
@@ -160,6 +166,7 @@ def create_app(
     application.state.integration_repository = wearable_integration_repository
     application.state.polar_provider = polar_client
     application.state.weekly_plan_coach = coach
+    application.state.checkin_context_coach = context_coach
     configure_error_handling(application)
     application.include_router(health_router)
     application.include_router(

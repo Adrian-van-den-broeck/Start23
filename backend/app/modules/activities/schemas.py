@@ -168,3 +168,10 @@ class ActivityRpeSubmission(PublicActivityModel):
     """Athlete RPE, correctable only during its current local week."""
 
     rpe: int = Field(ge=1, le=10)
+    average_heart_rate_bpm: int | None = Field(default=None, ge=20, le=260)
+
+
+class ActivityMatchConfirmation(PublicActivityModel):
+    """Explicit athlete confirmation for one suggested planned-workout match."""
+
+    planned_workout_id: UUID

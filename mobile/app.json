@@ -4,6 +4,7 @@
     "slug": "start23",
     "version": "1.0.0",
     "orientation": "portrait",
+    "newArchEnabled": true,
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
@@ -25,7 +26,11 @@
     },
     "scheme": "start23",
     "web": {
+      "bundler": "metro",
       "favicon": "./assets/favicon.png"
+    },
+    "experiments": {
+      "typedRoutes": true
     },
     "extra": {
       "eas": {
@@ -36,7 +41,8 @@
     "plugins": [
       "expo-status-bar",
       "expo-secure-store",
-      "expo-splash-screen"
+      "expo-splash-screen",
+      "expo-router"
     ]
   }
 }

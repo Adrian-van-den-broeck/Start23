@@ -11,8 +11,12 @@ applied in hosted Supabase and pass linked schema lint. The local Phase 6
 migration adds forced-RLS planning tables and private load snapshots but has
 not been applied. The local Phase 8.5 migration adds forced-RLS setup,
 observation, and evaluation tables plus bounded RPCs, but it also remains
-unapplied. Their pgTAP suites and real-token end-to-end verification remain
-pending. Storage controls await their respective migration.
+unapplied. Phase 11 locally adds forced-RLS test assignments, guarded
+validation-test proposals, and narrow service-only heart-rate/measured-source
+persistence. Their pgTAP suites and real-token end-to-end verification remain
+pending. Phase 12 adds only authenticated, TSS-free capability metadata; it
+creates no database object and exposes no non-race mutation path. Storage
+controls await their respective migration.
 
 Related documents:
 
@@ -245,6 +249,25 @@ An affirmative chat message may be translated into an approval only if the UI
 binds it unambiguously to one visible proposal and the final product
 requirements explicitly permit chat approval.
 
+Phase 11 treats a test date as another critical proposal. Direct assignment
+writes are trigger-blocked. Athlete RPCs are `SECURITY INVOKER`, derive identity
+from `auth.uid()`, rely on forced owner RLS, lock per athlete/discipline, and
+require exact assignment or plan revisions. Standalone confirmation cannot
+authorize a later threshold or zone update. Integrated confirmation is the
+existing weekly-plan approval and cannot bypass deterministic layout rules.
+
+Completion-time average heart rate is range-checked in bpm and written through
+a narrow service-only RPC with the athlete ID derived by verified FastAPI
+context. The public activity response remains TSS-free. The inclusive +/-10 bpm
+comparison accepts only a trusted reviewed reference and returns observation
+status; it exposes no zone/threshold/plan mutation path.
+
+Physician/lab source is an athlete assertion, not clinical verification. The
+mobile client submits the choice, deterministic Python calculates the same
+versioned model, and a service-only RPC preserves `measured_lab` provenance on
+a still-pending profile. Direct table relabelling and direct activation remain
+blocked. Evidence-upload/credential verification is outside the MVP contract.
+
 ## TSS confidentiality
 
 Planned and realized TSS are confidential from the athlete-facing product even
@@ -337,11 +360,11 @@ and real-credential verification remain required.
 
 ## LLM boundary
 
-The Phase 8 structured check-in does not invoke an LLM. Its form payload is
-strictly validated and separately confirmed. A pulled-forward Phase 10 slice
-now invokes the constrained coach only after deterministic weekly-plan proposal
-creation, and only for a public explanation. Context extraction and clarifying
-questions remain future work under the same boundary.
+The Phase 8 structured check-in remains the only authoritative context input
+and is separately confirmed. Phase 10 adds two constrained coach operations:
+an ephemeral schema-bound context candidate before form confirmation, and a
+public explanation only after deterministic weekly-plan proposal creation.
+Neither operation can confirm context, create/apply a plan, or change a zone.
 
 Permitted LLM operations:
 
@@ -376,6 +399,16 @@ bounded timeout, exposes no tools, validates forbidden private-load language,
 and falls back to a local deterministic explanation. A service-only RPC may
 write that text once to an owned pending plan proposal; it cannot mutate or
 approve the target revision.
+
+The context adapter sends at most 1,000 normalized characters plus the local
+week and timezone, uses a separate strict JSON schema, `store: false`, no tools,
+bounded timeout/output, and a deterministic empty fallback with a clarifying
+question. Source text and candidate output are not written to the database.
+The mobile client can explicitly copy only blocked dates, fatigue, and
+enumerated missed-workout reasons into the editable structured form. Injury
+mentions and agenda text remain informational. This deliberate non-retention
+is the Phase 10 implementation until consent, deletion, DPA, and retention
+policy approve any durable coach-message or candidate store.
 
 ## Logging, audit, and monitoring
 

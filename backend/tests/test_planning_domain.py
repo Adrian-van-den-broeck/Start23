@@ -14,15 +14,16 @@ from app.modules.physiology.models import (
     InternalLoad,
 )
 from app.modules.planning.domain import (
-    AvailabilityWindow,
     PlanLoadSample,
     PlanningConstraintError,
     PlanningTargetBasis,
+    SelectedWorkout,
     ZoneCapability,
     build_weekly_plan,
     eligible_workouts,
     remaining_workout_deck,
     resolve_target,
+    schedule_workouts,
     validate_manual_schedule,
 )
 from app.modules.workouts.catalog import (
@@ -30,6 +31,7 @@ from app.modules.workouts.catalog import (
     TrainingPhase,
     ZoneRequirement,
     active_catalog,
+    snapshot_template,
 )
 
 _WEEK_START = date(2026, 8, 3)
@@ -43,14 +45,94 @@ def _capabilities() -> dict[Discipline, ZoneCapability]:
     }
 
 
-def _availability() -> tuple[AvailabilityWindow, ...]:
-    return tuple(
-        AvailabilityWindow(
-            starts_at=datetime(2026, 8, day, 7, tzinfo=timezone.utc),
-            ends_at=datetime(2026, 8, day, 9, tzinfo=timezone.utc),
-        )
-        for day in (3, 5, 7)
+def _availability() -> tuple[date, ...]:
+    return tuple(date(2026, 8, day) for day in (3, 5, 7))
+
+
+def test_rpe_guidance_removes_numeric_zones_without_fake_zone_profile() -> None:
+    deck = eligible_workouts(
+        catalog=active_catalog(),
+        phase=TrainingPhase.BASE,
+        goal_disciplines=frozenset({Discipline.RUN}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities={
+            Discipline.RUN: ZoneCapability(
+                requirements=frozenset(),
+                protocol_ids=frozenset(
+                    {
+                        "start23_week1_run_calibration_v1",
+                        "start23_run_threshold_30min_v1",
+                    }
+                ),
+                rpe_guided=True,
+            )
+        },
     )
+
+    regular = next(
+        template for template in deck if not template.explicit_scheduling_only
+    )
+    field_test = next(
+        template for template in deck if template.explicit_scheduling_only
+    )
+    assert all(segment.zone_target is None for segment in regular.segments)
+    assert all(segment.rpe_target is not None for segment in regular.segments)
+    assert all(segment.protocol_target is not None for segment in field_test.segments)
+
+
+def test_exact_test_date_is_owned_by_fixed_schedule_constraint() -> None:
+    run = next(
+        template
+        for template in active_catalog()
+        if template.id.hex == "55000000000000000000000000000009"
+    )
+    scheduled = schedule_workouts(
+        selected=(
+            # The selection snapshot keeps the private load while the result exposes
+            # only its exact local date.
+            SelectedWorkout(
+                discipline=run.discipline,
+                snapshot=snapshot_template(run),
+            ),
+        ),
+        week_start=date(2026, 8, 24),
+        timezone_name="Europe/Amsterdam",
+        available_dates=(date(2026, 8, 27),),
+        fixed_template_dates={run.id: date(2026, 8, 27)},
+    )
+
+    assert scheduled[0].scheduled_date == date(2026, 8, 27)
+
+
+def test_explicit_field_test_cannot_be_selected_without_an_exact_date() -> None:
+    run_test = next(
+        template
+        for template in active_catalog()
+        if template.id.hex == "55000000000000000000000000000009"
+    )
+
+    with pytest.raises(
+        PlanningConstraintError,
+        match="Every explicitly scheduled field test requires an exact date",
+    ):
+        build_weekly_plan(
+            week_start=date(2026, 8, 24),
+            timezone_name="Europe/Amsterdam",
+            race_date=date(2026, 12, 6),
+            catalog=active_catalog(),
+            prior_loads=(),
+            goal_disciplines=frozenset({Discipline.RUN}),
+            confirmed_injuries=frozenset(),
+            zone_capabilities={
+                Discipline.RUN: ZoneCapability(
+                    requirements=frozenset(),
+                    protocol_ids=frozenset({"start23_run_threshold_30min_v1"}),
+                    rpe_guided=True,
+                )
+            },
+            available_dates=(date(2026, 8, 27),),
+            selected_template_ids=(run_test.id,),
+        )
 
 
 def test_initial_plan_uses_catalog_baseline_and_explicit_availability() -> None:
@@ -63,18 +145,14 @@ def test_initial_plan_uses_catalog_baseline_and_explicit_availability() -> None:
         goal_disciplines=frozenset(Discipline),
         confirmed_injuries=frozenset(),
         zone_capabilities=_capabilities(),
-        availability=_availability(),
+        available_dates=_availability(),
     )
 
     assert draft.target.phase is TrainingPhase.BASE
     assert draft.target.basis is PlanningTargetBasis.INITIAL_CATALOG_BASELINE
     assert {workout.discipline for workout in draft.workouts} == set(Discipline)
-    assert all(
-        any(
-            window.starts_at <= workout.scheduled_at < window.ends_at
-            for window in _availability()
-        )
-        for workout in draft.workouts
+    assert {workout.scheduled_date for workout in draft.workouts} <= set(
+        _availability()
     )
     assert draft.low_intensity_percent == Decimal(100)
     assert draft.high_intensity_percent == Decimal(0)
@@ -256,7 +334,7 @@ def test_reliable_realized_intensity_reduces_first_eligible_week_target() -> Non
                 frozenset({ZoneRequirement.HEART_RATE, ZoneRequirement.POWER})
             ),
         },
-        availability=_availability(),
+        available_dates=_availability(),
     )
 
     assert draft.target.desired_high_fraction.value == Decimal("0.05")
@@ -388,7 +466,7 @@ def test_confirmed_injury_excludes_discipline_before_selection() -> None:
         goal_disciplines=frozenset(Discipline),
         confirmed_injuries=frozenset({Discipline.RUN}),
         zone_capabilities=_capabilities(),
-        availability=_availability(),
+        available_dates=_availability(),
     )
 
     assert {workout.discipline for workout in draft.workouts} == {
@@ -410,7 +488,7 @@ def test_all_goal_disciplines_blocked_returns_pending_rest_only_draft() -> None:
         goal_disciplines=frozenset(Discipline),
         confirmed_injuries=frozenset(Discipline),
         zone_capabilities=_capabilities(),
-        availability=(),
+        available_dates=(),
     )
 
     assert draft.target.basis is PlanningTargetBasis.INJURY_REST_ONLY
@@ -473,38 +551,14 @@ def test_generated_schedule_fails_when_availability_cannot_fit_deck() -> None:
             goal_disciplines=frozenset(Discipline),
             confirmed_injuries=frozenset(),
             zone_capabilities=_capabilities(),
-            availability=(
-                AvailabilityWindow(
-                    starts_at=datetime(
-                        2026,
-                        8,
-                        3,
-                        7,
-                        tzinfo=timezone.utc,
-                    ),
-                    ends_at=datetime(
-                        2026,
-                        8,
-                        3,
-                        7,
-                        30,
-                        tzinfo=timezone.utc,
-                    ),
-                ),
-            ),
+            available_dates=(date(2026, 8, 3),),
         )
 
     assert captured.value.code == "availability_unsatisfied"
 
 
 def test_generated_schedule_rejects_four_consecutive_rest_days() -> None:
-    early_week_availability = tuple(
-        AvailabilityWindow(
-            starts_at=datetime(2026, 8, day, 7, tzinfo=timezone.utc),
-            ends_at=datetime(2026, 8, day, 9, tzinfo=timezone.utc),
-        )
-        for day in (3, 4, 5)
-    )
+    early_week_availability = tuple(date(2026, 8, day) for day in (3, 4, 5))
 
     with pytest.raises(PlanningConstraintError) as captured:
         build_weekly_plan(
@@ -516,7 +570,7 @@ def test_generated_schedule_rejects_four_consecutive_rest_days() -> None:
             goal_disciplines=frozenset(Discipline),
             confirmed_injuries=frozenset(),
             zone_capabilities=_capabilities(),
-            availability=early_week_availability,
+            available_dates=early_week_availability,
         )
 
     assert captured.value.code == "rest_or_anti_stack_unsatisfied"

@@ -71,6 +71,24 @@ class ZoneSourceQuality(str, Enum):
     UNKNOWN = "unknown"
 
 
+class HeartRateToleranceStatus(str, Enum):
+    """Deterministic comparison against an applicable reviewed BPM reference."""
+
+    WITHIN_TOLERANCE = "within_tolerance"
+    OUTSIDE_TOLERANCE = "outside_tolerance"
+
+
+@dataclass(frozen=True, slots=True)
+class HeartRateToleranceResult:
+    """TSS-free observation result that cannot manufacture a threshold or zone."""
+
+    observed_bpm: int
+    reference_bpm: int
+    lower_inclusive_bpm: int
+    upper_inclusive_bpm: int
+    status: HeartRateToleranceStatus
+
+
 _METRIC_DISCIPLINE = {
     ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M: Discipline.SWIM,
     ZoneMetricKind.BIKE_FTP_WATTS: Discipline.BIKE,
@@ -144,6 +162,40 @@ _KARVONEN_BANDS = (
     (TrainingZone.ZONE_4, Decimal("0.80"), Decimal("0.90")),
     (TrainingZone.ZONE_5, Decimal("0.90"), Decimal("1.00")),
 )
+
+
+def assess_heart_rate_tolerance(
+    *,
+    observed_bpm: int,
+    reference_bpm: int,
+    tolerance_bpm: int = 10,
+) -> HeartRateToleranceResult:
+    """Apply the approved inclusive ``+/-10 bpm`` observation boundary.
+
+    The result is observation context only. It deliberately returns no zone,
+    threshold, or plan decision and must be called only with a reviewed session
+    or protocol reference supplied by trusted backend context.
+    """
+
+    if isinstance(observed_bpm, bool) or not 20 <= observed_bpm <= 260:
+        raise ValueError("Observed heart rate must be between 20 and 260 bpm.")
+    if isinstance(reference_bpm, bool) or not 20 <= reference_bpm <= 260:
+        raise ValueError("Reference heart rate must be between 20 and 260 bpm.")
+    if isinstance(tolerance_bpm, bool) or tolerance_bpm != 10:
+        raise ValueError("The reviewed heart-rate tolerance is exactly 10 bpm.")
+    lower = reference_bpm - tolerance_bpm
+    upper = reference_bpm + tolerance_bpm
+    return HeartRateToleranceResult(
+        observed_bpm=observed_bpm,
+        reference_bpm=reference_bpm,
+        lower_inclusive_bpm=lower,
+        upper_inclusive_bpm=upper,
+        status=(
+            HeartRateToleranceStatus.WITHIN_TOLERANCE
+            if lower <= observed_bpm <= upper
+            else HeartRateToleranceStatus.OUTSIDE_TOLERANCE
+        ),
+    )
 
 
 @dataclass(frozen=True, slots=True)

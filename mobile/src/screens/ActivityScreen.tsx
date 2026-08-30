@@ -1,8 +1,7 @@
+import { FlashList } from '@shopify/flash-list';
 import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -10,6 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
+  confirmActivityMatch,
   createActivity,
   getCalendar,
   getOnboarding,
@@ -24,6 +24,7 @@ import type {
   PlannedWorkout,
 } from '../api/types';
 import { FormField } from '../components/FormField';
+import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
 import { colors, radius, spacing } from '../theme/tokens';
 
@@ -46,6 +47,13 @@ function newIdempotencyKey(): string {
     const digit = value === 'x' ? random : (random & 0x3) | 0x8;
     return digit.toString(16);
   });
+}
+
+function isoDate(value: Date): string {
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, '0');
+  const day = String(value.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function resultLabel(activity: CompletedActivity): string {
@@ -75,6 +83,28 @@ function localWeekKey(instant: Date, timezoneName: string): string {
   return local.toISOString().slice(0, 10);
 }
 
+function suggestedWorkout(
+  activity: CompletedActivity,
+  workouts: PlannedWorkout[],
+): PlannedWorkout | null {
+  const candidates = workouts
+    .filter(
+      (workout) =>
+        workout.discipline === activity.discipline &&
+        workout.status === 'scheduled',
+    )
+    .map((workout) => ({
+      workout,
+      difference: Math.abs(
+        new Date(`${workout.scheduled_date}T12:00:00`).getTime() -
+          new Date(activity.started_at).getTime(),
+      ),
+    }))
+    .filter(({ difference }) => difference <= 24 * 60 * 60 * 1000)
+    .sort((left, right) => left.difference - right.difference);
+  return candidates[0]?.workout ?? null;
+}
+
 export function ActivityScreen({
   accessToken,
   onBack,
@@ -94,6 +124,7 @@ export function ActivityScreen({
   const [discipline, setDiscipline] = useState<Discipline>('run');
   const [duration, setDuration] = useState('45');
   const [distance, setDistance] = useState('');
+  const [startedAt, setStartedAt] = useState(() => new Date().toISOString());
   const [athleteTimezone, setAthleteTimezone] = useState(
     Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
   );
@@ -103,6 +134,9 @@ export function ActivityScreen({
   const [editingRpeActivityId, setEditingRpeActivityId] = useState<string | null>(
     null,
   );
+  const [heartRateByActivity, setHeartRateByActivity] = useState<
+    Record<string, string>
+  >({});
 
   const pendingRpe = useMemo(
     () => activities.filter((activity) => activity.processing_state === 'awaiting_rpe'),
@@ -117,7 +151,7 @@ export function ActivityScreen({
     to.setDate(to.getDate() + 14);
     const [activityRows, calendar, onboarding, plannedExternal] = await Promise.all([
       listActivities(accessToken),
-      getCalendar(accessToken, from.toISOString(), to.toISOString()),
+      getCalendar(accessToken, isoDate(from), isoDate(to)),
       getOnboarding(accessToken),
       listPlannedExternalActivities(accessToken),
     ]);
@@ -182,6 +216,9 @@ export function ActivityScreen({
       ) {
         throw new Error('Vul afstand in hele meters in.');
       }
+      if (Number.isNaN(new Date(startedAt).getTime())) {
+        throw new Error('Gebruik een geldig werkelijk starttijdstip in ISO-formaat.');
+      }
       await createActivity(accessToken, idempotencyKey, {
         ...(selectedWorkout
           ? { planned_workout_id: selectedWorkout.id }
@@ -190,8 +227,8 @@ export function ActivityScreen({
           ? { planned_external_activity_id: selectedExternal.id }
           : {}),
         discipline,
-        started_at: selectedWorkout?.scheduled_at ?? new Date().toISOString(),
-        timezone: selectedWorkout?.timezone ?? athleteTimezone,
+        started_at: startedAt,
+        timezone: athleteTimezone,
         duration_minutes: String(numericDuration),
         ...(numericDistance === undefined
           ? {}
@@ -200,6 +237,7 @@ export function ActivityScreen({
       setIdempotencyKey(newIdempotencyKey());
       setSelectedWorkout(null);
       setSelectedExternal(null);
+      setStartedAt(new Date().toISOString());
       await load();
     } catch (caught) {
       setError(
@@ -216,11 +254,48 @@ export function ActivityScreen({
     setBusy(true);
     setError(null);
     try {
-      await submitActivityRpe(accessToken, activityId, rpe);
+      const rawHeartRate = heartRateByActivity[activityId]?.trim() ?? '';
+      const averageHeartRate = rawHeartRate ? Number(rawHeartRate) : undefined;
+      if (
+        averageHeartRate !== undefined &&
+        (!Number.isInteger(averageHeartRate) ||
+          averageHeartRate < 20 ||
+          averageHeartRate > 260)
+      ) {
+        throw new Error('Vul een gemiddelde hartslag tussen 20 en 260 bpm in.');
+      }
+      await submitActivityRpe(
+        accessToken,
+        activityId,
+        rpe,
+        averageHeartRate,
+      );
+      setHeartRateByActivity((current) => {
+        const next = { ...current };
+        delete next[activityId];
+        return next;
+      });
       await load();
     } catch (caught) {
       setError(
         caught instanceof Error ? caught.message : 'RPE opslaan is mislukt.',
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const confirmMatch = async (activityId: string, workoutId: string) => {
+    setBusy(true);
+    setError(null);
+    try {
+      await confirmActivityMatch(accessToken, activityId, workoutId);
+      await load();
+    } catch (caught) {
+      setError(
+        caught instanceof Error
+          ? caught.message
+          : 'De koppeling kon niet worden bevestigd.',
       );
     } finally {
       setBusy(false);
@@ -242,7 +317,15 @@ export function ActivityScreen({
         </Pressable>
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <FlashList
+        contentContainerStyle={styles.content}
+        data={activities}
+        extraData={{ busy, editingRpeActivityId, heartRateByActivity }}
+        ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
+        keyboardShouldPersistTaps="handled"
+        keyExtractor={(activity) => activity.id}
+        ListHeaderComponent={
+          <>
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {busy ? <ActivityIndicator color={colors.brand} /> : null}
 
@@ -254,12 +337,26 @@ export function ActivityScreen({
               {Number(activity.duration_minutes)} min
             </Text>
             <Text style={styles.body}>Hoe zwaar voelde deze training?</Text>
+            <FormField
+              hint="Verplicht bij een toegewezen training die op RPE is gestuurd; deze observatie maakt zelf geen zones."
+              inputMode="numeric"
+              label="Gemiddelde hartslag (bpm)"
+              onChangeText={(value) =>
+                setHeartRateByActivity((current) => ({
+                  ...current,
+                  [activity.id]: value,
+                }))
+              }
+              placeholder="bijv. 149"
+              value={heartRateByActivity[activity.id] ?? ''}
+            />
             <View style={styles.rpeGrid}>
               {Array.from({ length: 10 }, (_, index) => index + 1).map((rpe) => (
                 <Pressable
                   accessibilityLabel={`RPE ${rpe}`}
                   accessibilityRole="button"
                   disabled={busy}
+                  haptic="selection"
                   key={rpe}
                   onPress={() => void saveRpe(activity.id, rpe)}
                   style={styles.rpeButton}
@@ -305,7 +402,7 @@ export function ActivityScreen({
               <Text style={styles.choiceTitle}>{workout.name}</Text>
               <Text style={styles.meta}>
                 {disciplineLabels[workout.discipline]} ·{' '}
-                {new Date(workout.scheduled_at).toLocaleDateString('nl-NL')}
+                {new Date(`${workout.scheduled_date}T12:00:00`).toLocaleDateString('nl-NL')}
               </Text>
             </Pressable>
           ))}
@@ -354,6 +451,18 @@ export function ActivityScreen({
             </View>
           ) : null}
           <FormField
+            autoCapitalize="none"
+            label="Werkelijk gestart (ISO inclusief tijdzone)"
+            onChangeText={setStartedAt}
+            value={startedAt}
+          />
+          <FormField
+            autoCapitalize="none"
+            label="Tijdzone van de activiteit"
+            onChangeText={setAthleteTimezone}
+            value={athleteTimezone}
+          />
+          <FormField
             inputMode="decimal"
             label="Werkelijke duur (minuten)"
             onChangeText={setDuration}
@@ -375,12 +484,16 @@ export function ActivityScreen({
           </Pressable>
         </View>
 
-        <View style={styles.panel}>
+        <View style={styles.recentHeading}>
           <Text style={styles.title}>Recente activiteiten</Text>
           {activities.length === 0 ? (
             <Text style={styles.body}>Nog geen activiteiten geregistreerd.</Text>
           ) : null}
-          {activities.map((activity) => (
+        </View>
+          </>
+        }
+        ListHeaderComponentStyle={styles.listHeader}
+        renderItem={({ item: activity }) => (
             <View key={activity.id} style={styles.activityRow}>
               <View style={styles.activityHeader}>
                 <Text style={styles.cardTitle}>
@@ -402,6 +515,28 @@ export function ActivityScreen({
                 {activity.rpe === null ? '' : ` · RPE ${activity.rpe}`}
               </Text>
               <Text style={styles.body}>{activity.public_message}</Text>
+              {activity.match_status === 'unmatched' &&
+              activity.processing_state === 'awaiting_rpe' &&
+              suggestedWorkout(activity, workouts) ? (
+                <View style={styles.matchSuggestion}>
+                  <Text style={styles.choiceTitle}>Mogelijke geplande training</Text>
+                  <Text style={styles.body}>
+                    {suggestedWorkout(activity, workouts)?.name}. Start23 koppelt
+                    dit nooit automatisch.
+                  </Text>
+                  <Pressable
+                    disabled={busy}
+                    onPress={() => {
+                      const suggestion = suggestedWorkout(activity, workouts);
+                      if (suggestion) {
+                        void confirmMatch(activity.id, suggestion.id);
+                      }
+                    }}
+                  >
+                    <Text style={styles.link}>Koppeling expliciet bevestigen</Text>
+                  </Pressable>
+                </View>
+              ) : null}
               {activity.correction_proposal_id ? (
                 <Text style={styles.proposalText}>
                   Er staat een apart correctievoorstel klaar. Niets is automatisch
@@ -430,6 +565,7 @@ export function ActivityScreen({
                             accessibilityLabel={`RPE corrigeren naar ${rpe}`}
                             accessibilityRole="button"
                             disabled={busy || rpe === activity.rpe}
+                            haptic="selection"
                             key={rpe}
                             onPress={() => {
                               setEditingRpeActivityId(null);
@@ -449,9 +585,8 @@ export function ActivityScreen({
                 </>
               ) : null}
             </View>
-          ))}
-        </View>
-      </ScrollView>
+        )}
+      />
     </SafeAreaView>
   );
 }
@@ -468,11 +603,19 @@ const styles = StyleSheet.create({
   logo: { color: colors.brand, fontSize: 20, fontWeight: '900', textAlign: 'center' },
   caption: { color: colors.inkMuted, fontSize: 11, textAlign: 'center' },
   link: { color: colors.brand, fontSize: 12, fontWeight: '800' },
-  content: { gap: spacing.md, padding: spacing.lg, paddingBottom: 80 },
+  content: { padding: spacing.lg, paddingBottom: 80 },
+  listHeader: { gap: spacing.md, paddingBottom: spacing.md },
+  listSeparator: { height: spacing.md },
   panel: {
     backgroundColor: colors.surface,
     borderRadius: radius.md,
     gap: spacing.md,
+    padding: spacing.lg,
+  },
+  recentHeading: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    gap: spacing.xs,
     padding: spacing.lg,
   },
   alertCard: {
@@ -499,8 +642,14 @@ const styles = StyleSheet.create({
   action: { alignItems: 'center', backgroundColor: colors.brand, borderRadius: radius.pill, padding: 14 },
   actionText: { color: colors.white, fontSize: 14, fontWeight: '900' },
   disabled: { opacity: 0.45 },
-  activityRow: { borderTopColor: colors.line, borderTopWidth: 1, gap: spacing.xs, paddingTop: spacing.md },
+  activityRow: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    gap: spacing.xs,
+    padding: spacing.lg,
+  },
   activityHeader: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   proposalText: { color: colors.brand, fontSize: 12, fontWeight: '700', lineHeight: 18 },
+  matchSuggestion: { backgroundColor: colors.brandSoft, borderRadius: radius.sm, gap: spacing.xs, padding: spacing.md },
   error: { backgroundColor: colors.dangerSoft, borderRadius: radius.sm, color: colors.danger, padding: spacing.md },
 });

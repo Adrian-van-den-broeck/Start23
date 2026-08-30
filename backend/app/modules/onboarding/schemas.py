@@ -166,6 +166,27 @@ class PrimaryRaceGoalResponse(PrimaryRaceGoalInput):
     updated_at: datetime
 
 
+GoalKind = Literal["race_event", "personal_goal"]
+GoalFamily = Literal[
+    "race_event",
+    "general_fitness",
+    "weight_loss",
+    "muscle_gain",
+]
+
+
+class GoalPlanningOptionResponse(PublicModel):
+    """One explicit Phase 12 planning mode and its fail-closed availability."""
+
+    goal_kind: GoalKind
+    goal_family: GoalFamily
+    label: TrimmedText
+    availability: Literal["available", "coming_later"]
+    requires_target_date: bool
+    cycle_anchor: Literal["race_date", "cycle_week_1"]
+    unavailable_reason: Literal["deterministic_rules_not_approved"] | None
+
+
 class ZoneBoundaryInput(PublicModel):
     """One canonical lower-inclusive zone interval."""
 
@@ -206,6 +227,7 @@ class CalculatedZoneSubmission(PublicModel):
 
     setup_method: Literal["calculated"]
     confirmed: Literal[True]
+    source_quality: Literal["athlete_entered", "measured_lab"] = "athlete_entered"
     thresholds: tuple[KnownThresholdInput, ...] = Field(min_length=1, max_length=2)
     boundary_overrides: tuple[KnownZoneProfileInput, ...] = Field(
         default=(),
@@ -236,6 +258,7 @@ class ZoneProfileResponse(PublicModel):
     status: Literal["pending", "active", "superseded", "rejected", "expired"]
     source: Literal[
         "athlete_entered",
+        "measured_lab",
         "estimated",
         "reviewed_field_threshold",
     ]

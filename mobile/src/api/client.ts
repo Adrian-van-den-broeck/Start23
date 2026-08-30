@@ -1,20 +1,25 @@
 import type {
   AthleteProfile,
-  AvailabilityWindow,
   CalibrationEvaluation,
   CalibrationObservation,
   CalibrationObservationInput,
   CalibrationProtocol,
   CalibrationStatus,
   CalendarResponse,
+  CheckInContextCandidateResponse,
   ChangeProposal,
   CompletedActivity,
   Discipline,
   DisciplineSetup,
   DisciplineSetupInput,
+  FieldTestSchedulingResponse,
+  GoalPlanningOption,
   OnboardingComplete,
   OnboardingState,
   PlannedExternalActivity,
+  PendingWorkoutAlternatives,
+  PolarConnection,
+  PolarImportRun,
   PrimaryRaceGoal,
   TrainingHistoryEntry,
   ThresholdDecision,
@@ -25,6 +30,7 @@ import type {
   ZoneBoundary,
   ZoneProfile,
   ZoneSetupOption,
+  ZoneProfileState,
 } from './types';
 
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, '');
@@ -126,6 +132,7 @@ async function request<T>(
       body.error?.code ?? null,
     );
   }
+  if (response.status === 204) return undefined as T;
   return (await response.json()) as T;
 }
 
@@ -184,6 +191,12 @@ export function saveTrainingHistory(
     method: 'PUT',
     body: JSON.stringify({ entries }),
   });
+}
+
+export function getGoalPlanningOptions(
+  accessToken: string,
+): Promise<GoalPlanningOption[]> {
+  return request(accessToken, '/api/v1/onboarding/goal-options');
 }
 
 export function savePrimaryGoal(
@@ -245,6 +258,7 @@ export function saveCalculatedZones(
   discipline: Discipline,
   input: {
     thresholds: Array<{ metric_kind: string; value: string }>;
+    source_quality: 'athlete_entered' | 'measured_lab';
     boundary_overrides: Array<{
       metric_kind: string;
       boundaries: ZoneBoundary[];
@@ -347,6 +361,65 @@ export function getCalibrationStatus(
   return request(accessToken, '/api/v1/calibration/status');
 }
 
+export function getZoneProfileState(
+  accessToken: string,
+): Promise<ZoneProfileState> {
+  return request(accessToken, '/api/v1/me/zone-profile');
+}
+
+export function scheduleFieldTest(
+  accessToken: string,
+  input: {
+    discipline: Discipline;
+    protocol_id: string;
+    scheduling_mode: 'standalone' | 'weekly_plan';
+    scheduled_date: string;
+    plan_id?: string;
+    expected_plan_revision?: number;
+  },
+): Promise<FieldTestSchedulingResponse> {
+  return request(accessToken, '/api/v1/calibration/test-assignments', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
+export function approveTestAssignment(
+  accessToken: string,
+  proposalId: string,
+  expectedRevision: number,
+): Promise<{
+  proposal_id: string;
+  state: 'applied';
+  test_assignment_id: string;
+  test_assignment_state: 'scheduled';
+}> {
+  return request(
+    accessToken,
+    `/api/v1/calibration/test-assignments/${proposalId}/approve`,
+    {
+      method: 'POST',
+      body: JSON.stringify({ expected_revision: expectedRevision }),
+    },
+  );
+}
+
+export function rejectTestAssignment(
+  accessToken: string,
+  proposalId: string,
+): Promise<{
+  proposal_id: string;
+  state: 'rejected';
+  test_assignment_id: string;
+  test_assignment_state: 'rejected';
+}> {
+  return request(
+    accessToken,
+    `/api/v1/calibration/test-assignments/${proposalId}/reject`,
+    { method: 'POST' },
+  );
+}
+
 export function completeOnboarding(
   accessToken: string,
 ): Promise<OnboardingComplete> {
@@ -359,7 +432,8 @@ export function createWeeklyPlanProposal(
   accessToken: string,
   input: {
     week_start: string;
-    availability: AvailabilityWindow[];
+    available_dates?: string[];
+    reuse_previous_week?: boolean;
     confirmed_injuries: Discipline[];
   },
 ): Promise<WeeklyPlanProposal> {
@@ -398,7 +472,7 @@ export function createScheduleProposal(
   planId: string,
   input: {
     expected_base_revision: number;
-    availability: AvailabilityWindow[];
+    available_dates: string[];
     confirmed_injuries: Discipline[];
     selected_template_ids: string[];
   },
@@ -538,11 +612,86 @@ export function submitActivityRpe(
   accessToken: string,
   activityId: string,
   rpe: number,
+  averageHeartRateBpm?: number,
 ): Promise<CompletedActivity> {
   return request(accessToken, `/api/v1/activities/${activityId}/rpe`, {
     method: 'PUT',
-    body: JSON.stringify({ rpe }),
+    body: JSON.stringify({
+      rpe,
+      ...(averageHeartRateBpm === undefined
+        ? {}
+        : { average_heart_rate_bpm: averageHeartRateBpm }),
+    }),
   });
+}
+
+export function confirmActivityMatch(
+  accessToken: string,
+  activityId: string,
+  plannedWorkoutId: string,
+): Promise<CompletedActivity> {
+  return request(
+    accessToken,
+    `/api/v1/activities/${activityId}/planned-workout-match`,
+    {
+      method: 'PUT',
+      body: JSON.stringify({ planned_workout_id: plannedWorkoutId }),
+    },
+  );
+}
+
+export async function getPolarConnection(
+  accessToken: string,
+): Promise<PolarConnection | null> {
+  try {
+    return await request(accessToken, '/api/v1/integrations/polar');
+  } catch (caught) {
+    if (caught instanceof ApiRequestError && caught.status === 404) return null;
+    throw caught;
+  }
+}
+
+export function startPolarOAuth(
+  accessToken: string,
+): Promise<{ provider: 'polar'; authorization_url: string; expires_at: string }> {
+  return request(accessToken, '/api/v1/integrations/polar/oauth/start', {
+    method: 'POST',
+  });
+}
+
+export function disconnectPolar(accessToken: string): Promise<void> {
+  return request(accessToken, '/api/v1/integrations/polar', {
+    method: 'DELETE',
+  });
+}
+
+export function listPolarImports(
+  accessToken: string,
+): Promise<PolarImportRun[]> {
+  return request(accessToken, '/api/v1/integrations/polar/imports');
+}
+
+export function importPolarHistory(
+  accessToken: string,
+  idempotencyKey: string,
+  days: 7 | 14 | 30 = 14,
+): Promise<PolarImportRun> {
+  return request(accessToken, '/api/v1/integrations/polar/imports', {
+    method: 'POST',
+    headers: { 'Idempotency-Key': idempotencyKey },
+    body: JSON.stringify({ days }),
+  });
+}
+
+export function retryPolarImport(
+  accessToken: string,
+  importId: string,
+): Promise<PolarImportRun> {
+  return request(
+    accessToken,
+    `/api/v1/integrations/polar/imports/${importId}/retry`,
+    { method: 'POST' },
+  );
 }
 
 export function startWeeklyCheckIn(
@@ -553,6 +702,21 @@ export function startWeeklyCheckIn(
     method: 'POST',
     body: JSON.stringify({ week_start: weekStart }),
   });
+}
+
+export function extractWeeklyCheckInContextCandidate(
+  accessToken: string,
+  checkInId: string,
+  athleteText: string,
+): Promise<CheckInContextCandidateResponse> {
+  return request(
+    accessToken,
+    `/api/v1/checkins/${checkInId}/context-candidates`,
+    {
+      method: 'POST',
+      body: JSON.stringify({ athlete_text: athleteText }),
+    },
+  );
 }
 
 export function saveWeeklyCheckInContext(
@@ -621,13 +785,13 @@ export function movePlannedWorkout(
   accessToken: string,
   workoutId: string,
   expectedRevision: number,
-  scheduledAt: string,
+  scheduledDate: string,
 ): Promise<WeeklyPlan> {
   return request(accessToken, `/api/v1/planned-workouts/${workoutId}`, {
     method: 'PATCH',
     body: JSON.stringify({
       expected_revision: expectedRevision,
-      scheduled_at: scheduledAt,
+      scheduled_date: scheduledDate,
     }),
   });
 }
@@ -636,7 +800,7 @@ export function validatePlanLayout(
   accessToken: string,
   planId: string,
   expectedRevision: number,
-  workouts: Array<{ workout_id: string; scheduled_at: string }>,
+  workouts: Array<{ workout_id: string; scheduled_date: string }>,
 ): Promise<{ valid_for_generated_schedule: boolean; warnings: Array<{ message: string }> }> {
   return request(accessToken, `/api/v1/weekly-plans/${planId}/validate`, {
     method: 'POST',
@@ -645,6 +809,42 @@ export function validatePlanLayout(
       workouts,
     }),
   });
+}
+
+
+export function getPendingWorkoutAlternatives(
+  accessToken: string,
+  planId: string,
+  workoutId: string,
+  expectedRevision: number,
+): Promise<PendingWorkoutAlternatives> {
+  const query = new URLSearchParams({
+    expected_revision: String(expectedRevision),
+  });
+  return request(
+    accessToken,
+    `/api/v1/weekly-plans/${planId}/pending-workouts/${workoutId}/alternatives?${query.toString()}`,
+  );
+}
+
+export function editPendingWorkout(
+  accessToken: string,
+  planId: string,
+  workoutId: string,
+  input: {
+    expected_revision: number;
+    expected_proposal_id: string;
+    replacement_template_id: string | null;
+  },
+): Promise<WeeklyPlanProposal> {
+  return request(
+    accessToken,
+    `/api/v1/weekly-plans/${planId}/pending-workouts/${workoutId}/edit-proposals`,
+    {
+      method: 'POST',
+      body: JSON.stringify(input),
+    },
+  );
 }
 
 export function markGoalAchieved(

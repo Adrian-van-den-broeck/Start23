@@ -566,6 +566,79 @@ def test_onboarding_requires_authentication(
     assert response.status_code == 401
 
 
+def test_goal_options_distinguish_race_from_unavailable_personal_goals(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = onboarding_context
+
+    unauthenticated = client.get("/api/v1/onboarding/goal-options")
+    response = client.get("/api/v1/onboarding/goal-options", headers=_headers())
+
+    assert unauthenticated.status_code == 401
+    assert response.status_code == 200
+    assert response.json() == [
+        {
+            "goal_kind": "race_event",
+            "goal_family": "race_event",
+            "label": "Wedstrijd of evenement",
+            "availability": "available",
+            "requires_target_date": True,
+            "cycle_anchor": "race_date",
+            "unavailable_reason": None,
+        },
+        {
+            "goal_kind": "personal_goal",
+            "goal_family": "general_fitness",
+            "label": "Algemene fitheid",
+            "availability": "coming_later",
+            "requires_target_date": False,
+            "cycle_anchor": "cycle_week_1",
+            "unavailable_reason": "deterministic_rules_not_approved",
+        },
+        {
+            "goal_kind": "personal_goal",
+            "goal_family": "weight_loss",
+            "label": "Gewichtsverlies",
+            "availability": "coming_later",
+            "requires_target_date": False,
+            "cycle_anchor": "cycle_week_1",
+            "unavailable_reason": "deterministic_rules_not_approved",
+        },
+        {
+            "goal_kind": "personal_goal",
+            "goal_family": "muscle_gain",
+            "label": "Spieropbouw",
+            "availability": "coming_later",
+            "requires_target_date": False,
+            "cycle_anchor": "cycle_week_1",
+            "unavailable_reason": "deterministic_rules_not_approved",
+        },
+    ]
+    assert all("tss" not in key.lower() for item in response.json() for key in item)
+
+
+def test_personal_goal_cannot_be_submitted_as_a_race_goal(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = onboarding_context
+
+    response = client.post(
+        "/api/v1/me/goals",
+        headers=_headers(),
+        json={
+            "goal_type": "general_fitness",
+            "title": "Build year-round fitness",
+            "specific_description": "Train consistently without an event.",
+            "measurable_outcome": "Complete three sessions each week.",
+            "feasibility_score": 8,
+            "target_date": (date.today() + timedelta(days=120)).isoformat(),
+            "race_discipline_profile": ["swim", "bike", "run"],
+        },
+    )
+
+    assert response.status_code == 422
+
+
 def test_profile_rejects_invalid_timezone_and_authoritative_user_id(
     onboarding_context: tuple[TestClient, UUID, UUID],
 ) -> None:
@@ -737,6 +810,33 @@ def test_known_thresholds_create_multi_metric_pending_zones_before_activation(
     assert approved.status_code == 200, approved.text
     assert approved.json()["state"] == "applied"
     assert approved.json()["superseded_zone_profile_id"] is None
+
+
+def test_physician_or_lab_values_remain_pending_with_measured_provenance(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = onboarding_context
+
+    response = client.put(
+        "/api/v1/me/zones/bike",
+        headers=_headers(),
+        json={
+            "setup_method": "calculated",
+            "confirmed": True,
+            "source_quality": "measured_lab",
+            "thresholds": [
+                {"metric_kind": "bike_ftp_watts", "value": 245},
+            ],
+            "boundary_overrides": [],
+        },
+    )
+
+    assert response.status_code == 200, response.text
+    profile = response.json()["profile"]
+    assert profile["status"] == "pending"
+    assert profile["source_method"] == "physician_or_lab_reported"
+    assert profile["source_quality"] == "measured_lab"
+    assert response.json()["proposal_id"] is not None
 
 
 def test_zone_proposal_approval_is_owned_atomic_and_stale_safe(

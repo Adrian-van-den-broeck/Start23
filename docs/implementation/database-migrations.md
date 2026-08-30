@@ -118,7 +118,70 @@ write rejection, immutable/idempotent observations, cross-athlete isolation,
 service-only deterministic results, immutable evaluations, and absence of TSS
 columns. SQL execution, advisors, hosted migration, and two-real-token checks
 remain explicit gates because no local PostgreSQL/Docker runtime or Supabase
-CLI is available.
+database runtime is available. A current CLI can now be invoked ephemerally
+through `npx`; that does not provide the missing Docker/PostgreSQL runtime.
+
+Decision migration `20260825225207_phase_8_5_9_business_decisions` was created
+through the current Supabase CLI workflow and applied to linked development on
+2026-08-26. It adds the exclusive zone/protocol segment target contract,
+the reviewed week-1 bike calibration catalog item, bounded Polar import retry
+state, `reconnect_required`, invoker/RLS read-only Polar RPCs and explicit
+athlete-confirmed activity matching. Its rollback-only pgTAP suite verifies the
+target constraint, absence of public TSS in the protocol target, retry grants,
+invoker functions and authenticated match grant. All nine assertions pass via
+the rollback-only Management API query path. Two-real-user isolation remains an
+explicit release gate.
+
+Phase 10 migration `20260826085242_phase_10_date_only_planning` was created
+through pinned Supabase CLI `2.115.0` and applied to linked development on
+2026-08-26. It adds authoritative `available_dates` and provenance to plan
+revisions, authoritative `scheduled_date` to planned workouts, explicit
+previous-week reuse, exact pending-revision planning context, date-based
+calendar/rest/move RPCs, and a TSS-free owner plan projection. The previous
+timestamp is retained only as an athlete-local-noon internal compatibility
+projection for existing private relationships. New/changed objects have
+explicit grants; private planning-context functions are service-role-only and
+owner reads remain `SECURITY INVOKER`.
+
+The rollback-only `phase_10_date_only_planning_test.sql` suite contains 18
+assertions for columns/types, triggers, date function signatures, invoker and
+service-role grant separation, and the absence of `scheduled_at` in the public
+plan function. All 18 pass against development. Local and remote migration
+history aligns, linked public/private error-level lint is clean, and advisors
+contain no error or Phase 10-specific warning. The first push exposed an
+invalid target-table alias reference in the backfill; that Phase 10 transaction
+rolled back before ledger registration, the SQL was corrected to a correlated
+`SET` subquery, and a dry-run plus retry then succeeded.
+
+The pinned CLI's local reset still fails with `LegacyLocalDbRunningError`.
+Likewise, `test db --linked` unexpectedly requires local Docker for `pg_prove`.
+The committed rollback-only suites were therefore executed directly through
+current `db query --linked --file`; successful output ended at `1..9` for the
+decision suite and `ok 18` with no `finish()` failure summary for Phase 10.
+Read-only hosted verification also confirms zero null backfilled dates,
+date-only public move/calendar signatures, service-only private planning
+context and a service-only retry claim RPC. Two-real-user isolation remains an
+explicit release gate; no production project was changed.
+
+Phase 11 migration `20260826144239_phase_11_discipline_zone_profiles` was
+created through pinned Supabase CLI `2.115.0` on 2026-08-28 and remains
+local/unapplied. It adds explicit RPE planned-target snapshots, bounded
+completion-time heart-rate observations, independent discipline test
+assignments, standalone `validation_test` proposals, run/bike plan-integrated
+test binding, physician/lab provenance persistence, and approval synchronization.
+Integrated plan approval is guarded so a field-test revision cannot be applied
+without its exact typed assignment. All user-owned assignment rows use forced
+RLS; direct critical writes remain trigger-guarded, while service-role
+functions are narrow and explicitly granted. No public contract exposes TSS.
+
+The rollback-only `phase_11_discipline_zone_profiles_test.sql` suite contains
+24 assertions for RLS, triggers, grants, catalog targets, exact boundary
+ownership, RPE snapshot creation, heart-rate writes, measured provenance, and
+integrated-test approval binding. It has not run: local error-level lint waited
+on the unavailable database service at `127.0.0.1:54322` and was interrupted.
+Hosted application, linked lint/advisors, pgTAP, migration-ledger comparison,
+and two-real-user isolation are explicit release gates. No hosted or production
+database was changed.
 
 ## Workflow
 

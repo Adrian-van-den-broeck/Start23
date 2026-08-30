@@ -18,6 +18,7 @@ from app.modules.workouts.catalog import (
     FallbackCompatibility,
     ZoneRequirement,
     active_catalog,
+    as_rpe_guided_template,
     snapshot_template,
 )
 
@@ -46,7 +47,7 @@ def test_reviewed_catalog_has_latest_swim_bike_and_run_templates() -> None:
     latest = active_catalog()
 
     assert len(REVIEWED_CATALOG) == 7
-    assert len(latest) == 7
+    assert len(latest) == 11
     assert {template.discipline.value for template in latest} == {
         "swim",
         "bike",
@@ -112,6 +113,22 @@ def test_snapshot_remains_stable_when_a_new_catalog_version_exists() -> None:
     assert version_two.internal_planned_load.value == Decimal("2.25")
 
 
+def test_swim_template_can_be_projected_to_rpe_without_losing_technique_detail() -> None:
+    swim = next(
+        template
+        for template in active_catalog()
+        if template.discipline.value == "swim"
+        and any(segment.is_swim_technique for segment in template.segments)
+        and not template.explicit_scheduling_only
+    )
+
+    projected = as_rpe_guided_template(swim)
+
+    assert all(segment.zone_target is None for segment in projected.segments)
+    assert all(segment.rpe_target is not None for segment in projected.segments)
+    assert any(segment.is_swim_technique for segment in projected.segments)
+
+
 def test_internal_load_is_hidden_from_representations() -> None:
     template = REVIEWED_CATALOG[0]
     snapshot = snapshot_template(template)
@@ -133,7 +150,19 @@ def test_catalog_endpoint_requires_authentication_and_omits_hidden_load(
     assert unauthorized.status_code == 401
     assert response.status_code == 200
     payload = response.json()
-    assert len(payload["templates"]) == 7
+    assert len(payload["templates"]) == 11
+    calibration = next(
+        template
+        for template in payload["templates"]
+        if template["name"] == "Week-1 fietskalibratie"
+    )
+    assert calibration["zone_requirements"] == []
+    assert all(
+        segment["zone_target"] is None
+        and segment["protocol_target"]["protocol_id"]
+        == "start23_week1_bike_calibration_v1"
+        for segment in calibration["segments"]
+    )
     serialized = response.text.lower().replace("_", "")
     assert "tss" not in serialized
     assert "internalplannedload" not in serialized

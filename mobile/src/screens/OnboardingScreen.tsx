@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   approveZoneProposal,
   completeOnboarding,
+  getGoalPlanningOptions,
   getOnboarding,
   rejectZoneProposal,
   saveCalculatedZones,
@@ -26,14 +26,17 @@ import type {
   AthleteProfile,
   Discipline,
   DisciplineSetupInput,
+  GoalPlanningOption,
   OnboardingState,
   OnboardingStep,
   PrimaryRaceGoal,
   ZoneBoundary,
 } from '../api/types';
+import { FadeInView } from '../components/FadeInView';
 import { FormField } from '../components/FormField';
+import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
-import { colors, radius, spacing } from '../theme/tokens';
+import { colors, radius, shadows, spacing } from '../theme/tokens';
 import { ZoneSetupStep } from './ZoneSetupStep';
 
 const stepLabels: Array<{ step: OnboardingStep; label: string }> = [
@@ -65,14 +68,17 @@ function StepFrame({
   children,
 }: StepFrameProps) {
   return (
-    <View style={styles.step}>
-      <View>
-        <Text style={styles.eyebrow}>{eyebrow}</Text>
+    <FadeInView style={styles.step}>
+      <View style={styles.stepHero}>
+        <View style={styles.eyebrowRow}>
+          <View style={styles.eyebrowMark} />
+          <Text style={styles.eyebrow}>{eyebrow}</Text>
+        </View>
         <Text style={styles.stepTitle}>{title}</Text>
         <Text style={styles.description}>{description}</Text>
       </View>
-      {children}
-    </View>
+      <View style={styles.stepCard}>{children}</View>
+    </FadeInView>
   );
 }
 
@@ -95,6 +101,7 @@ function ActionButton({
     <Pressable
       accessibilityRole="button"
       disabled={disabled || loading}
+      haptic={secondary ? undefined : 'light'}
       onPress={onPress}
       style={({ pressed }) => [
         styles.action,
@@ -356,6 +363,7 @@ function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
 
 type GoalStepProps = {
   goal: PrimaryRaceGoal | null;
+  options: GoalPlanningOption[];
   saving: boolean;
   onSave: (input: {
     title: string;
@@ -391,7 +399,10 @@ function normalizeRaceDate(value: string): string | null {
   return normalized > localToday ? normalized : null;
 }
 
-function GoalStep({ goal, saving, onSave }: GoalStepProps) {
+function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
+  const [selectedKind, setSelectedKind] = useState<
+    GoalPlanningOption['goal_kind'] | null
+  >(goal ? 'race_event' : null);
   const [title, setTitle] = useState(goal?.title ?? '');
   const [description, setDescription] = useState(
     goal?.specific_description ?? '',
@@ -406,75 +417,162 @@ function GoalStep({ goal, saving, onSave }: GoalStepProps) {
     Boolean(title && description && outcome && normalizedTargetDate) &&
     Number(feasibility) >= 1 &&
     Number(feasibility) <= 10;
+  const raceOption = options.find(
+    (option) => option.goal_family === 'race_event',
+  );
+  const personalOptions = options.filter(
+    (option) => option.goal_kind === 'personal_goal',
+  );
 
   return (
     <StepFrame
-      description="De MVP gebruikt één actieve, racegerichte A-doelstelling voor zwemmen, fietsen en lopen."
+      description="Een wedstrijdplan rekent terug vanaf een racedatum. Een persoonlijk doel krijgt een eigen cyclus vanaf week 1 en gebruikt nooit stilzwijgend wedstrijdregels."
       eyebrow="Stap 3 van 5"
-      title="Kies je A-race"
+      title="Kies je trainingsdoel"
     >
-      <View style={styles.form}>
-        <FormField
-          label="Naam van de race"
-          onChangeText={setTitle}
-          placeholder="Amsterdam Olympic Triathlon"
-          value={title}
-        />
-        <FormField
-          label="Specifiek doel"
-          multiline
-          onChangeText={setDescription}
-          placeholder="Ik wil gecontroleerd finishen en gelijkmatig lopen."
-          style={styles.multiline}
-          value={description}
-        />
-        <FormField
-          label="Meetbaar resultaat"
-          onChangeText={setOutcome}
-          placeholder="Alle drie onderdelen voltooien."
-          value={outcome}
-        />
-        <View style={styles.twoColumns}>
-          <View style={styles.column}>
-            <FormField
-              hint="1 tot en met 10"
-              inputMode="numeric"
-              label="Haalbaarheid"
-              onChangeText={setFeasibility}
-              placeholder="8"
-              value={feasibility}
+      <View style={styles.goalModeList}>
+        <Pressable
+          accessibilityRole="radio"
+          accessibilityState={{ selected: selectedKind === 'race_event' }}
+          disabled={raceOption?.availability !== 'available'}
+          onPress={() => setSelectedKind('race_event')}
+          style={({ pressed }) => [
+            styles.goalModeCard,
+            selectedKind === 'race_event' && styles.goalModeCardSelected,
+            pressed && styles.actionPressed,
+          ]}
+        >
+          <View style={styles.goalModeHeading}>
+            <View
+              style={[
+                styles.goalModeRadio,
+                selectedKind === 'race_event' && styles.goalModeRadioSelected,
+              ]}
             />
+            <Text style={styles.goalModeTitle}>
+              {raceOption?.label ?? 'Wedstrijd of evenement'}
+            </Text>
+            <Text style={styles.availableBadge}>Beschikbaar</Text>
           </View>
-          <View style={styles.column}>
-            <FormField
-              autoCapitalize="none"
-              hint={
-                targetDate && !normalizedTargetDate
-                  ? 'Gebruik een toekomstige datum: JJJJ-MM-DD'
-                  : 'JJJJ-MM-DD'
-              }
-              label="Racedatum"
-              onChangeText={setTargetDate}
-              placeholder="2027-06-15"
-              value={targetDate}
+          <Text style={styles.goalModeDescription}>
+            Verplichte racedatum; de trainingscyclus wordt vanaf die datum
+            teruggerekend.
+          </Text>
+        </Pressable>
+        <Pressable
+          accessibilityHint="Toont persoonlijke doelen die nog niet beschikbaar zijn"
+          accessibilityRole="radio"
+          accessibilityState={{ selected: selectedKind === 'personal_goal' }}
+          onPress={() => setSelectedKind('personal_goal')}
+          style={({ pressed }) => [
+            styles.goalModeCard,
+            selectedKind === 'personal_goal' && styles.goalModeCardSelected,
+            pressed && styles.actionPressed,
+          ]}
+        >
+          <View style={styles.goalModeHeading}>
+            <View
+              style={[
+                styles.goalModeRadio,
+                selectedKind === 'personal_goal' &&
+                  styles.goalModeRadioSelected,
+              ]}
             />
+            <Text style={styles.goalModeTitle}>Persoonlijk doel</Text>
+            <Text style={styles.comingLaterBadge}>Komt later</Text>
+          </View>
+          <Text style={styles.goalModeDescription}>
+            Begint bij cyclusweek 1 en krijgt eigen doelregels zodra die zijn
+            beoordeeld.
+          </Text>
+        </Pressable>
+      </View>
+      {selectedKind === 'race_event' ? (
+        <>
+          <View style={styles.form}>
+            <FormField
+              label="Naam van de race"
+              onChangeText={setTitle}
+              placeholder="Amsterdam Olympic Triathlon"
+              value={title}
+            />
+            <FormField
+              label="Specifiek doel"
+              multiline
+              onChangeText={setDescription}
+              placeholder="Ik wil gecontroleerd finishen en gelijkmatig lopen."
+              style={styles.multiline}
+              value={description}
+            />
+            <FormField
+              label="Meetbaar resultaat"
+              onChangeText={setOutcome}
+              placeholder="Alle drie onderdelen voltooien."
+              value={outcome}
+            />
+            <View style={styles.twoColumns}>
+              <View style={styles.column}>
+                <FormField
+                  hint="1 tot en met 10"
+                  inputMode="numeric"
+                  label="Haalbaarheid"
+                  onChangeText={setFeasibility}
+                  placeholder="8"
+                  value={feasibility}
+                />
+              </View>
+              <View style={styles.column}>
+                <FormField
+                  autoCapitalize="none"
+                  hint={
+                    targetDate && !normalizedTargetDate
+                      ? 'Gebruik een toekomstige datum: JJJJ-MM-DD'
+                      : 'JJJJ-MM-DD'
+                  }
+                  label="Racedatum"
+                  onChangeText={setTargetDate}
+                  placeholder="2027-06-15"
+                  value={targetDate}
+                />
+              </View>
+            </View>
+          </View>
+          <ActionButton
+            disabled={!valid}
+            label="A-doel opslaan"
+            loading={saving}
+            onPress={() =>
+              void onSave({
+                title,
+                specific_description: description,
+                measurable_outcome: outcome,
+                feasibility_score: Number(feasibility),
+                target_date: normalizedTargetDate!,
+              })
+            }
+          />
+        </>
+      ) : null}
+      {selectedKind === 'personal_goal' ? (
+        <View style={styles.personalGoalsPanel}>
+          <Text style={styles.personalGoalsTitle}>
+            Persoonlijke planningsmodi komen later
+          </Text>
+          <Text style={styles.personalGoalsText}>
+            De deterministische macrocycli, intensiteitsdoelen en herstelregels
+            zijn nog niet beoordeeld. Daarom kan Start23 deze doelen nog niet
+            opslaan of als wedstrijdplan behandelen.
+          </Text>
+          <View style={styles.personalGoalList}>
+            {personalOptions.map((option) => (
+              <View key={option.goal_family} style={styles.personalGoalRow}>
+                <Text style={styles.personalGoalLabel}>{option.label}</Text>
+                <Text style={styles.comingLaterBadge}>Komt later</Text>
+              </View>
+            ))}
           </View>
         </View>
-      </View>
-      <ActionButton
-        disabled={!valid}
-        label="A-doel opslaan"
-        loading={saving}
-        onPress={() =>
-          void onSave({
-            title,
-            specific_description: description,
-            measurable_outcome: outcome,
-            feasibility_score: Number(feasibility),
-            target_date: normalizedTargetDate!,
-          })
-        }
-      />
+      ) : null}
     </StepFrame>
   );
 }
@@ -981,13 +1079,18 @@ export function OnboardingScreen({
   onSignOut,
 }: OnboardingScreenProps) {
   const [state, setState] = useState<OnboardingState | null>(null);
+  const [goalOptions, setGoalOptions] = useState<GoalPlanningOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
-    const next = await getOnboarding(accessToken);
+    const [next, nextGoalOptions] = await Promise.all([
+      getOnboarding(accessToken),
+      getGoalPlanningOptions(accessToken),
+    ]);
     setState(next);
+    setGoalOptions(nextGoalOptions);
   }, [accessToken]);
 
   const retryLoad = useCallback(async () => {
@@ -1008,10 +1111,14 @@ export function OnboardingScreen({
 
   useEffect(() => {
     let mounted = true;
-    getOnboarding(accessToken)
-      .then((next) => {
+    Promise.all([
+      getOnboarding(accessToken),
+      getGoalPlanningOptions(accessToken),
+    ])
+      .then(([next, nextGoalOptions]) => {
         if (mounted) {
           setState(next);
+          setGoalOptions(nextGoalOptions);
           setError(null);
         }
       })
@@ -1091,9 +1198,14 @@ export function OnboardingScreen({
         style={styles.keyboard}
       >
         <View style={styles.header}>
-          <View>
-            <Text style={styles.logo}>Start23</Text>
-            <Text style={styles.headerCaption}>Veilige intake</Text>
+          <View style={styles.brandLockup}>
+            <View style={styles.logoMark}>
+              <Text style={styles.logoMarkText}>23</Text>
+            </View>
+            <View>
+              <Text style={styles.logo}>Start23</Text>
+              <Text style={styles.headerCaption}>Jouw profiel</Text>
+            </View>
           </View>
           <View style={styles.headerActions}>
             {state.discipline_setups.some((setup) => setup.protocol_id) ? (
@@ -1116,7 +1228,7 @@ export function OnboardingScreen({
         </View>
 
         {step !== 'completed' ? (
-          <View style={styles.progress}>
+          <FadeInView delay={80} distance={8} style={styles.progress}>
             {stepLabels.map((item) => (
               <View key={item.step} style={styles.progressItem}>
                 <View
@@ -1137,7 +1249,7 @@ export function OnboardingScreen({
                 </Text>
               </View>
             ))}
-          </View>
+          </FadeInView>
         ) : null}
 
         <ScrollView
@@ -1185,6 +1297,7 @@ export function OnboardingScreen({
             <GoalStep
               goal={state.primary_goal}
               key={state.primary_goal?.revision ?? 0}
+              options={goalOptions}
               onSave={(input) =>
                 mutate(() =>
                   savePrimaryGoal(
@@ -1214,6 +1327,7 @@ export function OnboardingScreen({
                   if (input.setup_route === 'known_values') {
                     await saveCalculatedZones(accessToken, discipline, {
                       thresholds: input.thresholds,
+                      source_quality: input.source_quality,
                       boundary_overrides: input.zone_profiles,
                     });
                   }
@@ -1291,21 +1405,42 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
+    backgroundColor: colors.canvas,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.sm,
     paddingTop: spacing.sm,
   },
+  brandLockup: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  logoMark: {
+    alignItems: 'center',
+    backgroundColor: colors.brand,
+    borderRadius: radius.sm,
+    height: 38,
+    justifyContent: 'center',
+    transform: [{ rotate: '-4deg' }],
+    width: 38,
+  },
+  logoMarkText: {
+    color: colors.white,
+    fontSize: 12,
+    fontWeight: '900',
+  },
   logo: {
-    color: colors.accent,
+    color: colors.brand,
     fontSize: 14,
     fontWeight: '900',
     letterSpacing: 1.4,
     textTransform: 'uppercase',
   },
   headerCaption: {
-    color: colors.ink,
-    fontSize: 12,
+    color: colors.inkMuted,
+    fontSize: 11,
     fontWeight: '700',
     marginTop: 2,
   },
@@ -1314,6 +1449,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   signOut: {
+    borderRadius: radius.pill,
     padding: spacing.sm,
   },
   signOutText: {
@@ -1322,10 +1458,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   progress: {
+    alignSelf: 'center',
     flexDirection: 'row',
     gap: spacing.xs,
+    maxWidth: 720,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
+    width: '100%',
   },
   progressItem: {
     flex: 1,
@@ -1348,8 +1487,11 @@ const styles = StyleSheet.create({
     color: colors.ink,
   },
   scrollContent: {
+    alignSelf: 'center',
+    maxWidth: 720,
     padding: spacing.lg,
     paddingBottom: 80,
+    width: '100%',
   },
   errorBanner: {
     backgroundColor: colors.dangerSoft,
@@ -1367,6 +1509,20 @@ const styles = StyleSheet.create({
   },
   step: {
     gap: spacing.lg,
+  },
+  stepHero: {
+    paddingHorizontal: spacing.xs,
+  },
+  eyebrowRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  eyebrowMark: {
+    backgroundColor: colors.accent,
+    borderRadius: radius.pill,
+    height: 7,
+    width: 7,
   },
   eyebrow: {
     color: colors.accent,
@@ -1387,6 +1543,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 21,
     marginTop: spacing.sm,
+    maxWidth: 580,
+  },
+  stepCard: {
+    ...shadows.card,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.white,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    gap: spacing.lg,
+    padding: spacing.lg,
   },
   form: {
     gap: spacing.md,
@@ -1407,6 +1573,103 @@ const styles = StyleSheet.create({
     minHeight: 92,
     textAlignVertical: 'top',
   },
+  goalModeList: {
+    gap: spacing.sm,
+  },
+  goalModeCard: {
+    backgroundColor: colors.surface,
+    borderColor: colors.line,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    gap: spacing.sm,
+    padding: spacing.md,
+  },
+  goalModeCardSelected: {
+    backgroundColor: colors.brandSoft,
+    borderColor: colors.brand,
+  },
+  goalModeHeading: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  goalModeRadio: {
+    borderColor: colors.line,
+    borderRadius: radius.pill,
+    borderWidth: 2,
+    height: 20,
+    width: 20,
+  },
+  goalModeRadioSelected: {
+    backgroundColor: colors.brand,
+    borderColor: colors.brand,
+    borderWidth: 5,
+  },
+  goalModeTitle: {
+    color: colors.ink,
+    flex: 1,
+    fontSize: 15,
+    fontWeight: '800',
+  },
+  goalModeDescription: {
+    color: colors.inkMuted,
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  availableBadge: {
+    backgroundColor: colors.brandSoft,
+    borderRadius: radius.pill,
+    color: colors.success,
+    fontSize: 10,
+    fontWeight: '800',
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  comingLaterBadge: {
+    backgroundColor: colors.accentSoft,
+    borderRadius: radius.pill,
+    color: colors.danger,
+    fontSize: 10,
+    fontWeight: '800',
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  personalGoalsPanel: {
+    backgroundColor: colors.accentSoft,
+    borderRadius: radius.md,
+    gap: spacing.sm,
+    padding: spacing.md,
+  },
+  personalGoalsTitle: {
+    color: colors.ink,
+    fontSize: 15,
+    fontWeight: '800',
+  },
+  personalGoalsText: {
+    color: colors.inkMuted,
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  personalGoalList: {
+    gap: spacing.xs,
+  },
+  personalGoalRow: {
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: radius.sm,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    justifyContent: 'space-between',
+    padding: spacing.sm,
+  },
+  personalGoalLabel: {
+    color: colors.ink,
+    flex: 1,
+    fontSize: 13,
+    fontWeight: '700',
+  },
   action: {
     alignItems: 'center',
     backgroundColor: colors.brand,
@@ -1416,6 +1679,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     minHeight: 52,
     paddingHorizontal: spacing.lg,
+    ...shadows.card,
   },
   actionSecondary: {
     backgroundColor: colors.surface,

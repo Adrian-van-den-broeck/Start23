@@ -5,7 +5,6 @@ from datetime import date, datetime, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from typing import Any, Literal
 from uuid import UUID
-from zoneinfo import ZoneInfo
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -20,49 +19,57 @@ class PublicPlanningModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
-class AvailabilityWindowInput(PublicPlanningModel):
-    """One explicit athlete availability interval."""
+class FixedWorkoutDate(PublicPlanningModel):
+    """One exact athlete-local date for an explicitly selected template."""
 
-    starts_at: datetime
-    ends_at: datetime
-
-    @model_validator(mode="after")
-    def validate_interval(self) -> "AvailabilityWindowInput":
-        if (
-            self.starts_at.tzinfo is None
-            or self.starts_at.utcoffset() is None
-            or self.ends_at.tzinfo is None
-            or self.ends_at.utcoffset() is None
-        ):
-            raise ValueError("Availability windows must be timezone-aware.")
-        if self.ends_at <= self.starts_at:
-            raise ValueError("Availability window end must follow its start.")
-        return self
+    template_id: UUID
+    scheduled_date: date
 
 
 class WeeklyPlanProposalRequest(PublicPlanningModel):
     """Structured inputs for deterministic selection and auto-scheduling."""
 
     week_start: date
-    availability: tuple[AvailabilityWindowInput, ...] = Field(
-        min_length=1,
-        max_length=28,
-    )
+    available_dates: tuple[date, ...] = Field(default=(), max_length=7)
+    reuse_previous_week: bool = False
     confirmed_injuries: frozenset[Discipline] = frozenset()
     low_only_disciplines: frozenset[Discipline] = frozenset()
     selected_template_ids: tuple[UUID, ...] | None = Field(
         default=None,
         max_length=24,
     )
+    fixed_workout_dates: tuple[FixedWorkoutDate, ...] = Field(
+        default=(),
+        max_length=3,
+    )
 
     @model_validator(mode="after")
     def validate_week_and_selection(self) -> "WeeklyPlanProposalRequest":
         if self.week_start.weekday() != 0:
             raise ValueError("week_start must be a Monday.")
+        if bool(self.available_dates) == self.reuse_previous_week:
+            raise ValueError(
+                "Provide available_dates or explicitly reuse the previous week."
+            )
+        if len(set(self.available_dates)) != len(self.available_dates):
+            raise ValueError("available_dates must be unique.")
         if self.selected_template_ids is not None and len(
             set(self.selected_template_ids)
         ) != len(self.selected_template_ids):
             raise ValueError("selected_template_ids must be unique.")
+        fixed_ids = tuple(item.template_id for item in self.fixed_workout_dates)
+        if len(set(fixed_ids)) != len(fixed_ids):
+            raise ValueError("fixed workout templates must be unique.")
+        if self.fixed_workout_dates and (
+            self.selected_template_ids is None
+            or not set(fixed_ids) <= set(self.selected_template_ids)
+        ):
+            raise ValueError("fixed workout dates require selected templates.")
+        if any(
+            item.scheduled_date not in self.available_dates
+            for item in self.fixed_workout_dates
+        ):
+            raise ValueError("fixed workout dates must be available dates.")
         if self.confirmed_injuries & self.low_only_disciplines:
             raise ValueError("A discipline cannot be blocked and low-only.")
         return self
@@ -72,23 +79,36 @@ class ScheduleProposalRequest(PublicPlanningModel):
     """Explicit deck selection for a new pending schedule revision."""
 
     expected_base_revision: int = Field(ge=0)
-    availability: tuple[AvailabilityWindowInput, ...] = Field(
-        min_length=1,
-        max_length=28,
-    )
+    available_dates: tuple[date, ...] = Field(min_length=1, max_length=7)
     confirmed_injuries: frozenset[Discipline] = frozenset()
     low_only_disciplines: frozenset[Discipline] = frozenset()
     selected_template_ids: tuple[UUID, ...] = Field(
         min_length=1,
         max_length=24,
     )
+    fixed_workout_dates: tuple[FixedWorkoutDate, ...] = Field(
+        default=(),
+        max_length=3,
+    )
 
     @model_validator(mode="after")
     def validate_selection(self) -> "ScheduleProposalRequest":
         if len(set(self.selected_template_ids)) != len(self.selected_template_ids):
             raise ValueError("selected_template_ids must be unique.")
+        if len(set(self.available_dates)) != len(self.available_dates):
+            raise ValueError("available_dates must be unique.")
         if self.confirmed_injuries & self.low_only_disciplines:
             raise ValueError("A discipline cannot be blocked and low-only.")
+        fixed_ids = tuple(item.template_id for item in self.fixed_workout_dates)
+        if len(set(fixed_ids)) != len(fixed_ids):
+            raise ValueError("fixed workout templates must be unique.")
+        if not set(fixed_ids) <= set(self.selected_template_ids):
+            raise ValueError("fixed workout dates require selected templates.")
+        if any(
+            item.scheduled_date not in self.available_dates
+            for item in self.fixed_workout_dates
+        ):
+            raise ValueError("fixed workout dates must be available dates.")
         return self
 
 
@@ -119,8 +139,7 @@ class PlannedWorkoutResponse(PublicPlanningModel):
     expected_rpe_min: int = Field(ge=1, le=10)
     expected_rpe_max: int = Field(ge=1, le=10)
     segments: tuple[WorkoutSegmentResponse, ...]
-    scheduled_at: datetime
-    timezone: str
+    scheduled_date: date
     source: Literal[
         "auto_planned",
         "athlete_selected",
@@ -135,7 +154,7 @@ class ChangeProposalSummaryResponse(PublicPlanningModel):
     """Common, typed public proposal envelope."""
 
     id: UUID
-    kind: Literal["zone_update", "plan_revision"]
+    kind: Literal["zone_update", "plan_revision", "validation_test"]
     state: Literal["pending", "approved", "rejected", "expired", "applied"]
     reason_codes: tuple[str, ...]
     public_explanation: str
@@ -148,6 +167,7 @@ class ChangeProposalSummaryResponse(PublicPlanningModel):
     base_plan_revision: int | None = None
     target_zone_profile_id: UUID | None = None
     base_zone_profile_id: UUID | None = None
+    target_test_assignment_id: UUID | None = None
 
 
 class WeeklyPlanResponse(PublicPlanningModel):
@@ -193,6 +213,8 @@ class WeeklyPlanResponse(PublicPlanningModel):
     high_intensity_minutes: Decimal = Field(ge=0)
     confirmed_injuries: frozenset[Discipline]
     low_only_disciplines: frozenset[Discipline] = frozenset()
+    available_dates: tuple[date, ...]
+    availability_source: Literal["explicit", "previous_week", "checkin"]
     workouts: tuple[PlannedWorkoutResponse, ...]
     rest_days: tuple["RestDayResponse", ...] = ()
     warnings: tuple[PlanWarningResponse, ...]
@@ -213,13 +235,9 @@ class WeeklyPlanResponse(PublicPlanningModel):
         result.setdefault("display_high_intensity_percent", 100 - display_low)
         result.setdefault("low_intensity_minutes", total * low_percent / Decimal(100))
         result.setdefault("high_intensity_minutes", total * high_percent / Decimal(100))
-        timezone_name = str(result["timezone"])
-        athlete_timezone = ZoneInfo(timezone_name)
         week_start = date.fromisoformat(str(result["week_start"]))
         workout_dates = {
-            datetime.fromisoformat(str(workout["scheduled_at"]))
-            .astimezone(athlete_timezone)
-            .date()
+            date.fromisoformat(str(workout["scheduled_date"]))
             for workout in result.get("workouts", [])
             if isinstance(workout, Mapping)
         }
@@ -283,13 +301,7 @@ class PlanValidationWorkoutInput(PublicPlanningModel):
     """One existing workout position to validate qualitatively."""
 
     workout_id: UUID
-    scheduled_at: datetime
-
-    @model_validator(mode="after")
-    def require_timezone(self) -> "PlanValidationWorkoutInput":
-        if self.scheduled_at.tzinfo is None or self.scheduled_at.utcoffset() is None:
-            raise ValueError("scheduled_at must be timezone-aware.")
-        return self
+    scheduled_date: date
 
 
 class PlanValidationRequest(PublicPlanningModel):
@@ -320,22 +332,35 @@ class PlannedWorkoutMoveRequest(PublicPlanningModel):
     """Revision-preconditioned direct athlete calendar move."""
 
     expected_revision: int = Field(ge=1)
-    scheduled_at: datetime
-
-    @model_validator(mode="after")
-    def require_timezone(self) -> "PlannedWorkoutMoveRequest":
-        if self.scheduled_at.tzinfo is None or self.scheduled_at.utcoffset() is None:
-            raise ValueError("scheduled_at must be timezone-aware.")
-        return self
+    scheduled_date: date
 
 
 class CalendarResponse(PublicPlanningModel):
     """Owned public calendar events in the requested interval."""
 
-    from_datetime: datetime
-    to_datetime: datetime
+    from_date: date
+    to_date: date
     workouts: tuple[PlannedWorkoutResponse, ...]
     rest_days: tuple[RestDayResponse, ...] = ()
+
+
+class PendingWorkoutAlternativesResponse(PublicPlanningModel):
+    """Server-authoritative alternatives for one exact pending workout."""
+
+    plan_id: UUID
+    revision: int = Field(ge=1)
+    proposal_id: UUID
+    workout_id: UUID
+    can_remove: bool
+    alternatives: tuple[WorkoutDeckItemResponse, ...]
+
+
+class PendingWorkoutEditRequest(PublicPlanningModel):
+    """Replace or remove one workout from an exact pending revision."""
+
+    expected_revision: int = Field(ge=1)
+    expected_proposal_id: UUID
+    replacement_template_id: UUID | None = None
 
 
 class ProposalApprovalRequest(PublicPlanningModel):

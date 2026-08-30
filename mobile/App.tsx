@@ -14,19 +14,32 @@ import {
 
 import { AuthProvider, useAuth } from './src/auth/AuthProvider';
 import { listActivities } from './src/api/client';
+import { FadeInView } from './src/components/FadeInView';
 import { AuthScreen } from './src/screens/AuthScreen';
 import { ActivityScreen } from './src/screens/ActivityScreen';
 import { CalibrationScreen } from './src/screens/CalibrationScreen';
 import { CheckInScreen } from './src/screens/CheckInScreen';
+import { IntegrationsScreen } from './src/screens/IntegrationsScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { PlanningScreen } from './src/screens/PlanningScreen';
+import { ZoneProfileScreen } from './src/screens/ZoneProfileScreen';
 import { colors, spacing } from './src/theme/tokens';
 
 function AppContent() {
   const { configurationError, loading, session, signOut } = useAuth();
   const [authenticatedView, setAuthenticatedView] = useState<
-    'onboarding' | 'planning' | 'activities' | 'checkin' | 'calibration'
+    | 'onboarding'
+    | 'planning'
+    | 'activities'
+    | 'checkin'
+    | 'calibration'
+    | 'integrations'
+    | 'zone-profile'
   >('onboarding');
+  const [zonePlanContext, setZonePlanContext] = useState<{
+    planId: string;
+    revision: number;
+  } | null>(null);
   const [pendingRpeCount, setPendingRpeCount] = useState(0);
 
   useEffect(() => {
@@ -74,6 +87,13 @@ function AppContent() {
         onBackToOnboarding={() => setAuthenticatedView('onboarding')}
         onOpenActivities={() => setAuthenticatedView('activities')}
         onOpenCheckIn={() => setAuthenticatedView('checkin')}
+        onOpenIntegrations={() => setAuthenticatedView('integrations')}
+        onOpenZoneProfile={(planId, revision) => {
+          setZonePlanContext(
+            planId && revision ? { planId, revision } : null,
+          );
+          setAuthenticatedView('zone-profile');
+        }}
         onSignOut={signOut}
       />
     );
@@ -102,6 +122,24 @@ function AppContent() {
         onSignOut={signOut}
       />
     );
+  } else if (authenticatedView === 'integrations') {
+    screen = (
+      <IntegrationsScreen
+        accessToken={session.access_token}
+        onBack={() => setAuthenticatedView('planning')}
+        onOpenActivities={() => setAuthenticatedView('activities')}
+        onSignOut={signOut}
+      />
+    );
+  } else if (authenticatedView === 'zone-profile') {
+    screen = (
+      <ZoneProfileScreen
+        accessToken={session.access_token}
+        onBack={() => setAuthenticatedView('planning')}
+        onSignOut={signOut}
+        planContext={zonePlanContext}
+      />
+    );
   } else {
     screen = (
       <OnboardingScreen
@@ -127,7 +165,14 @@ function AppContent() {
           </Text>
         </Pressable>
       ) : null}
-      <View style={styles.screen}>{screen}</View>
+      <FadeInView
+        distance={10}
+        duration={360}
+        key={authenticatedView}
+        style={styles.screen}
+      >
+        {screen}
+      </FadeInView>
     </View>
   );
 }

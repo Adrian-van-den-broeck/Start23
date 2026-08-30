@@ -41,6 +41,7 @@ class MemoryActivityRepository:
         self._owners: dict[UUID, UUID] = {}
         self._idempotency: dict[tuple[UUID, UUID], tuple[str, UUID]] = {}
         self.planned_workouts = {owner: uuid4() for owner in token_owners.values()}
+        self.rpe_guided_activity_ids: set[UUID] = set()
 
     def _owner(self, token: str) -> UUID:
         try:
@@ -132,6 +133,14 @@ class MemoryActivityRepository:
             "duration_minutes": row["duration_minutes"],
             "processing_state": row["processing_state"],
             "rpe": row["rpe"],
+            "requires_heart_rate_observation": (
+                activity_id in self.rpe_guided_activity_ids
+            ),
+            "average_heart_rate_bpm": (
+                row["metrics"].get("average_heart_rate_bpm")
+                if row.get("metrics") is not None
+                else None
+            ),
             "planned": (
                 {
                     "planned_tss": "4",
@@ -143,6 +152,18 @@ class MemoryActivityRepository:
                 else None
             ),
         }
+
+    async def save_rpe_heart_rate_observation(
+        self,
+        athlete_id: UUID,
+        activity_id: UUID,
+        average_heart_rate_bpm: int,
+    ) -> None:
+        if self._owners.get(activity_id) != athlete_id:
+            raise ActivityRepositoryNotFoundError
+        metrics = self._rows[activity_id].setdefault("metrics", {})
+        assert isinstance(metrics, dict)
+        metrics["average_heart_rate_bpm"] = average_heart_rate_bpm
 
     async def complete_activity_rpe(
         self,
@@ -192,6 +213,23 @@ class MemoryActivityRepository:
                 "correction_proposal_id": None,
                 "updated_at": _NOW.isoformat(),
             }
+        )
+        return dict(row)
+
+    async def confirm_planned_workout_match(
+        self,
+        access_token: str,
+        activity_id: UUID,
+        planned_workout_id: UUID,
+    ) -> JsonObject:
+        athlete_id = self._owner(access_token)
+        if self._owners.get(activity_id) != athlete_id:
+            raise ActivityRepositoryNotFoundError
+        row = self._rows[activity_id]
+        row.update(
+            planned_workout_id=str(planned_workout_id),
+            match_status="matched",
+            updated_at=_NOW.isoformat(),
         )
         return dict(row)
 
@@ -282,6 +320,34 @@ def test_activity_creation_is_idempotent_and_awaits_rpe(
     assert first.json()["processing_state"] == "awaiting_rpe"
     assert first.json()["match_status"] == "unmatched"
     _assert_no_load_keys(first.json())
+
+
+def test_rpe_guided_completion_requires_and_accepts_heart_rate_bpm(
+    activity_client: tuple[TestClient, MemoryActivityRepository],
+) -> None:
+    client, repository = activity_client
+    owner = repository._token_owners["athlete-a"]
+    payload = _summary(repository.planned_workouts[owner])
+    assert isinstance(payload["metrics"], dict)
+    del payload["metrics"]["average_heart_rate_bpm"]
+    created = client.post("/api/v1/activities", headers=_headers(), json=payload)
+    activity_id = UUID(created.json()["id"])
+    repository.rpe_guided_activity_ids.add(activity_id)
+
+    missing = client.put(
+        f"/api/v1/activities/{activity_id}/rpe",
+        headers=_headers(),
+        json={"rpe": 4},
+    )
+    completed = client.put(
+        f"/api/v1/activities/{activity_id}/rpe",
+        headers=_headers(),
+        json={"rpe": 4, "average_heart_rate_bpm": 149},
+    )
+
+    assert missing.status_code == 422
+    assert completed.status_code == 200
+    assert completed.json()["metrics"]["average_heart_rate_bpm"] == 149
 
 
 def test_planned_external_activity_accepts_actual_summary_without_load_fields(
@@ -425,6 +491,27 @@ def test_activity_reads_are_owner_scoped(
     )
 
     assert other.status_code == 404
+
+
+def test_imported_activity_match_requires_explicit_athlete_action(
+    activity_client: tuple[TestClient, MemoryActivityRepository],
+) -> None:
+    client, _ = activity_client
+    created = client.post(
+        "/api/v1/activities", headers=_headers(), json=_summary()
+    ).json()
+    planned_workout_id = str(uuid4())
+
+    assert created["match_status"] == "unmatched"
+    confirmed = client.put(
+        f"/api/v1/activities/{created['id']}/planned-workout-match",
+        headers=_headers(),
+        json={"planned_workout_id": planned_workout_id},
+    )
+
+    assert confirmed.status_code == 200
+    assert confirmed.json()["planned_workout_id"] == planned_workout_id
+    assert confirmed.json()["match_status"] == "matched"
 
 
 def test_invalid_canonical_summary_is_rejected_before_persistence(

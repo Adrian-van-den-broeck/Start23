@@ -196,6 +196,24 @@ async def list_polar_imports(
 
 
 @router.post(
+    "/integrations/polar/imports/{import_id}/retry",
+    response_model=ImportRunResponse,
+    status_code=status.HTTP_202_ACCEPTED,
+    responses=errors,
+)
+async def retry_polar_import(
+    import_id: UUID,
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[IntegrationService, Depends(get_integration_service)],
+) -> ImportRunResponse:
+    """Retry one owned failed import after an explicit athlete action."""
+    try:
+        return await service.retry_historical(identity.user_id, import_id)
+    except Exception as error:
+        _raise(error)
+
+
+@router.post(
     "/webhooks/polar",
     response_model=WebhookReceiptResponse,
     status_code=status.HTTP_202_ACCEPTED,

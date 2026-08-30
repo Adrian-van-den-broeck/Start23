@@ -60,3 +60,42 @@ def test_polar_configuration_is_all_or_nothing_and_secrets_are_redacted() -> Non
 
     assert "polar-secret-do-not-log" not in repr(settings)
     assert "webhook-secret-do-not-log" not in repr(settings)
+
+
+def test_production_requires_accountable_physiology_review() -> None:
+    with pytest.raises(ValidationError, match="physiology review record"):
+        Settings(
+            environment="production",
+            supabase_publishable_key="sb_publishable_test",
+            supabase_secret_key="sb_secret_test",
+        )
+
+
+def test_production_polar_requires_approvals_https_owner_and_retention() -> None:
+    base = {
+        "environment": "production",
+        "supabase_publishable_key": "sb_publishable_test",
+        "supabase_secret_key": "sb_secret_test",
+        "physiology_review_record_id": "review-2026-08",
+        "physiology_accountable_owner": "qualified-reviewer",
+        "polar_client_id": "polar-client",
+        "polar_client_secret": "polar-secret",
+        "polar_webhook_secret": "webhook-secret",
+    }
+    with pytest.raises(ValidationError, match="legal, privacy"):
+        Settings(**base)
+
+    settings = Settings(
+        **base,
+        polar_legal_approved=True,
+        polar_privacy_approved=True,
+        polar_provider_terms_approved=True,
+        polar_operational_owner="integration-owner",
+        polar_oauth_redirect_url=(
+            "https://api.start23.example/api/v1/integrations/polar/oauth/callback"
+        ),
+        polar_raw_fit_retention_days=14,
+        polar_canonical_activity_retention_days=365,
+    )
+
+    assert settings.polar_raw_fit_retention_days == 14

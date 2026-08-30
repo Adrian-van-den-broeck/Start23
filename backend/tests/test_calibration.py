@@ -50,6 +50,9 @@ class MemoryCalibrationRepository:
         self._decisions: dict[UUID, list[JsonObject]] = {
             owner: [] for owner in owners.values()
         }
+        self._test_assignments: dict[UUID, list[JsonObject]] = {
+            owner: [] for owner in owners.values()
+        }
 
     def _owner(self, token: str) -> UUID:
         return self._owners[token]
@@ -242,6 +245,104 @@ class MemoryCalibrationRepository:
             ],
         }
 
+    async def fetch_athlete_timezone(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> str:
+        assert self._owner(access_token) == athlete_id
+        return "Europe/Amsterdam"
+
+    async def create_test_assignment(
+        self,
+        access_token: str,
+        values: JsonObject,
+    ) -> JsonObject:
+        owner = self._owner(access_token)
+        row = {
+            "id": str(uuid4()),
+            **deepcopy(values),
+            "state": "pending_approval",
+            "plan_id": None,
+            "target_plan_revision_id": None,
+            "plan_proposal_id": None,
+            "revision": 1,
+            "proposal_id": str(uuid4()),
+            "proposal_state": "pending",
+            "created_at": _NOW.isoformat(),
+            "updated_at": _NOW.isoformat(),
+            "decided_at": None,
+        }
+        self._test_assignments[owner].append(row)
+        return deepcopy(row)
+
+    async def approve_test_assignment(
+        self,
+        access_token: str,
+        proposal_id: UUID,
+        expected_revision: int,
+    ) -> JsonObject:
+        owner = self._owner(access_token)
+        row = next(
+            row
+            for row in self._test_assignments[owner]
+            if row["proposal_id"] == str(proposal_id)
+        )
+        if int(row["revision"]) != expected_revision:
+            raise CalibrationRepositoryConflictError
+        row["state"] = "scheduled"
+        row["proposal_state"] = "applied"
+        return {
+            "proposal_id": str(proposal_id),
+            "state": "applied",
+            "test_assignment_id": row["id"],
+            "test_assignment_state": "scheduled",
+        }
+
+    async def reject_test_assignment(
+        self,
+        access_token: str,
+        proposal_id: UUID,
+    ) -> JsonObject:
+        owner = self._owner(access_token)
+        row = next(
+            row
+            for row in self._test_assignments[owner]
+            if row["proposal_id"] == str(proposal_id)
+        )
+        row["state"] = "rejected"
+        row["proposal_state"] = "rejected"
+        return {
+            "proposal_id": str(proposal_id),
+            "state": "rejected",
+            "test_assignment_id": row["id"],
+            "test_assignment_state": "rejected",
+        }
+
+    async def fetch_zone_profile_state(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> JsonObject:
+        assert self._owner(access_token) == athlete_id
+        assignments = deepcopy(self._test_assignments[athlete_id])
+        return {
+            "setups": deepcopy(list(self._setups[athlete_id].values())),
+            "zone_profiles": [],
+            "zone_metrics": [],
+            "zone_boundaries": [],
+            "zone_proposals": [],
+            "test_assignments": assignments,
+            "test_proposals": [
+                {
+                    "id": row["proposal_id"],
+                    "state": row["proposal_state"],
+                    "target_test_assignment_id": row["id"],
+                }
+                for row in assignments
+            ],
+        }
+
     async def aclose(self) -> None:
         return None
 
@@ -316,6 +417,55 @@ def _save_run_test(client: TestClient, activity_id: UUID) -> None:
             json=payload,
         )
         assert response.status_code == 201, response.text
+
+
+def test_standalone_field_test_requires_confirmation_and_appears_in_profile(
+    calibration_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = calibration_context
+    setup = client.put(
+        "/api/v1/onboarding/disciplines/run/setup",
+        headers=_headers(),
+        json={
+            "setup_route": "field_test",
+            "guidance_mode": "heart_rate",
+            "protocol_id": "start23_run_threshold_30min_v1",
+        },
+    )
+    scheduled = client.post(
+        "/api/v1/calibration/test-assignments",
+        headers=_headers(),
+        json={
+            "discipline": "run",
+            "protocol_id": "start23_run_threshold_30min_v1",
+            "scheduling_mode": "standalone",
+            "scheduled_date": "2099-08-29",
+        },
+    )
+
+    assert setup.status_code == 200
+    assert scheduled.status_code == 201, scheduled.text
+    assignment = scheduled.json()["assignment"]
+    assert assignment["state"] == "pending_approval"
+    assert scheduled.json()["plan_proposal"] is None
+
+    approved = client.post(
+        f"/api/v1/calibration/test-assignments/{assignment['proposal_id']}/approve",
+        headers=_headers(),
+        json={"expected_revision": assignment["revision"]},
+    )
+    profile = client.get("/api/v1/me/zone-profile", headers=_headers())
+
+    assert approved.status_code == 200
+    assert approved.json()["test_assignment_state"] == "scheduled"
+    assert profile.status_code == 200, profile.text
+    assert len(profile.json()["disciplines"]) == 3
+    run = next(
+        item for item in profile.json()["disciplines"] if item["discipline"] == "run"
+    )
+    assert run["numeric_zone_visibility"] == "rpe_guided"
+    assert run["test_assignments"][0]["state"] == "scheduled"
+    assert "tss" not in profile.text.lower()
 
 
 def test_four_zone_options_are_authenticated_and_tss_free(

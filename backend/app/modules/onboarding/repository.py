@@ -431,9 +431,14 @@ class SupabaseOnboardingRepository:
         athlete_id: UUID,
         values: JsonObject,
     ) -> JsonObject:
+        function_name = (
+            "save_measured_calculated_zone_profile"
+            if values.get("source_quality") == "measured_lab"
+            else "save_calculated_zone_profile"
+        )
         result = await self._request(
             "POST",
-            "rpc/save_calculated_zone_profile",
+            f"rpc/{function_name}",
             "",
             service=True,
             json={

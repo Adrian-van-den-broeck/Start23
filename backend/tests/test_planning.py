@@ -12,6 +12,8 @@ from app.core.config import Settings
 from app.core.security import AuthenticatedIdentity, InvalidAccessTokenError
 from app.main import create_app
 from app.modules.onboarding.repository import RepositoryNotFoundError
+from app.modules.physiology.models import Discipline
+from app.modules.planning.domain import ZoneCapability, eligible_workouts
 from app.modules.planning.repository import (
     JsonObject,
     PlanningRepositoryConflictError,
@@ -19,11 +21,45 @@ from app.modules.planning.repository import (
 )
 from app.modules.workouts.catalog import (
     CURRENT_CATALOG,
+    TrainingPhase,
     WorkoutTemplate,
     active_catalog,
 )
 
 _NOW = datetime(2026, 8, 1, 12, tzinfo=timezone.utc)
+
+
+def test_week_one_calibration_is_eligible_only_for_its_pending_protocol() -> None:
+    protocol_id = "start23_week1_bike_calibration_v1"
+    without_protocol = eligible_workouts(
+        catalog=CURRENT_CATALOG,
+        phase=TrainingPhase.BASE,
+        goal_disciplines=frozenset({Discipline.BIKE}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities={Discipline.BIKE: ZoneCapability(frozenset())},
+    )
+    with_protocol = eligible_workouts(
+        catalog=CURRENT_CATALOG,
+        phase=TrainingPhase.BASE,
+        goal_disciplines=frozenset({Discipline.BIKE}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities={
+            Discipline.BIKE: ZoneCapability(
+                frozenset(), protocol_ids=frozenset({protocol_id})
+            )
+        },
+    )
+
+    assert all(
+        template.name != "Week-1 fietskalibratie" for template in without_protocol
+    )
+    calibration = next(
+        template
+        for template in with_protocol
+        if template.name == "Week-1 fietskalibratie"
+    )
+    assert calibration.zone_requirements == ()
+    assert all(segment.zone_target is None for segment in calibration.segments)
 
 
 class PlanningTokenVerifier:
@@ -100,6 +136,13 @@ def _snapshot(athlete_id: UUID) -> JsonObject:
                 "metric": {"kind": "run_lthr_bpm", "value": 170},
             },
         ],
+        "discipline_setups": [
+            {
+                "discipline": "bike",
+                "setup_status": "calibration_pending",
+                "protocol_id": "start23_week1_bike_calibration_v1",
+            }
+        ],
         "ruleset_version": "phase-3-ruleset-2",
     }
 
@@ -140,7 +183,25 @@ class MemoryPlanningRepository:
                 "instructions": segment.instructions,
                 "duration_minutes": str(segment.duration_minutes),
                 "distance_meters": segment.distance_meters,
-                "zone": int(segment.zone),
+                "zone_target": (
+                    int(segment.zone_target)
+                    if segment.zone_target is not None
+                    else None
+                ),
+                "protocol_target": (
+                    {
+                        "protocol_id": segment.protocol_target.protocol_id,
+                        "segment_id": segment.protocol_target.segment_id,
+                        "target_rpe_min": segment.protocol_target.target_rpe_min,
+                        "target_rpe_max": segment.protocol_target.target_rpe_max,
+                        "intensity_bucket": (
+                            segment.protocol_target.intensity_bucket.value
+                        ),
+                        "optional": segment.protocol_target.optional,
+                    }
+                    if segment.protocol_target is not None
+                    else None
+                ),
                 "expected_rpe": segment.expected_rpe,
                 "is_swim_technique": segment.is_swim_technique,
             }
@@ -175,8 +236,39 @@ class MemoryPlanningRepository:
             "confirmed_injuries": plan["confirmed_injuries"],
             "low_only_disciplines": plan.get("low_only_disciplines", []),
             "target_tss": plan["_target_tss"],
+            "available_dates": plan["available_dates"],
+            "availability_source": plan["availability_source"],
             "initial_plan_request_id": request["id"],
         }
+
+    async def fetch_plan_revision_context(
+        self,
+        athlete_id: UUID,
+        plan_id: UUID,
+        revision: int,
+    ) -> JsonObject:
+        context = await self.fetch_plan_context(athlete_id, plan_id)
+        if int(context["revision"]) != revision:
+            raise PlanningRepositoryNotFoundError
+        return context
+
+    async def fetch_previous_available_dates(
+        self,
+        athlete_id: UUID,
+        week_start: date,
+    ) -> tuple[date, ...]:
+        previous = week_start - timedelta(days=7)
+        for plan_id, plan in self._plans.items():
+            if (
+                self._plan_owners[plan_id] == athlete_id
+                and date.fromisoformat(str(plan["week_start"])) == previous
+                and plan["active_revision"] is not None
+            ):
+                return tuple(
+                    date.fromisoformat(str(value)) + timedelta(days=7)
+                    for value in plan["available_dates"]
+                )
+        return ()
 
     async def fetch_load_history(
         self,
@@ -210,6 +302,11 @@ class MemoryPlanningRepository:
         revision = int(current["revision"]) + 1 if current is not None else 1
         revision_id = uuid4()
         proposal_id = uuid4()
+        if current is not None and current["proposal"]["state"] == "pending":
+            old_proposal_id = UUID(str(current["proposal"]["id"]))
+            self._proposals[old_proposal_id]["state"] = "expired"
+            current["proposal"]["state"] = "expired"
+            current["revision_state"] = "expired"
         templates = {template.id: template for template in active_catalog()}
         workouts: list[JsonObject] = []
         for selected in payload["workouts"]:
@@ -229,8 +326,7 @@ class MemoryPlanningRepository:
                     "expected_rpe_min": template.expected_rpe_min,
                     "expected_rpe_max": template.expected_rpe_max,
                     "segments": self._segments(template),
-                    "scheduled_at": selected["scheduled_at"],
-                    "timezone": payload["timezone"],
+                    "scheduled_date": selected["scheduled_date"],
                     "source": selected["source"],
                     "status": "scheduled",
                     "warnings": [],
@@ -281,10 +377,11 @@ class MemoryPlanningRepository:
             "high_intensity_percent": payload["high_intensity_percent"],
             "confirmed_injuries": payload["confirmed_injuries"],
             "low_only_disciplines": payload.get("low_only_disciplines", []),
+            "available_dates": payload["available_dates"],
+            "availability_source": payload["availability_source"],
             "workouts": workouts,
             "warnings": warnings,
             "proposal": proposal,
-            "_availability": payload["availability"],
             "_target_tss": payload["target_tss"],
         }
         self._plans[plan_id] = plan
@@ -463,7 +560,7 @@ class MemoryPlanningRepository:
                         for key, value in plan.items()
                         if not key.startswith("_")
                     },
-                    "availability": plan["_availability"],
+                    "available_dates": plan["available_dates"],
                 }
         raise PlanningRepositoryNotFoundError
 
@@ -472,7 +569,7 @@ class MemoryPlanningRepository:
         athlete_id: UUID,
         workout_id: UUID,
         expected_revision: int,
-        scheduled_at: datetime,
+        scheduled_date: date,
         warnings: list[JsonObject],
     ) -> JsonObject:
         for plan_id, plan in self._plans.items():
@@ -488,7 +585,7 @@ class MemoryPlanningRepository:
                 plan["active_revision"] = expected_revision + 1
                 for workout in plan["workouts"]:
                     if workout["id"] == str(workout_id):
-                        workout["scheduled_at"] = scheduled_at.isoformat()
+                        workout["scheduled_date"] = scheduled_date.isoformat()
                         workout["source"] = "athlete_moved"
                 plan["warnings"] = [
                     {
@@ -504,8 +601,8 @@ class MemoryPlanningRepository:
     async def fetch_calendar(
         self,
         access_token: str,
-        from_datetime: datetime,
-        to_datetime: datetime,
+        from_date: date,
+        to_date: date,
     ) -> tuple[JsonObject, ...]:
         owner = self._owner(access_token)
         return tuple(
@@ -514,16 +611,14 @@ class MemoryPlanningRepository:
             if self._plan_owners[plan_id] == owner
             and plan["active_revision"] is not None
             for workout in plan["workouts"]
-            if from_datetime
-            <= datetime.fromisoformat(str(workout["scheduled_at"]))
-            < to_datetime
+            if from_date <= date.fromisoformat(str(workout["scheduled_date"])) < to_date
         )
 
     async def fetch_calendar_rest_days(
         self,
         access_token: str,
-        from_datetime: datetime,
-        to_datetime: datetime,
+        from_date: date,
+        to_date: date,
     ) -> tuple[JsonObject, ...]:
         owner = self._owner(access_token)
         rows: list[JsonObject] = []
@@ -532,17 +627,13 @@ class MemoryPlanningRepository:
                 continue
             week_start = date.fromisoformat(str(plan["week_start"]))
             workout_dates = {
-                datetime.fromisoformat(str(workout["scheduled_at"])).date()
+                date.fromisoformat(str(workout["scheduled_date"]))
                 for workout in plan["workouts"]
                 if workout["status"] != "cancelled"
             }
             for offset in range(7):
                 current = week_start + timedelta(days=offset)
-                instant = datetime.combine(current, datetime.min.time(), timezone.utc)
-                if (
-                    current not in workout_dates
-                    and from_datetime <= instant < to_datetime
-                ):
+                if current not in workout_dates and from_date <= current < to_date:
                     rows.append(
                         {
                             "date": current.isoformat(),
@@ -559,26 +650,8 @@ class MemoryPlanningRepository:
         return None
 
 
-def _availability_payload() -> list[dict[str, str]]:
-    return [
-        {
-            "starts_at": datetime(
-                2026,
-                8,
-                day,
-                7,
-                tzinfo=timezone.utc,
-            ).isoformat(),
-            "ends_at": datetime(
-                2026,
-                8,
-                day,
-                9,
-                tzinfo=timezone.utc,
-            ).isoformat(),
-        }
-        for day in (3, 5, 7)
-    ]
+def _availability_payload() -> list[str]:
+    return [f"2026-08-{day:02d}" for day in (3, 5, 7)]
 
 
 @pytest.fixture
@@ -608,7 +681,7 @@ def _create_proposal(client: TestClient) -> dict[str, Any]:
         headers=_headers(),
         json={
             "week_start": "2026-08-03",
-            "availability": _availability_payload(),
+            "available_dates": _availability_payload(),
             "confirmed_injuries": [],
         },
     )
@@ -623,7 +696,7 @@ def test_plan_generation_requires_authentication(
         "/api/v1/weekly-plans/proposals",
         json={
             "week_start": "2026-08-03",
-            "availability": _availability_payload(),
+            "available_dates": _availability_payload(),
         },
     )
 
@@ -653,6 +726,111 @@ def test_generated_plan_remains_pending_is_idempotent_and_hides_tss(
     serialized = json_normalized = str(first).lower().replace("_", "")
     assert "tss" not in serialized
     assert "plannedtss" not in json_normalized
+    assert first["plan"]["available_dates"] == _availability_payload()
+    assert first["plan"]["availability_source"] == "explicit"
+    assert all(
+        "scheduled_date" in workout and "scheduled_at" not in workout
+        for workout in first["plan"]["workouts"]
+    )
+
+
+def test_previous_week_availability_requires_an_explicit_action_and_active_week(
+    planning_client: TestClient,
+) -> None:
+    unavailable = planning_client.post(
+        "/api/v1/weekly-plans/proposals",
+        headers=_headers("athlete-b"),
+        json={"week_start": "2026-08-03", "reuse_previous_week": True},
+    )
+    assert unavailable.status_code == 409
+    assert (
+        unavailable.json()["error"]["code"] == "previous_week_availability_unavailable"
+    )
+
+    created = _create_proposal(planning_client)
+    approved = planning_client.post(
+        f"/api/v1/change-proposals/{created['proposal']['id']}/approve",
+        headers=_headers(),
+        json={"expected_base_revision": 0},
+    )
+    assert approved.status_code == 200
+    copied = planning_client.post(
+        "/api/v1/weekly-plans/proposals",
+        headers=_headers(),
+        json={"week_start": "2026-08-10", "reuse_previous_week": True},
+    )
+
+    assert copied.status_code == 201, copied.text
+    assert copied.json()["plan"]["availability_source"] == "previous_week"
+    assert copied.json()["plan"]["available_dates"] == [
+        "2026-08-10",
+        "2026-08-12",
+        "2026-08-14",
+    ]
+
+
+def test_pending_workout_replacement_is_revision_and_proposal_bound(
+    planning_client: TestClient,
+) -> None:
+    created = _create_proposal(planning_client)
+    plan = created["plan"]
+    workout = plan["workouts"][0]
+    alternatives = planning_client.get(
+        (
+            f"/api/v1/weekly-plans/{plan['id']}/pending-workouts/"
+            f"{workout['id']}/alternatives"
+        ),
+        headers=_headers(),
+        params={"expected_revision": plan["revision"]},
+    )
+
+    assert alternatives.status_code == 200, alternatives.text
+    body = alternatives.json()
+    assert body["proposal_id"] == created["proposal"]["id"]
+    assert body["can_remove"] is False
+    assert body["alternatives"]
+    rejected_removal = planning_client.post(
+        (
+            f"/api/v1/weekly-plans/{plan['id']}/pending-workouts/"
+            f"{workout['id']}/edit-proposals"
+        ),
+        headers=_headers(),
+        json={
+            "expected_revision": plan["revision"],
+            "expected_proposal_id": created["proposal"]["id"],
+            "replacement_template_id": None,
+        },
+    )
+    assert rejected_removal.status_code == 409
+    replacement = planning_client.post(
+        (
+            f"/api/v1/weekly-plans/{plan['id']}/pending-workouts/"
+            f"{workout['id']}/edit-proposals"
+        ),
+        headers=_headers(),
+        json={
+            "expected_revision": plan["revision"],
+            "expected_proposal_id": created["proposal"]["id"],
+            "replacement_template_id": body["alternatives"][0]["id"],
+        },
+    )
+
+    assert replacement.status_code == 201, replacement.text
+    assert replacement.json()["plan"]["revision"] == plan["revision"] + 1
+    assert replacement.json()["proposal"]["id"] != created["proposal"]["id"]
+    stale = planning_client.post(
+        (
+            f"/api/v1/weekly-plans/{plan['id']}/pending-workouts/"
+            f"{workout['id']}/edit-proposals"
+        ),
+        headers=_headers(),
+        json={
+            "expected_revision": plan["revision"],
+            "expected_proposal_id": created["proposal"]["id"],
+            "replacement_template_id": body["alternatives"][0]["id"],
+        },
+    )
+    assert stale.status_code in {404, 409}
 
 
 def test_plan_approval_is_owner_scoped_atomic_and_stale_safe(
@@ -690,8 +868,8 @@ def test_plan_approval_is_owner_scoped_atomic_and_stale_safe(
         "/api/v1/calendar",
         headers=_headers(),
         params={
-            "from": "2026-08-03T00:00:00Z",
-            "to": "2026-08-10T00:00:00Z",
+            "from": "2026-08-03",
+            "to": "2026-08-10",
         },
     )
 
@@ -740,7 +918,7 @@ def test_direct_calendar_move_applies_new_revision_with_soft_warning(
         headers=_headers(),
         json={
             "expected_revision": 1,
-            "scheduled_at": "2026-08-04T12:00:00Z",
+            "scheduled_date": "2026-08-04",
         },
     )
     stale_replay = planning_client.patch(
@@ -748,7 +926,7 @@ def test_direct_calendar_move_applies_new_revision_with_soft_warning(
         headers=_headers(),
         json={
             "expected_revision": 1,
-            "scheduled_at": "2026-08-04T13:00:00Z",
+            "scheduled_date": "2026-08-04",
         },
     )
 
@@ -780,7 +958,7 @@ def test_rejected_schedule_proposal_keeps_the_active_base_revision(
         headers=_headers(),
         json={
             "expected_base_revision": 1,
-            "availability": _availability_payload(),
+            "available_dates": _availability_payload(),
             "confirmed_injuries": [],
             "selected_template_ids": selection,
         },
@@ -824,7 +1002,7 @@ def test_deck_and_layout_validation_use_server_owned_workout_facts(
             "workouts": [
                 {
                     "workout_id": workout["id"],
-                    "scheduled_at": workout["scheduled_at"],
+                    "scheduled_date": workout["scheduled_date"],
                 }
                 for workout in plan["workouts"]
             ],
@@ -838,7 +1016,7 @@ def test_deck_and_layout_validation_use_server_owned_workout_facts(
             "workouts": [
                 {
                     "workout_id": workout["id"],
-                    "scheduled_at": workout["scheduled_at"],
+                    "scheduled_date": workout["scheduled_date"],
                     "discipline": "run",
                     "intensity_bucket": "low",
                 }
@@ -854,7 +1032,7 @@ def test_deck_and_layout_validation_use_server_owned_workout_facts(
             "workouts": [
                 {
                     "workout_id": plan["workouts"][0]["id"],
-                    "scheduled_at": plan["workouts"][0]["scheduled_at"],
+                    "scheduled_date": plan["workouts"][0]["scheduled_date"],
                 }
             ],
         },
@@ -869,6 +1047,31 @@ def test_deck_and_layout_validation_use_server_owned_workout_facts(
     assert incomplete.status_code == 422
 
 
+def test_generic_plan_endpoint_rejects_direct_field_test_template_selection(
+    planning_client: TestClient,
+) -> None:
+    field_test_template_id = "55000000-0000-0000-0000-000000000009"
+
+    response = planning_client.post(
+        "/api/v1/weekly-plans/proposals",
+        headers=_headers(),
+        json={
+            "week_start": "2026-08-03",
+            "available_dates": _availability_payload(),
+            "selected_template_ids": [field_test_template_id],
+            "fixed_workout_dates": [
+                {
+                    "template_id": field_test_template_id,
+                    "scheduled_date": "2026-08-03",
+                }
+            ],
+        },
+    )
+
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "field_test_assignment_required"
+
+
 def test_confirmed_injury_is_excluded_from_pending_plan(
     planning_client: TestClient,
 ) -> None:
@@ -877,7 +1080,7 @@ def test_confirmed_injury_is_excluded_from_pending_plan(
         headers=_headers("athlete-b"),
         json={
             "week_start": "2026-08-03",
-            "availability": _availability_payload(),
+            "available_dates": _availability_payload(),
             "confirmed_injuries": ["run"],
         },
     )

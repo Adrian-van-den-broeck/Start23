@@ -12,7 +12,14 @@
       "distribution": "internal"
     },
     "production": {
+      "environment": "production",
       "autoIncrement": true
+    },
+    "wombo": {
+      "extends": "production",
+      "env": {
+        "APP_VARIANT": "wombo"
+      }
     }
   },
   "submit": {

@@ -94,6 +94,49 @@ class CalibrationRepository(Protocol):
     ) -> JsonObject:
         """Fetch owner-scoped setup and evaluation history."""
 
+    async def fetch_athlete_timezone(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> str:
+        """Read the timezone used to interpret a date-only test choice."""
+
+    async def create_test_assignment(
+        self,
+        access_token: str,
+        values: JsonObject,
+    ) -> JsonObject:
+        """Create a standalone validation-test proposal."""
+
+    async def save_integrated_test_assignment(
+        self,
+        access_token: str,
+        values: JsonObject,
+    ) -> JsonObject:
+        """Link a pending plan proposal to its exact test date."""
+
+    async def approve_test_assignment(
+        self,
+        access_token: str,
+        proposal_id: UUID,
+        expected_revision: int,
+    ) -> JsonObject:
+        """Approve one standalone validation-test proposal."""
+
+    async def reject_test_assignment(
+        self,
+        access_token: str,
+        proposal_id: UUID,
+    ) -> JsonObject:
+        """Reject one standalone validation-test proposal."""
+
+    async def fetch_zone_profile_state(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> JsonObject:
+        """Fetch immutable profile history, setup, proposal, and test state."""
+
     async def aclose(self) -> None:
         """Release owned network resources."""
 
@@ -378,6 +421,168 @@ class SupabaseCalibrationRepository:
             "evaluations": evaluations,
             "threshold_decisions": decisions,
             "zone_proposals": zone_proposals,
+        }
+
+    async def fetch_athlete_timezone(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> str:
+        rows = await self._select(
+            "athlete_profiles",
+            access_token,
+            athlete_id,
+            extra_params={"select": "timezone", "limit": "1"},
+        )
+        if not rows or not isinstance(rows[0].get("timezone"), str):
+            raise CalibrationRepositoryNotFoundError
+        return str(rows[0]["timezone"])
+
+    async def create_test_assignment(
+        self,
+        access_token: str,
+        values: JsonObject,
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/create_validation_test_proposal",
+            access_token,
+            json={"p_assignment": values},
+        )
+        if not isinstance(result, dict):
+            raise CalibrationRepositoryUnavailableError
+        return dict(result)
+
+    async def save_integrated_test_assignment(
+        self,
+        access_token: str,
+        values: JsonObject,
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/save_integrated_test_assignment",
+            access_token,
+            json={"p_assignment": values},
+        )
+        if not isinstance(result, dict):
+            raise CalibrationRepositoryUnavailableError
+        return dict(result)
+
+    async def approve_test_assignment(
+        self,
+        access_token: str,
+        proposal_id: UUID,
+        expected_revision: int,
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/approve_validation_test_proposal",
+            access_token,
+            json={
+                "p_proposal_id": str(proposal_id),
+                "p_expected_revision": expected_revision,
+            },
+        )
+        if not isinstance(result, dict):
+            raise CalibrationRepositoryUnavailableError
+        return dict(result)
+
+    async def reject_test_assignment(
+        self,
+        access_token: str,
+        proposal_id: UUID,
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/reject_validation_test_proposal",
+            access_token,
+            json={"p_proposal_id": str(proposal_id)},
+        )
+        if not isinstance(result, dict):
+            raise CalibrationRepositoryUnavailableError
+        return dict(result)
+
+    async def fetch_zone_profile_state(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> JsonObject:
+        (
+            setups,
+            profiles,
+            metrics,
+            boundaries,
+            proposals,
+            assignments,
+        ) = await asyncio.gather(
+            self._select(
+                "discipline_zone_setups",
+                access_token,
+                athlete_id,
+                extra_params={"order": "discipline.asc"},
+            ),
+            self._select(
+                "zone_profile_versions",
+                access_token,
+                athlete_id,
+                extra_params={"order": "discipline.asc,version.desc"},
+            ),
+            self._select("zone_metrics", access_token, athlete_id),
+            self._select(
+                "zone_boundaries",
+                access_token,
+                athlete_id,
+                extra_params={"order": "zone_number.asc"},
+            ),
+            self._select(
+                "change_proposals",
+                access_token,
+                athlete_id,
+                extra_params={
+                    "kind": "eq.zone_update",
+                    "order": "created_at.desc",
+                },
+            ),
+            self._select(
+                "discipline_test_assignments",
+                access_token,
+                athlete_id,
+                extra_params={"order": "scheduled_date.desc,created_at.desc"},
+            ),
+        )
+        test_proposal_ids = {
+            str(row["plan_proposal_id"])
+            for row in assignments
+            if row.get("plan_proposal_id") is not None
+        }
+        standalone_assignment_ids = {
+            str(row["id"])
+            for row in assignments
+            if row.get("scheduling_mode") == "standalone"
+        }
+        test_proposals = await self._select(
+            "change_proposals",
+            access_token,
+            athlete_id,
+            extra_params={
+                "kind": "in.(validation_test,plan_revision)",
+                "order": "created_at.desc",
+            },
+        )
+        relevant_test_proposals = [
+            row
+            for row in test_proposals
+            if str(row.get("id")) in test_proposal_ids
+            or str(row.get("target_test_assignment_id")) in standalone_assignment_ids
+        ]
+        return {
+            "setups": setups,
+            "zone_profiles": profiles,
+            "zone_metrics": metrics,
+            "zone_boundaries": boundaries,
+            "zone_proposals": proposals,
+            "test_assignments": assignments,
+            "test_proposals": relevant_test_proposals,
         }
 
     async def aclose(self) -> None:
