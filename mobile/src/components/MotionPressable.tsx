@@ -6,15 +6,7 @@ import {
   type PressableStateCallbackType,
   type View,
 } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useReducedMotion,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
-
-import { motion } from '../theme/tokens';
+import { useReducedMotion } from 'react-native-reanimated';
 
 export type HapticKind = 'light' | 'selection' | 'success';
 
@@ -22,8 +14,6 @@ type MotionPressableProps = PressableProps & {
   haptic?: HapticKind;
   pressedScale?: number;
 };
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 function playHaptic(kind: HapticKind): void {
   const feedback =
@@ -49,16 +39,10 @@ export const MotionPressable = forwardRef<View, MotionPressableProps>(
     },
     ref,
   ) {
-    const scale = useSharedValue(1);
-    const opacity = useSharedValue(1);
     const reduceMotion = useReducedMotion();
-    const animatedStyle = useAnimatedStyle(() => ({
-      opacity: opacity.value,
-      transform: [{ scale: scale.value }],
-    }));
 
     return (
-      <AnimatedPressable
+      <Pressable
         {...props}
         disabled={disabled}
         onPress={(event) => {
@@ -66,23 +50,20 @@ export const MotionPressable = forwardRef<View, MotionPressableProps>(
           onPress?.(event);
         }}
         onPressIn={(event) => {
-          if (!disabled && !reduceMotion) {
-            scale.value = withSpring(pressedScale, motion.spring);
-            opacity.value = withTiming(0.88, {
-              duration: motion.duration.fast,
-            });
-          }
           onPressIn?.(event);
         }}
         onPressOut={(event) => {
-          scale.value = withSpring(1, motion.spring);
-          opacity.value = withTiming(1, { duration: motion.duration.fast });
           onPressOut?.(event);
         }}
         ref={ref}
         style={(state: PressableStateCallbackType) => [
           typeof style === 'function' ? style(state) : style,
-          animatedStyle,
+          state.pressed &&
+            !disabled &&
+            !reduceMotion && {
+              opacity: 0.88,
+              transform: [{ scale: pressedScale }],
+            },
         ]}
       />
     );

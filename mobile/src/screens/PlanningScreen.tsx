@@ -23,7 +23,10 @@ import {
   Text,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import {
   Carousel,
   type CarouselRef,
@@ -484,6 +487,7 @@ export function PlanningScreen({
   onOpenZoneProfile,
   onSignOut,
 }: PlanningScreenProps) {
+  const safeAreaInsets = useSafeAreaInsets();
   const [view, setView] = useState<ViewName>('plan');
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileSheetRef = useRef<BottomSheetModal>(null);
@@ -828,6 +832,7 @@ export function PlanningScreen({
       <BottomSheetModal
         backdropComponent={renderProfileBackdrop}
         backgroundStyle={styles.profileSheetBackground}
+        bottomInset={safeAreaInsets.bottom}
         enableDynamicSizing
         handleIndicatorStyle={styles.profileSheetHandle}
         onChange={(index) => setProfileMenuOpen(index >= 0)}
@@ -933,8 +938,10 @@ export function PlanningScreen({
         </Pressable>
       </View>
 
-      <View style={styles.tabs}>
+      <View accessibilityRole="tablist" style={styles.tabs}>
         <Pressable
+          accessibilityRole="tab"
+          accessibilityState={{ selected: view === 'plan' }}
           onPress={() => setView('plan')}
           style={[styles.tab, view === 'plan' && styles.tabActive]}
         >
@@ -943,6 +950,8 @@ export function PlanningScreen({
           </Text>
         </Pressable>
         <Pressable
+          accessibilityRole="tab"
+          accessibilityState={{ selected: view === 'deck' }}
           onPress={openDeck}
           style={[styles.tab, view === 'deck' && styles.tabActive]}
         >
@@ -951,6 +960,8 @@ export function PlanningScreen({
           </Text>
         </Pressable>
         <Pressable
+          accessibilityRole="tab"
+          accessibilityState={{ selected: view === 'calendar' }}
           onPress={openCalendar}
           style={[styles.tab, view === 'calendar' && styles.tabActive]}
         >
@@ -1326,6 +1337,35 @@ export function PlanningScreen({
                     {Number(template.duration_minutes)} min · RPE{' '}
                     {template.expected_rpe_min}–{template.expected_rpe_max}
                   </Text>
+                  <View style={styles.deckSelectionRow}>
+                    <View
+                      style={[
+                        styles.deckSelectionIcon,
+                        selected && styles.deckSelectionIconActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.deckSelectionIconText,
+                          selected && styles.deckSelectionIconTextActive,
+                        ]}
+                      >
+                        {selected ? '✓' : '+'}
+                      </Text>
+                    </View>
+                    <Text
+                      style={[
+                        styles.deckSelectionText,
+                        selected && styles.deckSelectionTextActive,
+                      ]}
+                    >
+                      {selected
+                        ? 'Gekozen voor deze week'
+                        : eligible
+                          ? 'Tik om deze training te kiezen'
+                          : 'Niet combineerbaar met je huidige keuze'}
+                    </Text>
+                  </View>
                 </Pressable>
               );
             })}
@@ -1555,9 +1595,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xs,
     paddingVertical: spacing.sm,
   },
-  tabActive: { ...shadows.card, backgroundColor: colors.surfaceRaised },
+  tabActive: { ...shadows.card, backgroundColor: colors.brand },
   tabText: { color: colors.inkMuted, fontSize: 12, fontWeight: '700', textAlign: 'center' },
-  tabTextActive: { color: colors.brand, fontWeight: '900' },
+  tabTextActive: { color: colors.white, fontWeight: '900' },
   content: { gap: spacing.md, padding: spacing.lg, paddingBottom: 80 },
   viewContent: { gap: spacing.md },
   panel: {
@@ -1749,7 +1789,43 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     padding: spacing.md,
   },
-  deckCardSelected: { backgroundColor: colors.brandSoft, borderColor: colors.brand },
+  deckCardSelected: {
+    backgroundColor: colors.brandSoft,
+    borderColor: colors.brand,
+    borderWidth: 2,
+  },
+  deckSelectionRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.xs,
+  },
+  deckSelectionIcon: {
+    alignItems: 'center',
+    borderColor: colors.lineStrong,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    height: 24,
+    justifyContent: 'center',
+    width: 24,
+  },
+  deckSelectionIconActive: {
+    backgroundColor: colors.brand,
+    borderColor: colors.brand,
+  },
+  deckSelectionIconText: {
+    color: colors.inkMuted,
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  deckSelectionIconTextActive: { color: colors.white },
+  deckSelectionText: {
+    color: colors.inkMuted,
+    flex: 1,
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  deckSelectionTextActive: { color: colors.brand, fontWeight: '900' },
   hint: { color: colors.inkMuted, fontSize: 12, lineHeight: 18 },
   error: {
     backgroundColor: colors.dangerSoft,
