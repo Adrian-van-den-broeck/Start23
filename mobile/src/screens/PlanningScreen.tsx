@@ -16,6 +16,7 @@ import {
 import {
   ActivityIndicator,
   Alert,
+  KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
@@ -46,16 +47,19 @@ import {
 import type {
   Discipline,
   PendingWorkoutAlternatives,
+  PlanWarning,
   PlannedWorkout,
   PrimaryRaceGoal,
   RestDay,
   WeeklyPlan,
   WorkoutDeck,
+  WorkoutDeckItem,
 } from '../api/types';
 import { FadeInView } from '../components/FadeInView';
 import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
+import { formatIsoDateInput } from '../lib/dateInput';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
 
 type PlanningScreenProps = {
@@ -76,7 +80,80 @@ const disciplineLabels: Record<Discipline, string> = {
   bike: 'Fietsen',
   run: 'Lopen',
 };
+const disciplineTrainingLabels: Record<Discipline, string> = {
+  swim: 'zwemtraining',
+  bike: 'fietstraining',
+  run: 'looptraining',
+};
 const latestPlanIdKey = 'start23.latest-plan-id';
+
+const warningCopy: Record<string, { message: string; title: string }> = {
+  all_disciplines_blocked_rest_only: {
+    title: 'Rustweek voorgesteld',
+    message:
+      'Alle disciplines zijn momenteel geblokkeerd. Daarom bevat dit voorstel alleen rust.',
+  },
+  anti_stack_violation: {
+    title: 'Meer herstel nodig',
+    message:
+      'Tussen deze intensieve trainingen is extra herstel nodig. Kies een andere datum.',
+  },
+  injured_disciplines_excluded: {
+    title: 'Blessure verwerkt',
+    message:
+      'Trainingen voor de bevestigde geblesseerde disciplines zijn niet opgenomen.',
+  },
+  intensity_distribution_outside_target: {
+    title: 'Intensiteit nog niet compleet',
+    message:
+      'De beschikbare combinatie vult de rustige en intensieve tijd voor deze week nog niet volledig. Je kunt per training swipen; als er geen geldig alternatief is, blijft dit aandachtspunt zichtbaar.',
+  },
+  manual_review_required: {
+    title: 'Extra controle nodig',
+    message:
+      'Er was geen veilig regulier weekdoel beschikbaar. Controleer dit herstelvoorstel extra zorgvuldig.',
+  },
+  outside_confirmed_availability: {
+    title: 'Datum niet beschikbaar',
+    message:
+      'Een training valt buiten je bevestigde beschikbare dagen. Kies een beschikbare datum.',
+  },
+  realized_intensity_debt_applied: {
+    title: 'Rustiger weekdoel',
+    message:
+      'Je recente trainingsgegevens verlagen de intensieve tijd voor deze week.',
+  },
+  restricted_disciplines_low_only: {
+    title: 'Alleen rustige training',
+    message:
+      'Voor een beperkte discipline zijn alleen rustige trainingen opgenomen.',
+  },
+  target_outside_catalog_capacity: {
+    title: 'Weekdoel nog niet compleet',
+    message:
+      'De beschikbare trainingen sluiten nog niet volledig aan op het weekdoel.',
+  },
+};
+
+function warningPresentation(warning: PlanWarning): {
+  message: string;
+  title: string;
+} {
+  return warningCopy[warning.code] ?? {
+    title: 'Aandachtspunt',
+    message: warning.message,
+  };
+}
+
+function coachExplanation(value: string): string {
+  if (value === 'A deterministic weekly plan is ready for review.') {
+    return 'Je persoonlijke weekvoorstel staat klaar om te controleren.';
+  }
+  if (value === 'A rest-only weekly revision is ready for review.') {
+    return 'Je herstelvoorstel met alleen rust staat klaar om te controleren.';
+  }
+  return value;
+}
 
 async function rememberPlanId(planId: string | null): Promise<void> {
   if (Platform.OS === 'web') return;
@@ -200,12 +277,30 @@ function WorkoutCard({ workout }: { workout: PlannedWorkout }) {
   );
 }
 
+function deckItemFor(workout: PlannedWorkout): WorkoutDeckItem {
+  return {
+    id: workout.template_id,
+    template_key: workout.template_key,
+    version: workout.template_version,
+    discipline: workout.discipline,
+    name: workout.name,
+    description: workout.description,
+    duration_minutes: workout.duration_minutes,
+    distance_meters: workout.distance_meters,
+    intensity_bucket: workout.intensity_bucket,
+    expected_rpe_min: workout.expected_rpe_min,
+    expected_rpe_max: workout.expected_rpe_max,
+    segments: workout.segments,
+  };
+}
+
 function PendingWorkoutEditor({
   accessToken,
   busy,
   onEdited,
   onError,
   plan,
+  slotIndex,
   workout,
 }: {
   accessToken: string;
@@ -213,21 +308,31 @@ function PendingWorkoutEditor({
   onEdited: (updated: WeeklyPlan) => void;
   onError: (message: string) => void;
   plan: WeeklyPlan;
+  slotIndex: number;
   workout: PlannedWorkout;
 }) {
   const [options, setOptions] = useState<PendingWorkoutAlternatives | null>(null);
   const [optionIndex, setOptionIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const carouselRef = useRef<CarouselRef>(null);
-  const alternatives = options?.alternatives ?? [];
-  const selected = alternatives[optionIndex] ?? null;
+  const candidates = useMemo(
+    () => [
+      deckItemFor(workout),
+      ...(options?.alternatives.filter(
+        (candidate) => candidate.id !== workout.template_id,
+      ) ?? []),
+    ],
+    [options?.alternatives, workout],
+  );
+  const selected = candidates[optionIndex] ?? candidates[0];
+  const selectedIsCurrent = selected.id === workout.template_id;
 
   const moveSelection = (direction: -1 | 1) => {
     if (direction === -1) carouselRef.current?.prev({ animated: true });
     else carouselRef.current?.next({ animated: true });
   };
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     onError('');
     try {
@@ -248,7 +353,11 @@ function PendingWorkoutEditor({
     } finally {
       setLoading(false);
     }
-  };
+  }, [accessToken, onError, plan.id, plan.revision, workout.id]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   const apply = async (replacementTemplateId: string | null) => {
     if (!options) return;
@@ -280,64 +389,69 @@ function PendingWorkoutEditor({
     }
   };
 
-  if (!options) {
-    return (
-      <View style={styles.editPanel}>
-        <ActionButton
-          disabled={busy || loading}
-          label={loading ? 'Opties laden...' : 'Training wijzigen'}
-          onPress={() => void load()}
-          secondary
-        />
-      </View>
-    );
-  }
-
   return (
     <View style={styles.editPanel}>
-      <Text style={styles.fieldLabel}>Geldige vervangingen</Text>
+      <View style={styles.slotHeading}>
+        <View>
+          <Text style={styles.slotEyebrow}>
+            Training {slotIndex + 1} van {plan.workouts.length}
+          </Text>
+          <Text style={styles.fieldLabel}>
+            Kies je {disciplineTrainingLabels[workout.discipline]}
+          </Text>
+        </View>
+        {loading ? <ActivityIndicator color={colors.brand} size="small" /> : null}
+      </View>
       <Text style={styles.hint}>
-        Veeg naar links of rechts. De server heeft elke optie opnieuw getoetst
-        aan deze exacte revisie.
+        Veeg horizontaal door de geldige opties. Na iedere keuze controleert
+        Start23 de volledige weekcombinatie opnieuw.
       </Text>
-      {selected ? (
-        <Carousel
-          animation={{ type: 'spring', damping: 18, stiffness: 190 }}
-          data={alternatives}
-          keyExtractor={(item) => item.id}
-          layout={{
-            type: 'parallax',
-            adjacentScale: 0.92,
-            offset: 34,
-            scale: 0.96,
-          }}
-          onConfigurePanGesture={(gesture) => gesture.activeOffsetX([-12, 12])}
-          onSnapToItem={(index) => {
-            setOptionIndex(index);
-            void Haptics.selectionAsync().catch(() => undefined);
-          }}
-          ref={carouselRef}
-          renderItem={({ item, index }) => (
+      <Carousel
+        animation={{ type: 'spring', damping: 18, stiffness: 190 }}
+        data={candidates}
+        keyExtractor={(item) => item.id}
+        layout={{
+          type: 'parallax',
+          adjacentScale: 0.92,
+          offset: 34,
+          scale: 0.96,
+        }}
+        onConfigurePanGesture={(gesture) => gesture.activeOffsetX([-12, 12])}
+        onSnapToItem={(index) => {
+          setOptionIndex(index);
+          void Haptics.selectionAsync().catch(() => undefined);
+        }}
+        ref={carouselRef}
+        renderItem={({ item, index }) => {
+          const isCurrent = item.id === workout.template_id;
+          return (
             <View
-              accessibilityLabel={`Vervanging ${index + 1} van ${alternatives.length}`}
-              style={styles.swipeCard}
+              accessibilityLabel={`Training ${index + 1} van ${candidates.length}: ${item.name}`}
+              style={[styles.swipeCard, isCurrent && styles.swipeCardCurrent]}
             >
+              <View style={styles.cardHeader}>
+                <StatusPill
+                  label={item.intensity_bucket === 'high' ? 'Intensief' : 'Rustig'}
+                  tone={item.intensity_bucket === 'high' ? 'accent' : 'neutral'}
+                />
+                {isCurrent ? (
+                  <Text style={styles.selectedLabel}>Gekozen</Text>
+                ) : null}
+              </View>
               <Text style={styles.cardTitle}>{item.name}</Text>
-              <Text style={styles.cardDescription}>
-                {disciplineLabels[item.discipline]} · {Number(item.duration_minutes)} min · RPE{' '}
-                {item.expected_rpe_min}–{item.expected_rpe_max}
+              <Text numberOfLines={2} style={styles.cardDescription}>
+                {item.description}
               </Text>
-              <Text style={styles.hint}>
-                {index + 1} van {alternatives.length}
+              <Text style={styles.cardMeta}>
+                {Number(item.duration_minutes)} min · RPE {item.expected_rpe_min}–
+                {item.expected_rpe_max} · {index + 1}/{candidates.length}
               </Text>
             </View>
-          )}
-          style={styles.carousel}
-        />
-      ) : (
-        <Text style={styles.hint}>Geen geldige vervanging voor deze training.</Text>
-      )}
-      {alternatives.length > 1 ? (
+          );
+        }}
+        style={styles.carousel}
+      />
+      {candidates.length > 1 ? (
         <View style={styles.decisionRow}>
           <View style={styles.decisionButton}>
             <ActionButton label="Vorige" onPress={() => moveSelection(-1)} secondary />
@@ -347,22 +461,16 @@ function PendingWorkoutEditor({
           </View>
         </View>
       ) : null}
-      {selected ? (
-        <ActionButton
-          disabled={busy || loading}
-          label="Gebruik deze vervanging"
-          onPress={() => void apply(selected.id)}
-        />
+      <ActionButton
+        disabled={busy || loading || selectedIsCurrent || !options}
+        label={selectedIsCurrent ? 'Deze training is gekozen' : 'Kies deze training'}
+        onPress={() => void apply(selected.id)}
+      />
+      {options && candidates.length === 1 ? (
+        <Text style={styles.hint}>
+          Voor dit trainingsslot is momenteel geen andere combinatie geldig.
+        </Text>
       ) : null}
-      {options.can_remove ? (
-        <ActionButton
-          disabled={busy || loading}
-          label="Training verwijderen"
-          onPress={() => void apply(null)}
-          secondary
-        />
-      ) : null}
-      <ActionButton label="Sluiten" onPress={() => setOptions(null)} secondary />
     </View>
   );
 }
@@ -528,12 +636,12 @@ export function PlanningScreen({
     });
 
   const approve = () => {
-    if (!plan?.proposal || plan.proposal.base_plan_revision === null) return;
+    if (!plan?.proposal) return;
     void run(async () => {
       await approvePlanProposal(
         accessToken,
         plan.proposal!.id,
-        plan.proposal!.base_plan_revision!,
+        plan.proposal!.base_plan_revision ?? 0,
       );
       setPlan(await getWeeklyPlan(accessToken, plan.id));
     });
@@ -651,10 +759,11 @@ export function PlanningScreen({
   };
 
   const proposeSelection = () => {
-    if (!plan?.active_revision) return;
+    if (!plan) return;
     void run(async () => {
       const result = await createScheduleProposal(accessToken, plan.id, {
-        expected_base_revision: plan.active_revision!,
+        expected_base_revision:
+          plan.active_revision ?? plan.proposal?.base_plan_revision ?? 0,
         available_dates: availableDatesFor(weekStart, selectedDays),
         confirmed_injuries: [...injuries],
         selected_template_ids: [...selectedTemplates],
@@ -681,7 +790,7 @@ export function PlanningScreen({
   };
 
   return (
-    <SafeAreaView edges={['top']} style={styles.safeArea}>
+    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
         <View style={styles.brandLockup}>
           <View style={styles.logoMark}>
@@ -830,7 +939,7 @@ export function PlanningScreen({
           style={[styles.tab, view === 'plan' && styles.tabActive]}
         >
           <Text style={[styles.tabText, view === 'plan' && styles.tabTextActive]}>
-            Voorstel
+            Week
           </Text>
         </Pressable>
         <Pressable
@@ -838,7 +947,7 @@ export function PlanningScreen({
           style={[styles.tab, view === 'deck' && styles.tabActive]}
         >
           <Text style={[styles.tabText, view === 'deck' && styles.tabTextActive]}>
-            Deck
+            Kiezen
           </Text>
         </Pressable>
         <Pressable
@@ -853,10 +962,18 @@ export function PlanningScreen({
         </Pressable>
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.content}
-        keyboardShouldPersistTaps="handled"
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboard}
       >
+        <ScrollView
+          automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
+          contentContainerStyle={styles.content}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          style={styles.scroll}
+        >
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {busy ? <ActivityIndicator color={colors.brand} /> : null}
 
@@ -873,8 +990,12 @@ export function PlanningScreen({
                 </Text>
                 <FormField
                   autoCapitalize="none"
+                  inputMode="numeric"
                   label="Week start op maandag"
-                  onChangeText={setWeekStart}
+                  maxLength={10}
+                  onChangeText={(value) =>
+                    setWeekStart(formatIsoDateInput(value))
+                  }
                   placeholder="JJJJ-MM-DD"
                   value={weekStart}
                 />
@@ -986,6 +1107,20 @@ export function PlanningScreen({
                     {Number(plan.low_intensity_minutes)} min rustig ·{' '}
                     {Number(plan.high_intensity_minutes)} min intensief
                   </Text>
+                  <View style={styles.selectionProgress}>
+                    <Text style={styles.selectionProgressValue}>
+                      {plan.workouts.length} van {plan.workouts.length} gekozen
+                    </Text>
+                    <Text style={styles.selectionProgressLabel}>
+                      {plan.warnings.some(
+                        (warning) =>
+                          warning.code ===
+                          'intensity_distribution_outside_target',
+                      )
+                        ? 'Intensiteit nog niet compleet'
+                        : 'Weekcombinatie compleet'}
+                    </Text>
+                  </View>
                   <Text style={styles.hint}>
                     Beschikbare datums: {plan.available_dates.join(', ')} · bron:{' '}
                     {plan.availability_source === 'previous_week'
@@ -1006,37 +1141,25 @@ export function PlanningScreen({
                       secondary
                     />
                   ) : null}
-                  {plan.warnings.map((warning) => (
-                    <View key={warning.id ?? warning.code} style={styles.warning}>
-                      <Text style={styles.warningTitle}>{warning.rule_id}</Text>
-                      <Text style={styles.warningText}>{warning.message}</Text>
-                    </View>
-                  ))}
+                  {plan.warnings.map((warning) => {
+                    const presentation = warningPresentation(warning);
+                    return (
+                      <View key={warning.id ?? warning.code} style={styles.warning}>
+                        <Text style={styles.warningTitle}>
+                          {presentation.title}
+                        </Text>
+                        <Text style={styles.warningText}>
+                          {presentation.message}
+                        </Text>
+                      </View>
+                    );
+                  })}
                   {plan.proposal ? (
                     <View style={styles.warning}>
                       <Text style={styles.warningTitle}>Coachuitleg</Text>
                       <Text style={styles.warningText}>
-                        {plan.proposal.public_explanation}
+                        {coachExplanation(plan.proposal.public_explanation)}
                       </Text>
-                    </View>
-                  ) : null}
-                  {plan.proposal?.state === 'pending' ? (
-                    <View style={styles.decisionRow}>
-                      <View style={styles.decisionButton}>
-                        <ActionButton
-                          disabled={busy}
-                          label="Goedkeuren"
-                          onPress={approve}
-                        />
-                      </View>
-                      <View style={styles.decisionButton}>
-                        <ActionButton
-                          disabled={busy}
-                          label="Afwijzen"
-                          onPress={reject}
-                          secondary
-                        />
-                      </View>
                     </View>
                   ) : null}
                   {['rejected', 'expired'].includes(plan.revision_state) ? (
@@ -1051,9 +1174,21 @@ export function PlanningScreen({
                     />
                   ) : null}
                 </View>
-                {plan.workouts.map((workout) => (
+                {plan.revision_state === 'pending_approval' &&
+                plan.proposal?.state === 'pending' ? (
+                  <View style={styles.swipeIntro}>
+                    <Text style={styles.swipeIntroTitle}>
+                      Stel je week samen
+                    </Text>
+                    <Text style={styles.body}>
+                      Swipe per training door de geldige opties. Fietsen, lopen
+                      en zwemmen blijven aparte keuzes; de totale combinatie
+                      wordt na elke wijziging opnieuw gecontroleerd.
+                    </Text>
+                  </View>
+                ) : null}
+                {plan.workouts.map((workout, index) => (
                   <View key={workout.id} style={styles.workoutStack}>
-                    <WorkoutCard workout={workout} />
                     {plan.revision_state === 'pending_approval' &&
                     plan.proposal?.state === 'pending' ? (
                       <PendingWorkoutEditor
@@ -1071,18 +1206,23 @@ export function PlanningScreen({
                         }}
                         onError={setError}
                         plan={plan}
+                        slotIndex={index}
                         workout={workout}
                       />
-                    ) : null}
+                    ) : (
+                      <WorkoutCard workout={workout} />
+                    )}
                     {plan.revision_state === 'active' ? (
                       <View style={styles.movePanel}>
                         <FormField
                           autoCapitalize="none"
+                          inputMode="numeric"
                           label="Nieuwe datum (JJJJ-MM-DD)"
+                          maxLength={10}
                           onChangeText={(value) =>
                             setMoveDates((current) => ({
                               ...current,
-                              [workout.id]: value,
+                              [workout.id]: formatIsoDateInput(value),
                             }))
                           }
                           value={moveDates[workout.id] ?? workout.scheduled_date}
@@ -1097,6 +1237,32 @@ export function PlanningScreen({
                     ) : null}
                   </View>
                 ))}
+                {plan.proposal?.state === 'pending' ? (
+                  <View style={styles.approvalPanel}>
+                    <Text style={styles.approvalTitle}>Klaar met kiezen?</Text>
+                    <Text style={styles.body}>
+                      Controleer de combinatie hierboven. Je week wordt pas
+                      actief nadat je dit voorstel uitdrukkelijk goedkeurt.
+                    </Text>
+                    <View style={styles.decisionRow}>
+                      <View style={styles.decisionButton}>
+                        <ActionButton
+                          disabled={busy}
+                          label="Week goedkeuren"
+                          onPress={approve}
+                        />
+                      </View>
+                      <View style={styles.decisionButton}>
+                        <ActionButton
+                          disabled={busy}
+                          label="Afwijzen"
+                          onPress={reject}
+                          secondary
+                        />
+                      </View>
+                    </View>
+                  </View>
+                ) : null}
               </>
             )}
           </>
@@ -1104,9 +1270,24 @@ export function PlanningScreen({
 
         {view === 'deck' ? (
           <View style={styles.panel}>
-            <Text style={styles.title}>Beschikbare trainingen</Text>
+            <StatusPill label="Precieze keuze" tone="brand" />
+            <Text style={styles.title}>Je weekcombinatie</Text>
+            <Text style={styles.body}>
+              Op de Week-tab swipe je per trainingsslot. Hier kun je dezelfde
+              combinatie met tikbediening controleren en aanpassen.
+            </Text>
             {!plan ? (
               <Text style={styles.body}>Maak eerst een weekvoorstel.</Text>
+            ) : null}
+            {plan ? (
+              <View style={styles.selectionProgress}>
+                <Text style={styles.selectionProgressValue}>
+                  {selectedTemplates.size} van {plan.workouts.length} gekozen
+                </Text>
+                <Text style={styles.selectionProgressLabel}>
+                  Iedere wijziging wordt opnieuw server-side gecontroleerd
+                </Text>
+              </View>
             ) : null}
             {deck?.templates.map((template) => {
               const selected = selectedTemplates.has(template.id);
@@ -1125,7 +1306,21 @@ export function PlanningScreen({
                     !eligible && styles.actionDisabled,
                   ]}
                 >
-                  <Text style={styles.cardTitle}>{template.name}</Text>
+                  <View style={styles.cardHeader}>
+                    <Text style={styles.cardTitle}>{template.name}</Text>
+                    <StatusPill
+                      label={
+                        template.intensity_bucket === 'high'
+                          ? 'Intensief'
+                          : 'Rustig'
+                      }
+                      tone={
+                        template.intensity_bucket === 'high'
+                          ? 'accent'
+                          : 'neutral'
+                      }
+                    />
+                  </View>
                   <Text style={styles.cardDescription}>
                     {disciplineLabels[template.discipline]} ·{' '}
                     {Number(template.duration_minutes)} min · RPE{' '}
@@ -1134,18 +1329,15 @@ export function PlanningScreen({
                 </Pressable>
               );
             })}
-            {plan?.active_revision ? (
+            {plan ? (
               <ActionButton
-                disabled={busy || selectedTemplates.size === 0}
-                label="Maak nieuw voorstel met selectie"
+                disabled={
+                  busy || selectedTemplates.size !== plan.workouts.length
+                }
+                label="Controleer deze combinatie"
                 onPress={proposeSelection}
               />
-            ) : (
-              <Text style={styles.hint}>
-                Keur het eerste voorstel goed voordat je een vervangend deck
-                maakt.
-              </Text>
-            )}
+            ) : null}
           </View>
         ) : null}
 
@@ -1175,13 +1367,16 @@ export function PlanningScreen({
           </View>
         ) : null}
         </FadeInView>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.canvas, flex: 1 },
+  keyboard: { flex: 1 },
+  scroll: { flex: 1 },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -1343,13 +1538,23 @@ const styles = StyleSheet.create({
   quickActionText: { color: colors.ink, fontSize: 10, fontWeight: '800', textAlign: 'center' },
   tabs: {
     backgroundColor: colors.surfaceMuted,
+    borderColor: colors.lineStrong,
     borderRadius: radius.pill,
+    borderWidth: 1,
     flexDirection: 'row',
     marginHorizontal: spacing.lg,
     marginTop: spacing.sm,
     padding: 4,
   },
-  tab: { borderRadius: radius.pill, flex: 1, paddingVertical: spacing.sm },
+  tab: {
+    alignItems: 'center',
+    borderRadius: radius.pill,
+    flex: 1,
+    justifyContent: 'center',
+    minHeight: 40,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.sm,
+  },
   tabActive: { ...shadows.card, backgroundColor: colors.surfaceRaised },
   tabText: { color: colors.inkMuted, fontSize: 12, fontWeight: '700', textAlign: 'center' },
   tabTextActive: { color: colors.brand, fontWeight: '900' },
@@ -1367,10 +1572,29 @@ const styles = StyleSheet.create({
   title: { color: colors.ink, fontSize: 23, fontWeight: '900' },
   body: { color: colors.inkMuted, fontSize: 14, lineHeight: 21 },
   fieldLabel: { color: colors.ink, fontSize: 13, fontWeight: '700' },
-  dayRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  selectionProgress: {
+    backgroundColor: colors.brandSoft,
+    borderColor: colors.brand,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    gap: 2,
+    padding: spacing.md,
+  },
+  selectionProgressValue: {
+    color: colors.brand,
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  selectionProgressLabel: {
+    color: colors.inkMuted,
+    fontSize: 12,
+    lineHeight: 17,
+  },
+  dayRow: { flexDirection: 'row', gap: 4, justifyContent: 'space-between' },
   choice: {
     alignItems: 'center',
-    borderColor: colors.line,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
     borderRadius: radius.pill,
     borderWidth: 1,
     height: 38,
@@ -1382,7 +1606,8 @@ const styles = StyleSheet.create({
   choiceTextActive: { color: colors.white },
   reuseChoice: {
     alignItems: 'center',
-    borderColor: colors.line,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
     borderRadius: radius.pill,
     borderWidth: 1,
     padding: spacing.md,
@@ -1390,7 +1615,9 @@ const styles = StyleSheet.create({
   choiceRow: { flexDirection: 'row', gap: spacing.sm },
   disciplineChoice: {
     backgroundColor: colors.surfaceMuted,
+    borderColor: colors.lineStrong,
     borderRadius: radius.pill,
+    borderWidth: 1,
     flex: 1,
     padding: spacing.sm,
   },
@@ -1403,8 +1630,8 @@ const styles = StyleSheet.create({
     ...shadows.card,
   },
   actionSecondary: {
-    backgroundColor: colors.surface,
-    borderColor: colors.line,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
     borderWidth: 1,
   },
   actionDisabled: { opacity: 0.45 },
@@ -1427,21 +1654,63 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   editPanel: {
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.md,
-    gap: spacing.sm,
-    padding: spacing.md,
+    ...shadows.card,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    gap: spacing.md,
+    padding: spacing.lg,
+  },
+  slotHeading: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  slotEyebrow: {
+    color: colors.accent,
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 1,
+    marginBottom: spacing.xs,
+    textTransform: 'uppercase',
   },
   swipeCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.brand,
-    borderRadius: radius.sm,
+    backgroundColor: colors.surfaceMuted,
+    borderColor: colors.lineStrong,
+    borderRadius: radius.md,
     borderWidth: 1,
     gap: spacing.xs,
-    minHeight: 112,
+    minHeight: 170,
     padding: spacing.md,
   },
-  carousel: { height: 132, width: '100%' },
+  swipeCardCurrent: {
+    backgroundColor: colors.brandSoft,
+    borderColor: colors.brand,
+  },
+  selectedLabel: {
+    color: colors.brand,
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  carousel: { height: 190, width: '100%' },
+  swipeIntro: {
+    backgroundColor: colors.brandSoft,
+    borderRadius: radius.md,
+    gap: spacing.xs,
+    padding: spacing.lg,
+  },
+  swipeIntroTitle: { color: colors.ink, fontSize: 18, fontWeight: '900' },
+  approvalPanel: {
+    ...shadows.card,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.brand,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    gap: spacing.md,
+    padding: spacing.lg,
+  },
+  approvalTitle: { color: colors.ink, fontSize: 19, fontWeight: '900' },
   restDay: {
     backgroundColor: colors.surfaceMuted,
     borderRadius: radius.md,
@@ -1451,9 +1720,15 @@ const styles = StyleSheet.create({
   cardHeader: {
     alignItems: 'center',
     flexDirection: 'row',
+    gap: spacing.sm,
     justifyContent: 'space-between',
   },
-  cardTitle: { color: colors.ink, fontSize: 17, fontWeight: '900' },
+  cardTitle: {
+    color: colors.ink,
+    flexShrink: 1,
+    fontSize: 17,
+    fontWeight: '900',
+  },
   cardDescription: { color: colors.inkMuted, fontSize: 13, lineHeight: 19 },
   cardMeta: { color: colors.inkMuted, fontSize: 12 },
   warning: {
@@ -1467,7 +1742,8 @@ const styles = StyleSheet.create({
   decisionRow: { flexDirection: 'row', gap: spacing.sm },
   decisionButton: { flex: 1 },
   deckCard: {
-    borderColor: colors.line,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
     borderRadius: radius.sm,
     borderWidth: 1,
     gap: spacing.xs,

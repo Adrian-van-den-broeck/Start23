@@ -16,6 +16,7 @@
     },
     "android": {
       "package": "com.adrivdbs.start23",
+      "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",

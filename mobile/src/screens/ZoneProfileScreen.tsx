@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -35,6 +37,7 @@ import { FadeInView } from '../components/FadeInView';
 import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
+import { formatIsoDateInput } from '../lib/dateInput';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
 import { ZoneSetupStep } from './ZoneSetupStep';
 
@@ -350,7 +353,7 @@ export function ZoneProfileScreen({
   };
 
   return (
-    <SafeAreaView edges={['top']} style={styles.safeArea}>
+    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
         <Pressable
           accessibilityRole="button"
@@ -379,9 +382,17 @@ export function ZoneProfileScreen({
           <Text style={styles.signOutButtonText}>Uit</Text>
         </Pressable>
       </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboard}
+      >
       <ScrollView
+        automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
         contentContainerStyle={styles.content}
+        keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.scroll}
       >
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {busy ? <ActivityIndicator color={colors.brand} /> : null}
@@ -518,11 +529,13 @@ export function ZoneProfileScreen({
                   <Text style={styles.valueTitle}>Veldtest plannen</Text>
                   <FormField
                     autoCapitalize="none"
+                    inputMode="numeric"
                     label="Lokale testdatum"
+                    maxLength={10}
                     onChangeText={(value) =>
                       setDates((current) => ({
                         ...current,
-                        [state.discipline]: value,
+                        [state.discipline]: formatIsoDateInput(value),
                       }))
                     }
                     placeholder="JJJJ-MM-DD"
@@ -617,12 +630,15 @@ export function ZoneProfileScreen({
           );
         })}
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.canvas, flex: 1 },
+  keyboard: { flex: 1 },
+  scroll: { flex: 1 },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -910,7 +926,8 @@ const styles = StyleSheet.create({
   buttonRow: { flexDirection: 'row', gap: spacing.sm },
   buttonCell: { flex: 1 },
   modeChoice: {
-    borderColor: colors.line,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
     borderRadius: radius.pill,
     borderWidth: 1,
     flex: 1,
@@ -929,8 +946,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   actionSecondary: {
-    backgroundColor: colors.surface,
-    borderColor: colors.line,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
     borderWidth: 1,
   },
   actionText: { color: colors.white, fontSize: 13, fontWeight: '800' },

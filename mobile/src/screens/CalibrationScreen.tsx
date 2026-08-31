@@ -764,9 +764,9 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
   }
 
   return (
-    <SafeAreaView edges={['top']} style={styles.safeArea}>
+    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboard}
       >
         <View style={styles.header}>
@@ -787,9 +787,12 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
         </View>
 
         <ScrollView
+          automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
           contentContainerStyle={styles.content}
+          keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          style={styles.scroll}
         >
           {error ? <Text style={styles.errorBanner}>{error}</Text> : null}
 
@@ -1359,6 +1362,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.canvas, flex: 1 },
   keyboard: { flex: 1 },
+  scroll: { flex: 1 },
   centered: {
     alignItems: 'center',
     backgroundColor: colors.canvas,
@@ -1395,8 +1399,8 @@ const styles = StyleSheet.create({
   },
   selectorRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   selector: {
-    backgroundColor: colors.surface,
-    borderColor: colors.line,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
     borderRadius: radius.pill,
     borderWidth: 1,
     paddingHorizontal: spacing.md,

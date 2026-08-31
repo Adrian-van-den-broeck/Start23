@@ -36,6 +36,10 @@ import { FadeInView } from '../components/FadeInView';
 import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
+import {
+  formatIsoDateInput,
+  isPastIsoDateInput,
+} from '../lib/dateInput';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
 import { ZoneSetupStep } from './ZoneSetupStep';
 
@@ -157,7 +161,8 @@ function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
     profile?.timezone ?? 'Europe/Amsterdam',
   );
   const valid =
-    Boolean(dateOfBirth && motivation && timezone) &&
+    isPastIsoDateInput(dateOfBirth) &&
+    Boolean(motivation && timezone) &&
     Number(height) > 0 &&
     Number(weight) > 0 &&
     Number(restingHeartRate) > 0;
@@ -170,10 +175,11 @@ function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
     >
       <View style={styles.form}>
         <FormField
-          hint="Gebruik JJJJ-MM-DD."
+          hint="Gebruik JJJJ-MM-DD. De streepjes verschijnen automatisch."
           inputMode="numeric"
           label="Geboortedatum"
-          onChangeText={setDateOfBirth}
+          maxLength={10}
+          onChangeText={(value) => setDateOfBirth(formatIsoDateInput(value))}
           placeholder="1990-05-20"
           value={dateOfBirth}
         />
@@ -529,8 +535,12 @@ function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                       ? 'Gebruik een toekomstige datum: JJJJ-MM-DD'
                       : 'JJJJ-MM-DD'
                   }
+                  inputMode="numeric"
                   label="Racedatum"
-                  onChangeText={setTargetDate}
+                  maxLength={10}
+                  onChangeText={(value) =>
+                    setTargetDate(formatIsoDateInput(value))
+                  }
                   placeholder="2027-06-15"
                   value={targetDate}
                 />
@@ -1192,9 +1202,9 @@ export function OnboardingScreen({
 
   const step = state.current_step;
   return (
-    <SafeAreaView edges={['top']} style={styles.safeArea}>
+    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboard}
       >
         <View style={styles.header}>
@@ -1253,9 +1263,12 @@ export function OnboardingScreen({
         ) : null}
 
         <ScrollView
+          automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
           contentContainerStyle={styles.scrollContent}
+          keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          style={styles.scroll}
         >
           {error ? <Text style={styles.errorBanner}>{error}</Text> : null}
 
@@ -1378,6 +1391,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   keyboard: {
+    flex: 1,
+  },
+  scroll: {
     flex: 1,
   },
   centered: {
@@ -1577,8 +1593,8 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   goalModeCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.line,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
     borderRadius: radius.md,
     borderWidth: 1,
     gap: spacing.sm,
@@ -1594,7 +1610,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   goalModeRadio: {
-    borderColor: colors.line,
+    borderColor: colors.lineStrong,
     borderRadius: radius.pill,
     borderWidth: 2,
     height: 20,
@@ -1718,8 +1734,8 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   zoneRouteCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.line,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
     borderRadius: radius.md,
     borderWidth: 1,
     gap: spacing.sm,
@@ -1746,7 +1762,7 @@ const styles = StyleSheet.create({
     lineHeight: 19,
   },
   zoneRouteRadio: {
-    borderColor: colors.line,
+    borderColor: colors.lineStrong,
     borderRadius: radius.pill,
     borderWidth: 2,
     height: 20,

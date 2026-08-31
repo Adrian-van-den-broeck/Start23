@@ -37,7 +37,7 @@ export function FormField({
     borderColor: interpolateColor(
       focusProgress.value,
       [0, 1],
-      [colors.line, colors.brand],
+      [colors.lineStrong, colors.brand],
     ),
   }));
 
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: colors.surfaceRaised,
-    borderColor: colors.line,
+    borderColor: colors.lineStrong,
     borderRadius: radius.md,
     borderWidth: 1,
     color: colors.ink,

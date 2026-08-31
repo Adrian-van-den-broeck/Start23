@@ -748,8 +748,8 @@ const styles = StyleSheet.create({
   progressRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   routeList: { gap: spacing.sm },
   routeCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.line,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
     borderRadius: radius.lg,
     borderWidth: 1,
     gap: spacing.sm,
@@ -792,8 +792,8 @@ const styles = StyleSheet.create({
   },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   chip: {
-    backgroundColor: colors.canvas,
-    borderColor: colors.line,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
     borderRadius: radius.pill,
     borderWidth: 1,
     paddingHorizontal: spacing.md,

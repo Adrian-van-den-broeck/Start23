@@ -97,13 +97,16 @@ export function AuthScreen() {
       />
       <View pointerEvents="none" style={styles.glowBottom} />
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboard}
       >
         <ScrollView
+          automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
           contentContainerStyle={styles.content}
+          keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          style={styles.scroll}
         >
           <FadeInView style={styles.hero}>
             <View style={styles.brandLockup}>
@@ -124,6 +127,34 @@ export function AuthScreen() {
           </FadeInView>
 
           <FadeInView delay={90} style={styles.card}>
+            <View accessibilityRole="tablist" style={styles.modeTabs}>
+              {(['sign-in', 'sign-up'] as const).map((option) => {
+                const selected = mode === option;
+                return (
+                  <Pressable
+                    accessibilityRole="tab"
+                    accessibilityState={{ selected }}
+                    disabled={loading}
+                    key={option}
+                    onPress={() => selectMode(option)}
+                    style={({ pressed }) => [
+                      styles.modeTab,
+                      selected && styles.modeTabSelected,
+                      pressed && styles.pressed,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.modeTabText,
+                        selected && styles.modeTabTextSelected,
+                      ]}
+                    >
+                      {option === 'sign-in' ? 'Aanmelden' : 'Registreren'}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
             <View style={styles.cardHeading}>
               <View>
                 <Text style={styles.cardEyebrow}>
@@ -193,24 +224,6 @@ export function AuthScreen() {
                 </Text>
               )}
             </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              disabled={loading}
-              onPress={() =>
-                selectMode(mode === 'sign-in' ? 'sign-up' : 'sign-in')
-              }
-              style={({ pressed }) => [
-                styles.linkButton,
-                loading && styles.disabled,
-                pressed && styles.pressed,
-              ]}
-            >
-              <Text style={styles.linkText}>
-                {mode === 'sign-in'
-                  ? 'Nieuw? Maak een account'
-                  : 'Al een account? Aanmelden'}
-              </Text>
-            </Pressable>
           </FadeInView>
 
           <FadeInView delay={170} style={styles.privacyRow}>
@@ -235,6 +248,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   keyboard: {
+    flex: 1,
+  },
+  scroll: {
     flex: 1,
   },
   content: {
@@ -328,6 +344,33 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 520,
   },
+  modeTabs: {
+    backgroundColor: colors.surfaceMuted,
+    borderColor: colors.lineStrong,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    flexDirection: 'row',
+    padding: 4,
+  },
+  modeTab: {
+    alignItems: 'center',
+    borderRadius: radius.pill,
+    flex: 1,
+    justifyContent: 'center',
+    minHeight: 44,
+    paddingHorizontal: spacing.sm,
+  },
+  modeTabSelected: {
+    backgroundColor: colors.brand,
+  },
+  modeTabText: {
+    color: colors.ink,
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  modeTabTextSelected: {
+    color: colors.white,
+  },
   cardHeading: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -371,6 +414,8 @@ const styles = StyleSheet.create({
   primaryButton: {
     alignItems: 'center',
     backgroundColor: colors.brand,
+    borderColor: colors.brandDeep,
+    borderWidth: 1,
     borderRadius: radius.pill,
     minHeight: 50,
     justifyContent: 'center',
@@ -383,19 +428,10 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   disabled: {
-    opacity: 0.45,
+    opacity: 0.62,
   },
   pressed: {
     opacity: 0.8,
-  },
-  linkButton: {
-    alignItems: 'center',
-    padding: spacing.sm,
-  },
-  linkText: {
-    color: colors.brand,
-    fontSize: 13,
-    fontWeight: '700',
   },
   error: {
     backgroundColor: colors.dangerSoft,

@@ -2,6 +2,8 @@ import { FlashList } from '@shopify/flash-list';
 import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   View,
@@ -303,7 +305,7 @@ export function ActivityScreen({
   };
 
   return (
-    <SafeAreaView edges={['top']} style={styles.safeArea}>
+    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
         <Pressable accessibilityRole="button" onPress={onBack}>
           <Text style={styles.link}>Weekplanning</Text>
@@ -317,6 +319,10 @@ export function ActivityScreen({
         </Pressable>
       </View>
 
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboard}
+      >
       <FlashList
         contentContainerStyle={styles.content}
         data={activities}
@@ -587,12 +593,14 @@ export function ActivityScreen({
             </View>
         )}
       />
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.canvas, flex: 1 },
+  keyboard: { flex: 1 },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -628,16 +636,16 @@ const styles = StyleSheet.create({
   cardTitle: { color: colors.ink, fontSize: 16, fontWeight: '900' },
   body: { color: colors.inkMuted, fontSize: 13, lineHeight: 19 },
   meta: { color: colors.inkMuted, fontSize: 12, marginTop: 3 },
-  choice: { borderColor: colors.line, borderRadius: radius.sm, borderWidth: 1, padding: spacing.md },
+  choice: { backgroundColor: colors.surfaceRaised, borderColor: colors.lineStrong, borderRadius: radius.sm, borderWidth: 1, padding: spacing.md },
   choiceActive: { backgroundColor: colors.brandSoft, borderColor: colors.brand },
   choiceTitle: { color: colors.ink, fontSize: 14, fontWeight: '800' },
   disciplineRow: { flexDirection: 'row', gap: spacing.sm },
-  discipline: { backgroundColor: colors.surfaceMuted, borderRadius: radius.pill, flex: 1, padding: spacing.sm },
+  discipline: { backgroundColor: colors.surfaceMuted, borderColor: colors.lineStrong, borderRadius: radius.pill, borderWidth: 1, flex: 1, padding: spacing.sm },
   disciplineActive: { backgroundColor: colors.brand },
   disciplineText: { color: colors.ink, fontSize: 12, fontWeight: '700', textAlign: 'center' },
   disciplineTextActive: { color: colors.white, fontSize: 12, fontWeight: '800', textAlign: 'center' },
   rpeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  rpeButton: { alignItems: 'center', backgroundColor: colors.surface, borderRadius: radius.pill, height: 40, justifyContent: 'center', width: 40 },
+  rpeButton: { alignItems: 'center', backgroundColor: colors.surfaceRaised, borderColor: colors.lineStrong, borderRadius: radius.pill, borderWidth: 1, height: 40, justifyContent: 'center', width: 40 },
   rpeText: { color: colors.brand, fontWeight: '900' },
   action: { alignItems: 'center', backgroundColor: colors.brand, borderRadius: radius.pill, padding: 14 },
   actionText: { color: colors.white, fontSize: 14, fontWeight: '900' },

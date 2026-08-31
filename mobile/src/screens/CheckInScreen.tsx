@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -358,21 +360,19 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
   };
 
   const approve = () => {
-    if (!proposalPlan?.proposal || proposalPlan.proposal.base_plan_revision === null) {
-      return;
-    }
+    if (!proposalPlan?.proposal) return;
     void run(async () => {
       await approvePlanProposal(
         accessToken,
         proposalPlan.proposal!.id,
-        proposalPlan.proposal!.base_plan_revision!,
+        proposalPlan.proposal!.base_plan_revision ?? 0,
       );
       onBack();
     });
   };
 
   return (
-    <SafeAreaView edges={['top']} style={styles.safeArea}>
+    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
         <Pressable accessibilityRole="button" onPress={onBack}>
           <Text style={styles.link}>Weekplanning</Text>
@@ -385,7 +385,18 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
           <Text style={styles.link}>Afmelden</Text>
         </Pressable>
       </View>
-      <ScrollView contentContainerStyle={styles.content}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboard}
+      >
+      <ScrollView
+        automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
+        contentContainerStyle={styles.content}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.scroll}
+      >
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {busy ? <ActivityIndicator color={colors.brand} /> : null}
 
@@ -715,12 +726,15 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
           </View>
         ) : null}
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.canvas, flex: 1 },
+  keyboard: { flex: 1 },
+  scroll: { flex: 1 },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -752,14 +766,15 @@ const styles = StyleSheet.create({
   rowWrap: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   choice: {
     alignItems: 'center',
-    borderColor: colors.line,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.lineStrong,
     borderRadius: radius.pill,
     borderWidth: 1,
     height: 38,
     justifyContent: 'center',
     width: 38,
   },
-  pill: { backgroundColor: colors.surfaceMuted, borderRadius: radius.pill, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
+  pill: { backgroundColor: colors.surfaceMuted, borderColor: colors.lineStrong, borderRadius: radius.pill, borderWidth: 1, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
   active: { backgroundColor: colors.brand, borderColor: colors.brand },
   choiceText: { color: colors.ink, fontSize: 12, fontWeight: '700' },
   activeText: { color: colors.white, fontSize: 12, fontWeight: '800' },
@@ -767,7 +782,7 @@ const styles = StyleSheet.create({
   noticeChecked: { backgroundColor: colors.brandSoft },
   activityRow: { borderTopColor: colors.line, borderTopWidth: 1, gap: spacing.xs, paddingTop: spacing.sm },
   action: { alignItems: 'center', backgroundColor: colors.brand, borderRadius: radius.pill, padding: 14 },
-  actionSecondary: { backgroundColor: colors.surface, borderColor: colors.line, borderWidth: 1 },
+  actionSecondary: { backgroundColor: colors.surfaceRaised, borderColor: colors.lineStrong, borderWidth: 1 },
   actionText: { color: colors.white, fontSize: 14, fontWeight: '900' },
   actionSecondaryText: { color: colors.brand },
   disabled: { opacity: 0.45 },
