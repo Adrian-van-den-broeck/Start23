@@ -1,9 +1,8 @@
 import * as Haptics from 'expo-haptics';
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 import {
   Pressable,
   type PressableProps,
-  type PressableStateCallbackType,
   type View,
 } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
@@ -40,6 +39,14 @@ export const MotionPressable = forwardRef<View, MotionPressableProps>(
     ref,
   ) {
     const reduceMotion = useReducedMotion();
+    const [pressed, setPressed] = useState(false);
+    const isPressed = pressed && !disabled;
+    // NativeWind's Pressable interop drops function-valued style props before
+    // React Native can resolve them, so always pass it a concrete style array.
+    const resolvedStyle =
+      typeof style === 'function'
+        ? style({ hovered: false, pressed: isPressed })
+        : style;
 
     return (
       <Pressable
@@ -50,16 +57,17 @@ export const MotionPressable = forwardRef<View, MotionPressableProps>(
           onPress?.(event);
         }}
         onPressIn={(event) => {
+          if (!disabled) setPressed(true);
           onPressIn?.(event);
         }}
         onPressOut={(event) => {
+          setPressed(false);
           onPressOut?.(event);
         }}
         ref={ref}
-        style={(state: PressableStateCallbackType) => [
-          typeof style === 'function' ? style(state) : style,
-          state.pressed &&
-            !disabled &&
+        style={[
+          resolvedStyle,
+          isPressed &&
             !reduceMotion && {
               opacity: 0.88,
               transform: [{ scale: pressedScale }],
