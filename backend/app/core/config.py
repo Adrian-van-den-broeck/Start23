@@ -110,18 +110,16 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def require_complete_polar_configuration(self) -> "Settings":
-        """Prevent partially configured OAuth or webhook authentication."""
-        values = (
-            self.polar_client_id.strip(),
-            self.polar_client_secret.get_secret_value().strip(),
-            self.polar_webhook_secret.get_secret_value().strip(),
-        )
-        if any(values) and not all(values):
+        """Require complete credentials only when Polar is explicitly enabled."""
+        client_id = self.polar_client_id.strip()
+        client_secret = self.polar_client_secret.get_secret_value().strip()
+        webhook_secret = self.polar_webhook_secret.get_secret_value().strip()
+        if client_id and not (client_secret and webhook_secret):
             raise ValueError(
                 "polar_client_id, polar_client_secret and polar_webhook_secret "
                 "must be configured together"
             )
-        if self.environment == "production" and all(values):
+        if self.environment == "production" and client_id:
             if not (
                 self.polar_legal_approved
                 and self.polar_privacy_approved

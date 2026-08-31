@@ -47,9 +47,16 @@ def test_openai_configuration_is_server_only_bounded_and_redacted() -> None:
         Settings(environment="test", openai_model="   ")
 
 
-def test_polar_configuration_is_all_or_nothing_and_secrets_are_redacted() -> None:
+def test_polar_configuration_requires_secrets_when_enabled_and_redacts_them() -> None:
     with pytest.raises(ValidationError, match="must be configured together"):
         Settings(environment="test", polar_client_id="partial-client")
+
+    disabled = Settings(
+        environment="test",
+        polar_client_secret="dormant-polar-secret",
+        polar_webhook_secret="dormant-webhook-secret",
+    )
+    assert disabled.polar_client_id == ""
 
     settings = Settings(
         environment="test",
