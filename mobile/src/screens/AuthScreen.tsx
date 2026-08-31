@@ -114,7 +114,7 @@ export function AuthScreen() {
                 <Text style={styles.brandMarkText}>23</Text>
               </View>
               <View>
-                <Text style={styles.eyebrow}>Start23</Text>
+                <Text style={styles.eyebrow}>Wombo</Text>
                 <Text style={styles.brandCaption}>Train bewust</Text>
               </View>
             </View>

@@ -126,7 +126,7 @@ export function IntegrationsScreen({
           <Text style={styles.link}>Weekplanning</Text>
         </Pressable>
         <View>
-          <Text style={styles.logo}>Start23</Text>
+          <Text style={styles.logo}>Wombo</Text>
           <Text style={styles.caption}>Integraties</Text>
         </View>
         <Pressable accessibilityRole="button" onPress={() => void onSignOut()}>
@@ -241,7 +241,7 @@ export function IntegrationsScreen({
           <Text style={styles.body}>
             Ontkoppelen stopt nieuwe toegang en verwijdert de credentials. Het is
             geen verwijderverzoek: bestaande activiteiten blijven behouden. Ruwe
-            FIT-bestanden blijven backend-only; Start23 toont geen filemanager of
+            FIT-bestanden blijven backend-only; Wombo toont geen filemanager of
             downloadscherm in de MVP. Bewaartermijnen en verwijder-/exportprocessen
             moeten vóór productie formeel zijn vastgelegd.
           </Text>

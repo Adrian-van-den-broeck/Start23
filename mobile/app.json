@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Start23",
+    "name": "Wombo",
     "slug": "start23",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,13 +9,13 @@
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.adrivdbs.start23",
+      "bundleIdentifier": "com.adrivdbs.wombo",
       "config": {
         "usesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "com.adrivdbs.start23",
+      "package": "com.adrivdbs.wombo",
       "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
@@ -25,7 +25,7 @@
       },
       "predictiveBackGestureEnabled": false
     },
-    "scheme": "start23",
+    "scheme": "wombo",
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png"

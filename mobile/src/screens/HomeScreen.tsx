@@ -28,10 +28,10 @@ export function HomeScreen() {
       >
         <View style={styles.header}>
           <View>
-            <Text style={styles.eyebrow}>Start23</Text>
+            <Text style={styles.eyebrow}>Wombo</Text>
             <Text style={styles.title}>Jouw training, jouw keuze.</Text>
           </View>
-          <View accessibilityLabel="Start23 profiel" style={styles.avatar}>
+          <View accessibilityLabel="Wombo profiel" style={styles.avatar}>
             <Text style={styles.avatarText}>23</Text>
           </View>
         </View>

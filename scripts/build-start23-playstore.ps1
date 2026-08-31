@@ -1,23 +1,14 @@
-param(
-    [ValidateSet('production', 'wombo')]
-    [string]$BuildProfile = 'production'
-)
-
 . (Join-Path $PSScriptRoot 'start23-common.ps1')
 
 $repositoryRoot = Get-Start23RepositoryRoot
 $mobileRoot = Join-Path $repositoryRoot 'mobile'
 $mobileEnvPath = Join-Path $mobileRoot '.env'
 $state = Get-Start23State
-$expectedPackage = if ($BuildProfile -eq 'wombo') {
-    'com.adrivdbs.wombo'
-}
-else {
-    'com.adrivdbs.start23'
-}
+$buildProfile = 'wombo'
+$expectedPackage = 'com.adrivdbs.wombo'
 
 if ($state.mode -ne 'production') {
-    throw 'Switch Start23 to production mode before creating a Play Store build.'
+    throw 'Switch Wombo to production mode before creating a Play Store build.'
 }
 
 $apiBaseUrl = ConvertTo-Start23PublicUrl -Value $state.apiBaseUrl
@@ -33,7 +24,7 @@ if ([string]::IsNullOrWhiteSpace($supabasePublishableKey) -or $supabasePublishab
 
 Push-Location $mobileRoot
 try {
-    Write-Host '[Start23] Syncing public mobile configuration to the EAS production environment...'
+    Write-Host '[Wombo] Syncing public mobile configuration to the EAS production environment...'
     $publicVariables = [ordered]@{
         EXPO_PUBLIC_API_BASE_URL = $apiBaseUrl
         EXPO_PUBLIC_SUPABASE_URL = $supabaseUrl
@@ -46,21 +37,24 @@ try {
         )
     }
 
-    Write-Host "[Start23] Building $expectedPackage for Google Play. EAS will increment versionCode remotely..."
+    Write-Host "[Wombo] Building $expectedPackage for Google Play. EAS will increment versionCode remotely..."
     Invoke-Start23Npx -Package $script:Start23EasCli -Arguments @(
-        'build', '--platform', 'android', '--profile', $BuildProfile, '--wait'
+        'build', '--platform', 'android', '--profile', $buildProfile, '--wait'
     )
 
     $latestBuildJson = Invoke-Start23Npx -Package $script:Start23EasCli -Arguments @(
-        'build:list', '--platform', 'android', '--build-profile', $BuildProfile,
+        'build:list', '--platform', 'android', '--build-profile', $buildProfile,
         '--status', 'finished', '--limit', '1', '--json', '--non-interactive'
     ) -CaptureOutput
     $latestBuild = @($latestBuildJson | ConvertFrom-Json)[0]
-    if (
-        $latestBuild.PSObject.Properties.Name -contains 'applicationIdentifier' -and
-        $latestBuild.applicationIdentifier -ne $expectedPackage
-    ) {
-        throw "EAS returned package '$($latestBuild.applicationIdentifier)' instead of '$expectedPackage'."
+    $actualPackage = if ($latestBuild.PSObject.Properties.Name -contains 'appIdentifier') {
+        $latestBuild.appIdentifier
+    }
+    elseif ($latestBuild.PSObject.Properties.Name -contains 'applicationIdentifier') {
+        $latestBuild.applicationIdentifier
+    }
+    if ($actualPackage -ne $expectedPackage) {
+        throw "EAS returned package '$actualPackage' instead of '$expectedPackage'."
     }
     $artifactUrl = $null
     if ($null -ne $latestBuild.artifacts) {
@@ -88,12 +82,11 @@ try {
     }
     $outputDirectory = Join-Path $mobileRoot 'dist'
     New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
-    $artifactName = if ($BuildProfile -eq 'wombo') { 'start23-wombo' } else { 'start23' }
-    $outputPath = Join-Path $outputDirectory "$artifactName-playstore-$versionCode.aab"
+    $outputPath = Join-Path $outputDirectory "wombo-playstore-$versionCode.aab"
     Invoke-WebRequest -Uri $artifactUrl -OutFile $outputPath -UseBasicParsing
 
-    Write-Host "[Start23] Play Store bundle downloaded to: $outputPath"
-    Write-Host "[Start23] Android package: $expectedPackage"
+    Write-Host "[Wombo] Play Store bundle downloaded to: $outputPath"
+    Write-Host "[Wombo] Android package: $expectedPackage"
 }
 finally {
     Pop-Location

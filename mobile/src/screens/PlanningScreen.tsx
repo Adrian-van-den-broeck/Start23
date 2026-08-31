@@ -407,7 +407,7 @@ function PendingWorkoutEditor({
       </View>
       <Text style={styles.hint}>
         Veeg horizontaal door de geldige opties. Na iedere keuze controleert
-        Start23 de volledige weekcombinatie opnieuw.
+        Wombo de volledige weekcombinatie opnieuw.
       </Text>
       <Carousel
         animation={{ type: 'spring', damping: 18, stiffness: 190 }}
@@ -801,7 +801,7 @@ export function PlanningScreen({
             <Text style={styles.logoMarkText}>23</Text>
           </View>
           <View>
-            <Text style={styles.logo}>Start23</Text>
+            <Text style={styles.logo}>Wombo</Text>
             <Text style={styles.headerCaption}>Jouw trainingsweek</Text>
           </View>
         </View>

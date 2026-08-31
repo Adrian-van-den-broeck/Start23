@@ -112,7 +112,7 @@ async function request<T>(
     });
   } catch {
     throw new ApiRequestError(
-      'De Start23-server is niet bereikbaar. Controleer je verbinding en probeer opnieuw.',
+      'De Wombo-server is niet bereikbaar. Controleer je verbinding en probeer opnieuw.',
       null,
       'network_unavailable',
     );
@@ -124,7 +124,7 @@ async function request<T>(
       (response.status === 401
         ? 'Je sessie is verlopen. Meld je opnieuw aan.'
         : response.status === 503
-          ? 'De Start23-server is tijdelijk niet beschikbaar. Probeer het zo opnieuw.'
+          ? 'De Wombo-server is tijdelijk niet beschikbaar. Probeer het zo opnieuw.'
           : body.error?.message ?? 'De wijziging kon niet worden opgeslagen.');
     throw new ApiRequestError(
       message,

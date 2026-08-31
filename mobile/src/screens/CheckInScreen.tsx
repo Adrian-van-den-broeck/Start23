@@ -378,7 +378,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
           <Text style={styles.link}>Weekplanning</Text>
         </Pressable>
         <View>
-          <Text style={styles.logo}>Start23</Text>
+          <Text style={styles.logo}>Wombo</Text>
           <Text style={styles.caption}>Wekelijkse check-in</Text>
         </View>
         <Pressable accessibilityRole="button" onPress={() => void onSignOut()}>
@@ -610,7 +610,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
             </View>
 
             <View style={styles.panel}>
-              <Text style={styles.title}>Sport buiten Start23</Text>
+              <Text style={styles.title}>Sport buiten Wombo</Text>
               <Pressable
                 accessibilityRole="checkbox"
                 accessibilityState={{ checked: recurringConfirmed }}

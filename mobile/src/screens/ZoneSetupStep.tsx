@@ -88,11 +88,11 @@ const metricOptions: Record<Discipline, readonly MetricOption[]> = {
 
 const routeDescriptions: Record<ZoneSetupRoute, string> = {
   known_values:
-    'Bevestig een bekende drempelwaarde. Start23 berekent een apart Zone 1-5-voorstel; bestaande grenzen kun je als override invoeren.',
+    'Bevestig een bekende drempelwaarde. Wombo berekent een apart Zone 1-5-voorstel; bestaande grenzen kun je als override invoeren.',
   field_test:
     'Voer een beoordeelde maximale veldtest uit voor een drempelschatting.',
   calibration_week:
-    'Train met dezelfde veilige RPE-workouts; Start23 bewaart daarnaast geschikte objectieve kalibratie-observaties.',
+    'Train met dezelfde veilige RPE-workouts; Wombo bewaart daarnaast geschikte objectieve kalibratie-observaties.',
   rpe_only:
     'Train met dezelfde veilige RPE-workouts, zonder extra kalibratie-observaties.',
 };
@@ -446,7 +446,7 @@ export function ZoneSetupStep({
           <Text style={styles.panelTitle}>Bekende waarden</Text>
           <Text style={styles.panelText}>
             Eén bekende drempel is genoeg. Laat de optionele grenzen leeg om
-            het geversioneerde Start23-model te gebruiken. De zones blijven
+            het geversioneerde Wombo-model te gebruiken. De zones blijven
             daarna eerst een apart voorstel.
           </Text>
           <View accessibilityRole="radiogroup" style={styles.chips}>

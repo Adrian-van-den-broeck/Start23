@@ -367,7 +367,7 @@ export function ZoneProfileScreen({
           <Text style={styles.headerButtonText}>Week</Text>
         </Pressable>
         <View style={styles.headerBrand}>
-          <Text style={styles.logo}>START23</Text>
+          <Text style={styles.logo}>WOMBO</Text>
           <Text style={styles.caption}>Mijn zones</Text>
         </View>
         <Pressable

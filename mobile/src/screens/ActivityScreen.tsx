@@ -311,7 +311,7 @@ export function ActivityScreen({
           <Text style={styles.link}>Weekplanning</Text>
         </Pressable>
         <View>
-          <Text style={styles.logo}>Start23</Text>
+          <Text style={styles.logo}>Wombo</Text>
           <Text style={styles.caption}>Training & RPE</Text>
         </View>
         <Pressable accessibilityRole="button" onPress={() => void onSignOut()}>
@@ -426,7 +426,7 @@ export function ActivityScreen({
             >
               <Text style={styles.choiceTitle}>{activity.name}</Text>
               <Text style={styles.meta}>
-                Buiten Start23 · {disciplineLabels[activity.discipline]} ·{' '}
+                Buiten Wombo · {disciplineLabels[activity.discipline]} ·{' '}
                 {new Date(activity.scheduled_at).toLocaleDateString('nl-NL')}
               </Text>
             </Pressable>
@@ -527,7 +527,7 @@ export function ActivityScreen({
                 <View style={styles.matchSuggestion}>
                   <Text style={styles.choiceTitle}>Mogelijke geplande training</Text>
                   <Text style={styles.body}>
-                    {suggestedWorkout(activity, workouts)?.name}. Start23 koppelt
+                    {suggestedWorkout(activity, workouts)?.name}. Wombo koppelt
                     dit nooit automatisch.
                   </Text>
                   <Pressable

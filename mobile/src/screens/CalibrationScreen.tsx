@@ -774,7 +774,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
             <Text style={styles.linkText}>← Terug</Text>
           </Pressable>
           <View style={styles.headerTitleBlock}>
-            <Text style={styles.logo}>Start23</Text>
+            <Text style={styles.logo}>Wombo</Text>
             <Text style={styles.headerTitle}>Test & kalibratie</Text>
           </View>
           <Pressable
@@ -1294,7 +1294,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                     <>
                       <Text style={styles.safety}>
                         Controleer eerst de gemeten drempel. Na bevestiging maakt
-                        Start23 een afzonderlijk, nog niet actief zonevoorstel.
+                        Wombo een afzonderlijk, nog niet actief zonevoorstel.
                       </Text>
                       <ActionButton
                         label="Drempel bevestigen"

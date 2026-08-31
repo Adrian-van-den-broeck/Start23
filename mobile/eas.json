@@ -11,18 +11,17 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {
+    "wombo": {
       "environment": "production",
       "autoIncrement": true
-    },
-    "wombo": {
-      "extends": "production",
-      "env": {
-        "APP_VARIANT": "wombo"
-      }
     }
   },
   "submit": {
-    "production": {}
+    "wombo": {
+      "android": {
+        "serviceAccountKeyPath": "./credentials-google-play.json",
+        "track": "internal"
+      }
+    }
   }
 }

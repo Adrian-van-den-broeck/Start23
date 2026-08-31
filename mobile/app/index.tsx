@@ -7,7 +7,7 @@ import { AuthScreen } from '@/screens/AuthScreen';
 export default function IndexRoute() {
   const { configurationError, loading, session } = useAuth();
 
-  if (loading) return <ScreenState loading title="Start23 wordt klaargezet" />;
+  if (loading) return <ScreenState loading title="Wombo wordt klaargezet" />;
   if (configurationError) {
     return <ScreenState message={configurationError} title="Configuratie ontbreekt" />;
   }

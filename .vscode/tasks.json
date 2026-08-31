@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Start23: Switch to local mode",
+      "label": "Wombo: Switch to local mode",
       "type": "process",
       "command": "powershell.exe",
       "args": [
@@ -21,7 +21,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Start23: Switch to production mode",
+      "label": "Wombo: Switch to production mode",
       "type": "process",
       "command": "powershell.exe",
       "args": [
@@ -40,7 +40,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Start23: Start Android emulator",
+      "label": "Wombo: Start Android emulator",
       "type": "shell",
       "command": "Start-Process -FilePath \"${env:ANDROID_HOME}\\emulator\\emulator.exe\" -ArgumentList '-avd','${input:androidAvd}','-no-snapshot-load'",
       "options": {
@@ -55,7 +55,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Start23: Stop Android emulator",
+      "label": "Wombo: Stop Android emulator",
       "type": "shell",
       "command": "& \"${env:ANDROID_HOME}\\platform-tools\\adb.exe\" emu kill",
       "options": {
@@ -70,7 +70,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Start23: Start backend",
+      "label": "Wombo: Start backend",
       "type": "process",
       "command": "powershell.exe",
       "args": [
@@ -98,7 +98,7 @@
       }
     },
     {
-      "label": "Start23: Configure Android bridges",
+      "label": "Wombo: Configure Android bridges",
       "type": "shell",
       "command": "& \"${env:ANDROID_HOME}\\platform-tools\\adb.exe\" reverse tcp:8081 tcp:8081; & \"${env:ANDROID_HOME}\\platform-tools\\adb.exe\" reverse tcp:8000 tcp:8000",
       "options": {
@@ -113,7 +113,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Start23: Run Android app",
+      "label": "Wombo: Run Android app",
       "type": "shell",
       "command": "npm run android -- --localhost",
       "options": {
@@ -123,8 +123,8 @@
         }
       },
       "dependsOn": [
-        "Start23: Start backend",
-        "Start23: Configure Android bridges"
+        "Wombo: Start backend",
+        "Wombo: Configure Android bridges"
       ],
       "dependsOrder": "sequence",
       "presentation": {
@@ -134,7 +134,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Start23: Build Play Store AAB",
+      "label": "Wombo: Build Play Store AAB",
       "type": "process",
       "command": "powershell.exe",
       "args": [
@@ -143,25 +143,6 @@
         "Bypass",
         "-File",
         "${workspaceFolder}\\scripts\\build-start23-playstore.ps1"
-      ],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Start23: Build Play Store AAB (com.adrivdbs.wombo)",
-      "type": "process",
-      "command": "powershell.exe",
-      "args": [
-        "-NoProfile",
-        "-ExecutionPolicy",
-        "Bypass",
-        "-File",
-        "${workspaceFolder}\\scripts\\build-start23-playstore.ps1",
-        "-BuildProfile",
-        "wombo"
       ],
       "presentation": {
         "reveal": "always",

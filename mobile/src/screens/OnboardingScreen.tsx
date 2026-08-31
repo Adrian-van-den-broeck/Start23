@@ -570,7 +570,7 @@ function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
           </Text>
           <Text style={styles.personalGoalsText}>
             De deterministische macrocycli, intensiteitsdoelen en herstelregels
-            zijn nog niet beoordeeld. Daarom kan Start23 deze doelen nog niet
+            zijn nog niet beoordeeld. Daarom kan Wombo deze doelen nog niet
             opslaan of als wedstrijdplan behandelen.
           </Text>
           <View style={styles.personalGoalList}>
@@ -645,7 +645,7 @@ const zoneSetupRoutes: ReadonlyArray<{
     piste: 'Piste B',
     title: 'Automatisch kalibreren',
     description:
-      'Laat Start23 een veilige test- of kalibratietraining in je schema opnemen.',
+      'Laat Wombo een veilige test- of kalibratietraining in je schema opnemen.',
   },
   {
     route: 'fallback',
@@ -734,7 +734,7 @@ function ZonesStep({
 
   return (
     <StepFrame
-      description="Kies per discipline hoe Start23 je trainingszones mag instellen. Een berekende wijziging wordt nooit automatisch actief."
+      description="Kies per discipline hoe Wombo je trainingszones mag instellen. Een berekende wijziging wordt nooit automatisch actief."
       eyebrow="Stap 4 van 5"
       title={`Zones voor ${
         discipline === 'swim'
@@ -886,7 +886,7 @@ function ZonesStep({
             Automatische kalibratie via je trainingsschema
           </Text>
           <Text style={styles.routeExplanationText}>
-            Start23 zal hiervoor een gestandaardiseerde test- of
+            Wombo zal hiervoor een gestandaardiseerde test- of
             kalibratietraining in je eerste trainingsweek plaatsen. Na je
             training worden meetgegevens en je gevoelsscore gebruikt voor een
             zonevoorstel dat je nog moet bevestigen.
@@ -1213,7 +1213,7 @@ export function OnboardingScreen({
               <Text style={styles.logoMarkText}>23</Text>
             </View>
             <View>
-              <Text style={styles.logo}>Start23</Text>
+              <Text style={styles.logo}>Wombo</Text>
               <Text style={styles.headerCaption}>Jouw profiel</Text>
             </View>
           </View>
