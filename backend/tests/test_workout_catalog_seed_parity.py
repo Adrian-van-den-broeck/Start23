@@ -7,8 +7,8 @@ from pathlib import Path
 from typing import Any
 
 from app.modules.workouts.catalog import (
-    PHASE_11_FIELD_TEST_ADDITIONS,
     PHASE_6_CATALOG_ADDITIONS,
+    PHASE_11_FIELD_TEST_ADDITIONS,
     REVIEWED_CATALOG,
 )
 
@@ -211,16 +211,13 @@ def test_phase_11_field_tests_match_durable_duration_and_load_seeds() -> None:
     segment_rows = _insert_rows("public.workout_segments", _PHASE_11_MIGRATION)
     load_rows = _load_rows(_PHASE_11_MIGRATION)
 
-    durable_durations = {
-        str(row[0]): _decimal(row[6]) for row in template_rows
-    }
+    durable_durations = {str(row[0]): _decimal(row[6]) for row in template_rows}
     durable_segment_durations: dict[str, Decimal] = {}
     for row in segment_rows:
         template_id = str(row[0])
-        durable_segment_durations[template_id] = (
-            durable_segment_durations.get(template_id, Decimal(0))
-            + _decimal(row[4])
-        )
+        durable_segment_durations[template_id] = durable_segment_durations.get(
+            template_id, Decimal(0)
+        ) + _decimal(row[4])
 
     for template in PHASE_11_FIELD_TEST_ADDITIONS:
         template_id = str(template.id)

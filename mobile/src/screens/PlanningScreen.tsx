@@ -17,6 +17,7 @@ import {
   ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
+  PanResponder,
   Platform,
   ScrollView,
   StyleSheet,
@@ -34,17 +35,19 @@ import {
 
 import {
   approvePlanProposal,
-  createScheduleProposal,
-  createWeeklyPlanProposal,
+  createSwipeWeekDraft,
   editPendingWorkout,
   getCalendar,
   getOnboarding,
   getPendingWorkoutAlternatives,
+  getSwipeWeekDraft,
   getWeeklyPlan,
-  getWorkoutDeck,
   markGoalAchieved,
   movePlannedWorkout,
+  placeSwipeWeekWorkout,
   rejectPlanProposal,
+  submitSwipeWeekDraft,
+  transitionSwipeWeekDraft,
   validatePlanLayout,
 } from '../api/client';
 import type {
@@ -54,14 +57,17 @@ import type {
   PlannedWorkout,
   PrimaryRaceGoal,
   RestDay,
+  SwipeWeekDraft,
   WeeklyPlan,
-  WorkoutDeck,
   WorkoutDeckItem,
 } from '../api/types';
 import { FadeInView } from '../components/FadeInView';
 import { FormField } from '../components/FormField';
+import { LanguageSelector } from '../components/LanguageSelector';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
+import { TrainingCalendar } from '../components/TrainingCalendar';
+import { useLanguage } from '../i18n/LanguageProvider';
 import { formatIsoDateInput } from '../lib/dateInput';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
 
@@ -77,7 +83,6 @@ type PlanningScreenProps = {
 
 type ViewName = 'plan' | 'deck' | 'calendar';
 
-const dayLabels = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'] as const;
 const disciplineLabels: Record<Discipline, string> = {
   swim: 'Zwemmen',
   bike: 'Fietsen',
@@ -89,6 +94,7 @@ const disciplineTrainingLabels: Record<Discipline, string> = {
   run: 'looptraining',
 };
 const latestPlanIdKey = 'start23.latest-plan-id';
+const latestSwipeDraftIdKey = 'start23.latest-swipe-draft-id';
 
 const warningCopy: Record<string, { message: string; title: string }> = {
   all_disciplines_blocked_rest_only: {
@@ -164,6 +170,17 @@ async function rememberPlanId(planId: string | null): Promise<void> {
     await SecureStore.deleteItemAsync(latestPlanIdKey);
   } else {
     await SecureStore.setItemAsync(latestPlanIdKey, planId, {
+      keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+    });
+  }
+}
+
+async function rememberSwipeDraftId(draftId: string | null): Promise<void> {
+  if (Platform.OS === 'web') return;
+  if (draftId === null) {
+    await SecureStore.deleteItemAsync(latestSwipeDraftIdKey);
+  } else {
+    await SecureStore.setItemAsync(latestSwipeDraftIdKey, draftId, {
       keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     });
   }
@@ -255,16 +272,21 @@ function ActionButton({
 }
 
 function WorkoutCard({ workout }: { workout: PlannedWorkout }) {
+  const { language, locale, t } = useLanguage();
   const scheduled = new Date(`${workout.scheduled_date}T12:00:00`);
+  const localizedDisciplines: Record<Discipline, string> =
+    language === 'nl'
+      ? disciplineLabels
+      : { swim: 'Swimming', bike: 'Cycling', run: 'Running' };
   return (
     <View style={styles.workoutCard}>
       <View style={styles.cardHeader}>
         <StatusPill
-          label={disciplineLabels[workout.discipline]}
+          label={localizedDisciplines[workout.discipline]}
           tone={workout.intensity_bucket === 'high' ? 'accent' : 'neutral'}
         />
         <Text style={styles.cardMeta}>
-          {scheduled.toLocaleDateString('nl-NL', {
+          {scheduled.toLocaleDateString(locale, {
             weekday: 'short',
             day: 'numeric',
           })}
@@ -273,8 +295,9 @@ function WorkoutCard({ workout }: { workout: PlannedWorkout }) {
       <Text style={styles.cardTitle}>{workout.name}</Text>
       <Text style={styles.cardDescription}>{workout.description}</Text>
       <Text style={styles.cardMeta}>
-        {Number(workout.duration_minutes)} min · RPE {workout.expected_rpe_min}–
-        {workout.expected_rpe_max}
+        {t('common.durationMinutes', {
+          minutes: Number(workout.duration_minutes),
+        })}
       </Text>
     </View>
   );
@@ -446,8 +469,7 @@ function PendingWorkoutEditor({
                 {item.description}
               </Text>
               <Text style={styles.cardMeta}>
-                {Number(item.duration_minutes)} min · RPE {item.expected_rpe_min}–
-                {item.expected_rpe_max} · {index + 1}/{candidates.length}
+                {Number(item.duration_minutes)} min · {index + 1}/{candidates.length}
               </Text>
             </View>
           );
@@ -478,6 +500,237 @@ function PendingWorkoutEditor({
   );
 }
 
+function SwipeDraftPanel({
+  busy,
+  draft,
+  onPlace,
+  onSubmit,
+  onTransition,
+}: {
+  busy: boolean;
+  draft: SwipeWeekDraft;
+  onPlace: (templateId: string, scheduledDate: string) => void;
+  onSubmit: (mode: 'automatic' | 'manual') => void;
+  onTransition: (
+    action: 'accept' | 'pass' | 'undo' | 'reset_passed',
+  ) => void;
+}) {
+  const candidate = draft.current_candidate;
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: (_, gesture) =>
+          !busy &&
+          candidate !== null &&
+          Math.abs(gesture.dx) > 14 &&
+          Math.abs(gesture.dx) > Math.abs(gesture.dy),
+        onPanResponderRelease: (_, gesture) => {
+          if (gesture.dx <= -64) onTransition('pass');
+          if (gesture.dx >= 64) onTransition('accept');
+        },
+      }),
+    [busy, candidate, onTransition],
+  );
+  const placementByTemplate = useMemo(
+    () =>
+      new Map(
+        draft.placements.map((placement) => [
+          placement.template_id,
+          placement.scheduled_date,
+        ]),
+      ),
+    [draft.placements],
+  );
+  const manualComplete =
+    draft.placements.length === draft.accepted_workouts.length;
+  const weekDates = useMemo(
+    () =>
+      Array.from({ length: 7 }, (_, dayOffset) =>
+        isoDate(addDays(draft.week_start, dayOffset)),
+      ),
+    [draft.week_start],
+  );
+
+  return (
+    <View style={styles.panel}>
+      <StatusPill
+        label={draft.state === 'collecting' ? 'Kiezen' : 'Inplannen'}
+        tone="brand"
+      />
+      <Text style={styles.title}>Stel je week samen</Text>
+      <View style={styles.selectionProgress}>
+        <Text style={styles.selectionProgressValue}>
+          {draft.accepted_workouts.length} van {draft.target_workout_count} gekozen
+        </Text>
+        <Text style={styles.selectionProgressLabel}>
+          Doel: {draft.target_composition.swim} zwemmen ·{' '}
+          {draft.target_composition.bike} fietsen · {draft.target_composition.run}{' '}
+          lopen
+        </Text>
+      </View>
+
+      {draft.state === 'collecting' && candidate ? (
+        <>
+          <View
+            accessible
+            accessibilityLabel={`${candidate.name}. Swipe links om over te slaan of rechts om te kiezen.`}
+            {...panResponder.panHandlers}
+            style={styles.swipeDecisionCard}
+          >
+            <View style={styles.cardHeader}>
+              <StatusPill
+                label={disciplineLabels[candidate.discipline]}
+                tone={
+                  candidate.intensity_bucket === 'high' ? 'accent' : 'neutral'
+                }
+              />
+              <Text style={styles.cardMeta}>
+                {Number(candidate.duration_minutes)} min
+              </Text>
+            </View>
+            <Text style={styles.cardTitle}>{candidate.name}</Text>
+            <Text style={styles.cardDescription}>{candidate.description}</Text>
+            <Text style={styles.swipeInstruction}>
+              ← overslaan · kiezen →
+            </Text>
+          </View>
+          <View style={styles.decisionRow}>
+            <View style={styles.decisionButton}>
+              <ActionButton
+                disabled={busy}
+                label="Overslaan"
+                onPress={() => onTransition('pass')}
+                secondary
+              />
+            </View>
+            <View style={styles.decisionButton}>
+              <ActionButton
+                disabled={busy}
+                label="Kiezen"
+                onPress={() => onTransition('accept')}
+              />
+            </View>
+          </View>
+        </>
+      ) : null}
+
+      {draft.state === 'collecting' && !candidate ? (
+        <View style={styles.warning}>
+          <Text style={styles.warningTitle}>Geen nieuwe geldige kaarten</Text>
+          <Text style={styles.warningText}>
+            Zet overgeslagen kaarten terug of maak je laatste keuze ongedaan.
+          </Text>
+        </View>
+      ) : null}
+
+      {draft.state === 'collecting' ? (
+        <View style={styles.decisionRow}>
+          <View style={styles.decisionButton}>
+            <ActionButton
+              disabled={busy || !draft.can_undo}
+              label="Ongedaan maken"
+              onPress={() => onTransition('undo')}
+              secondary
+            />
+          </View>
+          <View style={styles.decisionButton}>
+            <ActionButton
+              disabled={busy || draft.passed_count === 0}
+              label="Opnieuw bekijken"
+              onPress={() => onTransition('reset_passed')}
+              secondary
+            />
+          </View>
+        </View>
+      ) : null}
+
+      {draft.state === 'placement' ? (
+        <>
+          <Text style={styles.body}>
+            Laat Wombo automatisch plannen, of kies voor iedere training een
+            bevestigde datum. Iedere handmatige plaatsing wordt direct als
+            volledige week door de server gecontroleerd.
+          </Text>
+          {draft.warnings.map((warning) => {
+            const presentation = warningPresentation(warning);
+            return (
+              <View key={warning.id ?? warning.code} style={styles.warning}>
+                <Text style={styles.warningTitle}>{presentation.title}</Text>
+                <Text style={styles.warningText}>{presentation.message}</Text>
+              </View>
+            );
+          })}
+          <ActionButton
+            disabled={busy}
+            label="Plan datums automatisch"
+            onPress={() => onSubmit('automatic')}
+          />
+          {draft.accepted_workouts.map((workout) => (
+            <View key={workout.id} style={styles.placementCard}>
+              <View style={styles.cardHeader}>
+                <Text style={styles.cardTitle}>{workout.name}</Text>
+                <StatusPill
+                  label={disciplineLabels[workout.discipline]}
+                  tone="neutral"
+                />
+              </View>
+              <ScrollView
+                contentContainerStyle={styles.dateChoiceRow}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              >
+                {weekDates.map((scheduledDate) => {
+                  const selected =
+                    placementByTemplate.get(workout.id) === scheduledDate;
+                  const available = draft.available_dates.includes(scheduledDate);
+                  return (
+                    <Pressable
+                      accessibilityRole="radio"
+                      accessibilityState={{ checked: selected }}
+                      disabled={busy || !available}
+                      key={scheduledDate}
+                      onPress={() => onPlace(workout.id, scheduledDate)}
+                      style={[
+                        styles.dateChoice,
+                        selected && styles.choiceActive,
+                        !available && styles.actionDisabled,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.choiceText,
+                          selected && styles.choiceTextActive,
+                        ]}
+                      >
+                        {new Date(`${scheduledDate}T12:00:00`).toLocaleDateString(
+                          'nl-NL',
+                          { day: 'numeric', weekday: 'short' },
+                        )}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+            </View>
+          ))}
+          <ActionButton
+            disabled={busy || !manualComplete}
+            label="Controleer handmatige planning"
+            onPress={() => onSubmit('manual')}
+            secondary
+          />
+          <ActionButton
+            disabled={busy || !draft.can_undo}
+            label="Terug naar kiezen"
+            onPress={() => onTransition('undo')}
+            secondary
+          />
+        </>
+      ) : null}
+    </View>
+  );
+}
+
 export function PlanningScreen({
   accessToken,
   onBackToOnboarding,
@@ -487,6 +740,7 @@ export function PlanningScreen({
   onOpenZoneProfile,
   onSignOut,
 }: PlanningScreenProps) {
+  const { language, locale, t } = useLanguage();
   const safeAreaInsets = useSafeAreaInsets();
   const [view, setView] = useState<ViewName>('plan');
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
@@ -498,13 +752,7 @@ export function PlanningScreen({
   );
   const [injuries, setInjuries] = useState<Set<Discipline>>(() => new Set());
   const [plan, setPlan] = useState<WeeklyPlan | null>(null);
-  const [deck, setDeck] = useState<WorkoutDeck | null>(null);
-  const [selectedTemplates, setSelectedTemplates] = useState<Set<string>>(
-    () => new Set(),
-  );
-  const [eligibleTemplateIds, setEligibleTemplateIds] = useState<Set<string>>(
-    () => new Set(),
-  );
+  const [swipeDraft, setSwipeDraft] = useState<SwipeWeekDraft | null>(null);
   const [calendarWorkouts, setCalendarWorkouts] = useState<PlannedWorkout[]>([]);
   const [calendarRestDays, setCalendarRestDays] = useState<RestDay[]>([]);
   const [moveDates, setMoveDates] = useState<Record<string, string>>({});
@@ -512,6 +760,15 @@ export function PlanningScreen({
   const [maintenanceMarked, setMaintenanceMarked] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const dayLabels = useMemo(
+    () =>
+      Array.from({ length: 7 }, (_, index) =>
+        new Date(2026, 7, 3 + index, 12)
+          .toLocaleDateString(locale, { weekday: 'short' })
+          .replace('.', ''),
+      ),
+    [locale],
+  );
 
   const renderProfileBackdrop = useCallback(
     (props: ComponentProps<typeof BottomSheetBackdrop>) => (
@@ -547,24 +804,60 @@ export function PlanningScreen({
   useEffect(() => {
     if (Platform.OS === 'web') return;
     let mounted = true;
-    SecureStore.getItemAsync(latestPlanIdKey)
-      .then(async (planId) => {
+    SecureStore.getItemAsync(latestSwipeDraftIdKey)
+      .then(async (draftId) => {
+        if (!draftId) return false;
+        try {
+          const restored = await getSwipeWeekDraft(accessToken, draftId);
+          if (restored.state === 'submitted' && restored.plan_id) {
+            const submittedPlan = await getWeeklyPlan(
+              accessToken,
+              restored.plan_id,
+            );
+            await Promise.all([
+              rememberPlanId(submittedPlan.id),
+              rememberSwipeDraftId(null),
+            ]);
+            if (mounted) {
+              setPlan(submittedPlan);
+              setWeekStart(submittedPlan.week_start);
+              setView('plan');
+            }
+            return true;
+          }
+          if (mounted) {
+            setSwipeDraft(restored);
+            setWeekStart(restored.week_start);
+            setReusePreviousWeek(
+              restored.availability_source === 'previous_week',
+            );
+            setSelectedDays(
+              dayOffsetsFor(restored.week_start, restored.available_dates),
+            );
+            setView('deck');
+          }
+          return true;
+        } catch {
+          await rememberSwipeDraftId(null);
+          return false;
+        }
+      })
+      .then(async (draftRestored) => {
+        if (draftRestored) return;
+        const planId = await SecureStore.getItemAsync(latestPlanIdKey);
         if (!planId) return;
         try {
           const restored = await getWeeklyPlan(accessToken, planId);
           if (mounted) {
             setPlan(restored);
             setWeekStart(restored.week_start);
-            setReusePreviousWeek(restored.availability_source === 'previous_week');
+            setReusePreviousWeek(
+              restored.availability_source === 'previous_week',
+            );
             setSelectedDays(
               dayOffsetsFor(restored.week_start, restored.available_dates),
             );
             setInjuries(new Set(restored.confirmed_injuries));
-            setSelectedTemplates(
-              new Set(
-                restored.workouts.map((workout) => workout.template_id),
-              ),
-            );
           }
         } catch {
           await rememberPlanId(null);
@@ -623,20 +916,23 @@ export function PlanningScreen({
       if (!reusePreviousWeek && dates.length === 0) {
         throw new Error('Kies minstens één beschikbare trainingsdag.');
       }
-      const result = await createWeeklyPlanProposal(accessToken, {
+      const boundPlan = plan?.revision_state === 'active' ? plan : null;
+      const result = await createSwipeWeekDraft(accessToken, {
         week_start: weekStart,
         ...(reusePreviousWeek
           ? { reuse_previous_week: true }
           : { available_dates: dates }),
         confirmed_injuries: [...injuries],
+        ...(boundPlan
+          ? {
+              plan_id: boundPlan.id,
+              expected_base_revision: boundPlan.active_revision ?? 0,
+            }
+          : {}),
       });
-      await rememberPlanId(result.plan.id);
-      setPlan(result.plan);
-      setDeck(null);
-      setEligibleTemplateIds(new Set());
-      setSelectedTemplates(
-        new Set(result.plan.workouts.map((workout) => workout.template_id)),
-      );
+      await rememberSwipeDraftId(result.id);
+      setSwipeDraft(result);
+      setView('deck');
     });
 
   const approve = () => {
@@ -661,38 +957,65 @@ export function PlanningScreen({
 
   const openDeck = () => {
     setView('deck');
-    if (!plan || deck) return;
-    void run(async () => {
-      const result = await getWorkoutDeck(accessToken, plan.id);
-      setDeck(result);
-      setEligibleTemplateIds(new Set(result.templates.map((template) => template.id)));
-      if (selectedTemplates.size === 0) {
-        setSelectedTemplates(
-          new Set(plan.workouts.map((workout) => workout.template_id)),
+  };
+
+  const transitionDraft = useCallback(
+    (action: 'accept' | 'pass' | 'undo' | 'reset_passed') => {
+      if (!swipeDraft) return;
+      const candidateId = swipeDraft.current_candidate?.id;
+      if ((action === 'accept' || action === 'pass') && !candidateId) return;
+      void run(async () => {
+        const updated = await transitionSwipeWeekDraft(
+          accessToken,
+          swipeDraft.id,
+          {
+            expected_revision: swipeDraft.revision,
+            action,
+            ...(candidateId && (action === 'accept' || action === 'pass')
+              ? { candidate_template_id: candidateId }
+              : {}),
+          },
         );
-      }
+        setSwipeDraft(updated);
+        void Haptics.selectionAsync().catch(() => undefined);
+      });
+    },
+    [accessToken, swipeDraft],
+  );
+
+  const placeDraftWorkout = (templateId: string, scheduledDate: string) => {
+    if (!swipeDraft) return;
+    void run(async () => {
+      const updated = await placeSwipeWeekWorkout(
+        accessToken,
+        swipeDraft.id,
+        templateId,
+        swipeDraft.revision,
+        scheduledDate,
+      );
+      setSwipeDraft(updated);
     });
   };
 
-  const toggleTemplate = (templateId: string) => {
-    if (!plan) return;
-    const next = new Set(selectedTemplates);
-    if (next.has(templateId)) next.delete(templateId);
-    else next.add(templateId);
-    setSelectedTemplates(next);
+  const submitDraft = (placementMode: 'automatic' | 'manual') => {
+    if (!swipeDraft) return;
     void run(async () => {
-      const recalculated = await getWorkoutDeck(
+      const result = await submitSwipeWeekDraft(
         accessToken,
-        plan.id,
-        plan.revision,
-        [...next],
+        swipeDraft.id,
+        swipeDraft.revision,
+        placementMode,
       );
-      setEligibleTemplateIds(
-        new Set([
-          ...next,
-          ...recalculated.templates.map((template) => template.id),
-        ]),
-      );
+      await Promise.all([
+        rememberPlanId(result.plan.id),
+        rememberSwipeDraftId(null),
+      ]);
+      setSwipeDraft(null);
+      setPlan(result.plan);
+      setView('plan');
+      void Haptics.notificationAsync(
+        Haptics.NotificationFeedbackType.Success,
+      ).catch(() => undefined);
     });
   };
 
@@ -762,36 +1085,32 @@ export function PlanningScreen({
     );
   };
 
-  const proposeSelection = () => {
-    if (!plan) return;
-    void run(async () => {
-      const result = await createScheduleProposal(accessToken, plan.id, {
-        expected_base_revision:
-          plan.active_revision ?? plan.proposal?.base_plan_revision ?? 0,
-        available_dates: availableDatesFor(weekStart, selectedDays),
-        confirmed_injuries: [...injuries],
-        selected_template_ids: [...selectedTemplates],
-      });
-      await rememberPlanId(result.plan.id);
-      setPlan(result.plan);
-      setView('plan');
-    });
-  };
-
   const openCalendar = () => {
     setView('calendar');
-    void run(async () => {
-      const start = isoDate(addDays(plan?.week_start ?? weekStart, 0));
-      const end = isoDate(addDays(plan?.week_start ?? weekStart, 7));
-      const result = await getCalendar(
-        accessToken,
-        start,
-        end,
-      );
-      setCalendarWorkouts(result.workouts);
-      setCalendarRestDays(result.rest_days);
-    });
   };
+
+  const loadCalendarRange = useCallback(
+    (fromDate: string, toDate: string) => {
+      setBusy(true);
+      setError(null);
+      getCalendar(accessToken, fromDate, toDate)
+        .then((result) => {
+          setCalendarWorkouts(result.workouts);
+          setCalendarRestDays(result.rest_days);
+        })
+        .catch((caught) =>
+          setError(
+            caught instanceof Error
+              ? caught.message
+              : language === 'nl'
+                ? 'De kalender kon niet worden geladen.'
+                : 'The calendar could not be loaded.',
+          ),
+        )
+        .finally(() => setBusy(false));
+    },
+    [accessToken, language],
+  );
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
@@ -802,7 +1121,7 @@ export function PlanningScreen({
           </View>
           <View>
             <Text style={styles.logo}>Wombo</Text>
-            <Text style={styles.headerCaption}>Jouw trainingsweek</Text>
+            <Text style={styles.headerCaption}>{t('planning.headerCaption')}</Text>
           </View>
         </View>
         <Pressable
@@ -820,9 +1139,9 @@ export function PlanningScreen({
             <Text style={styles.avatarText}>JIJ</Text>
           </View>
           <View style={styles.profileControlCopy}>
-            <Text style={styles.profileControlTitle}>Profiel</Text>
+            <Text style={styles.profileControlTitle}>{t('planning.profile')}</Text>
             <Text style={styles.profileControlMeta}>
-              {profileMenuOpen ? 'Sluiten' : 'Open menu'}
+              {profileMenuOpen ? t('common.close') : t('planning.profileMenu')}
             </Text>
           </View>
           <Text style={styles.profileChevron}>{profileMenuOpen ? '-' : '+'}</Text>
@@ -842,12 +1161,12 @@ export function PlanningScreen({
         <BottomSheetView style={styles.profileSheet}>
           <View style={styles.profileMenuHeading}>
             <View>
-              <Text style={styles.profileMenuEyebrow}>Persoonlijke ruimte</Text>
-              <Text style={styles.profileMenuTitle}>Alles over jouw setup</Text>
+              <Text style={styles.profileMenuEyebrow}>{t('planning.profilePersonal')}</Text>
+              <Text style={styles.profileMenuTitle}>{t('planning.profileSetup')}</Text>
             </View>
             <View style={styles.profileStatus}>
               <View style={styles.profileStatusDot} />
-              <Text style={styles.profileStatusText}>Actief</Text>
+              <Text style={styles.profileStatusText}>{t('common.active')}</Text>
             </View>
           </View>
           <View style={styles.profileMenuGrid}>
@@ -862,7 +1181,7 @@ export function PlanningScreen({
             >
               <Text style={styles.profileMenuItemCode}>P</Text>
               <Text style={styles.profileMenuItemTitle}>Intakeprofiel</Text>
-              <Text style={styles.profileMenuItemMeta}>Gegevens en doel</Text>
+              <Text style={styles.profileMenuItemMeta}>{t('planning.profileData')}</Text>
             </Pressable>
             <Pressable
               accessibilityRole="button"
@@ -875,9 +1194,10 @@ export function PlanningScreen({
             >
               <Text style={styles.profileMenuItemCode}>I</Text>
               <Text style={styles.profileMenuItemTitle}>Integraties</Text>
-              <Text style={styles.profileMenuItemMeta}>Apps en data</Text>
+              <Text style={styles.profileMenuItemMeta}>{t('planning.profileIntegrations')}</Text>
             </Pressable>
           </View>
+          <LanguageSelector />
           <Pressable
             accessibilityRole="button"
             onPress={() => {
@@ -889,7 +1209,7 @@ export function PlanningScreen({
               pressed && styles.pressed,
             ]}
           >
-            <Text style={styles.signOutText}>Veilig afmelden</Text>
+            <Text style={styles.signOutText}>{t('planning.safeSignOut')}</Text>
           </Pressable>
         </BottomSheetView>
       </BottomSheetModal>
@@ -919,7 +1239,7 @@ export function PlanningScreen({
           <View style={[styles.quickActionIcon, styles.quickActionIconAccent]}>
             <Text style={styles.quickActionIconText}>R</Text>
           </View>
-          <Text style={styles.quickActionText}>Training & RPE</Text>
+          <Text style={styles.quickActionText}>{t('planning.trainingRpe')}</Text>
         </Pressable>
         <Pressable
           accessibilityRole="button"
@@ -934,7 +1254,7 @@ export function PlanningScreen({
           <View style={[styles.quickActionIcon, styles.quickActionIconGold]}>
             <Text style={styles.quickActionIconText}>Z</Text>
           </View>
-          <Text style={styles.quickActionText}>Mijn zones</Text>
+          <Text style={styles.quickActionText}>{t('planning.myZones')}</Text>
         </Pressable>
       </View>
 
@@ -946,7 +1266,7 @@ export function PlanningScreen({
           style={[styles.tab, view === 'plan' && styles.tabActive]}
         >
           <Text style={[styles.tabText, view === 'plan' && styles.tabTextActive]}>
-            Week
+            {t('planning.week')}
           </Text>
         </Pressable>
         <Pressable
@@ -956,7 +1276,7 @@ export function PlanningScreen({
           style={[styles.tab, view === 'deck' && styles.tabActive]}
         >
           <Text style={[styles.tabText, view === 'deck' && styles.tabTextActive]}>
-            Kiezen
+            {t('planning.choose')}
           </Text>
         </Pressable>
         <Pressable
@@ -968,7 +1288,7 @@ export function PlanningScreen({
           <Text
             style={[styles.tabText, view === 'calendar' && styles.tabTextActive]}
           >
-            Kalender
+            {t('planning.calendar')}
           </Text>
         </Pressable>
       </View>
@@ -1178,7 +1498,6 @@ export function PlanningScreen({
                       label="Nieuw voorstel voorbereiden"
                       onPress={() => {
                         setPlan(null);
-                        setDeck(null);
                         void rememberPlanId(null);
                       }}
                       secondary
@@ -1207,13 +1526,6 @@ export function PlanningScreen({
                         busy={busy}
                         onEdited={(updated) => {
                           setPlan(updated);
-                          setDeck(null);
-                          setEligibleTemplateIds(new Set());
-                          setSelectedTemplates(
-                            new Set(
-                              updated.workouts.map((item) => item.template_id),
-                            ),
-                          );
                         }}
                         onError={setError}
                         plan={plan}
@@ -1280,130 +1592,36 @@ export function PlanningScreen({
         ) : null}
 
         {view === 'deck' ? (
-          <View style={styles.panel}>
-            <StatusPill label="Precieze keuze" tone="brand" />
-            <Text style={styles.title}>Je weekcombinatie</Text>
-            <Text style={styles.body}>
-              Op de Week-tab swipe je per trainingsslot. Hier kun je dezelfde
-              combinatie met tikbediening controleren en aanpassen.
-            </Text>
-            {!plan ? (
-              <Text style={styles.body}>Maak eerst een weekvoorstel.</Text>
-            ) : null}
-            {plan ? (
-              <View style={styles.selectionProgress}>
-                <Text style={styles.selectionProgressValue}>
-                  {selectedTemplates.size} van {plan.workouts.length} gekozen
-                </Text>
-                <Text style={styles.selectionProgressLabel}>
-                  Iedere wijziging wordt opnieuw server-side gecontroleerd
-                </Text>
-              </View>
-            ) : null}
-            {deck?.templates.map((template) => {
-              const selected = selectedTemplates.has(template.id);
-              const eligible =
-                selected || eligibleTemplateIds.has(template.id);
-              return (
-                <Pressable
-                  accessibilityRole="checkbox"
-                  accessibilityState={{ checked: selected }}
-                  disabled={!eligible || busy}
-                  key={template.id}
-                  onPress={() => toggleTemplate(template.id)}
-                  style={[
-                    styles.deckCard,
-                    selected && styles.deckCardSelected,
-                    !eligible && styles.actionDisabled,
-                  ]}
-                >
-                  <View style={styles.cardHeader}>
-                    <Text style={styles.cardTitle}>{template.name}</Text>
-                    <StatusPill
-                      label={
-                        template.intensity_bucket === 'high'
-                          ? 'Intensief'
-                          : 'Rustig'
-                      }
-                      tone={
-                        template.intensity_bucket === 'high'
-                          ? 'accent'
-                          : 'neutral'
-                      }
-                    />
-                  </View>
-                  <Text style={styles.cardDescription}>
-                    {disciplineLabels[template.discipline]} ·{' '}
-                    {Number(template.duration_minutes)} min · RPE{' '}
-                    {template.expected_rpe_min}–{template.expected_rpe_max}
-                  </Text>
-                  <View style={styles.deckSelectionRow}>
-                    <View
-                      style={[
-                        styles.deckSelectionIcon,
-                        selected && styles.deckSelectionIconActive,
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.deckSelectionIconText,
-                          selected && styles.deckSelectionIconTextActive,
-                        ]}
-                      >
-                        {selected ? '✓' : '+'}
-                      </Text>
-                    </View>
-                    <Text
-                      style={[
-                        styles.deckSelectionText,
-                        selected && styles.deckSelectionTextActive,
-                      ]}
-                    >
-                      {selected
-                        ? 'Gekozen voor deze week'
-                        : eligible
-                          ? 'Tik om deze training te kiezen'
-                          : 'Niet combineerbaar met je huidige keuze'}
-                    </Text>
-                  </View>
-                </Pressable>
-              );
-            })}
-            {plan ? (
-              <ActionButton
-                disabled={
-                  busy || selectedTemplates.size !== plan.workouts.length
-                }
-                label="Controleer deze combinatie"
-                onPress={proposeSelection}
-              />
-            ) : null}
-          </View>
+          swipeDraft ? (
+            <SwipeDraftPanel
+              busy={busy}
+              draft={swipeDraft}
+              onPlace={placeDraftWorkout}
+              onSubmit={submitDraft}
+              onTransition={transitionDraft}
+            />
+          ) : (
+            <View style={styles.panel}>
+              <StatusPill label="Nieuwe week" tone="brand" />
+              <Text style={styles.title}>Nog geen open keuzeronde</Text>
+              <Text style={styles.body}>
+                Start op de Week-tab. Daarna toont Wombo telkens precies één
+                server-gecontroleerde training.
+              </Text>
+              <ActionButton label="Naar Week" onPress={() => setView('plan')} />
+            </View>
+          )
         ) : null}
 
         {view === 'calendar' ? (
           <View style={styles.panel}>
-            <Text style={styles.title}>Actieve kalender</Text>
-            <Text style={styles.body}>
-              Alleen goedgekeurde trainingen verschijnen hier.
-            </Text>
-            {calendarWorkouts.length === 0 && !busy ? (
-              <Text style={styles.hint}>Geen actieve trainingen in deze week.</Text>
-            ) : null}
-            {calendarWorkouts.map((workout) => (
-              <WorkoutCard key={workout.id} workout={workout} />
-            ))}
-            {calendarRestDays.map((restDay) => (
-              <View key={restDay.date} style={styles.restDay}>
-                <StatusPill label="Rustdag" tone="neutral" />
-                <Text style={styles.cardTitle}>{restDay.date}</Text>
-                <Text style={styles.body}>
-                  {restDay.reason === 'restriction_rest'
-                    ? 'Bewuste rust door bevestigde beperkingen.'
-                    : 'Bewust leeg gelaten in het actieve plan.'}
-                </Text>
-              </View>
-            ))}
+            <TrainingCalendar
+              initialDate={plan?.week_start ?? weekStart}
+              loading={busy}
+              onRangeChange={loadCalendarRange}
+              restDays={calendarRestDays}
+              workouts={calendarWorkouts}
+            />
           </View>
         ) : null}
         </FadeInView>
@@ -1728,6 +1946,23 @@ const styles = StyleSheet.create({
     backgroundColor: colors.brandSoft,
     borderColor: colors.brand,
   },
+  swipeDecisionCard: {
+    ...shadows.card,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.brand,
+    borderRadius: radius.lg,
+    borderWidth: 2,
+    gap: spacing.sm,
+    minHeight: 220,
+    padding: spacing.lg,
+  },
+  swipeInstruction: {
+    color: colors.brand,
+    fontSize: 12,
+    fontWeight: '900',
+    marginTop: 'auto',
+    textAlign: 'center',
+  },
   selectedLabel: {
     color: colors.brand,
     fontSize: 11,
@@ -1781,51 +2016,22 @@ const styles = StyleSheet.create({
   warningText: { color: colors.ink, fontSize: 13, lineHeight: 18 },
   decisionRow: { flexDirection: 'row', gap: spacing.sm },
   decisionButton: { flex: 1 },
-  deckCard: {
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.lineStrong,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    gap: spacing.xs,
+  placementCard: {
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.md,
+    gap: spacing.sm,
     padding: spacing.md,
   },
-  deckCardSelected: {
-    backgroundColor: colors.brandSoft,
-    borderColor: colors.brand,
-    borderWidth: 2,
-  },
-  deckSelectionRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginTop: spacing.xs,
-  },
-  deckSelectionIcon: {
+  dateChoiceRow: { gap: spacing.sm, paddingVertical: spacing.xs },
+  dateChoice: {
     alignItems: 'center',
     borderColor: colors.lineStrong,
     borderRadius: radius.pill,
     borderWidth: 1,
-    height: 24,
-    justifyContent: 'center',
-    width: 24,
+    minWidth: 72,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
   },
-  deckSelectionIconActive: {
-    backgroundColor: colors.brand,
-    borderColor: colors.brand,
-  },
-  deckSelectionIconText: {
-    color: colors.inkMuted,
-    fontSize: 13,
-    fontWeight: '900',
-  },
-  deckSelectionIconTextActive: { color: colors.white },
-  deckSelectionText: {
-    color: colors.inkMuted,
-    flex: 1,
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  deckSelectionTextActive: { color: colors.brand, fontWeight: '900' },
   hint: { color: colors.inkMuted, fontSize: 12, lineHeight: 18 },
   error: {
     backgroundColor: colors.dangerSoft,

@@ -183,6 +183,25 @@ Hosted application, linked lint/advisors, pgTAP, migration-ledger comparison,
 and two-real-user isolation are explicit release gates. No hosted or production
 database was changed.
 
+Phase 10.1 migration
+`20260901054333_phase_10_1_swipe_week_drafts` was generated with Supabase CLI
+`2.116.0` on 2026-09-01 and remains local/unapplied. It adds a TSS-free
+server-authoritative swipe draft with exact owner, week, base/context revision,
+availability, restrictions, ruleset, target composition, decision history and
+date-only placements. Authenticated clients receive owner-scoped read access
+through forced RLS and no direct write grant. Only two narrow service-role
+`SECURITY INVOKER` RPCs can create/resume or stale-safely update a draft, and
+the existing critical-write trigger guard plus a validation trigger protects
+the state machine and composition.
+
+The rollback-only `phase_10_1_swipe_week_drafts_test.sql` suite checks forced
+RLS, grants, invoker functions, critical-write/state triggers, owner and
+cross-owner reads, direct-write rejection and absence of TSS columns. Its local
+execution and lint attempt could not complete without a running local CLI/stack
+and was safely stopped. Migration application, pgTAP, lint/advisors,
+real-token isolation and hosted ledger comparison remain release gates; no
+hosted project was changed.
+
 ## Workflow
 
 Start23 uses reviewed imperative Supabase migrations:

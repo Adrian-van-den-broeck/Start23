@@ -869,9 +869,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                           <Text style={styles.muted}>
                             {segment.duration_seconds
                               ? `${segment.duration_seconds / 60} min`
-                              : `${segment.distance_meters} m`}{' '}
-                            · doel-RPE {segment.target_rpe_min}–
-                            {segment.target_rpe_max}
+                              : `${segment.distance_meters} m`}
                           </Text>
                         </View>
                       </View>
@@ -986,10 +984,6 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                         <Text style={styles.segmentTitle}>
                           {segment.order}.{' '}
                           {purposeLabels[segment.purpose] ?? segment.purpose}
-                        </Text>
-                        <Text style={styles.muted}>
-                          Doel-RPE {segment.target_rpe_min}–
-                          {segment.target_rpe_max}
                         </Text>
                         {segment.optional ? (
                           <Toggle

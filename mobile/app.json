@@ -43,7 +43,8 @@
       "expo-status-bar",
       "expo-secure-store",
       "expo-splash-screen",
-      "expo-router"
+      "expo-router",
+      "expo-localization"
     ]
   }
 }

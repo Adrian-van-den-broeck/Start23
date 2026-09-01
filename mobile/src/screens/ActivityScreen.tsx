@@ -28,6 +28,7 @@ import type {
 import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
+import { type AppLanguage, useLanguage } from '../i18n/LanguageProvider';
 import { colors, radius, spacing } from '../theme/tokens';
 
 type ActivityScreenProps = {
@@ -58,14 +59,40 @@ function isoDate(value: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-function resultLabel(activity: CompletedActivity): string {
-  return {
+function resultLabel(activity: CompletedActivity, language: AppLanguage): string {
+  const nl = {
     awaiting_rpe: 'RPE nodig',
     perfect_match: 'Goed aangesloten',
     overshoot: 'Zwaarder dan gepland',
     hidden_fatigue: 'Herstelsignaal',
     deviation: 'Afwijkende uitvoering',
     unplanned: 'Extra training',
+  } as const;
+  const en = {
+    awaiting_rpe: 'RPE needed',
+    perfect_match: 'Matched well',
+    overshoot: 'Harder than planned',
+    hidden_fatigue: 'Recovery signal',
+    deviation: 'Different execution',
+    unplanned: 'Extra workout',
+  } as const;
+  return (language === 'nl' ? nl : en)[activity.qualitative_result];
+}
+
+function resultMessage(activity: CompletedActivity, language: AppLanguage): string {
+  if (language === 'nl' || activity.qualitative_result === 'awaiting_rpe') {
+    return activity.public_message;
+  }
+  return {
+    perfect_match: 'The workout matched the planned effort well.',
+    overshoot:
+      'This workout was harder than planned. Any adjustment will remain a proposal first.',
+    hidden_fatigue:
+      'This easy workout felt notably harder than expected. Review any recovery proposal.',
+    deviation:
+      'The execution differed from the plan, but does not automatically require a correction.',
+    unplanned:
+      'This extra workout was not in your active plan. Any adjustment will remain a proposal first.',
   }[activity.qualitative_result];
 }
 
@@ -113,6 +140,11 @@ export function ActivityScreen({
   onPendingRpeChange,
   onSignOut,
 }: ActivityScreenProps) {
+  const { language, locale, t } = useLanguage();
+  const localizedDisciplineLabels: Record<Discipline, string> =
+    language === 'nl'
+      ? disciplineLabels
+      : { swim: 'Swimming', bike: 'Cycling', run: 'Running' };
   const [activities, setActivities] = useState<CompletedActivity[]>([]);
   const [workouts, setWorkouts] = useState<PlannedWorkout[]>([]);
   const [externalActivities, setExternalActivities] = useState<
@@ -308,14 +340,14 @@ export function ActivityScreen({
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
         <Pressable accessibilityRole="button" onPress={onBack}>
-          <Text style={styles.link}>Weekplanning</Text>
+          <Text style={styles.link}>{t('activity.back')}</Text>
         </Pressable>
         <View>
           <Text style={styles.logo}>Wombo</Text>
-          <Text style={styles.caption}>Training & RPE</Text>
+          <Text style={styles.caption}>{t('activity.title')}</Text>
         </View>
         <Pressable accessibilityRole="button" onPress={() => void onSignOut()}>
-          <Text style={styles.link}>Afmelden</Text>
+          <Text style={styles.link}>{t('activity.signOut')}</Text>
         </Pressable>
       </View>
 
@@ -337,23 +369,23 @@ export function ActivityScreen({
 
         {pendingRpe.map((activity) => (
           <View key={activity.id} style={styles.alertCard}>
-            <StatusPill label="RPE nodig" tone="accent" />
+            <StatusPill label={t('rpe.awaiting')} tone="accent" />
             <Text style={styles.cardTitle}>
-              {disciplineLabels[activity.discipline]} ·{' '}
+              {localizedDisciplineLabels[activity.discipline]} ·{' '}
               {Number(activity.duration_minutes)} min
             </Text>
-            <Text style={styles.body}>Hoe zwaar voelde deze training?</Text>
+            <Text style={styles.body}>{t('rpe.prompt')}</Text>
             <FormField
-              hint="Verplicht bij een toegewezen training die op RPE is gestuurd; deze observatie maakt zelf geen zones."
+              hint={t('activity.heartRateHint')}
               inputMode="numeric"
-              label="Gemiddelde hartslag (bpm)"
+              label={t('activity.heartRate')}
               onChangeText={(value) =>
                 setHeartRateByActivity((current) => ({
                   ...current,
                   [activity.id]: value,
                 }))
               }
-              placeholder="bijv. 149"
+              placeholder={t('activity.heartRatePlaceholder')}
               value={heartRateByActivity[activity.id] ?? ''}
             />
             <View style={styles.rpeGrid}>
@@ -375,9 +407,9 @@ export function ActivityScreen({
         ))}
 
         <View style={styles.panel}>
-          <Text style={styles.title}>Training registreren</Text>
+          <Text style={styles.title}>{t('activity.register')}</Text>
           <Text style={styles.body}>
-            Kies een geplande training, of registreer bewust een extra training.
+            {t('activity.registerHint')}
           </Text>
           <Pressable
             accessibilityRole="radio"
@@ -392,7 +424,7 @@ export function ActivityScreen({
                 styles.choiceActive,
             ]}
           >
-            <Text style={styles.choiceTitle}>Extra, ongeplande training</Text>
+            <Text style={styles.choiceTitle}>{t('activity.unplanned')}</Text>
           </Pressable>
           {workouts.map((workout) => (
             <Pressable
@@ -407,8 +439,8 @@ export function ActivityScreen({
             >
               <Text style={styles.choiceTitle}>{workout.name}</Text>
               <Text style={styles.meta}>
-                {disciplineLabels[workout.discipline]} ·{' '}
-                {new Date(`${workout.scheduled_date}T12:00:00`).toLocaleDateString('nl-NL')}
+                {localizedDisciplineLabels[workout.discipline]} ·{' '}
+                {new Date(`${workout.scheduled_date}T12:00:00`).toLocaleDateString(locale)}
               </Text>
             </Pressable>
           ))}
@@ -426,8 +458,8 @@ export function ActivityScreen({
             >
               <Text style={styles.choiceTitle}>{activity.name}</Text>
               <Text style={styles.meta}>
-                Buiten Wombo · {disciplineLabels[activity.discipline]} ·{' '}
-                {new Date(activity.scheduled_at).toLocaleDateString('nl-NL')}
+                {t('activity.external')} · {localizedDisciplineLabels[activity.discipline]} ·{' '}
+                {new Date(activity.scheduled_at).toLocaleDateString(locale)}
               </Text>
             </Pressable>
           ))}
@@ -450,7 +482,7 @@ export function ActivityScreen({
                         : styles.disciplineText
                     }
                   >
-                    {disciplineLabels[value]}
+                    {localizedDisciplineLabels[value]}
                   </Text>
                 </Pressable>
               ))}
@@ -458,25 +490,25 @@ export function ActivityScreen({
           ) : null}
           <FormField
             autoCapitalize="none"
-            label="Werkelijk gestart (ISO inclusief tijdzone)"
+            label={t('activity.startedAt')}
             onChangeText={setStartedAt}
             value={startedAt}
           />
           <FormField
             autoCapitalize="none"
-            label="Tijdzone van de activiteit"
+            label={t('activity.timezone')}
             onChangeText={setAthleteTimezone}
             value={athleteTimezone}
           />
           <FormField
             inputMode="decimal"
-            label="Werkelijke duur (minuten)"
+            label={t('activity.duration')}
             onChangeText={setDuration}
             value={duration}
           />
           <FormField
             inputMode="numeric"
-            label="Afstand (meter, optioneel)"
+            label={t('activity.distance')}
             onChangeText={setDistance}
             value={distance}
           />
@@ -486,14 +518,14 @@ export function ActivityScreen({
             onPress={() => void save()}
             style={[styles.action, busy && styles.disabled]}
           >
-            <Text style={styles.actionText}>Activiteit opslaan</Text>
+            <Text style={styles.actionText}>{t('activity.save')}</Text>
           </Pressable>
         </View>
 
         <View style={styles.recentHeading}>
-          <Text style={styles.title}>Recente activiteiten</Text>
+          <Text style={styles.title}>{t('activity.recent')}</Text>
           {activities.length === 0 ? (
-            <Text style={styles.body}>Nog geen activiteiten geregistreerd.</Text>
+            <Text style={styles.body}>{t('activity.noRecent')}</Text>
           ) : null}
         </View>
           </>
@@ -503,10 +535,10 @@ export function ActivityScreen({
             <View key={activity.id} style={styles.activityRow}>
               <View style={styles.activityHeader}>
                 <Text style={styles.cardTitle}>
-                  {disciplineLabels[activity.discipline]}
+                  {localizedDisciplineLabels[activity.discipline]}
                 </Text>
                 <StatusPill
-                  label={resultLabel(activity)}
+                  label={resultLabel(activity, language)}
                   tone={
                     activity.qualitative_result === 'perfect_match'
                       ? 'brand'
@@ -520,7 +552,7 @@ export function ActivityScreen({
                 {Number(activity.duration_minutes)} min
                 {activity.rpe === null ? '' : ` · RPE ${activity.rpe}`}
               </Text>
-              <Text style={styles.body}>{activity.public_message}</Text>
+              <Text style={styles.body}>{resultMessage(activity, language)}</Text>
               {activity.match_status === 'unmatched' &&
               activity.processing_state === 'awaiting_rpe' &&
               suggestedWorkout(activity, workouts) ? (
@@ -561,7 +593,7 @@ export function ActivityScreen({
                       )
                     }
                   >
-                    <Text style={styles.link}>RPE deze week corrigeren</Text>
+                    <Text style={styles.link}>{t('activity.correction')}</Text>
                   </Pressable>
                   {editingRpeActivityId === activity.id ? (
                     <View style={styles.rpeGrid}>

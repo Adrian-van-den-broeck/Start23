@@ -26,6 +26,7 @@ import type {
   WeeklyCheckIn,
   WeeklyPlan,
   WeeklyPlanProposal,
+  SwipeWeekDraft,
   WorkoutDeck,
   ZoneBoundary,
   ZoneProfile,
@@ -441,6 +442,89 @@ export function createWeeklyPlanProposal(
     method: 'POST',
     body: JSON.stringify(input),
   });
+}
+
+export function createSwipeWeekDraft(
+  accessToken: string,
+  input: {
+    week_start: string;
+    available_dates?: string[];
+    reuse_previous_week?: boolean;
+    confirmed_injuries: Discipline[];
+    low_only_disciplines?: Discipline[];
+    plan_id?: string;
+    expected_base_revision?: number;
+  },
+): Promise<SwipeWeekDraft> {
+  return request(accessToken, '/api/v1/weekly-plans/swipe-drafts', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
+export function getSwipeWeekDraft(
+  accessToken: string,
+  draftId: string,
+): Promise<SwipeWeekDraft> {
+  return request(
+    accessToken,
+    `/api/v1/weekly-plans/swipe-drafts/${draftId}`,
+  );
+}
+
+export function transitionSwipeWeekDraft(
+  accessToken: string,
+  draftId: string,
+  input: {
+    expected_revision: number;
+    action: 'accept' | 'pass' | 'undo' | 'reset_passed';
+    candidate_template_id?: string;
+  },
+): Promise<SwipeWeekDraft> {
+  return request(
+    accessToken,
+    `/api/v1/weekly-plans/swipe-drafts/${draftId}/transitions`,
+    { method: 'POST', body: JSON.stringify(input) },
+  );
+}
+
+export function placeSwipeWeekWorkout(
+  accessToken: string,
+  draftId: string,
+  templateId: string,
+  expectedRevision: number,
+  scheduledDate: string,
+): Promise<SwipeWeekDraft> {
+  return request(
+    accessToken,
+    `/api/v1/weekly-plans/swipe-drafts/${draftId}/placements/${templateId}`,
+    {
+      method: 'PUT',
+      body: JSON.stringify({
+        expected_revision: expectedRevision,
+        scheduled_date: scheduledDate,
+      }),
+    },
+  );
+}
+
+export function submitSwipeWeekDraft(
+  accessToken: string,
+  draftId: string,
+  expectedRevision: number,
+  placementMode: 'automatic' | 'manual',
+): Promise<WeeklyPlanProposal> {
+  return request(
+    accessToken,
+    `/api/v1/weekly-plans/swipe-drafts/${draftId}/submit`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        expected_revision: expectedRevision,
+        placement_mode: placementMode,
+      }),
+    },
+  );
 }
 
 export function getWeeklyPlan(

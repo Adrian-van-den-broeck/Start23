@@ -73,6 +73,4 @@ def test_planning_catalog_preserves_exact_numeric_load_precision() -> None:
 
     rows = asyncio.run(exercise())
 
-    assert rows[0]["planned_tss"] == Decimal(
-        "4.166666666666666666666666667"
-    )
+    assert rows[0]["planned_tss"] == Decimal("4.166666666666666666666666667")

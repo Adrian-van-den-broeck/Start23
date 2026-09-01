@@ -10,6 +10,7 @@ import {
 } from 'react-native-safe-area-context';
 
 import { AuthProvider } from '@/auth/AuthProvider';
+import { LanguageProvider } from '@/i18n/LanguageProvider';
 import { colors } from '@/theme/tokens';
 
 export default function RootLayout() {
@@ -18,16 +19,18 @@ export default function RootLayout() {
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <BottomSheetModalProvider>
           <StatusBar style="dark" />
-          <AuthProvider>
-            <Stack
-              screenOptions={{
-                animation: 'fade_from_bottom',
-                animationDuration: 240,
-                contentStyle: { backgroundColor: colors.canvas },
-                headerShown: false,
-              }}
-            />
-          </AuthProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <Stack
+                screenOptions={{
+                  animation: 'fade_from_bottom',
+                  animationDuration: 240,
+                  contentStyle: { backgroundColor: colors.canvas },
+                  headerShown: false,
+                }}
+              />
+            </AuthProvider>
+          </LanguageProvider>
         </BottomSheetModalProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

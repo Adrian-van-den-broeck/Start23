@@ -29,6 +29,11 @@ from .schemas import (
     PlanValidationRequest,
     PlanValidationResponse,
     ScheduleProposalRequest,
+    SwipeDraftCreateRequest,
+    SwipeDraftPlacementRequest,
+    SwipeDraftSubmitRequest,
+    SwipeDraftTransitionRequest,
+    SwipeWeekDraftResponse,
     WeeklyPlanProposalRequest,
     WeeklyPlanProposalResponse,
     WeeklyPlanResponse,
@@ -140,6 +145,131 @@ async def create_initial_weekly_plan_proposal(
             access_token,
             identity.user_id,
             proposal,
+        )
+    except Exception as error:
+        raise_planning_error(error)
+
+
+@router.post(
+    "/weekly-plans/swipe-drafts",
+    response_model=SwipeWeekDraftResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses=error_responses,
+)
+async def create_swipe_week_draft(
+    draft: SwipeDraftCreateRequest,
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[PlanningService, Depends(get_planning_service)],
+) -> SwipeWeekDraftResponse:
+    """Start or resume an exact server-authoritative workout-card draft."""
+
+    try:
+        return await service.create_swipe_draft(
+            access_token,
+            identity.user_id,
+            draft,
+        )
+    except Exception as error:
+        raise_planning_error(error)
+
+
+@router.get(
+    "/weekly-plans/swipe-drafts/{draft_id}",
+    response_model=SwipeWeekDraftResponse,
+    responses=error_responses,
+)
+async def get_swipe_week_draft(
+    draft_id: UUID,
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[PlanningService, Depends(get_planning_service)],
+) -> SwipeWeekDraftResponse:
+    """Read one owner-visible draft without private planning load."""
+
+    try:
+        return await service.get_swipe_draft(
+            access_token,
+            identity.user_id,
+            draft_id,
+        )
+    except Exception as error:
+        raise_planning_error(error)
+
+
+@router.post(
+    "/weekly-plans/swipe-drafts/{draft_id}/transitions",
+    response_model=SwipeWeekDraftResponse,
+    responses=error_responses,
+)
+async def transition_swipe_week_draft(
+    draft_id: UUID,
+    transition: SwipeDraftTransitionRequest,
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[PlanningService, Depends(get_planning_service)],
+) -> SwipeWeekDraftResponse:
+    """Accept, pass, undo, or reset against the exact current revision."""
+
+    try:
+        return await service.transition_swipe_draft(
+            access_token,
+            identity.user_id,
+            draft_id,
+            transition,
+        )
+    except Exception as error:
+        raise_planning_error(error)
+
+
+@router.put(
+    "/weekly-plans/swipe-drafts/{draft_id}/placements/{template_id}",
+    response_model=SwipeWeekDraftResponse,
+    responses=error_responses,
+)
+async def place_swipe_week_workout(
+    draft_id: UUID,
+    template_id: UUID,
+    placement: SwipeDraftPlacementRequest,
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[PlanningService, Depends(get_planning_service)],
+) -> SwipeWeekDraftResponse:
+    """Revalidate the full schedule after one date-only placement."""
+
+    try:
+        return await service.place_swipe_workout(
+            access_token,
+            identity.user_id,
+            draft_id,
+            template_id,
+            placement,
+        )
+    except Exception as error:
+        raise_planning_error(error)
+
+
+@router.post(
+    "/weekly-plans/swipe-drafts/{draft_id}/submit",
+    response_model=WeeklyPlanProposalResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses=error_responses,
+)
+async def submit_swipe_week_draft(
+    draft_id: UUID,
+    submission: SwipeDraftSubmitRequest,
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[PlanningService, Depends(get_planning_service)],
+) -> WeeklyPlanProposalResponse:
+    """Create one immutable pending proposal from a complete draft."""
+
+    try:
+        return await service.submit_swipe_draft(
+            access_token,
+            identity.user_id,
+            draft_id,
+            submission,
         )
     except Exception as error:
         raise_planning_error(error)

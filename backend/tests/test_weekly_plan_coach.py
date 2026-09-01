@@ -16,6 +16,7 @@ from app.modules.coach.weekly_plan import (
     OpenAIWeeklyPlanCoach,
     WeeklyPlanCoachExplanation,
     WeeklyPlanCoachFacts,
+    deterministic_weekly_plan_explanation,
 )
 from app.modules.physiology.models import Discipline, IntensityBucket
 from app.modules.workouts.catalog import TrainingPhase
@@ -37,6 +38,13 @@ def _facts() -> WeeklyPlanCoachFacts:
         ),
         rest_days=(date(2026, 8, 24), date(2026, 8, 26)),
     )
+
+
+def test_deterministic_explanation_describes_dates_without_inventing_times() -> None:
+    result = deterministic_weekly_plan_explanation(_facts())
+
+    assert "trainingsdagen" in result.public_explanation
+    assert "De tijden" not in result.public_explanation
 
 
 def test_openai_coach_sends_only_allowlisted_facts_and_strict_schema() -> None:

@@ -276,6 +276,26 @@ class MemoryCalibrationRepository:
         self._test_assignments[owner].append(row)
         return deepcopy(row)
 
+    async def save_integrated_test_assignment(
+        self,
+        access_token: str,
+        values: JsonObject,
+    ) -> JsonObject:
+        owner = self._owner(access_token)
+        row = {
+            "id": str(uuid4()),
+            **deepcopy(values),
+            "state": "pending_approval",
+            "revision": 1,
+            "proposal_id": values["plan_proposal_id"],
+            "proposal_state": "pending",
+            "created_at": _NOW.isoformat(),
+            "updated_at": _NOW.isoformat(),
+            "decided_at": None,
+        }
+        self._test_assignments[owner].append(row)
+        return deepcopy(row)
+
     async def approve_test_assignment(
         self,
         access_token: str,

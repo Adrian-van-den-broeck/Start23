@@ -585,6 +585,32 @@ export type WorkoutDeck = {
   templates: WorkoutDeckItem[];
 };
 
+export type SwipeDraftPlacement = {
+  template_id: string;
+  scheduled_date: string;
+};
+
+export type SwipeWeekDraft = {
+  id: string;
+  revision: number;
+  state: 'collecting' | 'placement' | 'submitted';
+  week_start: string;
+  available_dates: string[];
+  availability_source: 'explicit' | 'previous_week';
+  target_workout_count: number;
+  target_composition: Record<Discipline, number>;
+  accepted_workouts: WorkoutDeckItem[];
+  current_candidate: WorkoutDeckItem | null;
+  placements: SwipeDraftPlacement[];
+  warnings: PlanWarning[];
+  passed_count: number;
+  exhausted: boolean;
+  can_undo: boolean;
+  ruleset_version: string;
+  plan_id: string | null;
+  proposal_id: string | null;
+};
+
 export type PendingWorkoutAlternatives = {
   plan_id: string;
   revision: number;

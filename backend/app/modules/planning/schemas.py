@@ -297,6 +297,96 @@ class WorkoutDeckItemResponse(PublicPlanningModel):
     segments: tuple[WorkoutSegmentResponse, ...]
 
 
+class SwipeDraftCreateRequest(PublicPlanningModel):
+    """Start a TSS-free draft from exact confirmed planning context."""
+
+    week_start: date
+    available_dates: tuple[date, ...] = Field(default=(), max_length=7)
+    reuse_previous_week: bool = False
+    confirmed_injuries: frozenset[Discipline] = frozenset()
+    low_only_disciplines: frozenset[Discipline] = frozenset()
+    plan_id: UUID | None = None
+    expected_base_revision: int = Field(default=0, ge=0)
+
+    @model_validator(mode="after")
+    def validate_draft_context(self) -> "SwipeDraftCreateRequest":
+        if self.week_start.weekday() != 0:
+            raise ValueError("week_start must be a Monday.")
+        if bool(self.available_dates) == self.reuse_previous_week:
+            raise ValueError(
+                "Provide available_dates or explicitly reuse the previous week."
+            )
+        if len(set(self.available_dates)) != len(self.available_dates):
+            raise ValueError("available_dates must be unique.")
+        if self.confirmed_injuries & self.low_only_disciplines:
+            raise ValueError("A discipline cannot be blocked and low-only.")
+        if self.plan_id is None and self.expected_base_revision != 0:
+            raise ValueError("A new week draft must use base revision zero.")
+        return self
+
+
+class SwipeDraftTransitionRequest(PublicPlanningModel):
+    """One stale-safe swipe, undo, or passed-card reset."""
+
+    expected_revision: int = Field(ge=1)
+    action: Literal["accept", "pass", "undo", "reset_passed"]
+    candidate_template_id: UUID | None = None
+
+    @model_validator(mode="after")
+    def validate_candidate_binding(self) -> "SwipeDraftTransitionRequest":
+        requires_candidate = self.action in {"accept", "pass"}
+        if requires_candidate != (self.candidate_template_id is not None):
+            raise ValueError(
+                "Accept/pass requires exactly one current candidate template."
+            )
+        return self
+
+
+class SwipeDraftPlacementRequest(PublicPlanningModel):
+    """Place one accepted card on an exact athlete-local available date."""
+
+    expected_revision: int = Field(ge=1)
+    scheduled_date: date
+
+
+class SwipeDraftSubmitRequest(PublicPlanningModel):
+    """Create a pending proposal through automatic or complete manual placement."""
+
+    expected_revision: int = Field(ge=1)
+    placement_mode: Literal["automatic", "manual"]
+
+
+class SwipeTargetComposition(PublicPlanningModel):
+    """Fixed public workout counts without exposing private load."""
+
+    swim: int = Field(ge=0, le=24)
+    bike: int = Field(ge=0, le=24)
+    run: int = Field(ge=0, le=24)
+
+
+class SwipeWeekDraftResponse(PublicPlanningModel):
+    """Owner-visible draft projection with one current candidate at a time."""
+
+    id: UUID
+    revision: int = Field(ge=1)
+    state: Literal["collecting", "placement", "submitted"]
+    week_start: date
+    available_dates: tuple[date, ...]
+    availability_source: Literal["explicit", "previous_week"]
+    target_workout_count: int = Field(ge=0, le=24)
+    target_composition: SwipeTargetComposition
+    accepted_workouts: tuple[WorkoutDeckItemResponse, ...]
+    current_candidate: WorkoutDeckItemResponse | None
+    placements: tuple[FixedWorkoutDate, ...]
+    warnings: tuple[PlanWarningResponse, ...] = ()
+    passed_count: int = Field(ge=0)
+    exhausted: bool
+    can_undo: bool
+    ruleset_version: str
+    plan_id: UUID | None = None
+    proposal_id: UUID | None = None
+
+
 class PlanValidationWorkoutInput(PublicPlanningModel):
     """One existing workout position to validate qualitatively."""
 

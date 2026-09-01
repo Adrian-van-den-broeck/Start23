@@ -167,6 +167,8 @@ class MemoryPlanningRepository:
         self._proposals: dict[UUID, JsonObject] = {}
         self._proposal_owners: dict[UUID, UUID] = {}
         self._fingerprints: dict[tuple[UUID, str], tuple[UUID, UUID, int]] = {}
+        self._swipe_drafts: dict[UUID, JsonObject] = {}
+        self._swipe_draft_owners: dict[UUID, UUID] = {}
 
     def _owner(self, token: str) -> UUID:
         try:
@@ -398,6 +400,95 @@ class MemoryPlanningRepository:
             "proposal_id": str(proposal_id),
             "revision": revision,
         }
+
+    async def create_swipe_draft(
+        self,
+        athlete_id: UUID,
+        payload: JsonObject,
+    ) -> JsonObject:
+        existing = next(
+            (
+                row
+                for draft_id, row in self._swipe_drafts.items()
+                if self._swipe_draft_owners[draft_id] == athlete_id
+                and row["week_start"] == payload["week_start"]
+                and row["state"] in {"collecting", "placement"}
+            ),
+            None,
+        )
+        if existing is not None and (
+            existing["context_fingerprint"] == payload["context_fingerprint"]
+        ):
+            return dict(existing)
+        if existing is not None:
+            existing["state"] = "cancelled"
+            existing["current_template_id"] = None
+            existing["revision"] = int(existing["revision"]) + 1
+        draft_id = uuid4()
+        row = {
+            "id": str(draft_id),
+            "athlete_id": str(athlete_id),
+            **payload,
+            "accepted_template_ids": [],
+            "passed_template_ids": [],
+            "decision_history": [],
+            "placements": {},
+            "state": payload["state"],
+            "revision": 1,
+            "proposal_id": None,
+            "created_at": _NOW.isoformat(),
+            "updated_at": _NOW.isoformat(),
+            "submitted_at": None,
+        }
+        self._swipe_drafts[draft_id] = row
+        self._swipe_draft_owners[draft_id] = athlete_id
+        return dict(row)
+
+    async def fetch_swipe_draft(
+        self,
+        access_token: str,
+        draft_id: UUID,
+    ) -> JsonObject:
+        if self._swipe_draft_owners.get(draft_id) != self._owner(access_token):
+            raise PlanningRepositoryNotFoundError
+        return dict(self._swipe_drafts[draft_id])
+
+    async def update_swipe_draft(
+        self,
+        athlete_id: UUID,
+        draft_id: UUID,
+        expected_revision: int,
+        payload: JsonObject,
+    ) -> JsonObject:
+        if self._swipe_draft_owners.get(draft_id) != athlete_id:
+            raise PlanningRepositoryNotFoundError
+        row = self._swipe_drafts[draft_id]
+        if int(row["revision"]) != expected_revision:
+            raise PlanningRepositoryConflictError(
+                "swipe_draft_stale",
+                "The swipe draft changed after this action was prepared.",
+            )
+        if row["state"] not in {"collecting", "placement"}:
+            raise PlanningRepositoryConflictError(
+                "swipe_draft_closed",
+                "This swipe draft is already closed.",
+            )
+        for key in (
+            "accepted_template_ids",
+            "passed_template_ids",
+            "current_template_id",
+            "decision_history",
+            "placements",
+            "state",
+            "proposal_id",
+        ):
+            row[key] = payload[key]
+        if payload["state"] == "submitted":
+            row["plan_id"] = payload["plan_id"]
+            row["submitted_at"] = _NOW.isoformat()
+        row["revision"] = expected_revision + 1
+        row["updated_at"] = _NOW.isoformat()
+        return dict(row)
 
     async def set_plan_proposal_explanation(
         self,
@@ -687,6 +778,226 @@ def _create_proposal(client: TestClient) -> dict[str, Any]:
     )
     assert response.status_code == 201, response.text
     return cast(dict[str, Any], response.json())
+
+
+def _create_swipe_draft(client: TestClient) -> dict[str, Any]:
+    response = client.post(
+        "/api/v1/weekly-plans/swipe-drafts",
+        headers=_headers(),
+        json={
+            "week_start": "2026-08-03",
+            "available_dates": _availability_payload(),
+            "confirmed_injuries": [],
+        },
+    )
+    assert response.status_code == 201, response.text
+    return cast(dict[str, Any], response.json())
+
+
+def test_swipe_draft_is_owner_scoped_idempotent_and_submits_only_pending(
+    planning_client: TestClient,
+) -> None:
+    draft = _create_swipe_draft(planning_client)
+    assert draft["state"] == "collecting"
+    assert draft["target_workout_count"] == sum(draft["target_composition"].values())
+    assert draft["current_candidate"] is not None
+    assert "tss" not in str(draft).casefold()
+
+    hidden = planning_client.get(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}",
+        headers=_headers("athlete-b"),
+    )
+    assert hidden.status_code == 404
+
+    first_candidate = draft["current_candidate"]["id"]
+    passed = planning_client.post(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions",
+        headers=_headers(),
+        json={
+            "expected_revision": draft["revision"],
+            "action": "pass",
+            "candidate_template_id": first_candidate,
+        },
+    )
+    assert passed.status_code == 200, passed.text
+    draft = cast(dict[str, Any], passed.json())
+    assert draft["passed_count"] == 1
+    assert draft["current_candidate"]["id"] != first_candidate
+
+    undone = planning_client.post(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions",
+        headers=_headers(),
+        json={"expected_revision": draft["revision"], "action": "undo"},
+    )
+    assert undone.status_code == 200, undone.text
+    draft = cast(dict[str, Any], undone.json())
+    assert draft["current_candidate"]["id"] == first_candidate
+
+    first_revision = draft["revision"]
+    accepted = planning_client.post(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions",
+        headers=_headers(),
+        json={
+            "expected_revision": first_revision,
+            "action": "accept",
+            "candidate_template_id": first_candidate,
+        },
+    )
+    assert accepted.status_code == 200, accepted.text
+    draft = cast(dict[str, Any], accepted.json())
+
+    duplicate = planning_client.post(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions",
+        headers=_headers(),
+        json={
+            "expected_revision": first_revision,
+            "action": "accept",
+            "candidate_template_id": first_candidate,
+        },
+    )
+    assert duplicate.status_code == 200, duplicate.text
+    assert duplicate.json()["revision"] == draft["revision"]
+    assert len(duplicate.json()["accepted_workouts"]) == 1
+
+    stale = planning_client.post(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions",
+        headers=_headers(),
+        json={"expected_revision": first_revision, "action": "undo"},
+    )
+    assert stale.status_code == 409
+
+    while draft["state"] == "collecting":
+        current = draft["current_candidate"]
+        assert current is not None and draft["exhausted"] is False
+        response = planning_client.post(
+            f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions",
+            headers=_headers(),
+            json={
+                "expected_revision": draft["revision"],
+                "action": "accept",
+                "candidate_template_id": current["id"],
+            },
+        )
+        assert response.status_code == 200, response.text
+        draft = cast(dict[str, Any], response.json())
+
+    assert draft["state"] == "placement"
+    assert len(draft["accepted_workouts"]) == draft["target_workout_count"]
+    assert isinstance(draft["warnings"], list)
+
+    incomplete = planning_client.post(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/submit",
+        headers=_headers(),
+        json={
+            "expected_revision": draft["revision"],
+            "placement_mode": "manual",
+        },
+    )
+    assert incomplete.status_code == 409
+
+    for workout, scheduled_date in zip(
+        draft["accepted_workouts"],
+        draft["available_dates"],
+        strict=True,
+    ):
+        placement = planning_client.put(
+            (
+                f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}"
+                f"/placements/{workout['id']}"
+            ),
+            headers=_headers(),
+            json={
+                "expected_revision": draft["revision"],
+                "scheduled_date": scheduled_date,
+            },
+        )
+        assert placement.status_code == 200, placement.text
+        draft = cast(dict[str, Any], placement.json())
+
+    submitted = planning_client.post(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/submit",
+        headers=_headers(),
+        json={
+            "expected_revision": draft["revision"],
+            "placement_mode": "manual",
+        },
+    )
+    assert submitted.status_code == 201, submitted.text
+    result = submitted.json()
+    assert result["proposal"]["state"] == "pending"
+    assert result["plan"]["revision_state"] == "pending_approval"
+    assert "tss" not in str(result).casefold()
+
+
+def test_swipe_draft_preserves_rest_only_week_and_automatic_placement(
+    planning_client: TestClient,
+) -> None:
+    created = planning_client.post(
+        "/api/v1/weekly-plans/swipe-drafts",
+        headers=_headers(),
+        json={
+            "week_start": "2026-08-03",
+            "available_dates": _availability_payload(),
+            "confirmed_injuries": ["swim", "bike", "run"],
+        },
+    )
+    assert created.status_code == 201, created.text
+    draft = created.json()
+    assert draft["state"] == "placement"
+    assert draft["target_workout_count"] == 0
+    assert draft["accepted_workouts"] == []
+    assert draft["current_candidate"] is None
+
+    submitted = planning_client.post(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/submit",
+        headers=_headers(),
+        json={
+            "expected_revision": draft["revision"],
+            "placement_mode": "automatic",
+        },
+    )
+    assert submitted.status_code == 201, submitted.text
+    result = submitted.json()
+    assert result["proposal"]["state"] == "pending"
+    assert result["plan"]["workouts"] == []
+    assert len(result["plan"]["rest_days"]) == 7
+
+
+def test_swipe_draft_exhaustion_is_recoverable_without_lowering_target(
+    planning_client: TestClient,
+) -> None:
+    draft = _create_swipe_draft(planning_client)
+    target = draft["target_workout_count"]
+
+    while draft["current_candidate"] is not None:
+        passed = planning_client.post(
+            f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions",
+            headers=_headers(),
+            json={
+                "expected_revision": draft["revision"],
+                "action": "pass",
+                "candidate_template_id": draft["current_candidate"]["id"],
+            },
+        )
+        assert passed.status_code == 200, passed.text
+        draft = passed.json()
+
+    assert draft["exhausted"] is True
+    assert draft["target_workout_count"] == target
+    reset = planning_client.post(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions",
+        headers=_headers(),
+        json={
+            "expected_revision": draft["revision"],
+            "action": "reset_passed",
+        },
+    )
+    assert reset.status_code == 200, reset.text
+    recovered = reset.json()
+    assert recovered["exhausted"] is False
+    assert recovered["passed_count"] == 0
+    assert recovered["current_candidate"] is not None
+    assert recovered["target_workout_count"] == target
 
 
 def test_plan_generation_requires_authentication(

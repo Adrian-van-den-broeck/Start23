@@ -15,6 +15,7 @@ import {
 import { AuthProvider, useAuth } from './src/auth/AuthProvider';
 import { listActivities } from './src/api/client';
 import { FadeInView } from './src/components/FadeInView';
+import { LanguageProvider, useLanguage } from './src/i18n/LanguageProvider';
 import { AuthScreen } from './src/screens/AuthScreen';
 import { ActivityScreen } from './src/screens/ActivityScreen';
 import { CalibrationScreen } from './src/screens/CalibrationScreen';
@@ -27,6 +28,7 @@ import { colors, spacing } from './src/theme/tokens';
 
 function AppContent() {
   const { configurationError, loading, session, signOut } = useAuth();
+  const { language, t } = useLanguage();
   const [authenticatedView, setAuthenticatedView] = useState<
     | 'onboarding'
     | 'planning'
@@ -160,8 +162,11 @@ function AppContent() {
           style={styles.feedbackReminder}
         >
           <Text style={styles.feedbackReminderText}>
-            {pendingRpeCount} training{pendingRpeCount === 1 ? '' : 'en'} wacht
-            {pendingRpeCount === 1 ? '' : 'en'} op RPE · open Training & RPE
+            {t('rpe.reminder', {
+              count: pendingRpeCount,
+              suffix: pendingRpeCount === 1 ? '' : language === 'nl' ? 'en' : 's',
+              verbSuffix: pendingRpeCount === 1 ? '' : 'en',
+            })}
           </Text>
         </Pressable>
       ) : null}
@@ -181,9 +186,11 @@ export default function App() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <StatusBar style="dark" />
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </LanguageProvider>
     </SafeAreaProvider>
   );
 }

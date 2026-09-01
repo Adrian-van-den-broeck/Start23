@@ -206,6 +206,11 @@ added to the completion response.
 | Operation | Purpose | Critical notes |
 |---|---|---|
 | `POST /v1/weekly-plans/proposals` | Generate a pending weekly plan | Idempotent per athlete/week/input revision |
+| `POST /v1/weekly-plans/swipe-drafts` | Create or resume a server-authoritative deck-first week | Exact context/base binding; fixed count and composition; TSS-free |
+| `GET /v1/weekly-plans/swipe-drafts/{draft_id}` | Resume one owned swipe draft | RLS owner read; one current candidate only |
+| `POST /v1/weekly-plans/swipe-drafts/{draft_id}/transitions` | Accept, pass, undo, or reset passed cards | Expected revision and exact current candidate; duplicate accept/pass retry is idempotent |
+| `PUT /v1/weekly-plans/swipe-drafts/{draft_id}/placements/{template_id}` | Place one accepted workout on a local date | Full deterministic layout revalidation after every placement |
+| `POST /v1/weekly-plans/swipe-drafts/{draft_id}/submit` | Submit automatic or complete manual placement | Creates only an immutable pending proposal |
 | `GET /v1/weekly-plans/{plan_id}` | Read active or explicitly selected revision | Public fields only |
 | `GET /v1/weekly-plans/{plan_id}/deck` | Get eligible workout cards | Expected revision and exact selected IDs drive authoritative recalculation |
 | `POST /v1/weekly-plans/{plan_id}/schedule-proposals` | Auto-schedule selected workouts | Returns pending proposal |
@@ -218,9 +223,10 @@ added to the completion response.
 Workout-deck responses may return low/high time-bucket information but no hidden
 TSS budget.
 
-Phase 6 consolidates explicit template selection into the
-`schedule-proposals` request instead of persisting a separate mutable draft
-through `PUT /selections`.
+Phase 6 consolidated explicit template selection into `schedule-proposals`.
+Phase 10.1 adds the separate bounded draft above: its state is derived from an
+immutable accept/pass decision history, every write is stale-safe and
+server-calculated, and it never becomes an active plan directly.
 
 Phase 10 proposal input contains either non-empty `available_dates` or the
 explicit `reuse_previous_week=true` action, never both. Plans and calendars

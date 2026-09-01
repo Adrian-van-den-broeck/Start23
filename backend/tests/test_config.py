@@ -1,5 +1,7 @@
 """Deployment configuration safety tests."""
 
+from typing import Any
+
 import pytest
 from pydantic import ValidationError
 
@@ -79,7 +81,7 @@ def test_production_requires_accountable_physiology_review() -> None:
 
 
 def test_production_polar_requires_approvals_https_owner_and_retention() -> None:
-    base = {
+    base: dict[str, Any] = {
         "environment": "production",
         "supabase_publishable_key": "sb_publishable_test",
         "supabase_secret_key": "sb_secret_test",

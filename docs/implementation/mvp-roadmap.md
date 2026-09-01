@@ -1373,10 +1373,11 @@ form, and separately confirm it before a plan proposal can be created.
 
 ### Status
 
-Planned on 2026-08-29. The implemented Phase 10 swipe editor replaces one
-workout inside an already generated proposal. It does not yet provide the
-deck-first flow below, in which the athlete accepts workouts until the complete
-weekly target is filled and only then chooses their calendar placement.
+Implemented locally on 2026-09-01. The original Phase 10 pending-workout editor
+remains available for revising an existing proposal, while new weeks now use a
+separate server-authoritative deck-first draft. Draft selection and date
+placement stay TSS-free and cannot activate a plan; submission creates only an
+immutable pending proposal for the existing approval flow.
 
 ### Product flow
 
@@ -1403,22 +1404,45 @@ weekly target is filled and only then chooses their calendar placement.
 
 - Add a server-authoritative swipe draft bound to the athlete, local week,
   exact base revision, confirmed context, restrictions, availability, and
-  ruleset version. **Planned**
+  ruleset version. **Implemented locally**
 - Keep the target workout count fixed for that draft. Passed cards do not count
-  toward it, and an accepted workout counts at most once. **Planned**
+  toward it, and an accepted workout counts at most once. **Implemented locally**
 - Recalculate every right swipe against the accepted set and the deterministic
   weekly composition, phase, zone/RPE capability, injury, recovery, taper,
-  catalog, and private-load constraints. **Planned**
+  catalog, and private-load constraints. **Implemented locally**
 - Do not immediately resurface a passed card in the same draft. Support undoing
   the last swipe and resetting passed cards; if no eligible completion exists,
-  return a clear recoverable state rather than looping indefinitely. **Planned**
+  return a clear recoverable state rather than looping indefinitely.
+  **Implemented locally**
 - After selection, offer both deterministic automatic placement and manual
-  date-only placement on a horizontally navigable week timeline. **Planned**
+  date-only placement on a horizontally navigable week timeline.
+  **Implemented locally**
 - Revalidate the complete layout server-side after every placement or move.
   Invalid dates remain unavailable and qualitative warnings stay visible.
-  **Planned**
+  **Implemented locally**
 - Preserve the current immutable pending-revision, stale-edit, explicit
-  approval, RLS, and TSS-confidentiality boundaries. **Planned**
+  approval, RLS, and TSS-confidentiality boundaries. **Implemented locally**
+
+### Implementation and verification notes
+
+- `swipe_week_drafts` persists only public draft state and exact context hashes.
+  Forced RLS permits authenticated owner reads; service-role-only,
+  `security invoker` RPCs perform stale-safe writes under the existing critical
+  write guard.
+- FastAPI exposes create/resume, read, accept/pass/undo/reset, placement, and
+  submit operations through thin typed routes. Every transition rebuilds the
+  deterministic planning context before persistence.
+- The Expo flow renders one candidate at a time, supports horizontal gestures
+  plus equivalent buttons, survives restarts through a stored draft id, and
+  offers automatic or accessible date-only manual placement.
+- Pure state fixtures cover ten passes followed by three accepts, undo, and
+  reset. API tests cover owner isolation, duplicate accept idempotency, stale
+  rejection, invalid incomplete submit, manual placement, and pending-only
+  proposal creation. The full local backend suite contains 390 tests.
+- The migration and rollback-only pgTAP owner/grant suite are committed but
+  still require execution against a running Supabase stack. Physical iOS and
+  Android gesture/accessibility checks and real-token two-user RLS remain
+  release gates.
 
 ### Exit criteria
 
@@ -1750,9 +1774,11 @@ Every phase must:
   questions, and constrained explanation; hosted 18-assertion pgTAP, ledger,
   lint, advisor, and read-only contract verification pass; device/two-user E2E,
   privacy approval, and renewed BR-006 physiological review remain gates`
-- Phase 10.1 swipe-built week and calendar timeline: `planned; deck-first
-  accept/pass selection, fixed weekly count, optional automatic or manual
-  date-only placement, and pending-plan approval remain to be implemented`
+- Phase 10.1 swipe-built week and calendar timeline: `implemented locally;
+  persistent server-authoritative accept/pass/undo/reset selection, fixed
+  count/composition, automatic or manual date-only placement, restart resume,
+  and pending-only proposal submission are present; migration/pgTAP,
+  real-token RLS, and physical-device verification remain gates`
 - Phase 11 discipline zone profile, testing, and progress evaluation:
   `implemented locally: independent discipline profile/history, unified
   RPE-guided assignment, date-only standalone and run/bike integrated tests,

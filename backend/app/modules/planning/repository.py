@@ -82,6 +82,29 @@ class PlanningRepository(Protocol):
     ) -> JsonObject:
         """Persist a deterministic plan as a typed pending proposal."""
 
+    async def create_swipe_draft(
+        self,
+        athlete_id: UUID,
+        payload: JsonObject,
+    ) -> JsonObject:
+        """Create or replace one server-authoritative open week draft."""
+
+    async def fetch_swipe_draft(
+        self,
+        access_token: str,
+        draft_id: UUID,
+    ) -> JsonObject:
+        """Read one exact owner-visible swipe draft through RLS."""
+
+    async def update_swipe_draft(
+        self,
+        athlete_id: UUID,
+        draft_id: UUID,
+        expected_revision: int,
+        payload: JsonObject,
+    ) -> JsonObject:
+        """Persist one stale-safe backend-calculated draft transition."""
+
     async def set_plan_proposal_explanation(
         self,
         athlete_id: UUID,
@@ -243,6 +266,8 @@ class SupabasePlanningRepository:
                 "plan revision is stale": "plan_revision_stale",
                 "plan proposal is not pending": "proposal_not_pending",
                 "plan revision is not pending": "proposal_not_pending",
+                "swipe draft is stale": "swipe_draft_stale",
+                "swipe draft is closed": "swipe_draft_closed",
             }
             public_code = conflict_codes.get(error_message or "", "state_conflict")
             public_messages = {
@@ -251,6 +276,10 @@ class SupabasePlanningRepository:
                     "The plan changed after this operation was prepared."
                 ),
                 "proposal_not_pending": "This proposal was already decided.",
+                "swipe_draft_stale": (
+                    "The swipe draft changed after this action was prepared."
+                ),
+                "swipe_draft_closed": "This swipe draft is already closed.",
                 "state_conflict": "The planning state changed. Refresh and try again.",
             }
             raise PlanningRepositoryConflictError(
@@ -368,6 +397,74 @@ class SupabasePlanningRepository:
             service=True,
             json={
                 "p_athlete_id": str(athlete_id),
+                "p_payload": payload,
+            },
+        )
+        if not isinstance(result, dict):
+            raise PlanningRepositoryUnavailableError
+        return dict(result)
+
+    async def create_swipe_draft(
+        self,
+        athlete_id: UUID,
+        payload: JsonObject,
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/create_swipe_week_draft",
+            service=True,
+            json={
+                "p_athlete_id": str(athlete_id),
+                "p_payload": payload,
+            },
+        )
+        if not isinstance(result, dict):
+            raise PlanningRepositoryUnavailableError
+        return dict(result)
+
+    async def fetch_swipe_draft(
+        self,
+        access_token: str,
+        draft_id: UUID,
+    ) -> JsonObject:
+        payload = await self._request(
+            "GET",
+            "swipe_week_drafts",
+            access_token=access_token,
+            params={
+                "select": (
+                    "id,athlete_id,plan_id,initial_plan_request_id,"
+                    "base_plan_revision,context_plan_revision,week_start,timezone,"
+                    "available_dates,availability_source,confirmed_injuries,"
+                    "low_only_disciplines,input_fingerprint,context_fingerprint,"
+                    "ruleset_version,target_workout_count,target_composition,"
+                    "accepted_template_ids,passed_template_ids,current_template_id,"
+                    "decision_history,placements,state,revision,proposal_id,"
+                    "created_at,updated_at,submitted_at"
+                ),
+                "id": f"eq.{draft_id}",
+                "limit": "1",
+            },
+        )
+        if not isinstance(payload, list) or not payload:
+            raise PlanningRepositoryNotFoundError
+        return dict(payload[0])
+
+    async def update_swipe_draft(
+        self,
+        athlete_id: UUID,
+        draft_id: UUID,
+        expected_revision: int,
+        payload: JsonObject,
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/update_swipe_week_draft",
+            service=True,
+            json={
+                "p_athlete_id": str(athlete_id),
+                "p_draft_id": str(draft_id),
+                "p_expected_revision": expected_revision,
                 "p_payload": payload,
             },
         )

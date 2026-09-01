@@ -113,7 +113,9 @@ def test_snapshot_remains_stable_when_a_new_catalog_version_exists() -> None:
     assert version_two.internal_planned_load.value == Decimal("2.25")
 
 
-def test_swim_template_can_be_projected_to_rpe_without_losing_technique_detail() -> None:
+def test_swim_template_can_be_projected_to_rpe_without_losing_technique_detail() -> (
+    None
+):
     swim = next(
         template
         for template in active_catalog()

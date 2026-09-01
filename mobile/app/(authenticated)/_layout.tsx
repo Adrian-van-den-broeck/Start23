@@ -6,11 +6,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { listActivities } from '@/api/client';
 import { useAuth } from '@/auth/AuthProvider';
 import { MotionPressable } from '@/components/MotionPressable';
+import { useLanguage } from '@/i18n/LanguageProvider';
 import { ScreenState } from '@/components/ScreenState';
 import { colors, spacing } from '@/theme/tokens';
 
 export default function AuthenticatedLayout() {
   const { configurationError, loading, session } = useAuth();
+  const { language, t } = useLanguage();
   const router = useRouter();
   const pathname = usePathname();
   const [pendingRpeCount, setPendingRpeCount] = useState(0);
@@ -44,8 +46,11 @@ export default function AuthenticatedLayout() {
         >
           <BlurView intensity={55} style={styles.reminder} tint="light">
             <Text style={styles.reminderText}>
-              {pendingRpeCount} training{pendingRpeCount === 1 ? '' : 'en'} wacht
-              {pendingRpeCount === 1 ? '' : 'en'} op RPE · open Training & RPE
+              {t('rpe.reminder', {
+                count: pendingRpeCount,
+                suffix: pendingRpeCount === 1 ? '' : language === 'nl' ? 'en' : 's',
+                verbSuffix: pendingRpeCount === 1 ? '' : 'en',
+              })}
             </Text>
           </BlurView>
         </MotionPressable>
