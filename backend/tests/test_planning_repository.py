@@ -10,6 +10,7 @@ import pytest
 from app.core.config import Settings
 from app.modules.planning.repository import (
     PlanningRepositoryConflictError,
+    PlanningRepositoryUnavailableError,
     SupabasePlanningRepository,
 )
 
@@ -190,5 +191,33 @@ def test_database_conflicts_map_to_stable_public_planning_codes() -> None:
             assert str(captured.value) == (
                 "This proposal is based on an older plan revision."
             )
+
+    asyncio.run(exercise())
+
+
+def test_missing_supabase_rpc_is_reported_as_dependency_unavailable() -> None:
+    athlete_id = uuid4()
+
+    def handler(_: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            404,
+            json={
+                "code": "PGRST202",
+                "message": (
+                    "Could not find the function public.create_swipe_week_draft"
+                ),
+            },
+        )
+
+    async def exercise() -> None:
+        async with httpx.AsyncClient(
+            transport=httpx.MockTransport(handler),
+        ) as client:
+            repository = SupabasePlanningRepository(_settings(), client=client)
+            with pytest.raises(PlanningRepositoryUnavailableError):
+                await repository.create_swipe_draft(
+                    athlete_id,
+                    {"week_start": "2026-09-07"},
+                )
 
     asyncio.run(exercise())

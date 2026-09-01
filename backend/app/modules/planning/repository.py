@@ -253,7 +253,11 @@ class SupabasePlanningRepository:
                     error_message = raw_message
         except ValueError:
             pass
-        if response.status_code == 404 or error_code == "P0002":
+        if error_code == "P0002":
+            raise PlanningRepositoryNotFoundError
+        if response.status_code == 404 and not (
+            error_code and error_code.startswith("PGRST")
+        ):
             raise PlanningRepositoryNotFoundError
         if response.status_code in {400, 409, 422} or error_code in {
             "23505",

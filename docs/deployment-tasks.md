@@ -10,8 +10,10 @@ Run the Wombo tasks from **Terminal > Run Task** in VS Code.
 - `Wombo: Switch to production mode` selects the public Railway HTTPS URL.
   The task looks up the service domain and generates a Railway-provided domain
   when needed. It also updates the Railway Polar callback without deploying.
-  The `Wombo: Start backend` task then uploads and deploys the repository to
-  the Railway service named `start23` and verifies `/ready`.
+  The `Wombo: Start backend` task first applies pending migrations to the linked
+  Supabase project, then uploads and deploys the repository to the Railway
+  service named `start23` and verifies `/ready`. The database step runs first so
+  a backend cannot be released before the schema and RPCs it requires.
 
 The Railway private address `start23.railway.internal` is intentionally not
 used by the mobile app. It is only reachable by services inside Railway. A
@@ -46,6 +48,17 @@ It then creates a production Android App Bundle with EAS and downloads it to
 `mobile/dist/wombo-playstore-<versionCode>.aab`. Google Play uses `.aab`
 bundles for new app releases; `.apk` is an installable device format, not the
 Play Store upload format.
+
+If EAS finishes the cloud build but local validation or downloading is
+interrupted, resume that exact build without consuming another `versionCode`:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File `
+  .\scripts\build-start23-playstore.ps1 -BuildId <eas-build-id>
+```
+
+The script validates the resumed build status and Android package before it
+downloads the artifact.
 
 The fixed package is `com.adrivdbs.wombo`. EAS stores the Android `versionCode`
 remotely and increments it for every Wombo store build, as configured by

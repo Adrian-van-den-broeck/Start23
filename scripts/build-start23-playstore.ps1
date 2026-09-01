@@ -1,3 +1,7 @@
+param(
+    [string]$BuildId
+)
+
 . (Join-Path $PSScriptRoot 'start23-common.ps1')
 
 $repositoryRoot = Get-Start23RepositoryRoot
@@ -24,36 +28,55 @@ if ([string]::IsNullOrWhiteSpace($supabasePublishableKey) -or $supabasePublishab
 
 Push-Location $mobileRoot
 try {
-    Write-Host '[Wombo] Syncing public mobile configuration to the EAS production environment...'
-    $publicVariables = [ordered]@{
-        EXPO_PUBLIC_API_BASE_URL = $apiBaseUrl
-        EXPO_PUBLIC_SUPABASE_URL = $supabaseUrl
-        EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY = $supabasePublishableKey
+    if ([string]::IsNullOrWhiteSpace($BuildId)) {
+        Write-Host '[Wombo] Syncing public mobile configuration to the EAS production environment...'
+        $publicVariables = [ordered]@{
+            EXPO_PUBLIC_API_BASE_URL = $apiBaseUrl
+            EXPO_PUBLIC_SUPABASE_URL = $supabaseUrl
+            EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY = $supabasePublishableKey
+        }
+        foreach ($entry in $publicVariables.GetEnumerator()) {
+            Invoke-Start23Npx -Package $script:Start23EasCli -Arguments @(
+                'env:set', 'production', '--name', $entry.Key, '--value', $entry.Value,
+                '--visibility', 'plaintext', '--scope', 'project', '--non-interactive'
+            )
+        }
+
+        Write-Host "[Wombo] Building $expectedPackage for Google Play. EAS will increment versionCode remotely..."
+        $buildRequestJson = Invoke-Start23Npx -Package $script:Start23EasCli -Arguments @(
+            'build', '--platform', 'android', '--profile', $buildProfile,
+            '--wait', '--json', '--non-interactive'
+        ) -CaptureOutput
+        $buildRequests = @($buildRequestJson | ConvertFrom-Json)
+        if ($buildRequests.Count -ne 1 -or [string]::IsNullOrWhiteSpace($buildRequests[0].id)) {
+            throw 'EAS did not return exactly one Android build ID.'
+        }
+        $BuildId = [string]$buildRequests[0].id
     }
-    foreach ($entry in $publicVariables.GetEnumerator()) {
-        Invoke-Start23Npx -Package $script:Start23EasCli -Arguments @(
-            'env:set', 'production', '--name', $entry.Key, '--value', $entry.Value,
-            '--visibility', 'plaintext', '--scope', 'project', '--non-interactive'
-        )
+    else {
+        Write-Host "[Wombo] Resuming completed EAS build $BuildId without creating a new versionCode..."
     }
 
-    Write-Host "[Wombo] Building $expectedPackage for Google Play. EAS will increment versionCode remotely..."
-    Invoke-Start23Npx -Package $script:Start23EasCli -Arguments @(
-        'build', '--platform', 'android', '--profile', $buildProfile, '--wait'
-    )
-
-    $latestBuildJson = Invoke-Start23Npx -Package $script:Start23EasCli -Arguments @(
-        'build:list', '--platform', 'android', '--build-profile', $buildProfile,
-        '--status', 'finished', '--limit', '1', '--json', '--non-interactive'
+    $buildJson = Invoke-Start23Npx -Package $script:Start23EasCli -Arguments @(
+        'build:view', $BuildId, '--json'
     ) -CaptureOutput
-    $latestBuild = @($latestBuildJson | ConvertFrom-Json)[0]
+    $latestBuild = $buildJson | ConvertFrom-Json
+    if ($latestBuild.status -ne 'FINISHED') {
+        throw "EAS build '$BuildId' has status '$($latestBuild.status)' instead of 'FINISHED'."
+    }
     $actualPackage = if ($latestBuild.PSObject.Properties.Name -contains 'appIdentifier') {
-        $latestBuild.appIdentifier
+        [string]$latestBuild.appIdentifier
     }
     elseif ($latestBuild.PSObject.Properties.Name -contains 'applicationIdentifier') {
-        $latestBuild.applicationIdentifier
+        [string]$latestBuild.applicationIdentifier
     }
-    if ($actualPackage -ne $expectedPackage) {
+    else {
+        $null
+    }
+    if ([string]::IsNullOrWhiteSpace($actualPackage)) {
+        throw "EAS build '$BuildId' did not return an Android package identifier."
+    }
+    if ($actualPackage -cne $expectedPackage) {
         throw "EAS returned package '$actualPackage' instead of '$expectedPackage'."
     }
     $artifactUrl = $null

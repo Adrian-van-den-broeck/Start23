@@ -31,6 +31,11 @@ $publicUrl = ConvertTo-Start23PublicUrl -Value $state.apiBaseUrl
 Initialize-Start23RailwayContext
 Push-Location $repositoryRoot
 try {
+    Write-Host '[Start23] Applying pending Supabase migrations before the backend deploy...'
+    Invoke-Start23Npx -Package $script:Start23SupabaseCli -Arguments @(
+        'db', 'push', '--linked', '--yes'
+    )
+
     Invoke-Start23Npx -Package $script:Start23RailwayCli -Arguments @(
         'up', $repositoryRoot, '--service', 'start23'
     )

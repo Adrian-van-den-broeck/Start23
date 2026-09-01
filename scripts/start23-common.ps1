@@ -2,7 +2,8 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $script:Start23RailwayCli = '@railway/cli@5.45.10'
-$script:Start23EasCli = 'eas-cli@22.4.0'
+$script:Start23EasCli = 'eas-cli@23.2.0'
+$script:Start23SupabaseCli = 'supabase@2.116.0'
 
 function Get-Start23RepositoryRoot {
     return Split-Path -Parent $PSScriptRoot
