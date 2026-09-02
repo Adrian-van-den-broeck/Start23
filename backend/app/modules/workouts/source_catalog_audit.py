@@ -1,4 +1,4 @@
-"""Read-only validation for the Phase 8 160-row training source export."""
+"""Read-only validation for the MVP training source export."""
 
 from __future__ import annotations
 
@@ -12,6 +12,8 @@ _SPORT_PREFIXES = {"Fietsen": "BIK-", "Lopen": "RUN-", "Zwemmen": "SWI-"}
 _BUCKETS = {"80%", "20%"}
 _MINUTE_PATTERN = re.compile(r"^(\d+)'$")
 _DISTANCE_PATTERN = re.compile(r"^(\d+)m$")
+_RPE_ZONE_PATTERN = re.compile(r"^Zone ([1-5]) · RPE (2-3|4|5-6|7-8|9-10)$")
+_RPE_LABELS = {1: "2-3", 2: "4", 3: "5-6", 4: "7-8", 5: "9-10"}
 
 
 @dataclass(frozen=True, slots=True)
@@ -58,10 +60,19 @@ def audit_source_catalog(path: Path) -> SourceCatalogAudit:
             issues["discipline"] += 1
         if bucket not in _BUCKETS:
             issues["bucket"] += 1
-        if not _positive_integer(rpe) or not 1 <= int(rpe) <= 10:
+        rpe_match = _RPE_ZONE_PATTERN.fullmatch(rpe)
+        if rpe_match is None or (
+            _RPE_LABELS[int(rpe_match.group(1))] != rpe_match.group(2)
+        ):
             issues["rpe"] += 1
-        elif (bucket == "80%" and int(rpe) > 5) or (bucket == "20%" and int(rpe) < 6):
+        elif (bucket == "80%" and int(rpe_match.group(1)) > 3) or (
+            bucket == "20%" and int(rpe_match.group(1)) < 4
+        ):
             issues["bucket_rpe"] += 1
+        if sport == "Zwemmen" and any(
+            "techn" in str(value).casefold() for value in row.values()
+        ):
+            issues["swim_technique"] += 1
         if not _positive_integer(total_duration):
             issues["duration"] += 1
         if sport == "Zwemmen" and not _positive_integer(total_distance):
@@ -82,7 +93,10 @@ def audit_source_catalog(path: Path) -> SourceCatalogAudit:
             segment_found = True
             if blank_seen:
                 issues["segment_order"] += 1
-            if zone not in {"1", "2", "3", "4", "5"}:
+            zone_match = _RPE_ZONE_PATTERN.fullmatch(zone)
+            if zone_match is None or (
+                _RPE_LABELS[int(zone_match.group(1))] != zone_match.group(2)
+            ):
                 issues["zone"] += 1
             if not time_value and not distance_value:
                 issues["segment_measure"] += 1

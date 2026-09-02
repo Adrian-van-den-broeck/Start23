@@ -853,7 +853,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                   </Text>
                   <Text style={styles.muted}>
                     Uitvoering op {guidanceLabels[selectedSetup.guidance_mode]}.
-                    Gebruik per blok de canonieke RPE-schaal 1–10.
+                    Gebruik per blok de getoonde triathlon-RPE-zone.
                   </Text>
                   <View style={styles.segmentList}>
                     {selectedProtocol.segments.map((segment) => (
@@ -870,6 +870,12 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                             {segment.duration_seconds
                               ? `${segment.duration_seconds / 60} min`
                               : `${segment.distance_meters} m`}
+                          </Text>
+                          <Text style={styles.muted}>
+                            {segment.rpe_display_label} · {segment.rpe_training_type}
+                          </Text>
+                          <Text style={styles.muted}>
+                            {segment.rpe_description}
                           </Text>
                         </View>
                       </View>

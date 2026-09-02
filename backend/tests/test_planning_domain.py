@@ -84,7 +84,7 @@ def test_exact_test_date_is_owned_by_fixed_schedule_constraint() -> None:
     run = next(
         template
         for template in active_catalog()
-        if template.id.hex == "55000000000000000000000000000009"
+        if template.id.hex == "56000000000000000000000000000009"
     )
     scheduled = schedule_workouts(
         selected=(
@@ -108,7 +108,7 @@ def test_explicit_field_test_cannot_be_selected_without_an_exact_date() -> None:
     run_test = next(
         template
         for template in active_catalog()
-        if template.id.hex == "55000000000000000000000000000009"
+        if template.id.hex == "56000000000000000000000000000009"
     )
 
     with pytest.raises(

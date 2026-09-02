@@ -1423,7 +1423,7 @@ def test_deck_and_layout_validation_use_server_owned_workout_facts(
 def test_generic_plan_endpoint_rejects_direct_field_test_template_selection(
     planning_client: TestClient,
 ) -> None:
-    field_test_template_id = "55000000-0000-0000-0000-000000000009"
+    field_test_template_id = "56000000-0000-0000-0000-000000000009"
 
     response = planning_client.post(
         "/api/v1/weekly-plans/proposals",

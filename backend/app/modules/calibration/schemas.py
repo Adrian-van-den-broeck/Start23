@@ -156,6 +156,10 @@ class ProtocolSegmentResponse(CalibrationPublicModel):
     distance_meters: int | None
     target_rpe_min: int
     target_rpe_max: int
+    rpe_zone_number: int = Field(ge=1, le=5)
+    rpe_display_label: str
+    rpe_training_type: str
+    rpe_description: str
     optional: bool
 
 

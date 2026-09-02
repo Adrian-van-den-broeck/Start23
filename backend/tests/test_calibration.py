@@ -412,11 +412,11 @@ def _save_run_test(client: TestClient, activity_id: UUID) -> None:
         _segment_payload(activity_id, "warmup", 3, duration_seconds=900),
         _segment_payload(activity_id, "strides", 6, duration_seconds=300),
         _segment_payload(
-            activity_id,
-            "test_30min",
-            9,
-            duration_seconds=1800,
-            reported_block_rpe=9,
+                activity_id,
+                "test_30min",
+                8,
+                duration_seconds=1800,
+                reported_block_rpe=8,
             average_pace_seconds_per_km=290,
             average_heart_rate_last_20min_bpm=171.6,
             data_completeness=0.98,
@@ -622,6 +622,15 @@ def test_field_test_protocol_must_match_discipline_and_guidance(
         "start23_bike_fthr_20min_v1",
         "start23_week1_bike_calibration_v1",
     }
+    assert all(
+        segment["rpe_display_label"].startswith(
+            f"Zone {segment['rpe_zone_number']} · RPE "
+        )
+        and segment["rpe_training_type"]
+        and segment["rpe_description"]
+        for protocol in protocols.json()
+        for segment in protocol["segments"]
+    )
 
 
 def test_observation_retry_is_idempotent_and_conflicting_revision_is_rejected(
@@ -755,7 +764,7 @@ def test_missing_session_rpe_blocks_evaluation_not_observation_persistence(
         _segment_payload(
             activity_id,
             "test_30min",
-            9,
+            8,
             duration_seconds=1800,
             reported_block_rpe=9,
             average_pace_seconds_per_km=290,

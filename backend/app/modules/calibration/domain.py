@@ -12,6 +12,7 @@ from enum import Enum
 from typing import Final
 
 from app.modules.physiology.models import Discipline
+from app.modules.physiology.rpe_zones import zone_for_rpe_range
 from app.modules.physiology.zones import (
     CalculatedZoneMetricProfile,
     ZoneMetric,
@@ -133,6 +134,9 @@ class ProtocolSegment:
     target_rpe_min: int
     target_rpe_max: int
     optional: bool = False
+
+    def __post_init__(self) -> None:
+        zone_for_rpe_range(self.target_rpe_min, self.target_rpe_max)
 
 
 @dataclass(frozen=True, slots=True)
@@ -325,9 +329,9 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         guidance_modes=("heart_rate", "pace", "combined"),
         segments=(
             _segment(1, "warmup", "prepare", 900, None, 2, 3),
-            _segment(2, "strides", "prepare", 300, None, 5, 7),
-            _segment(3, "test_30min", "valid_test_segment", 1800, None, 8, 9),
-            _segment(4, "cooldown", "recovery", 600, None, 1, 2),
+            _segment(2, "strides", "prepare", 300, None, 5, 6),
+            _segment(3, "test_30min", "valid_test_segment", 1800, None, 7, 8),
+            _segment(4, "cooldown", "recovery", 600, None, 2, 3),
         ),
     ),
     "start23_bike_ftp_30min_v1": CalibrationProtocol(
@@ -339,9 +343,9 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
         guidance_modes=("power", "combined"),
         segments=(
-            _segment(1, "warmup", "prepare", 1200, None, 2, 4),
-            _segment(2, "test_30min", "valid_test_segment", 1800, None, 8, 9),
-            _segment(3, "cooldown", "recovery", 600, None, 1, 2),
+            _segment(1, "warmup", "prepare", 1200, None, 2, 3),
+            _segment(2, "test_30min", "valid_test_segment", 1800, None, 7, 8),
+            _segment(3, "cooldown", "recovery", 600, None, 2, 3),
         ),
     ),
     "start23_bike_fthr_20min_v1": CalibrationProtocol(
@@ -353,9 +357,9 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
         guidance_modes=("heart_rate",),
         segments=(
-            _segment(1, "warmup", "prepare", 1200, None, 2, 4),
-            _segment(2, "test_20min", "valid_test_segment", 1200, None, 8, 9),
-            _segment(3, "cooldown", "recovery", 600, None, 1, 2),
+            _segment(1, "warmup", "prepare", 1200, None, 2, 3),
+            _segment(2, "test_20min", "valid_test_segment", 1200, None, 7, 8),
+            _segment(3, "cooldown", "recovery", 600, None, 2, 3),
         ),
     ),
     "start23_swim_css_400_200_v1": CalibrationProtocol(
@@ -367,11 +371,11 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
         guidance_modes=("pace",),
         segments=(
-            _segment(1, "warmup", "prepare", None, 600, 2, 4),
+            _segment(1, "warmup", "prepare", None, 600, 2, 3),
             _segment(2, "tt_400m", "valid_test_segment", None, 400, 9, 10),
-            _segment(3, "active_recovery", "recovery_between_tests", 420, None, 1, 2),
+            _segment(3, "active_recovery", "recovery_between_tests", 420, None, 2, 3),
             _segment(4, "tt_200m", "valid_test_segment", None, 200, 9, 10),
-            _segment(5, "cooldown", "recovery", None, 200, 1, 2),
+            _segment(5, "cooldown", "recovery", None, 200, 2, 3),
         ),
     ),
     "start23_week1_run_calibration_v1": CalibrationProtocol(
@@ -385,7 +389,7 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         segments=(
             _segment(1, "warmup", "prepare", 600, None, 2, 3),
             _segment(
-                2, "comfortable_20min", "calibration_observation", 1200, None, 3, 4
+                2, "comfortable_20min", "calibration_observation", 1200, None, 4, 4
             ),
             _segment(
                 3,
@@ -397,7 +401,7 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
                 6,
                 optional=True,
             ),
-            _segment(4, "cooldown", "recovery", 600, None, 1, 2),
+            _segment(4, "cooldown", "recovery", 600, None, 2, 3),
         ),
     ),
     "start23_week1_bike_calibration_v1": CalibrationProtocol(
@@ -411,7 +415,7 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         segments=(
             _segment(1, "warmup", "prepare", 900, None, 2, 3),
             _segment(
-                2, "comfortable_20min", "calibration_observation", 1200, None, 3, 4
+                2, "comfortable_20min", "calibration_observation", 1200, None, 4, 4
             ),
             _segment(
                 3,
@@ -423,7 +427,7 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
                 6,
                 optional=True,
             ),
-            _segment(4, "cooldown", "recovery", 600, None, 1, 2),
+            _segment(4, "cooldown", "recovery", 600, None, 2, 3),
         ),
     ),
     "start23_week1_swim_calibration_v1": CalibrationProtocol(
@@ -437,10 +441,10 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         segments=(
             _segment(1, "warmup", "prepare", None, 300, 2, 3),
             _segment(
-                2, "4x200_comfortable", "calibration_observation", None, 800, 3, 4
+                2, "4x200_comfortable", "calibration_observation", None, 800, 4, 4
             ),
             _segment(3, "4x100_steady", "calibration_observation", None, 400, 5, 6),
-            _segment(4, "cooldown", "recovery", None, 200, 1, 2),
+            _segment(4, "cooldown", "recovery", None, 200, 2, 3),
         ),
     ),
 }

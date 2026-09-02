@@ -7,6 +7,7 @@ from uuid import UUID
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 
 from app.modules.physiology.models import Discipline, IntensityBucket, TrainingZone
+from app.modules.physiology.rpe_zones import rpe_zone, zone_for_rpe_value
 from app.modules.workouts.catalog import (
     FallbackCompatibility,
     ProtocolTarget,
@@ -41,6 +42,44 @@ class RpeTargetResponse(PublicWorkoutModel):
     target_rpe_max: int = Field(ge=1, le=10)
     intensity_bucket: IntensityBucket
     heart_rate_observation_required: Literal[True] = True
+
+
+class RpeZoneResponse(PublicWorkoutModel):
+    """Reviewed sport-specific RPE zone shown to the athlete."""
+
+    zone_number: int = Field(ge=1, le=5)
+    target_rpe_min: int = Field(ge=2, le=10)
+    target_rpe_max: int = Field(ge=2, le=10)
+    display_label: str
+    training_type: str
+    description: str
+
+
+def rpe_zone_responses(
+    discipline: Discipline,
+    segments: tuple[object, ...],
+) -> tuple[RpeZoneResponse, ...]:
+    """Derive unique canonical zones from domain or validated response segments."""
+    zones: set[TrainingZone] = set()
+    for segment in segments:
+        zone = getattr(segment, "zone_target", None)
+        if zone is None:
+            zone = zone_for_rpe_value(int(getattr(segment, "expected_rpe")))
+        zones.add(TrainingZone(zone))
+    return tuple(
+        RpeZoneResponse(
+            zone_number=definition.zone.value,
+            target_rpe_min=definition.rpe_min,
+            target_rpe_max=definition.rpe_max,
+            display_label=definition.display_label,
+            training_type=definition.training_type,
+            description=definition.description,
+        )
+        for definition in (
+            rpe_zone(discipline, zone)
+            for zone in sorted(zones, key=lambda item: item.value)
+        )
+    )
 
 
 class WorkoutSegmentResponse(PublicWorkoutModel):
@@ -91,6 +130,7 @@ class WorkoutTemplateResponse(PublicWorkoutModel):
     zone_requirements: tuple[ZoneRequirement, ...]
     fallback_compatibility: FallbackCompatibility
     segments: tuple[WorkoutSegmentResponse, ...]
+    rpe_zones: tuple[RpeZoneResponse, ...]
 
     @classmethod
     def from_domain(cls, template: WorkoutTemplate) -> "WorkoutTemplateResponse":
@@ -98,7 +138,7 @@ class WorkoutTemplateResponse(PublicWorkoutModel):
         values = {
             field: getattr(template, field)
             for field in cls.model_fields
-            if field != "segments"
+            if field not in {"segments", "rpe_zones"}
         }
         values["segments"] = tuple(
             {
@@ -125,6 +165,7 @@ class WorkoutTemplateResponse(PublicWorkoutModel):
             }
             for segment in template.segments
         )
+        values["rpe_zones"] = rpe_zone_responses(template.discipline, template.segments)
         return cls.model_validate(values)
 
 

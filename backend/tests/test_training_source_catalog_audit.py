@@ -13,9 +13,9 @@ def test_phase_8_source_catalog_is_audited_without_inventing_taper_rows() -> Non
 
     audit = audit_source_catalog(source)
 
-    assert audit.row_count == 160
-    assert audit.sport_counts == {"Fietsen": 50, "Lopen": 50, "Zwemmen": 60}
-    assert audit.bucket_counts == {"80%": 73, "20%": 87}
-    assert audit.issue_counts == {"duration": 60}
+    assert audit.row_count == 154
+    assert audit.sport_counts == {"Fietsen": 50, "Lopen": 50, "Zwemmen": 54}
+    assert audit.bucket_counts == {"80%": 67, "20%": 87}
+    assert audit.issue_counts == {"duration": 54}
     assert audit.taper_marker_present is False
     assert audit.structurally_importable is False

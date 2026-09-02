@@ -233,6 +233,10 @@ export type CalibrationProtocolSegment = {
   distance_meters: number | null;
   target_rpe_min: number;
   target_rpe_max: number;
+  rpe_zone_number: number;
+  rpe_display_label: string;
+  rpe_training_type: string;
+  rpe_description: string;
   optional: boolean;
 };
 
@@ -455,6 +459,15 @@ export type WorkoutSegment = {
   is_swim_technique: boolean;
 };
 
+export type RpeZone = {
+  zone_number: number;
+  target_rpe_min: number;
+  target_rpe_max: number;
+  display_label: string;
+  training_type: string;
+  description: string;
+};
+
 export type PlanWarning = {
   id: string | null;
   rule_id: string;
@@ -478,6 +491,7 @@ export type PlannedWorkout = {
   expected_rpe_min: number;
   expected_rpe_max: number;
   segments: WorkoutSegment[];
+  rpe_zones: RpeZone[];
   scheduled_date: string;
   source:
     | 'auto_planned'
@@ -576,6 +590,7 @@ export type WorkoutDeckItem = {
   expected_rpe_min: number;
   expected_rpe_max: number;
   segments: WorkoutSegment[];
+  rpe_zones: RpeZone[];
 };
 
 export type WorkoutDeck = {

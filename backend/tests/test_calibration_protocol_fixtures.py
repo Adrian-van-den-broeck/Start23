@@ -4,6 +4,7 @@ import csv
 from pathlib import Path
 
 from app.modules.calibration.domain import PROTOCOLS
+from app.modules.physiology.rpe_zones import rpe_zone, zone_for_rpe_range
 
 _FIXTURES = Path(__file__).parents[2] / "docs" / "trainings"
 
@@ -45,4 +46,11 @@ def test_python_protocol_registry_matches_every_approved_csv_fixture() -> None:
         ]
         assert [segment.target_rpe_max for segment in protocol.segments] == [
             int(row["target_rpe_max"]) for row in segment_rows
+        ]
+        assert [row["rpe_zone"] for row in segment_rows] == [
+            rpe_zone(
+                protocol.discipline,
+                zone_for_rpe_range(segment.target_rpe_min, segment.target_rpe_max),
+            ).display_label
+            for segment in protocol.segments
         ]

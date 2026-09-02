@@ -10,7 +10,11 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.modules.physiology.models import Discipline, IntensityBucket
 from app.modules.workouts.catalog import TrainingPhase
-from app.modules.workouts.schemas import WorkoutSegmentResponse
+from app.modules.workouts.schemas import (
+    RpeZoneResponse,
+    WorkoutSegmentResponse,
+    rpe_zone_responses,
+)
 
 
 class PublicPlanningModel(BaseModel):
@@ -139,6 +143,7 @@ class PlannedWorkoutResponse(PublicPlanningModel):
     expected_rpe_min: int = Field(ge=1, le=10)
     expected_rpe_max: int = Field(ge=1, le=10)
     segments: tuple[WorkoutSegmentResponse, ...]
+    rpe_zones: tuple[RpeZoneResponse, ...] = ()
     scheduled_date: date
     source: Literal[
         "auto_planned",
@@ -148,6 +153,11 @@ class PlannedWorkoutResponse(PublicPlanningModel):
     ]
     status: Literal["scheduled", "completed", "cancelled"]
     warnings: tuple[PlanWarningResponse, ...] = ()
+
+    @model_validator(mode="after")
+    def derive_rpe_zones(self) -> "PlannedWorkoutResponse":
+        self.rpe_zones = rpe_zone_responses(self.discipline, self.segments)
+        return self
 
 
 class ChangeProposalSummaryResponse(PublicPlanningModel):
@@ -295,6 +305,12 @@ class WorkoutDeckItemResponse(PublicPlanningModel):
     expected_rpe_min: int = Field(ge=1, le=10)
     expected_rpe_max: int = Field(ge=1, le=10)
     segments: tuple[WorkoutSegmentResponse, ...]
+    rpe_zones: tuple[RpeZoneResponse, ...] = ()
+
+    @model_validator(mode="after")
+    def derive_rpe_zones(self) -> "WorkoutDeckItemResponse":
+        self.rpe_zones = rpe_zone_responses(self.discipline, self.segments)
+        return self
 
 
 class SwipeDraftCreateRequest(PublicPlanningModel):

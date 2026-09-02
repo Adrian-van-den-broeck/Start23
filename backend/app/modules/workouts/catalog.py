@@ -18,6 +18,7 @@ from app.modules.physiology.models import (
     TrainingZone,
 )
 from app.modules.physiology.progression import snapshot_personalized_load
+from app.modules.physiology.rpe_zones import rpe_zone, zone_for_rpe_value
 
 
 class TrainingPhase(str, Enum):
@@ -298,6 +299,7 @@ def as_rpe_guided_template(template: WorkoutTemplate) -> WorkoutTemplate:
             segments.append(segment)
             continue
         assert segment.zone_target is not None
+        guidance = rpe_zone(template.discipline, segment.zone_target)
         bucket = classify_workout(
             WorkoutIntensity(
                 (
@@ -313,13 +315,17 @@ def as_rpe_guided_template(template: WorkoutTemplate) -> WorkoutTemplate:
             replace(
                 segment,
                 instructions=(
-                    f"{segment.name}: volg RPE {segment.expected_rpe}; "
+                    f"{segment.name}: volg {guidance.display_label}; "
+                    f"{guidance.description} "
                     "gebruik geen onbevestigde numerieke zones."
+                ),
+                expected_rpe=min(
+                    max(segment.expected_rpe, guidance.rpe_min), guidance.rpe_max
                 ),
                 zone_target=None,
                 rpe_target=RpeTarget(
-                    target_rpe_min=segment.expected_rpe,
-                    target_rpe_max=segment.expected_rpe,
+                    target_rpe_min=guidance.rpe_min,
+                    target_rpe_max=guidance.rpe_max,
                     intensity_bucket=bucket,
                 ),
             )
@@ -814,8 +820,95 @@ PHASE_11_FIELD_TEST_ADDITIONS: tuple[WorkoutTemplate, ...] = (
     ),
 )
 
+
+def _canonical_protocol_version(
+    template: WorkoutTemplate,
+    *,
+    id: str,
+) -> WorkoutTemplate:
+    """Create an immutable successor whose targets use reviewed RPE zones."""
+    segments: list[WorkoutSegment] = []
+    for segment in template.segments:
+        assert segment.protocol_target is not None
+        target = segment.protocol_target
+        zone = (
+            TrainingZone.ZONE_2
+            if (target.target_rpe_min, target.target_rpe_max) == (3, 4)
+            else zone_for_rpe_value(segment.expected_rpe)
+        )
+        guidance = rpe_zone(template.discipline, zone)
+        segments.append(
+            replace(
+                segment,
+                instructions=(
+                    f"{segment.instructions} {guidance.display_label}: "
+                    f"{guidance.description}"
+                ),
+                expected_rpe=min(
+                    max(segment.expected_rpe, guidance.rpe_min), guidance.rpe_max
+                ),
+                protocol_target=replace(
+                    target,
+                    target_rpe_min=guidance.rpe_min,
+                    target_rpe_max=guidance.rpe_max,
+                ),
+            )
+        )
+    return _template(
+        id=id,
+        key=str(template.template_key),
+        version=template.version + 1,
+        discipline=template.discipline,
+        name=template.name,
+        description=template.description,
+        phases=template.training_phases,
+        requirements=template.zone_requirements,
+        fallback=template.fallback_compatibility,
+        segments=tuple(segments),
+        distance_meters=template.distance_meters,
+        explicit_scheduling_only=template.explicit_scheduling_only,
+    )
+
+
+MVP_CATALOG_ADDITIONS: tuple[WorkoutTemplate, ...] = (
+    _template(
+        id="52000000-0000-0000-0000-000000000001",
+        key="50000000-0000-0000-0000-000000000001",
+        version=2,
+        discipline=Discipline.SWIM,
+        name="Aerobic swim",
+        description="Relaxed continuous swimming for aerobic endurance.",
+        phases=(TrainingPhase.BASE, TrainingPhase.RECOVERY),
+        requirements=(ZoneRequirement.PACE,),
+        fallback=FallbackCompatibility.INCOMPATIBLE,
+        segments=(
+            _segment(1, "Easy warm-up", "10", 1, 2, distance=400),
+            _segment(2, "Aerobic swimming", "20", 2, 4, distance=800),
+            _segment(3, "Easy finish", "10", 1, 2, distance=400),
+        ),
+        distance_meters=1600,
+    ),
+    _canonical_protocol_version(
+        PHASE_8_5_PROTOCOL_ADDITIONS[0],
+        id="56000000-0000-0000-0000-000000000008",
+    ),
+    _canonical_protocol_version(
+        PHASE_11_FIELD_TEST_ADDITIONS[0],
+        id="56000000-0000-0000-0000-000000000009",
+    ),
+    _canonical_protocol_version(
+        PHASE_11_FIELD_TEST_ADDITIONS[1],
+        id="56000000-0000-0000-0000-000000000010",
+    ),
+    _canonical_protocol_version(
+        PHASE_11_FIELD_TEST_ADDITIONS[2],
+        id="56000000-0000-0000-0000-000000000011",
+    ),
+)
+
 CURRENT_CATALOG = (
     REVIEWED_CATALOG
+    + MVP_CATALOG_ADDITIONS
     + PHASE_6_CATALOG_ADDITIONS
     + PHASE_8_5_PROTOCOL_ADDITIONS
     + PHASE_11_FIELD_TEST_ADDITIONS

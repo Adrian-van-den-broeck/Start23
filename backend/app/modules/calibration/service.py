@@ -49,6 +49,7 @@ from app.modules.calibration.schemas import (
     ZoneProfileStateResponse,
 )
 from app.modules.physiology.models import Discipline, TrainingZone
+from app.modules.physiology.rpe_zones import rpe_zone, zone_for_rpe_range
 from app.modules.physiology.zones import (
     ZONE_MODEL_VERSION,
     CalculatedZoneMetricProfile,
@@ -150,6 +151,18 @@ class CalibrationService:
                         distance_meters=segment.distance_meters,
                         target_rpe_min=segment.target_rpe_min,
                         target_rpe_max=segment.target_rpe_max,
+                        rpe_zone_number=(
+                            guidance := rpe_zone(
+                                protocol.discipline,
+                                zone_for_rpe_range(
+                                    segment.target_rpe_min,
+                                    segment.target_rpe_max,
+                                ),
+                            )
+                        ).zone.value,
+                        rpe_display_label=guidance.display_label,
+                        rpe_training_type=guidance.training_type,
+                        rpe_description=guidance.description,
                         optional=segment.optional,
                     )
                     for segment in protocol.segments

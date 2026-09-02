@@ -113,22 +113,27 @@ def test_snapshot_remains_stable_when_a_new_catalog_version_exists() -> None:
     assert version_two.internal_planned_load.value == Decimal("2.25")
 
 
-def test_swim_template_can_be_projected_to_rpe_without_losing_technique_detail() -> (
-    None
-):
+def test_active_swim_templates_exclude_technique_for_the_mvp() -> None:
     swim = next(
         template
         for template in active_catalog()
         if template.discipline.value == "swim"
-        and any(segment.is_swim_technique for segment in template.segments)
+        and template.template_key == REVIEWED_CATALOG[0].template_key
         and not template.explicit_scheduling_only
     )
 
     projected = as_rpe_guided_template(swim)
 
+    assert swim.version == 2
+    assert "techni" not in f"{swim.name} {swim.description}".casefold()
+    assert not any(segment.is_swim_technique for segment in swim.segments)
     assert all(segment.zone_target is None for segment in projected.segments)
     assert all(segment.rpe_target is not None for segment in projected.segments)
-    assert any(segment.is_swim_technique for segment in projected.segments)
+    assert [
+        (segment.rpe_target.target_rpe_min, segment.rpe_target.target_rpe_max)
+        for segment in projected.segments
+        if segment.rpe_target
+    ] == [(2, 3), (4, 4), (2, 3)]
 
 
 def test_internal_load_is_hidden_from_representations() -> None:
@@ -153,6 +158,7 @@ def test_catalog_endpoint_requires_authentication_and_omits_hidden_load(
     assert response.status_code == 200
     payload = response.json()
     assert len(payload["templates"]) == 11
+    assert all("rpe_zones" in template for template in payload["templates"])
     calibration = next(
         template
         for template in payload["templates"]

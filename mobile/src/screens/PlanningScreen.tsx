@@ -69,6 +69,7 @@ import { StatusPill } from '../components/StatusPill';
 import { TrainingCalendar } from '../components/TrainingCalendar';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { formatIsoDateInput } from '../lib/dateInput';
+import { formatRpeZones } from '../lib/rpe';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
 
 type PlanningScreenProps = {
@@ -297,7 +298,7 @@ function WorkoutCard({ workout }: { workout: PlannedWorkout }) {
       <Text style={styles.cardMeta}>
         {t('common.durationMinutes', {
           minutes: Number(workout.duration_minutes),
-        })}
+        })}{' · '}{formatRpeZones(workout.rpe_zones)}
       </Text>
     </View>
   );
@@ -317,6 +318,7 @@ function deckItemFor(workout: PlannedWorkout): WorkoutDeckItem {
     expected_rpe_min: workout.expected_rpe_min,
     expected_rpe_max: workout.expected_rpe_max,
     segments: workout.segments,
+    rpe_zones: workout.rpe_zones,
   };
 }
 
@@ -469,7 +471,8 @@ function PendingWorkoutEditor({
                 {item.description}
               </Text>
               <Text style={styles.cardMeta}>
-                {Number(item.duration_minutes)} min · {index + 1}/{candidates.length}
+                {Number(item.duration_minutes)} min · {formatRpeZones(item.rpe_zones)} ·{' '}
+                {index + 1}/{candidates.length}
               </Text>
             </View>
           );
@@ -590,6 +593,9 @@ function SwipeDraftPanel({
             </View>
             <Text style={styles.cardTitle}>{candidate.name}</Text>
             <Text style={styles.cardDescription}>{candidate.description}</Text>
+            <Text style={styles.cardMeta}>
+              {formatRpeZones(candidate.rpe_zones)}
+            </Text>
             <Text style={styles.swipeInstruction}>
               ← overslaan · kiezen →
             </Text>
@@ -674,6 +680,9 @@ function SwipeDraftPanel({
                   tone="neutral"
                 />
               </View>
+              <Text style={styles.cardMeta}>
+                {formatRpeZones(workout.rpe_zones)}
+              </Text>
               <ScrollView
                 contentContainerStyle={styles.dateChoiceRow}
                 horizontal
