@@ -112,11 +112,6 @@ const warningCopy: Record<string, { message: string; title: string }> = {
     message:
       'Trainingen voor de bevestigde geblesseerde disciplines zijn niet opgenomen.',
   },
-  intensity_distribution_outside_target: {
-    title: 'Intensiteit nog niet compleet',
-    message:
-      'De beschikbare combinatie vult de rustige en intensieve tijd voor deze week nog niet volledig. Je kunt per training swipen; als er geen geldig alternatief is, blijft dit aandachtspunt zichtbaar.',
-  },
   manual_review_required: {
     title: 'Extra controle nodig',
     message:
@@ -141,6 +136,11 @@ const warningCopy: Record<string, { message: string; title: string }> = {
     title: 'Weekdoel nog niet compleet',
     message:
       'De beschikbare trainingen sluiten nog niet volledig aan op het weekdoel.',
+  },
+  workouts_consolidated_on_available_dates: {
+    title: 'Trainingen gecombineerd',
+    message:
+      'Er staan meerdere trainingen op dezelfde beschikbare dag. Plan voldoende herstel tussen de sessies.',
   },
 };
 
@@ -647,9 +647,9 @@ function SwipeDraftPanel({
       {draft.state === 'placement' ? (
         <>
           <Text style={styles.body}>
-            Laat Wombo automatisch plannen, of kies voor iedere training een
-            bevestigde datum. Iedere handmatige plaatsing wordt direct als
-            volledige week door de server gecontroleerd.
+            Laat Wombo de trainingen spreiden over je beschikbare dagen, of
+            kies zelf per training een datum. Je mag dezelfde datum voor
+            meerdere trainingen kiezen.
           </Text>
           {draft.warnings.map((warning) => {
             const presentation = warningPresentation(warning);
@@ -662,7 +662,7 @@ function SwipeDraftPanel({
           })}
           <ActionButton
             disabled={busy}
-            label="Plan datums automatisch"
+            label="Verspreid over beschikbare dagen"
             onPress={() => onSubmit('automatic')}
           />
           {draft.accepted_workouts.map((workout) => (
@@ -1316,8 +1316,9 @@ export function PlanningScreen({
                 <StatusPill label="Jij bevestigt" tone="brand" />
                 <Text style={styles.title}>Wanneer kun je trainen?</Text>
                 <Text style={styles.body}>
-                  Kies de volledige lokale datums waarop je kunt trainen. Het resultaat blijft een
-                  voorstel totdat jij het goedkeurt.
+                  Kies één dag om alle trainingen op die dag te plannen, of
+                  meerdere dagen om ze zo gelijk mogelijk te spreiden. Het
+                  resultaat blijft een voorstel totdat jij het goedkeurt.
                 </Text>
                 <FormField
                   autoCapitalize="none"
@@ -1446,9 +1447,9 @@ export function PlanningScreen({
                       {plan.warnings.some(
                         (warning) =>
                           warning.code ===
-                          'intensity_distribution_outside_target',
+                          'target_outside_catalog_capacity',
                       )
-                        ? 'Intensiteit nog niet compleet'
+                        ? 'Weekdoel vraagt aandacht'
                         : 'Weekcombinatie compleet'}
                     </Text>
                   </View>

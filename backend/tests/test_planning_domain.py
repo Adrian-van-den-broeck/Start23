@@ -156,6 +156,9 @@ def test_initial_plan_uses_catalog_baseline_and_explicit_availability() -> None:
     )
     assert draft.low_intensity_percent == Decimal(100)
     assert draft.high_intensity_percent == Decimal(0)
+    assert "intensity_distribution_outside_target" not in {
+        warning.code for warning in draft.warnings
+    }
     assert "value" not in repr(draft.planned_load)
 
 
@@ -540,37 +543,113 @@ def test_remaining_deck_is_selection_aware_and_rejects_stale_cards() -> None:
     assert captured.value.code == "template_not_eligible"
 
 
-def test_generated_schedule_fails_when_availability_cannot_fit_deck() -> None:
-    with pytest.raises(PlanningConstraintError) as captured:
-        build_weekly_plan(
-            week_start=_WEEK_START,
-            timezone_name="UTC",
-            race_date=date(2026, 12, 6),
-            catalog=active_catalog(REVIEWED_CATALOG),
-            prior_loads=(),
-            goal_disciplines=frozenset(Discipline),
-            confirmed_injuries=frozenset(),
-            zone_capabilities=_capabilities(),
-            available_dates=(date(2026, 8, 3),),
+def test_generated_schedule_can_consolidate_all_workouts_on_one_available_day() -> None:
+    only_available_day = date(2026, 8, 3)
+
+    draft = build_weekly_plan(
+        week_start=_WEEK_START,
+        timezone_name="UTC",
+        race_date=date(2026, 12, 6),
+        catalog=active_catalog(REVIEWED_CATALOG),
+        prior_loads=(),
+        goal_disciplines=frozenset(Discipline),
+        confirmed_injuries=frozenset(),
+        zone_capabilities=_capabilities(),
+        available_dates=(only_available_day,),
+    )
+
+    assert len(draft.workouts) == 3
+    assert {workout.scheduled_date for workout in draft.workouts} == {
+        only_available_day
+    }
+    assert "workouts_consolidated_on_available_dates" in {
+        warning.code for warning in draft.warnings
+    }
+
+
+def test_generated_schedule_balances_three_workouts_over_two_available_days() -> None:
+    available_dates = (date(2026, 8, 3), date(2026, 8, 5))
+
+    draft = build_weekly_plan(
+        week_start=_WEEK_START,
+        timezone_name="UTC",
+        race_date=date(2026, 12, 6),
+        catalog=active_catalog(REVIEWED_CATALOG),
+        prior_loads=(),
+        goal_disciplines=frozenset(Discipline),
+        confirmed_injuries=frozenset(),
+        zone_capabilities=_capabilities(),
+        available_dates=available_dates,
+    )
+
+    workout_counts = {
+        scheduled_date: sum(
+            workout.scheduled_date == scheduled_date for workout in draft.workouts
         )
+        for scheduled_date in available_dates
+    }
+    assert sorted(workout_counts.values()) == [1, 2]
 
-    assert captured.value.code == "availability_unsatisfied"
+
+def test_manual_schedule_can_place_multiple_workouts_on_the_same_date() -> None:
+    available_dates = (date(2026, 8, 3), date(2026, 8, 5))
+    automatic = build_weekly_plan(
+        week_start=_WEEK_START,
+        timezone_name="UTC",
+        race_date=date(2026, 12, 6),
+        catalog=active_catalog(REVIEWED_CATALOG),
+        prior_loads=(),
+        goal_disciplines=frozenset(Discipline),
+        confirmed_injuries=frozenset(),
+        zone_capabilities=_capabilities(),
+        available_dates=available_dates,
+    )
+    selected_ids = tuple(
+        workout.snapshot.template_id for workout in automatic.workouts
+    )
+
+    consolidated = build_weekly_plan(
+        week_start=_WEEK_START,
+        timezone_name="UTC",
+        race_date=date(2026, 12, 6),
+        catalog=active_catalog(REVIEWED_CATALOG),
+        prior_loads=(),
+        goal_disciplines=frozenset(Discipline),
+        confirmed_injuries=frozenset(),
+        zone_capabilities=_capabilities(),
+        available_dates=available_dates,
+        selected_template_ids=selected_ids,
+        fixed_template_dates={
+            template_id: available_dates[0] for template_id in selected_ids
+        },
+    )
+
+    assert {workout.scheduled_date for workout in consolidated.workouts} == {
+        available_dates[0]
+    }
 
 
-def test_generated_schedule_rejects_four_consecutive_rest_days() -> None:
-    early_week_availability = tuple(date(2026, 8, day) for day in (3, 4, 5))
+def test_consolidation_keeps_same_discipline_high_intensity_spacing() -> None:
+    high_runs = tuple(
+        template
+        for template in active_catalog()
+        if template.discipline is Discipline.RUN
+        and template.intensity_bucket is IntensityBucket.HIGH
+    )
+    selected = tuple(
+        SelectedWorkout(
+            discipline=template.discipline,
+            snapshot=snapshot_template(template),
+        )
+        for template in high_runs[:2]
+    )
 
     with pytest.raises(PlanningConstraintError) as captured:
-        build_weekly_plan(
+        schedule_workouts(
+            selected=selected,
+            available_dates=(date(2026, 8, 3),),
             week_start=_WEEK_START,
             timezone_name="UTC",
-            race_date=date(2026, 12, 6),
-            catalog=active_catalog(REVIEWED_CATALOG),
-            prior_loads=(),
-            goal_disciplines=frozenset(Discipline),
-            confirmed_injuries=frozenset(),
-            zone_capabilities=_capabilities(),
-            available_dates=early_week_availability,
         )
 
     assert captured.value.code == "rest_or_anti_stack_unsatisfied"

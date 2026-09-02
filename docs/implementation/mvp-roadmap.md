@@ -1373,7 +1373,8 @@ form, and separately confirm it before a plan proposal can be created.
 
 ### Status
 
-Implemented locally on 2026-09-01. The original Phase 10 pending-workout editor
+Implemented on 2026-09-01 and migrated to the linked hosted database on
+2026-09-02. The original Phase 10 pending-workout editor
 remains available for revising an existing proposal, while new weeks now use a
 separate server-authoritative deck-first draft. Draft selection and date
 placement stay TSS-free and cannot activate a plan; submission creates only an
@@ -1404,24 +1405,24 @@ immutable pending proposal for the existing approval flow.
 
 - Add a server-authoritative swipe draft bound to the athlete, local week,
   exact base revision, confirmed context, restrictions, availability, and
-  ruleset version. **Implemented locally**
+  ruleset version. **Implemented and hosted**
 - Keep the target workout count fixed for that draft. Passed cards do not count
-  toward it, and an accepted workout counts at most once. **Implemented locally**
+  toward it, and an accepted workout counts at most once. **Implemented and hosted**
 - Recalculate every right swipe against the accepted set and the deterministic
   weekly composition, phase, zone/RPE capability, injury, recovery, taper,
-  catalog, and private-load constraints. **Implemented locally**
+  catalog, and private-load constraints. **Implemented and hosted**
 - Do not immediately resurface a passed card in the same draft. Support undoing
   the last swipe and resetting passed cards; if no eligible completion exists,
   return a clear recoverable state rather than looping indefinitely.
-  **Implemented locally**
+  **Implemented and hosted**
 - After selection, offer both deterministic automatic placement and manual
   date-only placement on a horizontally navigable week timeline.
-  **Implemented locally**
+  **Implemented and hosted**
 - Revalidate the complete layout server-side after every placement or move.
   Invalid dates remain unavailable and qualitative warnings stay visible.
-  **Implemented locally**
+  **Implemented and hosted**
 - Preserve the current immutable pending-revision, stale-edit, explicit
-  approval, RLS, and TSS-confidentiality boundaries. **Implemented locally**
+  approval, RLS, and TSS-confidentiality boundaries. **Implemented and hosted**
 
 ### Implementation and verification notes
 
@@ -1438,11 +1439,12 @@ immutable pending proposal for the existing approval flow.
 - Pure state fixtures cover ten passes followed by three accepts, undo, and
   reset. API tests cover owner isolation, duplicate accept idempotency, stale
   rejection, invalid incomplete submit, manual placement, and pending-only
-  proposal creation. The full local backend suite contains 390 tests.
-- The migration and rollback-only pgTAP owner/grant suite are committed but
-  still require execution against a running Supabase stack. Physical iOS and
-  Android gesture/accessibility checks and real-token two-user RLS remain
-  release gates.
+  proposal creation. The full local backend suite contains 391 tests.
+- The original migration and two production forward fixes are applied to the
+  linked hosted database. All 18 rollback-only pgTAP assertions pass there,
+  including an actual service-role create RPC plus owner/cross-owner RLS.
+  Physical iOS and Android gesture/accessibility checks and real-token two-user
+  RLS remain release gates.
 
 ### Exit criteria
 
@@ -1774,7 +1776,7 @@ Every phase must:
   questions, and constrained explanation; hosted 18-assertion pgTAP, ledger,
   lint, advisor, and read-only contract verification pass; device/two-user E2E,
   privacy approval, and renewed BR-006 physiological review remain gates`
-- Phase 10.1 swipe-built week and calendar timeline: `implemented locally;
+- Phase 10.1 swipe-built week and calendar timeline: `implemented and hosted;
   persistent server-authoritative accept/pass/undo/reset selection, fixed
   count/composition, automatic or manual date-only placement, restart resume,
   and pending-only proposal submission are present; migration/pgTAP,

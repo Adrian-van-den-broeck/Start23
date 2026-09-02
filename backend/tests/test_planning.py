@@ -963,6 +963,68 @@ def test_swipe_draft_preserves_rest_only_week_and_automatic_placement(
     assert len(result["plan"]["rest_days"]) == 7
 
 
+def test_swipe_draft_allows_multiple_workouts_on_one_available_date(
+    planning_client: TestClient,
+) -> None:
+    created = planning_client.post(
+        "/api/v1/weekly-plans/swipe-drafts",
+        headers=_headers(),
+        json={
+            "week_start": "2026-08-03",
+            "available_dates": ["2026-08-03", "2026-08-05"],
+            "confirmed_injuries": [],
+        },
+    )
+    assert created.status_code == 201, created.text
+    draft = cast(dict[str, Any], created.json())
+
+    while draft["state"] == "collecting":
+        current = draft["current_candidate"]
+        assert current is not None
+        accepted = planning_client.post(
+            f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions",
+            headers=_headers(),
+            json={
+                "expected_revision": draft["revision"],
+                "action": "accept",
+                "candidate_template_id": current["id"],
+            },
+        )
+        assert accepted.status_code == 200, accepted.text
+        draft = cast(dict[str, Any], accepted.json())
+
+    shared_date = draft["available_dates"][0]
+    for workout in draft["accepted_workouts"]:
+        placement = planning_client.put(
+            (
+                f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}"
+                f"/placements/{workout['id']}"
+            ),
+            headers=_headers(),
+            json={
+                "expected_revision": draft["revision"],
+                "scheduled_date": shared_date,
+            },
+        )
+        assert placement.status_code == 200, placement.text
+        draft = cast(dict[str, Any], placement.json())
+
+    submitted = planning_client.post(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/submit",
+        headers=_headers(),
+        json={
+            "expected_revision": draft["revision"],
+            "placement_mode": "manual",
+        },
+    )
+    assert submitted.status_code == 201, submitted.text
+    result = submitted.json()
+    assert {
+        workout["scheduled_date"] for workout in result["plan"]["workouts"]
+    } == {shared_date}
+    assert "tss" not in str(result).casefold()
+
+
 def test_swipe_draft_exhaustion_is_recoverable_without_lowering_target(
     planning_client: TestClient,
 ) -> None:

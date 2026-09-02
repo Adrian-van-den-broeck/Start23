@@ -262,8 +262,9 @@ De pgTAP-doelset bestaat uit:
 - **Fase 10 productie:** NO-GO totdat privacy/retentie, named BR-006 review,
   twee-user-RLS en devicechecks zijn afgerond.
 - **Fase 10.1 code:** GO.
-- **Fase 10.1 productie:** NO-GO totdat migration/pgTAP/lint, echte
-  twee-user-tokenisolatie en fysieke iOS/Android-validatie zijn afgerond.
+- **Fase 10.1 productie:** migration, hosted pgTAP en ledger zijn afgerond;
+  echte twee-user-tokenisolatie en fysieke iOS/Android-validatie blijven
+  releasegates.
 - **Fase 11 goedgekeurde subset:** conditionele GO na migration/pgTAP/lint/RLS
   en devicevalidatie.
 - **Fase 11 volledige exitcriteria:** NO-GO totdat Week-2/UC-05

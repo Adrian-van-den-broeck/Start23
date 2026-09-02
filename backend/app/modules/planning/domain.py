@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from datetime import date, datetime, time, timedelta, timezone
 from decimal import Decimal
 from enum import Enum
-from itertools import combinations, permutations
+from itertools import combinations
 from uuid import UUID
 from zoneinfo import ZoneInfo
 
@@ -615,7 +615,13 @@ def schedule_workouts(
     timezone_name: str,
     fixed_template_dates: Mapping[UUID, date] | None = None,
 ) -> tuple[ProposedWorkout, ...]:
-    """Place deterministic snapshots on explicit athlete-local dates."""
+    """Place deterministic snapshots on explicit athlete-local dates.
+
+    Available dates describe when the athlete can train, not a one-workout-per-
+    day capacity. Automatic placement spreads workouts as evenly as possible;
+    constrained availability and explicit fixed placements may consolidate
+    multiple workouts on one date.
+    """
     if not available_dates:
         raise PlanningConstraintError(
             "availability_required",
@@ -632,11 +638,6 @@ def schedule_workouts(
         raise PlanningConstraintError(
             "fixed_template_not_selected",
             "A fixed workout date must reference an explicitly selected template.",
-        )
-    if len(set(fixed.values())) != len(fixed):
-        raise PlanningConstraintError(
-            "fixed_dates_conflict",
-            "Two fixed workouts cannot use the same training date.",
         )
     week_dates = {week_start + timedelta(days=offset) for offset in range(7)}
     if not set(available_dates) <= week_dates:
@@ -658,27 +659,9 @@ def schedule_workouts(
             str(item.snapshot.template_id),
         ),
     )
-    if len(available_dates) < len(ordered):
-        raise PlanningConstraintError(
-            "availability_unsatisfied",
-            "The selected workouts require availability on more training days.",
-        )
+    sorted_dates = tuple(sorted(available_dates))
 
-    for assigned_days in permutations(sorted(available_dates), len(ordered)):
-        if any(
-            fixed.get(workout.snapshot.template_id, assigned_day) != assigned_day
-            for workout, assigned_day in zip(ordered, assigned_days, strict=True)
-        ):
-            continue
-        proposed = [
-            ProposedWorkout(
-                discipline=workout.discipline,
-                snapshot=workout.snapshot,
-                scheduled_date=assigned_day,
-            )
-            for workout, assigned_day in zip(ordered, assigned_days, strict=True)
-        ]
-        training_days = {workout.scheduled_date for workout in proposed}
+    def maximum_consecutive_rest_days(training_days: set[date]) -> int:
         consecutive_rest = 0
         maximum_rest = 0
         for offset in range(7):
@@ -687,24 +670,67 @@ def schedule_workouts(
             else:
                 consecutive_rest += 1
                 maximum_rest = max(maximum_rest, consecutive_rest)
-        if maximum_rest > 3:
-            continue
-        violations = find_anti_stack_violations(
-            tuple(
-                ScheduledWorkout(
-                    workout_id=str(workout.snapshot.template_id),
-                    disciplines=frozenset({workout.discipline}),
-                    intensity=workout.snapshot.intensity_bucket,
-                    starts_at=canonical_schedule_instant(
-                        workout.scheduled_date,
-                        timezone_name=timezone_name,
-                    ),
-                )
-                for workout in proposed
-            )
+        return maximum_rest
+
+    # Do not reject a plan for rest spacing the athlete's confirmed availability
+    # makes impossible. A manual fixed placement is also an explicit athlete
+    # choice and may intentionally consolidate the week.
+    enforce_rest_limit = (
+        not fixed and maximum_consecutive_rest_days(set(sorted_dates)) <= 3
+    )
+    assigned: list[ProposedWorkout] = []
+    usage = {scheduled_date: 0 for scheduled_date in sorted_dates}
+
+    def find_schedule(index: int) -> tuple[ProposedWorkout, ...] | None:
+        if index == len(ordered):
+            if enforce_rest_limit and maximum_consecutive_rest_days(
+                {workout.scheduled_date for workout in assigned}
+            ) > 3:
+                return None
+            return tuple(sorted(assigned, key=lambda item: item.scheduled_date))
+
+        workout = ordered[index]
+        fixed_date = fixed.get(workout.snapshot.template_id)
+        candidate_dates = (
+            (fixed_date,)
+            if fixed_date is not None
+            else tuple(sorted(sorted_dates, key=lambda value: (usage[value], value)))
         )
-        if not violations:
-            return tuple(sorted(proposed, key=lambda item: item.scheduled_date))
+        for assigned_day in candidate_dates:
+            proposal = ProposedWorkout(
+                discipline=workout.discipline,
+                snapshot=workout.snapshot,
+                scheduled_date=assigned_day,
+            )
+            candidate = (*assigned, proposal)
+            violations = find_anti_stack_violations(
+                tuple(
+                    ScheduledWorkout(
+                        workout_id=str(item.snapshot.template_id),
+                        disciplines=frozenset({item.discipline}),
+                        intensity=item.snapshot.intensity_bucket,
+                        starts_at=canonical_schedule_instant(
+                            item.scheduled_date,
+                            timezone_name=timezone_name,
+                        ),
+                    )
+                    for item in candidate
+                )
+            )
+            if violations:
+                continue
+            assigned.append(proposal)
+            usage[assigned_day] += 1
+            result = find_schedule(index + 1)
+            usage[assigned_day] -= 1
+            assigned.pop()
+            if result is not None:
+                return result
+        return None
+
+    proposed = find_schedule(0)
+    if proposed is not None:
+        return proposed
     raise PlanningConstraintError(
         "rest_or_anti_stack_unsatisfied",
         "The generated schedule cannot satisfy rest-day and anti-stack constraints.",
@@ -904,14 +930,14 @@ def build_weekly_plan(
         )
     )
     warnings: list[PlanningWarning] = []
-    if distribution.high_fraction.value != target.desired_high_fraction.value:
+    if len({workout.scheduled_date for workout in proposed}) < len(proposed):
         warnings.append(
             PlanningWarning(
-                rule_id=RuleId.TIME_INTENSITY,
-                code="intensity_distribution_outside_target",
+                rule_id=RuleId.SOFT_BOUNDARIES,
+                code="workouts_consolidated_on_available_dates",
                 message=(
-                    "The available workout deck does not exactly match the standard "
-                    "low/high time distribution for this week."
+                    "Multiple workouts share a confirmed training date so the "
+                    "weekly training combination still fits your availability."
                 ),
             )
         )

@@ -185,7 +185,7 @@ database was changed.
 
 Phase 10.1 migration
 `20260901054333_phase_10_1_swipe_week_drafts` was generated with Supabase CLI
-`2.116.0` on 2026-09-01 and remains local/unapplied. It adds a TSS-free
+`2.116.0` on 2026-09-01 and was applied to the linked hosted project. It adds a TSS-free
 server-authoritative swipe draft with exact owner, week, base/context revision,
 availability, restrictions, ruleset, target composition, decision history and
 date-only placements. Authenticated clients receive owner-scoped read access
@@ -194,13 +194,19 @@ through forced RLS and no direct write grant. Only two narrow service-role
 the existing critical-write trigger guard plus a validation trigger protects
 the state machine and composition.
 
+Two forward fixes were applied on 2026-09-02 after production diagnostics:
+`20260902083241_fix_swipe_draft_service_role_permissions` removes an
+unnecessary direct `auth.users` read from the invoker RPC and grants the backend
+the public workout-template read required by draft validation;
+`20260902084055_fix_swipe_draft_placement_validation` replaces the unsupported
+`jsonb_object_length` call with a count over `jsonb_object_keys`.
+
 The rollback-only `phase_10_1_swipe_week_drafts_test.sql` suite checks forced
 RLS, grants, invoker functions, critical-write/state triggers, owner and
-cross-owner reads, direct-write rejection and absence of TSS columns. Its local
-execution and lint attempt could not complete without a running local CLI/stack
-and was safely stopped. Migration application, pgTAP, lint/advisors,
-real-token isolation and hosted ledger comparison remain release gates; no
-hosted project was changed.
+cross-owner reads, direct-write rejection, absence of TSS columns, and an
+actual service-role draft creation. All 18 assertions pass against the linked
+hosted database, and local/remote migration history matches. Real-token
+two-user isolation and physical-device validation remain release gates.
 
 ## Workflow
 
