@@ -16,12 +16,15 @@ import {
 import {
   ActivityIndicator,
   Alert,
+  Animated,
+  Easing,
   KeyboardAvoidingView,
   PanResponder,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import {
@@ -519,21 +522,148 @@ function SwipeDraftPanel({
   ) => void;
 }) {
   const candidate = draft.current_candidate;
+  const { width: windowWidth } = useWindowDimensions();
+  const swipePosition = useRef(new Animated.ValueXY()).current;
+  const swipeAnimation = useRef<Animated.CompositeAnimation | null>(null);
+  const animatingSwipe = useRef(false);
+  const [swipeInFlight, setSwipeInFlight] = useState(false);
+  const useNativeDriver = Platform.OS !== 'web';
+
+  const resetSwipePosition = useCallback(
+    (animated = true) => {
+      swipeAnimation.current?.stop();
+      const animation = Animated.spring(swipePosition, {
+        damping: 18,
+        mass: 0.7,
+        stiffness: 220,
+        toValue: { x: 0, y: 0 },
+        useNativeDriver,
+      });
+      swipeAnimation.current = animation;
+      if (animated) {
+        animation.start(() => {
+          swipeAnimation.current = null;
+        });
+        return;
+      }
+      swipePosition.setValue({ x: 0, y: 0 });
+      swipeAnimation.current = null;
+    },
+    [swipePosition, useNativeDriver],
+  );
+
+  const completeSwipe = useCallback(
+    (action: 'accept' | 'pass', velocityX = 0, exitY = 0) => {
+      if (busy || !candidate || animatingSwipe.current) return;
+      const direction = action === 'accept' ? 1 : -1;
+      const exitDistance = Math.max(windowWidth * 1.25, 480);
+      const duration = Math.max(
+        160,
+        Math.min(260, 230 - Math.abs(velocityX) * 55),
+      );
+
+      animatingSwipe.current = true;
+      setSwipeInFlight(true);
+      swipeAnimation.current?.stop();
+      const animation = Animated.timing(swipePosition, {
+        duration,
+        easing: Easing.out(Easing.cubic),
+        toValue: {
+          x: direction * exitDistance,
+          y: exitY,
+        },
+        useNativeDriver,
+      });
+      swipeAnimation.current = animation;
+      animation.start(({ finished }) => {
+        swipeAnimation.current = null;
+        if (!finished) {
+          animatingSwipe.current = false;
+          setSwipeInFlight(false);
+          return;
+        }
+        onTransition(action);
+      });
+    },
+    [busy, candidate, onTransition, swipePosition, useNativeDriver, windowWidth],
+  );
+
+  useEffect(() => {
+    animatingSwipe.current = false;
+    setSwipeInFlight(false);
+    resetSwipePosition(false);
+  }, [candidate?.id, resetSwipePosition]);
+
+  useEffect(() => {
+    if (!busy && animatingSwipe.current) {
+      animatingSwipe.current = false;
+      setSwipeInFlight(false);
+      resetSwipePosition();
+    }
+  }, [busy, resetSwipePosition]);
+
+  useEffect(
+    () => () => {
+      swipeAnimation.current?.stop();
+    },
+    [],
+  );
+
   const panResponder = useMemo(
     () =>
       PanResponder.create({
         onMoveShouldSetPanResponder: (_, gesture) =>
           !busy &&
+          !swipeInFlight &&
           candidate !== null &&
           Math.abs(gesture.dx) > 14 &&
           Math.abs(gesture.dx) > Math.abs(gesture.dy),
+        onPanResponderGrant: () => {
+          swipeAnimation.current?.stop();
+          swipePosition.setValue({ x: 0, y: 0 });
+        },
+        onPanResponderMove: (_, gesture) => {
+          swipePosition.setValue({ x: gesture.dx, y: gesture.dy * 0.18 });
+        },
         onPanResponderRelease: (_, gesture) => {
-          if (gesture.dx <= -64) onTransition('pass');
-          if (gesture.dx >= 64) onTransition('accept');
+          if (gesture.dx <= -86 || gesture.vx <= -0.55) {
+            completeSwipe('pass', gesture.vx, gesture.dy * 0.18);
+            return;
+          }
+          if (gesture.dx >= 86 || gesture.vx >= 0.55) {
+            completeSwipe('accept', gesture.vx, gesture.dy * 0.18);
+            return;
+          }
+          resetSwipePosition();
+        },
+        onPanResponderTerminate: () => {
+          resetSwipePosition();
         },
       }),
-    [busy, candidate, onTransition],
+    [
+      busy,
+      candidate,
+      completeSwipe,
+      resetSwipePosition,
+      swipeInFlight,
+      swipePosition,
+    ],
   );
+  const cardRotation = swipePosition.x.interpolate({
+    inputRange: [-windowWidth, 0, windowWidth],
+    outputRange: ['-11deg', '0deg', '11deg'],
+    extrapolate: 'clamp',
+  });
+  const acceptOpacity = swipePosition.x.interpolate({
+    inputRange: [20, 100],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+  const passOpacity = swipePosition.x.interpolate({
+    inputRange: [-100, -20],
+    outputRange: [1, 0],
+    extrapolate: 'clamp',
+  });
   const placementByTemplate = useMemo(
     () =>
       new Map(
@@ -574,12 +704,49 @@ function SwipeDraftPanel({
 
       {draft.state === 'collecting' && candidate ? (
         <>
-          <View
+          <Animated.View
             accessible
             accessibilityLabel={`${candidate.name}. Swipe links om over te slaan of rechts om te kiezen.`}
             {...panResponder.panHandlers}
-            style={styles.swipeDecisionCard}
+            style={[
+              styles.swipeDecisionCard,
+              {
+                transform: [
+                  { translateX: swipePosition.x },
+                  { translateY: swipePosition.y },
+                  { rotate: cardRotation },
+                ],
+              },
+            ]}
           >
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.swipeDecisionBadge,
+                styles.swipeAcceptBadge,
+                { opacity: acceptOpacity },
+              ]}
+            >
+              <Text
+                style={[styles.swipeDecisionBadgeText, styles.swipeAcceptText]}
+              >
+                KIEZEN
+              </Text>
+            </Animated.View>
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.swipeDecisionBadge,
+                styles.swipePassBadge,
+                { opacity: passOpacity },
+              ]}
+            >
+              <Text
+                style={[styles.swipeDecisionBadgeText, styles.swipePassText]}
+              >
+                OVERSLAAN
+              </Text>
+            </Animated.View>
             <View style={styles.cardHeader}>
               <StatusPill
                 label={disciplineLabels[candidate.discipline]}
@@ -599,21 +766,21 @@ function SwipeDraftPanel({
             <Text style={styles.swipeInstruction}>
               ← overslaan · kiezen →
             </Text>
-          </View>
+          </Animated.View>
           <View style={styles.decisionRow}>
             <View style={styles.decisionButton}>
               <ActionButton
-                disabled={busy}
+                disabled={busy || swipeInFlight}
                 label="Overslaan"
-                onPress={() => onTransition('pass')}
+                onPress={() => completeSwipe('pass')}
                 secondary
               />
             </View>
             <View style={styles.decisionButton}>
               <ActionButton
-                disabled={busy}
+                disabled={busy || swipeInFlight}
                 label="Kiezen"
-                onPress={() => onTransition('accept')}
+                onPress={() => completeSwipe('accept')}
               />
             </View>
           </View>
@@ -1966,6 +2133,33 @@ const styles = StyleSheet.create({
     minHeight: 220,
     padding: spacing.lg,
   },
+  swipeDecisionBadge: {
+    backgroundColor: colors.surfaceRaised,
+    borderRadius: radius.xs,
+    borderWidth: 3,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    position: 'absolute',
+    top: spacing.lg,
+    zIndex: 2,
+  },
+  swipeAcceptBadge: {
+    borderColor: colors.success,
+    left: spacing.lg,
+    transform: [{ rotate: '-10deg' }],
+  },
+  swipePassBadge: {
+    borderColor: colors.accent,
+    right: spacing.lg,
+    transform: [{ rotate: '10deg' }],
+  },
+  swipeDecisionBadgeText: {
+    fontSize: 18,
+    fontWeight: '900',
+    letterSpacing: 1.4,
+  },
+  swipeAcceptText: { color: colors.success },
+  swipePassText: { color: colors.accent },
   swipeInstruction: {
     color: colors.brand,
     fontSize: 12,
