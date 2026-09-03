@@ -136,6 +136,17 @@ def test_active_swim_templates_exclude_technique_for_the_mvp() -> None:
     ] == [(2, 3), (4, 4), (2, 3)]
 
 
+def test_rpe_projection_updates_the_template_range_atomically() -> None:
+    legacy_swim = REVIEWED_CATALOG[0]
+
+    projected = as_rpe_guided_template(legacy_swim)
+
+    assert (legacy_swim.expected_rpe_min, legacy_swim.expected_rpe_max) == (2, 3)
+    assert (projected.expected_rpe_min, projected.expected_rpe_max) == (2, 4)
+    assert [segment.expected_rpe for segment in projected.segments] == [2, 4, 4]
+    assert projected.internal_planned_load == legacy_swim.internal_planned_load
+
+
 def test_internal_load_is_hidden_from_representations() -> None:
     template = REVIEWED_CATALOG[0]
     snapshot = snapshot_template(template)

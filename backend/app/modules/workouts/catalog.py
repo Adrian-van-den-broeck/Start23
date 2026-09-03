@@ -330,7 +330,42 @@ def as_rpe_guided_template(template: WorkoutTemplate) -> WorkoutTemplate:
                 ),
             )
         )
-    return replace(template, zone_requirements=(), segments=tuple(segments))
+    projected_segments = tuple(segments)
+    minimum_rpe, maximum_rpe = _template_rpe_range(projected_segments)
+    return replace(
+        template,
+        expected_rpe_min=minimum_rpe,
+        expected_rpe_max=maximum_rpe,
+        zone_requirements=(),
+        segments=projected_segments,
+    )
+
+
+def _template_rpe_range(
+    segments: tuple[WorkoutSegment, ...],
+) -> tuple[int, int]:
+    """Return the complete execution-target RPE range for some segments."""
+    minimum_rpe = min(
+        (
+            segment.protocol_target.target_rpe_min
+            if segment.protocol_target is not None
+            else segment.rpe_target.target_rpe_min
+            if segment.rpe_target is not None
+            else segment.expected_rpe
+        )
+        for segment in segments
+    )
+    maximum_rpe = max(
+        (
+            segment.protocol_target.target_rpe_max
+            if segment.protocol_target is not None
+            else segment.rpe_target.target_rpe_max
+            if segment.rpe_target is not None
+            else segment.expected_rpe
+        )
+        for segment in segments
+    )
+    return minimum_rpe, maximum_rpe
 
 
 def _segment(
@@ -402,26 +437,7 @@ def _template(
     explicit_scheduling_only: bool = False,
 ) -> WorkoutTemplate:
     duration = sum((segment.duration_minutes for segment in segments), Decimal(0))
-    minimum_rpe = min(
-        (
-            segment.protocol_target.target_rpe_min
-            if segment.protocol_target is not None
-            else segment.rpe_target.target_rpe_min
-            if segment.rpe_target is not None
-            else segment.expected_rpe
-        )
-        for segment in segments
-    )
-    maximum_rpe = max(
-        (
-            segment.protocol_target.target_rpe_max
-            if segment.protocol_target is not None
-            else segment.rpe_target.target_rpe_max
-            if segment.rpe_target is not None
-            else segment.expected_rpe
-        )
-        for segment in segments
-    )
+    minimum_rpe, maximum_rpe = _template_rpe_range(segments)
     workout = WorkoutIntensity(
         tuple(
             IntensitySegment(
