@@ -19,6 +19,7 @@ from app.modules.planning.repository import (
     PlanningRepositoryConflictError,
     PlanningRepositoryNotFoundError,
 )
+from app.modules.planning.service import PlanningService
 from app.modules.workouts.catalog import (
     CURRENT_CATALOG,
     TrainingPhase,
@@ -60,6 +61,49 @@ def test_week_one_calibration_is_eligible_only_for_its_pending_protocol() -> Non
     )
     assert calibration.zone_requirements == ()
     assert all(segment.zone_target is None for segment in calibration.segments)
+
+    calibration_card = PlanningService._deck_item(
+        calibration,
+        contributes_to_zone_calibration=True,
+    )
+    regular_card = PlanningService._deck_item(
+        next(item for item in CURRENT_CATALOG if item.name == "Aerobic endurance")
+    )
+    assert calibration_card.workout_kind == "calibration"
+    assert calibration_card.contributes_to_zone_calibration is True
+    assert regular_card.workout_kind == "standard"
+
+
+def test_calibration_route_marks_regular_workouts_as_zone_evidence() -> None:
+    snapshot: JsonObject = {
+        "profile": {"timezone": "Europe/Amsterdam"},
+        "goal": {
+            "target_date": "2026-12-06",
+            "race_discipline_profile": ["bike"],
+        },
+        "zones": [],
+        "discipline_setups": [
+            {
+                "discipline": "bike",
+                "setup_route": "calibration_week",
+                "setup_status": "calibration_pending",
+                "protocol_id": "start23_week1_bike_calibration_v1",
+            }
+        ],
+    }
+
+    _, _, _, capabilities = PlanningService._context_values(snapshot)
+    regular = next(item for item in CURRENT_CATALOG if item.name == "Aerobic endurance")
+    card = PlanningService._deck_item(
+        regular,
+        contributes_to_zone_calibration=capabilities[
+            Discipline.BIKE
+        ].calibration_evidence,
+    )
+
+    assert capabilities[Discipline.BIKE].rpe_guided is True
+    assert card.workout_kind == "standard"
+    assert card.contributes_to_zone_calibration is True
 
 
 class PlanningTokenVerifier:
@@ -1019,9 +1063,9 @@ def test_swipe_draft_allows_multiple_workouts_on_one_available_date(
     )
     assert submitted.status_code == 201, submitted.text
     result = submitted.json()
-    assert {
-        workout["scheduled_date"] for workout in result["plan"]["workouts"]
-    } == {shared_date}
+    assert {workout["scheduled_date"] for workout in result["plan"]["workouts"]} == {
+        shared_date
+    }
     assert "tss" not in str(result).casefold()
 
 

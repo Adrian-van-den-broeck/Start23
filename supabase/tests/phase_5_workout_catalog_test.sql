@@ -6,8 +6,8 @@ select plan(16);
 
 select is(
   (select count(*) from public.workout_templates),
-  8::bigint,
-  'the current reviewed catalog contains eight immutable versions'
+  171::bigint,
+  'the current catalog contains reviewed and source-backed immutable versions'
 );
 
 select is(
@@ -15,8 +15,8 @@ select is(
     select count(distinct template_key)
     from public.workout_templates
   ),
-  7::bigint,
-  'the current catalog resolves to seven logical templates'
+  165::bigint,
+  'the current catalog resolves every logical template key'
 );
 
 select results_eq(
@@ -31,9 +31,9 @@ select results_eq(
     order by discipline
   $$,
   $$
-    values ('bike'::text, 3::bigint),
-           ('run'::text, 2::bigint),
-           ('swim'::text, 2::bigint)
+    values ('bike'::text, 56::bigint),
+           ('run'::text, 53::bigint),
+           ('swim'::text, 56::bigint)
   $$,
   'the active seed is balanced across swim, bike, and run'
 );
@@ -142,7 +142,7 @@ select is(
     select count(*)
     from public.get_workout_catalog_for_planning()
   ),
-  8::bigint,
+  171::bigint,
   'the trusted planning RPC returns every immutable version with hidden load'
 );
 reset role;
@@ -167,7 +167,7 @@ reset role;
 set local role authenticated;
 select is(
   (select count(*) from public.workout_templates),
-  8::bigint,
+  171::bigint,
   'authenticated clients can read public catalog fields'
 );
 reset role;

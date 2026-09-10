@@ -1,42 +1,53 @@
-# Expo HAS CHANGED
+# Start23 Mobile Instructions
 
-Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before writing any code.
+These instructions extend the repository-root AGENTS.md.
+All root architecture, physiology, security, privacy and approval constraints
+continue to apply.
 
-# Start23 development instructions
+## Stack
+
+- React Native with Expo SDK 57 and TypeScript.
+- Use strict TypeScript.
+- Follow the exact installed Expo SDK version and its corresponding documentation.
+- Do not upgrade Expo, React Native or Expo-managed dependencies unless the task
+  explicitly requires it.
 
 ## Architecture
 
-- Mobile client: React Native with Expo and TypeScript.
-- Backend: Python with FastAPI.
-- Database, authentication and storage: hosted Supabase.
-- Deployment target for backend: Railway.
-- Start as a modular monolith.
-- Do not introduce microservices, Celery, Redis, TimescaleDB or Kubernetes
-  unless explicitly requested.
+- The mobile client is presentation and interaction logic, not the authority
+  for physiological or planning decisions.
+- FastAPI is authoritative for domain validation and state transitions.
+- Client-side validation may improve UX but must not replace server validation.
+- Do not duplicate physiological formulas or planning rules in TypeScript.
+- Never calculate, infer or expose planned/realized private load or TSS.
 
-## Business logic
+## Authentication and secrets
 
-- Physiological decisions must be implemented as deterministic Python code.
-- The LLM may extract structured context and explain recommendations.
-- The LLM must not independently mutate training plans or user zones.
-- Changes to critical objects must first be stored as pending.
-- User confirmation is required before applying those changes.
-- Planned and realized TSS must never be returned to the mobile UI.
+- Send the verified athlete access token to FastAPI.
+- Never place Supabase secret/service-role keys, database credentials or LLM keys
+  in Expo configuration, source code or the application bundle.
+- Do not accept or persist an authoritative user_id from UI state.
+- Store credentials only through the project's established secure-storage flow.
 
-## Security
+## State and mutations
 
-- Never expose service role keys, database passwords or LLM API keys
-  in the mobile application.
-- Derive the user identity from a verified access token.
-- Enable Row Level Security on user-owned tables.
-- Do not commit .env files.
+- Respect server revision/precondition semantics.
+- Do not work around stale-state conflicts with last-write-wins behavior.
+- System-generated plan/zone changes remain pending until explicitly approved.
+- Prevent accidental duplicate submissions from rapid taps and retries.
+- Preserve server idempotency semantics.
 
-## Engineering style
+## UX
 
-- Use strict TypeScript.
-- Use Pydantic models for API input and output.
-- Keep route handlers thin.
-- Put business logic in services or domain modules.
-- Add tests for all physiological calculations.
-- Prefer small, reviewable changes.
-- Do not modify unrelated files.
+- Handle loading, empty, error, stale and retry states explicitly.
+- Preserve onboarding/resume behavior.
+- Keep accessibility labels free of private load/TSS data.
+- Do not present fail-closed backend behavior as successful completion.
+
+## Engineering
+
+- Reuse existing components and API clients before introducing parallel abstractions.
+- Keep screens thin when practical.
+- Add regression coverage for changed navigation/state behavior.
+- Run strict TypeScript and applicable mobile tests before declaring completion.
+- Do not modify backend files unless the task requires a cross-stack change.

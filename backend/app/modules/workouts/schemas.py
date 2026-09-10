@@ -88,7 +88,7 @@ class WorkoutSegmentResponse(PublicWorkoutModel):
     sequence: int = Field(ge=1)
     name: str
     instructions: str
-    duration_minutes: Decimal = Field(gt=0)
+    duration_minutes: Decimal | None = Field(default=None, gt=0)
     distance_meters: int | None = Field(default=None, gt=0)
     zone_target: TrainingZone | None = Field(
         default=None,
@@ -121,7 +121,7 @@ class WorkoutTemplateResponse(PublicWorkoutModel):
     discipline: Discipline
     name: str
     description: str
-    duration_minutes: Decimal = Field(gt=0)
+    duration_minutes: Decimal | None = Field(default=None, gt=0)
     distance_meters: int | None = Field(default=None, gt=0)
     intensity_bucket: IntensityBucket
     expected_rpe_min: int = Field(ge=1, le=10)

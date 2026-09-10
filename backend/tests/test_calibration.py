@@ -412,11 +412,11 @@ def _save_run_test(client: TestClient, activity_id: UUID) -> None:
         _segment_payload(activity_id, "warmup", 3, duration_seconds=900),
         _segment_payload(activity_id, "strides", 6, duration_seconds=300),
         _segment_payload(
-                activity_id,
-                "test_30min",
-                8,
-                duration_seconds=1800,
-                reported_block_rpe=8,
+            activity_id,
+            "test_30min",
+            8,
+            duration_seconds=1800,
+            reported_block_rpe=8,
             average_pace_seconds_per_km=290,
             average_heart_rate_last_20min_bpm=171.6,
             data_completeness=0.98,
@@ -488,7 +488,7 @@ def test_standalone_field_test_requires_confirmation_and_appears_in_profile(
     assert "tss" not in profile.text.lower()
 
 
-def test_four_zone_options_are_authenticated_and_tss_free(
+def test_three_mvp_zone_options_are_authenticated_and_tss_free(
     calibration_context: tuple[TestClient, UUID, UUID],
 ) -> None:
     client, _, _ = calibration_context
@@ -504,7 +504,6 @@ def test_four_zone_options_are_authenticated_and_tss_free(
         "known_values",
         "field_test",
         "calibration_week",
-        "rpe_only",
     ]
     assert "tss" not in response.text.lower()
 
@@ -572,11 +571,11 @@ def test_swim_calibration_week_accepts_pace_and_pool_length(
     assert response.json()["setup_status"] == "calibration_pending"
 
 
-def test_rpe_only_is_explicit_empty_and_rejects_authoritative_user_id(
+def test_rpe_only_is_rejected_as_a_new_setup_route(
     calibration_context: tuple[TestClient, UUID, UUID],
 ) -> None:
     client, athlete_a, _ = calibration_context
-    valid = client.put(
+    rejected = client.put(
         "/api/v1/onboarding/disciplines/bike/setup",
         headers=_headers(),
         json={"setup_route": "rpe_only", "guidance_mode": "rpe_only"},
@@ -591,10 +590,24 @@ def test_rpe_only_is_explicit_empty_and_rejects_authoritative_user_id(
         },
     )
 
-    assert valid.status_code == 200
-    assert valid.json()["threshold_status"] == "unknown"
-    assert valid.json()["zone_status"] == "unknown"
+    assert rejected.status_code == 422
     assert forged.status_code == 422
+
+
+def test_selectable_protocol_guidance_excludes_rpe_only(
+    calibration_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = calibration_context
+
+    for discipline in ("swim", "bike", "run"):
+        response = client.get(
+            f"/api/v1/calibration/protocols/{discipline}",
+            headers=_headers(),
+        )
+        assert response.status_code == 200
+        assert all(
+            "rpe_only" not in protocol["guidance_modes"] for protocol in response.json()
+        )
 
 
 def test_field_test_protocol_must_match_discipline_and_guidance(
@@ -802,7 +815,10 @@ def test_status_is_cross_athlete_isolated(
     saved = client.put(
         "/api/v1/onboarding/disciplines/run/setup",
         headers=_headers("athlete-a"),
-        json={"setup_route": "rpe_only", "guidance_mode": "rpe_only"},
+        json={
+            "setup_route": "calibration_week",
+            "guidance_mode": "heart_rate",
+        },
     )
     status_a = client.get(
         "/api/v1/calibration/status",

@@ -60,7 +60,7 @@ select ok(
   not (
     select prosecdef
     from pg_proc
-    where oid = 'public.save_primary_race_goal(uuid,text,text,text,smallint,date,text[])'::regprocedure
+    where oid = 'public.save_primary_race_goal(uuid,text,text,text,date,text[])'::regprocedure
   )
   and not (
     select prosecdef
@@ -93,17 +93,17 @@ select ok(
 select ok(
   has_function_privilege(
     'authenticated',
-    'public.save_primary_race_goal(uuid,text,text,text,smallint,date,text[])',
+    'public.save_primary_race_goal(uuid,text,text,text,date,text[])',
     'execute'
   )
   and not has_function_privilege(
     'anon',
-    'public.save_primary_race_goal(uuid,text,text,text,smallint,date,text[])',
+    'public.save_primary_race_goal(uuid,text,text,text,date,text[])',
     'execute'
   )
   and not has_function_privilege(
     'service_role',
-    'public.save_primary_race_goal(uuid,text,text,text,smallint,date,text[])',
+    'public.save_primary_race_goal(uuid,text,text,text,date,text[])',
     'execute'
   ),
   'only authenticated athletes can invoke the primary-goal RPC'
@@ -165,7 +165,6 @@ select throws_ok(
       title,
       specific_description,
       measurable_outcome,
-      feasibility_score,
       target_date,
       race_discipline_profile
     )
@@ -174,7 +173,6 @@ select throws_ok(
       'Bypass attempt',
       'Direct writes must fail.',
       'No mutation.',
-      5,
       '2027-07-01',
       array['run']
     )
@@ -191,7 +189,6 @@ select lives_ok(
       'Owned A race',
       'Finish the race with an even run.',
       'Complete all three disciplines.',
-      8::smallint,
       '2027-07-01',
       array['swim', 'bike', 'run']
     )
@@ -209,9 +206,9 @@ select lives_ok(
   $$
     select * from public.replace_training_history(
       '[
-        {"discipline":"swim","weekly_minutes":60,"experience_years":1},
-        {"discipline":"bike","weekly_minutes":120,"experience_years":2},
-        {"discipline":"run","weekly_minutes":90,"experience_years":3}
+        {"discipline":"swim","average_weekly_distance":4000,"distance_unit":"meters","average_sessions_per_week":2},
+        {"discipline":"bike","average_weekly_distance":120,"distance_unit":"kilometers","average_sessions_per_week":2.5},
+        {"discipline":"run","average_weekly_distance":30,"distance_unit":"kilometers","average_sessions_per_week":3}
       ]'::jsonb
     )
   $$,
@@ -432,7 +429,6 @@ select lives_ok(
       'Updated owned A race',
       'Finish the race with a negative-split run.',
       'Complete all three disciplines.',
-      8::smallint,
       '2027-07-01',
       array['swim', 'bike', 'run']
     )

@@ -10,11 +10,7 @@ export type OnboardingStep =
 export type AthleteProfile = {
   athlete_id: string;
   date_of_birth: string | null;
-  height_cm: string | null;
-  weight_kg: string | null;
   resting_heart_rate_bpm: number | null;
-  motivation_text: string | null;
-  motivation_tag: string | null;
   timezone: string;
   onboarding_status: 'not_started' | 'in_progress' | 'completed';
   revision: number;
@@ -24,8 +20,10 @@ export type AthleteProfile = {
 
 export type TrainingHistoryEntry = {
   discipline: Discipline;
-  weekly_minutes: number;
-  experience_years: string;
+  average_weekly_distance: string | null;
+  distance_unit: 'meters' | 'kilometers' | null;
+  average_sessions_per_week: string | null;
+  history_window_months: 2 | null;
   confirmed_at: string;
   updated_at: string;
 };
@@ -35,7 +33,6 @@ export type PrimaryRaceGoal = {
   title: string;
   specific_description: string;
   measurable_outcome: string;
-  feasibility_score: number;
   target_date: string;
   race_discipline_profile: Discipline[];
   priority: 'A';
@@ -85,6 +82,8 @@ export type ZoneSetupRoute =
   | 'calibration_week'
   | 'rpe_only';
 
+export type SelectableZoneSetupRoute = Exclude<ZoneSetupRoute, 'rpe_only'>;
+
 export type GuidanceMode =
   | 'power'
   | 'heart_rate'
@@ -130,10 +129,6 @@ export type DisciplineSetupInput =
       setup_route: 'calibration_week';
       guidance_mode: GuidanceMode;
       pool_length_meters?: 25 | 50;
-    }
-  | {
-      setup_route: 'rpe_only';
-      guidance_mode: 'rpe_only';
     };
 
 export type DisciplineSetup = {
@@ -219,7 +214,7 @@ export type OnboardingState = {
 };
 
 export type ZoneSetupOption = {
-  setup_route: ZoneSetupRoute;
+  setup_route: SelectableZoneSetupRoute;
   label: string;
   creates_threshold: boolean;
   creates_zones: boolean;
@@ -438,7 +433,7 @@ export type WorkoutSegment = {
   sequence: number;
   name: string;
   instructions: string;
-  duration_minutes: string;
+  duration_minutes: string | null;
   distance_meters: number | null;
   zone_target: number | null;
   protocol_target: {
@@ -485,7 +480,7 @@ export type PlannedWorkout = {
   discipline: Discipline;
   name: string;
   description: string;
-  duration_minutes: string;
+  duration_minutes: string | null;
   distance_meters: number | null;
   intensity_bucket: 'low' | 'high';
   expected_rpe_min: number;
@@ -584,13 +579,15 @@ export type WorkoutDeckItem = {
   discipline: Discipline;
   name: string;
   description: string;
-  duration_minutes: string;
+  duration_minutes: string | null;
   distance_meters: number | null;
   intensity_bucket: 'low' | 'high';
   expected_rpe_min: number;
   expected_rpe_max: number;
   segments: WorkoutSegment[];
   rpe_zones: RpeZone[];
+  workout_kind: 'calibration' | 'standard';
+  contributes_to_zone_calibration: boolean;
 };
 
 export type WorkoutDeck = {

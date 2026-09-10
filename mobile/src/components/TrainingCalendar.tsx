@@ -3,7 +3,6 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import type { PlannedWorkout, RestDay } from '../api/types';
 import { useLanguage } from '../i18n/LanguageProvider';
-import { formatRpeZones } from '../lib/rpe';
 import { colors, radius, spacing } from '../theme/tokens';
 import { MotionPressable as Pressable } from './MotionPressable';
 import { StatusPill } from './StatusPill';
@@ -139,9 +138,11 @@ export function TrainingCalendar({
               </Text>
               {!compact ? (
                 <Text style={styles.eventMeta}>
-                  {t('common.durationMinutes', {
-                    minutes: Number(workout.duration_minutes),
-                  })}{' · '}{formatRpeZones(workout.rpe_zones)}
+                  {workout.duration_minutes !== null
+                    ? t('common.durationMinutes', {
+                        minutes: Number(workout.duration_minutes),
+                      })
+                    : `${workout.distance_meters?.toLocaleString(locale)} m · afstandgestuurd`}
                 </Text>
               ) : null}
             </View>

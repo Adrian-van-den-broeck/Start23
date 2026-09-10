@@ -16,10 +16,10 @@ import type {
   DisciplineSetupInput,
   GuidanceMode,
   OnboardingState,
+  SelectableZoneSetupRoute,
   ZoneBoundary,
   ZoneMetricKind,
   ZoneSetupOption,
-  ZoneSetupRoute,
 } from '../api/types';
 import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
@@ -86,15 +86,13 @@ const metricOptions: Record<Discipline, readonly MetricOption[]> = {
   ],
 };
 
-const routeDescriptions: Record<ZoneSetupRoute, string> = {
+const routeDescriptions: Record<SelectableZoneSetupRoute, string> = {
   known_values:
     'Bevestig een bekende drempelwaarde. Wombo berekent een apart Zone 1-5-voorstel; bestaande grenzen kun je als override invoeren.',
   field_test:
     'Voer een beoordeelde maximale veldtest uit voor een drempelschatting.',
   calibration_week:
     'Train met dezelfde veilige RPE-workouts; Wombo bewaart daarnaast geschikte objectieve kalibratie-observaties.',
-  rpe_only:
-    'Train met dezelfde veilige RPE-workouts, zonder extra kalibratie-observaties.',
 };
 
 const guidanceLabels: Record<GuidanceMode, string> = {
@@ -226,7 +224,7 @@ export function ZoneSetupStep({
   const [protocols, setProtocols] = useState<CalibrationProtocol[]>([]);
   const [loadingChoices, setLoadingChoices] = useState(true);
   const [choiceError, setChoiceError] = useState<string | null>(null);
-  const [route, setRoute] = useState<ZoneSetupRoute | null>(null);
+  const [route, setRoute] = useState<SelectableZoneSetupRoute | null>(null);
   const [knownValues, setKnownValues] = useState<
     Partial<Record<ZoneMetricKind, string>>
   >({});
@@ -327,12 +325,10 @@ export function ZoneSetupStep({
     (option) => option.kind === boundaryMetric,
   );
 
-  const selectRoute = (nextRoute: ZoneSetupRoute) => {
+  const selectRoute = (nextRoute: SelectableZoneSetupRoute) => {
     setRoute(nextRoute);
     if (nextRoute === 'known_values') {
       setGuidanceMode(guidanceForKnownValues(availableMetrics, knownValues));
-    } else if (nextRoute === 'rpe_only') {
-      setGuidanceMode('rpe_only');
     } else if (nextRoute === 'field_test') {
       const first = fieldTests[0];
       setSelectedProtocolId(first?.protocol_id ?? null);
@@ -699,26 +695,6 @@ export function ZoneSetupStep({
         </View>
       ) : null}
 
-      {route === 'rpe_only' ? (
-        <View style={styles.panel}>
-          <StatusPill label="Zonder zones" tone="neutral" />
-          <Text style={styles.panelText}>
-            RPE-only is een geldige configuratie en maakt geen verzonnen
-            drempel of zoneprofiel. RPE 1 is minimaal en RPE 10 maximaal.
-          </Text>
-          <SaveButton
-            disabled={false}
-            label="RPE-only bevestigen"
-            onPress={() =>
-              void onSave(discipline, {
-                setup_route: 'rpe_only',
-                guidance_mode: 'rpe_only',
-              })
-            }
-            saving={saving}
-          />
-        </View>
-      ) : null}
     </View>
   );
 }

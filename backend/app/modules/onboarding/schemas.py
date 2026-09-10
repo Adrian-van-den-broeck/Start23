@@ -49,11 +49,7 @@ class AthleteProfileUpdate(PublicModel):
     """Confirmed profile and biometrics supplied by the athlete."""
 
     date_of_birth: date | None = None
-    height_cm: Decimal | None = Field(default=None, gt=0, max_digits=5)
-    weight_kg: Decimal | None = Field(default=None, gt=0, max_digits=5)
     resting_heart_rate_bpm: int | None = Field(default=None, gt=0, le=32767)
-    motivation_text: TrimmedText | None = Field(default=None, max_length=1000)
-    motivation_tag: TrimmedText | None = Field(default=None, max_length=50)
     timezone: TrimmedText | None = Field(default=None, max_length=100)
 
     @field_validator("date_of_birth")
@@ -77,11 +73,7 @@ class AthleteProfileResponse(PublicModel):
 
     athlete_id: UUID
     date_of_birth: date | None
-    height_cm: Decimal | None
-    weight_kg: Decimal | None
     resting_heart_rate_bpm: int | None
-    motivation_text: str | None
-    motivation_tag: str | None
     timezone: str
     onboarding_status: Literal["not_started", "in_progress", "completed"]
     revision: int
@@ -90,11 +82,22 @@ class AthleteProfileResponse(PublicModel):
 
 
 class TrainingHistoryEntryInput(PublicModel):
-    """Canonical weekly history for one triathlon discipline."""
+    """Two-month average history in the discipline's canonical distance unit."""
 
     discipline: Discipline
-    weekly_minutes: int = Field(ge=0, le=10080)
-    experience_years: Decimal = Field(ge=0, le=100, max_digits=4)
+    average_weekly_distance: Decimal = Field(ge=0, allow_inf_nan=False)
+    distance_unit: Literal["meters", "kilometers"]
+    average_sessions_per_week: Decimal = Field(ge=0, allow_inf_nan=False)
+
+    @model_validator(mode="after")
+    def require_canonical_distance_unit(self) -> "TrainingHistoryEntryInput":
+        """Swimming uses metres; cycling and running use kilometres."""
+        expected = "meters" if self.discipline is Discipline.SWIM else "kilometers"
+        if self.distance_unit != expected:
+            raise ValueError(
+                f"{self.discipline.value} distance_unit must be {expected}"
+            )
+        return self
 
 
 class TrainingHistoryReplace(PublicModel):
@@ -114,9 +117,14 @@ class TrainingHistoryReplace(PublicModel):
         return entries
 
 
-class TrainingHistoryEntryResponse(TrainingHistoryEntryInput):
-    """Persisted athlete-confirmed training history."""
+class TrainingHistoryEntryResponse(PublicModel):
+    """Persisted history; new fields are null on untouched legacy records."""
 
+    discipline: Discipline
+    average_weekly_distance: Decimal | None
+    distance_unit: Literal["meters", "kilometers"] | None
+    average_sessions_per_week: Decimal | None
+    history_window_months: Literal[2] | None
     confirmed_at: datetime
     updated_at: datetime
 
@@ -127,7 +135,6 @@ class PrimaryRaceGoalInput(PublicModel):
     title: TrimmedText = Field(max_length=120)
     specific_description: TrimmedText = Field(max_length=1000)
     measurable_outcome: TrimmedText = Field(max_length=500)
-    feasibility_score: int = Field(ge=1, le=10)
     target_date: date
     race_discipline_profile: tuple[Discipline, ...] = Field(
         min_length=1,

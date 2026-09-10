@@ -166,11 +166,7 @@ export function saveProfile(
   accessToken: string,
   input: {
     date_of_birth: string;
-    height_cm: string;
-    weight_kg: string;
     resting_heart_rate_bpm: number;
-    motivation_text: string;
-    motivation_tag?: string;
     timezone: string;
   },
 ): Promise<AthleteProfile> {
@@ -184,8 +180,9 @@ export function saveTrainingHistory(
   accessToken: string,
   entries: Array<{
     discipline: Discipline;
-    weekly_minutes: number;
-    experience_years: string;
+    average_weekly_distance: string;
+    distance_unit: 'meters' | 'kilometers';
+    average_sessions_per_week: string;
   }>,
 ): Promise<TrainingHistoryEntry[]> {
   return request(accessToken, '/api/v1/me/training-history', {
@@ -206,7 +203,6 @@ export function savePrimaryGoal(
     title: string;
     specific_description: string;
     measurable_outcome: string;
-    feasibility_score: number;
     target_date: string;
     race_discipline_profile: Discipline[];
   },

@@ -49,6 +49,74 @@ def test_discipline_setup_projection_omits_owner_identity() -> None:
     assert "athlete_id" not in setup.model_dump()
 
 
+def test_legacy_rpe_only_setup_remains_readable() -> None:
+    setup = OnboardingService._discipline_setup(
+        {
+            "athlete_id": str(uuid4()),
+            "discipline": "run",
+            "setup_route": "rpe_only",
+            "guidance_mode": "rpe_only",
+            "setup_status": "configured",
+            "protocol_id": None,
+            "pool_length_meters": None,
+            "threshold_status": "unknown",
+            "zone_status": "unknown",
+            "source": "none",
+            "validation_status": "not_assessed",
+            "confidence": "not_assessed",
+            "known_thresholds": [],
+            "known_zone_profiles": [],
+            "revision": 1,
+            "created_at": _NOW.isoformat(),
+            "updated_at": _NOW.isoformat(),
+        }
+    )
+
+    assert setup.setup_route.value == "rpe_only"
+    assert setup.guidance_mode.value == "rpe_only"
+
+
+def test_legacy_profile_and_history_values_are_not_reinterpreted() -> None:
+    profile = OnboardingService._profile(
+        {
+            "athlete_id": str(uuid4()),
+            "date_of_birth": "1990-05-20",
+            "height_cm": "181.5",
+            "weight_kg": "74.2",
+            "resting_heart_rate_bpm": 52,
+            "motivation_text": "Historical free text",
+            "motivation_tag": "historical-tag",
+            "timezone": "Europe/Amsterdam",
+            "onboarding_status": "in_progress",
+            "revision": 1,
+            "created_at": _NOW.isoformat(),
+            "updated_at": _NOW.isoformat(),
+        }
+    )
+    history = tuple(
+        OnboardingService._history(
+            {
+                "discipline": discipline,
+                "weekly_minutes": 90,
+                "experience_years": "2.0",
+                "confirmed_at": _NOW.isoformat(),
+                "updated_at": _NOW.isoformat(),
+            }
+        )
+        for discipline in ("swim", "bike", "run")
+    )
+
+    assert profile is not None
+    assert {
+        "height_cm",
+        "weight_kg",
+        "motivation_text",
+        "motivation_tag",
+    }.isdisjoint(profile.model_dump())
+    assert all(entry.average_weekly_distance is None for entry in history)
+    assert OnboardingService._history_is_complete(history) is False
+
+
 class TokenVerifier:
     """Resolve deterministic local tokens without a Supabase network call."""
 
@@ -146,6 +214,7 @@ class MemoryOnboardingRepository:
             {
                 "athlete_id": str(owner),
                 **entry,
+                "history_window_months": 2,
                 "source": "athlete",
                 "confirmed_at": _NOW.isoformat(),
                 "updated_at": _NOW.isoformat(),
@@ -463,15 +532,17 @@ def _complete_profile(client: TestClient, token: str = "athlete-a") -> None:
         headers=_headers(token),
         json={
             "date_of_birth": "1990-05-20",
-            "height_cm": "181.5",
-            "weight_kg": "74.2",
             "resting_heart_rate_bpm": 52,
-            "motivation_text": "Finish my first triathlon confidently.",
-            "motivation_tag": "first-race",
             "timezone": "Europe/Amsterdam",
         },
     )
     assert response.status_code == 200
+    assert {
+        "height_cm",
+        "weight_kg",
+        "motivation_text",
+        "motivation_tag",
+    }.isdisjoint(response.json())
 
 
 def _complete_history(client: TestClient, token: str = "athlete-a") -> None:
@@ -482,13 +553,14 @@ def _complete_history(client: TestClient, token: str = "athlete-a") -> None:
             "entries": [
                 {
                     "discipline": discipline,
-                    "weekly_minutes": minutes,
-                    "experience_years": years,
+                    "average_weekly_distance": distance,
+                    "distance_unit": unit,
+                    "average_sessions_per_week": sessions,
                 }
-                for discipline, minutes, years in (
-                    ("swim", 60, "1.0"),
-                    ("bike", 120, "2.5"),
-                    ("run", 90, "3.0"),
+                for discipline, distance, unit, sessions in (
+                    ("swim", "4000", "meters", "2.0"),
+                    ("bike", "120", "kilometers", "2.5"),
+                    ("run", "30", "kilometers", "3.0"),
                 )
             ]
         },
@@ -504,12 +576,12 @@ def _complete_goal(client: TestClient, token: str = "athlete-a") -> UUID:
             "title": "Amsterdam Olympic triathlon",
             "specific_description": "Finish the race with an even run.",
             "measurable_outcome": "Complete all three disciplines.",
-            "feasibility_score": 8,
             "target_date": (date.today() + timedelta(days=120)).isoformat(),
             "race_discipline_profile": ["swim", "bike", "run"],
         },
     )
     assert response.status_code == 201
+    assert "feasibility_score" not in response.json()
     return UUID(response.json()["id"])
 
 
@@ -671,6 +743,31 @@ def test_profile_rejects_values_outside_database_integer_range(
     assert response.status_code == 422
 
 
+@pytest.mark.parametrize(
+    "retired_field,value",
+    [
+        ("height_cm", "181.5"),
+        ("weight_kg", "74.2"),
+        ("motivation_text", "Finish a race."),
+        ("motivation_tag", "first-race"),
+    ],
+)
+def test_profile_rejects_retired_write_fields(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+    retired_field: str,
+    value: str,
+) -> None:
+    client, _, _ = onboarding_context
+
+    response = client.patch(
+        "/api/v1/me/profile",
+        headers=_headers(),
+        json={"timezone": "Europe/Amsterdam", retired_field: value},
+    )
+
+    assert response.status_code == 422
+
+
 def test_training_history_requires_each_triathlon_discipline(
     onboarding_context: tuple[TestClient, UUID, UUID],
 ) -> None:
@@ -682,8 +779,9 @@ def test_training_history_requires_each_triathlon_discipline(
             "entries": [
                 {
                     "discipline": "run",
-                    "weekly_minutes": 60,
-                    "experience_years": 1,
+                    "average_weekly_distance": 30,
+                    "distance_unit": "kilometers",
+                    "average_sessions_per_week": 3,
                 }
             ]
             * 3
@@ -691,6 +789,77 @@ def test_training_history_requires_each_triathlon_discipline(
     )
 
     assert response.status_code == 422
+
+
+def test_training_history_requires_discipline_canonical_units_and_no_baseline(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = onboarding_context
+    wrong_unit = client.put(
+        "/api/v1/me/training-history",
+        headers=_headers(),
+        json={
+            "entries": [
+                {
+                    "discipline": "swim",
+                    "average_weekly_distance": 4000,
+                    "distance_unit": "kilometers",
+                    "average_sessions_per_week": 2,
+                },
+                {
+                    "discipline": "bike",
+                    "average_weekly_distance": 120,
+                    "distance_unit": "kilometers",
+                    "average_sessions_per_week": 2,
+                },
+                {
+                    "discipline": "run",
+                    "average_weekly_distance": 30,
+                    "distance_unit": "kilometers",
+                    "average_sessions_per_week": 3,
+                },
+            ]
+        },
+    )
+
+    assert wrong_unit.status_code == 422
+
+    _complete_history(client)
+    state = client.get("/api/v1/onboarding", headers=_headers())
+    timestamp = _NOW.isoformat().replace("+00:00", "Z")
+
+    assert state.status_code == 200
+    assert state.json()["training_history"] == [
+        {
+            "discipline": "swim",
+            "average_weekly_distance": "4000",
+            "distance_unit": "meters",
+            "average_sessions_per_week": "2.0",
+            "history_window_months": 2,
+            "confirmed_at": timestamp,
+            "updated_at": timestamp,
+        },
+        {
+            "discipline": "bike",
+            "average_weekly_distance": "120",
+            "distance_unit": "kilometers",
+            "average_sessions_per_week": "2.5",
+            "history_window_months": 2,
+            "confirmed_at": timestamp,
+            "updated_at": timestamp,
+        },
+        {
+            "discipline": "run",
+            "average_weekly_distance": "30",
+            "distance_unit": "kilometers",
+            "average_sessions_per_week": "3.0",
+            "history_window_months": 2,
+            "confirmed_at": timestamp,
+            "updated_at": timestamp,
+        },
+    ]
+    assert "baseline" not in state.text.lower()
+    assert "tss" not in state.text.lower()
 
 
 def test_only_one_primary_race_goal_and_owned_updates(
@@ -705,7 +874,6 @@ def test_only_one_primary_race_goal_and_owned_updates(
             "title": "Another race",
             "specific_description": "This cannot also be primary.",
             "measurable_outcome": "Finish.",
-            "feasibility_score": 7,
             "target_date": (date.today() + timedelta(days=180)).isoformat(),
             "race_discipline_profile": ["run"],
         },
@@ -717,7 +885,6 @@ def test_only_one_primary_race_goal_and_owned_updates(
             "title": "Stolen goal",
             "specific_description": "Must remain inaccessible.",
             "measurable_outcome": "No.",
-            "feasibility_score": 1,
             "target_date": (date.today() + timedelta(days=180)).isoformat(),
             "race_discipline_profile": ["run"],
         },

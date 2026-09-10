@@ -1,5 +1,8 @@
 -- MVP feedback: remove swim-technique planning and use reviewed triathlon RPE zones.
 
+alter table public.workout_templates
+  add column if not exists explicit_scheduling_only boolean not null default false;
+
 insert into public.workout_templates (
   id, template_key, version, discipline, name, description,
   duration_minutes, distance_meters, intensity_bucket,

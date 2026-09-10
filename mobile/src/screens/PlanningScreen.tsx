@@ -72,7 +72,7 @@ import { StatusPill } from '../components/StatusPill';
 import { TrainingCalendar } from '../components/TrainingCalendar';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { formatIsoDateInput } from '../lib/dateInput';
-import { formatRpeZones } from '../lib/rpe';
+import { workoutCardDescription } from '../lib/workoutPresentation';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
 
 type PlanningScreenProps = {
@@ -297,17 +297,24 @@ function WorkoutCard({ workout }: { workout: PlannedWorkout }) {
         </Text>
       </View>
       <Text style={styles.cardTitle}>{workout.name}</Text>
-      <Text style={styles.cardDescription}>{workout.description}</Text>
+      <Text style={styles.cardDescription}>
+        {workoutCardDescription(workout.description)}
+      </Text>
       <Text style={styles.cardMeta}>
-        {t('common.durationMinutes', {
-          minutes: Number(workout.duration_minutes),
-        })}{' · '}{formatRpeZones(workout.rpe_zones)}
+        {workout.duration_minutes !== null
+          ? t('common.durationMinutes', {
+              minutes: Number(workout.duration_minutes),
+            })
+          : `${workout.distance_meters?.toLocaleString(locale)} m · afstandgestuurd`}
       </Text>
     </View>
   );
 }
 
 function deckItemFor(workout: PlannedWorkout): WorkoutDeckItem {
+  const calibration = workout.segments.some((segment) =>
+    segment.protocol_target?.protocol_id.includes('calibration'),
+  );
   return {
     id: workout.template_id,
     template_key: workout.template_key,
@@ -322,7 +329,41 @@ function deckItemFor(workout: PlannedWorkout): WorkoutDeckItem {
     expected_rpe_max: workout.expected_rpe_max,
     segments: workout.segments,
     rpe_zones: workout.rpe_zones,
+    workout_kind: calibration ? 'calibration' : 'standard',
+    contributes_to_zone_calibration: false,
   };
+}
+
+function WorkoutSignals({ workout }: { workout: WorkoutDeckItem }) {
+  if (
+    workout.workout_kind !== 'calibration' &&
+    !workout.contributes_to_zone_calibration
+  ) {
+    return null;
+  }
+
+  return (
+    <View style={styles.workoutSignals}>
+      {workout.workout_kind === 'calibration' ? (
+        <View
+          accessibilityLabel="Kalibratietraining"
+          style={styles.calibrationSignal}
+        >
+          <View style={styles.calibrationLogo}>
+            <Text style={styles.calibrationLogoText}>CAL</Text>
+          </View>
+          <Text style={styles.calibrationSignalText}>Kalibratietraining</Text>
+        </View>
+      ) : null}
+      {workout.contributes_to_zone_calibration ? (
+        <View style={styles.zoneEvidenceSignal}>
+          <Text style={styles.zoneEvidenceSignalText}>
+            Telt mee voor zone-inzicht
+          </Text>
+        </View>
+      ) : null}
+    </View>
+  );
 }
 
 function PendingWorkoutEditor({
@@ -469,12 +510,15 @@ function PendingWorkoutEditor({
                   <Text style={styles.selectedLabel}>Gekozen</Text>
                 ) : null}
               </View>
+              <WorkoutSignals workout={item} />
               <Text style={styles.cardTitle}>{item.name}</Text>
               <Text numberOfLines={2} style={styles.cardDescription}>
-                {item.description}
+                {workoutCardDescription(item.description)}
               </Text>
               <Text style={styles.cardMeta}>
-                {Number(item.duration_minutes)} min · {formatRpeZones(item.rpe_zones)} ·{' '}
+                {item.duration_minutes !== null
+                  ? `${Number(item.duration_minutes)} min`
+                  : `${item.distance_meters?.toLocaleString('nl-NL')} m · afstandgestuurd`}{' · '}
                 {index + 1}/{candidates.length}
               </Text>
             </View>
@@ -676,6 +720,11 @@ function SwipeDraftPanel({
   );
   const manualComplete =
     draft.placements.length === draft.accepted_workouts.length;
+  const zoneCalibrationWeek =
+    candidate?.contributes_to_zone_calibration === true ||
+    draft.accepted_workouts.some(
+      (workout) => workout.contributes_to_zone_calibration,
+    );
   const weekDates = useMemo(
     () =>
       Array.from({ length: 7 }, (_, dayOffset) =>
@@ -701,6 +750,19 @@ function SwipeDraftPanel({
           lopen
         </Text>
       </View>
+
+      {zoneCalibrationWeek ? (
+        <View style={styles.calibrationNotice}>
+          <Text style={styles.calibrationNoticeTitle}>
+            Deze week helpt je zones verfijnen
+          </Text>
+          <Text style={styles.calibrationNoticeText}>
+            Elke gekozen en afgeronde training levert RPE- en
+            hartslagobservaties. Numerieke zones wijzigen alleen via een apart
+            voorstel dat jij bevestigt.
+          </Text>
+        </View>
+      ) : null}
 
       {draft.state === 'collecting' && candidate ? (
         <>
@@ -755,13 +817,15 @@ function SwipeDraftPanel({
                 }
               />
               <Text style={styles.cardMeta}>
-                {Number(candidate.duration_minutes)} min
+                {candidate.duration_minutes !== null
+                  ? `${Number(candidate.duration_minutes)} min`
+                  : `${candidate.distance_meters?.toLocaleString('nl-NL')} m · afstand`}
               </Text>
             </View>
+            <WorkoutSignals workout={candidate} />
             <Text style={styles.cardTitle}>{candidate.name}</Text>
-            <Text style={styles.cardDescription}>{candidate.description}</Text>
-            <Text style={styles.cardMeta}>
-              {formatRpeZones(candidate.rpe_zones)}
+            <Text style={styles.cardDescription}>
+              {workoutCardDescription(candidate.description)}
             </Text>
             <Text style={styles.swipeInstruction}>
               ← overslaan · kiezen →
@@ -847,9 +911,7 @@ function SwipeDraftPanel({
                   tone="neutral"
                 />
               </View>
-              <Text style={styles.cardMeta}>
-                {formatRpeZones(workout.rpe_zones)}
-              </Text>
+              <WorkoutSignals workout={workout} />
               <ScrollView
                 contentContainerStyle={styles.dateChoiceRow}
                 horizontal
@@ -1604,17 +1666,22 @@ export function PlanningScreen({
                   </View>
                   <Text style={styles.title}>Week van {plan.week_start}</Text>
                   <Text style={styles.body}>
-                    {Number(plan.total_duration_minutes)} minuten ·{' '}
+                    {Number(plan.total_duration_minutes) > 0
+                      ? `${Number(plan.total_duration_minutes)} minuten met tijdsduur · `
+                      : ''}
                     {plan.workouts.length} trainingen · fase {plan.phase}
                   </Text>
                   <Text style={styles.body}>
-                    {plan.display_low_intensity_percent}% rustig /{' '}
-                    {plan.display_high_intensity_percent}% intensief
+                    {Number(plan.total_duration_minutes) > 0
+                      ? `${plan.display_low_intensity_percent}% rustig / ${plan.display_high_intensity_percent}% intensief op tijd`
+                      : 'Geen tijdverdeling voor uitsluitend afstandsgestuurde trainingen'}
                   </Text>
-                  <Text style={styles.hint}>
-                    {Number(plan.low_intensity_minutes)} min rustig ·{' '}
-                    {Number(plan.high_intensity_minutes)} min intensief
-                  </Text>
+                  {Number(plan.total_duration_minutes) > 0 ? (
+                    <Text style={styles.hint}>
+                      {Number(plan.low_intensity_minutes)} min rustig ·{' '}
+                      {Number(plan.high_intensity_minutes)} min intensief
+                    </Text>
+                  ) : null}
                   <View style={styles.selectionProgress}>
                     <Text style={styles.selectionProgressValue}>
                       {plan.workouts.length} van {plan.workouts.length} gekozen
@@ -2171,6 +2238,68 @@ const styles = StyleSheet.create({
     color: colors.brand,
     fontSize: 11,
     fontWeight: '900',
+  },
+  workoutSignals: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  calibrationSignal: {
+    alignItems: 'center',
+    backgroundColor: colors.highlightSoft,
+    borderRadius: radius.pill,
+    flexDirection: 'row',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  calibrationLogo: {
+    alignItems: 'center',
+    backgroundColor: colors.highlight,
+    borderRadius: radius.pill,
+    height: 20,
+    justifyContent: 'center',
+    width: 20,
+  },
+  calibrationLogoText: {
+    color: colors.brandDeep,
+    fontSize: 7,
+    fontWeight: '900',
+  },
+  calibrationSignalText: {
+    color: colors.brandDeep,
+    fontSize: 10,
+    fontWeight: '900',
+  },
+  zoneEvidenceSignal: {
+    backgroundColor: colors.brandSoft,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  zoneEvidenceSignalText: {
+    color: colors.brand,
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  calibrationNotice: {
+    backgroundColor: colors.brandSoft,
+    borderColor: colors.brand,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    gap: spacing.xs,
+    padding: spacing.md,
+  },
+  calibrationNoticeTitle: {
+    color: colors.brand,
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  calibrationNoticeText: {
+    color: colors.ink,
+    fontSize: 12,
+    lineHeight: 18,
   },
   carousel: { height: 190, width: '100%' },
   swipeIntro: {

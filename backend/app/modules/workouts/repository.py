@@ -45,7 +45,11 @@ def parse_planning_catalog(
                     sequence=int(segment["sequence"]),
                     name=str(segment["name"]),
                     instructions=str(segment["instructions"]),
-                    duration_minutes=Decimal(str(segment["duration_minutes"])),
+                    duration_minutes=(
+                        Decimal(str(segment["duration_minutes"]))
+                        if segment.get("duration_minutes") is not None
+                        else None
+                    ),
                     distance_meters=(
                         int(segment["distance_meters"])
                         if segment.get("distance_meters") is not None
@@ -92,7 +96,11 @@ def parse_planning_catalog(
                     discipline=Discipline(str(row["discipline"])),
                     name=str(row["name"]),
                     description=str(row["description"]),
-                    duration_minutes=Decimal(str(row["duration_minutes"])),
+                    duration_minutes=(
+                        Decimal(str(row["duration_minutes"]))
+                        if row.get("duration_minutes") is not None
+                        else None
+                    ),
                     distance_meters=(
                         int(row["distance_meters"])
                         if row.get("distance_meters") is not None
@@ -123,6 +131,19 @@ def parse_planning_catalog(
                             in EXPLICIT_FIELD_TEST_PROTOCOL_IDS
                             for segment in segments
                         )
+                    ),
+                    athlete_selection_only=bool(
+                        row.get("athlete_selection_only", False)
+                    ),
+                    source_catalog=(
+                        str(row["source_catalog"])
+                        if row.get("source_catalog") is not None
+                        else None
+                    ),
+                    source_workout_id=(
+                        str(row["source_workout_id"])
+                        if row.get("source_workout_id") is not None
+                        else None
                     ),
                 )
             )

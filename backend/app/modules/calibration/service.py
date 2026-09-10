@@ -40,7 +40,6 @@ from app.modules.calibration.schemas import (
     FieldTestSetup,
     KnownValuesSetup,
     ProtocolSegmentResponse,
-    RpeOnlySetup,
     TestAssignmentDecisionResponse,
     TestAssignmentResponse,
     ThresholdDecisionResponse,
@@ -65,18 +64,16 @@ class CalibrationDomainError(Exception):
 
 
 _GUIDANCE_BY_DISCIPLINE = {
-    Discipline.SWIM: {GuidanceMode.PACE, GuidanceMode.RPE_ONLY},
+    Discipline.SWIM: {GuidanceMode.PACE},
     Discipline.BIKE: {
         GuidanceMode.POWER,
         GuidanceMode.HEART_RATE,
         GuidanceMode.COMBINED,
-        GuidanceMode.RPE_ONLY,
     },
     Discipline.RUN: {
         GuidanceMode.HEART_RATE,
         GuidanceMode.PACE,
         GuidanceMode.COMBINED,
-        GuidanceMode.RPE_ONLY,
     },
 }
 _CALIBRATION_PROTOCOL_BY_DISCIPLINE = {
@@ -123,12 +120,6 @@ class CalibrationService:
                 creates_threshold=False,
                 creates_zones=False,
             ),
-            ZoneOptionResponse(
-                setup_route=SetupRoute.RPE_ONLY,
-                label="Ik wil voorlopig alleen op gevoel trainen",
-                creates_threshold=False,
-                creates_zones=False,
-            ),
         )
 
     @staticmethod
@@ -141,7 +132,11 @@ class CalibrationService:
                 version=protocol.version,
                 review_status=protocol.review_status,
                 result_status_on_success=protocol.result_status_on_success,
-                guidance_modes=protocol.guidance_modes,
+                guidance_modes=tuple(
+                    mode
+                    for mode in protocol.guidance_modes
+                    if mode != GuidanceMode.RPE_ONLY.value
+                ),
                 segments=tuple(
                     ProtocolSegmentResponse(
                         order=segment.order,
@@ -275,9 +270,6 @@ class CalibrationService:
             protocol_id = _CALIBRATION_PROTOCOL_BY_DISCIPLINE[discipline]
             setup_status = "calibration_pending"
             source = "week1_calibration"
-        elif isinstance(setup, RpeOnlySetup):
-            source = "none"
-
         if (
             discipline is Discipline.SWIM
             and setup.setup_route

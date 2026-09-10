@@ -124,6 +124,30 @@ def test_openapi_excludes_hidden_load_fields(client: TestClient) -> None:
     _assert_no_forbidden_load_key(schema)
 
 
+def test_phase_14_write_contracts_exclude_retired_inputs(client: TestClient) -> None:
+    """New writes collect only the independently approved Phase 14 fields."""
+    schema = client.get("/openapi.json").json()
+    components = schema["components"]["schemas"]
+
+    assert set(components["AthleteProfileUpdate"]["properties"]) == {
+        "date_of_birth",
+        "resting_heart_rate_bpm",
+        "timezone",
+    }
+    assert set(components["TrainingHistoryEntryInput"]["properties"]) == {
+        "discipline",
+        "average_weekly_distance",
+        "distance_unit",
+        "average_sessions_per_week",
+    }
+    assert "feasibility_score" not in components["PrimaryRaceGoalInput"]["properties"]
+
+    setup_schema = schema["paths"]["/api/v1/onboarding/disciplines/{discipline}/setup"][
+        "put"
+    ]["requestBody"]["content"]["application/json"]["schema"]
+    assert "RpeOnlySetup" not in str(setup_schema)
+
+
 def test_openapi_documents_authentication_error(client: TestClient) -> None:
     """The current-user operation advertises the stable error envelope."""
     schema = client.get("/openapi.json").json()

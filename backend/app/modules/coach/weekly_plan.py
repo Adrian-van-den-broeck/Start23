@@ -30,7 +30,8 @@ class CoachWorkoutFacts(CoachModel):
     discipline: Discipline
     name: str = Field(min_length=1, max_length=120)
     scheduled_date: date
-    duration_minutes: Decimal = Field(gt=0, le=1440)
+    duration_minutes: Decimal | None = Field(default=None, gt=0, le=1440)
+    distance_meters: int | None = Field(default=None, gt=0)
     intensity: IntensityBucket
 
 

@@ -137,7 +137,7 @@ class PlannedWorkoutResponse(PublicPlanningModel):
     discipline: Discipline
     name: str
     description: str
-    duration_minutes: Decimal = Field(gt=0)
+    duration_minutes: Decimal | None = Field(default=None, gt=0)
     distance_meters: int | None = Field(default=None, gt=0)
     intensity_bucket: IntensityBucket
     expected_rpe_min: int = Field(ge=1, le=10)
@@ -242,7 +242,10 @@ class WeeklyPlanResponse(PublicPlanningModel):
         high_percent = Decimal(str(result["high_intensity_percent"]))
         display_low = int(low_percent.quantize(Decimal(1), rounding=ROUND_HALF_UP))
         result.setdefault("display_low_intensity_percent", display_low)
-        result.setdefault("display_high_intensity_percent", 100 - display_low)
+        result.setdefault(
+            "display_high_intensity_percent",
+            0 if low_percent == 0 and high_percent == 0 else 100 - display_low,
+        )
         result.setdefault("low_intensity_minutes", total * low_percent / Decimal(100))
         result.setdefault("high_intensity_minutes", total * high_percent / Decimal(100))
         week_start = date.fromisoformat(str(result["week_start"]))
@@ -299,13 +302,15 @@ class WorkoutDeckItemResponse(PublicPlanningModel):
     discipline: Discipline
     name: str
     description: str
-    duration_minutes: Decimal = Field(gt=0)
+    duration_minutes: Decimal | None = Field(default=None, gt=0)
     distance_meters: int | None = Field(default=None, gt=0)
     intensity_bucket: IntensityBucket
     expected_rpe_min: int = Field(ge=1, le=10)
     expected_rpe_max: int = Field(ge=1, le=10)
     segments: tuple[WorkoutSegmentResponse, ...]
     rpe_zones: tuple[RpeZoneResponse, ...] = ()
+    workout_kind: Literal["calibration", "standard"]
+    contributes_to_zone_calibration: bool = False
 
     @model_validator(mode="after")
     def derive_rpe_zones(self) -> "WorkoutDeckItemResponse":

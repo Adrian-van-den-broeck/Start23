@@ -94,15 +94,8 @@ class CalibrationWeekSetup(CalibrationPublicModel):
     pool_length_meters: Literal[25, 50] | None = None
 
 
-class RpeOnlySetup(CalibrationPublicModel):
-    """Explicit zone-free onboarding route."""
-
-    setup_route: Literal[SetupRoute.RPE_ONLY]
-    guidance_mode: Literal[GuidanceMode.RPE_ONLY] = GuidanceMode.RPE_ONLY
-
-
 DisciplineSetupInput = Annotated[
-    KnownValuesSetup | FieldTestSetup | CalibrationWeekSetup | RpeOnlySetup,
+    KnownValuesSetup | FieldTestSetup | CalibrationWeekSetup,
     Field(discriminator="setup_route"),
 ]
 
@@ -140,7 +133,11 @@ class DisciplineSetupResponse(CalibrationPublicModel):
 class ZoneOptionResponse(CalibrationPublicModel):
     """One user-facing setup route."""
 
-    setup_route: SetupRoute
+    setup_route: Literal[
+        SetupRoute.KNOWN_VALUES,
+        SetupRoute.FIELD_TEST,
+        SetupRoute.CALIBRATION_WEEK,
+    ]
     label: str
     creates_threshold: bool
     creates_zones: bool

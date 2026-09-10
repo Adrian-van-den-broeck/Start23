@@ -1,5 +1,6 @@
 """Phase 6 deterministic target, deck, schedule, and warning tests."""
 
+from dataclasses import replace
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from uuid import uuid4
@@ -160,6 +161,92 @@ def test_initial_plan_uses_catalog_baseline_and_explicit_availability() -> None:
         warning.code for warning in draft.warnings
     }
     assert "value" not in repr(draft.planned_load)
+
+
+def test_athlete_selection_only_template_is_manual_but_never_auto_selected() -> None:
+    regular_bike = next(
+        template
+        for template in active_catalog(REVIEWED_CATALOG)
+        if template.discipline is Discipline.BIKE
+        and TrainingPhase.BASE in template.training_phases
+    )
+    source_option = replace(
+        regular_bike,
+        id=uuid4(),
+        template_key=uuid4(),
+        name="BIK-001 · Herstel",
+        athlete_selection_only=True,
+    )
+    catalog = active_catalog(REVIEWED_CATALOG + (source_option,))
+    automatic = build_weekly_plan(
+        week_start=_WEEK_START,
+        timezone_name="UTC",
+        race_date=date(2026, 12, 6),
+        catalog=catalog,
+        prior_loads=(),
+        goal_disciplines=frozenset({Discipline.BIKE}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities=_capabilities(),
+        available_dates=(_WEEK_START,),
+    )
+    explicit = build_weekly_plan(
+        week_start=_WEEK_START,
+        timezone_name="UTC",
+        race_date=date(2026, 12, 6),
+        catalog=catalog,
+        prior_loads=(),
+        goal_disciplines=frozenset({Discipline.BIKE}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities=_capabilities(),
+        available_dates=(_WEEK_START,),
+        selected_template_ids=(source_option.id,),
+    )
+
+    assert automatic.workouts[0].snapshot.template_id != source_option.id
+    assert explicit.workouts[0].snapshot.template_id == source_option.id
+
+
+def test_distance_only_swim_is_planned_without_inferred_minutes() -> None:
+    regular_swim = next(
+        template
+        for template in active_catalog(REVIEWED_CATALOG)
+        if template.discipline is Discipline.SWIM
+        and not template.explicit_scheduling_only
+    )
+    distance_swim = replace(
+        regular_swim,
+        id=uuid4(),
+        template_key=uuid4(),
+        name="SWI-007 · Duur",
+        duration_minutes=None,
+        segments=tuple(
+            replace(segment, duration_minutes=None) for segment in regular_swim.segments
+        ),
+        athlete_selection_only=True,
+        source_catalog="start23-v0.1",
+        source_workout_id="SWI-007",
+    )
+
+    draft = build_weekly_plan(
+        week_start=_WEEK_START,
+        timezone_name="UTC",
+        race_date=date(2026, 12, 6),
+        catalog=active_catalog(REVIEWED_CATALOG + (distance_swim,)),
+        prior_loads=(),
+        goal_disciplines=frozenset({Discipline.SWIM}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities=_capabilities(),
+        available_dates=(_WEEK_START,),
+        selected_template_ids=(distance_swim.id,),
+    )
+
+    assert draft.workouts[0].snapshot.duration_minutes is None
+    assert draft.workouts[0].snapshot.distance_meters == distance_swim.distance_meters
+    assert draft.total_duration_minutes == Decimal(0)
+    assert draft.low_intensity_percent == Decimal(0)
+    assert {warning.code for warning in draft.warnings} >= {
+        "distance_only_swim_excluded_from_time_ratio"
+    }
 
 
 def test_every_fifth_week_uses_recovery_target() -> None:
@@ -604,9 +691,7 @@ def test_manual_schedule_can_place_multiple_workouts_on_the_same_date() -> None:
         zone_capabilities=_capabilities(),
         available_dates=available_dates,
     )
-    selected_ids = tuple(
-        workout.snapshot.template_id for workout in automatic.workouts
-    )
+    selected_ids = tuple(workout.snapshot.template_id for workout in automatic.workouts)
 
     consolidated = build_weekly_plan(
         week_start=_WEEK_START,

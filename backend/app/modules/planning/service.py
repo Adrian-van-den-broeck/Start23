@@ -162,7 +162,16 @@ class PlanningService:
         self._weekly_plan_coach = weekly_plan_coach
 
     @staticmethod
-    def _deck_item(template: WorkoutTemplate) -> WorkoutDeckItemResponse:
+    def _deck_item(
+        template: WorkoutTemplate,
+        *,
+        contributes_to_zone_calibration: bool = False,
+    ) -> WorkoutDeckItemResponse:
+        calibration_protocol = any(
+            segment.protocol_target is not None
+            and "calibration" in segment.protocol_target.protocol_id
+            for segment in template.segments
+        )
         return WorkoutDeckItemResponse(
             id=template.id,
             template_key=template.template_key,
@@ -175,6 +184,8 @@ class PlanningService:
             intensity_bucket=template.intensity_bucket,
             expected_rpe_min=template.expected_rpe_min,
             expected_rpe_max=template.expected_rpe_max,
+            workout_kind="calibration" if calibration_protocol else "standard",
+            contributes_to_zone_calibration=contributes_to_zone_calibration,
             segments=tuple(
                 {
                     "sequence": segment.sequence,
@@ -234,6 +245,7 @@ class PlanningService:
                     name=workout.snapshot.name,
                     scheduled_date=workout.scheduled_date,
                     duration_minutes=workout.snapshot.duration_minutes,
+                    distance_meters=workout.snapshot.distance_meters,
                     intensity=workout.snapshot.intensity_bucket,
                 )
                 for workout in draft.workouts
@@ -336,6 +348,9 @@ class PlanningService:
                 fallback_active=current.fallback_active,
                 protocol_ids=protocol_ids,
                 rpe_guided=rpe_guided,
+                calibration_evidence=(
+                    current.calibration_evidence or route == "calibration_week"
+                ),
             )
         if not goal_disciplines:
             raise PlanningDomainError("The primary race requires a discipline.")
@@ -671,7 +686,12 @@ class PlanningService:
         by_id = {template.id: template for template in context.eligible_deck}
         try:
             accepted = tuple(
-                self._deck_item(by_id[template_id])
+                self._deck_item(
+                    by_id[template_id],
+                    contributes_to_zone_calibration=context.capabilities[
+                        by_id[template_id].discipline
+                    ].calibration_evidence,
+                )
                 for template_id in selection.accepted_template_ids
             )
             current_id = (
@@ -679,7 +699,16 @@ class PlanningService:
                 if row.get("current_template_id") is not None
                 else None
             )
-            current = self._deck_item(by_id[current_id]) if current_id else None
+            current = (
+                self._deck_item(
+                    by_id[current_id],
+                    contributes_to_zone_calibration=context.capabilities[
+                        by_id[current_id].discipline
+                    ].calibration_evidence,
+                )
+                if current_id
+                else None
+            )
             raw_placements = row.get("placements", {})
             if not isinstance(raw_placements, dict):
                 raise ValueError
@@ -1918,7 +1947,15 @@ class PlanningService:
             plan_id=plan_id,
             revision=revision,
             phase=phase,
-            templates=tuple(self._deck_item(template) for template in deck),
+            templates=tuple(
+                self._deck_item(
+                    template,
+                    contributes_to_zone_calibration=capabilities[
+                        template.discipline
+                    ].calibration_evidence,
+                )
+                for template in deck
+            ),
         )
 
     async def _pending_revision_edit_state(
@@ -2046,11 +2083,47 @@ class PlanningService:
             for template_id in current_ids
             if template_id != target.template_id
         )
-        can_remove = await self._candidate_edit_is_valid(
-            athlete_id=athlete_id,
-            context=context,
-            selected_template_ids=without_target,
+        snapshot = self._planning_input(context)
+        timezone_name, race_date, disciplines, capabilities = self._context_values(
+            snapshot
         )
+        week_start = date.fromisoformat(str(context["week_start"]))
+        catalog = active_catalog(await self._catalog_provider.fetch_catalog())
+        prior_loads = self._load_samples(
+            await self._repository.fetch_load_history(athlete_id, week_start)
+        )
+        injuries = frozenset(
+            Discipline(str(value)) for value in context.get("confirmed_injuries", [])
+        )
+        low_only = frozenset(
+            Discipline(str(value)) for value in context.get("low_only_disciplines", [])
+        )
+        available_dates = tuple(
+            date.fromisoformat(str(value))
+            for value in context.get("available_dates", [])
+        )
+
+        def candidate_is_valid(selected_template_ids: tuple[UUID, ...]) -> bool:
+            try:
+                build_weekly_plan(
+                    week_start=week_start,
+                    timezone_name=timezone_name,
+                    race_date=race_date,
+                    catalog=catalog,
+                    prior_loads=prior_loads,
+                    goal_disciplines=disciplines,
+                    confirmed_injuries=injuries,
+                    low_only_disciplines=low_only,
+                    zone_capabilities=capabilities,
+                    available_dates=available_dates,
+                    selected_template_ids=selected_template_ids,
+                    maintenance_active=bool(context.get("maintenance_active", False)),
+                )
+            except (PlanningConstraintError, KeyError, ValueError):
+                return False
+            return True
+
+        can_remove = candidate_is_valid(without_target)
         alternatives: list[WorkoutTemplate] = []
         for candidate in deck:
             if (
@@ -2058,11 +2131,7 @@ class PlanningService:
                 or candidate.discipline is not target.discipline
             ):
                 continue
-            if await self._candidate_edit_is_valid(
-                athlete_id=athlete_id,
-                context=context,
-                selected_template_ids=without_target + (candidate.id,),
-            ):
+            if candidate_is_valid(without_target + (candidate.id,)):
                 alternatives.append(candidate)
         assert plan.proposal is not None
         return PendingWorkoutAlternativesResponse(
@@ -2071,7 +2140,15 @@ class PlanningService:
             proposal_id=plan.proposal.id,
             workout_id=workout_id,
             can_remove=can_remove,
-            alternatives=tuple(self._deck_item(template) for template in alternatives),
+            alternatives=tuple(
+                self._deck_item(
+                    template,
+                    contributes_to_zone_calibration=capabilities[
+                        template.discipline
+                    ].calibration_evidence,
+                )
+                for template in alternatives
+            ),
         )
 
     async def edit_pending_workout(

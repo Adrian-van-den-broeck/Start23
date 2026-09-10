@@ -220,7 +220,11 @@ export function ActivityScreen({
     setSelectedExternal(null);
     if (workout) {
       setDiscipline(workout.discipline);
-      setDuration(String(Number(workout.duration_minutes)));
+      setDuration(
+        workout.duration_minutes === null
+          ? ''
+          : String(Number(workout.duration_minutes)),
+      );
       setDistance(
         workout.distance_meters === null ? '' : String(workout.distance_meters),
       );

@@ -92,6 +92,7 @@ class ZoneCapability:
     fallback_active: bool = False
     protocol_ids: frozenset[str] = frozenset()
     rpe_guided: bool = False
+    calibration_evidence: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -478,13 +479,19 @@ def _selection_key(
         Decimal(0),
     )
     total_duration = sum(
-        (template.duration_minutes for template in selection), Decimal(0)
+        (
+            template.duration_minutes
+            for template in selection
+            if template.duration_minutes is not None
+        ),
+        Decimal(0),
     )
     high_duration = sum(
         (
             template.duration_minutes
             for template in selection
             if template.intensity_bucket is IntensityBucket.HIGH
+            and template.duration_minutes is not None
         ),
         Decimal(0),
     )
@@ -525,7 +532,10 @@ def select_workouts(
         chosen = tuple(by_id[template_id] for template_id in selected_template_ids)
     else:
         deck = tuple(
-            template for template in deck if not template.explicit_scheduling_only
+            template
+            for template in deck
+            if not template.explicit_scheduling_only
+            and not template.athlete_selection_only
         )
         candidates: list[tuple[WorkoutTemplate, ...]] = []
         for count in range(1, len(deck) + 1):
@@ -683,9 +693,13 @@ def schedule_workouts(
 
     def find_schedule(index: int) -> tuple[ProposedWorkout, ...] | None:
         if index == len(ordered):
-            if enforce_rest_limit and maximum_consecutive_rest_days(
-                {workout.scheduled_date for workout in assigned}
-            ) > 3:
+            if (
+                enforce_rest_limit
+                and maximum_consecutive_rest_days(
+                    {workout.scheduled_date for workout in assigned}
+                )
+                > 3
+            ):
                 return None
             return tuple(sorted(assigned, key=lambda item: item.scheduled_date))
 
@@ -737,13 +751,16 @@ def schedule_workouts(
     )
 
 
-def _workout_intensity(workout: ProposedWorkout) -> WorkoutIntensity:
+def _workout_intensity(workout: ProposedWorkout) -> WorkoutIntensity | None:
     # The imported catalog bucket owns the complete workout's weekly 80/20
     # allocation. Segment zones remain execution detail only.
+    duration = workout.snapshot.duration_minutes
+    if duration is None:
+        return None
     return WorkoutIntensity(
         (
             IntensitySegment(
-                duration=DurationMinutes(workout.snapshot.duration_minutes),
+                duration=DurationMinutes(duration),
                 zone=(
                     TrainingZone.ZONE_3
                     if workout.snapshot.intensity_bucket is IntensityBucket.HIGH
@@ -809,6 +826,7 @@ def build_weekly_plan(
         for template in catalog
         if template.discipline in uninjured
         and not template.explicit_scheduling_only
+        and not template.athlete_selection_only
         and not (
             template.discipline in low_only_disciplines
             and template.intensity_bucket is IntensityBucket.HIGH
@@ -918,11 +936,22 @@ def build_weekly_plan(
         timezone_name=timezone_name,
         fixed_template_dates=fixed_dates,
     )
-    distribution = calculate_time_distribution(
-        tuple(_workout_intensity(workout) for workout in proposed)
+    timed_intensities = tuple(
+        intensity
+        for workout in proposed
+        if (intensity := _workout_intensity(workout)) is not None
     )
-    assert distribution.low_fraction is not None
-    assert distribution.high_fraction is not None
+    distribution = calculate_time_distribution(timed_intensities)
+    low_intensity_percent = (
+        distribution.low_fraction.value * Decimal(100)
+        if distribution.low_fraction is not None
+        else Decimal(0)
+    )
+    high_intensity_percent = (
+        distribution.high_fraction.value * Decimal(100)
+        if distribution.high_fraction is not None
+        else Decimal(0)
+    )
     planned_load = InternalLoad(
         sum(
             (workout.snapshot.internal_planned_load.value for workout in proposed),
@@ -930,6 +959,19 @@ def build_weekly_plan(
         )
     )
     warnings: list[PlanningWarning] = []
+    if any(workout.snapshot.duration_minutes is None for workout in proposed):
+        warnings.append(
+            PlanningWarning(
+                rule_id=RuleId.SOFT_BOUNDARIES,
+                code="distance_only_swim_excluded_from_time_ratio",
+                message=(
+                    "Afstandsgestuurde zwemtrainingen staan in meters in het plan; "
+                    "de 80/20-tijdverdeling bevat alleen trainingen met een "
+                    "vastgelegde duur."
+                ),
+                severity="info",
+            )
+        )
     if len({workout.scheduled_date for workout in proposed}) < len(proposed):
         warnings.append(
             PlanningWarning(
@@ -997,7 +1039,11 @@ def build_weekly_plan(
             )
         )
     total_duration = sum(
-        (workout.snapshot.duration_minutes for workout in proposed),
+        (
+            workout.snapshot.duration_minutes
+            for workout in proposed
+            if workout.snapshot.duration_minutes is not None
+        ),
         Decimal(0),
     )
     return WeeklyPlanDraft(
@@ -1005,8 +1051,8 @@ def build_weekly_plan(
         workouts=proposed,
         warnings=tuple(warnings),
         total_duration_minutes=total_duration,
-        low_intensity_percent=distribution.low_fraction.value * Decimal(100),
-        high_intensity_percent=distribution.high_fraction.value * Decimal(100),
+        low_intensity_percent=low_intensity_percent,
+        high_intensity_percent=high_intensity_percent,
         planned_load=planned_load,
     )
 

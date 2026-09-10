@@ -96,7 +96,11 @@ class OnboardingService:
 
     @staticmethod
     def _profile(row: JsonObject | None) -> AthleteProfileResponse | None:
-        return AthleteProfileResponse.model_validate(row) if row is not None else None
+        if row is None:
+            return None
+        return AthleteProfileResponse.model_validate(
+            {key: row[key] for key in AthleteProfileResponse.model_fields}
+        )
 
     @staticmethod
     def _goal(row: JsonObject | None) -> PrimaryRaceGoalResponse | None:
@@ -109,7 +113,21 @@ class OnboardingService:
     @staticmethod
     def _history(row: JsonObject) -> TrainingHistoryEntryResponse:
         return TrainingHistoryEntryResponse.model_validate(
-            {key: row[key] for key in TrainingHistoryEntryResponse.model_fields}
+            {key: row.get(key) for key in TrainingHistoryEntryResponse.model_fields}
+        )
+
+    @staticmethod
+    def _history_is_complete(
+        history: tuple[TrainingHistoryEntryResponse, ...],
+    ) -> bool:
+        """Require three newly confirmed two-month entries, not legacy history."""
+        return {entry.discipline for entry in history} == set(Discipline) and all(
+            entry.average_weekly_distance is not None
+            and entry.distance_unit
+            == ("meters" if entry.discipline is Discipline.SWIM else "kilometers")
+            and entry.average_sessions_per_week is not None
+            and entry.history_window_months == 2
+            for entry in history
         )
 
     @staticmethod
@@ -221,10 +239,7 @@ class OnboardingService:
             value is not None
             for value in (
                 profile.date_of_birth,
-                profile.height_cm,
-                profile.weight_kg,
                 profile.resting_heart_rate_bpm,
-                profile.motivation_text,
             )
         )
 
@@ -248,7 +263,7 @@ class OnboardingService:
         derived_steps: list[OnboardingStep] = []
         if cls._profile_is_complete(profile):
             derived_steps.append("profile")
-        if {entry.discipline for entry in history} == set(Discipline):
+        if cls._history_is_complete(history):
             derived_steps.append("history")
         if goal is not None:
             derived_steps.append("goal")
@@ -344,7 +359,10 @@ class OnboardingService:
             athlete_id,
             values,
         )
-        return AthleteProfileResponse.model_validate(row)
+        profile = self._profile(row)
+        if profile is None:
+            raise OnboardingDomainError("Saved profile could not be read back.")
+        return profile
 
     async def replace_training_history(
         self,

@@ -121,26 +121,29 @@ set local request.jwt.claim.sub =
   'a0000000-0000-0000-0000-000000000085';
 set local role authenticated;
 
-select is(
-  public.save_discipline_zone_setup(
-    jsonb_build_object(
-      'discipline', 'run',
-      'setup_route', 'rpe_only',
-      'guidance_mode', 'rpe_only',
-      'setup_status', 'configured',
-      'protocol_id', null,
-      'pool_length_meters', null,
-      'threshold_status', 'unknown',
-      'zone_status', 'unknown',
-      'source', 'none',
-      'validation_status', 'not_assessed',
-      'confidence', 'not_assessed',
-      'known_thresholds', '[]'::jsonb,
-      'known_zone_profiles', '[]'::jsonb
+select throws_ok(
+  $$
+    select public.save_discipline_zone_setup(
+      jsonb_build_object(
+        'discipline', 'run',
+        'setup_route', 'rpe_only',
+        'guidance_mode', 'rpe_only',
+        'setup_status', 'configured',
+        'protocol_id', null,
+        'pool_length_meters', null,
+        'threshold_status', 'unknown',
+        'zone_status', 'unknown',
+        'source', 'none',
+        'validation_status', 'not_assessed',
+        'confidence', 'not_assessed',
+        'known_thresholds', '[]'::jsonb,
+        'known_zone_profiles', '[]'::jsonb
+      )
     )
-  ) ->> 'setup_route',
-  'rpe_only',
-  'an explicitly empty RPE-only setup is persisted'
+  $$,
+  '23514',
+  'RPE-only setup is not available in the MVP',
+  'new RPE-only discipline setup is rejected'
 );
 
 -- Each PostgREST RPC/table call has its own transaction. Clear the simulated

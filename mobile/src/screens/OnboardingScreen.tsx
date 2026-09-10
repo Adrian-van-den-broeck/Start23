@@ -135,36 +135,22 @@ type ProfileStepProps = {
   saving: boolean;
   onSave: (input: {
     date_of_birth: string;
-    height_cm: string;
-    weight_kg: string;
     resting_heart_rate_bpm: number;
-    motivation_text: string;
-    motivation_tag?: string;
     timezone: string;
   }) => Promise<void>;
 };
 
 function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
   const [dateOfBirth, setDateOfBirth] = useState(profile?.date_of_birth ?? '');
-  const [height, setHeight] = useState(profile?.height_cm ?? '');
-  const [weight, setWeight] = useState(profile?.weight_kg ?? '');
   const [restingHeartRate, setRestingHeartRate] = useState(
     profile?.resting_heart_rate_bpm?.toString() ?? '',
-  );
-  const [motivation, setMotivation] = useState(
-    profile?.motivation_text ?? '',
-  );
-  const [motivationTag, setMotivationTag] = useState(
-    profile?.motivation_tag ?? '',
   );
   const [timezone, setTimezone] = useState(
     profile?.timezone ?? 'Europe/Amsterdam',
   );
   const valid =
     isPastIsoDateInput(dateOfBirth) &&
-    Boolean(motivation && timezone) &&
-    Number(height) > 0 &&
-    Number(weight) > 0 &&
+    Boolean(timezone) &&
     Number(restingHeartRate) > 0;
 
   return (
@@ -183,28 +169,6 @@ function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
           placeholder="1990-05-20"
           value={dateOfBirth}
         />
-        <View style={styles.twoColumns}>
-          <View style={styles.column}>
-            <FormField
-              inputMode="decimal"
-              label="Lengte"
-              onChangeText={setHeight}
-              placeholder="181"
-              suffix={<Text style={styles.unit}>cm</Text>}
-              value={height}
-            />
-          </View>
-          <View style={styles.column}>
-            <FormField
-              inputMode="decimal"
-              label="Gewicht"
-              onChangeText={setWeight}
-              placeholder="74"
-              suffix={<Text style={styles.unit}>kg</Text>}
-              value={weight}
-            />
-          </View>
-        </View>
         <FormField
           inputMode="numeric"
           label="Rusthartslag"
@@ -212,20 +176,6 @@ function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
           placeholder="52"
           suffix={<Text style={styles.unit}>bpm</Text>}
           value={restingHeartRate}
-        />
-        <FormField
-          label="Wat wil je bereiken?"
-          multiline
-          onChangeText={setMotivation}
-          placeholder="Vertel kort waarom je traint."
-          style={styles.multiline}
-          value={motivation}
-        />
-        <FormField
-          label="Motivatielabel (optioneel)"
-          onChangeText={setMotivationTag}
-          placeholder="eerste-race"
-          value={motivationTag}
         />
         <FormField
           hint="IANA-tijdzone voor correcte lokale trainingsweken."
@@ -242,11 +192,7 @@ function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
         onPress={() =>
           void onSave({
             date_of_birth: dateOfBirth,
-            height_cm: height,
-            weight_kg: weight,
             resting_heart_rate_bpm: Number(restingHeartRate),
-            motivation_text: motivation,
-            ...(motivationTag ? { motivation_tag: motivationTag } : {}),
             timezone,
           })
         }
@@ -261,42 +207,42 @@ type HistoryStepProps = {
   onSave: (
     values: Record<
       Discipline,
-      { weeklyMinutes: string; experienceYears: string }
+      { averageDistance: string; averageSessions: string }
     >,
   ) => Promise<void>;
 };
 
 function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
-  const initial = (discipline: Discipline, key: 'minutes' | 'years') => {
+  const initial = (discipline: Discipline, key: 'distance' | 'sessions') => {
     const entry = state.training_history.find(
       (history) => history.discipline === discipline,
     );
-    return key === 'minutes'
-      ? entry?.weekly_minutes.toString() ?? ''
-      : entry?.experience_years ?? '';
+    return key === 'distance'
+      ? entry?.average_weekly_distance ?? ''
+      : entry?.average_sessions_per_week ?? '';
   };
   const [values, setValues] = useState<
     Record<
       Discipline,
-      { weeklyMinutes: string; experienceYears: string }
+      { averageDistance: string; averageSessions: string }
     >
   >({
     swim: {
-      weeklyMinutes: initial('swim', 'minutes'),
-      experienceYears: initial('swim', 'years'),
+      averageDistance: initial('swim', 'distance'),
+      averageSessions: initial('swim', 'sessions'),
     },
     bike: {
-      weeklyMinutes: initial('bike', 'minutes'),
-      experienceYears: initial('bike', 'years'),
+      averageDistance: initial('bike', 'distance'),
+      averageSessions: initial('bike', 'sessions'),
     },
     run: {
-      weeklyMinutes: initial('run', 'minutes'),
-      experienceYears: initial('run', 'years'),
+      averageDistance: initial('run', 'distance'),
+      averageSessions: initial('run', 'sessions'),
     },
   });
   const update = (
     discipline: Discipline,
-    key: 'weeklyMinutes' | 'experienceYears',
+    key: 'averageDistance' | 'averageSessions',
     value: string,
   ) => {
     setValues((current) => ({
@@ -306,15 +252,15 @@ function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
   };
   const valid = (Object.keys(values) as Discipline[]).every(
     (discipline) =>
-      Number(values[discipline].weeklyMinutes) >= 0 &&
-      Number(values[discipline].experienceYears) >= 0 &&
-      values[discipline].weeklyMinutes !== '' &&
-      values[discipline].experienceYears !== '',
+      Number(values[discipline].averageDistance) >= 0 &&
+      Number(values[discipline].averageSessions) >= 0 &&
+      values[discipline].averageDistance !== '' &&
+      values[discipline].averageSessions !== '',
   );
 
   return (
     <StepFrame
-      description="Vul een normale trainingsweek in. Minuten mogen nul zijn als een discipline nieuw voor je is."
+      description="Geef per discipline je gemiddelde over de afgelopen twee maanden. We bewaren deze invoer nu alleen; de startbaseline volgt pas na de beoordeelde Phase 13-regels."
       eyebrow="Stap 2 van 5"
       title="Waar sta je nu?"
     >
@@ -331,26 +277,30 @@ function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
             <View style={styles.twoColumns}>
               <View style={styles.column}>
                 <FormField
-                  inputMode="numeric"
-                  label="Per week"
+                  inputMode="decimal"
+                  label="Gemiddelde afstand per week"
                   onChangeText={(value) =>
-                    update(discipline, 'weeklyMinutes', value)
+                    update(discipline, 'averageDistance', value)
                   }
-                  placeholder="90"
-                  suffix={<Text style={styles.unit}>min</Text>}
-                  value={values[discipline].weeklyMinutes}
+                  placeholder={discipline === 'swim' ? '4000' : '40'}
+                  suffix={
+                    <Text style={styles.unit}>
+                      {discipline === 'swim' ? 'm/week' : 'km/week'}
+                    </Text>
+                  }
+                  value={values[discipline].averageDistance}
                 />
               </View>
               <View style={styles.column}>
                 <FormField
                   inputMode="decimal"
-                  label="Ervaring"
+                  label="Gemiddelde frequentie"
                   onChangeText={(value) =>
-                    update(discipline, 'experienceYears', value)
+                    update(discipline, 'averageSessions', value)
                   }
                   placeholder="2"
-                  suffix={<Text style={styles.unit}>jaar</Text>}
-                  value={values[discipline].experienceYears}
+                  suffix={<Text style={styles.unit}>sessies/week</Text>}
+                  value={values[discipline].averageSessions}
                 />
               </View>
             </View>
@@ -375,7 +325,6 @@ type GoalStepProps = {
     title: string;
     specific_description: string;
     measurable_outcome: string;
-    feasibility_score: number;
     target_date: string;
   }) => Promise<void>;
 };
@@ -414,15 +363,9 @@ function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
     goal?.specific_description ?? '',
   );
   const [outcome, setOutcome] = useState(goal?.measurable_outcome ?? '');
-  const [feasibility, setFeasibility] = useState(
-    goal?.feasibility_score.toString() ?? '',
-  );
   const [targetDate, setTargetDate] = useState(goal?.target_date ?? '');
   const normalizedTargetDate = normalizeRaceDate(targetDate);
-  const valid =
-    Boolean(title && description && outcome && normalizedTargetDate) &&
-    Number(feasibility) >= 1 &&
-    Number(feasibility) <= 10;
+  const valid = Boolean(title && description && outcome && normalizedTargetDate);
   const raceOption = options.find(
     (option) => option.goal_family === 'race_event',
   );
@@ -516,36 +459,22 @@ function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
               placeholder="Alle drie onderdelen voltooien."
               value={outcome}
             />
-            <View style={styles.twoColumns}>
-              <View style={styles.column}>
-                <FormField
-                  hint="1 tot en met 10"
-                  inputMode="numeric"
-                  label="Haalbaarheid"
-                  onChangeText={setFeasibility}
-                  placeholder="8"
-                  value={feasibility}
-                />
-              </View>
-              <View style={styles.column}>
-                <FormField
-                  autoCapitalize="none"
-                  hint={
-                    targetDate && !normalizedTargetDate
-                      ? 'Gebruik een toekomstige datum: JJJJ-MM-DD'
-                      : 'JJJJ-MM-DD'
-                  }
-                  inputMode="numeric"
-                  label="Racedatum"
-                  maxLength={10}
-                  onChangeText={(value) =>
-                    setTargetDate(formatIsoDateInput(value))
-                  }
-                  placeholder="2027-06-15"
-                  value={targetDate}
-                />
-              </View>
-            </View>
+            <FormField
+              autoCapitalize="none"
+              hint={
+                targetDate && !normalizedTargetDate
+                  ? 'Gebruik een toekomstige datum: JJJJ-MM-DD'
+                  : 'JJJJ-MM-DD'
+              }
+              inputMode="numeric"
+              label="Racedatum"
+              maxLength={10}
+              onChangeText={(value) =>
+                setTargetDate(formatIsoDateInput(value))
+              }
+              placeholder="2027-06-15"
+              value={targetDate}
+            />
           </View>
           <ActionButton
             disabled={!valid}
@@ -556,7 +485,6 @@ function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                 title,
                 specific_description: description,
                 measurable_outcome: outcome,
-                feasibility_score: Number(feasibility),
                 target_date: normalizedTargetDate!,
               })
             }
@@ -1293,11 +1221,12 @@ export function OnboardingScreen({
                     accessToken,
                     (['swim', 'bike', 'run'] as const).map((discipline) => ({
                       discipline,
-                      weekly_minutes: Number(
-                        values[discipline].weeklyMinutes,
-                      ),
-                      experience_years:
-                        values[discipline].experienceYears,
+                      average_weekly_distance:
+                        values[discipline].averageDistance,
+                      distance_unit:
+                        discipline === 'swim' ? 'meters' : 'kilometers',
+                      average_sessions_per_week:
+                        values[discipline].averageSessions,
                     })),
                   ),
                 )

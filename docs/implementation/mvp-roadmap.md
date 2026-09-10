@@ -5,7 +5,11 @@
 This roadmap tracks small, reviewable implementation phases. Phase 1 is
 implemented and locally verified. Phase 2 authentication is verified; its
 persistence and hosted RLS slice is intentionally pending. The roadmap assumes
-the architecture and safety constraints in `AGENTS.md`.
+the architecture and safety constraints in `AGENTS.md`. The 5 November business
+meeting decisions are incorporated as the current MVP direction in Phases
+12-16. Where those decisions conflict with an older implemented or open item,
+the older behavior is retained only as historical context and must not be
+shipped as the target MVP behavior.
 
 Related documents:
 
@@ -18,27 +22,32 @@ Related documents:
 - [Database migration workflow](database-migrations.md)
 - [Backend zone calculation and calibration](backend-zone-calculation.md)
 - [Phase 8.5 and 9 business decision brief](phase-8-5-and-9-business-decisions.md)
+- [5 November business meeting decisions](../requirements/Decisions.md)
 
 ## MVP outcome
 
 The phase-one MVP should support a narrow, safe, end-to-end loop:
 
 1. an athlete authenticates;
-2. completes structured onboarding;
-3. configures a primary race-oriented goal and, per discipline, enters known
-   zones, follows a reviewed estimation route, or explicitly continues with
-   RPE guidance while zones are unknown;
+2. completes structured onboarding and confirms access to a heart-rate monitor;
+3. configures one concrete race goal and, per required discipline, enters known
+   zones or follows a reviewed heart-rate-based calibration route; an RPE-only
+   route is not supported in the MVP;
 4. receives a server-curated workout deck and fills the deterministic weekly
    target by accepting workouts;
 5. optionally places the accepted workouts on a date-only calendar timeline or
    asks the deterministic planner to place them;
 6. explicitly approves the resulting pending weekly-plan proposal;
 7. schedules or moves workouts with qualitative warnings;
-8. records a completed activity and RPE;
+8. records a completed activity, average heart rate, and a
+   discipline-specific textual RPE choice;
 9. receives a pending corrective proposal when deterministic rules require one;
 10. completes a structured weekly check-in for the next week.
 
 The LLM and multiple wearable providers are not required to prove this loop.
+Physiological decisions remain deterministic Python behavior. AI may help
+extract context and explain a pending volume/intensity change within confirmed
+zones, but it may neither recalculate zones nor directly mutate a plan.
 
 ## Phase 0: decision and requirements lock
 
@@ -58,6 +67,10 @@ one qualified, accountable physiological reviewer and an identifiable external
 review record before production. Because neither identity nor record reference
 is present in the repository configuration, that production gate remains open.
 Material rule changes reopen it.
+
+The 5 November decisions are material rule changes and are not part of
+`phase-3-ruleset-3` or `start23-zone-model-1.0`. Phase 13 must produce a new
+versioned, reviewed ruleset before the affected behavior is release-eligible.
 
 ### Scope
 
@@ -626,7 +639,8 @@ the subsequent run reports no remaining Phase 6 unindexed foreign keys.
   deterministic hidden baseline and later regular weeks held prior planned
   load. Phase 7 now supplies canonical realized load and replaces that hold
   whenever realized history exists; the safe hold remains the intentional
-  missing-history fallback. Recovery and taper factors remain unchanged.
+  missing-history fallback. Recovery and taper factors remained unchanged in
+  Phase 6; Phase 13 supersedes the target sickness/fatigue and taper behavior.
 - The documented separate `PUT /weekly-plans/{plan_id}/selections` draft step
   is consolidated into `POST /weekly-plans/{plan_id}/schedule-proposals`,
   whose request contains explicit eligible template IDs and availability.
@@ -648,14 +662,14 @@ the subsequent run reports no remaining Phase 6 unindexed foreign keys.
   taper and a taper-week triathlon request therefore fails closed with
   `catalog_coverage_unsatisfied`; taper generation also fails closed without a
   prior build-load baseline. Decision 41 requires Phase 8 to reassess taper
-  coverage from the available 160-row `Trainingen START23.v01` export before
+  coverage from the available 154-row `Trainingen START23.v01` export before
   concluding that new training definitions are needed. That file has no
   explicit taper flag, so taper eligibility, import validation, and a full
   runtime fixture remain pending.
 - The runtime planner still selects forward cycle position from the number of
   prior plans. Decision 43 supersedes that behavior for a race: the event date
-  always anchors backward cycle alignment. A non-race goal begins at cycle week
-  1 and uses only its own later Phase 12 rules.
+  always anchors backward cycle alignment. The former non-race cycle-week-1
+  follow-up is closed for MVP by the 5 November decision and Phase 12.
 - Hosted `start23-dev` now contains both the main Phase 6 migration and the
   advisor-index follow-up. The hosted pgTAP suite passes 30/30, and two real
   Auth sessions pass owner/cross-owner Data API isolation. The test accounts
@@ -793,7 +807,7 @@ Core application work was implemented and locally verified on 2026-08-13.
 The structured FastAPI/mobile flow, deterministic planning amendments, and
 Supabase migration/pgTAP suite are prepared, and the migration is recorded in
 the linked hosted project. Phase 8 is still `in progress`, because the reviewed
-standard Week-1/TSE conversion protocol and reviewed taper labels do not exist,
+Phase 13 baseline/calibration rules and reviewed taper labels do not exist,
 the Phase 8 pgTAP/real-token flows have not run, the local SQL runtime is
 unavailable, and no device verification was performed. Phase 8 now also owns
 the explicitly accepted planning-completion work below.
@@ -830,16 +844,15 @@ the explicitly accepted planning-completion work below.
   local-Monday trigger and post-check-in trigger must be idempotent for the same
   athlete and local week; the final behavior must not use a blind UTC week.
 - For race goals, align every partial training horizon backward from the event
-  date. For non-race goals, retain a cycle-week-1 start and leave goal-specific
-  execution to Phase 12.
-- Use a reviewed standard Week-1 training selection. Known CSS/thresholds and
-  zones personalize execution difficulty; unknown values use safe calibration
-  training and athlete-entered TSE feedback to create only a pending zone
-  proposal. Do not use reported hours multiplied by 40 as the Week-1 target.
+  date. **The former non-race cycle-week-1 scope is closed for MVP by Phase 12.**
+- Historical scope used a reviewed standard Week-1 selection instead of
+  `reported hours * 40`. **Superseded for the target MVP by Phase 13:** Week 1
+  must use the reviewed two-month, discipline-specific volume/frequency
+  baseline and a heart-rate-based calibration route where zones are unknown.
 - On app open, show a prominent but non-blocking reminder for completed
   activities missing required RPE/TSE feedback. Keep it visible and deep-link
   it to the activity until feedback or an explicit terminal state exists.
-- Reassess taper coverage from the available 160-row
+- Reassess taper coverage from the available 154-row
   `Trainingen START23.v01` export. Define reviewed taper eligibility for
   existing rows, validate their bucket/discipline/duration/zone data, and add no
   new training definitions unless that review proves coverage is insufficient.
@@ -862,11 +875,11 @@ the explicitly accepted planning-completion work below.
 - Weekly generation is idempotent and tested around athlete-local week and
   timezone boundaries.
 - Race fixtures prove that the event date, rather than prior-plan count,
-  determines cycle position; non-race fixtures begin at week 1 without race
-  rules.
-- Week-1 fixtures prove the known-zone and unknown-zone calibration routes. A
-  TSE-derived proposal cannot activate zones and cannot be implemented until
-  the reviewed conversion protocol and TSE/RPE definition exist.
+  determines cycle position. **Non-race fixtures are no longer an MVP exit
+  criterion.**
+- Week-1 fixtures prove the known-zone and heart-rate calibration routes. A
+  calculated proposal cannot activate zones and cannot be implemented until
+  the Phase 13 calibration, baseline, and textual-RPE definitions are reviewed.
 - Missing-feedback reminders are visible on app open, non-blocking, persistent,
   and TSS-free.
 - Reviewed existing-catalog taper rows pass validation and a full swim/bike/run
@@ -940,17 +953,21 @@ the explicitly accepted planning-completion work below.
   exit gate. The implementation does not use reported hours multiplied by 40.
   Phase 8.5 now uses the separately versioned `start23-zone-model-1.0` for
   complete, pending Zone 1-5 conversion from an accepted threshold.
+- The 5 November decision supersedes the standard-Week-1 and RPE-only target
+  behavior above. Phase 13 replaces it with a reviewed two-month baseline and
+  single-session heart-rate/RPE anchor; Phase 14 removes the RPE-only option
+  from the available MVP flow. Existing code remains historical until that
+  replacement is implemented and verified.
 - A non-race cycle-week-1 runtime fixture is not implemented because the public
-  goal model is intentionally still race-only. Goal-type selection and
-  non-race execution remain Phase 12 work; Phase 8 only removes prior-plan
-  count from race anchoring and does not invent a non-race macrocycle.
-- The 160-row source-catalog audit is recorded in
-  `phase-8-taper-catalog-review.md`. All IDs, disciplines, buckets, RPE values,
-  zones, segment order, and supplied totals validate, but all 60 swim rows omit
-  total duration and the export contains no reviewed taper marker. Treating
-  `Herstel` or `Techniek` as taper approval would invent physiology. No rows
-  were imported or relabelled, no new workouts were added, and full triathlon
-  taper remains fail-closed.
+  goal model is intentionally still race-only. Phase 12 now closes non-race
+  execution for MVP, so this is no longer remaining MVP work.
+- The current 154-row source-catalog audit is recorded in
+  `phase-8-taper-catalog-review.md`. All 50 bike, 50 run, and 54 swim rows are
+  structurally importable. Swim is deliberately distance-driven: template and
+  block distances are stored while planned duration remains absent. The export
+  still contains no reviewed taper marker, so importing these rows as explicit
+  athlete choices does not make them taper-eligible; full triathlon taper
+  remains fail-closed.
 - The local-Monday database entrypoint opens the structured check-in; it cannot
   create a plan before the athlete confirms context. A deployed
   Railway/Supabase schedule still has to invoke it. Post-confirmation plan
@@ -998,8 +1015,10 @@ named physiological reviewer remain hard production gates.
 
 ### Scope
 
-- Four explicit per-discipline setup routes: known values, field test,
-  calibration week, and RPE-only. **Implemented in FastAPI and persistence**
+- Four historical per-discipline setup routes: known values, field test,
+  calibration week, and RPE-only. **Implemented in FastAPI and persistence;
+  the 5 November hardware decision supersedes RPE-only for the MVP and Phase 14
+  must make it unavailable**
 - Partial known thresholds with optional Zone 1-5 profiles; empty optional
   boundaries do not produce `422`. **Implemented**
 - Reviewed run threshold, bike FTP, bike threshold-HR, and swim CSS field-test
@@ -1039,8 +1058,9 @@ named physiological reviewer remain hard production gates.
 - Submaximal calibration cannot produce a threshold. **Verified**
 - Missing session RPE blocks evaluation but not observation/activity storage.
   **Verified in domain/API tests and hosted pgTAP**
-- RPE-only is a valid onboarding configuration and creates no zone profile.
-  **Implemented and hosted-persistence verified; real-token/mobile flow pending**
+- RPE-only is a valid historical persistence state and creates no zone profile.
+  **Superseded as an available MVP configuration; existing records require a
+  safe migration/resume path in Phase 14**
 - Public APIs and tables contain no TSS/private-load fields. **OpenAPI/backend
   tests and hosted pgTAP pass**
 - Complete Zone 1-5 candidates are deterministic and versioned, and never
@@ -1477,6 +1497,10 @@ neither input creates a threshold or zone. The Expo profile page shows active,
 pending, and immutable prior versions with provenance and allows later
 self-service known/physician-or-lab value entry or a reviewed test.
 
+This remains an accurate record of the local implementation, but it is not the
+target MVP behavior after the 5 November meeting. Phases 13-15 must replace the
+RPE-only path and the rule that observations can never calibrate zones.
+
 Standalone tests create a separate pending `validation_test` proposal. Run and
 bike tests can instead replace one same-discipline workout in an exact-date
 pending weekly-plan revision. Both paths require explicit confirmation. The
@@ -1489,7 +1513,8 @@ stopped without changing a hosted project.
 
 - Present the setup choice independently for swim, bike, and run: use known or
   physician/lab-tested values, perform a reviewed field test, or continue
-  without a test using RPE-guided training.
+  without a test using RPE-guided training. **Historical; RPE-only is
+  superseded for the MVP by the heart-rate-monitor requirement in Phase 14.**
 - Do not present "calibration week" and "RPE by feel" as two different workout
   assignment behaviors. Both receive safe RPE-targeted workouts; calibration
   additionally records eligible objective observations and provenance for a
@@ -1504,6 +1529,8 @@ stopped without changing a hosted project.
   the required heart-rate observation in bpm. Interpret the measurement
   tolerance as an inclusive +/-10 bpm around the applicable reviewed session
   or protocol reference. This observation cannot by itself manufacture zones.
+  **Historical; Phase 13 may use the observation only through Joren's reviewed,
+  deterministic single-session calibration formula and a pending proposal.**
 - Show zone state per discipline on the profile page, including previously
   entered values, source/provenance, review state, and active version. Preserve
   immutable prior versions.
@@ -1549,9 +1576,27 @@ stopped without changing a hosted project.
   form explicitly distinguishes athlete-entered values from values reported as
   physician/lab measured; the resulting calculated profile remains pending and
   preserves `measured_lab` provenance.
+- **Superseded for MVP:** RPE-only must no longer be selectable, and a completed
+  reviewed calibration workout may become an input to a pending zone proposal.
+  It still may not directly activate or silently rescale zones.
 - **Implemented:** calibration and RPE-only use the same ordinary RPE-targeted
   workout projection. Calibration retains its reviewed protocol and immutable
   observation path as additional provenance; it does not fabricate a threshold.
+- **Implemented:** a calibration-week swipe deck is no longer limited to the
+  three calibration protocols. Calibration cards carry an explicit `CAL`
+  marker and the deck also offers the 154 reviewed START23 v0.1 catalog rows as
+  athlete-selected alternatives. All workouts selected and completed in a
+  calibration week provide discipline-specific RPE/heart-rate observations for
+  the weekly evaluation; a numeric zone change still requires a complete,
+  separately confirmed pending proposal.
+- **Implemented:** all 54 source-catalog swim workouts are distance-driven.
+  Their total and per-block meter distances are preserved, duration is left
+  null, and the mobile plan/card/calendar show meters rather than `0 min` or an
+  inferred time. Pool length can be used operationally to convert a block into
+  lengths (for example 1,000 m = 40 lengths in a 25 m pool) without changing
+  the stored workout prescription. Distance-only swims retain their reviewed
+  private source load, but are excluded from the public time-based 80/20
+  percentages; the plan states that scope explicitly.
 - **Implemented with one fail-closed exception:** standalone field tests support
   swim, bike, and run. Exact-date weekly-plan integration supports the reviewed
   duration-complete run and bike protocols. The CSS swim protocol has
@@ -1572,6 +1617,10 @@ stopped without changing a hosted project.
   reveal/activate a calibration-derived profile. Once such a reviewed ruleset
   exists, only a complete pending proposal followed by the existing separate
   approval may become active.
+- **Closed as a target design by the 5 November decision:** the proposed Week-2
+  statistical calibration route is replaced by one reviewed calibration
+  session using textual RPE and average heart rate. Its exact formula,
+  completeness rules, and fixtures remain a Phase 13 dependency.
 - **Not implemented by design:** automatic UC-05 progress evaluation, minimum
   sample thresholds, and outlier rejection remain gated on the statistical
   decisions explicitly required by this phase. Existing reviewed field-test
@@ -1583,81 +1632,240 @@ stopped without changing a hosted project.
   remain explicit deployment gates. No production or hosted database mutation
   was performed automatically.
 
-## Phase 12: non-race planning modes
-
-This is the new final functional phase requested on 2026-08-13. The product
-option remains visible as planned/coming later until its deterministic rules
-are approved; it must not masquerade as a supported race plan before then.
+## Phase 12: race-only MVP boundary
 
 ### Status
 
-Partially implemented locally on 2026-08-28. The fail-closed goal-mode
-boundary is complete: the authenticated API and Expo onboarding now distinguish
-a dated race/event from personal goals, and general fitness, weight loss, and
-muscle gain are visibly marked as coming later. Non-race plan generation is
-not implemented because the required reviewed deterministic rule tables and
-workout-catalog eligibility decisions are not present in the repository.
+Complete for MVP scope. The local capability boundary implemented on
+2026-08-28 already keeps general fitness, weight loss, muscle gain, and other
+personal/subgoal modes unavailable. The 5 November meeting closes the earlier
+open MVP question: these modes are not a final functional MVP phase and require
+no rule tables or catalog implementation before MVP release.
 
 ### Scope
 
-- Goal-type selection clearly distinguishes a dated race/event from a non-race
-  personal goal. Race goals are date-anchored and handled by the race planner;
-  non-race goals start their own cycle at week 1. **Implemented as an explicit
-  capability boundary; only race/event is currently available.**
-- Non-race goal selection, including general fitness, weight loss, and other
-  explicitly approved goal families. **Named families are visible as coming
-  later; none is selectable for planning.**
-- Goal-specific macrocycles, maintenance rules, intensity targets, progression
-  and recovery behavior. **Deferred pending reviewed deterministic rules.**
-- Workout-catalog coverage and deterministic eligibility for each supported
-  goal family. **Deferred with the non-race rules; race coverage is unchanged.**
-- Pending proposal and athlete-confirmation flow identical in safety semantics
-  to race planning. **Existing race safety semantics are unchanged; no
-  unsupported non-race proposal can be created.**
+- Keep dated race/event goals as the only selectable MVP planning mode.
+- Show personal goals and subgoals as locked with a clear `Coming Soon` state;
+  do not expose save or plan-generation actions for them.
+- Reject non-race goal mutations rather than silently mapping them to race
+  rules.
+- Preserve TSS confidentiality and pending-plan approval semantics.
 
 ### Exit criteria
 
-- Every exposed goal family has a reviewed deterministic rule table and catalog
-  coverage.
-- Unsupported goals are shown as unavailable/coming later, not silently mapped
-  onto race rules.
-- Public plan responses continue to omit planned and realized TSS.
-- No plan becomes active without athlete confirmation.
+- Only race/event is selectable for MVP planning.
+- Personal/subgoal options are visibly locked and cannot be persisted or used
+  to generate a plan.
+- Public responses contain no planned or realized TSS.
 
-### Phase 12 implementation differences and remaining work
+### Implemented result and later work
 
-- Added authenticated `GET /api/v1/onboarding/goal-options` as the canonical,
-  TSS-free capability catalog. It returns race/event as `available`, anchored
-  to `race_date`, and the three named personal-goal families as
-  `coming_later`, anchored to `cycle_week_1`, with
-  `deterministic_rules_not_approved` as the explicit reason.
-- Expo onboarding requires an explicit race/event versus personal-goal choice.
-  Selecting personal goals shows the unavailable families and explanation; it
-  exposes no save or plan-generation action. An existing race goal resumes in
-  race/event mode.
-- The existing goal mutation intentionally remains the narrow
-  `PrimaryRaceGoalInput`. Extra or non-race `goal_type` input is rejected, so a
-  personal goal cannot be persisted as a disguised race. No database migration
-  or hosted Supabase mutation was required for this capability-only slice.
-- The full functional phase remains open. Product/physiology review must supply
-  versioned rule tables for each goal family, including macrocycle blocks,
-  maintenance entry/exit behavior, time-based intensity targets, progression,
-  recovery, and deterministic workout eligibility. Only after those rules and
-  catalog coverage are approved may a non-race persistence/proposal path be
-  added.
-- Verification passes for this slice: all 380 backend tests, Ruff lint, strict
-  mypy and Ruff formatting over the changed backend paths, recursive
-  TSS/OpenAPI contracts, and Expo strict TypeScript. Repository-wide Ruff
-  formatting still flags a pre-existing coach-prompt wrap, and repository-wide
-  mypy still flags pre-existing Phase 11-era test typing in `test_config.py` and
-  a calibration test double missing `save_integrated_test_assignment`; these
-  unrelated working-tree changes were not modified. Android/iOS runtime
-  verification remains outstanding. No hosted database mutation was performed.
+- `GET /api/v1/onboarding/goal-options` already returns race/event as available
+  and named personal-goal families as `coming_later`.
+- Expo onboarding already exposes no save or plan-generation action for those
+  unavailable families, and `PrimaryRaceGoalInput` rejects disguised non-race
+  input.
+- Non-race macrocycles, rule tables, persistence, catalog eligibility, and
+  proposal generation move out of the MVP roadmap. They may be reopened only as
+  a separately approved post-MVP phase.
 
-### Final deployment and security handoff
+## Phase 13: physiological ruleset and load-model alignment
 
-These are end-of-MVP deployment gates, not blockers for continuing Phase 6 and
-later development locally:
+### Status
+
+Not started. Implementation is gated on Joren's reviewed sport-science
+deliverables from the 5 November minutes. The recorded deadline is Saturday at
+09:00; the calendar date and the eventual accountable-review record still need
+to be attached to the ruleset.
+
+### Scope
+
+- Define ten concrete textual RPE/feeling descriptions for swim, bike, and run;
+  triathlon and duathlon use their component discipline's scale. The UI may
+  retain canonical values 1-10 internally, but athletes select descriptions
+  such as conversational pace, acidification, and breathless/exhausted rather
+  than unexplained numbers.
+- Define the deterministic single-session calibration formula that derives five
+  heart-rate zones from the prescribed calibration workout, its discipline,
+  the selected textual RPE, and average heart rate. Specify anchor ownership,
+  bpm offsets, equality boundaries, rounding, valid inputs, missing-data
+  behavior, and outlier/data-quality rules.
+- Define versioned private load multipliers per heart-rate zone so planned and
+  realized load is calculated from time in zone. Specify treatment of missing
+  or partial zone-time data and distance-only swimming without inventing load.
+- Define the two-month onboarding baseline formula per discipline from average
+  weekly meters/kilometres and session frequency, using the approved Zone 2
+  assumption. Specify combination across disciplines, canonical units,
+  rounding, minimum/maximum guards, and insufficient-history behavior.
+- Replace the old fatigue/restart policy: a week marked sick is retained for
+  audit/history but excluded from all planning and load calculations and never
+  changes zones; fatigue or missed training lowers realized private load, and
+  the next week progresses from that lower realized value. Lock the exact
+  progression factor—the `+10%` in the minutes is an example, not yet a
+  complete boundary specification.
+- Replace the old week-based taper interpretation with a deterministic 7-10 day
+  taper immediately preceding race day. Define how the exact duration is
+  selected, the private-load reduction curve/factors, partial-week behavior,
+  race priority overlap, and athlete-local date boundaries.
+- Keep cycling zone and load decisions heart-rate based when no power meter is
+  available. Do not require FTP/power-meter data for the MVP cycling route.
+- Enforce the AI boundary in services and tests: no AI recalculation of zones,
+  no direct plan mutation, and only deterministic pending volume/intensity
+  proposals within the athlete's active zones.
+- Version the new ruleset, record Joren's evidence and the accountable reviewer,
+  update business-rule traceability, and add deterministic example, boundary,
+  invalid-input, precedence, and privacy tests.
+
+### Exit criteria
+
+- Joren's four deliverables—textual RPE scales, calibration formula, zone load
+  multipliers, and two-month baseline formula—are complete, versioned, and
+  reviewed.
+- Sick, fatigued, missed-training, and normal-week fixtures prove the new
+  baseline/progression behavior without changing zones automatically.
+- Taper fixtures cover 7- and 10-day boundaries, partial local weeks, and the
+  race-day edge; taper-catalog eligibility is reviewed separately and remains
+  fail-closed until complete swim/bike/run coverage passes.
+- All calculated zone profiles and plan changes are pending and require athlete
+  confirmation; planned and realized TSS remain absent from public APIs, the
+  mobile UI, logs, and LLM prompts.
+
+## Phase 14: privacy-safe onboarding, profile, and race configuration
+
+### Status
+
+In progress. The independent 2026-09-10 slice is implemented locally: the app
+collects two-month distance/frequency history without calculating a baseline,
+new public writes/UI omit the retired profile/history/feasibility fields, and
+RPE-only is no longer selectable or accepted as a new setup. Historical values
+and RPE-only records remain stored without reinterpretation. The migration is
+not yet applied to hosted Supabase, and calibration, baseline calculation, the
+legacy RPE-only resume/migration decision, and the remaining Phase 14 scope are
+still open. Calibration and baseline completion depend on Phase 13.
+
+### Scope
+
+- Split identifying profile data from medical/physiological data such as
+  resting heart rate using opaque athlete identifiers. Apply least-privilege
+  grants, RLS, RPC-only critical writes, migrations, and two-real-user isolation
+  tests; do not expose service credentials to Expo.
+- Keep first name, last name, date of birth, and resting heart rate. Remove
+  height, weight, years of experience, feasibility, and the standalone
+  `What do you want to achieve?` field from onboarding and profile flows; its
+  useful intent moves into the structured race goal and optional focus.
+- Add two-month training-history input for swimming (average metres/week plus
+  sessions/week), cycling (average kilometres/week plus sessions/week), and
+  running (average kilometres/week plus sessions/week), with canonical units
+  and validation aligned to Phase 13.
+- Make heart-rate-monitor access a hard onboarding and planning prerequisite.
+  Remove RPE-only as a selectable MVP route and provide a safe resume/migration
+  path for existing RPE-only records. Manual average-heart-rate entry remains a
+  supported input path, so a specific wearable provider is not an MVP blocker.
+- Restructure the concrete goal into run, bike, swim, triathlon, and duathlon.
+  Require race name, date, distance for every selected discipline, and total
+  target time. Persist race name for tracking/history. Allow optional
+  per-discipline target times and a specific focus.
+- Detect timezone from location when permission is granted. If it is refused or
+  unavailable, require an IANA-timezone dropdown fallback such as
+  `Europe/Amsterdam`; never guess silently.
+
+### Exit criteria
+
+- Removed fields are absent from mobile forms and new public write contracts;
+  existing stored values have an explicit retain/archive/delete migration
+  decision before rollout.
+- All race types validate their required and optional fields, and personal goals
+  remain locked as established in Phase 12.
+- Onboarding cannot complete without confirmed heart-rate-monitor access and a
+  valid timezone.
+- Identity and physiological records are independently protected by RLS, and
+  two real users cannot read or mutate each other's data.
+- Public contracts remain TSS-free and zone activation remains a separate,
+  stale-safe athlete confirmation.
+
+## Phase 15: calibration, activity, and weekly-planning UX
+
+### Status
+
+Not started. Text content and calibration behavior depend on Phase 13; layout
+and navigation work can start independently.
+
+### Scope
+
+- Replace numeric-only RPE inputs with the approved ten textual,
+  discipline-specific choices while preserving an unambiguous canonical value
+  in API and persistence contracts.
+- Remove the post-onboarding interstitial and the intermediate screen before
+  starting a baseline/field test so the user proceeds directly to the next
+  actionable screen.
+- Remove the timezone notice from test flows; timezone is resolved once through
+  profile/onboarding fallback in Phase 14.
+- Show a prominent `Stop if you feel pain` warning before every calibration or
+  field-test execution.
+- Collect the required average-heart-rate observation after calibration and
+  create only the deterministic pending zone proposal defined in Phase 13.
+- Make workout blocks directly draggable between dates in the week view. Reuse
+  the existing stale-safe, same-week validation and show qualitative recovery,
+  injury, and spacing warnings before submitting a pending revision.
+- Preserve the ability to add and later complete an unplanned workout; its
+  realized private load may affect only a later pending proposal.
+
+### Exit criteria
+
+- End-to-end mobile tests cover direct onboarding completion, direct test start,
+  textual RPE selection, pain warning, average-heart-rate entry, and pending
+  zone confirmation.
+- Drag-and-drop is accessible, date-only, same-week, revision-safe, and cannot
+  bypass server validation or athlete confirmation.
+- Unplanned-workout creation still works after the week-view redesign.
+- No screen, accessibility label, analytics payload, or error message exposes
+  planned or realized TSS.
+
+## Phase 16: live-test stabilization and beta readiness
+
+### Status
+
+Not started. This is the final MVP release-candidate phase after Phases 13-15.
+
+### Scope
+
+- Fix the crash when opening Profile from the week-planning view and add a
+  navigation regression test.
+- Fix the `This activity state changed, refresh and try again` conflict when
+  saving RPE. Preserve optimistic concurrency, but make the normal single-user
+  flow refresh/retry safely and explain genuine stale conflicts.
+- Prevent duplicate activity logging from repeated taps through disabled/in-
+  flight UI state plus the existing server idempotency contract.
+- Fix field-test scheduling that currently surfaces `Wombo service temporarily
+  unavailable`, with API/mobile integration coverage for valid and invalid
+  scheduling paths.
+- Fix the Tests navigation state so it always opens the intended screen and
+  add route/state restoration coverage.
+- Complete the generic Supabase-backed access-code flow for Pioneer beta users.
+  Validate codes server-side, store no privileged key in the mobile app, define
+  expiry/revocation and retry/rate-limit behavior, and retain RLS isolation.
+- Decide whether to bundle a heart-rate monitor with an annual subscription.
+  Validate the indicated EUR 20-25 unit cost and record unit economics plus
+  fulfillment/support ownership; this commercial decision does not block the
+  technical MVP unless Product explicitly promotes the offer into the beta
+  funnel.
+
+### Exit criteria
+
+- All five live-test defects have reproducing tests that fail before and pass
+  after their fixes on the supported Android development build; the iOS signing
+  gate remains separately documented.
+- Activity create/RPE flows are idempotent under rapid taps, retries, stale
+  revisions, and reconnects without suppressing genuine conflicts.
+- A Pioneer can redeem a valid code and cannot reuse an expired, revoked, or
+  unauthorized code; cross-user isolation and abuse controls are verified.
+- The full backend, mobile type/lint, database, recursive TSS-leak, and targeted
+  device regression suites pass before beta release.
+
+## Final deployment and security handoff
+
+These are end-of-MVP deployment gates, not blockers for continuing scoped local
+development:
 
 - Railway is not required during local development. When a local backend flow
   first calls either service-only Supabase RPC, configure the modern
@@ -1685,19 +1893,21 @@ later development locally:
 Included:
 
 - authentication and RLS;
-- structured onboarding;
-- one primary race-oriented goal;
-- swim/bike/run history;
-- manual and approved fallback zone configuration;
+- privacy-separated profile and physiological data;
+- structured onboarding with a hard heart-rate-monitor prerequisite;
+- one concrete run, bike, swim, triathlon, or duathlon race goal;
+- two-month swim/bike/run volume and frequency history;
+- known zones or an approved heart-rate-based calibration route;
 - small curated workout catalog;
 - deterministic planning rules required for the selected scope;
-- swipe-built weekly workout selection with an optional date-only calendar
+- swipe-built weekly workout selection with a draggable date-only calendar
   timeline;
 - pending plan revision and approval;
 - calendar and athlete rescheduling;
 - qualitative rule warnings;
 - selected activity input;
-- RPE and limited feedback loop;
+- discipline-specific textual RPE, average-heart-rate capture, and a limited
+  feedback loop;
 - structured weekly check-in;
 - TSS privacy and security tests.
 
@@ -1710,8 +1920,9 @@ Included:
 - Gamification, XP, and Pacing Points.
 - 500+ workout catalog.
 - Other-sport load modelling.
-- Weight-loss, muscle-gain, and general-fitness plan generation before the new
-  Phase 12 rule/catalog gates are satisfied.
+- Weight-loss, muscle-gain, general-fitness, ABC, and other personal/subgoal
+  planning. These stay locked as `Coming Soon` for the MVP and require a new
+  post-MVP decision before implementation.
 - Fasted-training recommendations.
 - Advanced swimrun redistribution.
 - Rich GPS maps and telemetry analytics.
@@ -1735,33 +1946,37 @@ Every phase must:
 ## Current status
 
 - Phase 0 architecture/state decisions: `locked`
-- Phase 0 physiological specification: `ruleset-3 implemented; one qualified
-  accountable reviewer plus external review record required before production`
+- Phase 0 physiological specification: `ruleset-3 implemented historically;
+  Phase 13 replacement ruleset and accountable review record required`
 - Phase 1 backend foundation: `implemented; locally verified`
 - Phase 2 authentication: `verified`
 - Phase 2 persistence and hosted RLS: `hosted schema/RLS verified; FastAPI
   persistence and real-token integration pending`
 - Phase 3 deterministic core: `ruleset-3 pure calculations implemented and
-  verified`
+  verified; load, calibration, sickness/fatigue, and taper behavior are
+  superseded where Phase 13 states`
 - Phase 3.5 mobile development-build transition: `SDK 57 Android development
   build installed, launched, and connected to local Metro`
 - Phase 4 onboarding, goals, and zones: `implemented and review-hardened
   locally and migrated in hosted Supabase; pgTAP, real-token isolation, and
-  mobile runtime verification pending`
+  mobile runtime verification pending; Phase 14 profile/onboarding/goal rework
+  required`
 - Phase 5 workout catalog: `implemented locally and migrated in hosted
   Supabase; pgTAP verification pending`
 - Phase 6 weekly planning and approval: `implemented, migrated, and verified
   locally plus hosted pgTAP/real-token isolation; taper-catalog and Android
   runtime verification pending`
 - Phase 7 activity and RPE feedback: `implemented and verified locally; hosted
-  migration applied; pgTAP, real-token isolation, and Android runtime pending`
+  migration applied; current RPE-duration load model is superseded by Phase 13;
+  pgTAP, real-token isolation, and Android runtime pending`
 - Phase 8 structured weekly check-in: `core implemented and verified locally;
-  hosted migration applied; taper review plus pgTAP/real-token/device gates
-  remain`
+  hosted migration applied; Phase 13 sickness/fatigue and taper rules plus
+  pgTAP/real-token/device gates remain`
 - Phase 8.5 zone intake, field tests, and Week-1 calibration: `backend and
   mobile functional cores, approved-fixture parity, and Zone 1-5 model v1.0
   implemented; original and zone-model hosted migrations/pgTAP/lint verified;
   protocol_target planning implemented; dependency risk accepted per release;
+  RPE-only and Week-2 calibration target behavior superseded by Phases 13-15;
   named-review, real-token, and physical-device gates remain`
 - Phase 9: `Polar backend functional core and hosted migration/pgTAP/lint
   verified; conditional first-provider GO; integrations UI, bounded retry,
@@ -1782,54 +1997,94 @@ Every phase must:
   and pending-only proposal submission are present; migration/pgTAP,
   real-token RLS, and physical-device verification remain gates`
 - Phase 11 discipline zone profile, testing, and progress evaluation:
-  `implemented locally: independent discipline profile/history, unified
-  RPE-guided assignment, date-only standalone and run/bike integrated tests,
-  pending approvals, completion-time bpm observation, and later self-service;
-  integrated swim and automatic UC-05/Week-2 statistics remain fail-closed
-  pending approved duration/load and statistical thresholds; migration,
-  pgTAP, hosted lint/RLS, and device verification remain gates`
-- Phase 12: `not started`
+  `implemented locally as historical groundwork: independent discipline
+  profile/history, RPE-guided assignment, date-only standalone and run/bike
+  integrated tests,
+  pending approvals, completion-time bpm observation, later self-service,
+  visibly marked calibration cards, and all 154 START23 source workouts as
+  explicit choices, including 54 distance-only swim workouts; integrated CSS
+  testing and automatic UC-05/Week-2 statistics remain fail-closed pending
+  approved test-load and statistical thresholds; its RPE-only and Week-2 target
+  behavior is superseded; migration, pgTAP, hosted lint/RLS, and device
+  verification remain gates`
+- Phase 12 race-only MVP boundary: `complete for MVP; non-race implementation
+  deferred post-MVP`
+- Phase 13 physiological ruleset and load-model alignment: `not started; gated
+  on Joren's four reviewed deliverables`
+- Phase 14 privacy-safe onboarding, profile, and race configuration: `in
+  progress; independent two-month history collection, retired-field write/UI
+  removal, and new RPE-only selection removal implemented locally; hosted
+  migration, legacy RPE-only resume behavior, and remaining scope pending`
+- Phase 15 calibration, activity, and weekly-planning UX: `not started`
+- Phase 16 live-test stabilization and beta readiness: `not started`
 
-## Unresolved roadmap decisions
+## Decision review after the 5 November meeting
 
+### Closed or superseded MVP points
+
+- **Non-race Phase 12:** closed for the MVP. The already implemented
+  `Coming Soon` capability lock is the desired outcome; non-race rule and
+  catalog work is post-MVP.
+- **RPE-only onboarding/training:** superseded. A heart-rate monitor is a hard
+  prerequisite, so RPE-only may remain only as a historical persistence state
+  with a safe Phase 14 migration/resume path.
+- **Standard Week-1 selection and `reported hours * 40`:** superseded by the
+  reviewed two-month, discipline-specific volume/frequency baseline in Phase
+  13. Training history is no longer context-only.
+- **Week-2 statistical calibration:** closed as the target calibration design.
+  One reviewed calibration session with textual RPE and average heart rate is
+  the new direction; the exact formula and data-quality boundaries remain open
+  inputs to Phase 13.
+- **Heart rate as observation-only:** superseded narrowly. Heart rate may derive
+  a pending zone proposal only inside Joren's reviewed deterministic
+  calibration protocol; it still cannot activate zones directly or be used by
+  AI to rescale them.
+- **RPE-duration private-load proxy:** superseded by reviewed time-in-heart-rate-
+  zone multipliers. Historical data migration/recalculation behavior must be
+  specified in Phase 13 before rollout.
+- **BR-004 low-completion/42-day fallback:** superseded for sickness, fatigue,
+  and missed-training cases. Sickness is excluded; fatigue/missed training uses
+  the lower realized private load. Phase 13 must decide whether the 42-day
+  baseline remains only for normal missing-history cases and must lock the exact
+  progression percentage.
+- **Taper timing:** resolved in direction as the 7-10 days immediately before
+  race day, replacing arbitrary whole-week placement. Exact duration selection,
+  reduction factors, and catalog taper eligibility remain open in Phase 13.
+- **Unplanned workouts:** explicitly retained; no scope decision remains. Phase
+  15 must preserve the existing behavior through the week-view redesign.
+- **A specific wearable integration as an MVP dependency:** not required by the
+  hardware decision because the minutes explicitly allow manual average-heart-
+  rate entry. Polar remains an optional/conditional adapter and its existing
+  legal/privacy gates remain unchanged.
+
+### Remaining decisions and release gates
+
+- Attach Joren's four versioned deliverables, the named accountable
+  physiological reviewer, and the external review-record identifier to the new
+  Phase 13 ruleset.
+- Decide the exact sickness marker/source, the progression factor after a
+  fatigue or missed-training week, calibration input-quality rules, taper-day
+  selector/reduction curve, and treatment of incomplete heart-rate zone time.
+- Review taper eligibility in the existing catalog and pass a complete
+  swim/bike/run taper fixture; the timing decision alone does not close this
+  catalog gate.
+- Decide whether removed height, weight, experience, feasibility, and free-goal
+  data is retained, archived, or deleted during the Phase 14 migration.
+- Decide whether the annual-subscription heart-rate-monitor bundle is part of
+  the Pioneer funnel; until then it is a non-blocking commercial opportunity.
 - BR-009 persistence, ownership, active-version constraints, pending
   replacement behavior, and atomic decisions are implemented and migrated;
-  hosted real-token behavior verification remains open.
-- Physical-iPhone SDK 57 validation depends on Apple signing and device
-  registration, but no longer blocks Android-led Phase 4 mobile development.
-- The phase-one activity input is a canonical authenticated summary. Polar
-  AccessLink v3 is the conditionally selected Phase 9 adapter and maps into
-  that same path; legal, privacy and provider-terms approval remain a hard
-  production gate.
-- Non-race goals are assigned to the new final Phase 12 and require separate
-  deterministic rules and catalog coverage before becoming selectable as
-  supported plans.
-- The functional injury policy, zero-redistribution MVP rule, durable Phase 8
-  persistence, weekly review UI, low-only filtering, and rest-only pending plan
-  are implemented; the accountable physiology-review record remains required
-  before production.
-- Current-week RPE correction/audit, achieved-goal maintenance, and the exact
-  four-complete-week restart baseline are implemented. Phase 8.5 defines RPE
-  in this flow as canonical 1-10 RPE and implements reviewed field-test
-  threshold formulas plus safe submaximal calibration. The complete
-  deterministic conversion from confirmed thresholds to Zone 1-5 is now
-  implemented as `start23-zone-model-1.0`, with separate pending threshold and
-  zone decisions. Zone-independent bike calibration selection is implemented
-  via `protocol_target`. Real-token and physical-device verification remain
-  hard gates; dependency advisories are reassessed and accepted per release
-  without a forced breaking audit fix. A qualified accountable physiology
-  reviewer and external review record remain required. The original Phase 8.5
-  hosted migration, pgTAP, and error-level lint remain verified; the new
-  decision migration is also hosted and its rollback-only pgTAP passes.
-- Decision 2026-08-26 retains BR-004 unchanged: below 80% of prior planned
-  private load, the planner uses the available 42-day baseline and does not
-  guarantee a heavier following week. A future change requires a new reviewed
-  ruleset decision.
-- Decision 2026-08-26 defines the requested heart-rate measurement tolerance as
-  inclusive +/-10 bpm. It remains observation context unless a reviewed
-  deterministic protocol explicitly uses it; it never creates zones by itself.
-- Phase 10 supersedes Phase 6's athlete-facing windows with explicit dates and
-  evaluates BR-006 bike/swim spacing as two complete intervening local rest
-  dates. The old timestamp remains private compatibility data only. Hosted
-  migration, pgTAP, ledger, lint, advisors and read-only contract checks pass;
-  two-user isolation and the renewed BR-006 production review remain open.
+  hosted real-token verification remains open.
+- Physical-iPhone SDK 57 validation still depends on Apple signing and device
+  registration. Android remains the primary MVP development route.
+- The Phase 9 Polar adapter still requires legal, privacy, provider-terms,
+  reconnect, Railway scheduling, and two-real-user/device approval before
+  production use.
+- Functional injury restrictions, zero redistribution, weekly review,
+  low-only filtering, and rest-only pending plans remain implemented. Phase 13
+  must preserve their precedence while replacing sickness/fatigue load rules.
+- Automatic UC-05 progress evaluation remains deferred; the new initial
+  one-session calibration must not be misrepresented as ongoing automatic zone
+  adjustment.
+- Phase 10 date-only planning and local-date BR-006 spacing remain implemented;
+  two-user isolation and renewed BR-006 physiological review remain open.

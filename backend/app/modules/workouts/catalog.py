@@ -94,7 +94,7 @@ class WorkoutSegment:
     sequence: int
     name: str
     instructions: str
-    duration_minutes: Decimal
+    duration_minutes: Decimal | None
     expected_rpe: int
     zone_target: TrainingZone | None = None
     protocol_target: ProtocolTarget | None = None
@@ -107,10 +107,14 @@ class WorkoutSegment:
             raise ValueError("Segment sequence must be positive.")
         if not self.name.strip() or not self.instructions.strip():
             raise ValueError("Every segment requires a name and instructions.")
-        if not self.duration_minutes.is_finite() or self.duration_minutes <= 0:
+        if self.duration_minutes is not None and (
+            not self.duration_minutes.is_finite() or self.duration_minutes <= 0
+        ):
             raise ValueError("Segment duration must be finite and positive.")
         if self.distance_meters is not None and self.distance_meters <= 0:
             raise ValueError("Segment distance must be positive when supplied.")
+        if self.duration_minutes is None and self.distance_meters is None:
+            raise ValueError("A segment requires a positive duration or distance.")
         if not 1 <= self.expected_rpe <= 10:
             raise ValueError("Segment expected RPE must be between 1 and 10.")
         target_count = sum(
@@ -152,7 +156,7 @@ class WorkoutTemplate:
     discipline: Discipline
     name: str
     description: str
-    duration_minutes: Decimal
+    duration_minutes: Decimal | None
     distance_meters: int | None
     intensity_bucket: IntensityBucket
     expected_rpe_min: int
@@ -163,16 +167,27 @@ class WorkoutTemplate:
     segments: tuple[WorkoutSegment, ...]
     internal_planned_load: InternalLoad = field(repr=False)
     explicit_scheduling_only: bool = False
+    athlete_selection_only: bool = False
+    source_catalog: str | None = None
+    source_workout_id: str | None = None
 
     def __post_init__(self) -> None:
         if self.version < 1:
             raise ValueError("Template version must be positive.")
         if not self.name.strip() or not self.description.strip():
             raise ValueError("Every template requires a name and description.")
-        if not self.duration_minutes.is_finite() or self.duration_minutes <= 0:
+        if self.duration_minutes is not None and (
+            not self.duration_minutes.is_finite() or self.duration_minutes <= 0
+        ):
             raise ValueError("Template duration must be finite and positive.")
         if self.distance_meters is not None and self.distance_meters <= 0:
             raise ValueError("Template distance must be positive when supplied.")
+        if self.duration_minutes is None and self.distance_meters is None:
+            raise ValueError("A template requires a positive duration or distance.")
+        if self.duration_minutes is None and self.discipline is not Discipline.SWIM:
+            raise ValueError("Only swim templates can be distance-only.")
+        if (self.source_catalog is None) != (self.source_workout_id is None):
+            raise ValueError("Source catalog and workout ID must be supplied together.")
         if not 1 <= self.expected_rpe_min <= self.expected_rpe_max <= 10:
             raise ValueError("Template expected RPE range must be within 1 through 10.")
         if not self.training_phases or len(set(self.training_phases)) != len(
@@ -193,11 +208,18 @@ class WorkoutTemplate:
         ):
             raise ValueError("Segment RPE must fall within the template RPE range.")
 
-        segment_duration = sum(
-            (segment.duration_minutes for segment in self.segments),
-            Decimal(0),
-        )
-        if segment_duration != self.duration_minutes:
+        segment_durations = tuple(segment.duration_minutes for segment in self.segments)
+        if self.duration_minutes is None:
+            if any(duration is not None for duration in segment_durations):
+                raise ValueError("A distance-only template cannot mix timed segments.")
+        elif (
+            any(duration is None for duration in segment_durations)
+            or sum(
+                (duration for duration in segment_durations if duration is not None),
+                Decimal(0),
+            )
+            != self.duration_minutes
+        ):
             raise ValueError("Segment durations must equal the template duration.")
         segment_distance = sum(
             (
@@ -227,9 +249,16 @@ class WorkoutTemplate:
                 "Fallback-compatible templates may require only heart-rate zones."
             )
 
-        calculated_bucket = classify_workout(
-            WorkoutIntensity(
-                tuple(
+        if self.source_catalog is None:
+            if self.duration_minutes is None:
+                raise ValueError(
+                    "Distance-only templates require an attributable reviewed source."
+                )
+            timed_segments: list[IntensitySegment] = []
+            for segment in self.segments:
+                if segment.duration_minutes is None:
+                    raise ValueError("A timed template requires timed segments.")
+                timed_segments.append(
                     IntensitySegment(
                         duration=DurationMinutes(segment.duration_minutes),
                         zone=segment.zone_target,
@@ -242,14 +271,15 @@ class WorkoutTemplate:
                             else None
                         ),
                     )
-                    for segment in self.segments
                 )
+            calculated_bucket = classify_workout(
+                WorkoutIntensity(tuple(timed_segments))
             )
-        )
-        if calculated_bucket is not self.intensity_bucket:
-            raise ValueError(
-                "Declared intensity bucket must match deterministic segment dominance."
-            )
+            if calculated_bucket is not self.intensity_bucket:
+                raise ValueError(
+                    "Declared intensity bucket must match deterministic segment "
+                    "dominance."
+                )
 
 
 @dataclass(frozen=True, slots=True)
@@ -260,7 +290,7 @@ class PlannedWorkoutSnapshot:
     template_key: UUID
     template_version: int
     name: str
-    duration_minutes: Decimal
+    duration_minutes: Decimal | None
     distance_meters: int | None
     intensity_bucket: IntensityBucket
     expected_rpe_min: int
@@ -300,16 +330,11 @@ def as_rpe_guided_template(template: WorkoutTemplate) -> WorkoutTemplate:
             continue
         assert segment.zone_target is not None
         guidance = rpe_zone(template.discipline, segment.zone_target)
-        bucket = classify_workout(
-            WorkoutIntensity(
-                (
-                    IntensitySegment(
-                        duration=DurationMinutes(segment.duration_minutes),
-                        zone=segment.zone_target,
-                        is_swim_technique=segment.is_swim_technique,
-                    ),
-                )
-            )
+        bucket = (
+            IntensityBucket.LOW
+            if segment.is_swim_technique
+            or segment.zone_target in {TrainingZone.ZONE_1, TrainingZone.ZONE_2}
+            else IntensityBucket.HIGH
         )
         segments.append(
             replace(
@@ -436,12 +461,25 @@ def _template(
     distance_meters: int | None = None,
     explicit_scheduling_only: bool = False,
 ) -> WorkoutTemplate:
-    duration = sum((segment.duration_minutes for segment in segments), Decimal(0))
+    if any(segment.duration_minutes is None for segment in segments):
+        raise ValueError("Static reviewed templates must remain time-driven.")
+    duration = sum(
+        (
+            segment.duration_minutes
+            for segment in segments
+            if segment.duration_minutes is not None
+        ),
+        Decimal(0),
+    )
     minimum_rpe, maximum_rpe = _template_rpe_range(segments)
     workout = WorkoutIntensity(
         tuple(
             IntensitySegment(
-                duration=DurationMinutes(segment.duration_minutes),
+                duration=DurationMinutes(
+                    segment.duration_minutes
+                    if segment.duration_minutes is not None
+                    else Decimal(0)
+                ),
                 zone=segment.zone_target,
                 is_swim_technique=segment.is_swim_technique,
                 explicit_bucket=(

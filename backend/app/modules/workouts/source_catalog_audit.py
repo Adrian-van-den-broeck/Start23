@@ -73,7 +73,7 @@ def audit_source_catalog(path: Path) -> SourceCatalogAudit:
             "techn" in str(value).casefold() for value in row.values()
         ):
             issues["swim_technique"] += 1
-        if not _positive_integer(total_duration):
+        if sport != "Zwemmen" and not _positive_integer(total_duration):
             issues["duration"] += 1
         if sport == "Zwemmen" and not _positive_integer(total_distance):
             issues["distance"] += 1
@@ -116,6 +116,8 @@ def audit_source_catalog(path: Path) -> SourceCatalogAudit:
             issues["segments_missing"] += 1
         if _positive_integer(total_duration) and segment_minutes != int(total_duration):
             issues["duration_sum"] += 1
+        if sport == "Zwemmen" and segment_minutes:
+            issues["swim_mixed_measure"] += 1
         if _positive_integer(total_distance) and segment_distance != int(
             total_distance
         ):
