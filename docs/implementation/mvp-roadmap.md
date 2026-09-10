@@ -1626,11 +1626,13 @@ stopped without changing a hosted project.
   decisions explicitly required by this phase. Existing reviewed field-test
   protocol completeness and data-quality checks remain covered, but they are
   not presented as UC-05 statistics.
-- **Verification:** Ruff, strict mypy, 378 backend tests, recursive TSS/OpenAPI
-  contracts, and Expo strict TypeScript pass. The new migration/pgTAP suite,
-  hosted lint/advisors, two-real-user RLS isolation, and Android/iOS runtime
-  remain explicit deployment gates. No production or hosted database mutation
-  was performed automatically.
+- **Verification:** Ruff, strict mypy, 417 backend tests, recursive TSS/OpenAPI
+  contracts, and Expo strict TypeScript pass. The canonical-RPE and complete
+  START23 source-catalog migrations are applied to the linked hosted project;
+  migration-ledger parity, linked lint, and advisors were checked on
+  2026-09-10. The rollback-only pgTAP suite remains blocked because this
+  workstation has no Docker/Podman runner. Two-real-user RLS isolation and
+  Android/iOS runtime verification remain explicit gates.
 
 ## Phase 12: race-only MVP boundary
 
@@ -1734,14 +1736,18 @@ to be attached to the ruleset.
 
 ### Status
 
-In progress. The independent 2026-09-10 slice is implemented locally: the app
+In progress. The independent 2026-09-10 slice is implemented and deployed to
+the linked hosted project: the app
 collects two-month distance/frequency history without calculating a baseline,
 new public writes/UI omit the retired profile/history/feasibility fields, and
 RPE-only is no longer selectable or accepted as a new setup. Historical values
-and RPE-only records remain stored without reinterpretation. The migration is
-not yet applied to hosted Supabase, and calibration, baseline calculation, the
-legacy RPE-only resume/migration decision, and the remaining Phase 14 scope are
-still open. Calibration and baseline completion depend on Phase 13.
+and RPE-only records remain stored without reinterpretation. Local and remote
+migration ledgers align through `20260910120000`; linked lint and advisors were
+rerun after deployment. The rollback-only pgTAP suite is blocked locally by the
+missing Docker/Podman runner. Calibration, baseline calculation, the legacy
+RPE-only resume/migration decision, two-real-user RLS isolation, and the
+remaining Phase 14 scope are still open. Calibration and baseline completion
+depend on Phase 13.
 
 ### Scope
 
@@ -2005,7 +2011,8 @@ Every phase must:
   explicit choices, including 54 distance-only swim workouts; integrated CSS
   testing and automatic UC-05/Week-2 statistics remain fail-closed pending
   approved test-load and statistical thresholds; its RPE-only and Week-2 target
-  behavior is superseded; migration, pgTAP, hosted lint/RLS, and device
+  behavior is superseded; canonical-RPE/source-catalog migrations and linked
+  lint/advisors are hosted, while pgTAP, two-real-user RLS, and device
   verification remain gates`
 - Phase 12 race-only MVP boundary: `complete for MVP; non-race implementation
   deferred post-MVP`
@@ -2013,8 +2020,9 @@ Every phase must:
   on Joren's four reviewed deliverables`
 - Phase 14 privacy-safe onboarding, profile, and race configuration: `in
   progress; independent two-month history collection, retired-field write/UI
-  removal, and new RPE-only selection removal implemented locally; hosted
-  migration, legacy RPE-only resume behavior, and remaining scope pending`
+  removal, and new RPE-only selection removal implemented and migrated to the
+  linked hosted project; pgTAP, two-real-user RLS, legacy RPE-only resume
+  behavior, and remaining scope pending`
 - Phase 15 calibration, activity, and weekly-planning UX: `not started`
 - Phase 16 live-test stabilization and beta readiness: `not started`
 
