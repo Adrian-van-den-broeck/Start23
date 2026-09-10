@@ -59,7 +59,20 @@ select
   successor.new_id, template.template_key, template.version + 1,
   template.discipline, template.name, template.description,
   template.duration_minutes, template.distance_meters, template.intensity_bucket,
-  2, case when template.intensity_bucket = 'high' then 8 else 6 end,
+  2,
+  (
+    select max(
+      case
+        when (segment.protocol_target ->> 'target_rpe_min')::integer = 3 then 4
+        when segment.expected_rpe <= 3 then 3
+        when segment.expected_rpe <= 6 then 6
+        when segment.expected_rpe <= 8 then 8
+        else 10
+      end
+    )
+    from public.workout_segments segment
+    where segment.template_id = successor.old_id
+  ),
   template.fallback_compatibility, template.explicit_scheduling_only
 from successors successor
 join public.workout_templates template on template.id = successor.old_id;

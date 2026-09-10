@@ -14,6 +14,16 @@ select has_table(
   'public', 'calibration_evaluations', 'calibration evaluation table exists'
 );
 
+select is(
+  (
+    select expected_rpe_max
+    from public.workout_templates
+    where id = '56000000-0000-0000-0000-000000000011'
+  ),
+  8::smallint,
+  'the low-bucket heart-rate field test retains its complete segment RPE range'
+);
+
 select ok(
   not exists (
     select 1 from pg_class
