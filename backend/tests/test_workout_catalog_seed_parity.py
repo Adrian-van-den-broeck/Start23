@@ -135,6 +135,7 @@ def test_python_catalog_matches_every_durable_sql_seed_field() -> None:
     expected_loads = {
         (str(template.id), template.internal_planned_load.value)
         for template in REVIEWED_CATALOG
+        if template.internal_planned_load is not None
     }
     actual_loads = _load_rows()
     assert actual_loads == expected_loads
@@ -142,6 +143,7 @@ def test_python_catalog_matches_every_durable_sql_seed_field() -> None:
 
 def test_phase_6_catalog_addition_matches_its_durable_seed() -> None:
     template = PHASE_6_CATALOG_ADDITIONS[0]
+    assert template.internal_planned_load is not None
     template_rows = _insert_rows(
         "public.workout_templates",
         _PHASE_6_MIGRATION,
@@ -221,6 +223,7 @@ def test_phase_11_field_tests_match_durable_duration_and_load_seeds() -> None:
 
     for template in PHASE_11_FIELD_TEST_ADDITIONS:
         template_id = str(template.id)
+        assert template.internal_planned_load is not None
         assert durable_durations[template_id] == template.duration_minutes
         assert durable_segment_durations[template_id] == template.duration_minutes
         assert (

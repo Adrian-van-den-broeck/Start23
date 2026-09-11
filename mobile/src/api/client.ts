@@ -180,9 +180,7 @@ export function saveTrainingHistory(
   accessToken: string,
   entries: Array<{
     discipline: Discipline;
-    average_weekly_distance: string;
-    distance_unit: 'meters' | 'kilometers';
-    average_sessions_per_week: string;
+    average_hours_per_week: string;
   }>,
 ): Promise<TrainingHistoryEntry[]> {
   return request(accessToken, '/api/v1/me/training-history', {
@@ -657,7 +655,7 @@ export function createActivity(
     discipline: Discipline;
     started_at: string;
     timezone: string;
-    duration_minutes: string;
+    duration_minutes: string | null;
     distance_meters?: number;
   },
 ): Promise<CompletedActivity> {

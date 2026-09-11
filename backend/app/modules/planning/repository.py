@@ -379,7 +379,7 @@ class SupabasePlanningRepository:
     ) -> tuple[JsonObject, ...]:
         payload = await self._request(
             "POST",
-            "rpc/get_plan_load_history_for_planning",
+            "rpc/get_plan_load_history_for_planning_v13",
             service=True,
             json={
                 "p_athlete_id": str(athlete_id),

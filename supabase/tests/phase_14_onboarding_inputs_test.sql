@@ -1,3 +1,4 @@
+-- Phase 13 supersedes the accepted write fixture; legacy columns remain asserted.
 begin;
 
 create extension if not exists pgtap with schema extensions;
@@ -118,20 +119,22 @@ select lives_ok(
   $$
     select * from public.replace_training_history(
       '[
-        {"discipline":"swim","average_weekly_distance":4000,"distance_unit":"meters","average_sessions_per_week":2},
-        {"discipline":"bike","average_weekly_distance":120,"distance_unit":"kilometers","average_sessions_per_week":2.5},
-        {"discipline":"run","average_weekly_distance":30,"distance_unit":"kilometers","average_sessions_per_week":3}
+        {"discipline":"swim","average_hours_per_week":2},
+        {"discipline":"bike","average_hours_per_week":4},
+        {"discipline":"run","average_hours_per_week":3}
       ]'::jsonb
     )
   $$,
-  'canonical two-month history is stored without calculating a baseline'
+  'previous-month history is stored without exposing a private baseline'
 );
 
 select is(
   (
     select count(*)
     from public.training_history_entries
-    where history_window_months = 2
+    where previous_month_weekly_minutes is not null
+      and baseline_model_version = 'phase-13-joren-ruleset-1'
+      and history_window_months is null
       and weekly_minutes is null
       and experience_years is null
   ),
@@ -150,7 +153,7 @@ select throws_ok(
     )
   $$,
   '23514',
-  'retired or private training history fields are not accepted',
+  'complete previous-month duration history is required',
   'the superseded history write shape is rejected'
 );
 

@@ -136,9 +136,7 @@ def test_phase_14_write_contracts_exclude_retired_inputs(client: TestClient) -> 
     }
     assert set(components["TrainingHistoryEntryInput"]["properties"]) == {
         "discipline",
-        "average_weekly_distance",
-        "distance_unit",
-        "average_sessions_per_week",
+        "average_hours_per_week",
     }
     assert "feasibility_score" not in components["PrimaryRaceGoalInput"]["properties"]
 

@@ -22,20 +22,13 @@ from app.modules.calibration.schemas import (
     KnownThresholdInput,
     KnownZoneProfileInput,
 )
+from app.modules.onboarding.versioning import OnboardingStatus, OnboardingStep
 from app.modules.physiology.models import Discipline
 from app.modules.physiology.zones import ZoneMetricKind
 
 TrimmedText = Annotated[
     str,
     StringConstraints(strip_whitespace=True, min_length=1),
-]
-OnboardingStep = Literal[
-    "profile",
-    "history",
-    "goal",
-    "zones",
-    "review",
-    "completed",
 ]
 
 
@@ -82,22 +75,10 @@ class AthleteProfileResponse(PublicModel):
 
 
 class TrainingHistoryEntryInput(PublicModel):
-    """Two-month average history in the discipline's canonical distance unit."""
+    """Previous-month average weekly hours; converted to Decimal minutes."""
 
     discipline: Discipline
-    average_weekly_distance: Decimal = Field(ge=0, allow_inf_nan=False)
-    distance_unit: Literal["meters", "kilometers"]
-    average_sessions_per_week: Decimal = Field(ge=0, allow_inf_nan=False)
-
-    @model_validator(mode="after")
-    def require_canonical_distance_unit(self) -> "TrainingHistoryEntryInput":
-        """Swimming uses metres; cycling and running use kilometres."""
-        expected = "meters" if self.discipline is Discipline.SWIM else "kilometers"
-        if self.distance_unit != expected:
-            raise ValueError(
-                f"{self.discipline.value} distance_unit must be {expected}"
-            )
-        return self
+    average_hours_per_week: Decimal = Field(ge=0, le=168, allow_inf_nan=False)
 
 
 class TrainingHistoryReplace(PublicModel):
@@ -114,6 +95,8 @@ class TrainingHistoryReplace(PublicModel):
         """Exactly one entry for swim, bike, and run is required."""
         if {entry.discipline for entry in entries} != set(Discipline):
             raise ValueError("swim, bike, and run history are required")
+        if sum((entry.average_hours_per_week for entry in entries), Decimal(0)) > 168:
+            raise ValueError("Combined weekly training cannot exceed 168 hours")
         return entries
 
 
@@ -125,6 +108,8 @@ class TrainingHistoryEntryResponse(PublicModel):
     distance_unit: Literal["meters", "kilometers"] | None
     average_sessions_per_week: Decimal | None
     history_window_months: Literal[2] | None
+    previous_month_weekly_minutes: Decimal | None = None
+    baseline_model_version: str | None = None
     confirmed_at: datetime
     updated_at: datetime
 
@@ -360,9 +345,15 @@ class ZoneProposalDecisionResponse(PublicModel):
 class OnboardingStateResponse(PublicModel):
     """Resumable, derived onboarding state."""
 
-    status: Literal["not_started", "in_progress", "completed"]
+    status: OnboardingStatus
     current_step: OnboardingStep
     completed_steps: tuple[OnboardingStep, ...]
+    current_onboarding_version: str
+    current_ruleset_version: str
+    completed_onboarding_version: str | None
+    completed_ruleset_version: str | None
+    upgrade_required: bool
+    missing_upgrade_steps: tuple[OnboardingStep, ...]
     profile: AthleteProfileResponse | None
     training_history: tuple[TrainingHistoryEntryResponse, ...]
     primary_goal: PrimaryRaceGoalResponse | None

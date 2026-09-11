@@ -7,6 +7,8 @@ from decimal import ROUND_HALF_UP, Decimal
 from enum import Enum
 from re import fullmatch
 
+from app.modules.physiology.joren import VERSION as JOREN_VERSION
+from app.modules.physiology.joren import threshold_zones
 from app.modules.physiology.models import (
     Discipline,
     RuleId,
@@ -282,7 +284,7 @@ class CalculatedZoneBoundary:
         if (
             self.lower is not None
             and self.upper is not None
-            and self.upper <= self.lower
+            and self.upper < self.lower
         ):
             raise ValueError("Calculated zone boundaries must be increasing.")
 
@@ -405,6 +407,16 @@ def validate_calculated_zone_profile(
     profile: CalculatedZoneMetricProfile,
 ) -> None:
     """Validate five gap-free model ranges with open outer edges."""
+    if profile.zone_model_version == JOREN_VERSION:
+        expected = threshold_zones(profile.metric.discipline, int(profile.metric.value))
+        if profile.metric.value != profile.metric.value.to_integral_value() or tuple(
+            (boundary.zone.value, boundary.lower, boundary.upper)
+            for boundary in profile.boundaries
+        ) != tuple((zone.zone, zone.lower, zone.upper) for zone in expected):
+            raise ValueError(
+                "Calculated ranges do not match their versioned threshold."
+            )
+        return
     boundaries = profile.boundaries
     if [boundary.zone for boundary in boundaries] != list(TrainingZone):
         raise ValueError("Zone boundaries must contain consecutive Zones 1 through 5.")
@@ -443,6 +455,28 @@ def calculate_zone_profile(
     """Convert one approved threshold to five canonical Start23 ranges."""
     if metric is None:
         raise ValueError("A threshold metric is required to calculate zones.")
+    if zone_model_version == JOREN_VERSION:
+        if metric.kind not in {
+            ZoneMetricKind.RUN_LTHR_BPM,
+            ZoneMetricKind.BIKE_THRESHOLD_HEART_RATE_BPM,
+            ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M,
+        }:
+            raise ValueError("The Phase 13 calibration model requires HR or CSS.")
+        if metric.value != metric.value.to_integral_value():
+            raise ValueError("Canonical threshold must use whole units.")
+        return CalculatedZoneMetricProfile(
+            metric=metric,
+            boundaries=tuple(
+                CalculatedZoneBoundary(
+                    TrainingZone(zone.zone),
+                    Decimal(zone.lower) if zone.lower is not None else None,
+                    Decimal(zone.upper) if zone.upper is not None else None,
+                )
+                for zone in threshold_zones(metric.discipline, int(metric.value))
+            ),
+            is_primary=is_primary,
+            zone_model_version=zone_model_version,
+        )
     if zone_model_version != ZONE_MODEL_VERSION:
         raise ValueError("The requested zone model version is not active.")
     ratios = _ZONE_MODEL_RATIOS[metric.kind]
@@ -525,8 +559,16 @@ def classify_calculated_zone_value(
         raise ValueError("Zone classification value must be finite and positive.")
     validate_calculated_zone_profile(profile)
     direction = metric_direction(profile.metric.kind)
+    if (
+        profile.zone_model_version == JOREN_VERSION
+        and value != value.to_integral_value()
+    ):
+        raise ValueError("Phase 13 classification requires whole measurement units.")
     for boundary in profile.boundaries:
-        if direction is ZoneScaleDirection.ASCENDING:
+        if profile.zone_model_version == JOREN_VERSION:
+            lower_matches = boundary.lower is None or boundary.lower <= value
+            upper_matches = boundary.upper is None or value <= boundary.upper
+        elif direction is ZoneScaleDirection.ASCENDING:
             lower_matches = boundary.lower is None or boundary.lower <= value
             upper_matches = boundary.upper is None or value < boundary.upper
         else:

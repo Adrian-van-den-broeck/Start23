@@ -24,6 +24,8 @@ export type TrainingHistoryEntry = {
   distance_unit: 'meters' | 'kilometers' | null;
   average_sessions_per_week: string | null;
   history_window_months: 2 | null;
+  previous_month_weekly_minutes: string | null;
+  baseline_model_version: string | null;
   confirmed_at: string;
   updated_at: string;
 };
@@ -106,7 +108,7 @@ export type CalculatedZoneMetricProfile = {
   source_value: string;
   is_primary: boolean;
   boundary_source: 'model_derived' | 'athlete_entered';
-  zone_model_version: 'start23-zone-model-1.0';
+  zone_model_version: 'start23-zone-model-1.0' | 'phase-13-joren-ruleset-1';
   boundaries: CalculatedZoneBoundary[];
 };
 
@@ -201,9 +203,15 @@ export type ZoneProfile = {
 };
 
 export type OnboardingState = {
-  status: 'not_started' | 'in_progress' | 'completed';
+  status: 'not_started' | 'in_progress' | 'upgrade_required' | 'completed';
   current_step: OnboardingStep;
   completed_steps: OnboardingStep[];
+  current_onboarding_version: string;
+  current_ruleset_version: string;
+  completed_onboarding_version: string | null;
+  completed_ruleset_version: string | null;
+  upgrade_required: boolean;
+  missing_upgrade_steps: OnboardingStep[];
   profile: AthleteProfile | null;
   training_history: TrainingHistoryEntry[];
   primary_goal: PrimaryRaceGoal | null;
@@ -320,7 +328,7 @@ export type CalibrationEvaluation = {
   confidence: 'not_assessed' | 'low' | 'medium';
   reason_codes: string[];
   thresholds: ThresholdEstimate[];
-  zone_model_version: 'start23-zone-model-1.0' | null;
+  zone_model_version: 'start23-zone-model-1.0' | 'phase-13-joren-ruleset-1' | null;
   zone_profiles: CalculatedZoneMetricProfile[];
   requires_athlete_confirmation: boolean;
   review_status: 'pending_athlete_confirmation' | 'not_applicable';
@@ -728,6 +736,7 @@ export type ActivityMetrics = {
   average_speed_kmh: string | null;
   max_speed_kmh: string | null;
   average_pace_seconds_per_km: string | null;
+  zone_minutes: [string, string, string, string, string] | null;
   low_intensity_minutes: string | null;
   high_intensity_minutes: string | null;
 };
@@ -739,7 +748,7 @@ export type CompletedActivity = {
   source: 'canonical_summary';
   started_at: string;
   timezone: string;
-  duration_minutes: string;
+  duration_minutes: string | null;
   distance_meters: number | null;
   elevation_gain_meters: number | null;
   rpe: number | null;

@@ -439,7 +439,7 @@ def _save_run_test(client: TestClient, activity_id: UUID) -> None:
         assert response.status_code == 201, response.text
 
 
-def test_standalone_field_test_requires_confirmation_and_appears_in_profile(
+def test_historical_run_field_test_is_not_newly_selectable_or_schedulable(
     calibration_context: tuple[TestClient, UUID, UUID],
 ) -> None:
     client, _, _ = calibration_context
@@ -463,29 +463,8 @@ def test_standalone_field_test_requires_confirmation_and_appears_in_profile(
         },
     )
 
-    assert setup.status_code == 200
-    assert scheduled.status_code == 201, scheduled.text
-    assignment = scheduled.json()["assignment"]
-    assert assignment["state"] == "pending_approval"
-    assert scheduled.json()["plan_proposal"] is None
-
-    approved = client.post(
-        f"/api/v1/calibration/test-assignments/{assignment['proposal_id']}/approve",
-        headers=_headers(),
-        json={"expected_revision": assignment["revision"]},
-    )
-    profile = client.get("/api/v1/me/zone-profile", headers=_headers())
-
-    assert approved.status_code == 200
-    assert approved.json()["test_assignment_state"] == "scheduled"
-    assert profile.status_code == 200, profile.text
-    assert len(profile.json()["disciplines"]) == 3
-    run = next(
-        item for item in profile.json()["disciplines"] if item["discipline"] == "run"
-    )
-    assert run["numeric_zone_visibility"] == "rpe_guided"
-    assert run["test_assignments"][0]["state"] == "scheduled"
-    assert "tss" not in profile.text.lower()
+    assert setup.status_code == 422
+    assert scheduled.status_code == 422
 
 
 def test_three_mvp_zone_options_are_authenticated_and_tss_free(
@@ -594,20 +573,48 @@ def test_rpe_only_is_rejected_as_a_new_setup_route(
     assert forged.status_code == 422
 
 
-def test_selectable_protocol_guidance_excludes_rpe_only(
+def test_selectable_protocol_matrix_matches_current_phase_13_measurements(
     calibration_context: tuple[TestClient, UUID, UUID],
 ) -> None:
     client, _, _ = calibration_context
 
-    for discipline in ("swim", "bike", "run"):
-        response = client.get(
-            f"/api/v1/calibration/protocols/{discipline}",
-            headers=_headers(),
-        )
-        assert response.status_code == 200
-        assert all(
-            "rpe_only" not in protocol["guidance_modes"] for protocol in response.json()
-        )
+    run = client.get("/api/v1/calibration/protocols/run", headers=_headers())
+    bike = client.get("/api/v1/calibration/protocols/bike", headers=_headers())
+    swim = client.get("/api/v1/calibration/protocols/swim", headers=_headers())
+
+    assert run.status_code == bike.status_code == swim.status_code == 200
+    assert [item["protocol_id"] for item in run.json()] == [
+        "start23_week1_run_calibration_v1"
+    ]
+    assert run.json()[0]["guidance_modes"] == ["heart_rate"]
+    assert [item["protocol_id"] for item in bike.json()] == [
+        "start23_week1_bike_calibration_v1"
+    ]
+    assert bike.json()[0]["guidance_modes"] == ["heart_rate", "combined"]
+    assert all("rpe_only" not in protocol["guidance_modes"] for protocol in swim.json())
+
+
+@pytest.mark.parametrize(
+    ("discipline", "guidance_mode"),
+    [("run", "pace"), ("bike", "power")],
+)
+def test_current_calibration_rejects_modes_without_required_average_hr(
+    calibration_context: tuple[TestClient, UUID, UUID],
+    discipline: str,
+    guidance_mode: str,
+) -> None:
+    client, _, _ = calibration_context
+
+    response = client.put(
+        f"/api/v1/onboarding/disciplines/{discipline}/setup",
+        headers=_headers(),
+        json={
+            "setup_route": "calibration_week",
+            "guidance_mode": guidance_mode,
+        },
+    )
+
+    assert response.status_code == 422
 
 
 def test_field_test_protocol_must_match_discipline_and_guidance(
@@ -631,9 +638,7 @@ def test_field_test_protocol_must_match_discipline_and_guidance(
     assert wrong_discipline.status_code == 422
     assert protocols.status_code == 200
     assert {item["protocol_id"] for item in protocols.json()} == {
-        "start23_bike_ftp_30min_v1",
-        "start23_bike_fthr_20min_v1",
-        "start23_week1_bike_calibration_v1",
+        "start23_week1_bike_calibration_v1"
     }
     assert all(
         segment["rpe_display_label"].startswith(

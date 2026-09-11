@@ -8,6 +8,7 @@ from uuid import UUID
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from app.modules.calibration.schemas import DisciplineSetupResponse
+from app.modules.calibration.service import is_current_mvp_setup
 from app.modules.onboarding.repository import JsonObject, OnboardingRepository
 from app.modules.onboarding.schemas import (
     AthleteProfileResponse,
@@ -18,7 +19,6 @@ from app.modules.onboarding.schemas import (
     ManualZoneSubmission,
     OnboardingCompleteResponse,
     OnboardingStateResponse,
-    OnboardingStep,
     PrimaryRaceGoalInput,
     PrimaryRaceGoalResponse,
     TrainingHistoryEntryResponse,
@@ -28,6 +28,13 @@ from app.modules.onboarding.schemas import (
     ZoneProposalDecisionResponse,
     ZoneSubmission,
     ZoneSubmissionResponse,
+)
+from app.modules.onboarding.versioning import (
+    CURRENT_ONBOARDING_VERSION,
+    CURRENT_RULESET_VERSION,
+    LEGACY_UNVERSIONED_ONBOARDING,
+    OnboardingStep,
+    assess_onboarding_version,
 )
 from app.modules.physiology.models import Discipline, TrainingZone
 from app.modules.physiology.zones import (
@@ -120,13 +127,10 @@ class OnboardingService:
     def _history_is_complete(
         history: tuple[TrainingHistoryEntryResponse, ...],
     ) -> bool:
-        """Require three newly confirmed two-month entries, not legacy history."""
+        """Require fresh previous-month observations, preserving legacy rows."""
         return {entry.discipline for entry in history} == set(Discipline) and all(
-            entry.average_weekly_distance is not None
-            and entry.distance_unit
-            == ("meters" if entry.discipline is Discipline.SWIM else "kilometers")
-            and entry.average_sessions_per_week is not None
-            and entry.history_window_months == 2
+            entry.previous_month_weekly_minutes is not None
+            and entry.baseline_model_version == "phase-13-joren-ruleset-1"
             for entry in history
         )
 
@@ -257,7 +261,9 @@ class OnboardingService:
             zone.discipline for zone in zones if zone.status == "active"
         }
         configured_disciplines = active_disciplines | {
-            setup.discipline for setup in discipline_setups
+            setup.discipline
+            for setup in discipline_setups
+            if is_current_mvp_setup(setup)
         }
 
         derived_steps: list[OnboardingStep] = []
@@ -276,45 +282,60 @@ class OnboardingService:
             if session is not None
             else (profile.onboarding_status if profile is not None else "not_started")
         )
+        completed_onboarding_version = (
+            session.get("completed_onboarding_version") if session is not None else None
+        )
+        completed_ruleset_version = (
+            session.get("completed_ruleset_version") if session is not None else None
+        )
         if persisted_status == "completed":
-            completed_steps: tuple[OnboardingStep, ...] = (
-                "profile",
-                "history",
-                "goal",
-                "zones",
-                "review",
+            completed_onboarding_version = (
+                completed_onboarding_version or LEGACY_UNVERSIONED_ONBOARDING
             )
-            current_step: OnboardingStep = "completed"
-        else:
-            completed_steps = tuple(derived_steps)
-            step_order: tuple[OnboardingStep, ...] = (
-                "profile",
-                "history",
-                "goal",
-                "zones",
-                "review",
+            completed_ruleset_version = (
+                completed_ruleset_version or LEGACY_UNVERSIONED_ONBOARDING
             )
-            current_step = next(
-                (step for step in step_order if step not in completed_steps),
-                "review",
-            )
-
-        can_complete = all(
-            step in derived_steps for step in ("profile", "history", "goal", "zones")
+        version_state = assess_onboarding_version(
+            persisted_status=persisted_status,
+            completed_onboarding_version=(
+                str(completed_onboarding_version)
+                if completed_onboarding_version is not None
+                else None
+            ),
+            completed_ruleset_version=(
+                str(completed_ruleset_version)
+                if completed_ruleset_version is not None
+                else None
+            ),
+            satisfied_steps=derived_steps,
         )
         request_id = (
             session.get("initial_plan_request_id") if session is not None else None
         )
         return OnboardingStateResponse(
-            status=persisted_status,
-            current_step=current_step,
-            completed_steps=completed_steps,
+            status=version_state.status,
+            current_step=version_state.current_step,
+            completed_steps=version_state.completed_steps,
+            current_onboarding_version=CURRENT_ONBOARDING_VERSION,
+            current_ruleset_version=CURRENT_RULESET_VERSION,
+            completed_onboarding_version=(
+                str(completed_onboarding_version)
+                if completed_onboarding_version is not None
+                else None
+            ),
+            completed_ruleset_version=(
+                str(completed_ruleset_version)
+                if completed_ruleset_version is not None
+                else None
+            ),
+            upgrade_required=version_state.upgrade_required,
+            missing_upgrade_steps=version_state.missing_upgrade_steps,
             profile=profile,
             training_history=history,
             primary_goal=goal,
             zones=zones,
             discipline_setups=discipline_setups,
-            can_complete=can_complete,
+            can_complete=version_state.can_complete,
             initial_plan_request_id=request_id,
         )
 

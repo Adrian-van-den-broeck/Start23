@@ -85,7 +85,7 @@ class OnboardingRepository(Protocol):
         """Persist model-derived zones as a service-only pending proposal."""
 
     async def complete_onboarding(self, access_token: str) -> UUID:
-        """Validate persisted state and create a pending planning request."""
+        """Complete the current version and create a pending planning request."""
 
     async def approve_zone_proposal(
         self,
@@ -468,7 +468,7 @@ class SupabaseOnboardingRepository:
     async def complete_onboarding(self, access_token: str) -> UUID:
         result = await self._request(
             "POST",
-            "rpc/complete_onboarding",
+            "rpc/complete_current_onboarding",
             access_token,
             json={},
         )

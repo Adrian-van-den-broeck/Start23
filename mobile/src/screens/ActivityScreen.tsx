@@ -243,9 +243,13 @@ export function ActivityScreen({
     setBusy(true);
     setError(null);
     try {
-      const numericDuration = Number(duration);
+      const numericDuration = duration.trim() === '' ? null : Number(duration);
       const numericDistance = distance ? Number(distance) : undefined;
-      if (!Number.isFinite(numericDuration) || numericDuration <= 0) {
+      if (
+        numericDuration === null
+          ? discipline !== 'swim' || numericDistance === undefined
+          : !Number.isFinite(numericDuration) || numericDuration <= 0
+      ) {
         throw new Error('Vul een geldige duur in minuten in.');
       }
       if (
@@ -267,7 +271,7 @@ export function ActivityScreen({
         discipline,
         started_at: startedAt,
         timezone: athleteTimezone,
-        duration_minutes: String(numericDuration),
+        duration_minutes: numericDuration === null ? null : String(numericDuration),
         ...(numericDistance === undefined
           ? {}
           : { distance_meters: numericDistance }),
@@ -506,7 +510,11 @@ export function ActivityScreen({
           />
           <FormField
             inputMode="decimal"
-            label={t('activity.duration')}
+            label={
+              discipline === 'swim'
+                ? `${t('activity.duration')} (${language === 'nl' ? 'optioneel bij afstand' : 'optional with distance'})`
+                : t('activity.duration')
+            }
             onChangeText={setDuration}
             value={duration}
           />
@@ -553,7 +561,9 @@ export function ActivityScreen({
                 />
               </View>
               <Text style={styles.meta}>
-                {Number(activity.duration_minutes)} min
+                {activity.duration_minutes === null
+                  ? `${activity.distance_meters} m`
+                  : `${Number(activity.duration_minutes)} min`}
                 {activity.rpe === null ? '' : ` · RPE ${activity.rpe}`}
               </Text>
               <Text style={styles.body}>{resultMessage(activity, language)}</Text>

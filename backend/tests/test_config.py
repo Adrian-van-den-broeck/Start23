@@ -86,6 +86,7 @@ def test_production_polar_requires_approvals_https_owner_and_retention() -> None
         "supabase_publishable_key": "sb_publishable_test",
         "supabase_secret_key": "sb_secret_test",
         "physiology_review_record_id": "review-2026-08",
+        "physiology_review_ruleset_version": "phase-13-joren-ruleset-1",
         "physiology_accountable_owner": "qualified-reviewer",
         "polar_client_id": "polar-client",
         "polar_client_secret": "polar-secret",
@@ -108,3 +109,15 @@ def test_production_polar_requires_approvals_https_owner_and_retention() -> None
     )
 
     assert settings.polar_raw_fit_retention_days == 14
+
+
+def test_old_review_cannot_authorize_new_phase_13_production() -> None:
+    with pytest.raises(ValidationError, match="phase-13-joren-ruleset-1"):
+        Settings(
+            environment="production",
+            supabase_publishable_key="sb_publishable_test",
+            supabase_secret_key="sb_secret_test",
+            physiology_review_record_id="old-review",
+            physiology_accountable_owner="reviewer",
+            physiology_review_ruleset_version="phase-10-ruleset-1",
+        )

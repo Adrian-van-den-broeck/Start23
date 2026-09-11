@@ -10,6 +10,7 @@ from app.modules.physiology.intensity import (
     WorkoutIntensity,
     classify_workout,
 )
+from app.modules.physiology.joren import zone_load
 from app.modules.physiology.models import (
     Discipline,
     DurationMinutes,
@@ -165,7 +166,7 @@ class WorkoutTemplate:
     zone_requirements: tuple[ZoneRequirement, ...]
     fallback_compatibility: FallbackCompatibility
     segments: tuple[WorkoutSegment, ...]
-    internal_planned_load: InternalLoad = field(repr=False)
+    internal_planned_load: InternalLoad | None = field(repr=False)
     explicit_scheduling_only: bool = False
     athlete_selection_only: bool = False
     source_catalog: str | None = None
@@ -296,7 +297,7 @@ class PlannedWorkoutSnapshot:
     expected_rpe_min: int
     expected_rpe_max: int
     segments: tuple[WorkoutSegment, ...]
-    internal_planned_load: InternalLoad = field(repr=False)
+    internal_planned_load: InternalLoad | None = field(repr=False)
 
 
 def snapshot_template(template: WorkoutTemplate) -> PlannedWorkoutSnapshot:
@@ -987,7 +988,34 @@ def active_catalog(
         raise ValueError("The active catalog must cover swim, bike, and run.")
     return tuple(
         sorted(
-            latest.values(),
+            (with_current_load(template) for template in latest.values()),
             key=lambda template: (template.discipline.value, template.name),
         )
     )
+
+
+def with_current_load(template: WorkoutTemplate) -> WorkoutTemplate:
+    """Snapshot the new method without changing a historical catalog version."""
+    totals = [Decimal(0)] * 5
+    reliable = template.duration_minutes is not None
+    for segment in template.segments:
+        if segment.zone_target is None or segment.duration_minutes is None:
+            reliable = False
+            break
+        totals[segment.zone_target.value - 1] += segment.duration_minutes
+    measurement = zone_load(
+        discipline=template.discipline,
+        total_minutes=template.duration_minutes,
+        minutes_by_zone=tuple(totals) if reliable else None,
+        planned=True,
+    )
+    return replace(template, internal_planned_load=measurement.load)
+
+
+def require_planned_load(
+    template: WorkoutTemplate | PlannedWorkoutSnapshot,
+) -> InternalLoad:
+    """Only actual available values may enter planning arithmetic."""
+    if template.internal_planned_load is None:
+        raise ValueError("Reliable planned zone duration is unavailable.")
+    return template.internal_planned_load

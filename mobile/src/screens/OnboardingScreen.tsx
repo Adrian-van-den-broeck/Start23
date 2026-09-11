@@ -204,63 +204,26 @@ function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
 type HistoryStepProps = {
   state: OnboardingState;
   saving: boolean;
-  onSave: (
-    values: Record<
-      Discipline,
-      { averageDistance: string; averageSessions: string }
-    >,
-  ) => Promise<void>;
+  onSave: (values: Record<Discipline, string>) => Promise<void>;
 };
 
 function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
-  const initial = (discipline: Discipline, key: 'distance' | 'sessions') => {
-    const entry = state.training_history.find(
-      (history) => history.discipline === discipline,
-    );
-    return key === 'distance'
-      ? entry?.average_weekly_distance ?? ''
-      : entry?.average_sessions_per_week ?? '';
+  const initial = (discipline: Discipline): string => {
+    const entry = state.training_history.find((item) => item.discipline === discipline);
+    return entry?.previous_month_weekly_minutes != null
+      ? String(Number(entry.previous_month_weekly_minutes) / 60)
+      : '';
   };
-  const [values, setValues] = useState<
-    Record<
-      Discipline,
-      { averageDistance: string; averageSessions: string }
-    >
-  >({
-    swim: {
-      averageDistance: initial('swim', 'distance'),
-      averageSessions: initial('swim', 'sessions'),
-    },
-    bike: {
-      averageDistance: initial('bike', 'distance'),
-      averageSessions: initial('bike', 'sessions'),
-    },
-    run: {
-      averageDistance: initial('run', 'distance'),
-      averageSessions: initial('run', 'sessions'),
-    },
+  const [values, setValues] = useState<Record<Discipline, string>>({
+    swim: initial('swim'), bike: initial('bike'), run: initial('run'),
   });
-  const update = (
-    discipline: Discipline,
-    key: 'averageDistance' | 'averageSessions',
-    value: string,
-  ) => {
-    setValues((current) => ({
-      ...current,
-      [discipline]: { ...current[discipline], [key]: value },
-    }));
-  };
-  const valid = (Object.keys(values) as Discipline[]).every(
-    (discipline) =>
-      Number(values[discipline].averageDistance) >= 0 &&
-      Number(values[discipline].averageSessions) >= 0 &&
-      values[discipline].averageDistance !== '' &&
-      values[discipline].averageSessions !== '',
-  );
-
+  const hours = Object.values(values).map((value) => Number(value.replace(',', '.')));
+  const valid = Object.values(values).every((value) => value.trim() !== '') &&
+    hours.every((value) => Number.isFinite(value) && value >= 0) &&
+    hours.reduce((total, value) => total + value, 0) <= 168;
   return (
     <StepFrame
-      description="Geef per discipline je gemiddelde over de afgelopen twee maanden. We bewaren deze invoer nu alleen; de startbaseline volgt pas na de beoordeelde Phase 13-regels."
+      description="Hoeveel uur per week trainde je gemiddeld de afgelopen maand? Vul ook nul in als je een discipline niet deed."
       eyebrow="Stap 2 van 5"
       title="Waar sta je nu?"
     >
@@ -268,51 +231,21 @@ function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
         {(['swim', 'bike', 'run'] as const).map((discipline) => (
           <View key={discipline} style={styles.disciplineCard}>
             <Text style={styles.cardTitle}>
-              {discipline === 'swim'
-                ? 'Zwemmen'
-                : discipline === 'bike'
-                  ? 'Fietsen'
-                  : 'Hardlopen'}
+              {discipline === 'swim' ? 'Zwemmen' : discipline === 'bike' ? 'Fietsen' : 'Hardlopen'}
             </Text>
-            <View style={styles.twoColumns}>
-              <View style={styles.column}>
-                <FormField
-                  inputMode="decimal"
-                  label="Gemiddelde afstand per week"
-                  onChangeText={(value) =>
-                    update(discipline, 'averageDistance', value)
-                  }
-                  placeholder={discipline === 'swim' ? '4000' : '40'}
-                  suffix={
-                    <Text style={styles.unit}>
-                      {discipline === 'swim' ? 'm/week' : 'km/week'}
-                    </Text>
-                  }
-                  value={values[discipline].averageDistance}
-                />
-              </View>
-              <View style={styles.column}>
-                <FormField
-                  inputMode="decimal"
-                  label="Gemiddelde frequentie"
-                  onChangeText={(value) =>
-                    update(discipline, 'averageSessions', value)
-                  }
-                  placeholder="2"
-                  suffix={<Text style={styles.unit}>sessies/week</Text>}
-                  value={values[discipline].averageSessions}
-                />
-              </View>
-            </View>
+            <FormField
+              inputMode="decimal"
+              label="Gemiddelde uren per week"
+              onChangeText={(value) => setValues((current) => ({ ...current, [discipline]: value }))}
+              placeholder="0"
+              suffix={<Text style={styles.unit}>uur/week</Text>}
+              value={values[discipline]}
+            />
           </View>
         ))}
       </View>
-      <ActionButton
-        disabled={!valid}
-        label="Trainingshistorie opslaan"
-        loading={saving}
-        onPress={() => void onSave(values)}
-      />
+      <ActionButton disabled={!valid} label="Trainingshistorie opslaan" loading={saving}
+        onPress={() => void onSave(values)} />
     </StepFrame>
   );
 }
@@ -1221,12 +1154,7 @@ export function OnboardingScreen({
                     accessToken,
                     (['swim', 'bike', 'run'] as const).map((discipline) => ({
                       discipline,
-                      average_weekly_distance:
-                        values[discipline].averageDistance,
-                      distance_unit:
-                        discipline === 'swim' ? 'meters' : 'kilometers',
-                      average_sessions_per_week:
-                        values[discipline].averageSessions,
+                      average_hours_per_week: values[discipline].replace(',', '.'),
                     })),
                   ),
                 )

@@ -62,7 +62,7 @@ def test_integrated_swim_test_fails_closed_without_planned_duration() -> None:
         )
 
 
-def test_calibration_week_hides_numbers_until_reviewed_week_2_gate() -> None:
+def test_calibration_proposal_visibility_no_longer_requires_week_2() -> None:
     assert (
         numeric_zone_visibility(
             setup_route=SetupRoute.CALIBRATION_WEEK,
@@ -70,13 +70,13 @@ def test_calibration_week_hides_numbers_until_reviewed_week_2_gate() -> None:
             week_2_evaluation_completed=False,
             has_pending_complete_proposal=False,
         )
-        is NumericZoneVisibility.WEEK_2_EVALUATION_PENDING
+        is NumericZoneVisibility.RPE_GUIDED
     )
     assert (
         numeric_zone_visibility(
             setup_route=SetupRoute.CALIBRATION_WEEK,
             has_active_profile=False,
-            week_2_evaluation_completed=True,
+            week_2_evaluation_completed=False,
             has_pending_complete_proposal=True,
         )
         is NumericZoneVisibility.PROPOSAL_CONFIRMATION_PENDING
@@ -267,7 +267,7 @@ def test_valid_run_test_estimates_thresholds_and_pending_zone_profiles() -> None
     assert result.zone_profiles[0].boundaries[0].upper is None
 
 
-def test_run_lthr_is_never_extrapolated_from_easy_pace() -> None:
+def test_run_calibration_uses_observed_hr_for_pending_lthr() -> None:
     protocol = "start23_week1_run_calibration_v1"
     observations = (
         _observation(protocol, Discipline.RUN, "warmup", duration_seconds=600),
@@ -293,15 +293,14 @@ def test_run_lthr_is_never_extrapolated_from_easy_pace() -> None:
 
     result = evaluate_protocol(protocol_id=protocol, observations=observations)
 
-    assert result.status is EvaluationStatus.PROVISIONALLY_CALIBRATED
-    assert result.threshold_status is ThresholdStatus.UNKNOWN
-    assert result.thresholds == ()
-    assert result.reason_codes == (
-        "threshold_not_permitted_from_submaximal_calibration",
-    )
+    assert result.status is EvaluationStatus.THRESHOLD_ESTIMATED
+    assert result.threshold_status is ThresholdStatus.ESTIMATED
+    assert result.thresholds[0].metric_kind is ZoneMetricKind.RUN_LTHR_BPM
+    assert result.ruleset_version == "phase-13-joren-ruleset-1"
+    assert result.requires_athlete_confirmation
 
 
-def test_calibration_without_sensor_metrics_stays_rpe_only() -> None:
+def test_calibration_without_sensor_metrics_fails_closed() -> None:
     protocol = "start23_week1_bike_calibration_v1"
     observations = (
         _observation(protocol, Discipline.BIKE, "warmup", duration_seconds=900),
@@ -324,7 +323,7 @@ def test_calibration_without_sensor_metrics_stays_rpe_only() -> None:
 
     result = evaluate_protocol(protocol_id=protocol, observations=observations)
 
-    assert result.status is EvaluationStatus.RPE_ONLY
+    assert result.status is EvaluationStatus.INSUFFICIENT_DATA
     assert result.zone_status is ZoneStatus.UNKNOWN
     assert result.reason_codes == ("sensor_data_missing",)
 
@@ -453,7 +452,7 @@ def test_duplicate_segment_observations_fail_closed() -> None:
     assert "duplicate_segment_observation" in result.reason_codes
 
 
-def test_swim_calibration_calculates_observation_pace_without_inventing_css() -> None:
+def test_swim_calibration_uses_measured_pace_for_pending_css() -> None:
     assert pace_seconds_per_100m(
         elapsed_time_seconds=Decimal("210"),
         distance_meters=200,
@@ -480,6 +479,7 @@ def test_swim_calibration_calculates_observation_pace_without_inventing_css() ->
                 Discipline.SWIM,
                 "4x200_comfortable",
                 distance_meters=800,
+                elapsed_time_seconds=Decimal("840"),
                 pool_length_meters=50,
                 stroke="freestyle",
                 equipment="none",
@@ -509,9 +509,10 @@ def test_swim_calibration_calculates_observation_pace_without_inventing_css() ->
         ),
     )
 
-    assert result.status is EvaluationStatus.PROVISIONALLY_CALIBRATED
-    assert result.threshold_status is ThresholdStatus.UNKNOWN
-    assert result.thresholds == ()
+    assert result.status is EvaluationStatus.THRESHOLD_ESTIMATED
+    assert result.threshold_status is ThresholdStatus.ESTIMATED
+    assert result.thresholds[0].value == Decimal(97)
+    assert result.requires_athlete_confirmation
 
 
 @pytest.mark.parametrize("rpe", [0, 11])

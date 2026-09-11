@@ -153,3 +153,21 @@ PHASE_10_RULESET_V1 = PhysiologySpecification(
     ),
     production_review=None,
 )
+
+
+PHASE_13_RULESET_V1 = PhysiologySpecification(
+    version=RulesetVersion("phase-13-joren-ruleset-1"),
+    status=SpecificationStatus.APPROVED,
+    approved_rules=PHASE_10_RULESET_V1.approved_rules,
+    evidence_references=(
+        "docs/requirements/phase-13-joren-ruleset-1.md",
+        "docs/requirements/Triathlon_Onboarding_StartTSS.pdf",
+        "docs/requirements/Triathlon_Zone_Calibratie_Voorbeelden.pdf",
+        "docs/requirements/Hoe TSS berekenen zones gekend (z) "
+        "en zones onbekend (rpe).pdf",
+    ),
+    applicability=PHASE_10_RULESET_V1.applicability,
+    contraindications=PHASE_10_RULESET_V1.contraindications,
+    test_references=("backend/tests/physiology/test_joren.py",),
+    production_review=None,
+)

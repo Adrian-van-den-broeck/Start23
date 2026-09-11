@@ -1,3 +1,4 @@
+-- Phase 13 supersedes the accepted write fixture; legacy columns remain asserted.
 begin;
 
 create extension if not exists pgtap with schema extensions;
@@ -206,9 +207,9 @@ select lives_ok(
   $$
     select * from public.replace_training_history(
       '[
-        {"discipline":"swim","average_weekly_distance":4000,"distance_unit":"meters","average_sessions_per_week":2},
-        {"discipline":"bike","average_weekly_distance":120,"distance_unit":"kilometers","average_sessions_per_week":2.5},
-        {"discipline":"run","average_weekly_distance":30,"distance_unit":"kilometers","average_sessions_per_week":3}
+        {"discipline":"swim","average_hours_per_week":2},
+        {"discipline":"bike","average_hours_per_week":4},
+        {"discipline":"run","average_hours_per_week":3}
       ]'::jsonb
     )
   $$,

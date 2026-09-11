@@ -30,6 +30,7 @@ class ActivityMetricInput(PublicActivityModel):
         gt=0,
         le=3600,
     )
+    zone_minutes: tuple[Decimal, Decimal, Decimal, Decimal, Decimal] | None = None
     low_intensity_minutes: Decimal | None = Field(default=None, ge=0, le=1440)
     high_intensity_minutes: Decimal | None = Field(default=None, ge=0, le=1440)
 
@@ -47,6 +48,10 @@ class ActivityMetricInput(PublicActivityModel):
             and self.average_speed_kmh > self.max_speed_kmh
         ):
             raise ValueError("average speed cannot exceed maximum speed")
+        if self.zone_minutes is not None and any(
+            not value.is_finite() or value < 0 for value in self.zone_minutes
+        ):
+            raise ValueError("Zone durations must be finite and non-negative")
         intensity_values = (
             self.low_intensity_minutes,
             self.high_intensity_minutes,
@@ -62,6 +67,7 @@ class ActivityMetricInput(PublicActivityModel):
                 self.average_speed_kmh,
                 self.max_speed_kmh,
                 self.average_pace_seconds_per_km,
+                self.zone_minutes,
                 *intensity_values,
             )
         ):
@@ -77,7 +83,7 @@ class ActivitySummaryInput(PublicActivityModel):
     discipline: Discipline
     started_at: datetime
     timezone: str = Field(min_length=1, max_length=100)
-    duration_minutes: Decimal = Field(gt=0, le=1440, max_digits=8)
+    duration_minutes: Decimal | None = Field(default=None, gt=0, le=1440, max_digits=8)
     distance_meters: int | None = Field(default=None, gt=0, le=1_000_000)
     elevation_gain_meters: int | None = Field(default=None, ge=0, le=100_000)
     metrics: ActivityMetricInput | None = None
@@ -102,7 +108,16 @@ class ActivitySummaryInput(PublicActivityModel):
             and self.elevation_gain_meters is not None
         ):
             raise ValueError("swim activities cannot include elevation gain")
+        if self.duration_minutes is None and (
+            self.discipline is not Discipline.SWIM or self.distance_meters is None
+        ):
+            raise ValueError("Only a distance-only swim may omit duration")
         if self.metrics is not None:
+            if self.metrics.zone_minutes is not None and (
+                self.duration_minutes is None
+                or sum(self.metrics.zone_minutes) > self.duration_minutes
+            ):
+                raise ValueError("Zone durations require sufficient total duration")
             if (
                 self.metrics.normalized_power_watts is not None
                 and self.discipline is not Discipline.BIKE
@@ -123,7 +138,9 @@ class ActivitySummaryInput(PublicActivityModel):
             if (
                 low is not None
                 and high is not None
-                and low + high > self.duration_minutes
+                and (
+                    self.duration_minutes is None or low + high > self.duration_minutes
+                )
             ):
                 raise ValueError("classified intensity minutes cannot exceed duration")
         return self
@@ -142,7 +159,7 @@ class ActivityResponse(PublicActivityModel):
     source: Literal["canonical_summary"]
     started_at: datetime
     timezone: str
-    duration_minutes: Decimal
+    duration_minutes: Decimal | None
     distance_meters: int | None
     elevation_gain_meters: int | None
     rpe: int | None = Field(default=None, ge=1, le=10)

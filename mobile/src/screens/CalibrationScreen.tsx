@@ -116,6 +116,8 @@ const resultLabels: Record<CalibrationEvaluation['status'], string> = {
 };
 
 const reasonLabels: Record<string, string> = {
+  calculated_threshold_unusually_low:
+    "De berekende drempel lijkt ongewoon laag. Controleer het resultaat voordat je het zonevoorstel goedkeurt.",
   zone_profile_pending_athlete_confirmation:
     'De drempel en berekende zones wachten op jouw afzonderlijke bevestigingen.',
   threshold_not_permitted_from_submaximal_calibration:

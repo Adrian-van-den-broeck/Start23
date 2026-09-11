@@ -119,3 +119,52 @@ def zone_for_rpe_value(rpe: int) -> TrainingZone:
     if rpe <= 8:
         return TrainingZone.ZONE_4
     return TrainingZone.ZONE_5
+
+
+# Phase 13 reference descriptions. Historical catalog range definitions above
+# remain readable; these exact descriptions are indexed by canonical score.
+RPE_DESCRIPTIONS_V13 = {
+    Discipline.SWIM: (
+        "Gevoelloos door het water glijden.",
+        "Ontspannen slag, rustige ademhaling.",
+        "Vlotte, ritmische slag.",
+        "Doorzwemmen, gecontroleerde ademhaling.",
+        "Doelgericht tempo.",
+        "Hard werken, snakken naar adem op keerpunt.",
+        "Verzuring begint, moeite met techniek.",
+        "Net onder sprintniveau.",
+        "Snelle verzuring, techniek brokkelt af.",
+        "All-out sprint.",
+    ),
+    Discipline.BIKE: (
+        "Geen druk op de pedalen.",
+        "Zeer licht trappen, uren vol te houden.",
+        "Comfortabel duurtempo.",
+        "Druk op de pedalen, zweet breekt uit.",
+        "Ademhaling aanwezig, korte zinnen.",
+        "Branderig gevoel bouwt op.",
+        "Benen lopen vol, weinig praten.",
+        "Op de limiet, net niet volledig verzuren.",
+        "Extreem zwaar, korte intervallen.",
+        "Volle sprint, maximale kracht.",
+    ),
+    Discipline.RUN: (
+        "Wandelen of extreem traag joggen.",
+        "Zeer ontspannen, eindeloos kletsen.",
+        "Vlot duurlooptempo, neusademhaling.",
+        "Focus nodig, praten in zinnen.",
+        "'Sweet spot', comfortabel oncomfortabel.",
+        "Zwaar, net niet in het rood.",
+        "Diepe ademhaling (10k wedstrijdtempo).",
+        "Tegen verzuring aan (5k tempo).",
+        "Naar adem happen, zware benen.",
+        "Volle sprint, snel moeten stoppen.",
+    ),
+}
+
+
+def rpe_description(discipline: Discipline, rpe: int) -> str:
+    """Exact supplied textual selection; score remains an integer."""
+    if type(rpe) is not int or not 1 <= rpe <= 10:
+        raise ValueError("RPE must be an integer from 1 through 10.")
+    return RPE_DESCRIPTIONS_V13[discipline][rpe - 1]

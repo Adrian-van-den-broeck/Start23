@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     openai_model: str = "gpt-5.6-luna"
     openai_api_timeout_seconds: float = Field(default=8.0, gt=0, le=30)
     physiology_review_record_id: str = ""
+    physiology_review_ruleset_version: str = ""
     physiology_accountable_owner: str = ""
     polar_client_id: str = ""
     polar_client_secret: SecretStr = SecretStr("")
@@ -100,11 +101,13 @@ class Settings(BaseSettings):
     def require_production_physiology_governance(self) -> "Settings":
         """Keep production closed until one accountable qualified review exists."""
         if self.environment == "production" and (
-            not self.physiology_review_record_id.strip()
+            self.physiology_review_ruleset_version != "phase-13-joren-ruleset-1"
+            or not self.physiology_review_record_id.strip()
             or not self.physiology_accountable_owner.strip()
         ):
             raise ValueError(
-                "production requires a physiology review record and accountable owner"
+                "production requires a physiology review record and accountable owner "
+                "for phase-13-joren-ruleset-1"
             )
         return self
 

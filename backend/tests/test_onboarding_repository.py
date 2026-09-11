@@ -202,3 +202,29 @@ def test_measured_zone_provenance_uses_the_bounded_service_rpc() -> None:
     )
     assert captured.headers["apikey"] == "sb_secret_test"
     assert "authorization" not in captured.headers
+
+
+def test_completion_uses_current_version_rpc_with_verified_owner_token() -> None:
+    request_id = uuid4()
+    captured: httpx.Request | None = None
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal captured
+        captured = request
+        return httpx.Response(200, json=str(request_id))
+
+    async def exercise() -> None:
+        async with httpx.AsyncClient(
+            transport=httpx.MockTransport(handler),
+        ) as client:
+            repository = SupabaseOnboardingRepository(_settings(), client=client)
+            result = await repository.complete_onboarding("athlete-token")
+        assert result == request_id
+
+    asyncio.run(exercise())
+
+    assert captured is not None
+    assert captured.url.path.endswith("/rest/v1/rpc/complete_current_onboarding")
+    assert captured.headers["apikey"] == "sb_publishable_test"
+    assert captured.headers["authorization"] == "Bearer athlete-token"
+    assert b"user_id" not in captured.content

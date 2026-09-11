@@ -9,9 +9,9 @@ from uuid import UUID
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from app.modules.calibration.domain import (
-    CALIBRATION_RULESET_VERSION,
     PROTOCOLS,
     CalibrationObservation,
+    CalibrationProtocol,
     DataQuality,
     GuidanceMode,
     NumericZoneVisibility,
@@ -47,7 +47,7 @@ from app.modules.calibration.schemas import (
     ZoneProfileSnapshotResponse,
     ZoneProfileStateResponse,
 )
-from app.modules.physiology.models import Discipline, TrainingZone
+from app.modules.physiology.models import Discipline, RulesetVersion, TrainingZone
 from app.modules.physiology.rpe_zones import rpe_zone, zone_for_rpe_range
 from app.modules.physiology.zones import (
     ZONE_MODEL_VERSION,
@@ -81,6 +81,80 @@ _CALIBRATION_PROTOCOL_BY_DISCIPLINE = {
     Discipline.BIKE: "start23_week1_bike_calibration_v1",
     Discipline.RUN: "start23_week1_run_calibration_v1",
 }
+
+
+def _current_mvp_protocols(
+    discipline: Discipline,
+) -> tuple[CalibrationProtocol, ...]:
+    """Expose only protocols compatible with the current Phase 13 evaluator."""
+    protocols = protocols_for_discipline(discipline)
+    if discipline is Discipline.SWIM:
+        return protocols
+    return tuple(
+        protocol
+        for protocol in protocols
+        if protocol.protocol_type is ProtocolType.SUBMAXIMAL_CALIBRATION
+    )
+
+
+def _current_mvp_guidance_modes(
+    discipline: Discipline,
+    protocol_type: ProtocolType,
+    guidance_modes: tuple[str, ...],
+) -> tuple[str, ...]:
+    """Filter current choices while leaving immutable protocol definitions intact."""
+    if protocol_type is not ProtocolType.SUBMAXIMAL_CALIBRATION:
+        return tuple(
+            mode for mode in guidance_modes if mode != GuidanceMode.RPE_ONLY.value
+        )
+    if discipline is Discipline.RUN:
+        return (GuidanceMode.HEART_RATE.value,)
+    if discipline is Discipline.BIKE:
+        return tuple(
+            mode
+            for mode in guidance_modes
+            if mode in {GuidanceMode.HEART_RATE.value, GuidanceMode.COMBINED.value}
+        )
+    return (GuidanceMode.PACE.value,)
+
+
+def is_current_mvp_setup(setup: DisciplineSetupResponse) -> bool:
+    """Return whether persisted guidance can satisfy a current selectable route."""
+    if setup.setup_route is SetupRoute.RPE_ONLY:
+        return False
+    if setup.setup_route is SetupRoute.KNOWN_VALUES:
+        return True
+    if setup.protocol_id is None:
+        return False
+    protocol = PROTOCOLS.get(setup.protocol_id)
+    if protocol is None or protocol.discipline is not setup.discipline:
+        return False
+    return any(
+        candidate.protocol_id == protocol.protocol_id
+        and setup.guidance_mode.value
+        in _current_mvp_guidance_modes(
+            candidate.discipline,
+            candidate.protocol_type,
+            candidate.guidance_modes,
+        )
+        for candidate in _current_mvp_protocols(setup.discipline)
+    )
+
+
+def _require_current_mvp_field_test(
+    *,
+    discipline: Discipline,
+    protocol_id: str,
+) -> None:
+    if not any(
+        protocol.protocol_id == protocol_id
+        and protocol.protocol_type is ProtocolType.FIELD_TEST
+        for protocol in _current_mvp_protocols(discipline)
+    ):
+        raise CalibrationDomainError(
+            "Selected field-test protocol is historical and not selectable for "
+            "the current MVP."
+        )
 
 
 def _fingerprint(value: Any) -> str:
@@ -132,10 +206,10 @@ class CalibrationService:
                 version=protocol.version,
                 review_status=protocol.review_status,
                 result_status_on_success=protocol.result_status_on_success,
-                guidance_modes=tuple(
-                    mode
-                    for mode in protocol.guidance_modes
-                    if mode != GuidanceMode.RPE_ONLY.value
+                guidance_modes=_current_mvp_guidance_modes(
+                    protocol.discipline,
+                    protocol.protocol_type,
+                    protocol.guidance_modes,
                 ),
                 segments=tuple(
                     ProtocolSegmentResponse(
@@ -163,7 +237,7 @@ class CalibrationService:
                     for segment in protocol.segments
                 ),
             )
-            for protocol in protocols_for_discipline(discipline)
+            for protocol in _current_mvp_protocols(discipline)
         )
 
     @staticmethod
@@ -259,6 +333,14 @@ class CalibrationService:
                 raise CalibrationDomainError(
                     "Selected field-test protocol is not active for this discipline."
                 )
+            if not any(
+                candidate.protocol_id == protocol.protocol_id
+                for candidate in _current_mvp_protocols(discipline)
+            ):
+                raise CalibrationDomainError(
+                    "Selected field-test protocol is historical and not selectable "
+                    "for the current MVP."
+                )
             if setup.guidance_mode.value not in protocol.guidance_modes:
                 raise CalibrationDomainError(
                     "Guidance mode is not supported by the selected protocol."
@@ -268,6 +350,16 @@ class CalibrationService:
             source = "field_test"
         elif setup.setup_route is SetupRoute.CALIBRATION_WEEK:
             protocol_id = _CALIBRATION_PROTOCOL_BY_DISCIPLINE[discipline]
+            protocol = PROTOCOLS[protocol_id]
+            if setup.guidance_mode.value not in _current_mvp_guidance_modes(
+                protocol.discipline,
+                protocol.protocol_type,
+                protocol.guidance_modes,
+            ):
+                raise CalibrationDomainError(
+                    "Guidance mode cannot provide the measurement required by "
+                    "the current calibration ruleset."
+                )
             setup_status = "calibration_pending"
             source = "week1_calibration"
         if (
@@ -482,7 +574,7 @@ class CalibrationService:
             "activity_id": str(request.activity_id),
             "protocol_id": result.protocol_id,
             "discipline": result.discipline.value,
-            "ruleset_version": CALIBRATION_RULESET_VERSION,
+            "ruleset_version": result.ruleset_version,
             "status": result.status.value,
             "threshold_status": result.threshold_status.value,
             "zone_status": result.zone_status.value,
@@ -496,7 +588,9 @@ class CalibrationService:
                 for estimate in result.thresholds
             ],
             "zone_model_version": (
-                ZONE_MODEL_VERSION.value if result.zone_profiles else None
+                result.zone_profiles[0].zone_model_version.value
+                if result.zone_profiles
+                else None
             ),
             "zone_profiles": self._zone_profile_values(result.zone_profiles),
             "requires_athlete_confirmation": result.requires_athlete_confirmation,
@@ -550,13 +644,16 @@ class CalibrationService:
                     value=threshold.value,
                 )
                 for threshold in evaluation.thresholds
-            )
+            ),
+            zone_model_version=RulesetVersion(
+                evaluation.zone_model_version or ZONE_MODEL_VERSION.value
+            ),
         )
         profile_values = self._zone_profile_values(profiles)
         fingerprint = _fingerprint(
             {
                 "evaluation_id": str(evaluation.id),
-                "zone_model_version": ZONE_MODEL_VERSION.value,
+                "zone_model_version": evaluation.zone_model_version,
                 "metric_profiles": profile_values,
             }
         )
@@ -618,6 +715,10 @@ class CalibrationService:
         """Create a pending standalone test after athlete-local validation."""
         if request.scheduling_mode is not TestSchedulingMode.STANDALONE:
             raise CalibrationDomainError("This operation requires a standalone test.")
+        _require_current_mvp_field_test(
+            discipline=request.discipline,
+            protocol_id=request.protocol_id,
+        )
         timezone_name = await self._repository.fetch_athlete_timezone(
             access_token,
             athlete_id,
@@ -661,6 +762,10 @@ class CalibrationService:
             or request.plan_id is None
         ):
             raise CalibrationDomainError("This operation requires an integrated test.")
+        _require_current_mvp_field_test(
+            discipline=request.discipline,
+            protocol_id=request.protocol_id,
+        )
         row = await self._repository.save_integrated_test_assignment(
             access_token,
             {

@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 from enum import Enum
 
+from app.modules.physiology.joren import ZoneLoad
 from app.modules.physiology.models import DurationMinutes, IntensityBucket, InternalLoad
 from app.modules.physiology.progression import snapshot_personalized_load
 
@@ -30,7 +31,7 @@ class ActivityCorrectionReason(str, Enum):
 class PlannedActivityExpectation:
     """Server-owned planned facts used by the match matrix."""
 
-    load: InternalLoad = field(repr=False)
+    load: InternalLoad | None = field(repr=False)
     expected_rpe_min: int
     expected_rpe_max: int
     intensity_bucket: IntensityBucket
@@ -47,7 +48,7 @@ class ActivityMatch:
     result: ActivityMatchResult
     correction_reason: ActivityCorrectionReason | None
     public_message: str
-    realized_load: InternalLoad = field(repr=False)
+    realized_load: InternalLoad | None = field(repr=False)
 
 
 def calculate_realized_activity_load(
@@ -69,6 +70,7 @@ def classify_activity_match(
     duration: DurationMinutes,
     rpe: int,
     planned: PlannedActivityExpectation | None,
+    measurement: ZoneLoad | None = None,
 ) -> ActivityMatch:
     """Apply the locked Phase 7 matrix without exposing either load value.
 
@@ -76,7 +78,38 @@ def classify_activity_match(
     canonical path uses session RPE as its load proxy. Without that precedence,
     a high RPE on an easy workout could never retain its distinct safety signal.
     """
-    realized = calculate_realized_activity_load(duration=duration, rpe=rpe)
+    realized = (
+        measurement.load
+        if measurement is not None
+        else calculate_realized_activity_load(duration=duration, rpe=rpe)
+    )
+    if measurement is not None and measurement.status != "complete":
+        hidden_fatigue = (
+            planned is not None
+            and planned.intensity_bucket is IntensityBucket.LOW
+            and rpe >= 7
+        )
+        return ActivityMatch(
+            result=ActivityMatchResult.HIDDEN_FATIGUE
+            if hidden_fatigue
+            else ActivityMatchResult.DEVIATION,
+            correction_reason=ActivityCorrectionReason.HIDDEN_FATIGUE
+            if hidden_fatigue
+            else None,
+            public_message=(
+                (
+                    "Deze rustige training voelde duidelijk zwaarder dan verwacht. "
+                    "Controleer een eventueel herstelvoorstel."
+                )
+                if hidden_fatigue
+                else (
+                    "Training opgeslagen. Er zijn onvoldoende meetgegevens "
+                    "voor een volledige vergelijking."
+                )
+            ),
+            realized_load=realized,
+        )
+    assert realized is not None
     if planned is None:
         return ActivityMatch(
             result=ActivityMatchResult.UNPLANNED,
@@ -95,6 +128,17 @@ def classify_activity_match(
             public_message=(
                 "Deze rustige training voelde duidelijk zwaarder dan verwacht. "
                 "Controleer een eventueel herstelvoorstel."
+            ),
+            realized_load=realized,
+        )
+
+    if planned.load is None:
+        return ActivityMatch(
+            result=ActivityMatchResult.DEVIATION,
+            correction_reason=None,
+            public_message=(
+                "Training opgeslagen. De eerdere planning heeft "
+                "geen vergelijkbare meetbasis."
             ),
             realized_load=realized,
         )

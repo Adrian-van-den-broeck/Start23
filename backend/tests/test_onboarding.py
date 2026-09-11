@@ -3,6 +3,7 @@
 from collections.abc import Iterator
 from copy import deepcopy
 from datetime import date, datetime, timedelta, timezone
+from decimal import Decimal
 from typing import Any, cast
 from uuid import UUID, uuid4
 
@@ -12,12 +13,17 @@ from fastapi.testclient import TestClient
 from app.core.config import Settings
 from app.core.security import AuthenticatedIdentity, InvalidAccessTokenError
 from app.main import create_app
+from app.modules.calibration.service import is_current_mvp_setup
 from app.modules.onboarding.repository import (
     JsonObject,
     RepositoryConflictError,
     RepositoryNotFoundError,
 )
 from app.modules.onboarding.service import OnboardingService
+from app.modules.onboarding.versioning import (
+    CURRENT_ONBOARDING_VERSION,
+    CURRENT_RULESET_VERSION,
+)
 
 _NOW = datetime(2026, 7, 27, 12, tzinfo=timezone.utc)
 
@@ -74,6 +80,7 @@ def test_legacy_rpe_only_setup_remains_readable() -> None:
 
     assert setup.setup_route.value == "rpe_only"
     assert setup.guidance_mode.value == "rpe_only"
+    assert not is_current_mvp_setup(setup)
 
 
 def test_legacy_profile_and_history_values_are_not_reinterpreted() -> None:
@@ -214,7 +221,11 @@ class MemoryOnboardingRepository:
             {
                 "athlete_id": str(owner),
                 **entry,
-                "history_window_months": 2,
+                "history_window_months": None,
+                "previous_month_weekly_minutes": str(
+                    Decimal(entry["average_hours_per_week"]) * 60
+                ),
+                "baseline_model_version": "phase-13-joren-ruleset-1",
                 "source": "athlete",
                 "confirmed_at": _NOW.isoformat(),
                 "updated_at": _NOW.isoformat(),
@@ -417,6 +428,8 @@ class MemoryOnboardingRepository:
             "current_step": "completed",
             "completed_steps": ["profile", "history", "goal", "zones", "review"],
             "initial_plan_request_id": str(request_id),
+            "completed_onboarding_version": CURRENT_ONBOARDING_VERSION,
+            "completed_ruleset_version": CURRENT_RULESET_VERSION,
         }
         return request_id
 
@@ -551,17 +564,8 @@ def _complete_history(client: TestClient, token: str = "athlete-a") -> None:
         headers=_headers(token),
         json={
             "entries": [
-                {
-                    "discipline": discipline,
-                    "average_weekly_distance": distance,
-                    "distance_unit": unit,
-                    "average_sessions_per_week": sessions,
-                }
-                for discipline, distance, unit, sessions in (
-                    ("swim", "4000", "meters", "2.0"),
-                    ("bike", "120", "kilometers", "2.5"),
-                    ("run", "30", "kilometers", "3.0"),
-                )
+                {"discipline": discipline, "average_hours_per_week": hours}
+                for discipline, hours in (("swim", "2"), ("bike", "4"), ("run", "3"))
             ]
         },
     )
@@ -791,7 +795,7 @@ def test_training_history_requires_each_triathlon_discipline(
     assert response.status_code == 422
 
 
-def test_training_history_requires_discipline_canonical_units_and_no_baseline(
+def test_history_uses_previous_month_hours_and_keeps_load_private(
     onboarding_context: tuple[TestClient, UUID, UUID],
 ) -> None:
     client, _, _ = onboarding_context
@@ -829,36 +833,16 @@ def test_training_history_requires_discipline_canonical_units_and_no_baseline(
     timestamp = _NOW.isoformat().replace("+00:00", "Z")
 
     assert state.status_code == 200
-    assert state.json()["training_history"] == [
-        {
-            "discipline": "swim",
-            "average_weekly_distance": "4000",
-            "distance_unit": "meters",
-            "average_sessions_per_week": "2.0",
-            "history_window_months": 2,
-            "confirmed_at": timestamp,
-            "updated_at": timestamp,
-        },
-        {
-            "discipline": "bike",
-            "average_weekly_distance": "120",
-            "distance_unit": "kilometers",
-            "average_sessions_per_week": "2.5",
-            "history_window_months": 2,
-            "confirmed_at": timestamp,
-            "updated_at": timestamp,
-        },
-        {
-            "discipline": "run",
-            "average_weekly_distance": "30",
-            "distance_unit": "kilometers",
-            "average_sessions_per_week": "3.0",
-            "history_window_months": 2,
-            "confirmed_at": timestamp,
-            "updated_at": timestamp,
-        },
-    ]
-    assert "baseline" not in state.text.lower()
+    assert [
+        row["previous_month_weekly_minutes"] for row in state.json()["training_history"]
+    ] == ["120", "240", "180"]
+    assert all(
+        row["baseline_model_version"] == "phase-13-joren-ruleset-1"
+        for row in state.json()["training_history"]
+    )
+    assert all(
+        row["confirmed_at"] == timestamp for row in state.json()["training_history"]
+    )
     assert "tss" not in state.text.lower()
 
 

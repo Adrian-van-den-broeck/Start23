@@ -3,7 +3,7 @@
 from collections.abc import Collection, Mapping
 from dataclasses import dataclass, field
 from datetime import date, datetime, time, timedelta, timezone
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from enum import Enum
 from itertools import combinations
 from uuid import UUID
@@ -23,6 +23,7 @@ from app.modules.physiology.intensity import (
     WorkoutIntensity,
     calculate_time_distribution,
 )
+from app.modules.physiology.joren import StartingBaseline, is_taper_day
 from app.modules.physiology.models import (
     Discipline,
     DurationMinutes,
@@ -55,6 +56,7 @@ from app.modules.workouts.catalog import (
     WorkoutTemplate,
     ZoneRequirement,
     as_rpe_guided_template,
+    require_planned_load,
     snapshot_template,
 )
 
@@ -110,6 +112,8 @@ class PlanLoadSample:
     realized_classified_minutes: DurationMinutes | None = None
     realized_total_minutes: DurationMinutes | None = None
     completed_activity_count: int | None = None
+    sick_week: bool = False
+    reduced_realized_progression: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -177,7 +181,7 @@ def _race_anchored_phase(*, week_start: date, race_date: date) -> WeekPhase:
     """Resolve the 4+1 position only from the dated race anchor."""
     race_week_start = race_date - timedelta(days=race_date.weekday())
     weeks_before_race = (race_week_start - week_start).days // 7
-    if weeks_before_race in {1, 2}:
+    if any(is_taper_day(week_start + timedelta(days=i), race_date) for i in range(7)):
         return WeekPhase.TAPER
     return WeekPhase.RECOVERY if weeks_before_race % 5 == 0 else WeekPhase.BUILD
 
@@ -190,7 +194,8 @@ def resolve_target(
     initial_catalog_load: InternalLoad,
     maintenance_active: bool = False,
 ) -> PlanningTarget:
-    """Resolve taper, recovery, and fail-safe pre-Phase-7 target context."""
+    """Resolve current targets with historical records explicitly filtered."""
+    prior_loads = tuple(sample for sample in prior_loads if not sample.sick_week)
     if week_start.weekday() != 0:
         raise ValueError("The training week must start on Monday.")
     if race_date < week_start and not maintenance_active:
@@ -221,12 +226,15 @@ def resolve_target(
             target=prior_loads[-1].load,
         )
 
-    race_week_start = race_date - timedelta(days=race_date.weekday())
-    weeks_before_race = (race_week_start - week_start).days // 7
-    taper_period = {
-        2: TaperPeriod.A_T_MINUS_2,
-        1: TaperPeriod.A_T_MINUS_1,
-    }.get(weeks_before_race)
+    overlapping_taper = any(
+        is_taper_day(week_start + timedelta(days=i), race_date) for i in range(7)
+    )
+    if overlapping_taper and race_date != week_start + timedelta(days=7):
+        raise PlanningConstraintError(
+            "partial_week_taper_rule_required",
+            "A reviewed target for this exact pre-race date window is required.",
+        )
+    taper_period = TaperPeriod.A_T_MINUS_1 if overlapping_taper else None
     if taper_period is not None:
         baseline = calculate_taper_baseline(
             tuple(
@@ -277,32 +285,12 @@ def resolve_target(
         latest = prior_loads[-1]
         assert latest.realized_load is not None
         if (
-            latest.week_start == week_start - timedelta(days=7)
-            and latest.completed_activity_count == 0
-        ):
-            restart_samples = prior_loads[-4:]
-            if len(restart_samples) != 4 or any(
-                sample.realized_load is None for sample in restart_samples
-            ):
-                raise PlanningConstraintError(
-                    "inactive_restart_baseline_unavailable",
-                    "Restart planning requires four complete local training weeks.",
-                )
-            restart_target = InternalLoad(
-                sum(
-                    (
-                        sample.realized_load.value
-                        for sample in restart_samples
-                        if sample.realized_load is not None
-                    ),
-                    Decimal(0),
-                )
-                / Decimal(4)
-            )
+            latest.reduced_realized_progression or latest.completed_activity_count == 0
+        ) and latest.realized_load.value < latest.load.value:
             return PlanningTarget(
                 phase=phase,
-                basis=PlanningTargetBasis.INACTIVE_RESTART,
-                target=restart_target,
+                basis=PlanningTargetBasis.REALIZED_PROGRESSION,
+                target=InternalLoad(latest.realized_load.value * Decimal("1.10")),
             )
         debt = calculate_volume_debt(
             prior_planned=latest.load,
@@ -421,6 +409,8 @@ def eligible_workouts(
     """Filter immutable catalog versions by phase, injury, goal, and zones."""
     eligible: list[WorkoutTemplate] = []
     for template in catalog:
+        if template.internal_planned_load is None:
+            continue
         if (
             template.discipline not in goal_disciplines
             or template.discipline in confirmed_injuries
@@ -461,7 +451,7 @@ def eligible_workouts(
             eligible,
             key=lambda item: (
                 item.discipline.value,
-                item.internal_planned_load.value,
+                require_planned_load(item).value,
                 str(item.id),
             ),
         )
@@ -475,7 +465,7 @@ def _selection_key(
     desired_high_fraction: Fraction,
 ) -> tuple[Decimal, Decimal, int, tuple[str, ...]]:
     planned = sum(
-        (template.internal_planned_load.value for template in selection),
+        (require_planned_load(template).value for template in selection),
         Decimal(0),
     )
     total_duration = sum(
@@ -589,7 +579,7 @@ def remaining_workout_deck(
         )
     selected_load = sum(
         (
-            by_id[template_id].internal_planned_load.value
+            require_planned_load(by_id[template_id]).value
             for template_id in selected_template_ids
         ),
         Decimal(0),
@@ -598,7 +588,7 @@ def remaining_workout_deck(
         template
         for template in deck
         if template.id not in selected_template_ids
-        and selected_load + template.internal_planned_load.value <= target.value
+        and selected_load + require_planned_load(template).value <= target.value
     )
 
 
@@ -786,8 +776,10 @@ def build_weekly_plan(
     selected_template_ids: Collection[UUID] | None = None,
     fixed_template_dates: Mapping[UUID, date] | None = None,
     maintenance_active: bool = False,
+    onboarding_baseline: StartingBaseline | None = None,
 ) -> WeeklyPlanDraft:
     """Build a deterministic, TSS-private plan ready to remain pending."""
+    prior_loads = tuple(sample for sample in prior_loads if not sample.sick_week)
     uninjured = goal_disciplines - confirmed_injuries
     if not uninjured:
         phase = _training_phase(
@@ -817,6 +809,20 @@ def build_weekly_plan(
             planned_load=InternalLoad(Decimal(0)),
         )
 
+    if (
+        not prior_loads
+        and onboarding_baseline is not None
+        and not onboarding_baseline.zero_base
+        and any(
+            onboarding_baseline.by_discipline[sport].value == 0 for sport in uninjured
+        )
+    ):
+        raise PlanningConstraintError(
+            "zero_history_discipline_baseline_unavailable",
+            "The catalog cannot fill this composition without an approved "
+            "starting target for the untrained discipline.",
+        )
+
     # The first target must be seeded without fabricating realized load. Use the
     # latest eligible catalog's hidden load as a deterministic bootstrap.
     initial_candidates = tuple(
@@ -824,7 +830,8 @@ def build_weekly_plan(
         if zone_capabilities[template.discipline].rpe_guided
         else template
         for template in catalog
-        if template.discipline in uninjured
+        if template.internal_planned_load is not None
+        and template.discipline in uninjured
         and not template.explicit_scheduling_only
         and not template.athlete_selection_only
         and not (
@@ -863,7 +870,7 @@ def build_weekly_plan(
                 for template in initial_candidates
                 if template.discipline is discipline
             ),
-            key=lambda item: (item.internal_planned_load.value, str(item.id)),
+            key=lambda item: (require_planned_load(item).value, str(item.id)),
         )
         for discipline in uninjured
         if any(template.discipline is discipline for template in initial_candidates)
@@ -876,12 +883,32 @@ def build_weekly_plan(
     initial_load = InternalLoad(
         sum(
             (
-                template.internal_planned_load.value
+                require_planned_load(template).value
                 for template in cheapest_by_discipline.values()
             ),
             Decimal(0),
         )
     )
+    if onboarding_baseline is not None:
+        if not prior_loads and confirmed_injuries and onboarding_baseline.zero_base:
+            raise PlanningConstraintError(
+                "restricted_zero_base_allocation_unavailable",
+                "A reviewed starting allocation is required for this restricted "
+                "introduction week.",
+            )
+        initial_load = (
+            onboarding_baseline.total
+            if not confirmed_injuries
+            else InternalLoad(
+                sum(
+                    (
+                        onboarding_baseline.by_discipline[sport].value
+                        for sport in uninjured
+                    ),
+                    Decimal(0),
+                ).quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
+            )
+        )
     target = resolve_target(
         week_start=week_start,
         race_date=race_date,
@@ -954,7 +981,7 @@ def build_weekly_plan(
     )
     planned_load = InternalLoad(
         sum(
-            (workout.snapshot.internal_planned_load.value for workout in proposed),
+            (require_planned_load(workout.snapshot).value for workout in proposed),
             Decimal(0),
         )
     )

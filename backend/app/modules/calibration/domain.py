@@ -11,6 +11,8 @@ from decimal import ROUND_HALF_UP, Decimal
 from enum import Enum
 from typing import Final
 
+from app.modules.physiology.joren import VERSION as JOREN_VERSION
+from app.modules.physiology.joren import calibrate
 from app.modules.physiology.models import Discipline
 from app.modules.physiology.rpe_zones import zone_for_rpe_range
 from app.modules.physiology.zones import (
@@ -280,7 +282,7 @@ def numeric_zone_visibility(
     week_2_evaluation_completed: bool,
     has_pending_complete_proposal: bool,
 ) -> NumericZoneVisibility:
-    """Fail closed for calibration-derived numeric profiles through Week 2."""
+    """Show pending proposals immediately; activation still requires approval."""
 
     if has_active_profile:
         return NumericZoneVisibility.VISIBLE
@@ -288,8 +290,6 @@ def numeric_zone_visibility(
         if has_pending_complete_proposal:
             return NumericZoneVisibility.PROPOSAL_CONFIRMATION_PENDING
         return NumericZoneVisibility.RPE_GUIDED
-    if not week_2_evaluation_completed:
-        return NumericZoneVisibility.WEEK_2_EVALUATION_PENDING
     if has_pending_complete_proposal:
         return NumericZoneVisibility.PROPOSAL_CONFIRMATION_PENDING
     return NumericZoneVisibility.RPE_GUIDED
@@ -873,62 +873,79 @@ def _evaluate_submaximal_calibration(
     mapped: dict[str, CalibrationObservation],
     initial_reasons: tuple[str, ...],
 ) -> ProtocolEvaluation:
-    reasons = list(initial_reasons) + list(_common_reasons(protocol, mapped))
-    main_definitions = tuple(
+    # The protocol's first mandatory calibration block is the observation
+    # anchor. Warm-up/cool-down and optional blocks cannot replace its evidence.
+    definition = next(
         segment
         for segment in protocol.segments
-        if segment.purpose
-        in {"calibration_observation", "optional_calibration_observation"}
+        if segment.purpose == "calibration_observation" and not segment.optional
     )
-    required_main = tuple(
-        segment for segment in main_definitions if not segment.optional
-    )
-    main_observations = tuple(
-        mapped[segment.segment_id]
-        for segment in required_main
-        if segment.segment_id in mapped
-    )
-    for observation in main_observations:
-        if observation.reported_block_rpe is None:
-            reasons.append("missing_block_rpe")
-        if observation.steady_execution is SteadyExecution.NO:
-            reasons.append("unstable_execution")
-        if (
-            _has_objective_metrics(observation)
-            and observation.quality_status is not DataQuality.SUFFICIENT
-        ):
-            reasons.append("sensor_quality_insufficient")
-        if protocol.discipline is Discipline.SWIM:
-            expected_distance = (
-                200 if observation.segment_id.startswith("4x200") else 100
-            )
-            if observation.pool_length_meters not in {25, 50}:
-                reasons.append("invalid_pool_length")
-            if observation.stroke != "freestyle":
-                reasons.append("stroke_not_freestyle")
-            if observation.equipment != "none":
-                reasons.append("equipment_used")
-            if len(observation.repetitions) != 4 or any(
-                repetition.distance_meters != expected_distance
-                or not repetition.completed
-                for repetition in observation.repetitions
-            ):
-                reasons.append("set_incomplete")
-    reasons = list(dict.fromkeys(reasons))
+    observation = mapped.get(definition.segment_id)
+    reasons = list(initial_reasons)
+    if observation is None or not observation.completed or observation.interrupted:
+        reasons.append("calibration_observation_incomplete")
+    elif observation.quality_status is not DataQuality.SUFFICIENT:
+        reasons.append("sensor_quality_insufficient")
+    elif observation.reported_block_rpe is None:
+        reasons.append("missing_block_rpe")
+    elif observation.steady_execution is SteadyExecution.NO:
+        reasons.append("unstable_execution")
     if reasons:
-        return _result(
-            protocol,
+        return ProtocolEvaluation(
+            protocol.protocol_id,
+            protocol.discipline,
+            JOREN_VERSION.value,
             EvaluationStatus.INSUFFICIENT_DATA,
+            ThresholdStatus.UNKNOWN,
+            ZoneStatus.UNKNOWN,
+            Confidence.NOT_ASSESSED,
             tuple(reasons),
         )
-    if not any(
-        _has_objective_metrics(observation) for observation in main_observations
-    ):
-        return _result(protocol, EvaluationStatus.RPE_ONLY, ("sensor_data_missing",))
-    return _result(
-        protocol,
-        EvaluationStatus.PROVISIONALLY_CALIBRATED,
-        ("threshold_not_permitted_from_submaximal_calibration",),
+    assert observation is not None and observation.reported_block_rpe is not None
+    measured = observation.average_heart_rate_bpm
+    kind = (
+        ZoneMetricKind.RUN_LTHR_BPM
+        if protocol.discipline is Discipline.RUN
+        else ZoneMetricKind.BIKE_THRESHOLD_HEART_RATE_BPM
+    )
+    if protocol.discipline is Discipline.SWIM:
+        kind = ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M
+        measured = None
+        if observation.elapsed_time_seconds is not None and observation.distance_meters:
+            measured = (
+                observation.elapsed_time_seconds
+                * Decimal(100)
+                / observation.distance_meters
+            )
+    if measured is None:
+        return ProtocolEvaluation(
+            protocol.protocol_id,
+            protocol.discipline,
+            JOREN_VERSION.value,
+            EvaluationStatus.INSUFFICIENT_DATA,
+            ThresholdStatus.UNKNOWN,
+            ZoneStatus.UNKNOWN,
+            Confidence.NOT_ASSESSED,
+            ("sensor_data_missing",),
+        )
+    result = calibrate(
+        discipline=protocol.discipline,
+        observation=measured,
+        rpe=observation.reported_block_rpe,
+    )
+    metric = ZoneMetric(protocol.discipline, kind, Decimal(result.threshold))
+    return ProtocolEvaluation(
+        protocol.protocol_id,
+        protocol.discipline,
+        JOREN_VERSION.value,
+        EvaluationStatus.THRESHOLD_ESTIMATED,
+        ThresholdStatus.ESTIMATED,
+        ZoneStatus.PENDING_ATHLETE_CONFIRMATION,
+        Confidence.MEDIUM,
+        result.warning_codes + ("zone_profile_pending_athlete_confirmation",),
+        (ThresholdEstimate(kind, metric.value),),
+        calculate_zone_profiles((metric,), zone_model_version=JOREN_VERSION),
+        True,
     )
 
 

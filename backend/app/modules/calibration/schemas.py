@@ -261,7 +261,7 @@ class CalculatedZoneMetricProfileResponse(CalibrationPublicModel):
     source_value: Decimal = Field(gt=0)
     is_primary: bool
     boundary_source: Literal["model_derived", "athlete_entered"]
-    zone_model_version: Literal["start23-zone-model-1.0"]
+    zone_model_version: Literal["start23-zone-model-1.0", "phase-13-joren-ruleset-1"]
     boundaries: tuple[CalculatedZoneBoundaryResponse, ...] = Field(
         min_length=5,
         max_length=5,
@@ -282,7 +282,9 @@ class CalibrationEvaluationResponse(CalibrationPublicModel):
     confidence: Confidence
     reason_codes: tuple[str, ...]
     thresholds: tuple[ThresholdEstimateResponse, ...]
-    zone_model_version: Literal["start23-zone-model-1.0"] | None
+    zone_model_version: (
+        Literal["start23-zone-model-1.0", "phase-13-joren-ruleset-1"] | None
+    )
     zone_profiles: tuple[CalculatedZoneMetricProfileResponse, ...]
     requires_athlete_confirmation: bool
     review_status: Literal["pending_athlete_confirmation", "not_applicable"]

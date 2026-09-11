@@ -11,8 +11,30 @@ from app.modules.physiology.activity import (
     PlannedActivityExpectation,
     classify_activity_match,
 )
-from app.modules.physiology.models import DurationMinutes, IntensityBucket, InternalLoad
+from app.modules.physiology.joren import (
+    VERSION,
+    ZoneLoad,
+    average_hr_zone_load,
+    zone_load,
+)
+from app.modules.physiology.models import (
+    Discipline,
+    DurationMinutes,
+    IntensityBucket,
+    InternalLoad,
+    RulesetVersion,
+    TrainingZone,
+)
 from app.modules.physiology.specification import PHASE_3_RULESET_V3
+from app.modules.physiology.zones import (
+    CalculatedZoneBoundary,
+    CalculatedZoneMetricProfile,
+    ZoneBoundary,
+    ZoneMetric,
+    ZoneMetricKind,
+    classify_calculated_zone_value,
+    classify_zone_value,
+)
 
 from .repository import ActivityRepository, JsonObject
 from .schemas import (
@@ -88,7 +110,11 @@ class ActivityService:
             raise ActivityDomainError("Stored planned workout context is invalid.")
         try:
             return PlannedActivityExpectation(
-                load=InternalLoad(Decimal(str(planned["planned_tss"]))),
+                load=(
+                    InternalLoad(Decimal(str(planned["planned_tss"])))
+                    if planned.get("planned_tss") is not None
+                    else None
+                ),
                 expected_rpe_min=int(planned["expected_rpe_min"]),
                 expected_rpe_max=int(planned["expected_rpe_max"]),
                 intensity_bucket=IntensityBucket(str(planned["intensity_bucket"])),
@@ -123,13 +149,122 @@ class ActivityService:
                 "observation in bpm before session RPE can be completed."
             )
         try:
-            duration = DurationMinutes(Decimal(str(context["duration_minutes"])))
+            duration = DurationMinutes(Decimal(str(context["duration_minutes"] or 0)))
         except (KeyError, TypeError, ValueError) as error:
             raise ActivityDomainError("Stored activity duration is invalid.") from error
+        legacy_revision = (
+            context.get("rpe") is not None
+            and context.get("load_ruleset_version") != VERSION.value
+        )
+        stored = context.get("private_load_snapshot")
+        preserve_measurement = (
+            context.get("rpe") is not None
+            and isinstance(stored, dict)
+            and stored.get("ruleset_version") == VERSION.value
+        )
+        raw_zones = context.get("zone_minutes")
+        measurement = (
+            None
+            if legacy_revision
+            else zone_load(
+                discipline=Discipline(str(context["discipline"])),
+                total_minutes=(
+                    duration.value
+                    if context.get("duration_minutes") is not None
+                    else None
+                ),
+                minutes_by_zone=(
+                    tuple(Decimal(str(value)) for value in raw_zones)
+                    if isinstance(raw_zones, list)
+                    else None
+                ),
+            )
+        )
+        # Observed zone time, including partial coverage, always takes precedence.
+        if (
+            not legacy_revision
+            and not preserve_measurement
+            and raw_zones is None
+            and duration.value > 0
+        ):
+            profile_data = context.get("known_hr_profile")
+            average_hr = context.get("average_heart_rate_bpm")
+            if isinstance(profile_data, dict) and average_hr is not None:
+                try:
+                    profile = CalculatedZoneMetricProfile(
+                        metric=ZoneMetric(
+                            Discipline(str(context["discipline"])),
+                            ZoneMetricKind(str(profile_data["metric_kind"])),
+                            Decimal(str(profile_data["source_value"])),
+                        ),
+                        boundaries=tuple(
+                            CalculatedZoneBoundary(
+                                TrainingZone(int(boundary["zone_number"])),
+                                Decimal(str(boundary["lower_value"]))
+                                if boundary.get("lower_value") is not None
+                                else None,
+                                Decimal(str(boundary["upper_value"]))
+                                if boundary.get("upper_value") is not None
+                                else None,
+                            )
+                            for boundary in profile_data["boundaries"]
+                        ),
+                        is_primary=True,
+                        zone_model_version=RulesetVersion(
+                            str(profile_data["zone_model_version"])
+                        ),
+                    )
+                    assigned_zone = (
+                        classify_zone_value(
+                            metric_kind=profile.metric.kind,
+                            value=Decimal(str(average_hr)),
+                            boundaries=tuple(
+                                ZoneBoundary(
+                                    boundary.zone, boundary.lower, boundary.upper
+                                )
+                                for boundary in profile.boundaries
+                                if boundary.lower is not None
+                                and boundary.upper is not None
+                            ),
+                        )
+                        if profile_data.get("boundary_kind") == "manual"
+                        else classify_calculated_zone_value(
+                            profile=profile, value=Decimal(str(average_hr))
+                        ).zone
+                    )
+                    measurement = average_hr_zone_load(
+                        discipline=profile.metric.discipline,
+                        total_minutes=duration.value,
+                        zone=assigned_zone.value,
+                    )
+                except (KeyError, TypeError, ValueError) as error:
+                    raise ActivityDomainError(
+                        "Stored heart-rate zone context is invalid."
+                    ) from error
+        if preserve_measurement and isinstance(stored, dict):
+            measurement = ZoneLoad(
+                InternalLoad(Decimal(str(stored["realized_tss"])))
+                if stored.get("realized_tss") is not None
+                else None,
+                Decimal(str(stored["total_minutes"]))
+                if stored.get("total_minutes") is not None
+                else None,
+                Decimal(str(stored["valid_minutes"])),
+                Decimal(str(stored["coverage_ratio"]))
+                if stored.get("coverage_ratio") is not None
+                else None,
+                str(stored["load_status"]),
+                str(stored["calculation_method"]),
+                VERSION,
+                int(stored["assigned_zone"])
+                if stored.get("assigned_zone") is not None
+                else None,
+            )
         result = classify_activity_match(
             duration=duration,
             rpe=submission.rpe,
             planned=self._expectation(context),
+            measurement=measurement,
         )
         payload = {
             "rpe": submission.rpe,
@@ -140,9 +275,48 @@ class ActivityService:
                 if result.correction_reason is not None
                 else None
             ),
-            "realized_tss": str(result.realized_load.value),
-            "calculation_method": "actual_rpe_times_duration_hours",
-            "ruleset_version": PHASE_3_RULESET_V3.version.value,
+            "realized_tss": str(result.realized_load.value)
+            if result.realized_load is not None
+            else None,
+            "calculation_method": "actual_rpe_times_duration_hours"
+            if legacy_revision
+            else measurement.calculation_method
+            if measurement is not None
+            else "observed_zone_minutes",
+            "ruleset_version": str(
+                context.get("load_ruleset_version") or PHASE_3_RULESET_V3.version.value
+            )
+            if legacy_revision
+            else VERSION.value,
+            **(
+                {
+                    "total_minutes": str(measurement.total_minutes)
+                    if measurement.total_minutes is not None
+                    else None,
+                    "valid_minutes": str(measurement.valid_minutes),
+                    "coverage_ratio": str(measurement.coverage_ratio)
+                    if measurement.coverage_ratio is not None
+                    else None,
+                    "load_status": measurement.status,
+                    "assigned_zone": measurement.assigned_zone,
+                    "zone_profile_id": (
+                        stored.get("zone_profile_id")
+                        if isinstance(stored, dict)
+                        else context.get("known_hr_profile_id")
+                    )
+                    if measurement.assigned_zone is not None
+                    else None,
+                    "average_heart_rate_bpm": str(
+                        stored.get("average_heart_rate_bpm")
+                        if isinstance(stored, dict)
+                        else context["average_heart_rate_bpm"]
+                    )
+                    if measurement.assigned_zone is not None
+                    else None,
+                }
+                if measurement is not None
+                else {}
+            ),
         }
         row = (
             await self._repository.revise_activity_rpe(

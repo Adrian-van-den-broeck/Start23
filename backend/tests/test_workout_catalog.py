@@ -106,6 +106,8 @@ def test_snapshot_remains_stable_when_a_new_catalog_version_exists() -> None:
 
     snapshot = snapshot_template(version_one)
 
+    assert snapshot.internal_planned_load is not None
+    assert version_two.internal_planned_load is not None
     assert snapshot.template_version == 1
     assert snapshot.duration_minutes == Decimal(40)
     assert snapshot.internal_planned_load.value == Decimal(2)

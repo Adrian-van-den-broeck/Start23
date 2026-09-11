@@ -1,5 +1,31 @@
 # Business Rule Traceability
 
+> Active amendment: [phase-13-joren-ruleset-1](phase-13-joren-ruleset-1.md)
+> supersedes conflicting onboarding, BR-004 progression/load snapshots,
+> BR-005 private zone-time load, BR-008 taper timing and BR-009 calibration.
+> Older sections below retain historical provenance. Production review and
+> database/device verification gates are not closed by product approval.
+
+> Remediation R1 decision record:
+> [phase-13-and-14-r1-decisions](../implementation/phase-13-and-14-r1-decisions.md).
+> It adds onboarding-version provenance and current calibration capability
+> boundaries without changing any Phase 13 physiological formula. The approved
+> average-HR correction transaction remains assigned to R5.
+
+
+## Phase 13 implementation mapping (2026-09-11)
+
+| Requirement | Active implementation | Regression evidence |
+| --- | --- | --- |
+| Previous-month starting baseline, zero-base 45.0 | `physiology/joren.py`, onboarding schemas/service, planning baseline | `physiology/test_joren.py`, `test_onboarding.py`, `test_planning_domain.py` |
+| BR-005 observed zone load and mean-HR-only amendment | `physiology/joren.py`, activities service; private method/coverage/profile snapshot | `test_activities.py`, public-contract and recursive leak suite |
+| BR-009 HR/CSS calibration, low-threshold warning, pending confirmation | `calibration/domain.py`, calibration service, version-aware `physiology/zones.py` | `calibration/test_domain.py`, zone boundary and stale-confirmation tests |
+| BR-004 sickness exclusion, lower-realized progression, injury precedence | planning domain and version-filtered history RPC | `test_planning_domain.py`, `test_planning.py` |
+| BR-008 exact seven-day taper, partial-week fail-closed | `joren.taper_window`, planning target resolution | all weekday window fixtures and partial-week rejection tests |
+| Historical and owner isolation | forward migration `20260910215947`, private load revision audit | SQL/PLpgSQL syntax passes; pgTAP/RLS execution remains open |
+| Version-aware onboarding provenance | `onboarding/versioning.py`, forward migration `20260911180631`, current completion RPC | `test_onboarding_versioning.py`, `test_onboarding.py`, `phase_r1_onboarding_versioning_test.sql`; R2 planner/RPC upgrade parity remains open |
+| Current calibration capability boundary | `calibration/service.py` filters current selections while `calibration/domain.py` retains immutable historical protocols | `test_calibration.py` selectable-mode and rejected pace/power cases; R2 mobile-to-domain matrix remains open |
+
 ## Status and purpose
 
 This document maps BR-001 through BR-010 to the modular-monolith

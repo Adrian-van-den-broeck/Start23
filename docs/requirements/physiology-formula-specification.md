@@ -1,5 +1,12 @@
 # Physiological Formula Specification
 
+> Active amendment: [phase-13-joren-ruleset-1](phase-13-joren-ruleset-1.md)
+> supersedes conflicting onboarding, BR-004 progression/load snapshots,
+> BR-005 private zone-time load, BR-008 taper timing and BR-009 calibration.
+> Older sections below retain historical provenance. Production review and
+> database/device verification gates are not closed by product approval.
+
+
 ## Status
 
 `Implemented for local MVP development - phase-10-ruleset-1; renewed

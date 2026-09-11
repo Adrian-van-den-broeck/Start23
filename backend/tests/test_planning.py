@@ -1,6 +1,7 @@
 """Phase 6 API workflow, ownership, approval, and TSS-contract tests."""
 
 from collections.abc import Iterator
+from dataclasses import replace
 from datetime import date, datetime, timedelta, timezone
 from typing import Any, cast
 from uuid import UUID, uuid4
@@ -124,7 +125,18 @@ class StaticCatalogProvider:
     """Provide the validated reviewed catalog without external services."""
 
     async def fetch_catalog(self) -> tuple[WorkoutTemplate, ...]:
-        return CURRENT_CATALOG
+        # Equivalent prescriptions provide real alternatives at the new zone-load
+        # scale; this fixture tests lifecycle, not legacy catalog load pricing.
+        return CURRENT_CATALOG + tuple(
+            replace(
+                template,
+                id=UUID(int=template.id.int + 1000),
+                template_key=UUID(int=template.template_key.int + 1000),
+                name=template.name + " alternative",
+            )
+            for template in CURRENT_CATALOG
+            if not template.explicit_scheduling_only
+        )
 
     async def aclose(self) -> None:
         return None
@@ -153,9 +165,12 @@ def _snapshot(athlete_id: UUID) -> JsonObject:
             "revision": 1,
         },
         "training_history": [
-            {"discipline": "swim", "weekly_minutes": 60},
-            {"discipline": "bike", "weekly_minutes": 120},
-            {"discipline": "run", "weekly_minutes": 90},
+            {
+                "discipline": sport,
+                "previous_month_weekly_minutes": 36,
+                "baseline_model_version": "phase-13-joren-ruleset-1",
+            }
+            for sport in ("swim", "bike", "run")
         ],
         "goal": {
             "id": str(uuid4()),
@@ -353,7 +368,12 @@ class MemoryPlanningRepository:
             self._proposals[old_proposal_id]["state"] = "expired"
             current["proposal"]["state"] = "expired"
             current["revision_state"] = "expired"
-        templates = {template.id: template for template in active_catalog()}
+        templates = {
+            template.id: template
+            for template in active_catalog(
+                await StaticCatalogProvider().fetch_catalog()
+            )
+        }
         workouts: list[JsonObject] = []
         for selected in payload["workouts"]:
             template = templates[UUID(str(selected["template_id"]))]
@@ -1510,3 +1530,12 @@ def test_confirmed_injury_is_excluded_from_pending_plan(
     assert "injured_disciplines_excluded" in {
         warning["code"] for warning in response.json()["plan"]["warnings"]
     }
+
+
+def test_new_plan_cannot_reinterpret_legacy_training_history() -> None:
+    snapshot = _snapshot(uuid4())
+    snapshot["training_history"] = [
+        {"discipline": sport, "weekly_minutes": 36} for sport in ("swim", "bike", "run")
+    ]
+    with pytest.raises(ValueError, match="previous-month training history"):
+        PlanningService._onboarding_baseline(snapshot)

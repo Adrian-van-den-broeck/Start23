@@ -42,6 +42,9 @@ class MemoryActivityRepository:
         self._idempotency: dict[tuple[UUID, UUID], tuple[str, UUID]] = {}
         self.planned_workouts = {owner: uuid4() for owner in token_owners.values()}
         self.rpe_guided_activity_ids: set[UUID] = set()
+        self.known_hr_profile: JsonObject | None = None
+        self.known_hr_profile_id = uuid4()
+        self.load_snapshots: dict[UUID, JsonObject] = {}
 
     def _owner(self, token: str) -> UUID:
         try:
@@ -78,7 +81,7 @@ class MemoryActivityRepository:
             "source": "canonical_summary",
             "started_at": payload["started_at"],
             "timezone": payload["timezone"],
-            "duration_minutes": payload["duration_minutes"],
+            "duration_minutes": payload.get("duration_minutes"),
             "distance_meters": payload.get("distance_meters"),
             "elevation_gain_meters": payload.get("elevation_gain_meters"),
             "rpe": None,
@@ -131,6 +134,14 @@ class MemoryActivityRepository:
         row = self._rows[activity_id]
         return {
             "duration_minutes": row["duration_minutes"],
+            "discipline": row["discipline"],
+            "zone_minutes": row.get("metrics", {}).get("zone_minutes")
+            if row.get("metrics")
+            else None,
+            "load_ruleset_version": "phase-13-joren-ruleset-1",
+            "known_hr_profile": self.known_hr_profile,
+            "known_hr_profile_id": str(self.known_hr_profile_id),
+            "private_load_snapshot": self.load_snapshots.get(activity_id),
             "processing_state": row["processing_state"],
             "rpe": row["rpe"],
             "requires_heart_rate_observation": (
@@ -143,7 +154,7 @@ class MemoryActivityRepository:
             ),
             "planned": (
                 {
-                    "planned_tss": "4",
+                    "planned_tss": "55.2",
                     "expected_rpe_min": 3,
                     "expected_rpe_max": 5,
                     "intensity_bucket": "low",
@@ -178,6 +189,7 @@ class MemoryActivityRepository:
             if row["rpe"] != payload["rpe"]:
                 raise ActivityRepositoryConflictError("activity_rpe_immutable")
             return dict(row)
+        self.load_snapshots[activity_id] = dict(payload)
         row.update(
             {
                 "rpe": payload["rpe"],
@@ -204,6 +216,7 @@ class MemoryActivityRepository:
         row = self._rows[activity_id]
         if row["rpe"] == payload["rpe"]:
             return dict(row)
+        self.load_snapshots[activity_id] = dict(payload)
         row.update(
             {
                 "rpe": payload["rpe"],
@@ -273,6 +286,7 @@ def _summary(
         "duration_minutes": duration,
         "distance_meters": 10000,
         "metrics": {
+            "zone_minutes": ["0", duration, "0", "0", "0"],
             "average_heart_rate_bpm": 150,
             "max_heart_rate_bpm": 170,
             "low_intensity_minutes": duration,
@@ -574,3 +588,138 @@ def test_speed_telemetry_cannot_be_used_as_a_run_zone_input(
     )
 
     assert response.status_code == 422
+
+
+def _known_run_hr_profile() -> JsonObject:
+    return {
+        "metric_kind": "run_lthr_bpm",
+        "source_value": "165",
+        "zone_model_version": "phase-13-joren-ruleset-1",
+        "boundaries": [
+            {"zone_number": i + 1, "lower_value": lo, "upper_value": hi}
+            for i, (lo, hi) in enumerate(
+                ((None, 134), (135, 147), (148, 157), (158, 165), (166, None))
+            )
+        ],
+    }
+
+
+@pytest.mark.parametrize(
+    "mean_hr,zone,load",
+    [
+        (134, 1, "34.80"),
+        (135, 2, "55.20"),
+        (147, 2, "55.20"),
+        (148, 3, "82.80"),
+        (157, 3, "82.80"),
+        (158, 4, "110.40"),
+        (165, 4, "110.40"),
+        (166, 5, "138.00"),
+    ],
+)
+def test_mean_hr_only_assigns_full_duration_with_separate_provenance(
+    activity_client: tuple[TestClient, MemoryActivityRepository],
+    mean_hr: int,
+    zone: int,
+    load: str,
+) -> None:
+    client, repository = activity_client
+    repository.known_hr_profile = _known_run_hr_profile()
+    summary = _summary()
+    summary["metrics"] = {"average_heart_rate_bpm": mean_hr}
+    created = client.post("/api/v1/activities", headers=_headers(), json=summary)
+    identifier = created.json()["id"]
+    response = client.put(
+        f"/api/v1/activities/{identifier}/rpe", headers=_headers(), json={"rpe": 4}
+    )
+    assert response.status_code == 200
+    stored = repository.load_snapshots[UUID(identifier)]
+    assert stored["realized_tss"] == load
+    assert stored["calculation_method"] == "average_hr_zone_duration"
+    assert stored["load_status"] == "estimated_from_average_hr"
+    assert stored["assigned_zone"] == zone
+    assert stored["valid_minutes"] == "0" and stored["coverage_ratio"] == "0"
+    assert stored["zone_profile_id"] == str(repository.known_hr_profile_id)
+    _assert_no_load_keys(response.json())
+
+
+@pytest.mark.parametrize("observed", [None, ["10", "20", "8", "3", "0"]])
+def test_missing_zones_or_partial_observations_never_use_unapproved_estimate(
+    activity_client: tuple[TestClient, MemoryActivityRepository],
+    observed: list[str] | None,
+) -> None:
+    client, repository = activity_client
+    # Known zones may be used only when there is no actual observed zone time.
+    repository.known_hr_profile = (
+        _known_run_hr_profile() if observed is not None else None
+    )
+    summary = _summary()
+    summary["metrics"] = {"average_heart_rate_bpm": 150}
+    if observed is not None:
+        summary["metrics"]["zone_minutes"] = observed
+    identifier = client.post(
+        "/api/v1/activities", headers=_headers(), json=summary
+    ).json()["id"]
+    response = client.put(
+        f"/api/v1/activities/{identifier}/rpe", headers=_headers(), json={"rpe": 4}
+    )
+    assert response.status_code == 200
+    stored = repository.load_snapshots[UUID(identifier)]
+    assert stored["calculation_method"] == "observed_zone_minutes"
+    if observed is None:
+        assert stored["realized_tss"] is None and stored["load_status"] == "unavailable"
+    else:
+        assert stored["realized_tss"] == "40.76"
+        assert stored["valid_minutes"] == "41"
+        assert stored["load_status"] == "partial_observed"
+    _assert_no_load_keys(response.json())
+
+
+def test_distance_only_swim_can_complete_without_inferred_duration_or_hr(
+    activity_client: tuple[TestClient, MemoryActivityRepository],
+) -> None:
+    client, repository = activity_client
+    summary = _summary()
+    summary.update(
+        discipline="swim", duration_minutes=None, metrics=None, distance_meters=1000
+    )
+    identifier = client.post(
+        "/api/v1/activities", headers=_headers(), json=summary
+    ).json()["id"]
+    response = client.put(
+        f"/api/v1/activities/{identifier}/rpe", headers=_headers(), json={"rpe": 4}
+    )
+    assert response.status_code == 200
+    assert response.json()["duration_minutes"] is None
+    assert response.json()["distance_meters"] == 1000
+    assert repository.load_snapshots[UUID(identifier)]["realized_tss"] is None
+
+
+def test_rpe_correction_preserves_mean_hr_calculation_snapshot(
+    activity_client: tuple[TestClient, MemoryActivityRepository],
+) -> None:
+    client, repository = activity_client
+    repository.known_hr_profile = _known_run_hr_profile()
+    summary = _summary()
+    summary["metrics"] = {"average_heart_rate_bpm": 150}
+    identifier = client.post(
+        "/api/v1/activities", headers=_headers(), json=summary
+    ).json()["id"]
+    client.put(
+        f"/api/v1/activities/{identifier}/rpe", headers=_headers(), json={"rpe": 4}
+    )
+    original = repository.load_snapshots[UUID(identifier)].copy()
+    repository.known_hr_profile = {"invalid": "changed after completion"}
+    response = client.put(
+        f"/api/v1/activities/{identifier}/rpe", headers=_headers(), json={"rpe": 5}
+    )
+    assert response.status_code == 200
+    corrected = repository.load_snapshots[UUID(identifier)]
+    for field in (
+        "realized_tss",
+        "calculation_method",
+        "zone_profile_id",
+        "assigned_zone",
+        "average_heart_rate_bpm",
+    ):
+        assert corrected[field] == original[field]

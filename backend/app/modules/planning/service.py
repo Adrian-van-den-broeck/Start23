@@ -21,13 +21,14 @@ from app.modules.coach.weekly_plan import (
     deterministic_weekly_plan_explanation,
 )
 from app.modules.physiology.anti_stack import ScheduledWorkout
+from app.modules.physiology.joren import StartingBaseline, starting_baseline
 from app.modules.physiology.models import (
     Discipline,
     DurationMinutes,
     InternalLoad,
     RuleId,
 )
-from app.modules.physiology.specification import PHASE_10_RULESET_V1
+from app.modules.physiology.specification import PHASE_13_RULESET_V1
 from app.modules.workouts.catalog import (
     TrainingPhase,
     WorkoutTemplate,
@@ -335,9 +336,15 @@ class PlanningService:
                     raise PlanningDomainError("A pending protocol setup is invalid.")
                 protocol_ids |= frozenset({protocol_id})
             route = str(setup.get("setup_route", ""))
+            if route == "rpe_only":
+                raise PlanningConstraintError(
+                    "legacy_setup_requires_calibration",
+                    "Confirm known zones or choose calibration before "
+                    "generating a new plan.",
+                )
             rpe_guided = current.rpe_guided or (
                 discipline not in capabilities
-                and route in {"field_test", "calibration_week", "rpe_only"}
+                and route in {"field_test", "calibration_week"}
             )
             if rpe_guided:
                 protocol_ids |= frozenset(
@@ -357,6 +364,32 @@ class PlanningService:
         return timezone_name, race_date, goal_disciplines, capabilities
 
     @staticmethod
+    def _onboarding_baseline(snapshot: Mapping[str, Any]) -> StartingBaseline | None:
+        rows = snapshot.get("training_history", [])
+        disciplines = set(snapshot.get("goal", {}).get("race_discipline_profile", []))
+        eligible = [
+            row
+            for row in rows
+            if row.get("discipline") in disciplines
+            and row.get("baseline_model_version") == "phase-13-joren-ruleset-1"
+            and row.get("previous_month_weekly_minutes") is not None
+        ]
+        if not disciplines or len(eligible) != len(disciplines):
+            raise PlanningConstraintError(
+                "previous_month_history_required",
+                "Complete previous-month training history before "
+                "generating a new plan.",
+            )
+        return starting_baseline(
+            {
+                Discipline(row["discipline"]): Decimal(
+                    str(row["previous_month_weekly_minutes"])
+                )
+                for row in eligible
+            }
+        )
+
+    @staticmethod
     def _load_samples(rows: tuple[JsonObject, ...]) -> tuple[PlanLoadSample, ...]:
         try:
             return tuple(
@@ -364,6 +397,10 @@ class PlanningService:
                     week_start=date.fromisoformat(str(row["week_start"])),
                     load=InternalLoad(Decimal(str(row["planned_tss"]))),
                     phase=TrainingPhase(str(row["phase"])),
+                    sick_week=bool(row.get("sick_week", False)),
+                    reduced_realized_progression=bool(
+                        row.get("reduced_realized_progression", False)
+                    ),
                     realized_load=(
                         InternalLoad(Decimal(str(row["realized_tss"])))
                         if row.get("realized_tss") is not None
@@ -447,6 +484,7 @@ class PlanningService:
             low_only_disciplines=low_only_disciplines,
             zone_capabilities=capabilities,
             available_dates=available_dates,
+            onboarding_baseline=self._onboarding_baseline(snapshot),
             maintenance_active=bool(input_source.get("maintenance_active", False)),
         )
         eligible = tuple(
@@ -483,7 +521,7 @@ class PlanningService:
             "confirmed_injuries": sorted(item.value for item in injuries),
             "low_only_disciplines": sorted(item.value for item in low_only_disciplines),
             "maintenance_active": bool(input_source.get("maintenance_active", False)),
-            "ruleset_version": PHASE_10_RULESET_V1.version.value,
+            "ruleset_version": PHASE_13_RULESET_V1.version.value,
             "history": history_rows,
             "catalog": [
                 {"id": str(template.id), "version": template.version}
@@ -590,6 +628,9 @@ class PlanningService:
                     zone_capabilities=context.capabilities,
                     available_dates=available_dates,
                     selected_template_ids=selected_ids,
+                    onboarding_baseline=self._onboarding_baseline(
+                        self._planning_input(context.source)
+                    ),
                     maintenance_active=bool(
                         context.source.get("maintenance_active", False)
                     ),
@@ -757,6 +798,9 @@ class PlanningService:
                         UUID(str(key)): date.fromisoformat(str(value))
                         for key, value in raw_placements.items()
                     },
+                    onboarding_baseline=self._onboarding_baseline(
+                        self._planning_input(context.source)
+                    ),
                     maintenance_active=bool(
                         context.source.get("maintenance_active", False)
                     ),
@@ -896,6 +940,7 @@ class PlanningService:
             "availability_source": availability_source,
             "workouts": [
                 {
+                    "planned_tss": str(workout.snapshot.internal_planned_load.value),
                     "template_id": str(workout.snapshot.template_id),
                     "discipline": workout.discipline.value,
                     "scheduled_date": workout.scheduled_date.isoformat(),
@@ -924,7 +969,7 @@ class PlanningService:
                 for warning in draft.warnings
             ],
             "planned_tss": str(draft.planned_load.value),
-            "ruleset_version": PHASE_10_RULESET_V1.version.value,
+            "ruleset_version": PHASE_13_RULESET_V1.version.value,
         }
 
     async def _build_and_persist(
@@ -976,6 +1021,7 @@ class PlanningService:
             available_dates=available_dates,
             selected_template_ids=selected_template_ids,
             fixed_template_dates=fixed_template_dates,
+            onboarding_baseline=self._onboarding_baseline(snapshot),
             maintenance_active=bool(input_source.get("maintenance_active", False)),
         )
         try:
@@ -1311,7 +1357,7 @@ class PlanningService:
                 ),
                 "input_fingerprint": str(source["input_fingerprint"]),
                 "context_fingerprint": context.context_fingerprint,
-                "ruleset_version": PHASE_10_RULESET_V1.version.value,
+                "ruleset_version": PHASE_13_RULESET_V1.version.value,
                 "target_workout_count": context.target_workout_count,
                 "target_composition": {
                     discipline.value: context.target_composition[discipline]
@@ -1547,6 +1593,9 @@ class PlanningService:
             available_dates=available_dates,
             selected_template_ids=selection.accepted_template_ids,
             fixed_template_dates=placements,
+            onboarding_baseline=self._onboarding_baseline(
+                self._planning_input(context.source)
+            ),
             maintenance_active=bool(context.source.get("maintenance_active", False)),
         )
         updated = await self._repository.update_swipe_draft(
@@ -2048,6 +2097,7 @@ class PlanningService:
                     for value in context.get("available_dates", [])
                 ),
                 selected_template_ids=selected_template_ids,
+                onboarding_baseline=self._onboarding_baseline(snapshot),
                 maintenance_active=bool(context.get("maintenance_active", False)),
             )
         except (PlanningConstraintError, PlanningDomainError, KeyError, ValueError):
@@ -2117,6 +2167,7 @@ class PlanningService:
                     zone_capabilities=capabilities,
                     available_dates=available_dates,
                     selected_template_ids=selected_template_ids,
+                    onboarding_baseline=self._onboarding_baseline(snapshot),
                     maintenance_active=bool(context.get("maintenance_active", False)),
                 )
             except (PlanningConstraintError, KeyError, ValueError):
