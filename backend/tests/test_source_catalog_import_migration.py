@@ -108,6 +108,7 @@ def test_calibration_week_can_choose_source_workout_without_calibration_test() -
         "profile": {"timezone": "Europe/Amsterdam"},
         "goal": {
             "target_date": "2026-12-06",
+            "race_type": "bike",
             "race_discipline_profile": ["bike"],
         },
         "zones": [],

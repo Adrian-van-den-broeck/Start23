@@ -3,14 +3,17 @@
 ## Status
 
 Remediation migrations through
-`20260912180000_phase_r4_r5_onboarding_race_activity.sql` are authored locally
-but have not been executed against local or hosted PostgreSQL. R4/R5 adds the
-new onboarding-session step vocabulary, explicit monitor/timezone confirmation,
-structured race goals, onboarding v2 completion/planner checks, and atomic
-Phase 13 average-HR correction protection. Its static migration contract tests
-pass and rollback-only pgTAP coverage is present. Full-chain execution, pgTAP,
-RLS/grant proof, two-real-user testing, advisors, and migration-ledger validation
-remain R6 work; this status does not claim database runtime success.
+`20260913130000_phase_13_14_r6_entry_audit_remediation.sql` are authored locally
+but have not been executed against local or hosted PostgreSQL. The final
+R6-entry migration revokes direct access to the retained `athlete_profiles`
+compatibility table, exposes only narrow owner-derived operational RPCs, applies
+the exact five-race readiness mapping, hardens structured-race constraints, and
+persists submaximal calibration with distinct source quality. It preserves the
+identity map and dual-key expand/cutover contract; R6 contract removal has not
+started. Static migration contracts pass and rollback-only pgTAP coverage is
+present. Full-chain execution, pgTAP, RLS/grant proof, two-real-user testing,
+advisors, and migration-ledger validation remain R6 work; this status does not
+claim database runtime success.
 
 The workflow is selected. Migration `20260724140227_create_athlete_profiles`
 has been applied to the hosted development project. Catalog verification and

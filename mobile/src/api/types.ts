@@ -183,7 +183,8 @@ export type ZoneProfile = {
     | 'athlete_entered'
     | 'measured_lab'
     | 'estimated'
-    | 'reviewed_field_threshold';
+    | 'reviewed_field_threshold'
+    | 'submaximal_calibration_estimate';
   validation_status:
     | 'confirmed_by_athlete'
     | 'unreviewed'
@@ -232,6 +233,7 @@ export type OnboardingState = {
   profile: AthleteProfile | null;
   training_history: TrainingHistoryEntry[];
   primary_goal: PrimaryRaceGoal | null;
+  required_disciplines: Discipline[];
   zones: ZoneProfile[];
   discipline_setups: DisciplineSetup[];
   can_complete: boolean;
@@ -245,10 +247,7 @@ export type ZoneSetupOption = {
   creates_threshold: boolean;
   creates_zones: boolean;
   requires_athlete_confirmation: boolean;
-  activation_behavior:
-    | 'athlete_input_can_activate'
-    | 'calculated_result_stays_pending'
-    | 'provisional_guidance_only';
+  activation_behavior: 'calculated_result_stays_pending';
 };
 
 export type CalibrationProtocolSegment = {
@@ -272,19 +271,15 @@ export type CalibrationProtocol = {
   protocol_type: 'field_test' | 'submaximal_calibration';
   version: number;
   review_status: 'approved_active';
-  result_status_on_success:
-    | 'threshold_estimated'
-    | 'provisionally_calibrated';
+  result_status_on_success: 'threshold_estimated';
   guidance_modes: GuidanceMode[];
   required_observation_type:
     | 'average_heart_rate_and_rpe'
     | 'elapsed_time_distance_and_rpe';
   calculated_result:
-    | 'threshold_and_zone_profiles'
-    | 'provisional_calibration';
+    | 'threshold_and_zone_profiles';
   pending_zone_lifecycle:
-    | 'confirmation_creates_pending_proposal'
-    | 'no_zone_proposal_from_provisional_result';
+    | 'confirmation_creates_pending_proposal';
   segments: CalibrationProtocolSegment[];
 };
 

@@ -68,6 +68,7 @@ class ZoneSourceQuality(str, Enum):
 
     MEASURED_LAB = "measured_lab"
     REVIEWED_FIELD_THRESHOLD = "reviewed_field_threshold"
+    SUBMAXIMAL_CALIBRATION_ESTIMATE = "submaximal_calibration_estimate"
     ATHLETE_ENTERED = "athlete_entered"
     ESTIMATED = "estimated"
     UNKNOWN = "unknown"

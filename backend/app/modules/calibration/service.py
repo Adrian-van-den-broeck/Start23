@@ -54,6 +54,7 @@ from app.modules.physiology.zones import (
     CalculatedZoneMetricProfile,
     ZoneBoundary,
     ZoneMetric,
+    ZoneSourceQuality,
     calculate_zone_profiles,
     validate_zone_profile,
 )
@@ -196,20 +197,14 @@ class CalibrationService:
         self._repository = repository
 
     @staticmethod
-    def zone_options() -> tuple[ZoneOptionResponse, ...]:
-        return (
+    def zone_options(
+        discipline: Discipline,
+    ) -> tuple[ZoneOptionResponse, ...]:
+        options = [
             ZoneOptionResponse(
                 setup_route=SetupRoute.KNOWN_VALUES,
                 label="Ik ken mijn waarden",
                 creates_threshold=False,
-                creates_zones=True,
-                requires_athlete_confirmation=True,
-                activation_behavior="athlete_input_can_activate",
-            ),
-            ZoneOptionResponse(
-                setup_route=SetupRoute.FIELD_TEST,
-                label="Ik wil mijn waarden testen",
-                creates_threshold=True,
                 creates_zones=True,
                 requires_athlete_confirmation=True,
                 activation_behavior="calculated_result_stays_pending",
@@ -217,12 +212,28 @@ class CalibrationService:
             ZoneOptionResponse(
                 setup_route=SetupRoute.CALIBRATION_WEEK,
                 label="Ik wil rustig beginnen en laten kalibreren",
-                creates_threshold=False,
-                creates_zones=False,
-                requires_athlete_confirmation=False,
-                activation_behavior="provisional_guidance_only",
+                creates_threshold=True,
+                creates_zones=True,
+                requires_athlete_confirmation=True,
+                activation_behavior="calculated_result_stays_pending",
             ),
-        )
+        ]
+        if any(
+            protocol.protocol_type is ProtocolType.FIELD_TEST
+            for protocol in _current_mvp_protocols(discipline)
+        ):
+            options.insert(
+                1,
+                ZoneOptionResponse(
+                    setup_route=SetupRoute.FIELD_TEST,
+                    label="Ik wil mijn waarden testen",
+                    creates_threshold=True,
+                    creates_zones=True,
+                    requires_athlete_confirmation=True,
+                    activation_behavior="calculated_result_stays_pending",
+                ),
+            )
+        return tuple(options)
 
     @staticmethod
     def protocols(discipline: Discipline) -> tuple[CalibrationProtocolResponse, ...]:
@@ -244,16 +255,8 @@ class CalibrationService:
                     if protocol.discipline is Discipline.SWIM
                     else "average_heart_rate_and_rpe"
                 ),
-                calculated_result=(
-                    "threshold_and_zone_profiles"
-                    if protocol.protocol_type is ProtocolType.FIELD_TEST
-                    else "provisional_calibration"
-                ),
-                pending_zone_lifecycle=(
-                    "confirmation_creates_pending_proposal"
-                    if protocol.protocol_type is ProtocolType.FIELD_TEST
-                    else "no_zone_proposal_from_provisional_result"
-                ),
+                calculated_result="threshold_and_zone_profiles",
+                pending_zone_lifecycle="confirmation_creates_pending_proposal",
                 segments=tuple(
                     ProtocolSegmentResponse(
                         order=segment.order,
@@ -710,7 +713,7 @@ class CalibrationService:
             or not evaluation.thresholds
         ):
             raise CalibrationDomainError(
-                "Only a pending field-test threshold can be confirmed."
+                "Only a pending calibration threshold can be confirmed."
             )
         profiles = calculate_zone_profiles(
             tuple(
@@ -733,12 +736,19 @@ class CalibrationService:
                 "metric_profiles": profile_values,
             }
         )
+        protocol = PROTOCOLS.get(evaluation.protocol_id)
+        source_quality = (
+            ZoneSourceQuality.SUBMAXIMAL_CALIBRATION_ESTIMATE.value
+            if protocol is not None
+            and protocol.protocol_type is ProtocolType.SUBMAXIMAL_CALIBRATION
+            else ZoneSourceQuality.REVIEWED_FIELD_THRESHOLD.value
+        )
         saved = await self._repository.save_calculated_zone_profile(
             athlete_id,
             {
                 "discipline": evaluation.discipline.value,
                 "source_method": evaluation.protocol_id,
-                "source_quality": "reviewed_field_threshold",
+                "source_quality": source_quality,
                 "metric_profiles": profile_values,
                 "input_fingerprint": fingerprint,
                 "calibration_evaluation_id": str(evaluation.id),

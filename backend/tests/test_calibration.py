@@ -3,10 +3,11 @@
 from collections.abc import Iterator
 from copy import deepcopy
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, cast
 from uuid import UUID, uuid4
 
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app.core.config import Settings
@@ -196,6 +197,8 @@ class MemoryCalibrationRepository:
             "zone_proposal_id": str(uuid4()),
             "base_zone_profile_id": None,
             "decided_at": _NOW.isoformat(),
+            "source_method": values.get("source_method"),
+            "source_quality": values.get("source_quality"),
         }
         self._decisions[athlete_id].append(row)
         return deepcopy(row)
@@ -441,6 +444,94 @@ def _save_run_test(client: TestClient, activity_id: UUID) -> None:
         assert response.status_code == 201, response.text
 
 
+def _save_submaximal_calibration(
+    client: TestClient,
+    discipline: str,
+    activity_id: UUID,
+    *,
+    average_heart_rate_bpm: int = 148,
+) -> None:
+    protocol_id = f"start23_week1_{discipline}_calibration_v1"
+    segments: tuple[tuple[str, int, dict[str, object]], ...]
+    if discipline == "run":
+        segments = (
+            ("warmup", 3, {"duration_seconds": 600}),
+            (
+                "comfortable_20min",
+                4,
+                {
+                    "duration_seconds": 1200,
+                    "reported_block_rpe": 4,
+                    "steady_execution": "yes",
+                    "average_heart_rate_bpm": average_heart_rate_bpm,
+                },
+            ),
+            ("cooldown", 2, {"duration_seconds": 600}),
+        )
+    elif discipline == "bike":
+        segments = (
+            ("warmup", 3, {"duration_seconds": 900}),
+            (
+                "comfortable_20min",
+                4,
+                {
+                    "duration_seconds": 1200,
+                    "reported_block_rpe": 4,
+                    "steady_execution": "yes",
+                    "average_heart_rate_bpm": average_heart_rate_bpm,
+                },
+            ),
+            ("cooldown", 2, {"duration_seconds": 600}),
+        )
+    else:
+        segments = (
+            (
+                "warmup",
+                3,
+                {"distance_meters": 300, "pool_length_meters": 25},
+            ),
+            (
+                "4x200_comfortable",
+                4,
+                {
+                    "distance_meters": 800,
+                    "elapsed_time_seconds": 840,
+                    "pool_length_meters": 25,
+                    "reported_block_rpe": 4,
+                    "steady_execution": "yes",
+                },
+            ),
+            (
+                "4x100_steady",
+                6,
+                {
+                    "distance_meters": 400,
+                    "elapsed_time_seconds": 380,
+                    "pool_length_meters": 25,
+                    "reported_block_rpe": 6,
+                    "steady_execution": "yes",
+                },
+            ),
+            ("cooldown", 2, {"distance_meters": 200}),
+        )
+    for segment_id, target_rpe, overrides in segments:
+        response = client.post(
+            "/api/v1/calibration/observations",
+            headers=_headers(),
+            json={
+                **_segment_payload(
+                    activity_id,
+                    segment_id,
+                    target_rpe,
+                    **overrides,
+                ),
+                "protocol_id": protocol_id,
+                "discipline": discipline,
+            },
+        )
+        assert response.status_code == 201, response.text
+
+
 def test_historical_run_field_test_is_not_newly_selectable_or_schedulable(
     calibration_context: tuple[TestClient, UUID, UUID],
 ) -> None:
@@ -469,24 +560,44 @@ def test_historical_run_field_test_is_not_newly_selectable_or_schedulable(
     assert scheduled.status_code == 422
 
 
-def test_three_mvp_zone_options_are_authenticated_and_tss_free(
+def test_current_zone_options_are_discipline_scoped_and_tss_free(
     calibration_context: tuple[TestClient, UUID, UUID],
 ) -> None:
     client, _, _ = calibration_context
-    unauthorized = client.get("/api/v1/onboarding/zone-options")
-    response = client.get(
-        "/api/v1/onboarding/zone-options",
-        headers=_headers(),
-    )
+    unauthorized = client.get("/api/v1/onboarding/zone-options/run")
+    responses = {
+        discipline: client.get(
+            f"/api/v1/onboarding/zone-options/{discipline}",
+            headers=_headers(),
+        )
+        for discipline in ("run", "bike", "swim")
+    }
 
     assert unauthorized.status_code == 401
-    assert response.status_code == 200
-    assert [item["setup_route"] for item in response.json()] == [
+    assert all(response.status_code == 200 for response in responses.values())
+    assert [item["setup_route"] for item in responses["run"].json()] == [
+        "known_values",
+        "calibration_week",
+    ]
+    assert [item["setup_route"] for item in responses["bike"].json()] == [
+        "known_values",
+        "calibration_week",
+    ]
+    assert [item["setup_route"] for item in responses["swim"].json()] == [
         "known_values",
         "field_test",
         "calibration_week",
     ]
-    assert "tss" not in response.text.lower()
+    assert all(
+        option["activation_behavior"] == "calculated_result_stays_pending"
+        for response in responses.values()
+        for option in response.json()
+    )
+    assert all(
+        response.json()[0]["creates_threshold"] is False
+        for response in responses.values()
+    )
+    assert all("tss" not in response.text.lower() for response in responses.values())
 
 
 def test_threshold_only_known_values_accept_empty_optional_zones(
@@ -590,8 +701,10 @@ def test_selectable_protocol_matrix_matches_current_phase_13_measurements(
     ]
     assert run.json()[0]["guidance_modes"] == ["heart_rate"]
     assert run.json()[0]["required_observation_type"] == ("average_heart_rate_and_rpe")
+    assert run.json()[0]["result_status_on_success"] == "threshold_estimated"
+    assert run.json()[0]["calculated_result"] == "threshold_and_zone_profiles"
     assert run.json()[0]["pending_zone_lifecycle"] == (
-        "no_zone_proposal_from_provisional_result"
+        "confirmation_creates_pending_proposal"
     )
     assert [item["protocol_id"] for item in bike.json()] == [
         "start23_week1_bike_calibration_v1"
@@ -602,6 +715,120 @@ def test_selectable_protocol_matrix_matches_current_phase_13_measurements(
         protocol["required_observation_type"] == "elapsed_time_distance_and_rpe"
         for protocol in swim.json()
     )
+
+
+@pytest.mark.parametrize(
+    ("discipline", "guidance_mode", "setup_extra", "expected_metric"),
+    [
+        ("run", "heart_rate", {}, "run_lthr_bpm"),
+        ("bike", "heart_rate", {}, "bike_threshold_heart_rate_bpm"),
+        (
+            "swim",
+            "pace",
+            {"pool_length_meters": 25},
+            "swim_css_seconds_per_100m",
+        ),
+    ],
+)
+def test_current_submaximal_calibration_end_to_end_creates_pending_proposal(
+    calibration_context: tuple[TestClient, UUID, UUID],
+    discipline: str,
+    guidance_mode: str,
+    setup_extra: dict[str, Any],
+    expected_metric: str,
+) -> None:
+    client, athlete_id, _ = calibration_context
+    activity_id = uuid4()
+    expected_protocol_id = f"start23_week1_{discipline}_calibration_v1"
+    options = client.get(
+        f"/api/v1/onboarding/zone-options/{discipline}",
+        headers=_headers(),
+    )
+    protocols = client.get(
+        f"/api/v1/calibration/protocols/{discipline}",
+        headers=_headers(),
+    )
+    setup = client.put(
+        f"/api/v1/onboarding/disciplines/{discipline}/setup",
+        headers=_headers(),
+        json={
+            "setup_route": "calibration_week",
+            "guidance_mode": guidance_mode,
+            **setup_extra,
+        },
+    )
+    _save_submaximal_calibration(client, discipline, activity_id)
+    evaluated = client.post(
+        "/api/v1/calibration/evaluate",
+        headers=_headers(),
+        json={
+            "activity_id": str(activity_id),
+            "protocol_id": expected_protocol_id,
+        },
+    )
+
+    assert options.status_code == protocols.status_code == 200
+    assert "calibration_week" in {option["setup_route"] for option in options.json()}
+    assert expected_protocol_id in {
+        protocol["protocol_id"] for protocol in protocols.json()
+    }
+    if discipline in {"run", "bike"}:
+        assert "field_test" not in {option["setup_route"] for option in options.json()}
+    assert setup.status_code == 200, setup.text
+    assert evaluated.status_code == 200, evaluated.text
+    evaluation = evaluated.json()
+    assert evaluation["status"] == "threshold_estimated"
+    assert evaluation["threshold_status"] == "threshold_estimated"
+    assert evaluation["zone_status"] == "pending_athlete_confirmation"
+    assert evaluation["review_status"] == "pending_athlete_confirmation"
+    assert evaluation["requires_athlete_confirmation"] is True
+    assert evaluation["thresholds"][0]["metric_kind"] == expected_metric
+    assert len(evaluation["zone_profiles"]) == 1
+
+    path = f"/api/v1/calibration/evaluations/{evaluation['id']}/threshold/confirm"
+    confirmed = client.post(path, headers=_headers(), json={"confirmed": True})
+    retried = client.post(path, headers=_headers(), json={"confirmed": True})
+
+    assert confirmed.status_code == 200, confirmed.text
+    assert confirmed.json()["state"] == "accepted"
+    assert confirmed.json()["zone_proposal_state"] == "pending"
+    assert confirmed.json()["zone_profile_id"] is not None
+    assert retried.json() == confirmed.json()
+    app = cast(FastAPI, client.app)
+    repository = cast(
+        MemoryCalibrationRepository,
+        app.state.calibration_repository,
+    )
+    assert repository._decisions[athlete_id][0]["source_quality"] == (
+        "submaximal_calibration_estimate"
+    )
+
+
+def test_submaximal_threshold_below_140_is_warning_not_rejection(
+    calibration_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = calibration_context
+    activity_id = uuid4()
+    _save_submaximal_calibration(
+        client,
+        "run",
+        activity_id,
+        average_heart_rate_bpm=120,
+    )
+
+    response = client.post(
+        "/api/v1/calibration/evaluate",
+        headers=_headers(),
+        json={
+            "activity_id": str(activity_id),
+            "protocol_id": "start23_week1_run_calibration_v1",
+        },
+    )
+
+    assert response.status_code == 200, response.text
+    assert response.json()["status"] == "threshold_estimated"
+    assert response.json()["thresholds"][0]["value"] == "136"
+    assert "calculated_threshold_unusually_low" in response.json()["reason_codes"]
 
 
 @pytest.mark.parametrize(

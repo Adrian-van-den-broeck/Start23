@@ -6,7 +6,9 @@ from enum import Enum
 
 from app.modules.physiology.joren import ZoneLoad
 from app.modules.physiology.models import DurationMinutes, IntensityBucket, InternalLoad
-from app.modules.physiology.progression import snapshot_personalized_load
+from app.modules.physiology.progression import (
+    calculate_legacy_phase3_expected_rpe_duration_load,
+)
 
 
 class ActivityMatchResult(str, Enum):
@@ -51,15 +53,15 @@ class ActivityMatch:
     realized_load: InternalLoad | None = field(repr=False)
 
 
-def calculate_realized_activity_load(
+def calculate_legacy_phase7_rpe_duration_load(
     *,
     duration: DurationMinutes,
     rpe: int,
 ) -> InternalLoad:
-    """Calculate canonical-summary session load as RPE times actual hours."""
+    """Reproduce the retired Phase 7 RPE-times-hours load for old records."""
     if not 1 <= rpe <= 10:
         raise ValueError("RPE must be between 1 and 10.")
-    return snapshot_personalized_load(
+    return calculate_legacy_phase3_expected_rpe_duration_load(
         expected_rpe=Decimal(rpe),
         duration=duration,
     )
@@ -74,14 +76,14 @@ def classify_activity_match(
 ) -> ActivityMatch:
     """Apply the locked Phase 7 matrix without exposing either load value.
 
-    Hidden fatigue is evaluated before load overshoot because the phase-one
-    canonical path uses session RPE as its load proxy. Without that precedence,
-    a high RPE on an easy workout could never retain its distinct safety signal.
+    Passing ``measurement=None`` is the historical Phase 7 compatibility path.
+    Current Phase 13 activity processing always supplies an observed/fail-closed
+    ``ZoneLoad`` and never synthesizes RPE-duration load.
     """
     realized = (
         measurement.load
         if measurement is not None
-        else calculate_realized_activity_load(duration=duration, rpe=rpe)
+        else calculate_legacy_phase7_rpe_duration_load(duration=duration, rpe=rpe)
     )
     if measurement is not None and measurement.status != "complete":
         hidden_fatigue = (

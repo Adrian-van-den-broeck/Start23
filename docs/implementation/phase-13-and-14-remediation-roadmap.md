@@ -2,8 +2,10 @@
 
 Status: R1 complete locally on 2026-09-11. R3 foundation and R2 behavior were
 implemented together locally on 2026-09-12, in that order. R4 and R5 were
-implemented together locally on 2026-09-12. Database execution, real-token,
-two-user, and device evidence remains open under R6; R6 has not begun.
+implemented together locally on 2026-09-12. The final R6-entry audit findings
+B-01, H-01 through H-05, M-01 through M-03, and L-01 were remediated in the
+repository on 2026-09-13. Database execution, real-token, two-user, and device
+evidence remains open under R6; R6 has not begun.
 
 This roadmap converts the read-only Phase 13 and Phase 14 implementation audit
 into ordered remediation work. It is an implementation companion to
@@ -419,6 +421,47 @@ contract drift from recurring.
   load, partial observed coverage, pending/stale zone approval, disabled
   calibration mode, no-auto-activation, public-contract, and recursive privacy
   checks pass locally. The new pgTAP scenarios remain unexecuted until R6.
+
+## Final R6-entry audit remediation
+
+Status: repository implementation and local verification complete on
+2026-09-13. This is an entry remediation, not execution of R6, and does not
+mark Phase 13 or Phase 14 complete.
+
+- Current calibration discovery, setup, observations, deterministic evaluation,
+  calculated zone persistence, truthful `submaximal_calibration_estimate`
+  provenance, pending confirmation, and stale-safe activation now describe one
+  lifecycle. Run/bike historical field tests are retained but cannot be newly
+  selected; swim/bike/run lifecycle matrices and the below-140 warning pass.
+- One exact five-race mapping drives Python onboarding, planner behavior, SQL
+  readiness/snapshots, and mobile presentation. All-three history remains an
+  independent prerequisite; irrelevant zone disciplines do not block a
+  single-sport goal.
+- The approved known-values choice is option B: setup/threshold intent alone is
+  never readiness. A calculated profile must exist, remain pending, and be
+  explicitly approved before onboarding or planning becomes eligible. Retry,
+  partial-state, pending, approval, and stale checks are retained.
+- Forward migration
+  `20260913130000_phase_13_14_r6_entry_audit_remediation.sql` removes direct
+  authenticated access to the legacy operational table, introduces narrow
+  owner-derived operational read/write RPCs, hardens exact structured-race
+  validation, and adds accurate submaximal provenance without removing the R3
+  identity map or dual-key compatibility.
+- The combined `PATCH /api/v1/me/profile` mutation and DTO are removed. Current
+  writes remain split across identifying, physiological, and operational
+  contracts; the read-only compatibility projection remains available.
+- Device-reported IANA timezone detection requires no GPS, is shown for
+  explicit acceptance, and fails closed to manual selection. Expo Jest and
+  React Native Testing Library now exercise the relevant components and exact
+  transports; tests participate in strict TypeScript and unused-code checks.
+- The retired RPE-times-duration calculations have explicit Phase 3/Phase 7
+  legacy names. Current Phase 13 load selection remains attributable to zone
+  observations or the approved average-HR duration method.
+- Local repository verification records 618 passing backend tests, Ruff lint,
+  Ruff formatting across 133 files, strict mypy across 132 source files,
+  strict mobile TypeScript and unused-code checks, and 19 passing mobile tests.
+  The new rollback-only pgTAP scenarios are authored but unexecuted because no
+  PostgreSQL/Docker/pgTAP runtime is available; that remains R6 evidence.
 
 ## Remediation Phase R6: database, security, integration, and release closure
 

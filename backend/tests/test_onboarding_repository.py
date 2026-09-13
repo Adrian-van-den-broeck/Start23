@@ -33,6 +33,8 @@ def test_fetch_state_allows_missing_forward_zone_setup_table() -> None:
                     "message": "Could not find the table in the schema cache",
                 },
             )
+        if request.url.path.endswith("/rest/v1/rpc/get_operational_athlete_profile"):
+            return httpx.Response(200, json=None)
         return httpx.Response(200, json=[])
 
     async def exercise() -> None:
@@ -52,12 +54,12 @@ def test_fetch_state_does_not_hide_missing_required_table() -> None:
     athlete_id = uuid4()
 
     def handler(request: httpx.Request) -> httpx.Response:
-        if request.url.path.endswith("/rest/v1/athlete_profiles"):
+        if request.url.path.endswith("/rest/v1/rpc/get_operational_athlete_profile"):
             return httpx.Response(
                 404,
                 json={
                     "code": "PGRST205",
-                    "message": "Could not find the table in the schema cache",
+                    "message": "Could not find the function in the schema cache",
                 },
             )
         return httpx.Response(200, json=[])

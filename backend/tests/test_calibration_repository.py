@@ -18,13 +18,11 @@ def test_calibration_timezone_requires_persisted_confirmation() -> None:
     requests: list[httpx.Request] = []
     responses = iter(
         [
-            [
-                {
-                    "timezone": "Europe/Amsterdam",
-                    "timezone_confirmed_at": "2026-09-12T12:00:00Z",
-                }
-            ],
-            [{"timezone": "UTC", "timezone_confirmed_at": None}],
+            {
+                "timezone": "Europe/Amsterdam",
+                "timezone_confirmed_at": "2026-09-12T12:00:00Z",
+            },
+            {"timezone": "UTC", "timezone_confirmed_at": None},
         ]
     )
 
@@ -49,10 +47,12 @@ def test_calibration_timezone_requires_persisted_confirmation() -> None:
 
     asyncio.run(exercise())
 
+    assert all(request.method == "POST" for request in requests)
     assert all(
-        request.url.params["select"] == "timezone,timezone_confirmed_at"
+        request.url.path.endswith("/rest/v1/rpc/get_operational_athlete_profile")
         for request in requests
     )
+    assert all(request.content == b"{}" for request in requests)
 
 
 def test_setup_and_observation_rpcs_preserve_athlete_rls_context() -> None:

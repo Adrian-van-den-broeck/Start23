@@ -8,7 +8,7 @@ from app.modules.physiology.activity import (
     ActivityCorrectionReason,
     ActivityMatchResult,
     PlannedActivityExpectation,
-    calculate_realized_activity_load,
+    calculate_legacy_phase7_rpe_duration_load,
     classify_activity_match,
 )
 from app.modules.physiology.models import DurationMinutes, IntensityBucket, InternalLoad
@@ -29,8 +29,8 @@ def _planned(
     )
 
 
-def test_realized_load_uses_actual_rpe_times_duration_hours() -> None:
-    load = calculate_realized_activity_load(
+def test_legacy_phase7_load_uses_actual_rpe_times_duration_hours() -> None:
+    load = calculate_legacy_phase7_rpe_duration_load(
         duration=DurationMinutes(Decimal("90")),
         rpe=6,
     )
@@ -111,9 +111,9 @@ def test_unplanned_activity_requests_a_pending_correction() -> None:
 
 
 @pytest.mark.parametrize("rpe", [0, 11])
-def test_realized_load_rejects_invalid_rpe(rpe: int) -> None:
+def test_legacy_phase7_load_rejects_invalid_rpe(rpe: int) -> None:
     with pytest.raises(ValueError, match="RPE"):
-        calculate_realized_activity_load(
+        calculate_legacy_phase7_rpe_duration_load(
             duration=DurationMinutes(Decimal("60")),
             rpe=rpe,
         )

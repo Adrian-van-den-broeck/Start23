@@ -10,8 +10,8 @@ from app.modules.physiology.progression import (
     ProgressionBasis,
     WeeklyLoad,
     calculate_42_day_average,
+    calculate_legacy_phase3_expected_rpe_duration_load,
     calculate_progressive_target,
-    snapshot_personalized_load,
 )
 
 
@@ -114,7 +114,7 @@ def test_heavy_undershoot_without_history_fails_closed() -> None:
 
 
 def test_personalized_load_snapshot_is_expected_rpe_times_hours() -> None:
-    result = snapshot_personalized_load(
+    result = calculate_legacy_phase3_expected_rpe_duration_load(
         expected_rpe=Decimal("8"),
         duration=DurationMinutes(Decimal("90")),
     )
@@ -130,7 +130,7 @@ def test_personalized_snapshot_rejects_invalid_rpe(
     expected_rpe: Decimal,
 ) -> None:
     with pytest.raises(ValueError, match="between 1 and 10"):
-        snapshot_personalized_load(
+        calculate_legacy_phase3_expected_rpe_duration_load(
             expected_rpe=expected_rpe,
             duration=DurationMinutes(Decimal("60")),
         )

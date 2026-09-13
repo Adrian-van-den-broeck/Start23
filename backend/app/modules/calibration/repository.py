@@ -442,22 +442,20 @@ class SupabaseCalibrationRepository:
         access_token: str,
         athlete_id: UUID,
     ) -> str:
-        rows = await self._select(
-            "athlete_profiles",
+        del athlete_id
+        result = await self._request(
+            "POST",
+            "rpc/get_operational_athlete_profile",
             access_token,
-            athlete_id,
-            extra_params={
-                "select": "timezone,timezone_confirmed_at",
-                "limit": "1",
-            },
+            json={},
         )
         if (
-            not rows
-            or not isinstance(rows[0].get("timezone"), str)
-            or rows[0].get("timezone_confirmed_at") is None
+            not isinstance(result, dict)
+            or not isinstance(result.get("timezone"), str)
+            or result.get("timezone_confirmed_at") is None
         ):
             raise CalibrationRepositoryNotFoundError
-        return str(rows[0]["timezone"])
+        return str(result["timezone"])
 
     async def create_test_assignment(
         self,

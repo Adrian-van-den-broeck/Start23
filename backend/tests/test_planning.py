@@ -82,6 +82,7 @@ def test_calibration_route_marks_regular_workouts_as_zone_evidence() -> None:
         "profile": {"timezone": "Europe/Amsterdam"},
         "goal": {
             "target_date": "2026-12-06",
+            "race_type": "bike",
             "race_discipline_profile": ["bike"],
         },
         "zones": [],
@@ -107,6 +108,37 @@ def test_calibration_route_marks_regular_workouts_as_zone_evidence() -> None:
     assert capabilities[Discipline.BIKE].rpe_guided is True
     assert card.workout_kind == "standard"
     assert card.contributes_to_zone_calibration is True
+
+
+@pytest.mark.parametrize(
+    ("race_type", "expected"),
+    [
+        ("run", {Discipline.RUN}),
+        ("bike", {Discipline.BIKE}),
+        ("swim", {Discipline.SWIM}),
+        ("duathlon", {Discipline.BIKE, Discipline.RUN}),
+        ("triathlon", set(Discipline)),
+    ],
+)
+def test_planner_derives_disciplines_from_race_type(
+    race_type: str,
+    expected: set[Discipline],
+) -> None:
+    snapshot: JsonObject = {
+        "profile": {"timezone": "Europe/Amsterdam"},
+        "goal": {
+            "target_date": "2099-12-06",
+            "race_type": race_type,
+            # A stale compatibility array cannot expand current race scope.
+            "race_discipline_profile": ["swim", "bike", "run"],
+        },
+        "zones": [],
+        "discipline_setups": [],
+    }
+
+    _, _, disciplines, _ = PlanningService._context_values(snapshot)
+
+    assert disciplines == frozenset(expected)
 
 
 class PlanningTokenVerifier:

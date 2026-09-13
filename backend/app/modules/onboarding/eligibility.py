@@ -3,27 +3,35 @@
 from collections.abc import Iterable, Mapping
 from typing import Any
 
-from app.modules.calibration.service import is_current_mvp_setup_values
 from app.modules.onboarding.versioning import CURRENT_RULESET_VERSION, OnboardingStep
 from app.modules.physiology.models import Discipline
 
-_RACE_DISCIPLINES: dict[str, frozenset[str]] = {
-    "run": frozenset({"run"}),
-    "bike": frozenset({"bike"}),
-    "swim": frozenset({"swim"}),
-    "triathlon": frozenset({"swim", "bike", "run"}),
-    "duathlon": frozenset({"bike", "run"}),
+RACE_REQUIRED_DISCIPLINES: dict[str, tuple[Discipline, ...]] = {
+    "run": (Discipline.RUN,),
+    "bike": (Discipline.BIKE,),
+    "swim": (Discipline.SWIM,),
+    "duathlon": (Discipline.BIKE, Discipline.RUN),
+    "triathlon": (Discipline.SWIM, Discipline.BIKE, Discipline.RUN),
 }
+
+
+def required_disciplines_for_race_type(
+    race_type: object,
+) -> tuple[Discipline, ...]:
+    """Return the one authoritative current race-to-discipline mapping."""
+    return RACE_REQUIRED_DISCIPLINES.get(str(race_type), ())
 
 
 def _structured_goal_is_current(goal: Mapping[str, Any] | None) -> bool:
     if goal is None:
         return False
     race_type = str(goal.get("race_type", ""))
-    disciplines = _RACE_DISCIPLINES.get(race_type)
-    if disciplines is None:
+    disciplines = required_disciplines_for_race_type(race_type)
+    if not disciplines:
         return False
-    required_distances = {f"{discipline}_distance_meters" for discipline in disciplines}
+    required_distances = {
+        f"{discipline.value}_distance_meters" for discipline in disciplines
+    }
     return (
         bool(str(goal.get("race_name", "")).strip())
         and goal.get("race_date") is not None
@@ -70,25 +78,22 @@ def satisfied_onboarding_steps(
     if _structured_goal_is_current(goal):
         steps.append("goal")
 
+    # A setup row records intent only. Planning capability exists only after a
+    # calculated/manual profile has passed its separate athlete approval and is
+    # active. This also prevents a threshold-only direct RPC from claiming
+    # readiness after a partial write.
+    del discipline_setups
+    required = {
+        discipline.value
+        for discipline in required_disciplines_for_race_type(
+            goal.get("race_type") if goal is not None else None
+        )
+    }
     configured = {
         str(row.get("discipline"))
         for row in zones
         if row.get("status", "active") == "active"
     }
-    configured.update(
-        str(row.get("discipline"))
-        for row in discipline_setups
-        if row.get("setup_status")
-        in {"configured", "test_pending", "calibration_pending"}
-        and is_current_mvp_setup_values(
-            discipline=str(row.get("discipline")),
-            setup_route=str(row.get("setup_route")),
-            guidance_mode=str(row.get("guidance_mode")),
-            protocol_id=(
-                str(row["protocol_id"]) if row.get("protocol_id") is not None else None
-            ),
-        )
-    )
-    if configured == {discipline.value for discipline in Discipline}:
+    if required and configured >= required:
         steps.append("zones")
     return tuple(steps)

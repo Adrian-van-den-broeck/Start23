@@ -32,7 +32,6 @@ import type {
   OnboardingStep,
   PrimaryRaceGoal,
   RaceType,
-  ZoneBoundary,
 } from '../api/types';
 import { FadeInView } from '../components/FadeInView';
 import { FormField } from '../components/FormField';
@@ -152,7 +151,7 @@ type ProfileStepProps = {
   }) => Promise<void>;
 };
 
-function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
+export function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
   const [firstName, setFirstName] = useState(profile?.first_name ?? '');
   const [lastName, setLastName] = useState(profile?.last_name ?? '');
   const [dateOfBirth, setDateOfBirth] = useState(profile?.date_of_birth ?? '');
@@ -222,7 +221,7 @@ type ConfirmationStepProps = {
   onSave: () => Promise<void>;
 };
 
-function HeartRateMonitorStep({ saving, onSave }: ConfirmationStepProps) {
+export function HeartRateMonitorStep({ saving, onSave }: ConfirmationStepProps) {
   return (
     <StepFrame
       description="Voor het huidige MVP moet je gemiddelde hartslag kunnen meten. Dat mag met iedere hartslagmeter en je kunt de waarde handmatig invoeren; een specifieke wearable is niet nodig."
@@ -262,7 +261,7 @@ const fallbackTimezones = [
   'Australia/Sydney',
 ] as const;
 
-function TimezoneStep({ profile, saving, onSave }: TimezoneStepProps) {
+export function TimezoneStep({ profile, saving, onSave }: TimezoneStepProps) {
   const detected = useMemo(resolveDeviceTimezone, []);
   const [timezone, setTimezone] = useState(
     profile?.timezone_confirmed_at ? (profile.timezone ?? '') : '',
@@ -340,7 +339,7 @@ type HistoryStepProps = {
   onSave: (values: Record<Discipline, string>) => Promise<void>;
 };
 
-function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
+export function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
   const initial = (discipline: Discipline): string => {
     const entry = state.training_history.find((item) => item.discipline === discipline);
     return entry?.previous_month_weekly_minutes != null
@@ -427,7 +426,7 @@ function normalizeRaceDate(value: string): string | null {
   return normalized > localToday ? normalized : null;
 }
 
-function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
+export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
   const [selectedKind, setSelectedKind] = useState<
     GoalPlanningOption['goal_kind'] | null
   >(goal ? 'race_event' : null);
@@ -717,30 +716,6 @@ function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
   );
 }
 
-const metricConfiguration: Record<
-  Discipline,
-  { kind: string; label: string; unit: string; descending: boolean }
-> = {
-  swim: {
-    kind: 'swim_css_seconds_per_100m',
-    label: 'CSS',
-    unit: 'sec/100m',
-    descending: true,
-  },
-  bike: {
-    kind: 'bike_ftp_watts',
-    label: 'FTP',
-    unit: 'watt',
-    descending: false,
-  },
-  run: {
-    kind: 'run_lthr_bpm',
-    label: 'LTHR',
-    unit: 'bpm',
-    descending: false,
-  },
-};
-
 type ReviewStepProps = {
   state: OnboardingState;
   saving: boolean;
@@ -752,7 +727,7 @@ type ReviewStepProps = {
   onRejectZone: (proposalId: string) => Promise<void>;
 };
 
-function ReviewStep({
+export function ReviewStep({
   state,
   saving,
   onComplete,
@@ -760,7 +735,10 @@ function ReviewStep({
   onRejectZone,
 }: ReviewStepProps) {
   const pendingZones = state.zones.filter(
-    (zone) => zone.status === 'pending' && zone.proposal_id !== null,
+    (zone) =>
+      state.required_disciplines.includes(zone.discipline) &&
+      zone.status === 'pending' &&
+      zone.proposal_id !== null,
   );
   return (
     <StepFrame
@@ -786,10 +764,14 @@ function ReviewStep({
           value={`${
             new Set(
               state.zones
-                .filter((zone) => zone.status === 'active')
+                .filter(
+                  (zone) =>
+                    state.required_disciplines.includes(zone.discipline) &&
+                    zone.status === 'active',
+                )
                 .map((zone) => zone.discipline),
             ).size
-          }/3 disciplines`}
+          }/${state.required_disciplines.length} disciplines`}
         />
       </View>
       {pendingZones.map((zone) => (
@@ -1168,29 +1150,72 @@ export function OnboardingScreen({
             />
           ) : null}
           {step === 'zones' ? (
-            <ZoneSetupStep
-              accessToken={accessToken}
-              key={[
-                ...state.zones.map((zone) => `${zone.id}:${zone.status}`),
-                ...state.discipline_setups.map(
-                  (setup) => `${setup.discipline}:${setup.revision}`,
-                ),
-              ].join(':')}
-              onSave={(discipline, input: DisciplineSetupInput) =>
-                mutate(async () => {
-                  if (input.setup_route === 'known_values') {
-                    await saveCalculatedZones(accessToken, discipline, {
-                      thresholds: input.thresholds,
-                      source_quality: input.source_quality,
-                      boundary_overrides: input.zone_profiles,
-                    });
-                  }
-                  await saveDisciplineSetup(accessToken, discipline, input);
-                })
-              }
-              saving={saving}
-              state={state}
-            />
+            <>
+              <ZoneSetupStep
+                accessToken={accessToken}
+                key={[
+                  ...state.zones.map((zone) => `${zone.id}:${zone.status}`),
+                  ...state.discipline_setups.map(
+                    (setup) => `${setup.discipline}:${setup.revision}`,
+                  ),
+                ].join(':')}
+                onSave={(discipline, input: DisciplineSetupInput) =>
+                  mutate(async () => {
+                    if (input.setup_route === 'known_values') {
+                      await saveCalculatedZones(accessToken, discipline, {
+                        thresholds: input.thresholds,
+                        source_quality: input.source_quality,
+                        boundary_overrides: input.zone_profiles,
+                      });
+                    }
+                    await saveDisciplineSetup(accessToken, discipline, input);
+                  })
+                }
+                saving={saving}
+                state={state}
+              />
+              {state.zones
+                .filter(
+                  (zone) =>
+                    state.required_disciplines.includes(zone.discipline) &&
+                    zone.status === 'pending' &&
+                    zone.proposal_id !== null,
+                )
+                .map((zone) => (
+                  <View key={zone.id} style={styles.approvalNotice}>
+                    <Text style={styles.approvalTitle}>
+                      Zonevoorstel {zone.discipline} wacht op bevestiging
+                    </Text>
+                    <Text style={styles.approvalText}>
+                      De berekende zones worden pas na deze aparte, stale-safe
+                      bevestiging actief.
+                    </Text>
+                    <ActionButton
+                      disabled={saving}
+                      label={`Zones ${zone.discipline} bevestigen`}
+                      onPress={() =>
+                        void mutate(() =>
+                          approveZoneProposal(
+                            accessToken,
+                            zone.proposal_id!,
+                            zone.base_zone_profile_id,
+                          ),
+                        )
+                      }
+                    />
+                    <ActionButton
+                      disabled={saving}
+                      label={`Zonevoorstel ${zone.discipline} afwijzen`}
+                      onPress={() =>
+                        void mutate(() =>
+                          rejectZoneProposal(accessToken, zone.proposal_id!),
+                        )
+                      }
+                      secondary
+                    />
+                  </View>
+                ))}
+            </>
           ) : null}
           {step === 'review' ? (
             <ReviewStep

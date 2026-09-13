@@ -45,6 +45,37 @@ const disciplineLabels: Record<Discipline, string> = {
   run: 'Lopen',
 };
 
+export function ActivityMeasurementNotices({
+  durationMinutes,
+  distanceMeters,
+  zoneMinutes,
+  language,
+}: {
+  durationMinutes: string | null;
+  distanceMeters: number | null;
+  zoneMinutes: [string, string, string, string, string] | null | undefined;
+  language: AppLanguage;
+}) {
+  return (
+    <>
+      {durationMinutes === null && distanceMeters ? (
+        <Text style={styles.measurementNotice}>
+          {language === 'nl'
+            ? 'Afstand geregistreerd. Duur en tijd-in-zone zijn niet gemeten en worden niet aangevuld.'
+            : 'Distance recorded. Duration and time in zone were not measured and are not inferred.'}
+        </Text>
+      ) : null}
+      {hasPartialObservedZoneTime(durationMinutes, zoneMinutes) ? (
+        <Text style={styles.measurementNotice}>
+          {language === 'nl'
+            ? 'Gedeeltelijke sensordekking: alleen gemeten zonetijd is gebruikt; ontbrekende minuten zijn niet geschat.'
+            : 'Partial sensor coverage: only observed zone time was used; missing minutes were not estimated.'}
+        </Text>
+      ) : null}
+    </>
+  );
+}
+
 function newIdempotencyKey(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (value) => {
     const random = Math.floor(Math.random() * 16);
@@ -578,23 +609,12 @@ export function ActivityScreen({
                 {activity.rpe === null ? '' : ` · RPE ${activity.rpe}`}
               </Text>
               <Text style={styles.body}>{resultMessage(activity, language)}</Text>
-              {activity.duration_minutes === null && activity.distance_meters ? (
-                <Text style={styles.measurementNotice}>
-                  {language === 'nl'
-                    ? 'Afstand geregistreerd. Duur en tijd-in-zone zijn niet gemeten en worden niet aangevuld.'
-                    : 'Distance recorded. Duration and time in zone were not measured and are not inferred.'}
-                </Text>
-              ) : null}
-              {hasPartialObservedZoneTime(
-                activity.duration_minutes,
-                activity.metrics?.zone_minutes,
-              ) ? (
-                <Text style={styles.measurementNotice}>
-                  {language === 'nl'
-                    ? 'Gedeeltelijke sensordekking: alleen gemeten zonetijd is gebruikt; ontbrekende minuten zijn niet geschat.'
-                    : 'Partial sensor coverage: only observed zone time was used; missing minutes were not estimated.'}
-                </Text>
-              ) : null}
+              <ActivityMeasurementNotices
+                distanceMeters={activity.distance_meters}
+                durationMinutes={activity.duration_minutes}
+                language={language}
+                zoneMinutes={activity.metrics?.zone_minutes}
+              />
               {activity.match_status === 'unmatched' &&
               activity.processing_state === 'awaiting_rpe' &&
               suggestedWorkout(activity, workouts) ? (

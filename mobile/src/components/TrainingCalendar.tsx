@@ -56,10 +56,6 @@ function visibleDates(anchor: Date, mode: CalendarMode): Date[] {
   return Array.from({ length: dayCount }, (_, index) => addDays(gridStart, index));
 }
 
-function sameDay(left: Date, right: Date): boolean {
-  return isoDate(left) === isoDate(right);
-}
-
 export function TrainingCalendar({
   initialDate,
   loading,

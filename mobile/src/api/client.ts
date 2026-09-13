@@ -311,8 +311,9 @@ export function saveCalculatedZones(
 
 export function getZoneSetupOptions(
   accessToken: string,
+  discipline: Discipline,
 ): Promise<ZoneSetupOption[]> {
-  return request(accessToken, '/api/v1/onboarding/zone-options');
+  return request(accessToken, `/api/v1/onboarding/zone-options/${discipline}`);
 }
 
 export function saveDisciplineSetup(

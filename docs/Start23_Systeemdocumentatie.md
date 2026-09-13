@@ -1013,19 +1013,25 @@ Goedkeuring van een testdatum verandert geen zones. Eerst moet de test worden ui
 
 ### 11.4 Submaximale kalibratie
 
-Week-1-kalibratie gebruikt comfortabele en steady RPE-blokken voor lopen, fietsen of zwemmen. Het systeem controleert compleetheid, uitvoering, sensorstatus en zwemspecifieke voorwaarden. Zonder objectieve data wordt het resultaat `RPE_ONLY`. Met bruikbare data wordt het `PROVISIONALLY_CALIBRATED`.
+Week-1-kalibratie gebruikt comfortabele en steady RPE-blokken voor lopen,
+fietsen of zwemmen. Het systeem controleert compleetheid, uitvoering en
+datakwaliteit. Lopen en fietsen vereisen de gemiddelde hartslag van hetzelfde
+blok; zwemmen vereist verstreken tijd en afstand. De goedgekeurde
+`phase-13-joren-ruleset-1`-ankers berekenen deterministisch een geschatte
+drempel en vijf zones. Een hartslagdrempel onder 140 bpm krijgt de expliciete
+waarschuwing `calculated_threshold_unusually_low`.
 
-Een submaximale kalibratie mag geen drempel afleiden:
-
-\[
-threshold_{submaximal}=\text{niet toegestaan}
-\]
-
-Numerieke kalibratiezones blijven tot na een complete Week-2-evaluatie verborgen. Die complete Week-2-regel is nog niet goedgekeurd en staat in de huidige service bewust altijd op onvoltooid. Hierdoor blijft de positieve route fail-closed.
+Het resultaat heet `THRESHOLD_ESTIMATED` en de zones blijven
+`PENDING_ATHLETE_CONFIRMATION`. Bevestiging van de drempel maakt alleen een
+pending zonevoorstel. Pas een aparte, versiegebonden goedkeuring kan dit
+stale-safe activeren. De bronkwaliteit
+`submaximal_calibration_estimate` voorkomt dat deze route zich voordoet als een
+beoordeelde veldtest. Historische `RPE_ONLY`- en
+`PROVISIONALLY_CALIBRATED`-records houden hun oorspronkelijke betekenis.
 
 ### 11.5 Drempel en zonevoorstel bevestigen
 
-Een geldige veldtest maakt eerst een geschatte drempel met middelmatig vertrouwen. De atleet kan:
+Een geldige actuele kalibratie of veldtest maakt eerst een geschatte drempel met middelmatig vertrouwen. De atleet kan:
 
 - de drempel afwijzen: er verandert geen zone;
 - de drempel bevestigen: er ontstaat een apart pending zonevoorstel;
@@ -1198,7 +1204,10 @@ Alle `/api/v1`-routes behalve health, readiness, OAuth-callback en Polar-webhook
 
 | Methode | Pad | Functie |
 |---|---|---|
-| GET/PATCH | `/me/profile` | Eigen profiel lezen of gedeeltelijk bijwerken. |
+| GET | `/me/profile` | Samengestelde actuele profielprojectie lezen. |
+| PATCH | `/me/identifying-profile` | Alleen actuele identificerende velden bijwerken. |
+| PATCH | `/me/physiology-profile` | Alleen actuele fysiologische velden bijwerken. |
+| PATCH | `/me/operational-profile` | Monitor of expliciet geaccepteerde IANA-tijdzone bevestigen. |
 | GET | `/onboarding` | Hervatbare afgeleide onboardingstatus. |
 | GET | `/onboarding/goal-options` | Actieve raceoptie en fail-closed persoonlijke opties. |
 | PUT | `/me/training-history` | Complete drie-disciplineset vervangen. |
@@ -1252,7 +1261,7 @@ Alle `/api/v1`-routes behalve health, readiness, OAuth-callback en Polar-webhook
 
 | Methode | Pad | Functie |
 |---|---|---|
-| GET | `/onboarding/zone-options` | Vier routes per discipline tonen. |
+| GET | `/onboarding/zone-options/{discipline}` | Alleen uitvoerbare routes voor die discipline tonen. |
 | PUT | `/onboarding/disciplines/{discipline}/setup` | Gekozen route en instellingen bewaren. |
 | GET | `/calibration/protocols/{discipline}` | Beoordeelde actieve protocollen lezen. |
 | POST | `/calibration/observations` | Immutable, idempotente segmentobservatie opslaan. |

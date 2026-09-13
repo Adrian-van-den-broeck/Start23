@@ -14,6 +14,7 @@ from fastapi.testclient import TestClient
 from app.core.config import Settings
 from app.core.security import AuthenticatedIdentity, InvalidAccessTokenError
 from app.main import create_app
+from app.modules.calibration.repository import CalibrationRepository
 from app.modules.calibration.service import is_current_mvp_setup
 from app.modules.onboarding.repository import (
     JsonObject,
@@ -152,6 +153,7 @@ class MemoryOnboardingRepository:
                 "session": None,
                 "training_history": [],
                 "goals": [],
+                "discipline_setups": [],
                 "zone_profiles": [],
                 "zone_metrics": [],
                 "zone_boundaries": [],
@@ -383,6 +385,37 @@ class MemoryOnboardingRepository:
             for profile in profiles
             if profile["discipline"] == values["discipline"]
         ]
+        input_fingerprint = values.get("input_fingerprint")
+        replay = next(
+            (
+                profile
+                for profile in discipline_profiles
+                if input_fingerprint is not None
+                and profile.get("calculation_fingerprint") == input_fingerprint
+                and profile["status"] in {"pending", "active"}
+            ),
+            None,
+        )
+        if replay is not None:
+            proposal = next(
+                (
+                    (proposal_id, proposal)
+                    for proposal_id, proposal in self._proposals.items()
+                    if proposal["target_id"] == UUID(str(replay["id"]))
+                ),
+                None,
+            )
+            return {
+                "profile_id": replay["id"],
+                "version": replay["version"],
+                "status": replay["status"],
+                "proposal_id": str(proposal[0]) if proposal is not None else None,
+                "base_zone_profile_id": (
+                    str(proposal[1]["base_id"])
+                    if proposal is not None and proposal[1]["base_id"] is not None
+                    else None
+                ),
+            }
         active = next(
             (
                 profile
@@ -467,6 +500,36 @@ class MemoryOnboardingRepository:
             for profile in profiles
             if profile["discipline"] == values["discipline"]
         ]
+        replay = next(
+            (
+                profile
+                for profile in discipline_profiles
+                if profile.get("calculation_fingerprint")
+                == values.get("input_fingerprint")
+                and profile["status"] in {"pending", "active"}
+            ),
+            None,
+        )
+        if replay is not None:
+            proposal = next(
+                (
+                    (proposal_id, proposal)
+                    for proposal_id, proposal in self._proposals.items()
+                    if proposal["target_id"] == UUID(str(replay["id"]))
+                ),
+                None,
+            )
+            return {
+                "profile_id": replay["id"],
+                "version": replay["version"],
+                "status": replay["status"],
+                "proposal_id": str(proposal[0]) if proposal is not None else None,
+                "base_zone_profile_id": (
+                    str(proposal[1]["base_id"])
+                    if proposal is not None and proposal[1]["base_id"] is not None
+                    else None
+                ),
+            }
         active = next(
             (
                 profile
@@ -501,6 +564,7 @@ class MemoryOnboardingRepository:
             "effective_from": None,
             "created_at": _NOW.isoformat(),
             "metric_profiles": deepcopy(values["metric_profiles"]),
+            "calculation_fingerprint": values.get("input_fingerprint"),
         }
         profiles.append(profile)
         self._proposals[proposal_id] = {
@@ -516,6 +580,32 @@ class MemoryOnboardingRepository:
             "proposal_id": str(proposal_id),
             "base_zone_profile_id": (str(active["id"]) if active is not None else None),
         }
+
+    async def save_setup(
+        self,
+        access_token: str,
+        values: JsonObject,
+    ) -> JsonObject:
+        owner = self._owner(access_token)
+        setups: list[JsonObject] = self._states[owner]["discipline_setups"]
+        existing = next(
+            (row for row in setups if row["discipline"] == values["discipline"]),
+            None,
+        )
+        revision = int(existing["revision"]) + 1 if existing else 1
+        created_at = existing["created_at"] if existing else _NOW.isoformat()
+        row = {
+            **values,
+            "revision": revision,
+            "created_at": created_at,
+            "updated_at": _NOW.isoformat(),
+        }
+        if existing is None:
+            setups.append(row)
+        else:
+            existing.clear()
+            existing.update(row)
+        return deepcopy(row)
 
     async def complete_onboarding(
         self,
@@ -652,6 +742,7 @@ def onboarding_context() -> Iterator[tuple[TestClient, UUID, UUID]]:
         Settings(environment="test"),
         access_token_verifier=TokenVerifier(token_owners),
         onboarding_repository=repository,
+        calibration_repository=cast(CalibrationRepository, repository),
     )
     with TestClient(application) as client:
         yield client, athlete_a, athlete_b
@@ -663,7 +754,7 @@ def _headers(token: str = "athlete-a") -> dict[str, str]:
 
 def _complete_profile(client: TestClient, token: str = "athlete-a") -> None:
     response = client.patch(
-        "/api/v1/me/profile",
+        "/api/v1/me/physiology-profile",
         headers=_headers(token),
         json={
             "date_of_birth": "1990-05-20",
@@ -860,18 +951,45 @@ def test_profile_rejects_invalid_timezone_and_authoritative_user_id(
 ) -> None:
     client, _, athlete_b = onboarding_context
     invalid_timezone = client.patch(
-        "/api/v1/me/profile",
+        "/api/v1/me/operational-profile",
         headers=_headers(),
-        json={"timezone": "Mars/Olympus"},
+        json={
+            "timezone": "Mars/Olympus",
+            "timezone_source": "manual",
+            "timezone_confirmed": True,
+        },
     )
     override = client.patch(
-        "/api/v1/me/profile",
+        "/api/v1/me/operational-profile",
         headers=_headers(),
-        json={"athlete_id": str(athlete_b), "timezone": "UTC"},
+        json={
+            "athlete_id": str(athlete_b),
+            "timezone": "UTC",
+            "timezone_source": "manual",
+            "timezone_confirmed": True,
+        },
     )
 
     assert invalid_timezone.status_code == 422
     assert override.status_code == 422
+
+
+def test_combined_profile_mutation_route_is_removed(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = onboarding_context
+
+    response = client.patch(
+        "/api/v1/me/profile",
+        headers=_headers(),
+        json={
+            "first_name": "Mixed",
+            "date_of_birth": "1990-05-20",
+            "timezone": "Europe/Amsterdam",
+        },
+    )
+
+    assert response.status_code == 405
 
 
 def test_profile_rejects_values_outside_database_integer_range(
@@ -879,7 +997,7 @@ def test_profile_rejects_values_outside_database_integer_range(
 ) -> None:
     client, _, _ = onboarding_context
     response = client.patch(
-        "/api/v1/me/profile",
+        "/api/v1/me/physiology-profile",
         headers=_headers(),
         json={"resting_heart_rate_bpm": 32768},
     )
@@ -904,9 +1022,9 @@ def test_profile_rejects_retired_write_fields(
     client, _, _ = onboarding_context
 
     response = client.patch(
-        "/api/v1/me/profile",
+        "/api/v1/me/physiology-profile",
         headers=_headers(),
-        json={"timezone": "Europe/Amsterdam", retired_field: value},
+        json={"date_of_birth": "1990-05-20", retired_field: value},
     )
 
     assert response.status_code == 422
@@ -1150,7 +1268,7 @@ def test_monitor_and_timezone_are_independent_server_prerequisites(
 ) -> None:
     client, _, _ = onboarding_context
     profile = client.patch(
-        "/api/v1/me/profile",
+        "/api/v1/me/physiology-profile",
         headers=_headers(),
         json={
             "date_of_birth": "1990-05-20",
@@ -1284,6 +1402,81 @@ def test_known_thresholds_create_multi_metric_pending_zones_before_activation(
     assert approved.json()["superseded_zone_profile_id"] is None
 
 
+def test_setup_intent_and_pending_profile_never_report_false_readiness(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = onboarding_context
+    _complete_profile(client)
+    _complete_history(client)
+    goal = client.post(
+        "/api/v1/me/goals",
+        headers=_headers(),
+        json={
+            "race_type": "run",
+            "race_name": "Readiness 10K",
+            "race_date": (date.today() + timedelta(days=120)).isoformat(),
+            "run_distance_meters": 10000,
+            "total_target_time_seconds": 3600,
+        },
+    )
+    assert goal.status_code == 201, goal.text
+
+    setup = client.put(
+        "/api/v1/onboarding/disciplines/run/setup",
+        headers=_headers(),
+        json={
+            "setup_route": "known_values",
+            "guidance_mode": "heart_rate",
+            "thresholds": [{"metric_kind": "run_lthr_bpm", "value": 172}],
+        },
+    )
+    setup_only = client.get("/api/v1/onboarding", headers=_headers()).json()
+
+    assert setup.status_code == 200, setup.text
+    assert setup_only["required_disciplines"] == ["run"]
+    assert setup_only["current_step"] == "zones"
+    assert "zones" not in setup_only["completed_steps"]
+    assert setup_only["can_complete"] is False
+
+    payload = {
+        "setup_method": "calculated",
+        "confirmed": True,
+        "thresholds": [{"metric_kind": "run_lthr_bpm", "value": 172}],
+        "boundary_overrides": [],
+    }
+    pending = client.put(
+        "/api/v1/me/zones/run",
+        headers=_headers(),
+        json=payload,
+    )
+    retried = client.put(
+        "/api/v1/me/zones/run",
+        headers=_headers(),
+        json=payload,
+    )
+    pending_state = client.get("/api/v1/onboarding", headers=_headers()).json()
+
+    assert pending.status_code == retried.status_code == 200
+    assert retried.json()["profile"]["id"] == pending.json()["profile"]["id"]
+    assert retried.json()["proposal_id"] == pending.json()["proposal_id"]
+    assert pending.json()["profile"]["status"] == "pending"
+    assert pending_state["current_step"] == "zones"
+    assert "zones" not in pending_state["completed_steps"]
+    assert pending_state["can_complete"] is False
+
+    approved = client.post(
+        f"/api/v1/change-proposals/{pending.json()['proposal_id']}/approve",
+        headers=_headers(),
+        json={"expected_base_zone_profile_id": None},
+    )
+    ready = client.get("/api/v1/onboarding", headers=_headers()).json()
+
+    assert approved.status_code == 200, approved.text
+    assert ready["current_step"] == "review"
+    assert "zones" in ready["completed_steps"]
+    assert ready["can_complete"] is True
+
+
 def test_physician_or_lab_values_remain_pending_with_measured_provenance(
     onboarding_context: tuple[TestClient, UUID, UUID],
 ) -> None:
@@ -1311,12 +1504,43 @@ def test_physician_or_lab_values_remain_pending_with_measured_provenance(
     assert response.json()["proposal_id"] is not None
 
 
-def test_zone_proposal_approval_is_owned_atomic_and_stale_safe(
+@pytest.mark.parametrize(
+    ("discipline", "metric_kind", "active_value", "pending_value", "descending"),
+    [
+        ("run", "run_lthr_bpm", 170, 172, False),
+        ("bike", "bike_ftp_watts", 240, 250, False),
+        ("swim", "swim_css_seconds_per_100m", 105, 102, True),
+    ],
+)
+def test_calculated_zone_approval_is_owned_atomic_and_stale_safe_for_each_sport(
     onboarding_context: tuple[TestClient, UUID, UUID],
+    discipline: str,
+    metric_kind: str,
+    active_value: int,
+    pending_value: int,
+    descending: bool,
 ) -> None:
     client, _, _ = onboarding_context
-    first = _manual_zone(client, "run", "run_lthr_bpm", 170)
-    replacement = _manual_zone(client, "run", "run_lthr_bpm", 172)
+    first = _manual_zone(
+        client,
+        discipline,
+        metric_kind,
+        active_value,
+        descending=descending,
+    )
+    replacement_response = client.put(
+        f"/api/v1/me/zones/{discipline}",
+        headers=_headers(),
+        json={
+            "setup_method": "calculated",
+            "confirmed": True,
+            "thresholds": [{"metric_kind": metric_kind, "value": pending_value}],
+            "boundary_overrides": [],
+        },
+    )
+    assert replacement_response.status_code == 200, replacement_response.text
+    replacement = replacement_response.json()
+    assert replacement["profile"]["status"] == "pending"
     proposal_id = replacement["proposal_id"]
     base_id = first["profile"]["id"]
 
@@ -1353,7 +1577,7 @@ def test_zone_proposal_approval_is_owned_atomic_and_stale_safe(
             [
                 zone
                 for zone in state["zones"]
-                if zone["discipline"] == "run" and zone["status"] == "active"
+                if zone["discipline"] == discipline and zone["status"] == "active"
             ]
         )
         == 1
@@ -1581,7 +1805,7 @@ def test_legacy_completed_user_resumes_only_new_r4_steps_then_completes(
 ) -> None:
     client, athlete_a, _ = onboarding_context
     client.patch(
-        "/api/v1/me/profile",
+        "/api/v1/me/physiology-profile",
         headers=_headers(),
         json={"date_of_birth": "1990-05-20", "resting_heart_rate_bpm": 52},
     )
@@ -1656,7 +1880,7 @@ def test_legacy_completed_user_resumes_only_new_r4_steps_then_completes(
     )
 
     assert first["current_step"] == "heart_rate_monitor"
-    assert first["completed_steps"] == ["profile", "history", "zones"]
+    assert first["completed_steps"] == ["profile", "history"]
     assert second["current_step"] == "timezone"
     assert third["current_step"] == "goal"
     assert upgraded_goal.status_code == 201

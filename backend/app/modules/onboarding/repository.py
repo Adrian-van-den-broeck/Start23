@@ -44,14 +44,6 @@ class OnboardingRepository(Protocol):
     async def fetch_state(self, access_token: str, athlete_id: UUID) -> JsonObject:
         """Fetch all public onboarding records for one verified owner."""
 
-    async def upsert_profile(
-        self,
-        access_token: str,
-        athlete_id: UUID,
-        values: JsonObject,
-    ) -> JsonObject:
-        """Create or patch the owner's profile."""
-
     async def fetch_identifying_profile(
         self, access_token: str, athlete_id: UUID
     ) -> JsonObject | None:
@@ -304,6 +296,23 @@ class SupabaseOnboardingRepository:
             )
             return []
 
+    async def _read_operational_profile(
+        self,
+        access_token: str,
+    ) -> list[JsonObject]:
+        """Read the bounded legacy state without exposing its backing table."""
+        result = await self._request(
+            "POST",
+            "rpc/get_operational_athlete_profile",
+            access_token,
+            json={},
+        )
+        if result is None:
+            return []
+        if not isinstance(result, dict):
+            raise RepositoryUnavailableError
+        return [dict(result)]
+
     async def fetch_state(self, access_token: str, athlete_id: UUID) -> JsonObject:
         """Fetch rows in parallel with an explicit owner filter on every query."""
         (
@@ -319,16 +328,7 @@ class SupabaseOnboardingRepository:
             discipline_setups,
             zone_proposals,
         ) = await asyncio.gather(
-            self._select(
-                "athlete_profiles",
-                access_token,
-                athlete_id,
-                select=(
-                    "timezone,timezone_source,timezone_confirmed_at,"
-                    "heart_rate_monitor_confirmed_at,onboarding_status,revision,"
-                    "created_at,updated_at"
-                ),
-            ),
+            self._read_operational_profile(access_token),
             self._select(
                 "athlete_identifying_profiles",
                 access_token,
@@ -438,42 +438,6 @@ class SupabaseOnboardingRepository:
             "zone_proposals": zone_proposals,
         }
 
-    async def upsert_profile(
-        self,
-        access_token: str,
-        athlete_id: UUID,
-        values: JsonObject,
-    ) -> JsonObject:
-        identifying = {
-            key: values[key] for key in ("first_name", "last_name") if key in values
-        }
-        physiology = {
-            key: values[key]
-            for key in ("date_of_birth", "resting_heart_rate_bpm")
-            if key in values
-        }
-        operational = {
-            key: values[key]
-            for key in (
-                "timezone",
-                "timezone_source",
-                "timezone_confirmed",
-                "heart_rate_monitor_confirmed",
-            )
-            if key in values
-        }
-        if identifying:
-            await self.upsert_identifying_profile(access_token, identifying)
-        if physiology:
-            await self.upsert_physiology_profile(access_token, physiology)
-        if operational:
-            await self.upsert_operational_profile(access_token, operational)
-        state = await self.fetch_state(access_token, athlete_id)
-        profile = state.get("profile")
-        if not isinstance(profile, dict):
-            raise RepositoryUnavailableError
-        return dict(profile)
-
     async def fetch_identifying_profile(
         self,
         access_token: str,
@@ -510,16 +474,7 @@ class SupabaseOnboardingRepository:
         access_token: str,
         athlete_id: UUID,
     ) -> JsonObject | None:
-        rows = await self._select(
-            "athlete_profiles",
-            access_token,
-            athlete_id,
-            select=(
-                "athlete_id,timezone,timezone_source,timezone_confirmed_at,"
-                "heart_rate_monitor_confirmed_at,onboarding_status,revision,"
-                "created_at,updated_at"
-            ),
-        )
+        rows = await self._read_operational_profile(access_token)
         if not rows:
             return None
         row = dict(rows[0])

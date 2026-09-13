@@ -63,7 +63,10 @@ Implemented Phase 4 operations:
 
 | Operation | Purpose |
 |---|---|
-| `GET/PATCH /api/v1/me/profile` | Read or update profile and biometrics |
+| `GET /api/v1/me/profile` | Read the composed current profile projection |
+| `PATCH /api/v1/me/identifying-profile` | Update only current identifying fields |
+| `PATCH /api/v1/me/physiology-profile` | Update only current physiological fields |
+| `PATCH /api/v1/me/operational-profile` | Explicitly confirm monitor/timezone operational fields |
 | `GET /api/v1/onboarding` | Read resumable onboarding state |
 | `PUT /api/v1/me/training-history` | Atomically replace swim/bike/run history |
 | `POST /api/v1/me/goals` | Create the primary race-oriented A goal |
@@ -179,7 +182,9 @@ realized or matched planned TSS.
 | Operation | Purpose | Critical notes |
 |---|---|---|
 | `GET /v1/me/profile` | Read the athlete profile | Token-derived athlete |
-| `PATCH /v1/me/profile` | Update confirmed profile fields | Validate biometrics and timezone |
+| `PATCH /v1/me/identifying-profile` | Update current identifying fields | Separate owner-derived RPC |
+| `PATCH /v1/me/physiology-profile` | Update date of birth and resting heart rate | Separate owner-derived RPC |
+| `PATCH /v1/me/operational-profile` | Confirm monitor or an accepted IANA timezone | Server owns status and confirmation timestamps |
 | `GET /v1/onboarding` | Read resumable onboarding state | No internal calculations |
 | `PUT /v1/me/training-history` | Replace confirmed weekly history entries | Canonical minutes |
 | `POST /v1/me/goals` | Create a SMART goal | Validate priority, date, metric, feasibility |
@@ -282,17 +287,18 @@ context/proposal revisions.
 
 | Operation | Purpose | Critical notes |
 |---|---|---|
-| `GET /v1/onboarding/zone-options` | List known values, field test, calibration week, and RPE-only | Authenticated; no physiological mutation |
+| `GET /v1/onboarding/zone-options/{discipline}` | List only executable discipline routes | Run/bike field tests and historical RPE-only are suppressed |
 | `PUT /v1/onboarding/disciplines/{discipline}/setup` | Save one resumable setup route | Owner derived from token; optional boundaries may be empty |
 | `GET /v1/calibration/protocols/{discipline}` | List reviewed active test/calibration segments | Versioned RPE, duration, and distance contract |
 | `POST /v1/calibration/observations` | Save a segment observation | Immutable; exact retry idempotent; conflicting retry returns `409` |
 | `POST /v1/calibration/evaluate` | Evaluate owned observations | Pure deterministic engine; generated persistence is service-only |
 | `GET /v1/calibration/status` | Resume setup and evaluation state | Owner-scoped; no TSS/private load |
 
-A valid field test may return pending threshold estimates, but it returns
-`zone_status=pending_protocol` and no calculated boundaries until a complete
-reviewed Zone 1-5 model exists. Submaximal Week-1 calibration cannot return a
-threshold. See
+A current successful calibration/field-test evaluation returns an attributable
+threshold estimate and deterministic Zone 1-5 profiles. Threshold confirmation
+creates only a pending proposal; exact athlete approval is still required for
+stale-safe activation. Setup intent, a threshold, and a pending profile do not
+satisfy readiness. See
 [backend-zone-calculation.md](../implementation/backend-zone-calculation.md).
 
 `POST /v1/calibration/observations` requires an owned canonical activity. The

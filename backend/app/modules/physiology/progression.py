@@ -108,13 +108,13 @@ def calculate_progressive_target(
     )
 
 
-def snapshot_personalized_load(
+def calculate_legacy_phase3_expected_rpe_duration_load(
     *,
     expected_rpe: Decimal,
     duration: DurationMinutes,
     specification: PhysiologySpecification = PHASE_3_RULESET_V3,
 ) -> InternalLoad:
-    """Snapshot personalized planned load as expected RPE times duration hours."""
+    """Reproduce the retired Phase 3 expected-RPE-times-hours calculation."""
     specification.require_approved(frozenset({RuleId.PROGRESSIVE_LOAD}))
     if (
         not expected_rpe.is_finite()

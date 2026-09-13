@@ -1055,7 +1055,9 @@ named physiological reviewer remain hard production gates.
   fixture-parity tests**
 - CSS/FTP/LTHR/threshold pace are produced only by their own valid reviewed
   field tests. **Verified**
-- Submaximal calibration cannot produce a threshold. **Verified**
+- **Superseded by the approved Phase 13 ruleset:** current submaximal
+  calibration deterministically produces a pending threshold and Zone 1-5
+  proposal from the required same-block observations. It never auto-activates.
 - Missing session RPE blocks evaluation but not observation/activity storage.
   **Verified in domain/API tests and hosted pgTAP**
 - RPE-only is a valid historical persistence state and creates no zone profile.
@@ -1579,9 +1581,10 @@ stopped without changing a hosted project.
 - **Superseded for MVP:** RPE-only must no longer be selectable, and a completed
   reviewed calibration workout may become an input to a pending zone proposal.
   It still may not directly activate or silently rescale zones.
-- **Implemented:** calibration and RPE-only use the same ordinary RPE-targeted
-  workout projection. Calibration retains its reviewed protocol and immutable
-  observation path as additional provenance; it does not fabricate a threshold.
+- **Historical implementation, superseded by Phase 13:** calibration and
+  RPE-only used the same ordinary RPE-targeted workout projection. Current
+  calibration uses its reviewed protocol, immutable observation, deterministic
+  threshold/zone calculation, and separate pending-confirmation lifecycle.
 - **Implemented:** a calibration-week swipe deck is no longer limited to the
   three calibration protocols. Calibration cards carry an explicit `CAL`
   marker and the deck also offers the 154 reviewed START23 v0.1 catalog rows as
@@ -1702,11 +1705,22 @@ across all 44 migration/pgTAP SQL files; no database execution, real-token,
 two-user, device, or external-review gate is closed by this local
 implementation.
 
+The final R6-entry audit remediation was implemented locally on 2026-09-13.
+Current submaximal calibration now has one discovery-to-pending-activation
+lifecycle and distinct estimate provenance; current run/bike field-test choices
+are suppressed. Exact race-required disciplines and approved active-zone
+readiness now agree across Python, planner, SQL, and mobile. The forward-only
+least-privilege/race-parity migration, executable mobile component and transport
+tests, and explicit legacy-load naming are present. Local checks pass with 618
+backend tests and 19 mobile tests. PostgreSQL/pgTAP, real-token, and device
+execution remain R6 gates; neither Phase 13 nor R6 is complete or started by
+this repository remediation.
+
 See [versioned rules](../requirements/phase-13-joren-ruleset-1.md),
 [historical Phase 13](../requirements/deprecated-phase-13.md), and
 [implementation and consumer trace](phase-13-implementation-plan.md).
-The [2026-09-11 review](phase-13-review.md) records 556 passing backend tests,
-passing lint/type/artifact checks and the outstanding database/runtime/release
+The [2026-09-13 review](phase-13-review.md) records 618 passing backend tests,
+passing lint/type/artifact/mobile checks and the outstanding database/runtime/release
 gates. The [R1 decision record](phase-13-and-14-r1-decisions.md) is authoritative
 for the four explicitly approved remediation decisions.
 
@@ -1759,8 +1773,9 @@ for the four explicitly approved remediation decisions.
   unavailable environments remain explicit gates. A qualified accountable
   reviewer and review record for this material ruleset remain required to release.
 
-R1 and the local R2-R5 implementation satisfy their repository-side artifact,
-contract, deterministic service, and typecheck criteria. The Phase 13 criteria
+R1, the local R2-R5 implementation, and the final R6-entry audit remediation
+satisfy their repository-side artifact, contract, deterministic service, and
+typecheck criteria. The Phase 13 criteria
 above remain open for R6, execution of the unexecuted remediation migrations and
 pgTAP suites, runtime/device verification, and qualified external review; Phase
 13 is not complete.
@@ -1802,6 +1817,16 @@ existing-user upgrade steps. R5 closes average-HR correction and affected
 mobile presentation regressions. Database, real-token, two-user, and device
 evidence remains open under R6.
 
+The final R6-entry audit remediation on 2026-09-13 removes the combined profile
+mutation, keeps identifying/physiological/operational writes separated, narrows
+legacy operational storage to owner-derived RPCs, enforces exact five-race SQL
+parity, and makes approved race-required zones the readiness condition. The
+device-reported IANA flow requires explicit acceptance, uses no GPS, and falls
+back to manual IANA selection. React Native interaction and exact transport
+tests now run under strict TypeScript and unused-code checks. Database/pgTAP,
+real-user, and physical-device evidence remains open under R6; Phase 14 is not
+complete.
+
 ### Scope
 
 - Split identifying profile data from medical/physiological data such as
@@ -1828,11 +1853,12 @@ evidence remains open under R6.
   target time. Persist race name for tracking/history. Allow optional
   per-discipline target times and a specific focus. **Implemented locally in
   R4; migration execution remains an R6 gate.**
-- Detect timezone from location when permission is granted. If it is refused or
-  unavailable, require an IANA-timezone dropdown fallback such as
-  `Europe/Amsterdam`; never guess silently. **The device-reported timezone path,
-  explicit confirmation, manual fallback, and server validation are implemented
-  locally in R4. Real-device verification remains an R6 gate.**
+- Detect the device-reported IANA timezone without requesting GPS/location. Show
+  it for explicit acceptance; if unavailable or declined, require a manual IANA
+  fallback such as `Europe/Amsterdam`; never guess silently. **The
+  device-reported path, explicit confirmation, manual fallback, server
+  validation, and DST-sensitive domain coverage are implemented locally.
+  Real-device verification remains an R6 gate.**
 
 ### Exit criteria
 
@@ -1848,8 +1874,9 @@ evidence remains open under R6.
 - Public contracts remain TSS-free and zone activation remains a separate,
   stale-safe athlete confirmation.
 
-R1 plus the local R2-R5 implementation cover version-aware resume, the opaque
-identity cutover, independently protected identifying/physiological records,
+R1, the local R2-R5 implementation, and the final audit remediation cover
+version-aware resume, the opaque identity cutover, independently protected
+identifying/physiological records,
 monitor/timezone prerequisites, and structured race goals. The Phase 14 exit
 criteria remain open pending R6 and executed database/two-user/device evidence;
 Phase 14 is not complete.

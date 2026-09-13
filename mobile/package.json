@@ -33,8 +33,12 @@
     "react-native-worklets": "0.10.1"
   },
   "devDependencies": {
+    "@testing-library/react-native": "^14.0.1",
+    "@types/jest": "29.5.14",
     "@types/react": "~19.2.4",
     "babel-preset-expo": "^57.0.9",
+    "jest": "~29.7.0",
+    "jest-expo": "~57.0.5",
     "tailwindcss": "^3.4.19",
     "typescript": "~6.0.3"
   },
@@ -44,8 +48,11 @@
     "android": "expo start --dev-client --android",
     "ios": "expo start --dev-client --ios",
     "web": "expo start --web",
-    "test": "node --experimental-strip-types --test src/lib/onboardingForms.test.ts",
-    "typecheck": "tsc --noEmit"
+    "test": "jest --runInBand",
+    "test:components": "jest --runInBand src/screens",
+    "test:transport": "jest --runInBand src/api",
+    "typecheck": "tsc --noEmit",
+    "check:unused": "tsc --noEmit --noUnusedLocals --noUnusedParameters"
   },
   "private": true
 }

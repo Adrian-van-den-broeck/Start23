@@ -18,7 +18,9 @@ from app.modules.physiology.models import (
     InternalLoad,
     TrainingZone,
 )
-from app.modules.physiology.progression import snapshot_personalized_load
+from app.modules.physiology.progression import (
+    calculate_legacy_phase3_expected_rpe_duration_load,
+)
 from app.modules.physiology.rpe_zones import rpe_zone, zone_for_rpe_value
 
 
@@ -494,7 +496,9 @@ def _template(
             for segment in segments
         )
     )
-    load = snapshot_personalized_load(
+    # Compatibility seed for historical templates. Current Phase 13 planning
+    # replaces this with attributable zone-derived load before selection.
+    load = calculate_legacy_phase3_expected_rpe_duration_load(
         expected_rpe=Decimal(minimum_rpe + maximum_rpe) / Decimal(2),
         duration=DurationMinutes(duration),
     )

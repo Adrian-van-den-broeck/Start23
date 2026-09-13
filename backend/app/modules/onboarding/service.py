@@ -8,7 +8,10 @@ from uuid import UUID
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from app.modules.calibration.schemas import DisciplineSetupResponse
-from app.modules.onboarding.eligibility import satisfied_onboarding_steps
+from app.modules.onboarding.eligibility import (
+    required_disciplines_for_race_type,
+    satisfied_onboarding_steps,
+)
 from app.modules.onboarding.repository import JsonObject, OnboardingRepository
 from app.modules.onboarding.schemas import (
     AthleteIdentifyingProfileResponse,
@@ -18,7 +21,6 @@ from app.modules.onboarding.schemas import (
     AthletePhysiologyProfileResponse,
     AthletePhysiologyProfileUpdate,
     AthleteProfileResponse,
-    AthleteProfileUpdate,
     CalculatedZoneSubmission,
     FallbackZoneSubmission,
     GoalPlanningOptionResponse,
@@ -327,6 +329,9 @@ class OnboardingService:
             profile=profile,
             training_history=history,
             primary_goal=goal,
+            required_disciplines=required_disciplines_for_race_type(
+                goal.race_type if goal is not None else None
+            ),
             zones=zones,
             discipline_setups=discipline_setups,
             can_complete=version_state.can_complete,
@@ -351,28 +356,6 @@ class OnboardingService:
     ) -> AthleteProfileResponse | None:
         """Return the athlete profile when one has been started."""
         return (await self.get_state(access_token, athlete_id)).profile
-
-    async def update_profile(
-        self,
-        access_token: str,
-        athlete_id: UUID,
-        update: AthleteProfileUpdate,
-    ) -> AthleteProfileResponse:
-        """Persist only current identifying and physiological fields."""
-        values = update.model_dump(
-            mode="json",
-            exclude_unset=True,
-            exclude_none=False,
-        )
-        row = await self._repository.upsert_profile(
-            access_token,
-            athlete_id,
-            values,
-        )
-        profile = self._profile(row)
-        if profile is None:
-            raise OnboardingDomainError("Saved profile could not be read back.")
-        return profile
 
     async def get_identifying_profile(
         self,

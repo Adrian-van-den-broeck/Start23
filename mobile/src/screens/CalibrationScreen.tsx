@@ -112,7 +112,7 @@ const resultLabels: Record<CalibrationEvaluation['status'], string> = {
   insufficient_data: 'Meer of betere gegevens nodig',
   insufficient_protocol: 'Protocolregel ontbreekt',
   rpe_only: 'Veilig als RPE-only opgeslagen',
-  provisionally_calibrated: 'Voorlopig gekalibreerd',
+  provisionally_calibrated: 'Historisch: voorlopig gekalibreerd',
   threshold_estimated: 'Drempel geschat',
 };
 
@@ -122,7 +122,7 @@ const reasonLabels: Record<string, string> = {
   zone_profile_pending_athlete_confirmation:
     'De drempel en berekende zones wachten op jouw afzonderlijke bevestigingen.',
   threshold_not_permitted_from_submaximal_calibration:
-    'Een submaximale kalibratie mag geen drempel produceren.',
+    'Historische evaluatie: deze oudere protocolversie produceerde nog geen drempel.',
   sensor_data_missing:
     'Er waren geen bruikbare sensorgegevens; de RPE-observatie blijft wel bewaard.',
   missing_session_rpe: 'De sessie-RPE ontbreekt.',

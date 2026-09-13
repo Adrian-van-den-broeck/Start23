@@ -99,7 +99,7 @@ def test_openapi_contains_expected_foundation_paths(client: TestClient) -> None:
         "/api/v1/me/injury-restrictions",
         "/api/v1/planned-external-activities",
         "/api/v1/me/goals/{goal_id}/achievement",
-        "/api/v1/onboarding/zone-options",
+        "/api/v1/onboarding/zone-options/{discipline}",
         "/api/v1/onboarding/disciplines/{discipline}/setup",
         "/api/v1/calibration/protocols/{discipline}",
         "/api/v1/calibration/observations",
@@ -132,12 +132,8 @@ def test_phase_14_write_contracts_exclude_retired_inputs(client: TestClient) -> 
     schema = client.get("/openapi.json").json()
     components = schema["components"]["schemas"]
 
-    assert set(components["AthleteProfileUpdate"]["properties"]) == {
-        "first_name",
-        "last_name",
-        "date_of_birth",
-        "resting_heart_rate_bpm",
-    }
+    assert "AthleteProfileUpdate" not in components
+    assert set(schema["paths"]["/api/v1/me/profile"]) == {"get"}
     assert set(components["AthleteIdentifyingProfileUpdate"]["properties"]) == {
         "first_name",
         "last_name",

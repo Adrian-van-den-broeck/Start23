@@ -22,6 +22,7 @@ from app.modules.calibration.schemas import (
     KnownThresholdInput,
     KnownZoneProfileInput,
 )
+from app.modules.onboarding.eligibility import required_disciplines_for_race_type
 from app.modules.onboarding.versioning import OnboardingStatus, OnboardingStep
 from app.modules.physiology.models import Discipline
 from app.modules.physiology.zones import ZoneMetricKind
@@ -36,30 +37,6 @@ class PublicModel(BaseModel):
     """Base public model with accidental-field rejection."""
 
     model_config = ConfigDict(extra="forbid")
-
-
-class AthleteProfileUpdate(PublicModel):
-    """Confirmed profile and biometrics supplied by the athlete."""
-
-    first_name: TrimmedText | None = Field(default=None, max_length=100)
-    last_name: TrimmedText | None = Field(default=None, max_length=100)
-    date_of_birth: date | None = None
-    resting_heart_rate_bpm: int | None = Field(default=None, gt=0, le=32767)
-
-    @field_validator("date_of_birth")
-    @classmethod
-    def date_of_birth_must_be_past(cls, value: date | None) -> date | None:
-        """A future or same-day birth date is structurally invalid."""
-        if value is not None and value >= date.today():
-            raise ValueError("date_of_birth must be in the past")
-        return value
-
-    @model_validator(mode="after")
-    def at_least_one_field(self) -> "AthleteProfileUpdate":
-        """PATCH requests must carry at least one explicit field."""
-        if not self.model_fields_set:
-            raise ValueError("at least one profile field is required")
-        return self
 
 
 class AthleteProfileResponse(PublicModel):
@@ -250,12 +227,9 @@ class PrimaryRaceGoalInput(PublicModel):
     @model_validator(mode="after")
     def validate_race_shape(self) -> "PrimaryRaceGoalInput":
         required = {
-            "run": {"run"},
-            "bike": {"bike"},
-            "swim": {"swim"},
-            "triathlon": {"swim", "bike", "run"},
-            "duathlon": {"bike", "run"},
-        }[self.race_type]
+            discipline.value
+            for discipline in required_disciplines_for_race_type(self.race_type)
+        }
         distances = {
             "swim": self.swim_distance_meters,
             "bike": self.bike_distance_meters,
@@ -390,6 +364,7 @@ class ZoneProfileResponse(PublicModel):
         "measured_lab",
         "estimated",
         "reviewed_field_threshold",
+        "submaximal_calibration_estimate",
     ]
     validation_status: Literal[
         "confirmed_by_athlete",
@@ -494,6 +469,7 @@ class OnboardingStateResponse(PublicModel):
     profile: AthleteProfileResponse | None
     training_history: tuple[TrainingHistoryEntryResponse, ...]
     primary_goal: PrimaryRaceGoalResponse | None
+    required_disciplines: tuple[Discipline, ...]
     zones: tuple[ZoneProfileResponse, ...]
     discipline_setups: tuple[DisciplineSetupResponse, ...]
     can_complete: bool

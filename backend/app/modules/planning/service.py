@@ -20,7 +20,10 @@ from app.modules.coach.weekly_plan import (
     WeeklyPlanCoachFacts,
     deterministic_weekly_plan_explanation,
 )
-from app.modules.onboarding.eligibility import satisfied_onboarding_steps
+from app.modules.onboarding.eligibility import (
+    required_disciplines_for_race_type,
+    satisfied_onboarding_steps,
+)
 from app.modules.onboarding.versioning import (
     CURRENT_ONBOARDING_VERSION,
     CURRENT_RULESET_VERSION,
@@ -346,7 +349,7 @@ class PlanningService:
             ZoneInfo(timezone_name)
             race_date = date.fromisoformat(str(goal["target_date"]))
             goal_disciplines = frozenset(
-                Discipline(str(value)) for value in goal["race_discipline_profile"]
+                required_disciplines_for_race_type(goal["race_type"])
             )
         except (KeyError, TypeError, ValueError) as error:
             raise PlanningDomainError("The race planning input is invalid.") from error
@@ -423,7 +426,13 @@ class PlanningService:
     @staticmethod
     def _onboarding_baseline(snapshot: Mapping[str, Any]) -> StartingBaseline | None:
         rows = snapshot.get("training_history", [])
-        disciplines = set(snapshot.get("goal", {}).get("race_discipline_profile", []))
+        goal = snapshot.get("goal")
+        disciplines = {
+            discipline.value
+            for discipline in required_disciplines_for_race_type(
+                goal.get("race_type") if isinstance(goal, dict) else None
+            )
+        }
         eligible = [
             row
             for row in rows

@@ -684,15 +684,14 @@ tests enforce owner isolation. Hosted migration/RLS verification remains
 pending. Numeric soft-range thresholds remain configurable product data and
 never become hard rejection limits.
 
-Phase 8.5 adds the four explicit discipline setup routes, canonical 1-10
-RPE/TSE semantics, reviewed field-test threshold formulas, immutable
-same-block calibration observations, and safe provisional/RPE-only results.
+Phase 8.5 introduced four historical setup routes. The approved Phase 13
+ruleset supersedes its provisional/RPE-only current behavior: run and bike
+field-test selection plus RPE-only selection are suppressed, while current
+submaximal calibration uses immutable same-block observations to calculate an
+attributable threshold and deterministic Zone 1-5 profile. The result remains
+pending through threshold confirmation and a separate stale-safe zone approval.
 The seven protocol definitions are parity-tested against the approved CSV
-bundle. Valid field tests remain pending athlete-confirmation results and use
-`zone_status=pending_protocol`; no calculated Zone 1-5 boundaries exist because
-the supplied protocols do not define a complete zone model. Submaximal Week-1
-calibration cannot produce CSS, FTP, LTHR, bike threshold HR, or run threshold
-pace. Full decisions and gates are in
+fixtures. Full decisions and gates are in
 [backend-zone-calculation.md](../implementation/backend-zone-calculation.md).
 
 Phase 11 adds the TSS-free discipline profile history, explicit standalone and

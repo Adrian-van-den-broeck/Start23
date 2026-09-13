@@ -72,7 +72,10 @@ The endpoints are then available at:
 - `http://127.0.0.1:8000/api/v1/ready`
 - `http://127.0.0.1:8000/api/v1/me`
 - `http://127.0.0.1:8000/api/v1/onboarding`
-- `http://127.0.0.1:8000/api/v1/me/profile`
+- `http://127.0.0.1:8000/api/v1/me/profile` (read-only composed projection)
+- `http://127.0.0.1:8000/api/v1/me/identifying-profile`
+- `http://127.0.0.1:8000/api/v1/me/physiology-profile`
+- `http://127.0.0.1:8000/api/v1/me/operational-profile`
 
 ## Configuration
 

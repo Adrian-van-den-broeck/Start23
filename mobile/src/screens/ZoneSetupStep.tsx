@@ -34,8 +34,6 @@ type MetricOption = {
   descending: boolean;
 };
 
-const disciplines: readonly Discipline[] = ['swim', 'bike', 'run'];
-
 const disciplineLabels: Record<Discipline, string> = {
   swim: 'zwemmen',
   bike: 'fietsen',
@@ -92,7 +90,7 @@ const routeDescriptions: Record<SelectableZoneSetupRoute, string> = {
   field_test:
     'Voer een beoordeelde maximale veldtest uit voor een drempelschatting.',
   calibration_week:
-    'Train met dezelfde veilige RPE-workouts; Wombo bewaart daarnaast geschikte objectieve kalibratie-observaties.',
+    'Voer de huidige submaximale kalibratie uit. De observatie levert deterministisch een drempelschatting en berekend zoneprofiel op, die pas na jouw aparte bevestiging actief worden.',
 };
 
 const guidanceLabels: Record<GuidanceMode, string> = {
@@ -207,17 +205,26 @@ export function ZoneSetupStep({
 }: Props) {
   const configured = useMemo(
     () =>
-      new Set<Discipline>([
-        ...state.zones
+      new Set<Discipline>(
+        state.zones
           .filter((zone) => zone.status === 'active')
           .map((zone) => zone.discipline),
+      ),
+    [state.zones],
+  );
+  const started = useMemo(
+    () =>
+      new Set<Discipline>([
+        ...configured,
         ...state.discipline_setups.map((setup) => setup.discipline),
       ]),
-    [state.discipline_setups, state.zones],
+    [configured, state.discipline_setups],
   );
+  const requiredDisciplines = state.required_disciplines;
   const discipline =
     disciplineOverride ??
-    disciplines.find((candidate) => !configured.has(candidate)) ??
+    requiredDisciplines.find((candidate) => !started.has(candidate)) ??
+    requiredDisciplines.find((candidate) => !configured.has(candidate)) ??
     'run';
   const availableMetrics = metricOptions[discipline];
   const [options, setOptions] = useState<ZoneSetupOption[]>([]);
@@ -249,7 +256,7 @@ export function ZoneSetupStep({
     setLoadingChoices(true);
     setChoiceError(null);
     Promise.all([
-      getZoneSetupOptions(accessToken),
+      getZoneSetupOptions(accessToken, discipline),
       listCalibrationProtocols(accessToken, discipline),
     ])
       .then(([nextOptions, nextProtocols]) => {
@@ -393,7 +400,7 @@ export function ZoneSetupStep({
       </View>
 
       <View style={styles.progressRow}>
-        {disciplines.map((item) => (
+        {requiredDisciplines.map((item) => (
           <StatusPill
             key={item}
             label={`${configured.has(item) ? '✓ ' : ''}${disciplineLabels[item]}`}
@@ -659,8 +666,9 @@ export function ZoneSetupStep({
         <View style={styles.panel}>
           <StatusPill label="Submaximaal" tone="brand" />
           <Text style={styles.panelText}>
-            Deze rustige kalibratie bewaart observaties uit hetzelfde blok. Ze
-            maakt nooit zelfstandig CSS, FTP, LTHR of drempeltempo.
+            Deze rustige kalibratie bewaart de gemeten observatie uit hetzelfde
+            blok en berekent deterministisch een drempel en vijf zones. Die
+            blijven een voorstel totdat jij ze afzonderlijk bevestigt.
           </Text>
           <View accessibilityRole="radiogroup" style={styles.chips}>
             {calibrationProtocol?.guidance_modes.map((mode) => (

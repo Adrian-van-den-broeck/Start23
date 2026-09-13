@@ -102,16 +102,17 @@ def _raise_public_error(error: Exception) -> NoReturn:
 
 
 @router.get(
-    "/onboarding/zone-options",
+    "/onboarding/zone-options/{discipline}",
     response_model=tuple[ZoneOptionResponse, ...],
     responses=error_responses,
 )
 async def get_zone_options(
+    discipline: Discipline,
     _: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
     service: Annotated[CalibrationService, Depends(get_calibration_service)],
 ) -> tuple[ZoneOptionResponse, ...]:
-    """Return the four explicit setup choices."""
-    return service.zone_options()
+    """Return only setup choices executable for this discipline."""
+    return service.zone_options(discipline)
 
 
 @router.put(

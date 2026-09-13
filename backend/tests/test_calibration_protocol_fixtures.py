@@ -54,3 +54,11 @@ def test_python_protocol_registry_matches_every_approved_csv_fixture() -> None:
             ).display_label
             for segment in protocol.segments
         ]
+        assert all(
+            tuple(row["guidance_mode"].split("|")) == protocol.guidance_modes
+            for row in segment_rows
+        )
+        assert all(
+            row["result_status_on_success"] == protocol.result_status_on_success.value
+            for row in segment_rows
+        )

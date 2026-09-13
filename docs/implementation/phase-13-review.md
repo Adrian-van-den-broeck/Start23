@@ -1,8 +1,9 @@
-# Phase 13 review - updated 2026-09-12
+# Phase 13 review - updated 2026-09-13
 
 Status: implementation and hosted Phase 13 migration present; remediation R1,
-the coupled R3-then-R2 implementation, and R4/R5 are complete locally; runtime,
-database, two-user, device, and external exit gates remain open.
+the coupled R3-then-R2 implementation, R4/R5, and the final R6-entry audit
+remediation are complete locally; runtime, database, two-user, device, and
+external exit gates remain open. R6 has not begun.
 
 ## 1. Version
 
@@ -100,6 +101,16 @@ This migration has not been executed against a database; no local or hosted
 migration success is claimed. A rollback-only R4/R5 pgTAP suite is present for
 R6 execution.
 
+The final audit adds forward migration
+`20260913130000_phase_13_14_r6_entry_audit_remediation.sql`. It removes broad
+legacy operational table privileges, adds narrow owner-derived operational
+RPCs, centralizes the five-race SQL mapping, requires active race-relevant zone
+profiles for readiness, hardens structured-race validation, and persists
+submaximal calibration estimates with distinct provenance. It retains the
+identity map, compatibility columns, historical rows, and old implementation
+behind a revoked compatibility function. The rollback-only pgTAP suite is
+authored but has not been executed; no database/RLS success is claimed.
+
 ## 5. Deprecated and historical behavior
 
 New paths retire two-month distance/frequency baseline assumptions, the Week-2
@@ -177,7 +188,26 @@ Week-2/RPE-only state, taper timing, model labels and private response fields.
 Historical definitions remain intentionally labeled as historical. No new
 physiological formulas were placed in mobile or LLM logic.
 
-## 7. Open gates
+## 7. Final R6-entry audit remediation
+
+The 2026-09-13 final audit remediation aligns current calibration discovery
+through stale-safe zone activation, gives submaximal estimates distinct
+provenance, applies the exact five-race discipline rule across every current
+consumer, and makes approved active zone profiles—not setup intent—the only
+zone-readiness evidence. It also removes the combined profile mutation,
+hardens the retained operational compatibility table behind narrow owner-derived
+RPCs, adds explicit SQL/FastAPI race-validation parity, adopts explicit
+device-IANA acceptance with manual fallback and no GPS, and labels retired
+RPE-times-duration calculations as legacy-only.
+
+Repository verification passes 618 backend tests, Ruff lint, Ruff formatting
+across 133 files, strict mypy across 132 source files, strict TypeScript,
+unused-code checks, and 19 Jest/RNTL mobile tests in six suites. Static contracts
+cover the new forward migration and rollback-only pgTAP suite. The pgTAP suite,
+full migration chain, real-token RLS checks, and real-device flows were not run
+locally and remain R6 gates.
+
+## 8. Open gates
 
 - Run the complete database test directory through a TAP-aware runner and the
   direct hosted schema lint when a database password or suitable runner is
@@ -188,14 +218,14 @@ physiological formulas were placed in mobile or LLM logic.
   runner was available; the hosted project was not mutated by this local task.
 - Device/runtime verification of onboarding resume, timezone detection/fallback,
   calibration warning and approval, and distance-only activity display/input.
-  The configured Node tests cover pure logic and source contracts, but do not
-  replace React Native component/device execution.
+  Jest/RNTL now covers executable component interaction and transport behavior,
+  but it does not replace physical-device execution.
 - Accountable external physiological reviewer and review record for this exact
   version. Production configuration now requires the matching ruleset version
   in addition to the reviewer/record, so an older review cannot authorize it.
 - Existing legal/privacy and other production/release gates remain unchanged.
 
-## 8. Deferred rules and future work
+## 9. Deferred rules and future work
 
 Partial-week taper targets remain fail-closed: the retained full-week reduction
 is applicable when the seven-day window aligns with a whole planning week.
@@ -206,11 +236,11 @@ cannot enter private-load-target selection; their distance/protocol content is
 preserved. Additional starting allocations/minima require an explicit decision.
 Phase 15 may consume the supplied textual RPE catalog in its broader UI work.
 
-## 9. Exit criteria
+## 10. Exit criteria
 
-**Remediation R1 and the local R3-then-R2 and R4/R5 implementations are
-complete; Phase 13 is not marked complete.** Local domain, API, type, artifact,
-and source-control verification and the earlier hosted Phase 13 checks pass.
-R6, execution of all unexecuted remediation migration/database suites,
-runtime/device evidence, and accountable external review are still open. This
-report does not represent release approval.
+**Remediation R1, the local R3-then-R2 and R4/R5 implementations, and the final
+R6-entry audit remediation are complete; Phase 13 is not marked complete.**
+Local domain, API, type, artifact, source-control, and clean-archive verification
+and the earlier hosted Phase 13 checks pass. R6, execution of all unexecuted
+remediation migration/database suites, runtime/device evidence, and accountable
+external review are still open. This report does not represent release approval.

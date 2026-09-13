@@ -41,11 +41,12 @@ export const MotionPressable = forwardRef<View, MotionPressableProps>(
     const reduceMotion = useReducedMotion();
     const [pressed, setPressed] = useState(false);
     const isPressed = pressed && !disabled;
+    const pressableState = { hovered: false, pressed: isPressed };
     // NativeWind's Pressable interop drops function-valued style props before
     // React Native can resolve them, so always pass it a concrete style array.
     const resolvedStyle =
       typeof style === 'function'
-        ? style({ hovered: false, pressed: isPressed })
+        ? style(pressableState)
         : style;
 
     return (

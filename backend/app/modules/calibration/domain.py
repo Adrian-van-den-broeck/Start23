@@ -1,8 +1,8 @@
 """Deterministic evaluation of reviewed Start23 calibration protocols.
 
-Reviewed field-test thresholds are converted with the versioned Start23 Zone
-1-5 model.  Both the threshold and generated profile remain pending athlete
-confirmation; submaximal calibration still cannot manufacture a threshold.
+Reviewed field tests and the current submaximal calibration route produce
+versioned deterministic threshold estimates and Zone 1-5 profiles. Both remain
+pending until explicit athlete confirmation.
 """
 
 from dataclasses import dataclass
@@ -384,8 +384,8 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         protocol_type=ProtocolType.SUBMAXIMAL_CALIBRATION,
         version=1,
         review_status=ProtocolReviewStatus.APPROVED_ACTIVE,
-        result_status_on_success=EvaluationStatus.PROVISIONALLY_CALIBRATED,
-        guidance_modes=("heart_rate", "pace", "rpe_only"),
+        result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
+        guidance_modes=("heart_rate",),
         segments=(
             _segment(1, "warmup", "prepare", 600, None, 2, 3),
             _segment(
@@ -410,8 +410,8 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         protocol_type=ProtocolType.SUBMAXIMAL_CALIBRATION,
         version=1,
         review_status=ProtocolReviewStatus.APPROVED_ACTIVE,
-        result_status_on_success=EvaluationStatus.PROVISIONALLY_CALIBRATED,
-        guidance_modes=("heart_rate", "power", "combined", "rpe_only"),
+        result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
+        guidance_modes=("heart_rate", "combined"),
         segments=(
             _segment(1, "warmup", "prepare", 900, None, 2, 3),
             _segment(
@@ -436,8 +436,8 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         protocol_type=ProtocolType.SUBMAXIMAL_CALIBRATION,
         version=1,
         review_status=ProtocolReviewStatus.APPROVED_ACTIVE,
-        result_status_on_success=EvaluationStatus.PROVISIONALLY_CALIBRATED,
-        guidance_modes=("pace", "rpe_only"),
+        result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
+        guidance_modes=("pace",),
         segments=(
             _segment(1, "warmup", "prepare", None, 300, 2, 3),
             _segment(

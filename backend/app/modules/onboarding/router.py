@@ -27,7 +27,6 @@ from app.modules.onboarding.schemas import (
     AthletePhysiologyProfileResponse,
     AthletePhysiologyProfileUpdate,
     AthleteProfileResponse,
-    AthleteProfileUpdate,
     GoalPlanningOptionResponse,
     OnboardingCompleteRequest,
     OnboardingCompleteResponse,
@@ -120,24 +119,6 @@ async def get_profile(
         if profile is None:
             raise RepositoryNotFoundError
         return profile
-    except Exception as error:
-        _raise_public_error(error)
-
-
-@router.patch(
-    "/me/profile",
-    response_model=AthleteProfileResponse,
-    responses=error_responses,
-)
-async def update_profile(
-    update: AthleteProfileUpdate,
-    access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
-    service: Annotated[OnboardingService, Depends(get_onboarding_service)],
-) -> AthleteProfileResponse:
-    """Create or patch confirmed profile and biometric fields."""
-    try:
-        return await service.update_profile(access_token, identity.athlete_id, update)
     except Exception as error:
         _raise_public_error(error)
 
