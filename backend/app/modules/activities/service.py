@@ -49,6 +49,14 @@ class ActivityDomainError(ValueError):
     """Stored or submitted activity state is inconsistent."""
 
 
+class ActivityCorrectionConflictError(ActivityDomainError):
+    """A correction violated its stale or immutable-observation precondition."""
+
+    def __init__(self, code: str, message: str) -> None:
+        super().__init__(message)
+        self.code = code
+
+
 class ActivityService:
     """Coordinate validation, pure decisions, and owner-scoped persistence."""
 
@@ -130,16 +138,50 @@ class ActivityService:
         activity_id: UUID,
         submission: ActivityRpeSubmission,
     ) -> ActivityResponse:
-        if submission.average_heart_rate_bpm is not None:
+        context = await self._repository.fetch_processing_context(
+            athlete_id,
+            activity_id,
+        )
+        is_correction = context.get("rpe") is not None
+        if is_correction:
+            is_duplicate = submission.rpe == int(context["rpe"])
+            stored_average_hr = context.get("average_heart_rate_bpm")
+            if (
+                submission.average_heart_rate_bpm is not None
+                and submission.average_heart_rate_bpm != stored_average_hr
+                and context.get("load_ruleset_version") == VERSION.value
+            ):
+                raise ActivityCorrectionConflictError(
+                    "average_heart_rate_immutable",
+                    "Average heart rate cannot be changed after its activity "
+                    "calculation.",
+                )
+            if not is_duplicate and submission.expected_current_rpe is None:
+                raise ActivityCorrectionConflictError(
+                    "activity_correction_stale",
+                    "An RPE correction requires the expected current RPE.",
+                )
+            if not is_duplicate and submission.expected_current_rpe != int(
+                context["rpe"]
+            ):
+                raise ActivityCorrectionConflictError(
+                    "activity_correction_stale",
+                    "The activity correction is stale. Refresh and try again.",
+                )
+        elif submission.expected_current_rpe is not None:
+            raise ActivityDomainError(
+                "An initial RPE submission cannot include a correction precondition."
+            )
+        if not is_correction and submission.average_heart_rate_bpm is not None:
             await self._repository.save_rpe_heart_rate_observation(
                 athlete_id,
                 activity_id,
                 submission.average_heart_rate_bpm,
             )
-        context = await self._repository.fetch_processing_context(
-            athlete_id,
-            activity_id,
-        )
+            context = await self._repository.fetch_processing_context(
+                athlete_id,
+                activity_id,
+            )
         if (
             context.get("requires_heart_rate_observation")
             and context.get("average_heart_rate_bpm") is None
@@ -268,6 +310,22 @@ class ActivityService:
         )
         payload = {
             "rpe": submission.rpe,
+            **(
+                {
+                    "expected_current_rpe": submission.expected_current_rpe,
+                    **(
+                        {
+                            "submitted_average_heart_rate_bpm": (
+                                submission.average_heart_rate_bpm
+                            )
+                        }
+                        if submission.average_heart_rate_bpm is not None
+                        else {}
+                    ),
+                }
+                if is_correction
+                else {}
+            ),
             "qualitative_result": result.result.value,
             "public_message": result.public_message,
             "correction_reason": (

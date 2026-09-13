@@ -21,6 +21,16 @@ class AuthenticatedIdentity:
 
     user_id: UUID
     role: Literal["authenticated"]
+    athlete_id: UUID | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class AuthenticatedAthlete:
+    """Token-authenticated caller resolved to an opaque domain identity."""
+
+    auth_user_id: UUID
+    athlete_id: UUID
+    role: Literal["authenticated"]
 
 
 class AccessTokenVerifier(Protocol):

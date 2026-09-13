@@ -1,8 +1,9 @@
 # Phase 13 implementation plan
 
-Status: implementation and hosted Phase 13 migration present; remediation R1
-implemented locally; full runtime, database, and external verification remain
-open, 2026-09-11. Specification: phase-13-joren-ruleset-1.
+Status: implementation and hosted Phase 13 migration present; remediation R1,
+the coupled R3-then-R2 cutover, and R4/R5 are implemented locally; full runtime,
+database, two-user, device, and external verification remain open, 2026-09-12.
+Specification: phase-13-joren-ruleset-1.
 
 See [executed checks, final review and remaining gates](phase-13-review.md).
 
@@ -27,11 +28,20 @@ approved Phase 13 formulas and all historical protocol/ruleset provenance.
 
 | R1 decision | R1 implementation/evidence | Later-phase dependency intentionally retained |
 | --- | --- | --- |
-| Reject changed average HR after Phase 13 private load exists | Decision R1-D1 records the immutable inputs, originating profile/ruleset, atomicity, idempotency, and audit requirement | R5 implements and regression-tests the correction transaction |
+| Reject changed average HR after Phase 13 private load exists | Decision R1-D1 records the immutable inputs, originating profile/ruleset, atomicity, idempotency, and audit requirement | R5 now provides service and direct-persistence rejection, owner locking, stale protection, idempotency, and audit regression tests |
 | Version-aware onboarding | `onboarding/versioning.py`; state response version/upgrade fields; forward migration `20260911180631`; `test_onboarding_versioning.py`; R1 pgTAP structure test | R2 implements legacy upgrade orchestration and planner/direct-RPC parity; R4 adds a new version for its remaining mandatory fields |
 | Run/bike calibration must supply average HR | Current protocol discovery/setup/scheduling filters in `calibration/service.py`; API matrix/rejection tests; immutable registry unchanged | R2 completes the mobile observation contract, swim elapsed-time path, and capability copy |
 | Opaque identity/physiology split | R1-D4 fixes mapping, table ownership, RLS, staged dual-key backfill/cutover, value retention, and verification invariants | R3 executes the forward migrations, repository/API cutover, and two-user isolation tests |
 | Reproducible Phase 13 artifact set | Versioned ruleset/source PDFs, domain module/tests, migrations/pgTAP, implementation/review/remediation records are explicitly tracked and checked | R6 repeats full release/database verification |
+
+R3/R2 implement the approved architecture in forward migration
+`20260912072232_phase_r2_r3_identity_onboarding_calibration.sql`: opaque owners
+and split profiles are established first, then version-aware upgrade,
+planner/direct-write parity, and complete current calibration contracts are
+layered on that model. R4/R5 add forward migration
+`20260912180000_phase_r4_r5_onboarding_race_activity.sql` for onboarding v2,
+operational confirmations, structured races, and protected activity correction.
+R6 remains responsible for executing the full chain and release proof.
 
 Existing load constraints require positive values and the old calculation method;
 new unavailable/partial measurements need explicit private provenance and cannot

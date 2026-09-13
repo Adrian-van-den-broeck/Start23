@@ -8,6 +8,10 @@ from uuid import UUID
 import httpx
 
 from app.core.config import Settings
+from app.modules.identity.repository import (
+    AthleteIdentityResolutionError,
+    LegacyAthleteOwnerAdapter,
+)
 
 JsonObject = dict[str, Any]
 
@@ -203,6 +207,27 @@ class SupabasePlanningRepository:
         self._client = client or httpx.AsyncClient(
             timeout=settings.supabase_data_api_timeout_seconds,
         )
+        self._legacy_owner = LegacyAthleteOwnerAdapter(settings, self._client)
+
+    async def _rpc_athlete_id(self, athlete_id: UUID) -> UUID:
+        try:
+            return await self._legacy_owner.legacy_id(athlete_id)
+        except AthleteIdentityResolutionError as error:
+            raise PlanningRepositoryUnavailableError from error
+
+    async def _planning_eligibility_context(
+        self,
+        athlete_id: UUID,
+    ) -> JsonObject:
+        payload = await self._request(
+            "POST",
+            "rpc/get_current_planning_eligibility_context",
+            service=True,
+            json={"p_athlete_id": str(athlete_id)},
+        )
+        if not isinstance(payload, dict):
+            raise PlanningRepositoryUnavailableError
+        return dict(payload)
 
     def _headers(self, access_token: str, *, service: bool) -> dict[str, str]:
         key = self._secret_key if service else self._publishable_key
@@ -303,10 +328,11 @@ class SupabasePlanningRepository:
             access_token=access_token,
             params={
                 "select": (
-                    "id,athlete_id,status,onboarding_revision,ruleset_version,"
-                    "input_snapshot,input_fingerprint,created_at,refreshed_at"
+                    "id,internal_athlete_id,status,onboarding_revision,"
+                    "onboarding_version,ruleset_version,input_snapshot,"
+                    "input_fingerprint,created_at,refreshed_at"
                 ),
-                "athlete_id": f"eq.{athlete_id}",
+                "internal_athlete_id": f"eq.{athlete_id}",
                 "status": "in.(pending,consumed)",
                 "order": "status.desc,refreshed_at.desc",
                 "limit": "1",
@@ -314,25 +340,53 @@ class SupabasePlanningRepository:
         )
         if not isinstance(payload, list):
             raise PlanningRepositoryUnavailableError
-        return dict(payload[0]) if payload else None
+        if not payload:
+            return None
+        sessions = await self._request(
+            "GET",
+            "onboarding_sessions",
+            access_token=access_token,
+            params={
+                "select": (
+                    "status,completed_onboarding_version,"
+                    "completed_ruleset_version,initial_plan_request_id"
+                ),
+                "internal_athlete_id": f"eq.{athlete_id}",
+                "limit": "1",
+            },
+        )
+        if not isinstance(sessions, list):
+            raise PlanningRepositoryUnavailableError
+        result = dict(payload[0])
+        result["athlete_id"] = str(athlete_id)
+        result.pop("internal_athlete_id", None)
+        session = sessions[0] if sessions else {}
+        result["onboarding_status"] = session.get("status")
+        result["completed_onboarding_version"] = session.get(
+            "completed_onboarding_version"
+        )
+        result["completed_ruleset_version"] = session.get("completed_ruleset_version")
+        return result
 
     async def fetch_plan_context(
         self,
         athlete_id: UUID,
         plan_id: UUID,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         payload = await self._request(
             "POST",
             "rpc/get_plan_context_for_planning",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_plan_id": str(plan_id),
             },
         )
         if not isinstance(payload, dict):
             raise PlanningRepositoryUnavailableError
-        return dict(payload)
+        eligibility = await self._planning_eligibility_context(athlete_id)
+        return {**dict(payload), **eligibility}
 
     async def fetch_plan_revision_context(
         self,
@@ -340,31 +394,34 @@ class SupabasePlanningRepository:
         plan_id: UUID,
         revision: int,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         payload = await self._request(
             "POST",
             "rpc/get_plan_revision_context_for_planning",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_plan_id": str(plan_id),
                 "p_revision": revision,
             },
         )
         if not isinstance(payload, dict):
             raise PlanningRepositoryNotFoundError
-        return dict(payload)
+        eligibility = await self._planning_eligibility_context(athlete_id)
+        return {**dict(payload), **eligibility}
 
     async def fetch_previous_available_dates(
         self,
         athlete_id: UUID,
         week_start: date,
     ) -> tuple[date, ...]:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         payload = await self._request(
             "POST",
             "rpc/get_previous_week_available_dates",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_week_start": week_start.isoformat(),
             },
         )
@@ -377,12 +434,13 @@ class SupabasePlanningRepository:
         athlete_id: UUID,
         before_week: date,
     ) -> tuple[JsonObject, ...]:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         payload = await self._request(
             "POST",
             "rpc/get_plan_load_history_for_planning_v13",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_before_week": before_week.isoformat(),
             },
         )
@@ -395,12 +453,13 @@ class SupabasePlanningRepository:
         athlete_id: UUID,
         payload: JsonObject,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
             "rpc/create_weekly_plan_proposal_v2",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_payload": payload,
             },
         )
@@ -413,12 +472,13 @@ class SupabasePlanningRepository:
         athlete_id: UUID,
         payload: JsonObject,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
             "rpc/create_swipe_week_draft",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_payload": payload,
             },
         )
@@ -437,7 +497,7 @@ class SupabasePlanningRepository:
             access_token=access_token,
             params={
                 "select": (
-                    "id,athlete_id,plan_id,initial_plan_request_id,"
+                    "id,internal_athlete_id,plan_id,initial_plan_request_id,"
                     "base_plan_revision,context_plan_revision,week_start,timezone,"
                     "available_dates,availability_source,confirmed_injuries,"
                     "low_only_disciplines,input_fingerprint,context_fingerprint,"
@@ -452,7 +512,9 @@ class SupabasePlanningRepository:
         )
         if not isinstance(payload, list) or not payload:
             raise PlanningRepositoryNotFoundError
-        return dict(payload[0])
+        result = dict(payload[0])
+        result["athlete_id"] = result.pop("internal_athlete_id")
+        return result
 
     async def update_swipe_draft(
         self,
@@ -461,12 +523,13 @@ class SupabasePlanningRepository:
         expected_revision: int,
         payload: JsonObject,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
             "rpc/update_swipe_week_draft",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_draft_id": str(draft_id),
                 "p_expected_revision": expected_revision,
                 "p_payload": payload,
@@ -482,12 +545,13 @@ class SupabasePlanningRepository:
         proposal_id: UUID,
         explanation: str,
     ) -> str:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
             "rpc/set_weekly_plan_proposal_explanation",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_proposal_id": str(proposal_id),
                 "p_explanation": explanation,
             },
@@ -607,12 +671,13 @@ class SupabasePlanningRepository:
         scheduled_date: date,
         warnings: list[JsonObject],
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         payload = await self._request(
             "POST",
             "rpc/move_planned_workout",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_workout_id": str(workout_id),
                 "p_expected_revision": expected_revision,
                 "p_scheduled_date": scheduled_date.isoformat(),

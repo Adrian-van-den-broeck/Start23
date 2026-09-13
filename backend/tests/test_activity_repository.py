@@ -87,6 +87,8 @@ def test_hidden_load_context_and_rpe_completion_use_only_server_secret() -> None
 
     def handler(request: httpx.Request) -> httpx.Response:
         requests.append(request)
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
         if request.url.path.endswith("get_activity_processing_context"):
             return httpx.Response(200, json={"duration_minutes": "60"})
         return httpx.Response(200, json={"id": str(activity_id)})
@@ -108,14 +110,18 @@ def test_hidden_load_context_and_rpe_completion_use_only_server_secret() -> None
 
     asyncio.run(exercise())
 
-    assert len(requests) == 3
+    assert len(requests) == 4
     assert all(request.headers["apikey"] == "sb_secret_test" for request in requests)
     assert all("authorization" not in request.headers for request in requests)
     assert all(str(athlete_id).encode() in request.content for request in requests)
 
 
 def test_rpe_correction_window_conflict_maps_to_stable_code() -> None:
-    def handler(_: httpx.Request) -> httpx.Response:
+    athlete_id = uuid4()
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
         return httpx.Response(
             400,
             json={"code": "40001", "message": "rpe correction window closed"},
@@ -126,7 +132,7 @@ def test_rpe_correction_window_conflict_maps_to_stable_code() -> None:
             repository = SupabaseActivityRepository(_settings(), client=client)
             with pytest.raises(ActivityRepositoryConflictError) as captured:
                 await repository.revise_activity_rpe(
-                    uuid4(),
+                    athlete_id,
                     uuid4(),
                     {"rpe": 7},
                 )

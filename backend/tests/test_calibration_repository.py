@@ -4,10 +4,55 @@ import asyncio
 from uuid import uuid4
 
 import httpx
+import pytest
 from pydantic import SecretStr
 
 from app.core.config import Settings
-from app.modules.calibration.repository import SupabaseCalibrationRepository
+from app.modules.calibration.repository import (
+    CalibrationRepositoryNotFoundError,
+    SupabaseCalibrationRepository,
+)
+
+
+def test_calibration_timezone_requires_persisted_confirmation() -> None:
+    requests: list[httpx.Request] = []
+    responses = iter(
+        [
+            [
+                {
+                    "timezone": "Europe/Amsterdam",
+                    "timezone_confirmed_at": "2026-09-12T12:00:00Z",
+                }
+            ],
+            [{"timezone": "UTC", "timezone_confirmed_at": None}],
+        ]
+    )
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        return httpx.Response(200, json=next(responses))
+
+    settings = Settings(environment="test", supabase_publishable_key="publishable")
+
+    async def exercise() -> None:
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            repository = SupabaseCalibrationRepository(settings, client=client)
+            assert (
+                await repository.fetch_athlete_timezone(
+                    "athlete-token",
+                    uuid4(),
+                )
+                == "Europe/Amsterdam"
+            )
+            with pytest.raises(CalibrationRepositoryNotFoundError):
+                await repository.fetch_athlete_timezone("athlete-token", uuid4())
+
+    asyncio.run(exercise())
+
+    assert all(
+        request.url.params["select"] == "timezone,timezone_confirmed_at"
+        for request in requests
+    )
 
 
 def test_setup_and_observation_rpcs_preserve_athlete_rls_context() -> None:
@@ -55,6 +100,8 @@ def test_generated_evaluation_uses_only_the_service_rpc() -> None:
 
     def handler(request: httpx.Request) -> httpx.Response:
         nonlocal captured
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
         captured = request
         return httpx.Response(200, json={"id": str(uuid4())})
 
@@ -128,7 +175,7 @@ def test_observation_read_keeps_explicit_owner_protocol_activity_filters() -> No
     asyncio.run(exercise())
 
     assert captured is not None
-    assert captured.url.params["athlete_id"] == f"eq.{athlete_id}"
+    assert captured.url.params["internal_athlete_id"] == f"eq.{athlete_id}"
     assert captured.url.params["activity_id"] == f"eq.{activity_id}"
     assert captured.url.params["protocol_id"] == ("eq.start23_run_threshold_30min_v1")
     assert rows[0]["id"] == str(observation_id)
@@ -142,6 +189,8 @@ def test_threshold_lifecycle_separates_owner_read_and_service_writes() -> None:
 
     def handler(request: httpx.Request) -> httpx.Response:
         requests.append(request)
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
         if request.method == "GET":
             return httpx.Response(200, json=[{"id": str(evaluation_id)}])
         return httpx.Response(
@@ -180,9 +229,9 @@ def test_threshold_lifecycle_separates_owner_read_and_service_writes() -> None:
 
     assert requests[0].url.path.endswith("/rest/v1/calibration_evaluations")
     assert requests[0].headers["Authorization"] == "Bearer athlete-token"
-    assert requests[0].url.params["athlete_id"] == f"eq.{athlete_id}"
+    assert requests[0].url.params["internal_athlete_id"] == f"eq.{athlete_id}"
     assert requests[0].url.params["id"] == f"eq.{evaluation_id}"
-    assert requests[1].url.path.endswith("/rest/v1/rpc/save_calculated_zone_profile")
-    assert requests[2].url.path.endswith("/rest/v1/rpc/reject_calibration_threshold")
+    assert requests[2].url.path.endswith("/rest/v1/rpc/save_calculated_zone_profile")
+    assert requests[3].url.path.endswith("/rest/v1/rpc/reject_calibration_threshold")
     assert all(request.headers["apikey"] == "server-secret" for request in requests[1:])
     assert all("Authorization" not in request.headers for request in requests[1:])

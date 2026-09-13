@@ -27,6 +27,7 @@ class CheckInTokenVerifier:
             return AuthenticatedIdentity(
                 user_id=self.owners[access_token],
                 role="authenticated",
+                athlete_id=self.owners[access_token],
             )
         except KeyError as error:
             raise InvalidAccessTokenError from error

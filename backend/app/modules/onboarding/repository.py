@@ -9,6 +9,10 @@ from uuid import UUID
 import httpx
 
 from app.core.config import Settings
+from app.modules.identity.repository import (
+    AthleteIdentityResolutionError,
+    LegacyAthleteOwnerAdapter,
+)
 
 JsonObject = dict[str, Any]
 logger = logging.getLogger(__name__)
@@ -48,6 +52,36 @@ class OnboardingRepository(Protocol):
     ) -> JsonObject:
         """Create or patch the owner's profile."""
 
+    async def fetch_identifying_profile(
+        self, access_token: str, athlete_id: UUID
+    ) -> JsonObject | None:
+        """Fetch the owner's identifying fields only."""
+
+    async def fetch_physiology_profile(
+        self, access_token: str, athlete_id: UUID
+    ) -> JsonObject | None:
+        """Fetch the owner's physiological fields only."""
+
+    async def fetch_operational_profile(
+        self, access_token: str, athlete_id: UUID
+    ) -> JsonObject | None:
+        """Fetch the owner's operational profile only."""
+
+    async def upsert_identifying_profile(
+        self, access_token: str, values: JsonObject
+    ) -> JsonObject:
+        """Write only identifying fields through the intended RPC."""
+
+    async def upsert_physiology_profile(
+        self, access_token: str, values: JsonObject
+    ) -> JsonObject:
+        """Write only physiological fields through the intended RPC."""
+
+    async def upsert_operational_profile(
+        self, access_token: str, values: JsonObject
+    ) -> JsonObject:
+        """Write only operational fields through the intended RPC."""
+
     async def replace_training_history(
         self,
         access_token: str,
@@ -84,7 +118,11 @@ class OnboardingRepository(Protocol):
     ) -> JsonObject:
         """Persist model-derived zones as a service-only pending proposal."""
 
-    async def complete_onboarding(self, access_token: str) -> UUID:
+    async def complete_onboarding(
+        self,
+        access_token: str,
+        expected_session_revision: int,
+    ) -> UUID:
         """Complete the current version and create a pending planning request."""
 
     async def approve_zone_proposal(
@@ -122,6 +160,7 @@ class SupabaseOnboardingRepository:
         self._client = client or httpx.AsyncClient(
             timeout=settings.supabase_data_api_timeout_seconds,
         )
+        self._legacy_owner = LegacyAthleteOwnerAdapter(settings, self._client)
 
     def _headers(
         self,
@@ -221,11 +260,12 @@ class SupabaseOnboardingRepository:
         athlete_id: UUID,
         *,
         select: str = "*",
+        owner_column: str = "internal_athlete_id",
         extra_params: Mapping[str, str] | None = None,
     ) -> list[JsonObject]:
         params = {
             "select": select,
-            "athlete_id": f"eq.{athlete_id}",
+            owner_column: f"eq.{athlete_id}",
             **dict(extra_params or {}),
         }
         payload = await self._request(
@@ -268,6 +308,8 @@ class SupabaseOnboardingRepository:
         """Fetch rows in parallel with an explicit owner filter on every query."""
         (
             profiles,
+            identifying_profiles,
+            physiology_profiles,
             sessions,
             history,
             goals,
@@ -277,7 +319,35 @@ class SupabaseOnboardingRepository:
             discipline_setups,
             zone_proposals,
         ) = await asyncio.gather(
-            self._select("athlete_profiles", access_token, athlete_id),
+            self._select(
+                "athlete_profiles",
+                access_token,
+                athlete_id,
+                select=(
+                    "timezone,timezone_source,timezone_confirmed_at,"
+                    "heart_rate_monitor_confirmed_at,onboarding_status,revision,"
+                    "created_at,updated_at"
+                ),
+            ),
+            self._select(
+                "athlete_identifying_profiles",
+                access_token,
+                athlete_id,
+                select=(
+                    "athlete_id,first_name,last_name,revision,created_at,updated_at"
+                ),
+                owner_column="athlete_id",
+            ),
+            self._select(
+                "athlete_physiology_profiles",
+                access_token,
+                athlete_id,
+                select=(
+                    "athlete_id,date_of_birth,resting_heart_rate_bpm,revision,"
+                    "created_at,updated_at"
+                ),
+                owner_column="athlete_id",
+            ),
             self._select("onboarding_sessions", access_token, athlete_id),
             self._select(
                 "training_history_entries",
@@ -324,8 +394,40 @@ class SupabaseOnboardingRepository:
                 },
             ),
         )
+        operational = profiles[0] if profiles else None
+        identifying = identifying_profiles[0] if identifying_profiles else None
+        physiology = physiology_profiles[0] if physiology_profiles else None
+        profile = None
+        if operational is not None:
+            profile = {
+                "athlete_id": str(athlete_id),
+                "first_name": identifying.get("first_name") if identifying else None,
+                "last_name": identifying.get("last_name") if identifying else None,
+                "date_of_birth": (
+                    physiology.get("date_of_birth") if physiology else None
+                ),
+                "resting_heart_rate_bpm": (
+                    physiology.get("resting_heart_rate_bpm") if physiology else None
+                ),
+                "timezone": operational.get("timezone"),
+                "timezone_source": operational.get("timezone_source"),
+                "timezone_confirmed_at": operational.get("timezone_confirmed_at"),
+                "heart_rate_monitor_confirmed_at": operational.get(
+                    "heart_rate_monitor_confirmed_at"
+                ),
+                "onboarding_status": operational["onboarding_status"],
+                "revision": operational["revision"],
+                "identifying_revision": (
+                    identifying.get("revision", 0) if identifying else 0
+                ),
+                "physiology_revision": (
+                    physiology.get("revision", 0) if physiology else 0
+                ),
+                "created_at": operational["created_at"],
+                "updated_at": operational["updated_at"],
+            }
         return {
-            "profile": profiles[0] if profiles else None,
+            "profile": profile,
             "session": sessions[0] if sessions else None,
             "training_history": history,
             "goals": goals,
@@ -342,31 +444,133 @@ class SupabaseOnboardingRepository:
         athlete_id: UUID,
         values: JsonObject,
     ) -> JsonObject:
-        update_payload = {"onboarding_status": "in_progress", **values}
-        result = await self._request(
-            "PATCH",
+        identifying = {
+            key: values[key] for key in ("first_name", "last_name") if key in values
+        }
+        physiology = {
+            key: values[key]
+            for key in ("date_of_birth", "resting_heart_rate_bpm")
+            if key in values
+        }
+        operational = {
+            key: values[key]
+            for key in (
+                "timezone",
+                "timezone_source",
+                "timezone_confirmed",
+                "heart_rate_monitor_confirmed",
+            )
+            if key in values
+        }
+        if identifying:
+            await self.upsert_identifying_profile(access_token, identifying)
+        if physiology:
+            await self.upsert_physiology_profile(access_token, physiology)
+        if operational:
+            await self.upsert_operational_profile(access_token, operational)
+        state = await self.fetch_state(access_token, athlete_id)
+        profile = state.get("profile")
+        if not isinstance(profile, dict):
+            raise RepositoryUnavailableError
+        return dict(profile)
+
+    async def fetch_identifying_profile(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> JsonObject | None:
+        rows = await self._select(
+            "athlete_identifying_profiles",
+            access_token,
+            athlete_id,
+            select="athlete_id,first_name,last_name,revision,created_at,updated_at",
+            owner_column="athlete_id",
+        )
+        return rows[0] if rows else None
+
+    async def fetch_physiology_profile(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> JsonObject | None:
+        rows = await self._select(
+            "athlete_physiology_profiles",
+            access_token,
+            athlete_id,
+            select=(
+                "athlete_id,date_of_birth,resting_heart_rate_bpm,revision,"
+                "created_at,updated_at"
+            ),
+            owner_column="athlete_id",
+        )
+        return rows[0] if rows else None
+
+    async def fetch_operational_profile(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> JsonObject | None:
+        rows = await self._select(
             "athlete_profiles",
             access_token,
-            params={"athlete_id": f"eq.{athlete_id}"},
-            json=update_payload,
-            prefer="return=representation",
+            athlete_id,
+            select=(
+                "athlete_id,timezone,timezone_source,timezone_confirmed_at,"
+                "heart_rate_monitor_confirmed_at,onboarding_status,revision,"
+                "created_at,updated_at"
+            ),
         )
-        if isinstance(result, list) and result:
-            return dict(result[0])
-        insert_payload = {
-            "athlete_id": str(athlete_id),
-            **update_payload,
-        }
+        if not rows:
+            return None
+        row = dict(rows[0])
+        row["athlete_id"] = str(athlete_id)
+        row.pop("internal_athlete_id", None)
+        return row
+
+    async def upsert_identifying_profile(
+        self,
+        access_token: str,
+        values: JsonObject,
+    ) -> JsonObject:
         result = await self._request(
             "POST",
-            "athlete_profiles",
+            "rpc/save_identifying_profile",
             access_token,
-            json=insert_payload,
-            prefer="return=representation",
+            json={"p_profile": values},
         )
-        if not isinstance(result, list) or not result:
+        if not isinstance(result, dict):
             raise RepositoryUnavailableError
-        return dict(result[0])
+        return dict(result)
+
+    async def upsert_physiology_profile(
+        self,
+        access_token: str,
+        values: JsonObject,
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/save_physiology_profile",
+            access_token,
+            json={"p_profile": values},
+        )
+        if not isinstance(result, dict):
+            raise RepositoryUnavailableError
+        return dict(result)
+
+    async def upsert_operational_profile(
+        self,
+        access_token: str,
+        values: JsonObject,
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/save_operational_athlete_profile",
+            access_token,
+            json={"p_profile": values},
+        )
+        if not isinstance(result, dict):
+            raise RepositoryUnavailableError
+        return dict(result)
 
     async def replace_training_history(
         self,
@@ -411,13 +615,17 @@ class SupabaseOnboardingRepository:
         athlete_id: UUID,
         values: JsonObject,
     ) -> JsonObject:
+        try:
+            legacy_id = await self._legacy_owner.legacy_id(athlete_id)
+        except AthleteIdentityResolutionError as error:
+            raise RepositoryUnavailableError from error
         result = await self._request(
             "POST",
             "rpc/save_fallback_zone_profile",
             "",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(legacy_id),
                 "p_discipline": values["discipline"],
                 "p_boundaries": values["boundaries"],
             },
@@ -431,6 +639,10 @@ class SupabaseOnboardingRepository:
         athlete_id: UUID,
         values: JsonObject,
     ) -> JsonObject:
+        try:
+            legacy_id = await self._legacy_owner.legacy_id(athlete_id)
+        except AthleteIdentityResolutionError as error:
+            raise RepositoryUnavailableError from error
         function_name = (
             "save_measured_calculated_zone_profile"
             if values.get("source_quality") == "measured_lab"
@@ -442,7 +654,7 @@ class SupabaseOnboardingRepository:
             "",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(legacy_id),
                 "p_profile": values,
             },
         )
@@ -465,12 +677,16 @@ class SupabaseOnboardingRepository:
             raise RepositoryUnavailableError
         return dict(result)
 
-    async def complete_onboarding(self, access_token: str) -> UUID:
+    async def complete_onboarding(
+        self,
+        access_token: str,
+        expected_session_revision: int,
+    ) -> UUID:
         result = await self._request(
             "POST",
             "rpc/complete_current_onboarding",
             access_token,
-            json={},
+            json={"p_expected_session_revision": expected_session_revision},
         )
         try:
             return UUID(str(result))

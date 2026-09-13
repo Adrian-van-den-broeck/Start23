@@ -8,8 +8,13 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from app.core.config import Settings
 from app.core.security import (
     AccessTokenVerifier,
+    AuthenticatedAthlete,
     AuthenticatedIdentity,
     InvalidAccessTokenError,
+)
+from app.modules.identity.repository import (
+    AthleteIdentityRepository,
+    AthleteIdentityResolutionError,
 )
 
 _bearer_scheme = HTTPBearer(auto_error=False)
@@ -55,3 +60,33 @@ def get_authenticated_identity(
         return verifier.verify(access_token)
     except InvalidAccessTokenError:
         raise _authentication_error from None
+
+
+def get_athlete_identity_repository(request: Request) -> AthleteIdentityRepository:
+    """Return the process-wide opaque identity resolver."""
+    return cast(
+        AthleteIdentityRepository,
+        request.app.state.athlete_identity_repository,
+    )
+
+
+async def get_authenticated_athlete(
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    repository: Annotated[
+        AthleteIdentityRepository,
+        Depends(get_athlete_identity_repository),
+    ],
+) -> AuthenticatedAthlete:
+    """Resolve one verified Auth subject to its opaque business identity."""
+    try:
+        athlete_id = identity.athlete_id or await repository.resolve_current_athlete_id(
+            access_token
+        )
+    except AthleteIdentityResolutionError:
+        raise _authentication_error from None
+    return AuthenticatedAthlete(
+        auth_user_id=identity.user_id,
+        athlete_id=athlete_id,
+        role=identity.role,
+    )

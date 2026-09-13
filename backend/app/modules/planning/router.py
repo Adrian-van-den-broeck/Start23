@@ -6,9 +6,13 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 
-from app.api.dependencies import get_access_token, get_authenticated_identity
+from app.api.dependencies import (
+    get_access_token,
+    get_authenticated_athlete,
+    get_authenticated_identity,
+)
 from app.core.errors import ErrorResponse
-from app.core.security import AuthenticatedIdentity
+from app.core.security import AuthenticatedAthlete, AuthenticatedIdentity
 from app.modules.coach.weekly_plan import WeeklyPlanCoach
 from app.modules.workouts.repository import PlanningCatalogUnavailableError
 
@@ -136,14 +140,14 @@ def raise_planning_error(error: Exception) -> NoReturn:
 async def create_initial_weekly_plan_proposal(
     proposal: WeeklyPlanProposalRequest,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
 ) -> WeeklyPlanProposalResponse:
     """Consume confirmed onboarding input into a pending auto-scheduled plan."""
     try:
         return await service.generate_initial_proposal(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             proposal,
         )
     except Exception as error:
@@ -159,7 +163,7 @@ async def create_initial_weekly_plan_proposal(
 async def create_swipe_week_draft(
     draft: SwipeDraftCreateRequest,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
 ) -> SwipeWeekDraftResponse:
     """Start or resume an exact server-authoritative workout-card draft."""
@@ -167,7 +171,7 @@ async def create_swipe_week_draft(
     try:
         return await service.create_swipe_draft(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             draft,
         )
     except Exception as error:
@@ -182,7 +186,7 @@ async def create_swipe_week_draft(
 async def get_swipe_week_draft(
     draft_id: UUID,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
 ) -> SwipeWeekDraftResponse:
     """Read one owner-visible draft without private planning load."""
@@ -190,7 +194,7 @@ async def get_swipe_week_draft(
     try:
         return await service.get_swipe_draft(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             draft_id,
         )
     except Exception as error:
@@ -206,7 +210,7 @@ async def transition_swipe_week_draft(
     draft_id: UUID,
     transition: SwipeDraftTransitionRequest,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
 ) -> SwipeWeekDraftResponse:
     """Accept, pass, undo, or reset against the exact current revision."""
@@ -214,7 +218,7 @@ async def transition_swipe_week_draft(
     try:
         return await service.transition_swipe_draft(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             draft_id,
             transition,
         )
@@ -232,7 +236,7 @@ async def place_swipe_week_workout(
     template_id: UUID,
     placement: SwipeDraftPlacementRequest,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
 ) -> SwipeWeekDraftResponse:
     """Revalidate the full schedule after one date-only placement."""
@@ -240,7 +244,7 @@ async def place_swipe_week_workout(
     try:
         return await service.place_swipe_workout(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             draft_id,
             template_id,
             placement,
@@ -259,7 +263,7 @@ async def submit_swipe_week_draft(
     draft_id: UUID,
     submission: SwipeDraftSubmitRequest,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
 ) -> WeeklyPlanProposalResponse:
     """Create one immutable pending proposal from a complete draft."""
@@ -267,7 +271,7 @@ async def submit_swipe_week_draft(
     try:
         return await service.submit_swipe_draft(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             draft_id,
             submission,
         )
@@ -301,7 +305,7 @@ async def get_weekly_plan(
 )
 async def get_weekly_plan_deck(
     plan_id: UUID,
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
     expected_revision: int | None = None,
     selected_template_ids: list[UUID] | None = Query(default=None),
@@ -309,7 +313,7 @@ async def get_weekly_plan_deck(
     """Return current eligible workout cards without hidden load."""
     try:
         return await service.get_deck(
-            identity.user_id,
+            identity.athlete_id,
             plan_id,
             expected_revision=expected_revision,
             selected_template_ids=tuple(selected_template_ids or ()),
@@ -328,14 +332,14 @@ async def create_schedule_proposal(
     plan_id: UUID,
     proposal: ScheduleProposalRequest,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
 ) -> WeeklyPlanProposalResponse:
     """Create a new pending revision from an explicit eligible deck selection."""
     try:
         return await service.generate_schedule_proposal(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             plan_id,
             proposal,
         )
@@ -352,7 +356,7 @@ async def get_pending_workout_alternatives(
     plan_id: UUID,
     workout_id: UUID,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
     expected_revision: Annotated[int, Query(ge=1)],
 ) -> PendingWorkoutAlternativesResponse:
@@ -360,7 +364,7 @@ async def get_pending_workout_alternatives(
     try:
         return await service.get_pending_workout_alternatives(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             plan_id,
             workout_id,
             expected_revision,
@@ -380,14 +384,14 @@ async def edit_pending_workout(
     workout_id: UUID,
     edit: PendingWorkoutEditRequest,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
 ) -> WeeklyPlanProposalResponse:
     """Create a new pending revision after one server-authoritative edit."""
     try:
         return await service.edit_pending_workout(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             plan_id,
             workout_id,
             edit,
@@ -424,14 +428,14 @@ async def move_planned_workout(
     workout_id: UUID,
     move: PlannedWorkoutMoveRequest,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
 ) -> WeeklyPlanResponse:
     """Apply an explicit owner move as a new active revision with warnings."""
     try:
         return await service.move_workout(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             workout_id,
             move,
         )

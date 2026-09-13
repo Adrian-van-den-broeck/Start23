@@ -44,6 +44,7 @@
     "android": "expo start --dev-client --android",
     "ios": "expo start --dev-client --ios",
     "web": "expo start --web",
+    "test": "node --experimental-strip-types --test src/lib/onboardingForms.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "private": true

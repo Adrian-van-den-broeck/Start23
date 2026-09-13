@@ -1,6 +1,9 @@
 # Phase 13 and 14 remediation roadmap
 
-Status: R1 complete locally on 2026-09-11; R2-R6 not started.
+Status: R1 complete locally on 2026-09-11. R3 foundation and R2 behavior were
+implemented together locally on 2026-09-12, in that order. R4 and R5 were
+implemented together locally on 2026-09-12. Database execution, real-token,
+two-user, and device evidence remains open under R6; R6 has not begun.
 
 This roadmap converts the read-only Phase 13 and Phase 14 implementation audit
 into ordered remediation work. It is an implementation companion to
@@ -29,8 +32,10 @@ expected behavior.
 ## Delivery order and dependencies
 
 1. Remediation Phase R1 establishes a reproducible audited baseline.
-2. Remediation Phase R2 resolves the end-to-end Phase 13/14 blockers.
-3. Remediation Phase R3 implements the privacy-safe profile architecture.
+2. Remediation Phase R3 establishes the opaque identity and privacy-safe
+   profile architecture used by all following work.
+3. Remediation Phase R2 resolves the end-to-end Phase 13/14 blockers on that
+   architecture.
 4. Remediation Phase R4 completes the remaining onboarding and race inputs.
 5. Remediation Phase R5 closes activity consistency and mobile-quality gaps.
 6. Remediation Phase R6 performs database, security, integration, and release
@@ -107,6 +112,10 @@ questions that later remediation phases must not guess.
 
 ## Remediation Phase R2: unblock onboarding and calibration
 
+Status: implementation complete locally on 2026-09-12 on top of the R3
+foundation. Database/pgTAP, real-token, mobile-device, and release evidence is
+still an R6 gate. This status does not mark Phase 13 or Phase 14 complete.
+
 ### Objective
 
 Make both new-athlete and existing-athlete flows reach a valid, pending Phase 13
@@ -157,7 +166,38 @@ zone proposal and then planning without bypassing current prerequisites.
 - Pending approval, duplicate submission, stale version, and historical
   provenance tests.
 
+### Completion evidence
+
+- The version assessment now drives explicit fresh, current, incomplete, and
+  `legacy-unversioned` resume states. Mobile shows the retained historical
+  completion and only the derived missing steps; completion requires the
+  session revision, is replay-idempotent, and appends current provenance
+  without deleting the legacy completion record.
+- One shared deterministic Python prerequisite assessment is used by
+  onboarding and planning. A service-only eligibility-context RPC supplies the
+  same current session/request versions to service planning contexts. Database
+  triggers on weekly plans, plan revisions, and swipe drafts apply the SQL
+  equivalent to all persistence/direct-RPC writes.
+- Current protocol discovery keeps historical run/bike field tests and
+  unsupported guidance out of selection. Current run/bike result observations
+  require measured average HR and block RPE; swim requires measured elapsed
+  time, distance, and block RPE. The mobile swim form sends elapsed time as an
+  independent measurement. A new insert trigger applies the same contract to
+  direct calibration-observation RPC persistence without changing old rows.
+- Calculated field-test zones still enter the existing pending proposal flow;
+  activation remains a separate stale-safe athlete decision. Capability
+  metadata now states its observation, result, and pending lifecycle.
+- The complete backend suite passed with 565 tests; Ruff, formatting, strict
+  mypy including tests, OpenAPI/private-load contracts, and mobile strict
+  TypeScript passed. All 44 migration/pgTAP SQL files passed local PostgreSQL
+  syntax parsing. The R2/R3 pgTAP file was authored but not executed because
+  Docker/Postgres is unavailable; that execution remains R6 evidence.
+
 ## Remediation Phase R3: privacy-safe identity and physiology profiles
+
+Status: foundation and application cutover complete locally on 2026-09-12.
+Database/pgTAP execution and two-real-user proof remain open under R6. This
+status does not mark Phase 13 or Phase 14 complete.
 
 ### Objective
 
@@ -200,7 +240,41 @@ boundary.
 - OpenAPI/public-contract and recursive private-load/TSS leak tests.
 - Mobile secret and accessibility-label inspection.
 
+### Completion evidence
+
+- Forward migration
+  `20260912072232_phase_r2_r3_identity_onboarding_calibration.sql` adds the
+  private one-to-one Auth-user/opaque-athlete map, deterministic existing-user
+  backfill, fresh-user trigger, and immutable dual-owner synchronization.
+  Thirty-nine existing owner-bearing tables receive indexed opaque FKs; 38 are
+  non-null and the webhook receipt keeps its intentional paired-null PING state.
+  The legacy Auth key remains an explicitly bounded compatibility key pending
+  the R6 contract-removal proof.
+- First/last name and DOB/resting-HR are stored in independently forced-RLS
+  identifying and physiological tables. Operational timezone/onboarding state
+  remains in the bounded legacy operational profile. Backfill copies existing
+  physiological values exactly and records source metadata without exposing
+  that migration provenance in athlete grants or RPC responses.
+- Athlete-facing code resolves the opaque ID from the verified token and never
+  accepts an authoritative client owner ID. New owner-aware repositories query
+  opaque columns; service-only adapters translate only at stored procedures
+  that still require the legacy key. Token-scoped calls that do not pass an
+  owner remain authentication-boundary compatibility paths.
+- Split-profile table grants are column-limited, writes are owner-derived RPC
+  paths, and independent RLS policies prevent cross-owner access. Public
+  `/me` returns only the opaque athlete ID. No service credential was added to
+  Expo and recursive public-contract tests remain private-load/TSS free.
+- Static migration and application tests cover mapping uniqueness, fresh and
+  existing users, idempotent backfill, split data contracts, old-record resume,
+  owner filtering, direct-write denial, and representative orphan checks. The
+  new pgTAP scenarios require execution in R6 before hosted isolation or
+  migration success may be claimed.
+
 ## Remediation Phase R4: complete onboarding prerequisites and race goals
+
+Status: implementation complete locally on 2026-09-12. The forward migration
+and pgTAP suite are authored but unexecuted; their runtime proof remains an R6
+gate. This does not mark Phase 13 or Phase 14 complete.
 
 ### Objective
 
@@ -212,8 +286,8 @@ every boundary that can complete onboarding or start planning.
 - Add explicit, persisted confirmation of heart-rate-monitor access. Enforce it
   in mobile, API, database completion, and planning. Manual average-HR entry
   remains supported as already specified.
-- Replace silent timezone defaults and free text with permission-based location
-  detection and a validated IANA-timezone dropdown fallback. Require explicit
+- Replace silent timezone defaults and free text with device-reported IANA
+  resolution and a validated explicit IANA-timezone fallback. Require explicit
   confirmation and retain the relevant source/audit state where approved.
 - Replace the generic/hardcoded triathlon goal with typed run, bike, swim,
   triathlon, and duathlon configurations.
@@ -229,8 +303,8 @@ every boundary that can complete onboarding or start planning.
 
 - Onboarding and planning reject missing monitor confirmation or unconfirmed
   timezone, including direct RPC attempts.
-- Permission-granted and permission-denied timezone flows both reach an
-  explicitly confirmed valid IANA zone without guessing.
+- Automatic device resolution and the unavailable/declined fallback both reach
+  an explicitly confirmed valid IANA zone without guessing.
 - All five race types validate their conditional required and optional fields.
 - Standalone and multisport goals produce correct discipline-specific planning
   inputs.
@@ -246,7 +320,40 @@ every boundary that can complete onboarding or start planning.
 - Migration compatibility for historical generic goals.
 - Planning snapshot and locked-personal-goal regression tests.
 
+### Completion evidence
+
+- Onboarding version `phase-14-onboarding-v2` adds independent derived monitor
+  and timezone steps. Fresh, legacy-completed, partially upgraded,
+  interrupted/replayed, already-populated, and current-state tests prove that
+  only missing evidence is requested and current completion remains stale-safe
+  and idempotent.
+- The API and operational-profile RPC persist an explicit monitor assertion
+  without requiring a provider. A default/legacy timezone remains unconfirmed;
+  device resolution is shown for explicit acceptance, and the manual fallback
+  is validated against IANA data in Python and PostgreSQL. Planning re-derives
+  both prerequisites, the R3 direct-write triggers call the replaced SQL
+  eligibility function, calibration rejects an unconfirmed schedule timezone,
+  and activity writes must match the confirmed persisted profile timezone.
+- Current onboarding accepts only separate previous-month hours/week for swim,
+  bike, and run. Structured race writes cover run, bike, swim, triathlon, and
+  duathlon with conditional distances, total time, optional discipline times,
+  race name, and focus. The old generic RPC loses authenticated execution while
+  old columns and rows remain stored for compatibility/history.
+- Forward migration
+  `20260912180000_phase_r4_r5_onboarding_race_activity.sql` expands the current
+  session constraints, operational confirmation state, structured goal shape,
+  v2 completion, planning snapshot, and SQL eligibility checks without removing
+  the R2/R3 dual-owner compatibility contract.
+- Local service/schema/planner tests, static migration tests, strict TypeScript,
+  and seven configured mobile logic/source-contract tests pass. Existing local
+  week and DST suites continue to pass. Database execution and real-device
+  permission/fallback behavior remain R6 evidence.
+
 ## Remediation Phase R5: activity consistency and mobile regression coverage
+
+Status: implementation complete locally on 2026-09-12. The database trigger,
+correction wrapper, and pgTAP scenarios are unexecuted pending R6. This does not
+mark Phase 13 or Phase 14 complete.
 
 ### Objective
 
@@ -284,6 +391,34 @@ contract drift from recurring.
 - Mobile component tests for nullable duration/distance presentation.
 - End-to-end mocked-contract tests using the exact serialized mobile payloads.
 - Full strict TypeScript and unused-code checks.
+
+### Completion evidence
+
+- The API requires an expected-current-RPE precondition for a real correction,
+  accepts exact duplicates idempotently, and returns a typed conflict for stale
+  writes. Changed average HR is rejected once the Phase 13 private-load record
+  exists, before any RPE/load mutation; omission or the exact stored value is
+  allowed. Existing load, originating profile/HR snapshot, ruleset, and audit
+  provenance therefore remain aligned under approved decision R1-D1.
+- The forward migration adds a direct-table HR guard and a service-only,
+  owner-scoped, row-locking correction wrapper around the existing atomic
+  revision operation. The original operation remains private compatibility
+  implementation rather than being removed in this expand/cutover phase.
+- Run/bike calibration retains measured average HR plus textual block RPE;
+  swim retains measured elapsed time/distance and pace/CSS. Pending threshold,
+  separate zone proposal approval, stale-safe activation, warnings, and
+  ruleset/model provenance remain unchanged. Mobile now uses only the persisted
+  confirmed profile timezone and omits historical protocols absent from current
+  discovery.
+- Distance-only swim cards render distance rather than `0 min`, and explanatory
+  copy states that duration/zone time were not inferred. Partial-HR copy states
+  that only observed zone time was used. Neither representation exposes private
+  load/TSS. The superseded inline zone step is removed; `ZoneSetupStep` is the
+  sole implementation.
+- Original/same/changed HR, duplicate and stale correction, unavailable swim
+  load, partial observed coverage, pending/stale zone approval, disabled
+  calibration mode, no-auto-activation, public-contract, and recursive privacy
+  checks pass locally. The new pgTAP scenarios remain unexecuted until R6.
 
 ## Remediation Phase R6: database, security, integration, and release closure
 

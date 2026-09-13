@@ -9,6 +9,10 @@ from uuid import UUID
 import httpx
 
 from app.core.config import Settings
+from app.modules.identity.repository import (
+    AthleteIdentityResolutionError,
+    LegacyAthleteOwnerAdapter,
+)
 
 JsonObject = dict[str, Any]
 logger = logging.getLogger(__name__)
@@ -157,6 +161,13 @@ class SupabaseCalibrationRepository:
         self._client = client or httpx.AsyncClient(
             timeout=settings.supabase_data_api_timeout_seconds,
         )
+        self._legacy_owner = LegacyAthleteOwnerAdapter(settings, self._client)
+
+    async def _rpc_athlete_id(self, athlete_id: UUID) -> UUID:
+        try:
+            return await self._legacy_owner.legacy_id(athlete_id)
+        except AthleteIdentityResolutionError as error:
+            raise CalibrationRepositoryUnavailableError from error
 
     def _headers(self, access_token: str) -> dict[str, str]:
         if not self._publishable_key:
@@ -241,7 +252,7 @@ class SupabaseCalibrationRepository:
             table,
             access_token,
             params={
-                "athlete_id": f"eq.{athlete_id}",
+                "internal_athlete_id": f"eq.{athlete_id}",
                 **dict(extra_params or {}),
             },
         )
@@ -313,13 +324,14 @@ class SupabaseCalibrationRepository:
         values: JsonObject,
         fingerprint: str,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
             "rpc/save_calibration_evaluation",
             "",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_evaluation": values,
                 "p_fingerprint": fingerprint,
             },
@@ -349,13 +361,14 @@ class SupabaseCalibrationRepository:
         athlete_id: UUID,
         values: JsonObject,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
             "rpc/save_calculated_zone_profile",
             "",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_profile": values,
             },
         )
@@ -368,13 +381,14 @@ class SupabaseCalibrationRepository:
         athlete_id: UUID,
         evaluation_id: UUID,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
             "rpc/reject_calibration_threshold",
             "",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_evaluation_id": str(evaluation_id),
             },
         )
@@ -432,9 +446,16 @@ class SupabaseCalibrationRepository:
             "athlete_profiles",
             access_token,
             athlete_id,
-            extra_params={"select": "timezone", "limit": "1"},
+            extra_params={
+                "select": "timezone,timezone_confirmed_at",
+                "limit": "1",
+            },
         )
-        if not rows or not isinstance(rows[0].get("timezone"), str):
+        if (
+            not rows
+            or not isinstance(rows[0].get("timezone"), str)
+            or rows[0].get("timezone_confirmed_at") is None
+        ):
             raise CalibrationRepositoryNotFoundError
         return str(rows[0]["timezone"])
 

@@ -8,6 +8,10 @@ from uuid import UUID
 import httpx
 
 from app.core.config import Settings
+from app.modules.identity.repository import (
+    AthleteIdentityResolutionError,
+    LegacyAthleteOwnerAdapter,
+)
 
 JsonObject = dict[str, Any]
 
@@ -108,6 +112,13 @@ class SupabaseCheckInRepository:
             timeout=settings.supabase_data_api_timeout_seconds
         )
         self._owns_client = client is None
+        self._legacy_owner = LegacyAthleteOwnerAdapter(settings, self._client)
+
+    async def _rpc_athlete_id(self, athlete_id: UUID) -> UUID:
+        try:
+            return await self._legacy_owner.legacy_id(athlete_id)
+        except AthleteIdentityResolutionError as error:
+            raise CheckInRepositoryUnavailableError from error
 
     def _headers(
         self,
@@ -254,12 +265,13 @@ class SupabaseCheckInRepository:
         athlete_id: UUID,
         checkin_id: UUID,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
             "rpc/get_checkin_context_for_planning",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_checkin_id": str(checkin_id),
             },
         )
@@ -273,12 +285,13 @@ class SupabaseCheckInRepository:
         checkin_id: UUID,
         proposal_id: UUID,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
             "rpc/attach_checkin_plan_proposal",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_checkin_id": str(checkin_id),
                 "p_proposal_id": str(proposal_id),
             },

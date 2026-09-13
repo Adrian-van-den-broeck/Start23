@@ -38,6 +38,19 @@ class AuthenticationTestContext:
     settings: Settings
     private_key: ec.EllipticCurvePrivateKey
     user_id: UUID
+    athlete_id: UUID
+
+
+class StaticAthleteIdentityRepository:
+    def __init__(self, athlete_id: UUID) -> None:
+        self.athlete_id = athlete_id
+
+    async def resolve_current_athlete_id(self, access_token: str) -> UUID:
+        assert access_token
+        return self.athlete_id
+
+    async def aclose(self) -> None:
+        return None
 
 
 def _to_pyjwk(
@@ -70,15 +83,21 @@ def auth_context() -> Iterator[AuthenticationTestContext]:
         jwks_client=StaticJWKClient(_to_pyjwk(private_key.public_key())),
     )
     user_id = uuid4()
+    athlete_id = uuid4()
 
     with TestClient(
-        create_app(settings, access_token_verifier=verifier)
+        create_app(
+            settings,
+            access_token_verifier=verifier,
+            athlete_identity_repository=StaticAthleteIdentityRepository(athlete_id),
+        )
     ) as test_client:
         yield AuthenticationTestContext(
             client=test_client,
             settings=settings,
             private_key=private_key,
             user_id=user_id,
+            athlete_id=athlete_id,
         )
 
 
@@ -194,7 +213,7 @@ def test_valid_token_returns_verified_identity(
 
     assert response.status_code == 200
     assert response.json() == {
-        "id": str(auth_context.user_id),
+        "athlete_id": str(auth_context.athlete_id),
         "role": "authenticated",
     }
 
@@ -218,5 +237,6 @@ def test_request_input_cannot_override_verified_identity(
     )
 
     assert response.status_code == 200
-    assert response.json()["id"] == str(auth_context.user_id)
-    assert response.json()["id"] != str(attacker_id)
+    assert response.json()["athlete_id"] == str(auth_context.athlete_id)
+    assert response.json()["athlete_id"] != str(attacker_id)
+    assert "id" not in response.json()

@@ -141,6 +141,12 @@ class ZoneOptionResponse(CalibrationPublicModel):
     label: str
     creates_threshold: bool
     creates_zones: bool
+    requires_athlete_confirmation: bool
+    activation_behavior: Literal[
+        "athlete_input_can_activate",
+        "calculated_result_stays_pending",
+        "provisional_guidance_only",
+    ]
 
 
 class ProtocolSegmentResponse(CalibrationPublicModel):
@@ -170,6 +176,18 @@ class CalibrationProtocolResponse(CalibrationPublicModel):
     review_status: ProtocolReviewStatus
     result_status_on_success: EvaluationStatus
     guidance_modes: tuple[str, ...]
+    required_observation_type: Literal[
+        "average_heart_rate_and_rpe",
+        "elapsed_time_distance_and_rpe",
+    ]
+    calculated_result: Literal[
+        "threshold_and_zone_profiles",
+        "provisional_calibration",
+    ]
+    pending_zone_lifecycle: Literal[
+        "confirmation_creates_pending_proposal",
+        "no_zone_proposal_from_provisional_result",
+    ]
     segments: tuple[ProtocolSegmentResponse, ...]
 
 

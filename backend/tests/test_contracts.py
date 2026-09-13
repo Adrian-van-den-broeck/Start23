@@ -56,6 +56,9 @@ def test_openapi_contains_expected_foundation_paths(client: TestClient) -> None:
         "/api/v1/ready",
         "/api/v1/me",
         "/api/v1/me/profile",
+        "/api/v1/me/identifying-profile",
+        "/api/v1/me/physiology-profile",
+        "/api/v1/me/operational-profile",
         "/api/v1/onboarding",
         "/api/v1/onboarding/goal-options",
         "/api/v1/me/training-history",
@@ -130,15 +133,46 @@ def test_phase_14_write_contracts_exclude_retired_inputs(client: TestClient) -> 
     components = schema["components"]["schemas"]
 
     assert set(components["AthleteProfileUpdate"]["properties"]) == {
+        "first_name",
+        "last_name",
         "date_of_birth",
         "resting_heart_rate_bpm",
+    }
+    assert set(components["AthleteIdentifyingProfileUpdate"]["properties"]) == {
+        "first_name",
+        "last_name",
+    }
+    assert set(components["AthletePhysiologyProfileUpdate"]["properties"]) == {
+        "date_of_birth",
+        "resting_heart_rate_bpm",
+    }
+    assert set(components["AthleteOperationalProfileUpdate"]["properties"]) == {
         "timezone",
+        "timezone_source",
+        "timezone_confirmed",
+        "heart_rate_monitor_confirmed",
     }
     assert set(components["TrainingHistoryEntryInput"]["properties"]) == {
         "discipline",
         "average_hours_per_week",
     }
-    assert "feasibility_score" not in components["PrimaryRaceGoalInput"]["properties"]
+    goal_fields = set(components["PrimaryRaceGoalInput"]["properties"])
+    assert goal_fields == {
+        "race_type",
+        "race_name",
+        "race_date",
+        "swim_distance_meters",
+        "bike_distance_meters",
+        "run_distance_meters",
+        "total_target_time_seconds",
+        "swim_target_time_seconds",
+        "bike_target_time_seconds",
+        "run_target_time_seconds",
+        "specific_focus",
+    }
+    assert {"title", "specific_description", "measurable_outcome"}.isdisjoint(
+        goal_fields
+    )
 
     setup_schema = schema["paths"]["/api/v1/onboarding/disciplines/{discipline}/setup"][
         "put"

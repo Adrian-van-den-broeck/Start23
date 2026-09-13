@@ -41,9 +41,10 @@ class PublicModel(BaseModel):
 class AthleteProfileUpdate(PublicModel):
     """Confirmed profile and biometrics supplied by the athlete."""
 
+    first_name: TrimmedText | None = Field(default=None, max_length=100)
+    last_name: TrimmedText | None = Field(default=None, max_length=100)
     date_of_birth: date | None = None
     resting_heart_rate_bpm: int | None = Field(default=None, gt=0, le=32767)
-    timezone: TrimmedText | None = Field(default=None, max_length=100)
 
     @field_validator("date_of_birth")
     @classmethod
@@ -65,9 +66,115 @@ class AthleteProfileResponse(PublicModel):
     """Owner-scoped athlete profile."""
 
     athlete_id: UUID
+    first_name: str | None = None
+    last_name: str | None = None
     date_of_birth: date | None
     resting_heart_rate_bpm: int | None
-    timezone: str
+    timezone: str | None
+    timezone_source: Literal["device", "manual"] | None = None
+    timezone_confirmed_at: datetime | None = None
+    heart_rate_monitor_confirmed_at: datetime | None = None
+    onboarding_status: Literal["not_started", "in_progress", "completed"]
+    revision: int
+    identifying_revision: int = 1
+    physiology_revision: int = 1
+    created_at: datetime
+    updated_at: datetime
+
+
+class AthleteIdentifyingProfileUpdate(PublicModel):
+    """Explicit identifying-profile mutation contract."""
+
+    first_name: TrimmedText | None = Field(default=None, max_length=100)
+    last_name: TrimmedText | None = Field(default=None, max_length=100)
+
+    @model_validator(mode="after")
+    def at_least_one_field(self) -> "AthleteIdentifyingProfileUpdate":
+        if not self.model_fields_set:
+            raise ValueError("at least one identifying field is required")
+        return self
+
+
+class AthleteIdentifyingProfileResponse(PublicModel):
+    """Identifying fields kept outside the physiological record."""
+
+    athlete_id: UUID
+    first_name: str | None
+    last_name: str | None
+    revision: int
+    created_at: datetime
+    updated_at: datetime
+
+
+class AthletePhysiologyProfileUpdate(PublicModel):
+    """Explicit physiological-profile mutation contract."""
+
+    date_of_birth: date | None = None
+    resting_heart_rate_bpm: int | None = Field(default=None, gt=0, le=32767)
+
+    @field_validator("date_of_birth")
+    @classmethod
+    def date_of_birth_must_be_past(cls, value: date | None) -> date | None:
+        if value is not None and value >= date.today():
+            raise ValueError("date_of_birth must be in the past")
+        return value
+
+    @model_validator(mode="after")
+    def at_least_one_field(self) -> "AthletePhysiologyProfileUpdate":
+        if not self.model_fields_set:
+            raise ValueError("at least one physiology field is required")
+        return self
+
+
+class AthletePhysiologyProfileResponse(PublicModel):
+    """Physiological fields kept outside identifying data."""
+
+    athlete_id: UUID
+    date_of_birth: date | None
+    resting_heart_rate_bpm: int | None
+    revision: int
+    created_at: datetime
+    updated_at: datetime
+
+
+class AthleteOperationalProfileUpdate(PublicModel):
+    """Non-identifying, non-physiological account operation fields."""
+
+    timezone: TrimmedText | None = Field(default=None, max_length=100)
+    timezone_source: Literal["device", "manual"] | None = None
+    timezone_confirmed: Literal[True] | None = None
+    heart_rate_monitor_confirmed: Literal[True] | None = None
+
+    @model_validator(mode="after")
+    def validate_confirmation(self) -> "AthleteOperationalProfileUpdate":
+        timezone_fields = (
+            self.timezone,
+            self.timezone_source,
+            self.timezone_confirmed,
+        )
+        if any(value is not None for value in timezone_fields) and not all(
+            value is not None for value in timezone_fields
+        ):
+            raise ValueError(
+                "timezone, timezone_source, and timezone_confirmed are "
+                "required together"
+            )
+        if (
+            not any(value is not None for value in timezone_fields)
+            and self.heart_rate_monitor_confirmed is not True
+        ):
+            raise ValueError("at least one operational confirmation is required")
+        return self
+
+
+class AthleteOperationalProfileResponse(PublicModel):
+    """Operational profile state retained separately during dual-key cutover."""
+
+    athlete_id: UUID
+    timezone: str | None
+    timezone_source: Literal["device", "manual"] | None
+    timezone_confirmed_at: datetime | None
+    heart_rate_monitor_confirmed_at: datetime | None
     onboarding_status: Literal["not_started", "in_progress", "completed"]
     revision: int
     created_at: datetime
@@ -114,36 +221,66 @@ class TrainingHistoryEntryResponse(PublicModel):
     updated_at: datetime
 
 
+RaceType = Literal["run", "bike", "swim", "triathlon", "duathlon"]
+
+
 class PrimaryRaceGoalInput(PublicModel):
-    """The single active race-oriented A goal in the MVP."""
+    """The single structured race-oriented A goal in the MVP."""
 
-    title: TrimmedText = Field(max_length=120)
-    specific_description: TrimmedText = Field(max_length=1000)
-    measurable_outcome: TrimmedText = Field(max_length=500)
-    target_date: date
-    race_discipline_profile: tuple[Discipline, ...] = Field(
-        min_length=1,
-        max_length=3,
-    )
+    race_type: RaceType
+    race_name: TrimmedText = Field(max_length=120)
+    race_date: date
+    swim_distance_meters: int | None = Field(default=None, gt=0, le=1_000_000)
+    bike_distance_meters: int | None = Field(default=None, gt=0, le=1_000_000)
+    run_distance_meters: int | None = Field(default=None, gt=0, le=1_000_000)
+    total_target_time_seconds: int = Field(gt=0, le=604_800)
+    swim_target_time_seconds: int | None = Field(default=None, gt=0, le=604_800)
+    bike_target_time_seconds: int | None = Field(default=None, gt=0, le=604_800)
+    run_target_time_seconds: int | None = Field(default=None, gt=0, le=604_800)
+    specific_focus: TrimmedText | None = Field(default=None, max_length=1000)
 
-    @field_validator("target_date")
+    @field_validator("race_date")
     @classmethod
     def race_date_must_be_future(cls, value: date) -> date:
         """The primary onboarding race is still upcoming."""
         if value <= date.today():
-            raise ValueError("target_date must be in the future")
+            raise ValueError("race_date must be in the future")
         return value
 
-    @field_validator("race_discipline_profile")
-    @classmethod
-    def disciplines_must_be_unique(
-        cls,
-        value: tuple[Discipline, ...],
-    ) -> tuple[Discipline, ...]:
-        """A race cannot list a discipline twice."""
-        if len(set(value)) != len(value):
-            raise ValueError("race disciplines must be unique")
-        return value
+    @model_validator(mode="after")
+    def validate_race_shape(self) -> "PrimaryRaceGoalInput":
+        required = {
+            "run": {"run"},
+            "bike": {"bike"},
+            "swim": {"swim"},
+            "triathlon": {"swim", "bike", "run"},
+            "duathlon": {"bike", "run"},
+        }[self.race_type]
+        distances = {
+            "swim": self.swim_distance_meters,
+            "bike": self.bike_distance_meters,
+            "run": self.run_distance_meters,
+        }
+        target_times = {
+            "swim": self.swim_target_time_seconds,
+            "bike": self.bike_target_time_seconds,
+            "run": self.run_target_time_seconds,
+        }
+        if any(distances[discipline] is None for discipline in required):
+            raise ValueError("every race discipline requires a distance")
+        if any(
+            value is not None and discipline not in required
+            for discipline, value in distances.items()
+        ) or any(
+            value is not None and discipline not in required
+            for discipline, value in target_times.items()
+        ):
+            raise ValueError("race values may include only applicable disciplines")
+        if sum(value or 0 for value in target_times.values()) > (
+            self.total_target_time_seconds
+        ):
+            raise ValueError("discipline target times cannot exceed total target time")
+        return self
 
 
 class PrimaryRaceGoalResponse(PrimaryRaceGoalInput):
@@ -361,6 +498,13 @@ class OnboardingStateResponse(PublicModel):
     discipline_setups: tuple[DisciplineSetupResponse, ...]
     can_complete: bool
     initial_plan_request_id: UUID | None
+    onboarding_revision: int = Field(ge=0)
+
+
+class OnboardingCompleteRequest(PublicModel):
+    """Optimistic-concurrency precondition for version completion."""
+
+    expected_onboarding_revision: int = Field(ge=0)
 
 
 class OnboardingCompleteResponse(PublicModel):

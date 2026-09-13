@@ -25,6 +25,8 @@ def test_oauth_state_uses_owner_token_but_callback_storage_is_service_only() -> 
         requests.append(request)
         if request.url.path.endswith("consume_polar_oauth_state"):
             return httpx.Response(200, json=str(athlete_id))
+        if request.url.path.endswith("resolve_opaque_athlete_id_for_auth_user"):
+            return httpx.Response(200, json=str(athlete_id))
         return httpx.Response(200, json={"id": str(uuid4())})
 
     async def exercise() -> None:
@@ -60,6 +62,8 @@ def test_raw_fit_upload_is_private_and_metadata_uses_bounded_rpc() -> None:
 
     def handler(request: httpx.Request) -> httpx.Response:
         requests.append(request)
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
         return httpx.Response(201 if "/storage/v1/object/" in request.url.path else 200)
 
     async def exercise() -> None:
@@ -75,7 +79,8 @@ def test_raw_fit_upload_is_private_and_metadata_uses_bounded_rpc() -> None:
 
     asyncio.run(exercise())
 
-    upload, metadata = requests
+    mapping, upload, metadata = requests
+    assert mapping.url.path.endswith("/rest/v1/rpc/resolve_legacy_auth_user_id")
     assert upload.url.path.endswith(
         f"/storage/v1/object/activity-files/{athlete_id}/{activity_id}/2AC312F.fit"
     )

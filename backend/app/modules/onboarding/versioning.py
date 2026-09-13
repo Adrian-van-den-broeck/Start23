@@ -12,6 +12,8 @@ from app.modules.physiology.joren import VERSION as JOREN_RULESET_VERSION
 
 OnboardingStep: TypeAlias = Literal[
     "profile",
+    "heart_rate_monitor",
+    "timezone",
     "history",
     "goal",
     "zones",
@@ -25,11 +27,13 @@ OnboardingStatus: TypeAlias = Literal[
     "completed",
 ]
 
-CURRENT_ONBOARDING_VERSION: Final = "phase-13-onboarding-v1"
+CURRENT_ONBOARDING_VERSION: Final = "phase-14-onboarding-v2"
 CURRENT_RULESET_VERSION: Final = JOREN_RULESET_VERSION.value
 LEGACY_UNVERSIONED_ONBOARDING: Final = "legacy-unversioned"
 CURRENT_REQUIRED_STEPS: tuple[OnboardingStep, ...] = (
     "profile",
+    "heart_rate_monitor",
+    "timezone",
     "history",
     "goal",
     "zones",

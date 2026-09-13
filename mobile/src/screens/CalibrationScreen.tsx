@@ -16,6 +16,7 @@ import {
   createActivity,
   evaluateCalibration,
   getCalibrationStatus,
+  getOnboarding,
   listCalibrationProtocols,
   rejectCalibrationThreshold,
   saveCalibrationObservation,
@@ -326,9 +327,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
   const [stage, setStage] = useState<Stage>('protocol');
   const [drafts, setDrafts] = useState<Record<string, SegmentDraft>>({});
   const [performedAt, setPerformedAt] = useState(new Date().toISOString());
-  const [timezone, setTimezone] = useState(
-    Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
-  );
+  const [timezone, setTimezone] = useState('');
   const [durationMinutes, setDurationMinutes] = useState('');
   const [sessionRpe, setSessionRpe] = useState('');
   const [swimConditionsConfirmed, setSwimConditionsConfirmed] = useState(false);
@@ -343,7 +342,19 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    const status = await getCalibrationStatus(accessToken);
+    const [status, onboarding] = await Promise.all([
+      getCalibrationStatus(accessToken),
+      getOnboarding(accessToken),
+    ]);
+    if (
+      !onboarding.profile?.timezone_confirmed_at ||
+      !onboarding.profile.timezone
+    ) {
+      throw new Error(
+        'Bevestig eerst je tijdzone in de intake voordat je een kalibratie uitvoert.',
+      );
+    }
+    setTimezone(onboarding.profile.timezone);
     const protocolSetups = status.setups.filter((setup) => setup.protocol_id);
     const disciplineProtocols = await Promise.all(
       [...new Set(protocolSetups.map((setup) => setup.discipline))].map(
@@ -354,13 +365,16 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
     for (const protocol of disciplineProtocols.flat()) {
       protocolMap[protocol.protocol_id] = protocol;
     }
-    setSetups(protocolSetups);
+    const currentSetups = protocolSetups.filter(
+      (setup) => setup.protocol_id && protocolMap[setup.protocol_id],
+    );
+    setSetups(currentSetups);
     setProtocols(protocolMap);
     setEvaluations(status.evaluations);
     setThresholdDecisions(status.threshold_decisions);
     setSelectedProtocolId((current) => {
       if (current && protocolMap[current]) return current;
-      return protocolSetups[0]?.protocol_id ?? null;
+      return currentSetups[0]?.protocol_id ?? null;
     });
   }, [accessToken]);
 
@@ -500,6 +514,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
       }
       if (protocol.protocol_type === 'submaximal_calibration') {
         if (protocol.discipline === 'swim') {
+          parsePositive(draft.elapsedTime, 'Gemeten totale zwemtijd');
           parseCsvNumbers(draft.repetitionTimes, 'Herhalingstijden', false);
           parseCsvNumbers(draft.repetitionRests, 'Rusttijden', true);
         } else {
@@ -926,13 +941,9 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                     placeholder="2026-08-15T09:00:00+02:00"
                     value={performedAt}
                   />
-                  <FormField
-                    autoCapitalize="none"
-                    label="IANA-tijdzone"
-                    onChangeText={setTimezone}
-                    placeholder="Europe/Amsterdam"
-                    value={timezone}
-                  />
+                  <Text style={styles.muted}>
+                    Tijdzone uit je bevestigde profiel: {timezone}
+                  </Text>
                   <View style={styles.twoColumns}>
                     <View style={styles.column}>
                       <FormField
@@ -1158,6 +1169,17 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                               <>
                                 {selectedProtocol.discipline === 'swim' ? (
                                   <>
+                                    <FormField
+                                      inputMode="decimal"
+                                      label="Gemeten totale tijd van dit blok"
+                                      onChangeText={(value) =>
+                                        updateDraft(segment.segment_id, {
+                                          elapsedTime: value,
+                                        })
+                                      }
+                                      placeholder="seconden"
+                                      value={draft.elapsedTime}
+                                    />
                                     <FormField
                                       inputMode="decimal"
                                       label="Vier herhalingstijden"

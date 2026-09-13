@@ -7,12 +7,14 @@ from typing import Any, cast
 from uuid import UUID, uuid4
 
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app.core.config import Settings
 from app.core.security import AuthenticatedIdentity, InvalidAccessTokenError
 from app.main import create_app
 from app.modules.onboarding.repository import RepositoryNotFoundError
+from app.modules.onboarding.versioning import CURRENT_ONBOARDING_VERSION
 from app.modules.physiology.models import Discipline
 from app.modules.planning.domain import ZoneCapability, eligible_workouts
 from app.modules.planning.repository import (
@@ -118,7 +120,9 @@ class PlanningTokenVerifier:
             owner = self._owners[access_token]
         except KeyError as error:
             raise InvalidAccessTokenError from error
-        return AuthenticatedIdentity(user_id=owner, role="authenticated")
+        return AuthenticatedIdentity(
+            user_id=owner, role="authenticated", athlete_id=owner
+        )
 
 
 class StaticCatalogProvider:
@@ -161,7 +165,12 @@ def _snapshot(athlete_id: UUID) -> JsonObject:
     return {
         "profile": {
             "athlete_id": str(athlete_id),
+            "date_of_birth": "1990-05-20",
+            "resting_heart_rate_bpm": 52,
             "timezone": "UTC",
+            "timezone_source": "manual",
+            "timezone_confirmed_at": _NOW.isoformat(),
+            "heart_rate_monitor_confirmed_at": _NOW.isoformat(),
             "revision": 1,
         },
         "training_history": [
@@ -174,6 +183,13 @@ def _snapshot(athlete_id: UUID) -> JsonObject:
         ],
         "goal": {
             "id": str(uuid4()),
+            "race_type": "triathlon",
+            "race_name": "Test triathlon",
+            "race_date": "2026-12-06",
+            "swim_distance_meters": 1500,
+            "bike_distance_meters": 40000,
+            "run_distance_meters": 10000,
+            "total_target_time_seconds": 10800,
             "target_date": "2026-12-06",
             "race_discipline_profile": ["swim", "bike", "run"],
             "revision": 1,
@@ -202,7 +218,8 @@ def _snapshot(athlete_id: UUID) -> JsonObject:
                 "protocol_id": "start23_week1_bike_calibration_v1",
             }
         ],
-        "ruleset_version": "phase-3-ruleset-2",
+        "ruleset_version": "phase-13-joren-ruleset-1",
+        "onboarding_version": CURRENT_ONBOARDING_VERSION,
     }
 
 
@@ -211,11 +228,16 @@ class MemoryPlanningRepository:
 
     def __init__(self, token_owners: dict[str, UUID]) -> None:
         self._token_owners = token_owners
-        self._requests = {
+        self._requests: dict[UUID, JsonObject] = {
             owner: {
                 "id": str(uuid4()),
                 "athlete_id": str(owner),
                 "status": "pending",
+                "onboarding_status": "completed",
+                "onboarding_version": CURRENT_ONBOARDING_VERSION,
+                "ruleset_version": "phase-13-joren-ruleset-1",
+                "completed_onboarding_version": CURRENT_ONBOARDING_VERSION,
+                "completed_ruleset_version": "phase-13-joren-ruleset-1",
                 "input_fingerprint": "a" * 32,
                 "input_snapshot": _snapshot(owner),
             }
@@ -1138,6 +1160,70 @@ def test_plan_generation_requires_authentication(
     )
 
     assert response.status_code == 401
+
+
+def test_planner_rejects_legacy_or_incomplete_onboarding_before_generation(
+    planning_client: TestClient,
+) -> None:
+    app = cast(FastAPI, planning_client.app)
+    repository = cast(MemoryPlanningRepository, app.state.planning_repository)
+    owner = repository._owner("athlete-a")
+    request = repository._requests[owner]
+    request["completed_onboarding_version"] = "legacy-unversioned"
+    request["onboarding_version"] = "legacy-unversioned"
+    request["input_snapshot"]["onboarding_version"] = "legacy-unversioned"
+
+    proposal = planning_client.post(
+        "/api/v1/weekly-plans/proposals",
+        headers=_headers(),
+        json={
+            "week_start": "2026-08-03",
+            "available_dates": _availability_payload(),
+            "confirmed_injuries": [],
+        },
+    )
+    swipe = planning_client.post(
+        "/api/v1/weekly-plans/swipe-drafts",
+        headers=_headers(),
+        json={
+            "week_start": "2026-08-03",
+            "available_dates": _availability_payload(),
+            "confirmed_injuries": [],
+        },
+    )
+
+    assert proposal.status_code == 422
+    assert swipe.status_code == 422
+    assert "current onboarding upgrade" in proposal.json()["error"]["message"]
+
+
+@pytest.mark.parametrize(
+    "missing_profile_field",
+    ["heart_rate_monitor_confirmed_at", "timezone_confirmed_at"],
+)
+def test_planner_rechecks_r4_profile_prerequisites_from_snapshot(
+    planning_client: TestClient,
+    missing_profile_field: str,
+) -> None:
+    app = cast(FastAPI, planning_client.app)
+    repository = cast(MemoryPlanningRepository, app.state.planning_repository)
+    owner = repository._owner("athlete-a")
+    profile = repository._requests[owner]["input_snapshot"]["profile"]
+    assert isinstance(profile, dict)
+    profile[missing_profile_field] = None
+
+    proposal = planning_client.post(
+        "/api/v1/weekly-plans/proposals",
+        headers=_headers(),
+        json={
+            "week_start": "2026-08-03",
+            "available_dates": _availability_payload(),
+            "confirmed_injuries": [],
+        },
+    )
+
+    assert proposal.status_code == 422
+    assert "current onboarding upgrade" in proposal.json()["error"]["message"]
 
 
 def test_generated_plan_remains_pending_is_idempotent_and_hides_tss(

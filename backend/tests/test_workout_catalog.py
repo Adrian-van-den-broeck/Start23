@@ -29,7 +29,10 @@ class CatalogTokenVerifier:
     def verify(self, access_token: str) -> AuthenticatedIdentity:
         if access_token != "athlete":
             raise InvalidAccessTokenError
-        return AuthenticatedIdentity(user_id=uuid4(), role="authenticated")
+        owner = uuid4()
+        return AuthenticatedIdentity(
+            user_id=owner, role="authenticated", athlete_id=owner
+        )
 
 
 @pytest.fixture

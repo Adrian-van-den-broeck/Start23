@@ -5,9 +5,13 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 
-from app.api.dependencies import get_access_token, get_authenticated_identity
+from app.api.dependencies import (
+    get_access_token,
+    get_authenticated_athlete,
+    get_authenticated_identity,
+)
 from app.core.errors import ErrorResponse
-from app.core.security import AuthenticatedIdentity
+from app.core.security import AuthenticatedAthlete, AuthenticatedIdentity
 from app.modules.calibration.repository import (
     CalibrationRepository,
     CalibrationRepositoryConflictError,
@@ -170,14 +174,14 @@ async def save_calibration_observation(
 async def evaluate_calibration(
     evaluation: CalibrationEvaluationRequest,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[CalibrationService, Depends(get_calibration_service)],
 ) -> CalibrationEvaluationResponse:
     """Evaluate owned observations with deterministic reviewed formulas."""
     try:
         return await service.evaluate(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             evaluation,
         )
     except Exception as error:
@@ -193,7 +197,7 @@ async def confirm_calibration_threshold(
     evaluation_id: UUID,
     confirmation: ThresholdConfirmationRequest,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[CalibrationService, Depends(get_calibration_service)],
 ) -> ThresholdDecisionResponse:
     """Confirm a threshold and create a separate pending zone proposal."""
@@ -201,7 +205,7 @@ async def confirm_calibration_threshold(
     try:
         return await service.confirm_threshold(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             evaluation_id,
         )
     except Exception as error:
@@ -215,12 +219,12 @@ async def confirm_calibration_threshold(
 )
 async def reject_calibration_threshold(
     evaluation_id: UUID,
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[CalibrationService, Depends(get_calibration_service)],
 ) -> ThresholdDecisionResponse:
     """Reject a threshold without creating or changing a zone profile."""
     try:
-        return await service.reject_threshold(identity.user_id, evaluation_id)
+        return await service.reject_threshold(identity.athlete_id, evaluation_id)
     except Exception as error:
         _raise_public_error(error)
 
@@ -232,12 +236,12 @@ async def reject_calibration_threshold(
 )
 async def get_calibration_status(
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[CalibrationService, Depends(get_calibration_service)],
 ) -> CalibrationStatusResponse:
     """Return only the verified athlete's setup and evaluation state."""
     try:
-        return await service.status(access_token, identity.user_id)
+        return await service.status(access_token, identity.athlete_id)
     except Exception as error:
         _raise_public_error(error)
 
@@ -251,7 +255,7 @@ async def get_calibration_status(
 async def schedule_field_test(
     scheduling: FieldTestSchedulingRequest,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[CalibrationService, Depends(get_calibration_service)],
     planning: Annotated[PlanningService, Depends(get_planning_service)],
 ) -> FieldTestSchedulingResponse:
@@ -260,7 +264,7 @@ async def schedule_field_test(
         if scheduling.scheduling_mode.value == "standalone":
             assignment = await service.schedule_standalone_test(
                 access_token,
-                identity.user_id,
+                identity.athlete_id,
                 scheduling,
             )
             return FieldTestSchedulingResponse(assignment=assignment)
@@ -268,7 +272,7 @@ async def schedule_field_test(
         assert scheduling.expected_plan_revision is not None
         plan_proposal = await planning.generate_integrated_field_test_proposal(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             plan_id=scheduling.plan_id,
             expected_revision=scheduling.expected_plan_revision,
             discipline=scheduling.discipline,
@@ -344,11 +348,11 @@ async def reject_field_test(
 )
 async def get_zone_profile_state(
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[CalibrationService, Depends(get_calibration_service)],
 ) -> ZoneProfileStateResponse:
     """Return current, pending, and immutable prior values per discipline."""
     try:
-        return await service.zone_profile_state(access_token, identity.user_id)
+        return await service.zone_profile_state(access_token, identity.athlete_id)
     except Exception as error:
         _raise_public_error(error)

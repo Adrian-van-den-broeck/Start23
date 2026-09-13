@@ -6,9 +6,13 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 
-from app.api.dependencies import get_access_token, get_authenticated_identity
+from app.api.dependencies import (
+    get_access_token,
+    get_authenticated_athlete,
+    get_authenticated_identity,
+)
 from app.core.errors import ErrorResponse
-from app.core.security import AuthenticatedIdentity
+from app.core.security import AuthenticatedAthlete, AuthenticatedIdentity
 from app.modules.coach.context import CheckInContextCoach
 from app.modules.coach.weekly_plan import WeeklyPlanCoach
 from app.modules.planning.repository import PlanningRepository
@@ -208,13 +212,13 @@ async def confirm_weekly_checkin_context(
 async def generate_checkin_plan_proposal(
     checkin_id: UUID,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[CheckInService, Depends(get_checkin_service)],
 ) -> WeeklyPlanProposalResponse:
     try:
         return await service.generate_plan_proposal(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             checkin_id,
         )
     except Exception as error:

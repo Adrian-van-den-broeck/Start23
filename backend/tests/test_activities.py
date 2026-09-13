@@ -29,7 +29,9 @@ class ActivityTokenVerifier:
             owner = self._owners[access_token]
         except KeyError as error:
             raise InvalidAccessTokenError from error
-        return AuthenticatedIdentity(user_id=owner, role="authenticated")
+        return AuthenticatedIdentity(
+            user_id=owner, role="authenticated", athlete_id=owner
+        )
 
 
 class MemoryActivityRepository:
@@ -446,7 +448,7 @@ def test_matched_activity_rpe_can_be_corrected_in_the_current_week(
     changed = client.put(
         f"/api/v1/activities/{activity_id}/rpe",
         headers=_headers(),
-        json={"rpe": 5},
+        json={"rpe": 5, "expected_current_rpe": 4},
     )
 
     assert completed.status_code == 200
@@ -711,7 +713,9 @@ def test_rpe_correction_preserves_mean_hr_calculation_snapshot(
     original = repository.load_snapshots[UUID(identifier)].copy()
     repository.known_hr_profile = {"invalid": "changed after completion"}
     response = client.put(
-        f"/api/v1/activities/{identifier}/rpe", headers=_headers(), json={"rpe": 5}
+        f"/api/v1/activities/{identifier}/rpe",
+        headers=_headers(),
+        json={"rpe": 5, "expected_current_rpe": 4},
     )
     assert response.status_code == 200
     corrected = repository.load_snapshots[UUID(identifier)]
@@ -723,3 +727,62 @@ def test_rpe_correction_preserves_mean_hr_calculation_snapshot(
         "average_heart_rate_bpm",
     ):
         assert corrected[field] == original[field]
+
+
+def test_average_hr_change_after_phase_13_calculation_is_rejected_atomically(
+    activity_client: tuple[TestClient, MemoryActivityRepository],
+) -> None:
+    client, repository = activity_client
+    repository.known_hr_profile = _known_run_hr_profile()
+    summary = _summary()
+    summary["metrics"] = {"average_heart_rate_bpm": 150}
+    identifier = client.post(
+        "/api/v1/activities", headers=_headers(), json=summary
+    ).json()["id"]
+    client.put(
+        f"/api/v1/activities/{identifier}/rpe",
+        headers=_headers(),
+        json={"rpe": 4},
+    )
+    before_activity = repository._rows[UUID(identifier)].copy()
+    before_load = repository.load_snapshots[UUID(identifier)].copy()
+
+    response = client.put(
+        f"/api/v1/activities/{identifier}/rpe",
+        headers=_headers(),
+        json={
+            "rpe": 5,
+            "expected_current_rpe": 4,
+            "average_heart_rate_bpm": 151,
+        },
+    )
+
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "average_heart_rate_immutable"
+    assert repository._rows[UUID(identifier)] == before_activity
+    assert repository.load_snapshots[UUID(identifier)] == before_load
+
+
+def test_stale_rpe_correction_is_rejected_without_mutation(
+    activity_client: tuple[TestClient, MemoryActivityRepository],
+) -> None:
+    client, repository = activity_client
+    identifier = client.post(
+        "/api/v1/activities", headers=_headers(), json=_summary()
+    ).json()["id"]
+    client.put(
+        f"/api/v1/activities/{identifier}/rpe",
+        headers=_headers(),
+        json={"rpe": 4},
+    )
+    before = repository._rows[UUID(identifier)].copy()
+
+    response = client.put(
+        f"/api/v1/activities/{identifier}/rpe",
+        headers=_headers(),
+        json={"rpe": 5, "expected_current_rpe": 3},
+    )
+
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "activity_correction_stale"
+    assert repository._rows[UUID(identifier)] == before

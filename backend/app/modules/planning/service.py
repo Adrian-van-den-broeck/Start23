@@ -20,6 +20,12 @@ from app.modules.coach.weekly_plan import (
     WeeklyPlanCoachFacts,
     deterministic_weekly_plan_explanation,
 )
+from app.modules.onboarding.eligibility import satisfied_onboarding_steps
+from app.modules.onboarding.versioning import (
+    CURRENT_ONBOARDING_VERSION,
+    CURRENT_RULESET_VERSION,
+    assess_onboarding_version,
+)
 from app.modules.physiology.anti_stack import ScheduledWorkout
 from app.modules.physiology.joren import StartingBaseline, starting_baseline
 from app.modules.physiology.models import (
@@ -266,6 +272,57 @@ class PlanningService:
         required = {"profile", "training_history", "goal", "zones", "ruleset_version"}
         if not required.issubset(snapshot):
             raise PlanningDomainError("The planning input snapshot is incomplete.")
+        profile = snapshot.get("profile")
+        history = snapshot.get("training_history")
+        goal = snapshot.get("goal")
+        zones = snapshot.get("zones")
+        setups = snapshot.get("discipline_setups", [])
+        if (
+            not isinstance(profile, dict)
+            or not isinstance(history, list)
+            or not isinstance(goal, dict)
+            or not isinstance(zones, list)
+            or not isinstance(setups, list)
+        ):
+            raise PlanningDomainError("Current onboarding inputs are incomplete.")
+        completed_onboarding_version = (
+            source.get("completed_onboarding_version")
+            or source.get("onboarding_version")
+            or snapshot.get("onboarding_version")
+        )
+        completed_ruleset_version = (
+            source.get("completed_ruleset_version")
+            or source.get("ruleset_version")
+            or snapshot.get("ruleset_version")
+        )
+        assessment = assess_onboarding_version(
+            persisted_status=str(source.get("onboarding_status") or "not_started"),
+            completed_onboarding_version=(
+                str(completed_onboarding_version)
+                if completed_onboarding_version is not None
+                else None
+            ),
+            completed_ruleset_version=(
+                str(completed_ruleset_version)
+                if completed_ruleset_version is not None
+                else None
+            ),
+            satisfied_steps=satisfied_onboarding_steps(
+                profile=profile,
+                training_history=history,
+                goal=goal,
+                zones=zones,
+                discipline_setups=setups,
+            ),
+        )
+        if (
+            assessment.status != "completed"
+            or completed_onboarding_version != CURRENT_ONBOARDING_VERSION
+            or completed_ruleset_version != CURRENT_RULESET_VERSION
+        ):
+            raise PlanningDomainError(
+                "Complete the current onboarding upgrade before planning."
+            )
         return dict(snapshot)
 
     @staticmethod
@@ -371,7 +428,7 @@ class PlanningService:
             row
             for row in rows
             if row.get("discipline") in disciplines
-            and row.get("baseline_model_version") == "phase-13-joren-ruleset-1"
+            and row.get("baseline_model_version") == CURRENT_RULESET_VERSION
             and row.get("previous_month_weekly_minutes") is not None
         ]
         if not disciplines or len(eligible) != len(disciplines):

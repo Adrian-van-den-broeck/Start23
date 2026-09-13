@@ -30,7 +30,9 @@ class TokenVerifier:
             owner = self._owners[access_token]
         except KeyError as error:
             raise InvalidAccessTokenError from error
-        return AuthenticatedIdentity(user_id=owner, role="authenticated")
+        return AuthenticatedIdentity(
+            user_id=owner, role="authenticated", athlete_id=owner
+        )
 
 
 class MemoryCalibrationRepository:
@@ -587,11 +589,19 @@ def test_selectable_protocol_matrix_matches_current_phase_13_measurements(
         "start23_week1_run_calibration_v1"
     ]
     assert run.json()[0]["guidance_modes"] == ["heart_rate"]
+    assert run.json()[0]["required_observation_type"] == ("average_heart_rate_and_rpe")
+    assert run.json()[0]["pending_zone_lifecycle"] == (
+        "no_zone_proposal_from_provisional_result"
+    )
     assert [item["protocol_id"] for item in bike.json()] == [
         "start23_week1_bike_calibration_v1"
     ]
     assert bike.json()[0]["guidance_modes"] == ["heart_rate", "combined"]
     assert all("rpe_only" not in protocol["guidance_modes"] for protocol in swim.json())
+    assert all(
+        protocol["required_observation_type"] == "elapsed_time_distance_and_rpe"
+        for protocol in swim.json()
+    )
 
 
 @pytest.mark.parametrize(
@@ -615,6 +625,56 @@ def test_current_calibration_rejects_modes_without_required_average_hr(
     )
 
     assert response.status_code == 422
+
+
+def test_current_observation_contract_requires_measured_hr_or_swim_time(
+    calibration_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = calibration_context
+    activity_id = uuid4()
+    run_payload = {
+        **_segment_payload(
+            activity_id,
+            "comfortable_20min",
+            4,
+            reported_block_rpe=4,
+            duration_seconds=1200,
+        ),
+        "protocol_id": "start23_week1_run_calibration_v1",
+    }
+    swim_payload = {
+        **_segment_payload(
+            activity_id,
+            "4x200_comfortable",
+            4,
+            reported_block_rpe=4,
+            distance_meters=800,
+        ),
+        "protocol_id": "start23_week1_swim_calibration_v1",
+        "discipline": "swim",
+    }
+
+    missing_hr = client.post(
+        "/api/v1/calibration/observations", headers=_headers(), json=run_payload
+    )
+    valid_hr = client.post(
+        "/api/v1/calibration/observations",
+        headers=_headers(),
+        json={**run_payload, "average_heart_rate_bpm": 142},
+    )
+    missing_time = client.post(
+        "/api/v1/calibration/observations", headers=_headers(), json=swim_payload
+    )
+    valid_swim = client.post(
+        "/api/v1/calibration/observations",
+        headers=_headers(),
+        json={**swim_payload, "elapsed_time_seconds": 845},
+    )
+
+    assert missing_hr.status_code == 422
+    assert valid_hr.status_code == 201
+    assert missing_time.status_code == 422
+    assert valid_swim.status_code == 201
 
 
 def test_field_test_protocol_must_match_discipline_and_guidance(

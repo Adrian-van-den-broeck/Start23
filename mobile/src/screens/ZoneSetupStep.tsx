@@ -383,7 +383,7 @@ export function ZoneSetupStep({
     <View style={styles.step}>
       <View>
         <Text style={styles.eyebrow}>
-          {profileMode ? 'Profiel bijwerken' : 'Stap 4 van 5'}
+          {profileMode ? 'Profiel bijwerken' : 'Stap 6 van 7'}
         </Text>
         <Text style={styles.title}>Instellen voor {disciplineLabels[discipline]}</Text>
         <Text style={styles.description}>

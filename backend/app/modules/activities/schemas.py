@@ -186,6 +186,7 @@ class ActivityRpeSubmission(PublicActivityModel):
 
     rpe: int = Field(ge=1, le=10)
     average_heart_rate_bpm: int | None = Field(default=None, ge=20, le=260)
+    expected_current_rpe: int | None = Field(default=None, ge=1, le=10)
 
 
 class ActivityMatchConfirmation(PublicActivityModel):

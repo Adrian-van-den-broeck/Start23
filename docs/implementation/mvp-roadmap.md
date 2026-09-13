@@ -1690,6 +1690,18 @@ Phase 13 measurement, and the onboarding-version/R3 migration foundations are
 recorded. The new R1 migration and pgTAP suite have syntax verification only
 because no Docker/Podman database runner is available.
 
+R3 and R2 were implemented together locally on 2026-09-12, with the opaque
+identity/profile foundation first. The current calibration observation
+contracts now require run/bike average HR plus RPE and measured swim
+elapsed-time/distance plus RPE in mobile, API, Python, and new persistence
+writes. Current eligibility is shared by onboarding/planning services and
+enforced on direct plan persistence. Migration
+`20260912072232_phase_r2_r3_identity_onboarding_calibration.sql` and its pgTAP
+suite have static coverage, including successful local PostgreSQL syntax parsing
+across all 44 migration/pgTAP SQL files; no database execution, real-token,
+two-user, device, or external-review gate is closed by this local
+implementation.
+
 See [versioned rules](../requirements/phase-13-joren-ruleset-1.md),
 [historical Phase 13](../requirements/deprecated-phase-13.md), and
 [implementation and consumer trace](phase-13-implementation-plan.md).
@@ -1731,8 +1743,8 @@ for the four explicitly approved remediation decisions.
   pending lifecycle and historical calculation/model versions.
 - An ordinary RPE correction that attempts to change average HR after a Phase
   13 private-load record exists must be rejected while preserving its complete
-  originating snapshot/provenance. This decision is recorded in R1; its atomic
-  implementation and regression evidence remain assigned to R5.
+  originating snapshot/provenance. R5 implements this with service and
+  persistence guards, owner locking, stale protection, and regression tests.
 
 ### Exit criteria
 
@@ -1747,10 +1759,11 @@ for the four explicitly approved remediation decisions.
   unavailable environments remain explicit gates. A qualified accountable
   reviewer and review record for this material ruleset remain required to release.
 
-R1 satisfies its artifact, decision, traceability, typecheck, migration-order,
-and clean-checkout criteria. The Phase 13 criteria above remain open for R2-R6,
-the unexecuted R1 database migration/pgTAP suite, runtime/device verification,
-and qualified external review; Phase 13 is not complete.
+R1 and the local R2-R5 implementation satisfy their repository-side artifact,
+contract, deterministic service, and typecheck criteria. The Phase 13 criteria
+above remain open for R6, execution of the unexecuted remediation migrations and
+pgTAP suites, runtime/device verification, and qualified external review; Phase
+13 is not complete.
 
 ### Future work
 
@@ -1770,27 +1783,33 @@ RPE-only is no longer selectable or accepted as a new setup. Historical values
 and RPE-only records remain stored without reinterpretation. Local and remote
 migration ledgers align through `20260910120000`; linked lint and advisors were
 rerun after deployment. The rollback-only pgTAP suite is blocked locally by the
-missing Docker/Podman runner. Calibration, baseline calculation, the legacy
-RPE-only upgrade flow, two-real-user RLS isolation, and the
-remaining Phase 14 scope are still open. Calibration and baseline completion
-depend on Phase 13.
+missing Docker/Podman runner. Two-real-user RLS isolation and release/runtime
+evidence remain open. Calibration and baseline completion depend on Phase 13.
 
 Remediation R1 now supplies explicit onboarding/ruleset completion versions,
 an append-only completion-history foundation, and a deterministic
 `upgrade_required` state that derives only missing current steps. Historical
 RPE-only setup remains readable but does not satisfy current completion. R1
 also approves the opaque-athlete-ID, independent identifying/physiology tables,
-dual-key backfill, and forward-only cutover design. The actual legacy upgrade
-flow (R2), profile split (R3), and remaining prerequisite/goal work (R4) are not
-implemented.
+dual-key backfill, and forward-only cutover design. R3 and R2 now implement that
+cutover and the actual legacy upgrade/resume flow locally: historical completion
+records remain append-only, current completion is revision-preconditioned and
+idempotent, and planning/direct persistence requires exact current versions and
+current profile/history/goal/zone state. R4 introduces
+`phase-14-onboarding-v2` and implements persisted monitor confirmation,
+explicit confirmed IANA timezone, structured race goals, and derived
+existing-user upgrade steps. R5 closes average-HR correction and affected
+mobile presentation regressions. Database, real-token, two-user, and device
+evidence remains open under R6.
 
 ### Scope
 
 - Split identifying profile data from medical/physiological data such as
   resting heart rate using opaque athlete identifiers. Apply least-privilege
   grants, RLS, RPC-only critical writes, migrations, and two-real-user isolation
-  tests; do not expose service credentials to Expo. **R1 architecture/backfill
-  design approved; R3 implementation and database evidence open.**
+  tests; do not expose service credentials to Expo. **R3 is implemented locally
+  in migration `20260912072232`; database and two-real-user evidence remains
+  open under R6.**
 - Keep first name, last name, date of birth, and resting heart rate. Remove
   height, weight, years of experience, feasibility, and the standalone
   `What do you want to achieve?` field from onboarding and profile flows; its
@@ -1802,15 +1821,18 @@ implemented.
   Remove RPE-only as a selectable MVP route and provide a safe resume/migration
   path for existing RPE-only records. Manual average-heart-rate entry remains a
   supported input path, so a specific wearable provider is not an MVP blocker.
-  **R1 version state and RPE-only exclusion implemented; R2 upgrade/planner
-  parity and R4 persisted monitor confirmation remain open.**
+  **R2 upgrade/planner parity and R4 persisted monitor confirmation are
+  implemented locally; R6 runtime/database evidence remains open.**
 - Restructure the concrete goal into run, bike, swim, triathlon, and duathlon.
   Require race name, date, distance for every selected discipline, and total
   target time. Persist race name for tracking/history. Allow optional
-  per-discipline target times and a specific focus.
+  per-discipline target times and a specific focus. **Implemented locally in
+  R4; migration execution remains an R6 gate.**
 - Detect timezone from location when permission is granted. If it is refused or
   unavailable, require an IANA-timezone dropdown fallback such as
-  `Europe/Amsterdam`; never guess silently.
+  `Europe/Amsterdam`; never guess silently. **The device-reported timezone path,
+  explicit confirmation, manual fallback, and server validation are implemented
+  locally in R4. Real-device verification remains an R6 gate.**
 
 ### Exit criteria
 
@@ -1826,9 +1848,11 @@ implemented.
 - Public contracts remain TSS-free and zone activation remains a separate,
   stale-safe athlete confirmation.
 
-R1 verification covers the version representation and migration design only.
-The Phase 14 exit criteria remain open pending R2-R4 and database/two-user
-evidence; Phase 14 is not complete.
+R1 plus the local R2-R5 implementation cover version-aware resume, the opaque
+identity cutover, independently protected identifying/physiological records,
+monitor/timezone prerequisites, and structured race goals. The Phase 14 exit
+criteria remain open pending R6 and executed database/two-user/device evidence;
+Phase 14 is not complete.
 
 ### Follow-up remediation roadmap
 
@@ -2069,17 +2093,20 @@ Every phase must:
 - Phase 12 race-only MVP boundary: `complete for MVP; non-race implementation
   deferred post-MVP`
 - Phase 13 physiological ruleset and load-model alignment: `implementation and
-  hosted migration 20260910215947 present; R1 artifact/decision/typecheck and
-  current calibration-capability remediation complete locally; targeted hosted
-  RLS/owner checks pass; R1 migration 20260911180631 execution, R2-R6, full
-  database/runtime tests, accountable external review and device gates remain open`
+  hosted migration 20260910215947 present; R1 and local R2/R3 identity,
+  onboarding, planner-parity and calibration-contract work plus local R4/R5
+  onboarding/correction/mobile work implemented; targeted earlier hosted
+  RLS/owner checks pass; remediation migration execution, R6, full
+  database/runtime tests, accountable external review and device gates remain
+  open`
 - Phase 14 privacy-safe onboarding, profile, and race configuration: `in
   progress; independent two-month history collection, retired-field write/UI
   removal, and new RPE-only selection removal implemented and migrated to the
-  linked hosted project; R1 version-aware state foundation and opaque-ID
-  migration/backfill design complete locally; pgTAP, two-real-user RLS, R2
-  legacy upgrade, R3 profile cutover, R4 prerequisites/goals, and remaining
-  scope pending`
+  linked hosted project; R1 versioning plus local R3 opaque-ID/profile cutover
+  and R2 legacy-upgrade/planner parity implemented; local R4 monitor/timezone,
+  current history, and structured race goals plus R5 mobile/correction work
+  implemented; pgTAP, remediation migration execution, two-real-user RLS,
+  device evidence, and R6 remain pending`
 - Phase 15 calibration, activity, and weekly-planning UX: `not started`
 - Phase 16 live-test stabilization and beta readiness: `not started`
 
@@ -2133,8 +2160,9 @@ Every phase must:
 - Review taper eligibility in the existing catalog and pass a complete
   swim/bike/run taper fixture; the timing decision alone does not close this
   catalog gate.
-- Decide whether removed height, weight, experience, feasibility, and free-goal
-  data is retained, archived, or deleted during the Phase 14 migration.
+- Execute and verify the approved historical-retention strategy for removed
+  height, weight, experience, feasibility, and generic-goal data; do not delete
+  or reinterpret those values during the R6 compatibility cutover.
 - Decide whether the annual-subscription heart-rate-monitor bundle is part of
   the Pioneer funnel; until then it is a non-blocking commercial opportunity.
 - BR-009 persistence, ownership, active-version constraints, pending

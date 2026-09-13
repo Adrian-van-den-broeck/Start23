@@ -79,6 +79,8 @@ def test_fallback_rpc_uses_only_the_server_secret_key() -> None:
 
     def handler(request: httpx.Request) -> httpx.Response:
         nonlocal captured
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
         captured = request
         return httpx.Response(
             200,
@@ -128,6 +130,8 @@ def test_calculated_zone_rpc_uses_only_the_server_secret_key() -> None:
 
     def handler(request: httpx.Request) -> httpx.Response:
         nonlocal captured
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
         captured = request
         return httpx.Response(
             200,
@@ -168,6 +172,8 @@ def test_measured_zone_provenance_uses_the_bounded_service_rpc() -> None:
 
     def handler(request: httpx.Request) -> httpx.Response:
         nonlocal captured
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
         captured = request
         return httpx.Response(
             200,
@@ -218,7 +224,7 @@ def test_completion_uses_current_version_rpc_with_verified_owner_token() -> None
             transport=httpx.MockTransport(handler),
         ) as client:
             repository = SupabaseOnboardingRepository(_settings(), client=client)
-            result = await repository.complete_onboarding("athlete-token")
+            result = await repository.complete_onboarding("athlete-token", 7)
         assert result == request_id
 
     asyncio.run(exercise())
@@ -228,3 +234,4 @@ def test_completion_uses_current_version_rpc_with_verified_owner_token() -> None
     assert captured.headers["apikey"] == "sb_publishable_test"
     assert captured.headers["authorization"] == "Bearer athlete-token"
     assert b"user_id" not in captured.content
+    assert b'"p_expected_session_revision":7' in captured.content

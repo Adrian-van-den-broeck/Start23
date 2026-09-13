@@ -1710,7 +1710,7 @@ export function PlanningScreen({
                       label={
                         maintenanceMarked
                           ? 'Onderhoudsmodus bevestigd'
-                          : `Markeer “${primaryGoal.title}” als behaald`
+                          : `Markeer “${primaryGoal.race_name}” als behaald`
                       }
                       onPress={confirmGoalAchievement}
                       secondary

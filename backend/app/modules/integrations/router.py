@@ -18,11 +18,12 @@ from fastapi import (
 from app.api.dependencies import (
     get_access_token,
     get_app_settings,
+    get_authenticated_athlete,
     get_authenticated_identity,
 )
 from app.core.config import Settings
 from app.core.errors import ErrorResponse
-from app.core.security import AuthenticatedIdentity
+from app.core.security import AuthenticatedAthlete, AuthenticatedIdentity
 
 from .domain import IntegrationPayloadError
 from .polar import PolarProvider, PolarProviderError
@@ -149,11 +150,11 @@ async def get_polar_connection(
     responses=errors,
 )
 async def disconnect_polar(
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[IntegrationService, Depends(get_integration_service)],
 ) -> Response:
     try:
-        await service.disconnect(identity.user_id)
+        await service.disconnect(identity.athlete_id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except Exception as error:
         _raise(error)
@@ -168,12 +169,12 @@ async def disconnect_polar(
 async def import_polar_history(
     payload: HistoricalImportRequest,
     idempotency_key: Annotated[UUID, Header(alias="Idempotency-Key")],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[IntegrationService, Depends(get_integration_service)],
 ) -> ImportRunResponse:
     try:
         return await service.import_historical(
-            identity.user_id, idempotency_key, payload.days
+            identity.athlete_id, idempotency_key, payload.days
         )
     except Exception as error:
         _raise(error)
@@ -203,12 +204,12 @@ async def list_polar_imports(
 )
 async def retry_polar_import(
     import_id: UUID,
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[IntegrationService, Depends(get_integration_service)],
 ) -> ImportRunResponse:
     """Retry one owned failed import after an explicit athlete action."""
     try:
-        return await service.retry_historical(identity.user_id, import_id)
+        return await service.retry_historical(identity.athlete_id, import_id)
     except Exception as error:
         _raise(error)
 

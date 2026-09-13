@@ -27,6 +27,10 @@ from app.modules.checkins.repository import (
 from app.modules.coach.context import CheckInContextCoach, build_checkin_context_coach
 from app.modules.coach.weekly_plan import WeeklyPlanCoach, build_weekly_plan_coach
 from app.modules.health.router import router as health_router
+from app.modules.identity.repository import (
+    AthleteIdentityRepository,
+    SupabaseAthleteIdentityRepository,
+)
 from app.modules.integrations.polar import PolarAccessLinkClient, PolarProvider
 from app.modules.integrations.repository import (
     IntegrationRepository,
@@ -59,6 +63,7 @@ def _lifespan(
     polar_provider: PolarProvider,
     weekly_plan_coach: WeeklyPlanCoach,
     checkin_context_coach: CheckInContextCoach,
+    athlete_identity_repository: AthleteIdentityRepository,
 ) -> Callable[[FastAPI], AbstractAsyncContextManager[None]]:
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -83,6 +88,7 @@ def _lifespan(
             polar_provider.aclose(),
             weekly_plan_coach.aclose(),
             checkin_context_coach.aclose(),
+            athlete_identity_repository.aclose(),
         )
         logger.info(
             "Application stopped",
@@ -109,6 +115,7 @@ def create_app(
     polar_provider: PolarProvider | None = None,
     weekly_plan_coach: WeeklyPlanCoach | None = None,
     checkin_context_coach: CheckInContextCoach | None = None,
+    athlete_identity_repository: AthleteIdentityRepository | None = None,
 ) -> FastAPI:
     """Create and configure the Start23 FastAPI application."""
     app_settings = settings or get_settings()
@@ -136,6 +143,9 @@ def create_app(
     polar_client = polar_provider or PolarAccessLinkClient(app_settings)
     coach = weekly_plan_coach or build_weekly_plan_coach(app_settings)
     context_coach = checkin_context_coach or build_checkin_context_coach(app_settings)
+    identity_repository = (
+        athlete_identity_repository or SupabaseAthleteIdentityRepository(app_settings)
+    )
     application = FastAPI(
         title=app_settings.app_name,
         version=app_settings.app_version,
@@ -151,6 +161,7 @@ def create_app(
             polar_client,
             coach,
             context_coach,
+            identity_repository,
         ),
     )
     application.state.settings = app_settings
@@ -167,6 +178,7 @@ def create_app(
     application.state.polar_provider = polar_client
     application.state.weekly_plan_coach = coach
     application.state.checkin_context_coach = context_coach
+    application.state.athlete_identity_repository = identity_repository
     configure_error_handling(application)
     application.include_router(health_router)
     application.include_router(

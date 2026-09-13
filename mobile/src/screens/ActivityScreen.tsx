@@ -29,6 +29,7 @@ import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
 import { type AppLanguage, useLanguage } from '../i18n/LanguageProvider';
+import { hasPartialObservedZoneTime } from '../lib/onboardingForms';
 import { colors, radius, spacing } from '../theme/tokens';
 
 type ActivityScreenProps = {
@@ -159,9 +160,7 @@ export function ActivityScreen({
   const [duration, setDuration] = useState('45');
   const [distance, setDistance] = useState('');
   const [startedAt, setStartedAt] = useState(() => new Date().toISOString());
-  const [athleteTimezone, setAthleteTimezone] = useState(
-    Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
-  );
+  const [athleteTimezone, setAthleteTimezone] = useState('');
   const [idempotencyKey, setIdempotencyKey] = useState(newIdempotencyKey);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -199,9 +198,15 @@ export function ActivityScreen({
     setExternalActivities(
       plannedExternal.filter((activity) => activity.status === 'planned'),
     );
-    if (onboarding.profile?.timezone) {
-      setAthleteTimezone(onboarding.profile.timezone);
+    if (
+      !onboarding.profile?.timezone_confirmed_at ||
+      !onboarding.profile.timezone
+    ) {
+      throw new Error(
+        'Bevestig eerst je tijdzone in de intake voordat je activiteiten registreert.',
+      );
     }
+    setAthleteTimezone(onboarding.profile.timezone);
   };
 
   useEffect(() => {
@@ -243,6 +248,9 @@ export function ActivityScreen({
     setBusy(true);
     setError(null);
     try {
+      if (!athleteTimezone) {
+        throw new Error('Bevestig eerst je tijdzone in de intake.');
+      }
       const numericDuration = duration.trim() === '' ? null : Number(duration);
       const numericDistance = distance ? Number(distance) : undefined;
       if (
@@ -311,6 +319,7 @@ export function ActivityScreen({
         activityId,
         rpe,
         averageHeartRate,
+        activities.find((activity) => activity.id === activityId)?.rpe ?? undefined,
       );
       setHeartRateByActivity((current) => {
         const next = { ...current };
@@ -380,7 +389,9 @@ export function ActivityScreen({
             <StatusPill label={t('rpe.awaiting')} tone="accent" />
             <Text style={styles.cardTitle}>
               {localizedDisciplineLabels[activity.discipline]} ·{' '}
-              {Number(activity.duration_minutes)} min
+              {activity.duration_minutes === null
+                ? `${activity.distance_meters} m`
+                : `${Number(activity.duration_minutes)} min`}
             </Text>
             <Text style={styles.body}>{t('rpe.prompt')}</Text>
             <FormField
@@ -502,12 +513,9 @@ export function ActivityScreen({
             onChangeText={setStartedAt}
             value={startedAt}
           />
-          <FormField
-            autoCapitalize="none"
-            label={t('activity.timezone')}
-            onChangeText={setAthleteTimezone}
-            value={athleteTimezone}
-          />
+          <Text style={styles.meta}>
+            {t('activity.timezone')}: {athleteTimezone || 'Niet bevestigd'}
+          </Text>
           <FormField
             inputMode="decimal"
             label={
@@ -526,9 +534,12 @@ export function ActivityScreen({
           />
           <Pressable
             accessibilityRole="button"
-            disabled={busy}
+            disabled={busy || !athleteTimezone}
             onPress={() => void save()}
-            style={[styles.action, busy && styles.disabled]}
+            style={[
+              styles.action,
+              (busy || !athleteTimezone) && styles.disabled,
+            ]}
           >
             <Text style={styles.actionText}>{t('activity.save')}</Text>
           </Pressable>
@@ -567,6 +578,23 @@ export function ActivityScreen({
                 {activity.rpe === null ? '' : ` · RPE ${activity.rpe}`}
               </Text>
               <Text style={styles.body}>{resultMessage(activity, language)}</Text>
+              {activity.duration_minutes === null && activity.distance_meters ? (
+                <Text style={styles.measurementNotice}>
+                  {language === 'nl'
+                    ? 'Afstand geregistreerd. Duur en tijd-in-zone zijn niet gemeten en worden niet aangevuld.'
+                    : 'Distance recorded. Duration and time in zone were not measured and are not inferred.'}
+                </Text>
+              ) : null}
+              {hasPartialObservedZoneTime(
+                activity.duration_minutes,
+                activity.metrics?.zone_minutes,
+              ) ? (
+                <Text style={styles.measurementNotice}>
+                  {language === 'nl'
+                    ? 'Gedeeltelijke sensordekking: alleen gemeten zonetijd is gebruikt; ontbrekende minuten zijn niet geschat.'
+                    : 'Partial sensor coverage: only observed zone time was used; missing minutes were not estimated.'}
+                </Text>
+              ) : null}
               {activity.match_status === 'unmatched' &&
               activity.processing_state === 'awaiting_rpe' &&
               suggestedWorkout(activity, workouts) ? (
@@ -704,6 +732,15 @@ const styles = StyleSheet.create({
   },
   activityHeader: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   proposalText: { color: colors.brand, fontSize: 12, fontWeight: '700', lineHeight: 18 },
+  measurementNotice: {
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.sm,
+    color: colors.inkMuted,
+    fontSize: 12,
+    lineHeight: 18,
+    marginTop: spacing.sm,
+    padding: spacing.sm,
+  },
   matchSuggestion: { backgroundColor: colors.brandSoft, borderRadius: radius.sm, gap: spacing.xs, padding: spacing.md },
   error: { backgroundColor: colors.dangerSoft, borderRadius: radius.sm, color: colors.danger, padding: spacing.md },
 });

@@ -8,6 +8,7 @@ from typing import Any, cast
 from uuid import UUID, uuid4
 
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app.core.config import Settings
@@ -135,7 +136,9 @@ class TokenVerifier:
             owner = self._token_owners[access_token]
         except KeyError as error:
             raise InvalidAccessTokenError from error
-        return AuthenticatedIdentity(user_id=owner, role="authenticated")
+        return AuthenticatedIdentity(
+            user_id=owner, role="authenticated", athlete_id=owner
+        )
 
 
 class MemoryOnboardingRepository:
@@ -199,6 +202,9 @@ class MemoryOnboardingRepository:
             "motivation_text": None,
             "motivation_tag": None,
             "timezone": "UTC",
+            "timezone_source": None,
+            "timezone_confirmed_at": None,
+            "heart_rate_monitor_confirmed_at": None,
             "onboarding_status": "in_progress",
             "revision": revision,
             "created_at": created_at,
@@ -210,6 +216,91 @@ class MemoryOnboardingRepository:
         row["updated_at"] = _NOW.isoformat()
         state["profile"] = row
         return deepcopy(row)
+
+    async def fetch_identifying_profile(
+        self, access_token: str, athlete_id: UUID
+    ) -> JsonObject | None:
+        assert athlete_id == self._owner(access_token)
+        profile = self._states[athlete_id]["profile"]
+        if profile is None:
+            return None
+        return {
+            "athlete_id": str(athlete_id),
+            "first_name": profile.get("first_name"),
+            "last_name": profile.get("last_name"),
+            "revision": profile["revision"],
+            "created_at": profile["created_at"],
+            "updated_at": profile["updated_at"],
+        }
+
+    async def fetch_physiology_profile(
+        self, access_token: str, athlete_id: UUID
+    ) -> JsonObject | None:
+        assert athlete_id == self._owner(access_token)
+        profile = self._states[athlete_id]["profile"]
+        if profile is None:
+            return None
+        return {
+            "athlete_id": str(athlete_id),
+            "date_of_birth": profile.get("date_of_birth"),
+            "resting_heart_rate_bpm": profile.get("resting_heart_rate_bpm"),
+            "revision": profile["revision"],
+            "created_at": profile["created_at"],
+            "updated_at": profile["updated_at"],
+        }
+
+    async def fetch_operational_profile(
+        self, access_token: str, athlete_id: UUID
+    ) -> JsonObject | None:
+        assert athlete_id == self._owner(access_token)
+        profile = self._states[athlete_id]["profile"]
+        if profile is None:
+            return None
+        return {
+            "athlete_id": str(athlete_id),
+            "timezone": profile["timezone"],
+            "timezone_source": profile.get("timezone_source"),
+            "timezone_confirmed_at": profile.get("timezone_confirmed_at"),
+            "heart_rate_monitor_confirmed_at": profile.get(
+                "heart_rate_monitor_confirmed_at"
+            ),
+            "onboarding_status": profile["onboarding_status"],
+            "revision": profile["revision"],
+            "created_at": profile["created_at"],
+            "updated_at": profile["updated_at"],
+        }
+
+    async def upsert_identifying_profile(
+        self, access_token: str, values: JsonObject
+    ) -> JsonObject:
+        owner = self._owner(access_token)
+        await self.upsert_profile(access_token, owner, values)
+        result = await self.fetch_identifying_profile(access_token, owner)
+        assert result is not None
+        return result
+
+    async def upsert_physiology_profile(
+        self, access_token: str, values: JsonObject
+    ) -> JsonObject:
+        owner = self._owner(access_token)
+        await self.upsert_profile(access_token, owner, values)
+        result = await self.fetch_physiology_profile(access_token, owner)
+        assert result is not None
+        return result
+
+    async def upsert_operational_profile(
+        self, access_token: str, values: JsonObject
+    ) -> JsonObject:
+        owner = self._owner(access_token)
+        persisted = dict(values)
+        if persisted.pop("timezone_confirmed", None):
+            persisted["timezone_confirmed_at"] = _NOW.isoformat()
+        if persisted.pop("heart_rate_monitor_confirmed", None):
+            persisted["heart_rate_monitor_confirmed_at"] = _NOW.isoformat()
+        await self.upsert_profile(access_token, owner, persisted)
+        result = await self.fetch_operational_profile(access_token, owner)
+        assert result is not None
+        return result
 
     async def replace_training_history(
         self,
@@ -244,7 +335,16 @@ class MemoryOnboardingRepository:
         owner = self._owner(access_token)
         goals: list[JsonObject] = self._states[owner]["goals"]
         if goal_id is None and goals:
-            raise RepositoryConflictError
+            legacy = next(
+                (goal for goal in goals if goal.get("race_type") is None),
+                None,
+            )
+            if legacy is None:
+                raise RepositoryConflictError
+            legacy.update(values)
+            legacy["revision"] = int(legacy["revision"]) + 1
+            legacy["updated_at"] = _NOW.isoformat()
+            return deepcopy(legacy)
         if goal_id is not None:
             matching = next(
                 (goal for goal in goals if goal["id"] == str(goal_id)),
@@ -417,8 +517,25 @@ class MemoryOnboardingRepository:
             "base_zone_profile_id": (str(active["id"]) if active is not None else None),
         }
 
-    async def complete_onboarding(self, access_token: str) -> UUID:
+    async def complete_onboarding(
+        self,
+        access_token: str,
+        expected_session_revision: int,
+    ) -> UUID:
         owner = self._owner(access_token)
+        existing_session = self._states[owner]["session"]
+        if existing_session is not None:
+            if (
+                existing_session.get("completed_onboarding_version")
+                == CURRENT_ONBOARDING_VERSION
+                and existing_session.get("completed_ruleset_version")
+                == CURRENT_RULESET_VERSION
+            ):
+                return self._initial_requests[owner]
+            if int(existing_session["revision"]) != expected_session_revision:
+                raise RepositoryConflictError
+        elif expected_session_revision != 0:
+            raise RepositoryConflictError
         request_id = self._initial_requests.setdefault(owner, uuid4())
         state = self._states[owner]
         state["profile"]["onboarding_status"] = "completed"
@@ -430,6 +547,11 @@ class MemoryOnboardingRepository:
             "initial_plan_request_id": str(request_id),
             "completed_onboarding_version": CURRENT_ONBOARDING_VERSION,
             "completed_ruleset_version": CURRENT_RULESET_VERSION,
+            "revision": (
+                int(existing_session["revision"]) + 1
+                if existing_session is not None
+                else 1
+            ),
         }
         return request_id
 
@@ -546,10 +668,25 @@ def _complete_profile(client: TestClient, token: str = "athlete-a") -> None:
         json={
             "date_of_birth": "1990-05-20",
             "resting_heart_rate_bpm": 52,
-            "timezone": "Europe/Amsterdam",
         },
     )
     assert response.status_code == 200
+    monitor = client.patch(
+        "/api/v1/me/operational-profile",
+        headers=_headers(token),
+        json={"heart_rate_monitor_confirmed": True},
+    )
+    timezone_response = client.patch(
+        "/api/v1/me/operational-profile",
+        headers=_headers(token),
+        json={
+            "timezone": "Europe/Amsterdam",
+            "timezone_source": "manual",
+            "timezone_confirmed": True,
+        },
+    )
+    assert monitor.status_code == 200
+    assert timezone_response.status_code == 200
     assert {
         "height_cm",
         "weight_kg",
@@ -577,11 +714,14 @@ def _complete_goal(client: TestClient, token: str = "athlete-a") -> UUID:
         "/api/v1/me/goals",
         headers=_headers(token),
         json={
-            "title": "Amsterdam Olympic triathlon",
-            "specific_description": "Finish the race with an even run.",
-            "measurable_outcome": "Complete all three disciplines.",
-            "target_date": (date.today() + timedelta(days=120)).isoformat(),
-            "race_discipline_profile": ["swim", "bike", "run"],
+            "race_type": "triathlon",
+            "race_name": "Amsterdam Olympic triathlon",
+            "race_date": (date.today() + timedelta(days=120)).isoformat(),
+            "swim_distance_meters": 1500,
+            "bike_distance_meters": 40000,
+            "run_distance_meters": 10000,
+            "total_target_time_seconds": 10800,
+            "specific_focus": "Finish with an even run.",
         },
     )
     assert response.status_code == 201
@@ -855,27 +995,208 @@ def test_only_one_primary_race_goal_and_owned_updates(
         "/api/v1/me/goals",
         headers=_headers(),
         json={
-            "title": "Another race",
-            "specific_description": "This cannot also be primary.",
-            "measurable_outcome": "Finish.",
-            "target_date": (date.today() + timedelta(days=180)).isoformat(),
-            "race_discipline_profile": ["run"],
+            "race_type": "run",
+            "race_name": "Another race",
+            "race_date": (date.today() + timedelta(days=180)).isoformat(),
+            "run_distance_meters": 10000,
+            "total_target_time_seconds": 3600,
         },
     )
     other_athlete_update = client.put(
         f"/api/v1/me/goals/{goal_id}",
         headers=_headers("athlete-b"),
         json={
-            "title": "Stolen goal",
-            "specific_description": "Must remain inaccessible.",
-            "measurable_outcome": "No.",
-            "target_date": (date.today() + timedelta(days=180)).isoformat(),
-            "race_discipline_profile": ["run"],
+            "race_type": "run",
+            "race_name": "Stolen goal",
+            "race_date": (date.today() + timedelta(days=180)).isoformat(),
+            "run_distance_meters": 10000,
+            "total_target_time_seconds": 3600,
         },
     )
 
     assert duplicate.status_code == 409
     assert other_athlete_update.status_code == 409
+
+
+@pytest.mark.parametrize(
+    ("race_type", "distances"),
+    [
+        ("run", {"run_distance_meters": 10000}),
+        ("bike", {"bike_distance_meters": 100000}),
+        ("swim", {"swim_distance_meters": 3000}),
+        (
+            "triathlon",
+            {
+                "swim_distance_meters": 1500,
+                "bike_distance_meters": 40000,
+                "run_distance_meters": 10000,
+            },
+        ),
+        (
+            "duathlon",
+            {"bike_distance_meters": 40000, "run_distance_meters": 10000},
+        ),
+    ],
+)
+def test_all_current_race_types_accept_exact_applicable_distances(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+    race_type: str,
+    distances: dict[str, int],
+) -> None:
+    client, _, _ = onboarding_context
+    response = client.post(
+        "/api/v1/me/goals",
+        headers=_headers(),
+        json={
+            "race_type": race_type,
+            "race_name": f"Test {race_type}",
+            "race_date": (date.today() + timedelta(days=120)).isoformat(),
+            "total_target_time_seconds": 14400,
+            "specific_focus": "Controlled pacing",
+            **distances,
+        },
+    )
+
+    assert response.status_code == 201, response.text
+    assert response.json()["race_name"] == f"Test {race_type}"
+    assert {"title", "specific_description", "measurable_outcome"}.isdisjoint(
+        response.json()
+    )
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {"race_type": "run", "bike_distance_meters": 10000},
+        {"race_type": "triathlon", "swim_distance_meters": 1500},
+        {
+            "race_type": "duathlon",
+            "swim_distance_meters": 750,
+            "bike_distance_meters": 20000,
+            "run_distance_meters": 5000,
+        },
+    ],
+)
+def test_race_goal_rejects_missing_or_inapplicable_distances(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+    payload: dict[str, Any],
+) -> None:
+    client, _, _ = onboarding_context
+    response = client.post(
+        "/api/v1/me/goals",
+        headers=_headers(),
+        json={
+            "race_name": "Invalid race",
+            "race_date": (date.today() + timedelta(days=120)).isoformat(),
+            "total_target_time_seconds": 3600,
+            **payload,
+        },
+    )
+    assert response.status_code == 422
+
+
+def test_legacy_generic_goal_is_upgraded_in_place_without_deleting_history(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, athlete_a, _ = onboarding_context
+    app = cast(FastAPI, client.app)
+    repository = cast(MemoryOnboardingRepository, app.state.onboarding_repository)
+    legacy_id = uuid4()
+    repository._states[athlete_a]["goals"] = [
+        {
+            "id": str(legacy_id),
+            "athlete_id": str(athlete_a),
+            "priority": "A",
+            "goal_type": "race",
+            "title": "Historical title",
+            "specific_description": "Historical detail",
+            "measurable_outcome": "Historical outcome",
+            "target_date": (date.today() + timedelta(days=120)).isoformat(),
+            "race_discipline_profile": ["run"],
+            "status": "active",
+            "revision": 3,
+            "created_at": _NOW.isoformat(),
+            "updated_at": _NOW.isoformat(),
+        }
+    ]
+
+    before = client.get("/api/v1/onboarding", headers=_headers())
+    upgraded = client.post(
+        "/api/v1/me/goals",
+        headers=_headers(),
+        json={
+            "race_type": "run",
+            "race_name": "Current race",
+            "race_date": (date.today() + timedelta(days=120)).isoformat(),
+            "run_distance_meters": 10000,
+            "total_target_time_seconds": 3600,
+        },
+    )
+
+    stored = repository._states[athlete_a]["goals"][0]
+    assert before.status_code == 200
+    assert before.json()["primary_goal"] is None
+    assert upgraded.status_code == 201
+    assert upgraded.json()["id"] == str(legacy_id)
+    assert upgraded.json()["revision"] == 4
+    assert "title" not in upgraded.json()
+    assert stored["title"] == "Historical title"
+    assert stored["race_name"] == "Current race"
+    assert len(repository._states[athlete_a]["goals"]) == 1
+
+
+def test_monitor_and_timezone_are_independent_server_prerequisites(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = onboarding_context
+    profile = client.patch(
+        "/api/v1/me/profile",
+        headers=_headers(),
+        json={
+            "date_of_birth": "1990-05-20",
+            "resting_heart_rate_bpm": 52,
+        },
+    )
+    invalid_timezone = client.patch(
+        "/api/v1/me/operational-profile",
+        headers=_headers(),
+        json={
+            "timezone": "Amsterdam-ish",
+            "timezone_source": "manual",
+            "timezone_confirmed": True,
+        },
+    )
+    state = client.get("/api/v1/onboarding", headers=_headers())
+
+    assert profile.status_code == 200
+    assert invalid_timezone.status_code == 422
+    assert state.json()["current_step"] == "heart_rate_monitor"
+    assert state.json()["can_complete"] is False
+
+    monitor = client.patch(
+        "/api/v1/me/operational-profile",
+        headers=_headers(),
+        json={"heart_rate_monitor_confirmed": True},
+    )
+    after_monitor = client.get("/api/v1/onboarding", headers=_headers())
+    timezone_response = client.patch(
+        "/api/v1/me/operational-profile",
+        headers=_headers(),
+        json={
+            "timezone": "Europe/Amsterdam",
+            "timezone_source": "device",
+            "timezone_confirmed": True,
+        },
+    )
+    after_timezone = client.get("/api/v1/onboarding", headers=_headers())
+
+    assert monitor.status_code == 200
+    assert monitor.json()["timezone"] == "UTC"
+    assert after_monitor.json()["current_step"] == "timezone"
+    assert timezone_response.status_code == 200
+    assert after_timezone.json()["profile"]["timezone"] == "Europe/Amsterdam"
+    assert after_timezone.json()["profile"]["timezone_source"] == "device"
+    assert after_timezone.json()["current_step"] == "history"
 
 
 def test_first_zones_activate_and_replacement_remains_pending(
@@ -1120,7 +1441,11 @@ def test_onboarding_completion_is_resumable_and_idempotent(
     onboarding_context: tuple[TestClient, UUID, UUID],
 ) -> None:
     client, _, _ = onboarding_context
-    before = client.post("/api/v1/onboarding/complete", headers=_headers())
+    before = client.post(
+        "/api/v1/onboarding/complete",
+        headers=_headers(),
+        json={"expected_onboarding_revision": 0},
+    )
     _complete_profile(client)
     _complete_history(client)
     _complete_goal(client)
@@ -1134,8 +1459,16 @@ def test_onboarding_completion_is_resumable_and_idempotent(
     _manual_zone(client, "bike", "bike_ftp_watts", 250)
     _manual_zone(client, "run", "run_lthr_bpm", 170)
     ready = client.get("/api/v1/onboarding", headers=_headers())
-    completed = client.post("/api/v1/onboarding/complete", headers=_headers())
-    repeated = client.post("/api/v1/onboarding/complete", headers=_headers())
+    completed = client.post(
+        "/api/v1/onboarding/complete",
+        headers=_headers(),
+        json={"expected_onboarding_revision": ready.json()["onboarding_revision"]},
+    )
+    repeated = client.post(
+        "/api/v1/onboarding/complete",
+        headers=_headers(),
+        json={"expected_onboarding_revision": ready.json()["onboarding_revision"]},
+    )
 
     assert before.status_code == 422
     assert ready.status_code == 200
@@ -1167,3 +1500,169 @@ def test_cross_athlete_state_is_isolated(
     assert state_b.json()["profile"] is None
     assert str(athlete_a) not in state_b.text
     assert str(athlete_b) not in state_a.text
+
+
+def test_profile_domains_have_separate_owner_scoped_mutation_paths(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, athlete_a, _ = onboarding_context
+    _complete_profile(client)
+
+    identifying = client.patch(
+        "/api/v1/me/identifying-profile",
+        headers=_headers(),
+        json={"first_name": "Ada", "last_name": "Lovelace"},
+    )
+    physiology = client.patch(
+        "/api/v1/me/physiology-profile",
+        headers=_headers(),
+        json={"resting_heart_rate_bpm": 53},
+    )
+    operational = client.get("/api/v1/me/operational-profile", headers=_headers())
+
+    assert identifying.status_code == 200
+    assert identifying.json()["athlete_id"] == str(athlete_a)
+    assert "resting_heart_rate_bpm" not in identifying.json()
+    assert physiology.status_code == 200
+    assert physiology.json()["resting_heart_rate_bpm"] == 53
+    assert "first_name" not in physiology.json()
+    assert operational.status_code == 200
+    assert set(operational.json()).isdisjoint(
+        {"first_name", "last_name", "date_of_birth", "resting_heart_rate_bpm"}
+    )
+
+
+def test_legacy_completion_upgrades_only_after_matching_revision(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, athlete_a, _ = onboarding_context
+    _complete_profile(client)
+    _complete_history(client)
+    _complete_goal(client)
+    _manual_zone(client, "swim", "swim_css_seconds_per_100m", 100, descending=True)
+    _manual_zone(client, "bike", "bike_ftp_watts", 250)
+    _manual_zone(client, "run", "run_lthr_bpm", 170)
+    app = cast(FastAPI, client.app)
+    repository = cast(MemoryOnboardingRepository, app.state.onboarding_repository)
+    legacy_request_id = uuid4()
+    repository._states[athlete_a]["session"] = {
+        "athlete_id": str(athlete_a),
+        "status": "completed",
+        "current_step": "completed",
+        "completed_steps": ["profile", "history", "goal", "zones", "review"],
+        "initial_plan_request_id": str(legacy_request_id),
+        "completed_onboarding_version": "legacy-unversioned",
+        "completed_ruleset_version": "legacy-unversioned",
+        "revision": 5,
+    }
+
+    resumable = client.get("/api/v1/onboarding", headers=_headers())
+    stale = client.post(
+        "/api/v1/onboarding/complete",
+        headers=_headers(),
+        json={"expected_onboarding_revision": 4},
+    )
+    upgraded = client.post(
+        "/api/v1/onboarding/complete",
+        headers=_headers(),
+        json={"expected_onboarding_revision": 5},
+    )
+
+    assert resumable.json()["status"] == "upgrade_required"
+    assert resumable.json()["missing_upgrade_steps"] == []
+    assert resumable.json()["current_step"] == "review"
+    assert stale.status_code == 409
+    assert upgraded.status_code == 200
+    assert upgraded.json()["onboarding"]["status"] == "completed"
+
+
+def test_legacy_completed_user_resumes_only_new_r4_steps_then_completes(
+    onboarding_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, athlete_a, _ = onboarding_context
+    client.patch(
+        "/api/v1/me/profile",
+        headers=_headers(),
+        json={"date_of_birth": "1990-05-20", "resting_heart_rate_bpm": 52},
+    )
+    _complete_history(client)
+    _manual_zone(client, "swim", "swim_css_seconds_per_100m", 100, descending=True)
+    _manual_zone(client, "bike", "bike_ftp_watts", 250)
+    _manual_zone(client, "run", "run_lthr_bpm", 170)
+    app = cast(FastAPI, client.app)
+    repository = cast(MemoryOnboardingRepository, app.state.onboarding_repository)
+    legacy_goal_id = uuid4()
+    repository._states[athlete_a]["goals"] = [
+        {
+            "id": str(legacy_goal_id),
+            "athlete_id": str(athlete_a),
+            "priority": "A",
+            "goal_type": "race",
+            "title": "Legacy 10K",
+            "specific_description": "Retained historical goal",
+            "measurable_outcome": "Finish",
+            "target_date": (date.today() + timedelta(days=120)).isoformat(),
+            "race_discipline_profile": ["run"],
+            "status": "active",
+            "revision": 2,
+            "created_at": _NOW.isoformat(),
+            "updated_at": _NOW.isoformat(),
+        }
+    ]
+    repository._states[athlete_a]["session"] = {
+        "athlete_id": str(athlete_a),
+        "status": "completed",
+        "current_step": "completed",
+        "completed_steps": ["profile", "history", "goal", "zones", "review"],
+        "initial_plan_request_id": str(uuid4()),
+        "completed_onboarding_version": "phase-13-onboarding-v1",
+        "completed_ruleset_version": "phase-13-joren-ruleset-1",
+        "revision": 7,
+    }
+
+    first = client.get("/api/v1/onboarding", headers=_headers()).json()
+    client.patch(
+        "/api/v1/me/operational-profile",
+        headers=_headers(),
+        json={"heart_rate_monitor_confirmed": True},
+    )
+    second = client.get("/api/v1/onboarding", headers=_headers()).json()
+    client.patch(
+        "/api/v1/me/operational-profile",
+        headers=_headers(),
+        json={
+            "timezone": "Europe/Amsterdam",
+            "timezone_source": "manual",
+            "timezone_confirmed": True,
+        },
+    )
+    third = client.get("/api/v1/onboarding", headers=_headers()).json()
+    upgraded_goal = client.post(
+        "/api/v1/me/goals",
+        headers=_headers(),
+        json={
+            "race_type": "run",
+            "race_name": "Current 10K",
+            "race_date": (date.today() + timedelta(days=120)).isoformat(),
+            "run_distance_meters": 10000,
+            "total_target_time_seconds": 3600,
+        },
+    )
+    ready = client.get("/api/v1/onboarding", headers=_headers()).json()
+    completed = client.post(
+        "/api/v1/onboarding/complete",
+        headers=_headers(),
+        json={"expected_onboarding_revision": 7},
+    )
+
+    assert first["current_step"] == "heart_rate_monitor"
+    assert first["completed_steps"] == ["profile", "history", "zones"]
+    assert second["current_step"] == "timezone"
+    assert third["current_step"] == "goal"
+    assert upgraded_goal.status_code == 201
+    assert upgraded_goal.json()["id"] == str(legacy_goal_id)
+    assert ready["current_step"] == "review"
+    assert ready["missing_upgrade_steps"] == []
+    assert completed.status_code == 200
+    assert completed.json()["onboarding"]["status"] == "completed"
+    assert repository._states[athlete_a]["goals"][0]["title"] == "Legacy 10K"

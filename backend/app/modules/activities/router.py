@@ -5,9 +5,13 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
 
-from app.api.dependencies import get_access_token, get_authenticated_identity
+from app.api.dependencies import (
+    get_access_token,
+    get_authenticated_athlete,
+    get_authenticated_identity,
+)
 from app.core.errors import ErrorResponse
-from app.core.security import AuthenticatedIdentity
+from app.core.security import AuthenticatedAthlete, AuthenticatedIdentity
 
 from .repository import (
     ActivityRepository,
@@ -22,7 +26,11 @@ from .schemas import (
     ActivityRpeSubmission,
     ActivitySummaryInput,
 )
-from .service import ActivityDomainError, ActivityService
+from .service import (
+    ActivityCorrectionConflictError,
+    ActivityDomainError,
+    ActivityService,
+)
 
 router = APIRouter(tags=["activities"])
 error_responses: dict[int | str, dict[str, Any]] = {
@@ -60,6 +68,12 @@ def _raise_public_error(error: Exception) -> NoReturn:
             "activity_rpe_window_closed": (
                 "RPE can be corrected only during the current local training week."
             ),
+            "activity_correction_stale": (
+                "The activity correction is stale. Refresh and try again."
+            ),
+            "average_heart_rate_immutable": (
+                "Average heart rate cannot be changed after its activity calculation."
+            ),
             "planned_workout_already_matched": (
                 "This planned workout already has a completed activity."
             ),
@@ -69,7 +83,18 @@ def _raise_public_error(error: Exception) -> NoReturn:
         }
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail={"code": error.code, "message": messages[error.code]},
+            detail={
+                "code": error.code,
+                "message": messages.get(
+                    error.code,
+                    "The activity state changed. Refresh and try again.",
+                ),
+            },
+        ) from error
+    if isinstance(error, ActivityCorrectionConflictError):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={"code": error.code, "message": str(error)},
         ) from error
     if isinstance(error, ActivityRepositoryUnavailableError):
         raise HTTPException(
@@ -166,11 +191,11 @@ async def get_activity(
 async def submit_activity_rpe(
     activity_id: UUID,
     submission: ActivityRpeSubmission,
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[ActivityService, Depends(get_activity_service)],
 ) -> ActivityResponse:
     try:
-        return await service.submit_rpe(identity.user_id, activity_id, submission)
+        return await service.submit_rpe(identity.athlete_id, activity_id, submission)
     except Exception as error:
         _raise_public_error(error)
 

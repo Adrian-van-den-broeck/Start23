@@ -8,9 +8,15 @@ from uuid import UUID
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from app.modules.calibration.schemas import DisciplineSetupResponse
-from app.modules.calibration.service import is_current_mvp_setup
+from app.modules.onboarding.eligibility import satisfied_onboarding_steps
 from app.modules.onboarding.repository import JsonObject, OnboardingRepository
 from app.modules.onboarding.schemas import (
+    AthleteIdentifyingProfileResponse,
+    AthleteIdentifyingProfileUpdate,
+    AthleteOperationalProfileResponse,
+    AthleteOperationalProfileUpdate,
+    AthletePhysiologyProfileResponse,
+    AthletePhysiologyProfileUpdate,
     AthleteProfileResponse,
     AthleteProfileUpdate,
     CalculatedZoneSubmission,
@@ -33,7 +39,6 @@ from app.modules.onboarding.versioning import (
     CURRENT_ONBOARDING_VERSION,
     CURRENT_RULESET_VERSION,
     LEGACY_UNVERSIONED_ONBOARDING,
-    OnboardingStep,
     assess_onboarding_version,
 )
 from app.modules.physiology.models import Discipline, TrainingZone
@@ -106,12 +111,12 @@ class OnboardingService:
         if row is None:
             return None
         return AthleteProfileResponse.model_validate(
-            {key: row[key] for key in AthleteProfileResponse.model_fields}
+            {key: row[key] for key in AthleteProfileResponse.model_fields if key in row}
         )
 
     @staticmethod
     def _goal(row: JsonObject | None) -> PrimaryRaceGoalResponse | None:
-        if row is None:
+        if row is None or row.get("race_type") is None:
             return None
         return PrimaryRaceGoalResponse.model_validate(
             {key: row[key] for key in PrimaryRaceGoalResponse.model_fields}
@@ -130,7 +135,7 @@ class OnboardingService:
         """Require fresh previous-month observations, preserving legacy rows."""
         return {entry.discipline for entry in history} == set(Discipline) and all(
             entry.previous_month_weekly_minutes is not None
-            and entry.baseline_model_version == "phase-13-joren-ruleset-1"
+            and entry.baseline_model_version == CURRENT_RULESET_VERSION
             for entry in history
         )
 
@@ -257,24 +262,13 @@ class OnboardingService:
         discipline_setups = tuple(
             cls._discipline_setup(row) for row in raw.get("discipline_setups", [])
         )
-        active_disciplines = {
-            zone.discipline for zone in zones if zone.status == "active"
-        }
-        configured_disciplines = active_disciplines | {
-            setup.discipline
-            for setup in discipline_setups
-            if is_current_mvp_setup(setup)
-        }
-
-        derived_steps: list[OnboardingStep] = []
-        if cls._profile_is_complete(profile):
-            derived_steps.append("profile")
-        if cls._history_is_complete(history):
-            derived_steps.append("history")
-        if goal is not None:
-            derived_steps.append("goal")
-        if configured_disciplines == set(Discipline):
-            derived_steps.append("zones")
+        derived_steps = satisfied_onboarding_steps(
+            profile=raw["profile"],
+            training_history=raw["training_history"],
+            goal=goal_rows[0] if goal_rows else None,
+            zones=raw["zone_profiles"],
+            discipline_setups=raw.get("discipline_setups", []),
+        )
 
         session = raw["session"]
         persisted_status = (
@@ -337,6 +331,9 @@ class OnboardingService:
             discipline_setups=discipline_setups,
             can_complete=version_state.can_complete,
             initial_plan_request_id=request_id,
+            onboarding_revision=(
+                int(session["revision"]) if session is not None else 0
+            ),
         )
 
     async def get_state(
@@ -361,20 +358,12 @@ class OnboardingService:
         athlete_id: UUID,
         update: AthleteProfileUpdate,
     ) -> AthleteProfileResponse:
-        """Validate timezone and persist only explicitly supplied fields."""
+        """Persist only current identifying and physiological fields."""
         values = update.model_dump(
             mode="json",
             exclude_unset=True,
             exclude_none=False,
         )
-        timezone_name = values.get("timezone")
-        if timezone_name is not None:
-            try:
-                ZoneInfo(str(timezone_name))
-            except ZoneInfoNotFoundError as error:
-                raise OnboardingDomainError(
-                    "timezone must be a valid IANA name"
-                ) from error
         row = await self._repository.upsert_profile(
             access_token,
             athlete_id,
@@ -384,6 +373,78 @@ class OnboardingService:
         if profile is None:
             raise OnboardingDomainError("Saved profile could not be read back.")
         return profile
+
+    async def get_identifying_profile(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> AthleteIdentifyingProfileResponse | None:
+        row = await self._repository.fetch_identifying_profile(access_token, athlete_id)
+        if row is None:
+            return None
+        return AthleteIdentifyingProfileResponse.model_validate(row)
+
+    async def update_identifying_profile(
+        self,
+        access_token: str,
+        update: AthleteIdentifyingProfileUpdate,
+    ) -> AthleteIdentifyingProfileResponse:
+        row = await self._repository.upsert_identifying_profile(
+            access_token,
+            update.model_dump(mode="json", exclude_unset=True),
+        )
+        return AthleteIdentifyingProfileResponse.model_validate(row)
+
+    async def get_physiology_profile(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> AthletePhysiologyProfileResponse | None:
+        row = await self._repository.fetch_physiology_profile(access_token, athlete_id)
+        if row is None:
+            return None
+        return AthletePhysiologyProfileResponse.model_validate(row)
+
+    async def update_physiology_profile(
+        self,
+        access_token: str,
+        update: AthletePhysiologyProfileUpdate,
+    ) -> AthletePhysiologyProfileResponse:
+        row = await self._repository.upsert_physiology_profile(
+            access_token,
+            update.model_dump(mode="json", exclude_unset=True),
+        )
+        return AthletePhysiologyProfileResponse.model_validate(row)
+
+    async def get_operational_profile(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+    ) -> AthleteOperationalProfileResponse | None:
+        row = await self._repository.fetch_operational_profile(access_token, athlete_id)
+        if row is None:
+            return None
+        return AthleteOperationalProfileResponse.model_validate(row)
+
+    async def update_operational_profile(
+        self,
+        access_token: str,
+        update: AthleteOperationalProfileUpdate,
+    ) -> AthleteOperationalProfileResponse:
+        timezone_name = update.timezone
+        values = update.model_dump(mode="json", exclude_unset=True)
+        if timezone_name is not None:
+            try:
+                ZoneInfo(timezone_name)
+            except ZoneInfoNotFoundError as error:
+                raise OnboardingDomainError(
+                    "timezone must be a valid IANA name"
+                ) from error
+        row = await self._repository.upsert_operational_profile(
+            access_token,
+            values,
+        )
+        return AthleteOperationalProfileResponse.model_validate(row)
 
     async def replace_training_history(
         self,
@@ -667,14 +728,19 @@ class OnboardingService:
         self,
         access_token: str,
         athlete_id: UUID,
+        expected_onboarding_revision: int,
     ) -> OnboardingCompleteResponse:
         """Complete onboarding and persist an idempotent planning trigger."""
         state = await self.get_state(access_token, athlete_id)
         if not state.can_complete:
             raise OnboardingDomainError(
-                "Profile, history, primary goal, and discipline guidance are required."
+                "Profile, heart-rate monitor, confirmed timezone, history, primary "
+                "race goal, and discipline guidance are required."
             )
-        request_id = await self._repository.complete_onboarding(access_token)
+        request_id = await self._repository.complete_onboarding(
+            access_token,
+            expected_onboarding_revision,
+        )
         completed = await self.get_state(access_token, athlete_id)
         return OnboardingCompleteResponse(
             onboarding=completed,

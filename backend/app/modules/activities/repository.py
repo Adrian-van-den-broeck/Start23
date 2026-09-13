@@ -7,6 +7,10 @@ from uuid import UUID
 import httpx
 
 from app.core.config import Settings
+from app.modules.identity.repository import (
+    AthleteIdentityResolutionError,
+    LegacyAthleteOwnerAdapter,
+)
 
 JsonObject = dict[str, Any]
 
@@ -106,6 +110,13 @@ class SupabaseActivityRepository:
             timeout=settings.supabase_data_api_timeout_seconds
         )
         self._owns_client = client is None
+        self._legacy_owner = LegacyAthleteOwnerAdapter(settings, self._client)
+
+    async def _rpc_athlete_id(self, athlete_id: UUID) -> UUID:
+        try:
+            return await self._legacy_owner.legacy_id(athlete_id)
+        except AthleteIdentityResolutionError as error:
+            raise ActivityRepositoryUnavailableError from error
 
     def _headers(
         self, access_token: str = "", *, service: bool = False
@@ -160,6 +171,10 @@ class SupabaseActivityRepository:
             "activity rpe is immutable": "activity_rpe_immutable",
             "planned workout already matched": "planned_workout_already_matched",
             "rpe correction window closed": "activity_rpe_window_closed",
+            "activity correction is stale": "activity_correction_stale",
+            "average heart rate is immutable after load calculation": (
+                "average_heart_rate_immutable"
+            ),
             "planned external activity already completed": (
                 "planned_external_activity_already_completed"
             ),
@@ -213,12 +228,13 @@ class SupabaseActivityRepository:
         activity_id: UUID,
         average_heart_rate_bpm: int,
     ) -> None:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         await self._request(
             "POST",
             "rpc/save_rpe_heart_rate_observation",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_activity_id": str(activity_id),
                 "p_average_heart_rate_bpm": average_heart_rate_bpm,
             },
@@ -256,12 +272,13 @@ class SupabaseActivityRepository:
         athlete_id: UUID,
         activity_id: UUID,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
             "rpc/get_activity_processing_context",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_activity_id": str(activity_id),
             },
         )
@@ -275,12 +292,13 @@ class SupabaseActivityRepository:
         activity_id: UUID,
         payload: JsonObject,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
             "rpc/complete_activity_rpe",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_activity_id": str(activity_id),
                 "p_payload": payload,
             },
@@ -295,12 +313,13 @@ class SupabaseActivityRepository:
         activity_id: UUID,
         payload: JsonObject,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
             "rpc/revise_activity_rpe",
             service=True,
             json={
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_activity_id": str(activity_id),
                 "p_payload": payload,
             },

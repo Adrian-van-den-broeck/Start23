@@ -6,6 +6,10 @@ from uuid import UUID
 import httpx
 
 from app.core.config import Settings
+from app.modules.identity.repository import (
+    AthleteIdentityResolutionError,
+    LegacyAthleteOwnerAdapter,
+)
 
 JsonObject = dict[str, Any]
 
@@ -100,6 +104,19 @@ class SupabaseIntegrationRepository:
             timeout=settings.supabase_data_api_timeout_seconds
         )
         self._owns_client = client is None
+        self._legacy_owner = LegacyAthleteOwnerAdapter(settings, self._client)
+
+    async def _rpc_athlete_id(self, athlete_id: UUID) -> UUID:
+        try:
+            return await self._legacy_owner.legacy_id(athlete_id)
+        except AthleteIdentityResolutionError as error:
+            raise IntegrationRepositoryError from error
+
+    async def _opaque_athlete_id(self, auth_user_id: UUID) -> UUID:
+        try:
+            return await self._legacy_owner.opaque_id(auth_user_id)
+        except AthleteIdentityResolutionError as error:
+            raise IntegrationRepositoryError from error
 
     def _headers(
         self, access_token: str = "", *, service: bool = False
@@ -170,7 +187,7 @@ class SupabaseIntegrationRepository:
             service=True,
         )
         try:
-            return UUID(str(result))
+            return await self._opaque_athlete_id(UUID(str(result)))
         except (TypeError, ValueError) as error:
             raise IntegrationRepositoryError from error
 
@@ -181,10 +198,11 @@ class SupabaseIntegrationRepository:
         access_token: str,
         expires_at: str | None,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._rpc(
             "save_polar_connection",
             {
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_provider_user_id": provider_user_id,
                 "p_access_token": access_token,
                 "p_token_expires_at": expires_at,
@@ -202,9 +220,10 @@ class SupabaseIntegrationRepository:
         return dict(result)
 
     async def get_credentials(self, athlete_id: UUID) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._rpc(
             "get_polar_credentials",
-            {"p_athlete_id": str(athlete_id)},
+            {"p_athlete_id": str(rpc_athlete_id)},
             service=True,
         )
         if not isinstance(result, dict):
@@ -212,19 +231,21 @@ class SupabaseIntegrationRepository:
         return dict(result)
 
     async def disconnect(self, athlete_id: UUID, status: str) -> None:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         await self._rpc(
             "disconnect_polar_connection",
-            {"p_athlete_id": str(athlete_id), "p_status": status},
+            {"p_athlete_id": str(rpc_athlete_id), "p_status": status},
             service=True,
         )
 
     async def start_import(
         self, athlete_id: UUID, idempotency_key: UUID, payload: JsonObject
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._rpc(
             "start_polar_import",
             {
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_idempotency_key": str(idempotency_key),
                 "p_payload": payload,
             },
@@ -237,10 +258,11 @@ class SupabaseIntegrationRepository:
     async def finish_import(
         self, athlete_id: UUID, import_id: UUID, payload: JsonObject
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._rpc(
             "finish_polar_import",
             {
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_import_id": str(import_id),
                 "p_payload": payload,
             },
@@ -259,9 +281,10 @@ class SupabaseIntegrationRepository:
     async def prepare_import_retry(
         self, athlete_id: UUID, import_id: UUID
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._rpc(
             "prepare_polar_import_retry",
-            {"p_athlete_id": str(athlete_id), "p_import_id": str(import_id)},
+            {"p_athlete_id": str(rpc_athlete_id), "p_import_id": str(import_id)},
             service=True,
         )
         if not isinstance(result, dict):
@@ -279,20 +302,26 @@ class SupabaseIntegrationRepository:
         if not isinstance(result, list):
             raise IntegrationRepositoryError
         try:
-            return tuple(
-                (UUID(str(row["athlete_id"])), UUID(str(row["import_id"])))
-                for row in result
-                if isinstance(row, dict)
-            )
+            claims: list[tuple[UUID, UUID]] = []
+            for row in result:
+                if isinstance(row, dict):
+                    claims.append(
+                        (
+                            await self._opaque_athlete_id(UUID(str(row["athlete_id"]))),
+                            UUID(str(row["import_id"])),
+                        )
+                    )
+            return tuple(claims)
         except (KeyError, ValueError) as error:
             raise IntegrationRepositoryError from error
 
     async def get_import_retry_context(
         self, athlete_id: UUID, import_id: UUID
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._rpc(
             "get_polar_import_retry_context",
-            {"p_athlete_id": str(athlete_id), "p_import_id": str(import_id)},
+            {"p_athlete_id": str(rpc_athlete_id), "p_import_id": str(import_id)},
             service=True,
         )
         if not isinstance(result, dict):
@@ -308,10 +337,11 @@ class SupabaseIntegrationRepository:
         fingerprint: str,
         payload: JsonObject,
     ) -> JsonObject:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._rpc(
             "import_polar_activity",
             {
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_import_id": str(import_id),
                 "p_provider_entity_id": provider_entity_id,
                 "p_idempotency_key": str(idempotency_key),
@@ -332,6 +362,7 @@ class SupabaseIntegrationRepository:
         content: bytes,
         checksum: str,
     ) -> None:
+        rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         object_name = f"{athlete_id}/{activity_id}/{provider_entity_id}.fit"
         headers = {
             "apikey": self._secret_key,
@@ -352,7 +383,7 @@ class SupabaseIntegrationRepository:
         await self._rpc(
             "save_polar_activity_file",
             {
-                "p_athlete_id": str(athlete_id),
+                "p_athlete_id": str(rpc_athlete_id),
                 "p_activity_id": str(activity_id),
                 "p_object_name": object_name,
                 "p_checksum": checksum,
@@ -385,7 +416,12 @@ class SupabaseIntegrationRepository:
         )
         if not isinstance(result, dict):
             raise IntegrationNotFoundError
-        return dict(result)
+        context = dict(result)
+        if context.get("athlete_id") is not None:
+            context["athlete_id"] = str(
+                await self._opaque_athlete_id(UUID(str(context["athlete_id"])))
+            )
+        return context
 
     async def finish_webhook(
         self, receipt_id: UUID, *, status: str, failure_code: str | None = None

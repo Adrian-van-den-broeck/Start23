@@ -1,7 +1,8 @@
-# Phase 13 review ? 2026-09-11
+# Phase 13 review - updated 2026-09-12
 
-Status: implementation and hosted Phase 13 migration present; remediation R1
-complete locally; runtime, R1 database, and external exit gates remain open.
+Status: implementation and hosted Phase 13 migration present; remediation R1,
+the coupled R3-then-R2 implementation, and R4/R5 are complete locally; runtime,
+database, two-user, device, and external exit gates remain open.
 
 ## 1. Version
 
@@ -31,11 +32,13 @@ If only average HR is available and confirmed HR zones are known, all reliable
 training minutes use the zone containing that average. This is recorded as
 `average_hr_zone_duration` / `estimated_from_average_hr`, with the exact source
 profile, assigned zone and HR; it never pretends to be full observed coverage.
-Observed partial times take precedence over this estimate. The R1 audit found
-that the ordinary RPE correction path can currently change public average HR
-after this private snapshot exists. R1-D1 requires that change to be rejected;
-R5 owns the atomic correction fix. Without known HR zones, this estimate is
-unavailable. Swim does not acquire an HR fallback.
+Observed partial times take precedence over this estimate. R5 now rejects an
+ordinary correction that changes public average HR after this private snapshot
+exists. The owner row is locked, a real RPE correction requires its expected
+current value, and exact duplicates remain idempotent. The rejection preserves
+the original observation, load, profile snapshot, ruleset, and audit history as
+required by R1-D1. Without known HR zones, the estimate is unavailable. Swim
+does not acquire an HR fallback.
 
 Distance-only swim records retain distance and nullable duration without
 inventing time or load; mobile can record/display them. New realized load does
@@ -76,7 +79,28 @@ adds append-only owner-scoped completion records, and supplies the current
 versioned completion entry point. This migration has not been applied locally
 or hosted; its pgTAP execution remains an open database gate.
 
-## 5?6. Deprecated and historical behavior
+R3 and R2 add the forward migration
+`20260912072232_phase_r2_r3_identity_onboarding_calibration.sql`. It creates the
+private opaque identity map, backfills and synchronizes dual owners, separates
+identifying/physiology records, applies independent least-privilege RLS/RPC
+paths, makes completion stale-safe, and adds direct planning and calibration
+persistence gates. Legacy owner columns remain only as a documented expand/
+cutover compatibility key pending R6 reader/writer proof. This migration has
+not been executed against a database; no local or hosted migration success is
+claimed.
+
+R4 and R5 add the forward migration
+`20260912180000_phase_r4_r5_onboarding_race_activity.sql`. It expands the
+versioned onboarding session vocabulary, adds explicit operational
+confirmations and structured race fields, replaces current completion/planning
+eligibility with onboarding v2, and guards Phase 13 average HR at both the
+metric trigger and service-only correction RPC. Generic goal columns and the
+R2/R3 dual-owner compatibility key remain for historical/expand-cutover use.
+This migration has not been executed against a database; no local or hosted
+migration success is claimed. A rollback-only R4/R5 pgTAP suite is present for
+R6 execution.
+
+## 5. Deprecated and historical behavior
 
 New paths retire two-month distance/frequency baseline assumptions, the Week-2
 numeric calibration delay, and RPE-times-duration activity load. sRPE remains a
@@ -88,7 +112,7 @@ old history columns and persisted load/profile records remain interpretable.
 Historical RPE revisions retain their original ruleset label and calculation
 method; prior values are audited. No migration recalculates historical load.
 
-## 7?8. Tests and verification actually executed
+## 6. Tests and verification actually executed
 
 - Complete backend suite after R1: **556 passed**. Includes deterministic source fixtures,
   all anchors/coefficients, integer equality and inverse swim boundaries,
@@ -126,43 +150,67 @@ New pgTAP coverage checks canonical duration, atomic invalid input rejection,
 owner isolation, private grants/RLS and audit/provenance structure; older
 onboarding fixtures now express the superseding input contract.
 
+The 2026-09-12 R2/R3 repository verification passed the complete backend suite
+with **565 tests**, Ruff, formatting across **128 files**, strict mypy across
+app and tests (**128 source files**), OpenAPI and recursive private-load
+contracts, mobile strict TypeScript, and `git diff --check`. A new R2/R3 pgTAP
+suite covers identity uniqueness/backfill, split-profile grants and owner
+isolation, direct-write denial, opaque-owner orphans, planner enforcement, and
+calibration persistence enforcement. All **44** migration/pgTAP SQL files pass
+local PostgreSQL syntax parsing, but the suite remains unexecuted because no
+Docker/Postgres runner is available. At that R2/R3 checkpoint no mobile test
+script was configured.
+
+The 2026-09-12 R4/R5 repository verification passes the complete backend suite
+with **588 tests**, Ruff, formatting across **129 files**, strict mypy across
+app and tests (**129 source files**), targeted OpenAPI/recursive private-load
+contracts, mobile strict TypeScript, and **7 configured mobile tests**. Static
+migration checks cover v2 prerequisites, structured race constraints,
+compatibility retention, direct planner enforcement, owner locking, stale
+correction, and HR immutability. The new pgTAP suite covers runtime grants,
+invalid/valid timezone and race writes, direct metric protection, duplicate,
+changed-HR, successful, and stale correction cases, but remains unexecuted
+because no Docker/Postgres/`pg_prove` runner is available.
+
 Targeted final searches covered old duration/RPE load, two-month history,
 Week-2/RPE-only state, taper timing, model labels and private response fields.
 Historical definitions remain intentionally labeled as historical. No new
 physiological formulas were placed in mobile or LLM logic.
 
-## 9. Open gates
+## 7. Open gates
 
 - Run the complete database test directory through a TAP-aware runner and the
   direct hosted schema lint when a database password or suitable runner is
   available. Complete real-token/two-real-user isolation, pending approval and
   activity revision persistence checks remain release evidence.
-- Apply and execute the R1 onboarding-version migration/pgTAP suite. Docker and
-  Podman are unavailable on this workstation, so no local database runner was
-  available during R1; the hosted project was not mutated by this local task.
-- Device/runtime verification of onboarding resume, calibration warning and
-  approval, and distance-only activity display/input. No mobile test runner is
-  configured in `mobile/package.json`; typechecking does not replace this gate.
+- Apply and execute the R1, coupled R2/R3, and R4/R5 migrations/pgTAP suites.
+  Docker and Podman are unavailable on this workstation, so no local database
+  runner was available; the hosted project was not mutated by this local task.
+- Device/runtime verification of onboarding resume, timezone detection/fallback,
+  calibration warning and approval, and distance-only activity display/input.
+  The configured Node tests cover pure logic and source contracts, but do not
+  replace React Native component/device execution.
 - Accountable external physiological reviewer and review record for this exact
   version. Production configuration now requires the matching ruleset version
   in addition to the reviewer/record, so an older review cannot authorize it.
 - Existing legal/privacy and other production/release gates remain unchanged.
 
-## 10. Deferred rules and future work
+## 8. Deferred rules and future work
 
 Partial-week taper targets remain fail-closed: the retained full-week reduction
 is applicable when the seven-day window aligns with a whole planning week.
-No new curve is invented for other race weekdays. Adaptive 7?10 day taper,
+No new curve is invented for other race weekdays. Adaptive 7-10 day taper,
 discipline-specific taper, recovery interaction and advanced race overlap remain
 future work. Distance/protocol-only templates without authoritative timed zones
 cannot enter private-load-target selection; their distance/protocol content is
 preserved. Additional starting allocations/minima require an explicit decision.
 Phase 15 may consume the supplied textual RPE catalog in its broader UI work.
 
-## 11. Exit criteria
+## 9. Exit criteria
 
-**Remediation R1 is complete; Phase 13 is not marked complete.** Local domain,
-API, type, artifact, and source-control verification and the earlier hosted
-Phase 13 checks pass. R2-R6, the R1 migration/database suite, runtime/device
-evidence, and accountable external review are still open. This report does not
-represent release approval.
+**Remediation R1 and the local R3-then-R2 and R4/R5 implementations are
+complete; Phase 13 is not marked complete.** Local domain, API, type, artifact,
+and source-control verification and the earlier hosted Phase 13 checks pass.
+R6, execution of all unexecuted remediation migration/database suites,
+runtime/device evidence, and accountable external review are still open. This
+report does not represent release approval.

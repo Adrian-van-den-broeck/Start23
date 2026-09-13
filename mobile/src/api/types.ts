@@ -1,6 +1,8 @@
 export type Discipline = 'swim' | 'bike' | 'run';
 export type OnboardingStep =
   | 'profile'
+  | 'heart_rate_monitor'
+  | 'timezone'
   | 'history'
   | 'goal'
   | 'zones'
@@ -9,11 +11,18 @@ export type OnboardingStep =
 
 export type AthleteProfile = {
   athlete_id: string;
+  first_name: string | null;
+  last_name: string | null;
   date_of_birth: string | null;
   resting_heart_rate_bpm: number | null;
-  timezone: string;
+  timezone: string | null;
+  timezone_source: 'device' | 'manual' | null;
+  timezone_confirmed_at: string | null;
+  heart_rate_monitor_confirmed_at: string | null;
   onboarding_status: 'not_started' | 'in_progress' | 'completed';
   revision: number;
+  identifying_revision: number;
+  physiology_revision: number;
   created_at: string;
   updated_at: string;
 };
@@ -32,11 +41,17 @@ export type TrainingHistoryEntry = {
 
 export type PrimaryRaceGoal = {
   id: string;
-  title: string;
-  specific_description: string;
-  measurable_outcome: string;
-  target_date: string;
-  race_discipline_profile: Discipline[];
+  race_type: RaceType;
+  race_name: string;
+  race_date: string;
+  swim_distance_meters: number | null;
+  bike_distance_meters: number | null;
+  run_distance_meters: number | null;
+  total_target_time_seconds: number;
+  swim_target_time_seconds: number | null;
+  bike_target_time_seconds: number | null;
+  run_target_time_seconds: number | null;
+  specific_focus: string | null;
   priority: 'A';
   goal_type: 'race';
   status: 'active' | 'superseded';
@@ -44,6 +59,8 @@ export type PrimaryRaceGoal = {
   created_at: string;
   updated_at: string;
 };
+
+export type RaceType = 'run' | 'bike' | 'swim' | 'triathlon' | 'duathlon';
 
 export type GoalPlanningOption = {
   goal_kind: 'race_event' | 'personal_goal';
@@ -219,6 +236,7 @@ export type OnboardingState = {
   discipline_setups: DisciplineSetup[];
   can_complete: boolean;
   initial_plan_request_id: string | null;
+  onboarding_revision: number;
 };
 
 export type ZoneSetupOption = {
@@ -226,6 +244,11 @@ export type ZoneSetupOption = {
   label: string;
   creates_threshold: boolean;
   creates_zones: boolean;
+  requires_athlete_confirmation: boolean;
+  activation_behavior:
+    | 'athlete_input_can_activate'
+    | 'calculated_result_stays_pending'
+    | 'provisional_guidance_only';
 };
 
 export type CalibrationProtocolSegment = {
@@ -253,6 +276,15 @@ export type CalibrationProtocol = {
     | 'threshold_estimated'
     | 'provisionally_calibrated';
   guidance_modes: GuidanceMode[];
+  required_observation_type:
+    | 'average_heart_rate_and_rpe'
+    | 'elapsed_time_distance_and_rpe';
+  calculated_result:
+    | 'threshold_and_zone_profiles'
+    | 'provisional_calibration';
+  pending_zone_lifecycle:
+    | 'confirmation_creates_pending_proposal'
+    | 'no_zone_proposal_from_provisional_result';
   segments: CalibrationProtocolSegment[];
 };
 

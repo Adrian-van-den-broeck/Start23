@@ -118,26 +118,48 @@ def _current_mvp_guidance_modes(
     return (GuidanceMode.PACE.value,)
 
 
-def is_current_mvp_setup(setup: DisciplineSetupResponse) -> bool:
-    """Return whether persisted guidance can satisfy a current selectable route."""
-    if setup.setup_route is SetupRoute.RPE_ONLY:
+def is_current_mvp_setup_values(
+    *,
+    discipline: Discipline | str,
+    setup_route: SetupRoute | str,
+    guidance_mode: GuidanceMode | str,
+    protocol_id: str | None,
+) -> bool:
+    """Authoritative current setup matrix shared with onboarding and planning."""
+    try:
+        parsed_discipline = Discipline(discipline)
+        parsed_route = SetupRoute(setup_route)
+        parsed_mode = GuidanceMode(guidance_mode)
+    except ValueError:
         return False
-    if setup.setup_route is SetupRoute.KNOWN_VALUES:
+    if parsed_route is SetupRoute.RPE_ONLY:
+        return False
+    if parsed_route is SetupRoute.KNOWN_VALUES:
         return True
-    if setup.protocol_id is None:
+    if protocol_id is None:
         return False
-    protocol = PROTOCOLS.get(setup.protocol_id)
-    if protocol is None or protocol.discipline is not setup.discipline:
+    protocol = PROTOCOLS.get(protocol_id)
+    if protocol is None or protocol.discipline is not parsed_discipline:
         return False
     return any(
-        candidate.protocol_id == protocol.protocol_id
-        and setup.guidance_mode.value
+        candidate.protocol_id == protocol_id
+        and parsed_mode.value
         in _current_mvp_guidance_modes(
             candidate.discipline,
             candidate.protocol_type,
             candidate.guidance_modes,
         )
-        for candidate in _current_mvp_protocols(setup.discipline)
+        for candidate in _current_mvp_protocols(parsed_discipline)
+    )
+
+
+def is_current_mvp_setup(setup: DisciplineSetupResponse) -> bool:
+    """Return whether persisted guidance can satisfy a current selectable route."""
+    return is_current_mvp_setup_values(
+        discipline=setup.discipline,
+        setup_route=setup.setup_route,
+        guidance_mode=setup.guidance_mode,
+        protocol_id=setup.protocol_id,
     )
 
 
@@ -181,18 +203,24 @@ class CalibrationService:
                 label="Ik ken mijn waarden",
                 creates_threshold=False,
                 creates_zones=True,
+                requires_athlete_confirmation=True,
+                activation_behavior="athlete_input_can_activate",
             ),
             ZoneOptionResponse(
                 setup_route=SetupRoute.FIELD_TEST,
                 label="Ik wil mijn waarden testen",
                 creates_threshold=True,
                 creates_zones=True,
+                requires_athlete_confirmation=True,
+                activation_behavior="calculated_result_stays_pending",
             ),
             ZoneOptionResponse(
                 setup_route=SetupRoute.CALIBRATION_WEEK,
                 label="Ik wil rustig beginnen en laten kalibreren",
                 creates_threshold=False,
                 creates_zones=False,
+                requires_athlete_confirmation=False,
+                activation_behavior="provisional_guidance_only",
             ),
         )
 
@@ -210,6 +238,21 @@ class CalibrationService:
                     protocol.discipline,
                     protocol.protocol_type,
                     protocol.guidance_modes,
+                ),
+                required_observation_type=(
+                    "elapsed_time_distance_and_rpe"
+                    if protocol.discipline is Discipline.SWIM
+                    else "average_heart_rate_and_rpe"
+                ),
+                calculated_result=(
+                    "threshold_and_zone_profiles"
+                    if protocol.protocol_type is ProtocolType.FIELD_TEST
+                    else "provisional_calibration"
+                ),
+                pending_zone_lifecycle=(
+                    "confirmation_creates_pending_proposal"
+                    if protocol.protocol_type is ProtocolType.FIELD_TEST
+                    else "no_zone_proposal_from_provisional_result"
                 ),
                 segments=tuple(
                     ProtocolSegmentResponse(
@@ -518,6 +561,10 @@ class CalibrationService:
             raise CalibrationDomainError(
                 "Observation protocol does not match the discipline."
             )
+        is_current_protocol = any(
+            candidate.protocol_id == observation.protocol_id
+            for candidate in _current_mvp_protocols(observation.discipline)
+        )
         definition = next(
             (
                 segment
@@ -538,6 +585,35 @@ class CalibrationService:
             raise CalibrationDomainError(
                 "target_rpe does not match the reviewed protocol segment."
             )
+        is_result_segment = definition.purpose in {
+            "valid_test_segment",
+            "calibration_observation",
+        }
+        if (
+            is_current_protocol
+            and is_result_segment
+            and observation.completed
+            and observation.quality_status is DataQuality.SUFFICIENT
+        ):
+            if observation.reported_block_rpe is None:
+                raise CalibrationDomainError(
+                    "A completed result segment requires reported block RPE."
+                )
+            if (
+                observation.discipline in {Discipline.RUN, Discipline.BIKE}
+                and observation.average_heart_rate_bpm is None
+            ):
+                raise CalibrationDomainError(
+                    "Current run/bike calibration requires measured average HR."
+                )
+            if observation.discipline is Discipline.SWIM and (
+                observation.elapsed_time_seconds is None
+                or observation.distance_meters is None
+            ):
+                raise CalibrationDomainError(
+                    "Current swim calibration requires measured elapsed time "
+                    "and distance."
+                )
 
     async def save_observation(
         self,

@@ -29,6 +29,8 @@ def test_generated_plan_persistence_uses_only_the_server_secret() -> None:
 
     def handler(request: httpx.Request) -> httpx.Response:
         nonlocal captured
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
         captured = request
         return httpx.Response(
             200,
@@ -65,6 +67,8 @@ def test_coach_explanation_write_uses_bounded_service_rpc() -> None:
 
     def handler(request: httpx.Request) -> httpx.Response:
         nonlocal captured
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
         captured = request
         return httpx.Response(200, json="Veilig weekvoorstel ter controle.")
 
@@ -139,6 +143,8 @@ def test_direct_move_is_persisted_only_through_the_trusted_backend_rpc() -> None
 
     def handler(request: httpx.Request) -> httpx.Response:
         nonlocal captured
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
         captured = request
         return httpx.Response(
             200,
@@ -170,7 +176,7 @@ def test_direct_move_is_persisted_only_through_the_trusted_backend_rpc() -> None
 def test_database_conflicts_map_to_stable_public_planning_codes() -> None:
     proposal_id = uuid4()
 
-    def handler(_: httpx.Request) -> httpx.Response:
+    def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
             400,
             json={"code": "40001", "message": "plan proposal is stale"},
@@ -193,6 +199,49 @@ def test_database_conflicts_map_to_stable_public_planning_codes() -> None:
             )
 
     asyncio.run(exercise())
+
+
+def test_plan_context_is_enriched_with_authoritative_onboarding_state() -> None:
+    athlete_id = uuid4()
+    plan_id = uuid4()
+    calls: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(request)
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(uuid4()))
+        if request.url.path.endswith("get_plan_context_for_planning"):
+            return httpx.Response(
+                200,
+                json={"plan_id": str(plan_id), "input_snapshot": {}},
+            )
+        return httpx.Response(
+            200,
+            json={
+                "onboarding_status": "completed",
+                "completed_onboarding_version": "phase-13-onboarding-v1",
+                "completed_ruleset_version": "phase-13-joren-ruleset-1",
+                "onboarding_version": "phase-13-onboarding-v1",
+                "ruleset_version": "phase-13-joren-ruleset-1",
+            },
+        )
+
+    async def exercise() -> dict[str, object]:
+        async with httpx.AsyncClient(
+            transport=httpx.MockTransport(handler),
+        ) as client:
+            repository = SupabasePlanningRepository(_settings(), client=client)
+            return await repository.fetch_plan_context(athlete_id, plan_id)
+
+    result = asyncio.run(exercise())
+
+    assert result["onboarding_status"] == "completed"
+    assert result["completed_onboarding_version"] == "phase-13-onboarding-v1"
+    assert calls[-1].url.path.endswith(
+        "/rest/v1/rpc/get_current_planning_eligibility_context"
+    )
+    assert calls[-1].headers["apikey"] == "sb_secret_test"
+    assert str(athlete_id).encode() in calls[-1].content
 
 
 def test_missing_supabase_rpc_is_reported_as_dependency_unavailable() -> None:

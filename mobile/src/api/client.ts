@@ -1,5 +1,4 @@
 import type {
-  AthleteProfile,
   CalibrationEvaluation,
   CalibrationObservation,
   CalibrationObservationInput,
@@ -162,15 +161,49 @@ export async function getOnboarding(
   }
 }
 
-export function saveProfile(
+export async function saveProfile(
   accessToken: string,
   input: {
+    first_name?: string;
+    last_name?: string;
     date_of_birth: string;
     resting_heart_rate_bpm: number;
-    timezone: string;
   },
-): Promise<AthleteProfile> {
-  return request(accessToken, '/api/v1/me/profile', {
+): Promise<void> {
+  const writes: Promise<unknown>[] = [
+    request<unknown>(accessToken, '/api/v1/me/physiology-profile', {
+      method: 'PATCH',
+      body: JSON.stringify({
+        date_of_birth: input.date_of_birth,
+        resting_heart_rate_bpm: input.resting_heart_rate_bpm,
+      }),
+    }),
+  ];
+  if (input.first_name || input.last_name) {
+    writes.push(
+      request<unknown>(accessToken, '/api/v1/me/identifying-profile', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          ...(input.first_name ? { first_name: input.first_name } : {}),
+          ...(input.last_name ? { last_name: input.last_name } : {}),
+        }),
+      }),
+    );
+  }
+  await Promise.all(writes);
+}
+
+export function saveOperationalProfile(
+  accessToken: string,
+  input:
+    | {
+        timezone: string;
+        timezone_source: 'device' | 'manual';
+        timezone_confirmed: true;
+      }
+    | { heart_rate_monitor_confirmed: true },
+): Promise<unknown> {
+  return request(accessToken, '/api/v1/me/operational-profile', {
     method: 'PATCH',
     body: JSON.stringify(input),
   });
@@ -198,11 +231,17 @@ export function getGoalPlanningOptions(
 export function savePrimaryGoal(
   accessToken: string,
   input: {
-    title: string;
-    specific_description: string;
-    measurable_outcome: string;
-    target_date: string;
-    race_discipline_profile: Discipline[];
+    race_type: import('./types').RaceType;
+    race_name: string;
+    race_date: string;
+    swim_distance_meters?: number;
+    bike_distance_meters?: number;
+    run_distance_meters?: number;
+    total_target_time_seconds: number;
+    swim_target_time_seconds?: number;
+    bike_target_time_seconds?: number;
+    run_target_time_seconds?: number;
+    specific_focus?: string;
   },
   goalId?: string,
 ): Promise<PrimaryRaceGoal> {
@@ -417,9 +456,13 @@ export function rejectTestAssignment(
 
 export function completeOnboarding(
   accessToken: string,
+  expectedOnboardingRevision: number,
 ): Promise<OnboardingComplete> {
   return request(accessToken, '/api/v1/onboarding/complete', {
     method: 'POST',
+    body: JSON.stringify({
+      expected_onboarding_revision: expectedOnboardingRevision,
+    }),
   });
 }
 
@@ -691,11 +734,15 @@ export function submitActivityRpe(
   activityId: string,
   rpe: number,
   averageHeartRateBpm?: number,
+  expectedCurrentRpe?: number,
 ): Promise<CompletedActivity> {
   return request(accessToken, `/api/v1/activities/${activityId}/rpe`, {
     method: 'PUT',
     body: JSON.stringify({
       rpe,
+      ...(expectedCurrentRpe === undefined
+        ? {}
+        : { expected_current_rpe: expectedCurrentRpe }),
       ...(averageHeartRateBpm === undefined
         ? {}
         : { average_heart_rate_bpm: averageHeartRateBpm }),

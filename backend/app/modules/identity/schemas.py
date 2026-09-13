@@ -11,5 +11,5 @@ class MeResponse(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    id: UUID
+    athlete_id: UUID
     role: Literal["authenticated"]

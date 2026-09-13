@@ -18,6 +18,7 @@ import {
   rejectZoneProposal,
   saveCalculatedZones,
   saveDisciplineSetup,
+  saveOperationalProfile,
   savePrimaryGoal,
   saveProfile,
   saveTrainingHistory,
@@ -30,6 +31,7 @@ import type {
   OnboardingState,
   OnboardingStep,
   PrimaryRaceGoal,
+  RaceType,
   ZoneBoundary,
 } from '../api/types';
 import { FadeInView } from '../components/FadeInView';
@@ -41,10 +43,19 @@ import {
   isPastIsoDateInput,
 } from '../lib/dateInput';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
+import {
+  formatClockDuration,
+  parseClockDuration,
+  parsePositiveInteger,
+  raceDisciplines,
+  resolveDeviceTimezone,
+} from '../lib/onboardingForms';
 import { ZoneSetupStep } from './ZoneSetupStep';
 
 const stepLabels: Array<{ step: OnboardingStep; label: string }> = [
   { step: 'profile', label: 'Profiel' },
+  { step: 'heart_rate_monitor', label: 'Hartslag' },
+  { step: 'timezone', label: 'Tijdzone' },
   { step: 'history', label: 'Historie' },
   { step: 'goal', label: 'Doel' },
   { step: 'zones', label: 'Zones' },
@@ -134,32 +145,43 @@ type ProfileStepProps = {
   profile: AthleteProfile | null;
   saving: boolean;
   onSave: (input: {
+    first_name?: string;
+    last_name?: string;
     date_of_birth: string;
     resting_heart_rate_bpm: number;
-    timezone: string;
   }) => Promise<void>;
 };
 
 function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
+  const [firstName, setFirstName] = useState(profile?.first_name ?? '');
+  const [lastName, setLastName] = useState(profile?.last_name ?? '');
   const [dateOfBirth, setDateOfBirth] = useState(profile?.date_of_birth ?? '');
   const [restingHeartRate, setRestingHeartRate] = useState(
     profile?.resting_heart_rate_bpm?.toString() ?? '',
   );
-  const [timezone, setTimezone] = useState(
-    profile?.timezone ?? 'Europe/Amsterdam',
-  );
   const valid =
     isPastIsoDateInput(dateOfBirth) &&
-    Boolean(timezone) &&
     Number(restingHeartRate) > 0;
 
   return (
     <StepFrame
       description="Deze gegevens ondersteunen alleen goedgekeurde, deterministische berekeningen. Er worden geen medische grenzen afgedwongen."
-      eyebrow="Stap 1 van 5"
+      eyebrow="Stap 1 van 7"
       title="Jouw basis"
     >
       <View style={styles.form}>
+        <FormField
+          label="Voornaam (optioneel)"
+          onChangeText={setFirstName}
+          placeholder="Voornaam"
+          value={firstName}
+        />
+        <FormField
+          label="Achternaam (optioneel)"
+          onChangeText={setLastName}
+          placeholder="Achternaam"
+          value={lastName}
+        />
         <FormField
           hint="Gebruik JJJJ-MM-DD. De streepjes verschijnen automatisch."
           inputMode="numeric"
@@ -177,13 +199,6 @@ function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
           suffix={<Text style={styles.unit}>bpm</Text>}
           value={restingHeartRate}
         />
-        <FormField
-          hint="IANA-tijdzone voor correcte lokale trainingsweken."
-          label="Tijdzone"
-          onChangeText={setTimezone}
-          placeholder="Europe/Amsterdam"
-          value={timezone}
-        />
       </View>
       <ActionButton
         disabled={!valid}
@@ -191,11 +206,129 @@ function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
         loading={saving}
         onPress={() =>
           void onSave({
+            ...(firstName.trim() ? { first_name: firstName.trim() } : {}),
+            ...(lastName.trim() ? { last_name: lastName.trim() } : {}),
             date_of_birth: dateOfBirth,
             resting_heart_rate_bpm: Number(restingHeartRate),
-            timezone,
           })
         }
+      />
+    </StepFrame>
+  );
+}
+
+type ConfirmationStepProps = {
+  saving: boolean;
+  onSave: () => Promise<void>;
+};
+
+function HeartRateMonitorStep({ saving, onSave }: ConfirmationStepProps) {
+  return (
+    <StepFrame
+      description="Voor het huidige MVP moet je gemiddelde hartslag kunnen meten. Dat mag met iedere hartslagmeter en je kunt de waarde handmatig invoeren; een specifieke wearable is niet nodig."
+      eyebrow="Stap 2 van 7"
+      title="Heb je toegang tot een hartslagmeter?"
+    >
+      <View style={styles.approvalNotice}>
+        <Text style={styles.approvalTitle}>RPE-only is niet beschikbaar</Text>
+        <Text style={styles.approvalText}>
+          Zonder bevestigde toegang kan onboarding niet worden afgerond en kan
+          er geen planning worden aangemaakt.
+        </Text>
+      </View>
+      <ActionButton
+        label="Ja, ik kan gemiddelde hartslag meten"
+        loading={saving}
+        onPress={() => void onSave()}
+      />
+    </StepFrame>
+  );
+}
+
+type TimezoneStepProps = {
+  profile: AthleteProfile | null;
+  saving: boolean;
+  onSave: (timezone: string, source: 'device' | 'manual') => Promise<void>;
+};
+
+const fallbackTimezones = [
+  'Europe/Amsterdam',
+  'Europe/Brussels',
+  'Europe/London',
+  'Europe/Paris',
+  'America/New_York',
+  'America/Los_Angeles',
+  'Asia/Tokyo',
+  'Australia/Sydney',
+] as const;
+
+function TimezoneStep({ profile, saving, onSave }: TimezoneStepProps) {
+  const detected = useMemo(resolveDeviceTimezone, []);
+  const [timezone, setTimezone] = useState(
+    profile?.timezone_confirmed_at ? (profile.timezone ?? '') : '',
+  );
+  const [source, setSource] = useState<'device' | 'manual'>(
+    profile?.timezone_source ?? (detected ? 'device' : 'manual'),
+  );
+
+  return (
+    <StepFrame
+      description="Je tijdzone bepaalt lokale trainingsweken en datums. Controleer de gedetecteerde waarde of kies expliciet een IANA-tijdzone. We slaan nooit stilzwijgend een gok op."
+      eyebrow="Stap 3 van 7"
+      title="Bevestig je tijdzone"
+    >
+      {detected ? (
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            setTimezone(detected);
+            setSource('device');
+          }}
+          style={styles.goalModeCard}
+        >
+          <Text style={styles.goalModeTitle}>Gedetecteerd op dit apparaat</Text>
+          <Text style={styles.goalModeDescription}>{detected}</Text>
+        </Pressable>
+      ) : (
+        <Text style={styles.fieldError}>
+          Automatische detectie is niet beschikbaar. Kies hieronder een tijdzone.
+        </Text>
+      )}
+      <View style={styles.goalModeList}>
+        {fallbackTimezones.map((value) => (
+          <Pressable
+            accessibilityRole="radio"
+            accessibilityState={{ selected: timezone === value }}
+            key={value}
+            onPress={() => {
+              setTimezone(value);
+              setSource('manual');
+            }}
+            style={[
+              styles.goalModeCard,
+              timezone === value && styles.goalModeCardSelected,
+            ]}
+          >
+            <Text style={styles.goalModeTitle}>{value}</Text>
+          </Pressable>
+        ))}
+      </View>
+      <FormField
+        autoCapitalize="none"
+        hint="Gebruik een geldige IANA-naam als je tijdzone niet in de lijst staat."
+        label="Andere IANA-tijdzone"
+        onChangeText={(value) => {
+          setTimezone(value);
+          setSource('manual');
+        }}
+        placeholder="Europe/Amsterdam"
+        value={timezone}
+      />
+      <ActionButton
+        disabled={!timezone.trim()}
+        label="Tijdzone expliciet bevestigen"
+        loading={saving}
+        onPress={() => void onSave(timezone.trim(), source)}
       />
     </StepFrame>
   );
@@ -224,7 +357,7 @@ function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
   return (
     <StepFrame
       description="Hoeveel uur per week trainde je gemiddeld de afgelopen maand? Vul ook nul in als je een discipline niet deed."
-      eyebrow="Stap 2 van 5"
+      eyebrow="Stap 4 van 7"
       title="Waar sta je nu?"
     >
       <View style={styles.form}>
@@ -255,10 +388,17 @@ type GoalStepProps = {
   options: GoalPlanningOption[];
   saving: boolean;
   onSave: (input: {
-    title: string;
-    specific_description: string;
-    measurable_outcome: string;
-    target_date: string;
+    race_type: RaceType;
+    race_name: string;
+    race_date: string;
+    swim_distance_meters?: number;
+    bike_distance_meters?: number;
+    run_distance_meters?: number;
+    total_target_time_seconds: number;
+    swim_target_time_seconds?: number;
+    bike_target_time_seconds?: number;
+    run_target_time_seconds?: number;
+    specific_focus?: string;
   }) => Promise<void>;
 };
 
@@ -291,14 +431,61 @@ function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
   const [selectedKind, setSelectedKind] = useState<
     GoalPlanningOption['goal_kind'] | null
   >(goal ? 'race_event' : null);
-  const [title, setTitle] = useState(goal?.title ?? '');
-  const [description, setDescription] = useState(
-    goal?.specific_description ?? '',
+  const [raceType, setRaceType] = useState<RaceType>(
+    goal?.race_type ?? 'triathlon',
   );
-  const [outcome, setOutcome] = useState(goal?.measurable_outcome ?? '');
-  const [targetDate, setTargetDate] = useState(goal?.target_date ?? '');
+  const [raceName, setRaceName] = useState(goal?.race_name ?? '');
+  const [specificFocus, setSpecificFocus] = useState(goal?.specific_focus ?? '');
+  const [targetDate, setTargetDate] = useState(goal?.race_date ?? '');
+  const [totalTime, setTotalTime] = useState(
+    formatClockDuration(goal?.total_target_time_seconds ?? null),
+  );
+  const [distances, setDistances] = useState<Record<Discipline, string>>({
+    swim: goal?.swim_distance_meters?.toString() ?? '',
+    bike: goal?.bike_distance_meters?.toString() ?? '',
+    run: goal?.run_distance_meters?.toString() ?? '',
+  });
+  const [disciplineTimes, setDisciplineTimes] = useState<
+    Record<Discipline, string>
+  >({
+    swim: formatClockDuration(goal?.swim_target_time_seconds ?? null),
+    bike: formatClockDuration(goal?.bike_target_time_seconds ?? null),
+    run: formatClockDuration(goal?.run_target_time_seconds ?? null),
+  });
   const normalizedTargetDate = normalizeRaceDate(targetDate);
-  const valid = Boolean(title && description && outcome && normalizedTargetDate);
+  const disciplines = raceDisciplines[raceType];
+  const parsedTotalTime = parseClockDuration(totalTime);
+  const parsedDistances = Object.fromEntries(
+    disciplines.map((discipline) => [
+      discipline,
+      parsePositiveInteger(distances[discipline]),
+    ]),
+  ) as Partial<Record<Discipline, number | null>>;
+  const parsedDisciplineTimes = Object.fromEntries(
+    disciplines.map((discipline) => [
+      discipline,
+      disciplineTimes[discipline].trim()
+        ? parseClockDuration(disciplineTimes[discipline])
+        : undefined,
+    ]),
+  ) as Partial<Record<Discipline, number | null | undefined>>;
+  const individualTotal = Object.values(parsedDisciplineTimes).reduce<number>(
+    (sum, value) => sum + (value ?? 0),
+    0,
+  );
+  const valid = Boolean(
+    raceName.trim() &&
+      normalizedTargetDate &&
+      parsedTotalTime &&
+      disciplines.every((discipline) => parsedDistances[discipline]) &&
+      disciplines.every(
+        (discipline) =>
+          !disciplineTimes[discipline].trim() ||
+          parsedDisciplineTimes[discipline] !== null,
+      ) &&
+      parsedTotalTime !== null &&
+      individualTotal <= parsedTotalTime,
+  );
   const raceOption = options.find(
     (option) => option.goal_family === 'race_event',
   );
@@ -309,7 +496,7 @@ function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
   return (
     <StepFrame
       description="Een wedstrijdplan rekent terug vanaf een racedatum. Een persoonlijk doel krijgt een eigen cyclus vanaf week 1 en gebruikt nooit stilzwijgend wedstrijdregels."
-      eyebrow="Stap 3 van 5"
+      eyebrow="Stap 5 van 7"
       title="Kies je trainingsdoel"
     >
       <View style={styles.goalModeList}>
@@ -372,25 +559,36 @@ function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
       {selectedKind === 'race_event' ? (
         <>
           <View style={styles.form}>
+            <Text style={styles.cardTitle}>Type wedstrijd</Text>
+            <View style={styles.goalModeList}>
+              {(
+                [
+                  ['run', 'Lopen'],
+                  ['bike', 'Fietsen'],
+                  ['swim', 'Zwemmen'],
+                  ['triathlon', 'Triatlon'],
+                  ['duathlon', 'Duatlon'],
+                ] as const
+              ).map(([value, label]) => (
+                <Pressable
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected: raceType === value }}
+                  key={value}
+                  onPress={() => setRaceType(value)}
+                  style={[
+                    styles.goalModeCard,
+                    raceType === value && styles.goalModeCardSelected,
+                  ]}
+                >
+                  <Text style={styles.goalModeTitle}>{label}</Text>
+                </Pressable>
+              ))}
+            </View>
             <FormField
               label="Naam van de race"
-              onChangeText={setTitle}
+              onChangeText={setRaceName}
               placeholder="Amsterdam Olympic Triathlon"
-              value={title}
-            />
-            <FormField
-              label="Specifiek doel"
-              multiline
-              onChangeText={setDescription}
-              placeholder="Ik wil gecontroleerd finishen en gelijkmatig lopen."
-              style={styles.multiline}
-              value={description}
-            />
-            <FormField
-              label="Meetbaar resultaat"
-              onChangeText={setOutcome}
-              placeholder="Alle drie onderdelen voltooien."
-              value={outcome}
+              value={raceName}
             />
             <FormField
               autoCapitalize="none"
@@ -408,6 +606,57 @@ function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
               placeholder="2027-06-15"
               value={targetDate}
             />
+            {disciplines.map((discipline) => (
+              <View key={discipline} style={styles.disciplineCard}>
+                <Text style={styles.cardTitle}>
+                  {discipline === 'swim'
+                    ? 'Zwemmen'
+                    : discipline === 'bike'
+                      ? 'Fietsen'
+                      : 'Lopen'}
+                </Text>
+                <FormField
+                  inputMode="numeric"
+                  label="Afstand"
+                  onChangeText={(value) =>
+                    setDistances((current) => ({
+                      ...current,
+                      [discipline]: value,
+                    }))
+                  }
+                  placeholder={discipline === 'swim' ? '1500' : '10000'}
+                  suffix={<Text style={styles.unit}>meter</Text>}
+                  value={distances[discipline]}
+                />
+                <FormField
+                  hint="Optioneel, formaat U:MM:SS"
+                  label="Richttijd onderdeel"
+                  onChangeText={(value) =>
+                    setDisciplineTimes((current) => ({
+                      ...current,
+                      [discipline]: value,
+                    }))
+                  }
+                  placeholder="0:45:00"
+                  value={disciplineTimes[discipline]}
+                />
+              </View>
+            ))}
+            <FormField
+              hint="Verplicht, formaat U:MM:SS"
+              label="Totale richttijd"
+              onChangeText={setTotalTime}
+              placeholder="3:00:00"
+              value={totalTime}
+            />
+            <FormField
+              label="Specifieke focus (optioneel)"
+              multiline
+              onChangeText={setSpecificFocus}
+              placeholder="Bijvoorbeeld: extra aandacht voor het zwemonderdeel."
+              style={styles.multiline}
+              value={specificFocus}
+            />
           </View>
           <ActionButton
             disabled={!valid}
@@ -415,10 +664,30 @@ function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
             loading={saving}
             onPress={() =>
               void onSave({
-                title,
-                specific_description: description,
-                measurable_outcome: outcome,
-                target_date: normalizedTargetDate!,
+                race_type: raceType,
+                race_name: raceName.trim(),
+                race_date: normalizedTargetDate!,
+                ...Object.fromEntries(
+                  disciplines.map((discipline) => [
+                    `${discipline}_distance_meters`,
+                    parsedDistances[discipline],
+                  ]),
+                ),
+                total_target_time_seconds: parsedTotalTime!,
+                ...Object.fromEntries(
+                  disciplines
+                    .filter(
+                      (discipline) =>
+                        parsedDisciplineTimes[discipline] !== undefined,
+                    )
+                    .map((discipline) => [
+                      `${discipline}_target_time_seconds`,
+                      parsedDisciplineTimes[discipline],
+                    ]),
+                ),
+                ...(specificFocus.trim()
+                  ? { specific_focus: specificFocus.trim() }
+                  : {}),
               })
             }
           />
@@ -472,334 +741,6 @@ const metricConfiguration: Record<
   },
 };
 
-type ZonesStepProps = {
-  state: OnboardingState;
-  saving: boolean;
-  onManual: (
-    discipline: Discipline,
-    metricKind: string,
-    metricValue: string,
-    boundaries: ZoneBoundary[],
-  ) => Promise<void>;
-  onFallback: (
-    discipline: Exclude<Discipline, 'swim'>,
-  ) => Promise<void>;
-};
-
-type ZoneSetupRoute = 'manual' | 'calibration' | 'fallback';
-
-const zoneSetupRoutes: ReadonlyArray<{
-  route: ZoneSetupRoute;
-  piste: string;
-  title: string;
-  description: string;
-}> = [
-  {
-    route: 'manual',
-    piste: 'Piste A',
-    title: 'Ik ken mijn waarden',
-    description:
-      'Vul je drempelwaarde en vijf bestaande zonegrenzen zelf in.',
-  },
-  {
-    route: 'calibration',
-    piste: 'Piste B',
-    title: 'Automatisch kalibreren',
-    description:
-      'Laat Wombo een veilige test- of kalibratietraining in je schema opnemen.',
-  },
-  {
-    route: 'fallback',
-    piste: 'Piste C',
-    title: 'Biometrische fallback',
-    description:
-      'Start tijdelijk met geschatte hartslagzones op basis van je profiel.',
-  },
-];
-
-function ZonesStep({
-  state,
-  saving,
-  onManual,
-  onFallback,
-}: ZonesStepProps) {
-  const active = new Set(
-    state.zones
-      .filter((zone) => zone.status === 'active')
-      .map((zone) => zone.discipline),
-  );
-  const discipline =
-    (['swim', 'bike', 'run'] as const).find((item) => !active.has(item)) ??
-    'run';
-  const config = metricConfiguration[discipline];
-  const [setupRoute, setSetupRoute] = useState<ZoneSetupRoute | null>(null);
-  const [metricValue, setMetricValue] = useState('');
-  const [boundaries, setBoundaries] = useState<ZoneBoundary[]>(
-    Array.from({ length: 5 }, (_, index) => ({
-      zone_number: index + 1,
-      lower_value: '',
-      upper_value: '',
-    })),
-  );
-  const updateBoundary = (
-    index: number,
-    key: 'lower_value' | 'upper_value',
-    value: string,
-  ) => {
-    setBoundaries((current) =>
-      current.map((boundary, boundaryIndex) =>
-        boundaryIndex === index ? { ...boundary, [key]: value } : boundary,
-      ),
-    );
-  };
-  const hasCompleteBoundaries = boundaries.every(
-    (boundary) =>
-      boundary.lower_value !== '' && boundary.upper_value !== '',
-  );
-  const rowsHavePositiveWidth = boundaries.every(
-    (boundary) =>
-      Number(boundary.lower_value) >= 0 &&
-      Number(boundary.upper_value) > Number(boundary.lower_value),
-  );
-  const usesWholePaceSeconds =
-    !config.descending ||
-    (Number.isInteger(Number(metricValue)) &&
-      boundaries.every(
-        (boundary) =>
-          Number.isInteger(Number(boundary.lower_value)) &&
-          Number.isInteger(Number(boundary.upper_value)),
-      ));
-  const zonesAreContiguous = boundaries.slice(1).every((current, index) => {
-    const previous = boundaries[index];
-    return config.descending
-      ? Number(previous.lower_value) === Number(current.upper_value)
-      : Number(previous.upper_value) === Number(current.lower_value);
-  });
-  const valid =
-    Number(metricValue) > 0 &&
-    hasCompleteBoundaries &&
-    rowsHavePositiveWidth &&
-    usesWholePaceSeconds &&
-    zonesAreContiguous;
-  const boundaryValidationMessage = !hasCompleteBoundaries
-    ? null
-    : !rowsHavePositiveWidth
-      ? 'Elke bovengrens moet numeriek groter zijn dan de ondergrens.'
-      : !usesWholePaceSeconds
-        ? 'Tempozones en CSS gebruiken alleen hele seconden.'
-        : !zonesAreContiguous
-          ? config.descending
-            ? 'Bij tempo is Z1 het langzaamst. Laat de waarden dalen richting Z5: bijvoorbeeld Z1 120–140, Z2 110–120.'
-            : 'Laat iedere zone aansluiten: de bovengrens van Z1 is de ondergrens van Z2, enzovoort.'
-          : null;
-
-  return (
-    <StepFrame
-      description="Kies per discipline hoe Wombo je trainingszones mag instellen. Een berekende wijziging wordt nooit automatisch actief."
-      eyebrow="Stap 4 van 5"
-      title={`Zones voor ${
-        discipline === 'swim'
-          ? 'zwemmen'
-          : discipline === 'bike'
-            ? 'fietsen'
-            : 'hardlopen'
-      }`}
-    >
-      <View style={styles.zoneProgress}>
-        {(['swim', 'bike', 'run'] as const).map((item) => (
-          <StatusPill
-            key={item}
-            label={`${active.has(item) ? '✓ ' : ''}${item}`}
-            tone={active.has(item) ? 'brand' : 'neutral'}
-          />
-        ))}
-      </View>
-
-      <View accessibilityRole="radiogroup" style={styles.zoneRouteList}>
-        {zoneSetupRoutes.map((option) => {
-          const selected = setupRoute === option.route;
-          return (
-            <Pressable
-              accessibilityRole="radio"
-              accessibilityState={{ checked: selected }}
-              key={option.route}
-              onPress={() => setSetupRoute(option.route)}
-              style={({ pressed }) => [
-                styles.zoneRouteCard,
-                selected && styles.zoneRouteCardSelected,
-                pressed && styles.actionPressed,
-              ]}
-            >
-              <View style={styles.zoneRouteHeading}>
-                <StatusPill
-                  label={option.piste}
-                  tone={selected ? 'brand' : 'neutral'}
-                />
-                <Text style={styles.zoneRouteTitle}>{option.title}</Text>
-                <View
-                  style={[
-                    styles.zoneRouteRadio,
-                    selected && styles.zoneRouteRadioSelected,
-                  ]}
-                />
-              </View>
-              <Text style={styles.zoneRouteDescription}>
-                {option.description}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
-
-      {setupRoute === 'manual' ? (
-        <>
-          <View style={styles.routeExplanation}>
-            <Text style={styles.routeExplanationTitle}>
-              Piste A · Handmatige invoer
-            </Text>
-            <Text style={styles.routeExplanationText}>
-              Gebruik deze piste alleen wanneer je zowel je drempelwaarde als
-              je vijf zonegrenzen kent.
-            </Text>
-          </View>
-
-          <View style={styles.form}>
-            <FormField
-              hint={
-                config.descending
-                  ? 'Voor tempo betekent een lager getal een hogere intensiteit. Vul hele seconden in.'
-                  : 'Waarden buiten toekomstige productranges worden beoordeeld, niet hard afgekeurd.'
-              }
-              inputMode="decimal"
-              label={config.label}
-              onChangeText={setMetricValue}
-              placeholder="Drempelwaarde"
-              suffix={<Text style={styles.unit}>{config.unit}</Text>}
-              value={metricValue}
-            />
-
-            <View style={styles.boundaryHeader}>
-              <Text style={styles.boundaryTitle}>Vijf aaneengesloten zones</Text>
-              <Text style={styles.boundaryHint}>
-                {config.descending
-                  ? 'Z1 langzaam → Z5 snel'
-                  : 'Z1 laag → Z5 hoog'}
-              </Text>
-            </View>
-            {boundaries.map((boundary, index) => (
-              <View key={boundary.zone_number} style={styles.boundaryRow}>
-                <View style={styles.zoneNumber}>
-                  <Text style={styles.zoneNumberText}>
-                    Z{boundary.zone_number}
-                  </Text>
-                </View>
-                <View style={styles.boundaryInput}>
-                  <FormField
-                    inputMode="decimal"
-                    label="Onder"
-                    onChangeText={(value) =>
-                      updateBoundary(index, 'lower_value', value)
-                    }
-                    placeholder="0"
-                    value={boundary.lower_value}
-                  />
-                </View>
-                <View style={styles.boundaryInput}>
-                  <FormField
-                    inputMode="decimal"
-                    label="Boven"
-                    onChangeText={(value) =>
-                      updateBoundary(index, 'upper_value', value)
-                    }
-                    placeholder="0"
-                    value={boundary.upper_value}
-                  />
-                </View>
-              </View>
-            ))}
-            {boundaryValidationMessage ? (
-              <Text accessibilityLiveRegion="polite" style={styles.fieldError}>
-                {boundaryValidationMessage}
-              </Text>
-            ) : null}
-          </View>
-
-          <ActionButton
-            disabled={!valid}
-            label="Handmatige zones bevestigen"
-            loading={saving}
-            onPress={() =>
-              void onManual(
-                discipline,
-                config.kind,
-                metricValue,
-                boundaries,
-              )
-            }
-          />
-        </>
-      ) : null}
-
-      {setupRoute === 'calibration' ? (
-        <View style={styles.routeUnavailableCard}>
-          <StatusPill label="Piste B · Veilig geblokkeerd" tone="accent" />
-          <Text style={styles.routeExplanationTitle}>
-            Automatische kalibratie via je trainingsschema
-          </Text>
-          <Text style={styles.routeExplanationText}>
-            Wombo zal hiervoor een gestandaardiseerde test- of
-            kalibratietraining in je eerste trainingsweek plaatsen. Na je
-            training worden meetgegevens en je gevoelsscore gebruikt voor een
-            zonevoorstel dat je nog moet bevestigen.
-          </Text>
-          <Text style={styles.routeUnavailableText}>
-            Deze route kan in deze build nog niet veilig worden opgeslagen: het
-            beoordeelde protocol dat de test en gevoelsscore omzet naar
-            {` ${config.label}`} en vijf zones ontbreekt nog. Er worden daarom
-            geen waarden geschat of automatisch actief gemaakt.
-          </Text>
-          <ActionButton
-            disabled
-            label="Kalibratieroute nog niet beschikbaar"
-            onPress={() => undefined}
-          />
-        </View>
-      ) : null}
-
-      {setupRoute === 'fallback' && discipline !== 'swim' ? (
-        <View style={styles.fallbackCard}>
-          <StatusPill label="Piste C · Geschatte fallback" tone="accent" />
-          <Text style={styles.fallbackText}>
-            Gebruik tijdelijk hartslagreserve-zones op basis van leeftijd en
-            rusthartslag. Ze blijven zichtbaar als geschat en onbeoordeeld
-            totdat je ze expliciet bevestigt of later laat testen.
-          </Text>
-          <ActionButton
-            label="Tijdelijke fallback gebruiken"
-            loading={saving}
-            onPress={() => void onFallback(discipline)}
-            secondary
-          />
-        </View>
-      ) : null}
-
-      {setupRoute === 'fallback' && discipline === 'swim' ? (
-        <View style={styles.routeUnavailableCard}>
-          <StatusPill label="Piste C · Niet voor CSS" tone="accent" />
-          <Text style={styles.routeExplanationTitle}>
-            Geen biometrische CSS-schatting
-          </Text>
-          <Text style={styles.routeUnavailableText}>
-            Leeftijd en rusthartslag leveren geen betrouwbare zwem-CSS op.
-            Kies voor zwemmen Piste A wanneer je je waarden kent, of Piste B
-            zodra de beoordeelde kalibratieroute beschikbaar is.
-          </Text>
-        </View>
-      ) : null}
-    </StepFrame>
-  );
-}
-
 type ReviewStepProps = {
   state: OnboardingState;
   saving: boolean;
@@ -824,7 +765,7 @@ function ReviewStep({
   return (
     <StepFrame
       description="Afronden maakt geen trainingsplan actief. Het zet alleen een planningsverzoek klaar voor de volgende fase."
-      eyebrow="Stap 5 van 5"
+      eyebrow="Stap 7 van 7"
       title="Klaar voor je eerste voorstel"
     >
       <View style={styles.reviewCard}>
@@ -838,7 +779,7 @@ function ReviewStep({
         />
         <ReviewRow
           label="A-doel"
-          value={state.primary_goal?.title ?? 'Ontbreekt'}
+          value={state.primary_goal?.race_name ?? 'Ontbreekt'}
         />
         <ReviewRow
           label="Actieve zones"
@@ -1098,6 +1039,25 @@ export function OnboardingScreen({
           </View>
         </View>
 
+        {state.upgrade_required ? (
+          <View accessibilityRole="alert" style={styles.upgradeBanner}>
+            <Text style={styles.upgradeBannerTitle}>Werk je onboarding bij</Text>
+            <Text style={styles.upgradeBannerText}>
+              Je eerdere afronding blijft bewaard. Alleen deze onderdelen zijn nog
+              nodig voor {state.current_onboarding_version}:{' '}
+              {state.missing_upgrade_steps.length
+                ? state.missing_upgrade_steps
+                    .map(
+                      (missing) =>
+                        stepLabels.find((item) => item.step === missing)?.label ??
+                        missing,
+                    )
+                    .join(', ')
+                : 'controle en bevestiging'}.
+            </Text>
+          </View>
+        ) : null}
+
         {step !== 'completed' ? (
           <FadeInView delay={80} distance={8} style={styles.progress}>
             {stepLabels.map((item) => (
@@ -1143,6 +1103,33 @@ export function OnboardingScreen({
               saving={saving}
             />
           ) : null}
+          {step === 'heart_rate_monitor' ? (
+            <HeartRateMonitorStep
+              onSave={() =>
+                mutate(() =>
+                  saveOperationalProfile(accessToken, {
+                    heart_rate_monitor_confirmed: true,
+                  }),
+                )
+              }
+              saving={saving}
+            />
+          ) : null}
+          {step === 'timezone' ? (
+            <TimezoneStep
+              onSave={(timezone, source) =>
+                mutate(() =>
+                  saveOperationalProfile(accessToken, {
+                    timezone,
+                    timezone_source: source,
+                    timezone_confirmed: true,
+                  }),
+                )
+              }
+              profile={state.profile}
+              saving={saving}
+            />
+          ) : null}
           {step === 'history' ? (
             <HistoryStep
               key={state.training_history
@@ -1172,10 +1159,7 @@ export function OnboardingScreen({
                 mutate(() =>
                   savePrimaryGoal(
                     accessToken,
-                    {
-                      ...input,
-                      race_discipline_profile: ['swim', 'bike', 'run'],
-                    },
+                    input,
                     state.primary_goal?.id,
                   ),
                 )
@@ -1220,7 +1204,9 @@ export function OnboardingScreen({
                 )
               }
               onComplete={() =>
-                mutate(() => completeOnboarding(accessToken))
+                mutate(() =>
+                  completeOnboarding(accessToken, state.onboarding_revision),
+                )
               }
               onRejectZone={(proposalId) =>
                 mutate(() => rejectZoneProposal(accessToken, proposalId))
@@ -1374,6 +1360,25 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     marginBottom: spacing.md,
     padding: spacing.md,
+  },
+  upgradeBanner: {
+    backgroundColor: colors.surface,
+    borderColor: colors.brand,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.sm,
+    padding: spacing.md,
+  },
+  upgradeBannerTitle: {
+    color: colors.ink,
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  upgradeBannerText: {
+    color: colors.inkMuted,
+    lineHeight: 20,
+    marginTop: spacing.xs,
   },
   fieldError: {
     color: colors.danger,

@@ -5,9 +5,13 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 
-from app.api.dependencies import get_access_token, get_authenticated_identity
+from app.api.dependencies import (
+    get_access_token,
+    get_authenticated_athlete,
+    get_authenticated_identity,
+)
 from app.core.errors import ErrorResponse
-from app.core.security import AuthenticatedIdentity
+from app.core.security import AuthenticatedAthlete, AuthenticatedIdentity
 from app.modules.onboarding.repository import (
     OnboardingRepository,
     RepositoryConflictError,
@@ -16,9 +20,16 @@ from app.modules.onboarding.repository import (
     RepositoryUnavailableError,
 )
 from app.modules.onboarding.schemas import (
+    AthleteIdentifyingProfileResponse,
+    AthleteIdentifyingProfileUpdate,
+    AthleteOperationalProfileResponse,
+    AthleteOperationalProfileUpdate,
+    AthletePhysiologyProfileResponse,
+    AthletePhysiologyProfileUpdate,
     AthleteProfileResponse,
     AthleteProfileUpdate,
     GoalPlanningOptionResponse,
+    OnboardingCompleteRequest,
     OnboardingCompleteResponse,
     OnboardingStateResponse,
     PrimaryRaceGoalInput,
@@ -100,12 +111,12 @@ def _raise_public_error(error: Exception) -> NoReturn:
 )
 async def get_profile(
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[OnboardingService, Depends(get_onboarding_service)],
 ) -> AthleteProfileResponse:
     """Return the verified athlete's profile."""
     try:
-        profile = await service.get_profile(access_token, identity.user_id)
+        profile = await service.get_profile(access_token, identity.athlete_id)
         if profile is None:
             raise RepositoryNotFoundError
         return profile
@@ -121,12 +132,132 @@ async def get_profile(
 async def update_profile(
     update: AthleteProfileUpdate,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[OnboardingService, Depends(get_onboarding_service)],
 ) -> AthleteProfileResponse:
     """Create or patch confirmed profile and biometric fields."""
     try:
-        return await service.update_profile(access_token, identity.user_id, update)
+        return await service.update_profile(access_token, identity.athlete_id, update)
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.get(
+    "/me/identifying-profile",
+    response_model=AthleteIdentifyingProfileResponse,
+    responses=error_responses,
+)
+async def get_identifying_profile(
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
+    service: Annotated[OnboardingService, Depends(get_onboarding_service)],
+) -> AthleteIdentifyingProfileResponse:
+    """Return only the verified athlete's identifying fields."""
+    try:
+        profile = await service.get_identifying_profile(
+            access_token, identity.athlete_id
+        )
+        if profile is None:
+            raise RepositoryNotFoundError
+        return profile
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.patch(
+    "/me/identifying-profile",
+    response_model=AthleteIdentifyingProfileResponse,
+    responses=error_responses,
+)
+async def update_identifying_profile(
+    update: AthleteIdentifyingProfileUpdate,
+    access_token: Annotated[str, Depends(get_access_token)],
+    _: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
+    service: Annotated[OnboardingService, Depends(get_onboarding_service)],
+) -> AthleteIdentifyingProfileResponse:
+    """Mutate identifying data through its dedicated path."""
+    try:
+        return await service.update_identifying_profile(access_token, update)
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.get(
+    "/me/physiology-profile",
+    response_model=AthletePhysiologyProfileResponse,
+    responses=error_responses,
+)
+async def get_physiology_profile(
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
+    service: Annotated[OnboardingService, Depends(get_onboarding_service)],
+) -> AthletePhysiologyProfileResponse:
+    """Return only the verified athlete's physiological fields."""
+    try:
+        profile = await service.get_physiology_profile(
+            access_token, identity.athlete_id
+        )
+        if profile is None:
+            raise RepositoryNotFoundError
+        return profile
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.patch(
+    "/me/physiology-profile",
+    response_model=AthletePhysiologyProfileResponse,
+    responses=error_responses,
+)
+async def update_physiology_profile(
+    update: AthletePhysiologyProfileUpdate,
+    access_token: Annotated[str, Depends(get_access_token)],
+    _: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
+    service: Annotated[OnboardingService, Depends(get_onboarding_service)],
+) -> AthletePhysiologyProfileResponse:
+    """Mutate physiological data through its dedicated critical path."""
+    try:
+        return await service.update_physiology_profile(access_token, update)
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.get(
+    "/me/operational-profile",
+    response_model=AthleteOperationalProfileResponse,
+    responses=error_responses,
+)
+async def get_operational_profile(
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
+    service: Annotated[OnboardingService, Depends(get_onboarding_service)],
+) -> AthleteOperationalProfileResponse:
+    """Return only operational account state."""
+    try:
+        profile = await service.get_operational_profile(
+            access_token, identity.athlete_id
+        )
+        if profile is None:
+            raise RepositoryNotFoundError
+        return profile
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.patch(
+    "/me/operational-profile",
+    response_model=AthleteOperationalProfileResponse,
+    responses=error_responses,
+)
+async def update_operational_profile(
+    update: AthleteOperationalProfileUpdate,
+    access_token: Annotated[str, Depends(get_access_token)],
+    _: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
+    service: Annotated[OnboardingService, Depends(get_onboarding_service)],
+) -> AthleteOperationalProfileResponse:
+    """Mutate timezone through the dedicated operational path."""
+    try:
+        return await service.update_operational_profile(access_token, update)
     except Exception as error:
         _raise_public_error(error)
 
@@ -138,12 +269,12 @@ async def update_profile(
 )
 async def get_onboarding(
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[OnboardingService, Depends(get_onboarding_service)],
 ) -> OnboardingStateResponse:
     """Return the athlete's resumable onboarding state."""
     try:
-        return await service.get_state(access_token, identity.user_id)
+        return await service.get_state(access_token, identity.athlete_id)
     except Exception as error:
         _raise_public_error(error)
 
@@ -172,7 +303,7 @@ async def replace_training_history(
     _: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
     service: Annotated[OnboardingService, Depends(get_onboarding_service)],
 ) -> tuple[TrainingHistoryEntryResponse, ...]:
-    """Replace all athlete-confirmed triathlon history atomically."""
+    """Replace all athlete-confirmed discipline history atomically."""
     try:
         return await service.replace_training_history(access_token, replacement)
     except Exception as error:
@@ -230,14 +361,14 @@ async def save_zone_profile(
     discipline: Discipline,
     submission: ZoneSubmission,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[OnboardingService, Depends(get_onboarding_service)],
 ) -> ZoneSubmissionResponse:
     """Persist first active zones or a pending replacement proposal."""
     try:
         return await service.save_zone_profile(
             access_token,
-            identity.user_id,
+            identity.athlete_id,
             discipline,
             submission,
         )
@@ -251,13 +382,18 @@ async def save_zone_profile(
     responses=error_responses,
 )
 async def complete_onboarding(
+    completion: OnboardingCompleteRequest,
     access_token: Annotated[str, Depends(get_access_token)],
-    identity: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[OnboardingService, Depends(get_onboarding_service)],
 ) -> OnboardingCompleteResponse:
     """Complete valid onboarding and create an initial planning request."""
     try:
-        return await service.complete(access_token, identity.user_id)
+        return await service.complete(
+            access_token,
+            identity.athlete_id,
+            completion.expected_onboarding_revision,
+        )
     except Exception as error:
         _raise_public_error(error)
 
