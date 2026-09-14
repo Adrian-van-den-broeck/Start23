@@ -1,9 +1,10 @@
-# Phase 13 review - updated 2026-09-13
+# Phase 13 review - updated 2026-09-14
 
 Status: implementation and hosted Phase 13 migration present; remediation R1,
-the coupled R3-then-R2 implementation, R4/R5, and the final R6-entry audit
-remediation are complete locally; runtime, database, two-user, device, and
-external exit gates remain open. R6 has not begun.
+the coupled R3-then-R2 implementation, R4/R5, the final R6-entry audit
+remediation, and the bounded H-01/H-04 re-audit follow-up are complete locally;
+runtime, database, two-user, device, and external exit gates remain open. R6 has
+not begun.
 
 ## 1. Version
 
@@ -206,6 +207,25 @@ unused-code checks, and 19 Jest/RNTL mobile tests in six suites. Static contract
 cover the new forward migration and rollback-only pgTAP suite. The pgTAP suite,
 full migration chain, real-token RLS checks, and real-device flows were not run
 locally and remain R6 gates.
+
+The 2026-09-14 read-only re-audit follow-up closes the two remaining repository
+entry defects without beginning R6. H-01 classifies the retained run/bike field
+tests as historical/read-only across discovery, planning catalog, setup,
+observation, evaluation, scheduling, confirmation, pending-zone persistence,
+and pending-to-active transitions. The approval RPC and an independent database
+transition trigger both reject historical calibration activation while leaving
+already-active historical provenance unchanged. H-04 reconciles the complete
+executable pgTAP directory with the final narrow owner-derived profile contract
+and keeps opaque-owner and profile-integrity triggers enabled in fixtures.
+Current Phase 13 run/bike submaximal and swim CSS profiles retain normal pending,
+stale-safe athlete approval and activation.
+
+The updated repository passes 629 backend tests, Ruff lint/formatting across
+132 files, strict mypy across 132 source files, mobile strict/unused TypeScript,
+and 19 mobile tests. Static migration and pgTAP contract checks pass. No local
+PostgreSQL, Supabase CLI, `psql`, `pg_prove`, Docker, or Podman runtime is
+available, so migration execution and the complete pgTAP run remain explicit
+R6-only proof; no database runtime success is claimed.
 
 ## 8. Open gates
 

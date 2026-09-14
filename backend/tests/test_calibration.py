@@ -560,6 +560,45 @@ def test_historical_run_field_test_is_not_newly_selectable_or_schedulable(
     assert scheduled.status_code == 422
 
 
+@pytest.mark.parametrize(
+    ("discipline", "protocol_id", "segment_id", "target_rpe"),
+    [
+        ("run", "start23_run_threshold_30min_v1", "warmup", 3),
+        ("bike", "start23_bike_ftp_30min_v1", "warmup", 3),
+        ("bike", "start23_bike_fthr_20min_v1", "warmup", 3),
+    ],
+)
+def test_new_historical_observation_and_evaluation_are_rejected(
+    calibration_context: tuple[TestClient, UUID, UUID],
+    discipline: str,
+    protocol_id: str,
+    segment_id: str,
+    target_rpe: int,
+) -> None:
+    client, _, _ = calibration_context
+    activity_id = uuid4()
+
+    observation = client.post(
+        "/api/v1/calibration/observations",
+        headers=_headers(),
+        json={
+            **_segment_payload(activity_id, segment_id, target_rpe),
+            "protocol_id": protocol_id,
+            "discipline": discipline,
+        },
+    )
+    evaluation = client.post(
+        "/api/v1/calibration/evaluate",
+        headers=_headers(),
+        json={"activity_id": str(activity_id), "protocol_id": protocol_id},
+    )
+
+    assert observation.status_code == 422
+    assert "read-only" in observation.text
+    assert evaluation.status_code == 422
+    assert "read-only" in evaluation.text
+
+
 def test_current_zone_options_are_discipline_scoped_and_tss_free(
     calibration_context: tuple[TestClient, UUID, UUID],
 ) -> None:
@@ -943,7 +982,10 @@ def test_observation_retry_is_idempotent_and_conflicting_revision_is_rejected(
 ) -> None:
     client, _, _ = calibration_context
     activity_id = uuid4()
-    payload = _segment_payload(activity_id, "warmup", 3, duration_seconds=900)
+    payload = {
+        **_segment_payload(activity_id, "warmup", 3, duration_seconds=600),
+        "protocol_id": "start23_week1_run_calibration_v1",
+    }
     first = client.post(
         "/api/v1/calibration/observations",
         headers=_headers(),
@@ -965,34 +1007,47 @@ def test_observation_retry_is_idempotent_and_conflicting_revision_is_rejected(
     assert changed.status_code == 409
 
 
-def test_valid_field_test_creates_pending_threshold_and_zone_candidates(
+def test_historical_evaluation_already_stored_remains_readable_but_cannot_propose_zones(
     calibration_context: tuple[TestClient, UUID, UUID],
 ) -> None:
-    client, _, _ = calibration_context
-    activity_id = uuid4()
-    _save_run_test(client, activity_id)
-    response = client.post(
-        "/api/v1/calibration/evaluate",
-        headers=_headers(),
-        json={
-            "activity_id": str(activity_id),
+    client, athlete_id, _ = calibration_context
+    evaluation_id = uuid4()
+    app = cast(FastAPI, client.app)
+    repository = cast(MemoryCalibrationRepository, app.state.calibration_repository)
+    repository._evaluations[athlete_id].append(
+        {
+            "id": str(evaluation_id),
+            "activity_id": str(uuid4()),
             "protocol_id": "start23_run_threshold_30min_v1",
-        },
+            "discipline": "run",
+            "ruleset_version": "start23-calibration-ruleset-v2",
+            "status": "threshold_estimated",
+            "threshold_status": "threshold_estimated",
+            "zone_status": "pending_athlete_confirmation",
+            "confidence": "medium",
+            "reason_codes": ["zone_profile_pending_athlete_confirmation"],
+            "thresholds": [{"metric_kind": "run_lthr_bpm", "value": "172"}],
+            "zone_model_version": "start23-zone-model-1.0",
+            "zone_profiles": [],
+            "requires_athlete_confirmation": True,
+            "review_status": "pending_athlete_confirmation",
+            "fingerprint": "f" * 64,
+            "created_at": _NOW.isoformat(),
+        }
+    )
+    status = client.get("/api/v1/calibration/status", headers=_headers())
+    confirm = client.post(
+        f"/api/v1/calibration/evaluations/{evaluation_id}/threshold/confirm",
+        headers=_headers(),
+        json={"confirmed": True},
     )
 
-    assert response.status_code == 200, response.text
-    body = response.json()
-    assert body["status"] == "threshold_estimated"
-    assert body["threshold_status"] == "threshold_estimated"
-    assert body["zone_status"] == "pending_athlete_confirmation"
-    assert body["review_status"] == "pending_athlete_confirmation"
-    assert body["requires_athlete_confirmation"] is True
-    assert "zone_profile_pending_athlete_confirmation" in body["reason_codes"]
-    assert body["zone_model_version"] == "start23-zone-model-1.0"
-    assert len(body["zone_profiles"]) == 2
-    assert body["zone_profiles"][0]["is_primary"] is True
-    assert body["zone_profiles"][0]["boundaries"][0]["upper_value"] is None
-    assert "tss" not in response.text.lower()
+    assert status.status_code == 200
+    assert status.json()["evaluations"][0]["protocol_id"] == (
+        "start23_run_threshold_30min_v1"
+    )
+    assert confirm.status_code == 422
+    assert repository._decisions[athlete_id] == []
 
 
 def test_threshold_confirmation_is_owned_idempotent_and_keeps_zones_pending(
@@ -1000,13 +1055,13 @@ def test_threshold_confirmation_is_owned_idempotent_and_keeps_zones_pending(
 ) -> None:
     client, _, _ = calibration_context
     activity_id = uuid4()
-    _save_run_test(client, activity_id)
+    _save_submaximal_calibration(client, "run", activity_id)
     evaluation = client.post(
         "/api/v1/calibration/evaluate",
         headers=_headers(),
         json={
             "activity_id": str(activity_id),
-            "protocol_id": "start23_run_threshold_30min_v1",
+            "protocol_id": "start23_week1_run_calibration_v1",
         },
     ).json()
     path = f"/api/v1/calibration/evaluations/{evaluation['id']}/threshold/confirm"
@@ -1036,13 +1091,13 @@ def test_threshold_rejection_creates_no_zone_profile(
 ) -> None:
     client, _, _ = calibration_context
     activity_id = uuid4()
-    _save_run_test(client, activity_id)
+    _save_submaximal_calibration(client, "run", activity_id)
     evaluation = client.post(
         "/api/v1/calibration/evaluate",
         headers=_headers(),
         json={
             "activity_id": str(activity_id),
-            "protocol_id": "start23_run_threshold_30min_v1",
+            "protocol_id": "start23_week1_run_calibration_v1",
         },
     ).json()
 
@@ -1056,27 +1111,28 @@ def test_threshold_rejection_creates_no_zone_profile(
     assert rejected.json()["zone_profile_id"] is None
 
 
-def test_missing_session_rpe_blocks_evaluation_not_observation_persistence(
+def test_insufficient_current_observation_is_preserved_and_evaluates_fail_closed(
     calibration_context: tuple[TestClient, UUID, UUID],
 ) -> None:
     client, _, _ = calibration_context
     activity_id = uuid4()
-    _save_run_test(client, activity_id)
-    # A second activity intentionally omits the session score.
     for payload in (
-        _segment_payload(activity_id := uuid4(), "warmup", 3, duration_seconds=900),
-        _segment_payload(activity_id, "strides", 6, duration_seconds=300),
+        _segment_payload(activity_id, "warmup", 3, duration_seconds=600),
         _segment_payload(
             activity_id,
-            "test_30min",
-            8,
-            duration_seconds=1800,
-            reported_block_rpe=9,
-            average_pace_seconds_per_km=290,
-            stable_segment=True,
+            "comfortable_20min",
+            4,
+            duration_seconds=1200,
+            quality_status="insufficient",
         ),
         _segment_payload(activity_id, "cooldown", 2, duration_seconds=600),
     ):
+        payload.update(
+            {
+                "protocol_id": "start23_week1_run_calibration_v1",
+                "discipline": "run",
+            }
+        )
         assert (
             client.post(
                 "/api/v1/calibration/observations",
@@ -1091,13 +1147,13 @@ def test_missing_session_rpe_blocks_evaluation_not_observation_persistence(
         headers=_headers(),
         json={
             "activity_id": str(activity_id),
-            "protocol_id": "start23_run_threshold_30min_v1",
+            "protocol_id": "start23_week1_run_calibration_v1",
         },
     )
 
     assert evaluated.status_code == 200
     assert evaluated.json()["status"] == "insufficient_data"
-    assert "missing_session_rpe" in evaluated.json()["reason_codes"]
+    assert "sensor_quality_insufficient" in evaluated.json()["reason_codes"]
 
 
 def test_status_is_cross_athlete_isolated(

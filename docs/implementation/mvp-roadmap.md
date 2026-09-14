@@ -1716,10 +1716,22 @@ backend tests and 19 mobile tests. PostgreSQL/pgTAP, real-token, and device
 execution remain R6 gates; neither Phase 13 nor R6 is complete or started by
 this repository remediation.
 
+The latest read-only re-audit's remaining H-01 and H-04 entry defects were
+corrected locally on 2026-09-14 without starting R6. Historical run/bike field
+tests now remain readable only: the shared lifecycle classification removes
+them from calibration and workout discovery and rejects new setup, scheduling,
+observations, evaluations, confirmation-derived zone state, pending proposals,
+and pending-to-active zone-profile transitions in Python and the forward
+database contract. Current Phase 13 run/bike submaximal and swim CSS profiles
+retain their pending, stale-safe explicit-approval lifecycle. The complete
+pgTAP directory now asserts the final narrow profile/RPC/grant/RLS model with
+all opaque-owner integrity triggers enabled. Local checks pass with 629 backend
+tests and 19 mobile tests; PostgreSQL/pgTAP runtime remains an R6 gate.
+
 See [versioned rules](../requirements/phase-13-joren-ruleset-1.md),
 [historical Phase 13](../requirements/deprecated-phase-13.md), and
 [implementation and consumer trace](phase-13-implementation-plan.md).
-The [2026-09-13 review](phase-13-review.md) records 618 passing backend tests,
+The [2026-09-14 review](phase-13-review.md) records 629 passing backend tests,
 passing lint/type/artifact/mobile checks and the outstanding database/runtime/release
 gates. The [R1 decision record](phase-13-and-14-r1-decisions.md) is authoritative
 for the four explicitly approved remediation decisions.
@@ -1826,6 +1838,14 @@ back to manual IANA selection. React Native interaction and exact transport
 tests now run under strict TypeScript and unused-code checks. Database/pgTAP,
 real-user, and physical-device evidence remains open under R6; Phase 14 is not
 complete.
+
+The 2026-09-14 H-04 follow-up reconciles every executable profile pgTAP contract
+with that hardened boundary rather than restoring superseded table grants.
+Authenticated direct operational reads/writes fail; narrow owner-derived RPCs,
+IANA and server-owned confirmation timestamps, guarded identifying/physiology
+writes, two-owner isolation, identity-map non-enumerability, trigger enablement,
+and service-role separation are now the asserted final state. PostgreSQL/pgTAP
+execution remains intentionally deferred to R6; Phase 14 is not complete.
 
 ### Scope
 
@@ -2123,7 +2143,8 @@ Every phase must:
   hosted migration 20260910215947 present; R1 and local R2/R3 identity,
   onboarding, planner-parity and calibration-contract work plus local R4/R5
   onboarding/correction/mobile work implemented; targeted earlier hosted
-  RLS/owner checks pass; remediation migration execution, R6, full
+  RLS/owner checks pass; the bounded H-01/H-04 repository re-audit fixes are
+  present; remediation migration execution, R6, full
   database/runtime tests, accountable external review and device gates remain
   open`
 - Phase 14 privacy-safe onboarding, profile, and race configuration: `in
@@ -2132,7 +2153,8 @@ Every phase must:
   linked hosted project; R1 versioning plus local R3 opaque-ID/profile cutover
   and R2 legacy-upgrade/planner parity implemented; local R4 monitor/timezone,
   current history, and structured race goals plus R5 mobile/correction work
-  implemented; pgTAP, remediation migration execution, two-real-user RLS,
+  implemented; final profile pgTAP contracts are reconciled without weakening
+  production privileges; pgTAP, remediation migration execution, two-real-user RLS,
   device evidence, and R6 remain pending`
 - Phase 15 calibration, activity, and weekly-planning UX: `not started`
 - Phase 16 live-test stabilization and beta readiness: `not started`

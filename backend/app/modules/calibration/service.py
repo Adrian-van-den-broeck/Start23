@@ -11,7 +11,6 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 from app.modules.calibration.domain import (
     PROTOCOLS,
     CalibrationObservation,
-    CalibrationProtocol,
     DataQuality,
     GuidanceMode,
     NumericZoneVisibility,
@@ -21,6 +20,7 @@ from app.modules.calibration.domain import (
     SwimRepetition,
     TestSchedulingMode,
     evaluate_protocol,
+    is_current_protocol,
     numeric_zone_visibility,
     protocols_for_discipline,
     validate_test_schedule,
@@ -84,20 +84,6 @@ _CALIBRATION_PROTOCOL_BY_DISCIPLINE = {
 }
 
 
-def _current_mvp_protocols(
-    discipline: Discipline,
-) -> tuple[CalibrationProtocol, ...]:
-    """Expose only protocols compatible with the current Phase 13 evaluator."""
-    protocols = protocols_for_discipline(discipline)
-    if discipline is Discipline.SWIM:
-        return protocols
-    return tuple(
-        protocol
-        for protocol in protocols
-        if protocol.protocol_type is ProtocolType.SUBMAXIMAL_CALIBRATION
-    )
-
-
 def _current_mvp_guidance_modes(
     discipline: Discipline,
     protocol_type: ProtocolType,
@@ -150,7 +136,7 @@ def is_current_mvp_setup_values(
             candidate.protocol_type,
             candidate.guidance_modes,
         )
-        for candidate in _current_mvp_protocols(parsed_discipline)
+        for candidate in protocols_for_discipline(parsed_discipline)
     )
 
 
@@ -169,10 +155,10 @@ def _require_current_mvp_field_test(
     discipline: Discipline,
     protocol_id: str,
 ) -> None:
-    if not any(
-        protocol.protocol_id == protocol_id
-        and protocol.protocol_type is ProtocolType.FIELD_TEST
-        for protocol in _current_mvp_protocols(discipline)
+    if not is_current_protocol(
+        protocol_id,
+        discipline=discipline,
+        protocol_type=ProtocolType.FIELD_TEST,
     ):
         raise CalibrationDomainError(
             "Selected field-test protocol is historical and not selectable for "
@@ -220,7 +206,7 @@ class CalibrationService:
         ]
         if any(
             protocol.protocol_type is ProtocolType.FIELD_TEST
-            for protocol in _current_mvp_protocols(discipline)
+            for protocol in protocols_for_discipline(discipline)
         ):
             options.insert(
                 1,
@@ -283,7 +269,7 @@ class CalibrationService:
                     for segment in protocol.segments
                 ),
             )
-            for protocol in _current_mvp_protocols(discipline)
+            for protocol in protocols_for_discipline(discipline)
         )
 
     @staticmethod
@@ -381,7 +367,7 @@ class CalibrationService:
                 )
             if not any(
                 candidate.protocol_id == protocol.protocol_id
-                for candidate in _current_mvp_protocols(discipline)
+                for candidate in protocols_for_discipline(discipline)
             ):
                 raise CalibrationDomainError(
                     "Selected field-test protocol is historical and not selectable "
@@ -564,10 +550,14 @@ class CalibrationService:
             raise CalibrationDomainError(
                 "Observation protocol does not match the discipline."
             )
-        is_current_protocol = any(
-            candidate.protocol_id == observation.protocol_id
-            for candidate in _current_mvp_protocols(observation.discipline)
-        )
+        if not is_current_protocol(
+            observation.protocol_id,
+            discipline=observation.discipline,
+        ):
+            raise CalibrationDomainError(
+                "Historical calibration protocols are read-only and cannot accept "
+                "new observations."
+            )
         definition = next(
             (
                 segment
@@ -593,8 +583,7 @@ class CalibrationService:
             "calibration_observation",
         }
         if (
-            is_current_protocol
-            and is_result_segment
+            is_result_segment
             and observation.completed
             and observation.quality_status is DataQuality.SUFFICIENT
         ):
@@ -639,6 +628,11 @@ class CalibrationService:
         athlete_id: UUID,
         request: CalibrationEvaluationRequest,
     ) -> CalibrationEvaluationResponse:
+        if not is_current_protocol(request.protocol_id):
+            raise CalibrationDomainError(
+                "Historical calibration protocols are read-only and cannot be newly "
+                "evaluated."
+            )
         rows = await self._repository.list_observations(
             access_token,
             athlete_id,
@@ -737,10 +731,16 @@ class CalibrationService:
             }
         )
         protocol = PROTOCOLS.get(evaluation.protocol_id)
+        if protocol is None or not is_current_protocol(
+            evaluation.protocol_id,
+            discipline=evaluation.discipline,
+        ):
+            raise CalibrationDomainError(
+                "Historical calibration evaluations cannot create current zone state."
+            )
         source_quality = (
             ZoneSourceQuality.SUBMAXIMAL_CALIBRATION_ESTIMATE.value
-            if protocol is not None
-            and protocol.protocol_type is ProtocolType.SUBMAXIMAL_CALIBRATION
+            if protocol.protocol_type is ProtocolType.SUBMAXIMAL_CALIBRATION
             else ZoneSourceQuality.REVIEWED_FIELD_THRESHOLD.value
         )
         saved = await self._repository.save_calculated_zone_profile(

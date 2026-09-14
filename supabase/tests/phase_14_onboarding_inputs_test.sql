@@ -110,9 +110,9 @@ select throws_ok(
     set height_cm = 181
     where athlete_id = 'a0000000-0000-0000-0000-000000000014'
   $$,
-  '23514',
-  'retired profile fields cannot be changed',
-  'retired profile fields cannot receive new values'
+  '42501',
+  null,
+  'retired profile fields cannot receive new values through direct writes'
 );
 
 select lives_ok(

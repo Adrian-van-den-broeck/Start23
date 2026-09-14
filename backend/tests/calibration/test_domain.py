@@ -6,12 +6,12 @@ from decimal import Decimal
 import pytest
 
 from app.modules.calibration.domain import (
-    CALIBRATION_RULESET_VERSION,
     PROTOCOLS,
     CalibrationObservation,
     DataQuality,
     EvaluationStatus,
     NumericZoneVisibility,
+    ProtocolLifecycle,
     SetupRoute,
     SteadyExecution,
     SwimRepetition,
@@ -32,8 +32,8 @@ def test_date_only_test_schedule_accepts_today_and_rejects_past() -> None:
     today = date(2026, 8, 26)
 
     decision = validate_test_schedule(
-        protocol_id="start23_run_threshold_30min_v1",
-        discipline=Discipline.RUN,
+        protocol_id="start23_swim_css_400_200_v1",
+        discipline=Discipline.SWIM,
         scheduling_mode=SchedulingMode.STANDALONE,
         scheduled_date=today,
         athlete_today=today,
@@ -42,8 +42,8 @@ def test_date_only_test_schedule_accepts_today_and_rejects_past() -> None:
     assert decision.scheduled_date == today
     with pytest.raises(ValueError, match="cannot be in the past"):
         validate_test_schedule(
-            protocol_id="start23_run_threshold_30min_v1",
-            discipline=Discipline.RUN,
+            protocol_id="start23_swim_css_400_200_v1",
+            discipline=Discipline.SWIM,
             scheduling_mode=SchedulingMode.STANDALONE,
             scheduled_date=date(2026, 8, 25),
             athlete_today=today,
@@ -239,32 +239,25 @@ def test_protocol_registry_contains_all_approved_fixture_protocols() -> None:
         "start23_week1_swim_calibration_v1",
     }
     assert len(protocols_for_discipline(Discipline.SWIM)) == 2
-    assert len(protocols_for_discipline(Discipline.BIKE)) == 3
-    assert len(protocols_for_discipline(Discipline.RUN)) == 2
+    assert len(protocols_for_discipline(Discipline.BIKE)) == 1
+    assert len(protocols_for_discipline(Discipline.RUN)) == 1
+    assert {
+        protocol.protocol_id
+        for protocol in PROTOCOLS.values()
+        if protocol.lifecycle is ProtocolLifecycle.HISTORICAL_READ_ONLY
+    } == {
+        "start23_run_threshold_30min_v1",
+        "start23_bike_ftp_30min_v1",
+        "start23_bike_fthr_20min_v1",
+    }
 
 
-def test_valid_run_test_estimates_thresholds_and_pending_zone_profiles() -> None:
-    result = evaluate_protocol(
-        protocol_id="start23_run_threshold_30min_v1",
-        observations=_run_test(),
-    )
-
-    assert result.ruleset_version == CALIBRATION_RULESET_VERSION
-    assert result.status is EvaluationStatus.THRESHOLD_ESTIMATED
-    assert result.threshold_status is ThresholdStatus.ESTIMATED
-    assert result.zone_status is ZoneStatus.PENDING_ATHLETE_CONFIRMATION
-    assert result.requires_athlete_confirmation is True
-    assert [(value.metric_kind, value.value) for value in result.thresholds] == [
-        (ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM, Decimal("290")),
-        (ZoneMetricKind.RUN_LTHR_BPM, Decimal("172")),
-    ]
-    assert result.reason_codes == ("zone_profile_pending_athlete_confirmation",)
-    assert [profile.metric.kind for profile in result.zone_profiles] == [
-        ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM,
-        ZoneMetricKind.RUN_LTHR_BPM,
-    ]
-    assert result.zone_profiles[0].is_primary is True
-    assert result.zone_profiles[0].boundaries[0].upper is None
+def test_historical_run_test_cannot_enter_current_evaluation() -> None:
+    with pytest.raises(ValueError, match="read-only"):
+        evaluate_protocol(
+            protocol_id="start23_run_threshold_30min_v1",
+            observations=_run_test(),
+        )
 
 
 def test_run_calibration_uses_observed_hr_for_pending_lthr() -> None:
@@ -328,63 +321,31 @@ def test_calibration_without_sensor_metrics_fails_closed() -> None:
     assert result.reason_codes == ("sensor_data_missing",)
 
 
-def test_bike_ftp_uses_only_reviewed_power_formula_and_half_up_rounding() -> None:
-    result = evaluate_protocol(
-        protocol_id="start23_bike_ftp_30min_v1",
-        observations=_bike_ftp_test(),
-    )
-
-    assert result.thresholds == (result.thresholds[0],)
-    assert result.thresholds[0].metric_kind is ZoneMetricKind.BIKE_FTP_WATTS
-    assert result.thresholds[0].value == Decimal("238")
+def test_historical_bike_ftp_cannot_enter_current_evaluation() -> None:
+    with pytest.raises(ValueError, match="read-only"):
+        evaluate_protocol(
+            protocol_id="start23_bike_ftp_30min_v1",
+            observations=_bike_ftp_test(),
+        )
 
 
-def test_bike_ftp_is_never_derived_from_heart_rate() -> None:
-    observations = list(_bike_ftp_test())
-    test = observations[1]
-    observations[1] = _observation(
-        test.protocol_id,
-        Discipline.BIKE,
-        "test_30min",
-        duration_seconds=1800,
-        reported_block_rpe=9,
-        average_heart_rate_bpm=Decimal("175"),
-        data_completeness=Decimal("1"),
-        stable_segment=True,
-        power_source_calibrated=True,
-    )
-
-    result = evaluate_protocol(
-        protocol_id=test.protocol_id,
-        observations=tuple(observations),
-    )
-
-    assert result.status is EvaluationStatus.INSUFFICIENT_DATA
-    assert result.thresholds == ()
-    assert "power_data_missing" in result.reason_codes
+def test_historical_bike_hr_cannot_enter_current_evaluation() -> None:
+    with pytest.raises(ValueError, match="read-only"):
+        evaluate_protocol(
+            protocol_id="start23_bike_fthr_20min_v1",
+            observations=_bike_hr_test(),
+        )
 
 
-def test_bike_and_run_threshold_heart_rate_are_distinct_metrics() -> None:
-    bike = evaluate_protocol(
-        protocol_id="start23_bike_fthr_20min_v1",
-        observations=_bike_hr_test(),
-    )
-    run = evaluate_protocol(
-        protocol_id="start23_run_threshold_30min_v1",
-        observations=_run_test(),
-    )
-
-    assert (
-        bike.thresholds[0].metric_kind is ZoneMetricKind.BIKE_THRESHOLD_HEART_RATE_BPM
-    )
-    assert all(
-        estimate.metric_kind is not ZoneMetricKind.RUN_LTHR_BPM
-        for estimate in bike.thresholds
-    )
-    assert any(
-        estimate.metric_kind is ZoneMetricKind.RUN_LTHR_BPM
-        for estimate in run.thresholds
-    )
+def test_historical_run_test_cannot_be_newly_scheduled() -> None:
+    with pytest.raises(ValueError, match="does not match"):
+        validate_test_schedule(
+            protocol_id="start23_run_threshold_30min_v1",
+            discipline=Discipline.RUN,
+            scheduling_mode=SchedulingMode.STANDALONE,
+            scheduled_date=date(2026, 8, 26),
+            athlete_today=date(2026, 8, 26),
+        )
 
 
 @pytest.mark.parametrize("pool_length", [25, 50])
@@ -431,25 +392,20 @@ def test_missing_session_rpe_prevents_evaluation_but_preserves_observations() ->
         duration_seconds=600,
     )
 
-    result = evaluate_protocol(
-        protocol_id="start23_run_threshold_30min_v1",
-        observations=tuple(observations),
-    )
-
-    assert result.status is EvaluationStatus.INSUFFICIENT_DATA
-    assert result.thresholds == ()
-    assert "missing_session_rpe" in result.reason_codes
+    with pytest.raises(ValueError, match="read-only"):
+        evaluate_protocol(
+            protocol_id="start23_run_threshold_30min_v1",
+            observations=tuple(observations),
+        )
 
 
 def test_duplicate_segment_observations_fail_closed() -> None:
     observations = _bike_hr_test()
-    result = evaluate_protocol(
-        protocol_id="start23_bike_fthr_20min_v1",
-        observations=observations + (observations[1],),
-    )
-
-    assert result.status is EvaluationStatus.INSUFFICIENT_DATA
-    assert "duplicate_segment_observation" in result.reason_codes
+    with pytest.raises(ValueError, match="read-only"):
+        evaluate_protocol(
+            protocol_id="start23_bike_fthr_20min_v1",
+            observations=observations + (observations[1],),
+        )
 
 
 def test_swim_calibration_uses_measured_pace_for_pending_css() -> None:

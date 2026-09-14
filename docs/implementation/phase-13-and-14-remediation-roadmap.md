@@ -3,9 +3,10 @@
 Status: R1 complete locally on 2026-09-11. R3 foundation and R2 behavior were
 implemented together locally on 2026-09-12, in that order. R4 and R5 were
 implemented together locally on 2026-09-12. The final R6-entry audit findings
-B-01, H-01 through H-05, M-01 through M-03, and L-01 were remediated in the
-repository on 2026-09-13. Database execution, real-token, two-user, and device
-evidence remains open under R6; R6 has not begun.
+were remediated on 2026-09-13, and the latest read-only re-audit's two remaining
+entry defects H-01 and H-04 were corrected in the repository on 2026-09-14.
+Database execution, real-token, two-user, and device evidence remains open under
+R6; R6 has not begun.
 
 This roadmap converts the read-only Phase 13 and Phase 14 implementation audit
 into ordered remediation work. It is an implementation companion to
@@ -462,6 +463,52 @@ mark Phase 13 or Phase 14 complete.
   strict mobile TypeScript and unused-code checks, and 19 passing mobile tests.
   The new rollback-only pgTAP scenarios are authored but unexecuted because no
   PostgreSQL/Docker/pgTAP runtime is available; that remains R6 evidence.
+
+### Latest read-only re-audit follow-up: H-01 and H-04
+
+Status: repository defects corrected locally on 2026-09-14. This follow-up does
+not execute or start R6 and does not mark Phase 13 or Phase 14 complete.
+
+- H-01 now has an explicit `current_selectable` versus
+  `historical_read_only` lifecycle in the Python protocol registry and a matching
+  private database registry. Calibration and workout discovery, setup,
+  scheduling, observation submission/persistence, evaluation, threshold
+  confirmation, and calculated-zone/pending-proposal creation all consult that
+  classification. The three retained run/bike field tests remain available for
+  existing-record presentation and provenance, but every new creation path is
+  rejected. Current Phase 13 swim/bike/run submaximal flows and current swim CSS
+  remain available.
+- Forward migration
+  `20260914080000_close_historical_calibration_writes.sql` adds final-state
+  insert/update guards without deleting or rewriting any existing calibration
+  row. New evaluations require a matching persisted current observation;
+  historical evaluations cannot create current zone state. The deprecated
+  integrated scheduling RPC is no longer authenticated-callable, and the
+  retained standalone scheduling RPC uses the authoritative lifecycle predicate.
+- Forward migration
+  `20260914090000_block_historical_zone_profile_activation.sql` closes the
+  final pre-existing-state edge. The authenticated approval RPC now rejects a
+  pending profile whose evaluation protocol is historical/read-only, and an
+  independent `BEFORE UPDATE` trigger rejects any new transition into `active`
+  for the same provenance. Already-active historical profiles are not touched.
+  The migration also advances the superseded Phase 8.5 submaximal-evaluation
+  constraint so the explicitly approved Phase 13 threshold-estimate contract is
+  persistable for current run, bike, and swim calibration.
+- H-04 replaces the superseded broad-access assertions in
+  `athlete_profiles_rls_test.sql` and aligns the Phase 4 and Phase 14 denial
+  expectations with the final migration chain. The suite now proves zero broad
+  operational-table access, narrow owner-derived operational RPCs, guarded
+  split-profile writes, IANA/timestamp validation, two-owner isolation, private
+  identity-map non-enumerability, enabled opaque-owner/RPC triggers, and final
+  role/policy separation. Fixtures use the auth identity trigger or privileged
+  setup with all integrity triggers enabled.
+- Repository verification now records 629 passing backend tests, Ruff lint and
+  formatting across 132 files, strict mypy across 132 source files, strict
+  mobile TypeScript and unused-code checks, and 19 passing mobile tests. Static
+  migration/pgTAP contracts pass. PostgreSQL, Supabase CLI, `psql`, `pg_prove`,
+  Docker, and Podman are unavailable on this workstation, so the full migration
+  chain and all rollback-only pgTAP files remain intentionally unexecuted R6
+  evidence. No database runtime success is claimed here.
 
 ## Remediation Phase R6: database, security, integration, and release closure
 

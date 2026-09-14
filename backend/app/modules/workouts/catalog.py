@@ -5,6 +5,11 @@ from decimal import Decimal
 from enum import Enum
 from uuid import UUID
 
+from app.modules.calibration.domain import (
+    PROTOCOLS,
+    ProtocolType,
+    is_current_protocol,
+)
 from app.modules.physiology.intensity import (
     IntensitySegment,
     WorkoutIntensity,
@@ -49,12 +54,9 @@ class FallbackCompatibility(str, Enum):
 
 
 EXPLICIT_FIELD_TEST_PROTOCOL_IDS = frozenset(
-    {
-        "start23_run_threshold_30min_v1",
-        "start23_bike_ftp_30min_v1",
-        "start23_bike_fthr_20min_v1",
-        "start23_swim_css_400_200_v1",
-    }
+    protocol.protocol_id
+    for protocol in PROTOCOLS.values()
+    if protocol.protocol_type is ProtocolType.FIELD_TEST
 )
 
 
@@ -977,7 +979,7 @@ CURRENT_CATALOG = (
 def active_catalog(
     catalog: tuple[WorkoutTemplate, ...] = CURRENT_CATALOG,
 ) -> tuple[WorkoutTemplate, ...]:
-    """Return the highest immutable version of every logical template."""
+    """Return current-selectable highest immutable template versions."""
     latest: dict[UUID, WorkoutTemplate] = {}
     seen_versions: set[tuple[UUID, int]] = set()
     for template in catalog:
@@ -990,10 +992,22 @@ def active_catalog(
             latest[template.template_key] = template
     if {template.discipline for template in latest.values()} != set(Discipline):
         raise ValueError("The active catalog must cover swim, bike, and run.")
-    return tuple(
+    active = tuple(
         sorted(
             (with_current_load(template) for template in latest.values()),
             key=lambda template: (template.discipline.value, template.name),
+        )
+    )
+    return tuple(
+        template
+        for template in active
+        if all(
+            segment.protocol_target is None
+            or is_current_protocol(
+                segment.protocol_target.protocol_id,
+                discipline=template.discipline,
+            )
+            for segment in template.segments
         )
     )
 

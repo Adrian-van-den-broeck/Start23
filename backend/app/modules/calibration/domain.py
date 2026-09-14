@@ -73,6 +73,13 @@ class ProtocolReviewStatus(str, Enum):
     APPROVED_ACTIVE = "approved_active"
 
 
+class ProtocolLifecycle(str, Enum):
+    """Whether a retained protocol can enter the current write lifecycle."""
+
+    CURRENT_SELECTABLE = "current_selectable"
+    HISTORICAL_READ_ONLY = "historical_read_only"
+
+
 class EvaluationStatus(str, Enum):
     """Public, non-clinical outcome of a deterministic evaluation."""
 
@@ -150,6 +157,7 @@ class CalibrationProtocol:
     protocol_type: ProtocolType
     version: int
     review_status: ProtocolReviewStatus
+    lifecycle: ProtocolLifecycle
     result_status_on_success: EvaluationStatus
     guidance_modes: tuple[str, ...]
     segments: tuple[ProtocolSegment, ...]
@@ -325,6 +333,7 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         protocol_type=ProtocolType.FIELD_TEST,
         version=1,
         review_status=ProtocolReviewStatus.APPROVED_ACTIVE,
+        lifecycle=ProtocolLifecycle.HISTORICAL_READ_ONLY,
         result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
         guidance_modes=("heart_rate", "pace", "combined"),
         segments=(
@@ -340,6 +349,7 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         protocol_type=ProtocolType.FIELD_TEST,
         version=1,
         review_status=ProtocolReviewStatus.APPROVED_ACTIVE,
+        lifecycle=ProtocolLifecycle.HISTORICAL_READ_ONLY,
         result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
         guidance_modes=("power", "combined"),
         segments=(
@@ -354,6 +364,7 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         protocol_type=ProtocolType.FIELD_TEST,
         version=1,
         review_status=ProtocolReviewStatus.APPROVED_ACTIVE,
+        lifecycle=ProtocolLifecycle.HISTORICAL_READ_ONLY,
         result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
         guidance_modes=("heart_rate",),
         segments=(
@@ -368,6 +379,7 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         protocol_type=ProtocolType.FIELD_TEST,
         version=1,
         review_status=ProtocolReviewStatus.APPROVED_ACTIVE,
+        lifecycle=ProtocolLifecycle.CURRENT_SELECTABLE,
         result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
         guidance_modes=("pace",),
         segments=(
@@ -384,6 +396,7 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         protocol_type=ProtocolType.SUBMAXIMAL_CALIBRATION,
         version=1,
         review_status=ProtocolReviewStatus.APPROVED_ACTIVE,
+        lifecycle=ProtocolLifecycle.CURRENT_SELECTABLE,
         result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
         guidance_modes=("heart_rate",),
         segments=(
@@ -410,6 +423,7 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         protocol_type=ProtocolType.SUBMAXIMAL_CALIBRATION,
         version=1,
         review_status=ProtocolReviewStatus.APPROVED_ACTIVE,
+        lifecycle=ProtocolLifecycle.CURRENT_SELECTABLE,
         result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
         guidance_modes=("heart_rate", "combined"),
         segments=(
@@ -436,6 +450,7 @@ PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {
         protocol_type=ProtocolType.SUBMAXIMAL_CALIBRATION,
         version=1,
         review_status=ProtocolReviewStatus.APPROVED_ACTIVE,
+        lifecycle=ProtocolLifecycle.CURRENT_SELECTABLE,
         result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED,
         guidance_modes=("pace",),
         segments=(
@@ -464,6 +479,7 @@ def validate_test_schedule(
     protocol = PROTOCOLS.get(protocol_id)
     if (
         protocol is None
+        or protocol.lifecycle is not ProtocolLifecycle.CURRENT_SELECTABLE
         or protocol.protocol_type is not ProtocolType.FIELD_TEST
         or protocol.discipline is not discipline
     ):
@@ -492,12 +508,30 @@ def validate_test_schedule(
 def protocols_for_discipline(
     discipline: Discipline,
 ) -> tuple[CalibrationProtocol, ...]:
-    """Return active protocols in stable field-test/calibration order."""
+    """Return current selectable protocols in stable registry order."""
     return tuple(
         protocol
         for protocol in PROTOCOLS.values()
         if protocol.discipline is discipline
         and protocol.review_status is ProtocolReviewStatus.APPROVED_ACTIVE
+        and protocol.lifecycle is ProtocolLifecycle.CURRENT_SELECTABLE
+    )
+
+
+def is_current_protocol(
+    protocol_id: str,
+    *,
+    discipline: Discipline | None = None,
+    protocol_type: ProtocolType | None = None,
+) -> bool:
+    """Apply the registry's single current-versus-historical classification."""
+    protocol = PROTOCOLS.get(protocol_id)
+    return bool(
+        protocol is not None
+        and protocol.review_status is ProtocolReviewStatus.APPROVED_ACTIVE
+        and protocol.lifecycle is ProtocolLifecycle.CURRENT_SELECTABLE
+        and (discipline is None or protocol.discipline is discipline)
+        and (protocol_type is None or protocol.protocol_type is protocol_type)
     )
 
 
@@ -954,11 +988,16 @@ def evaluate_protocol(
     protocol_id: str,
     observations: tuple[CalibrationObservation, ...],
 ) -> ProtocolEvaluation:
-    """Evaluate one reviewed protocol, failing closed on missing rules or data."""
+    """Evaluate one current protocol, failing closed on historical definitions."""
     try:
         protocol = PROTOCOLS[protocol_id]
     except KeyError as error:
         raise ValueError("Unknown or inactive calibration protocol.") from error
+    if protocol.lifecycle is not ProtocolLifecycle.CURRENT_SELECTABLE:
+        raise ValueError(
+            "Historical calibration protocols are read-only and cannot be newly "
+            "evaluated."
+        )
     mapped, initial_reasons = _observation_map(protocol, observations)
     if protocol.protocol_type is ProtocolType.SUBMAXIMAL_CALIBRATION:
         return _evaluate_submaximal_calibration(

@@ -467,15 +467,16 @@ select is(
   'a second athlete cannot read the first athlete history'
 );
 
-select results_eq(
+select throws_ok(
   $$
     update public.athlete_profiles
     set timezone = 'Europe/Paris'
     where athlete_id = '30000000-0000-0000-0000-000000000003'
     returning athlete_id
   $$,
-  $$select null::uuid where false$$,
-  'a second athlete cannot update the first athlete profile'
+  '42501',
+  null,
+  'the final contract denies every authenticated direct profile update'
 );
 
 select throws_ok(
@@ -485,7 +486,7 @@ select throws_ok(
     where athlete_id = '40000000-0000-0000-0000-000000000004'
   $$,
   '42501',
-  'onboarding completion requires the completion RPC',
+  null,
   'onboarding completion cannot bypass validation'
 );
 

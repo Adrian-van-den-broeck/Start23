@@ -50,7 +50,7 @@ def test_reviewed_catalog_has_latest_swim_bike_and_run_templates() -> None:
     latest = active_catalog()
 
     assert len(REVIEWED_CATALOG) == 7
-    assert len(latest) == 11
+    assert len(latest) == 8
     assert {template.discipline.value for template in latest} == {
         "swim",
         "bike",
@@ -61,6 +61,19 @@ def test_reviewed_catalog_has_latest_swim_bike_and_run_templates() -> None:
             template for template in latest if template.name == "Easy aerobic run"
         ).version
         == 2
+    )
+    active_protocol_ids = {
+        segment.protocol_target.protocol_id
+        for template in latest
+        for segment in template.segments
+        if segment.protocol_target is not None
+    }
+    assert not active_protocol_ids.intersection(
+        {
+            "start23_run_threshold_30min_v1",
+            "start23_bike_ftp_30min_v1",
+            "start23_bike_fthr_20min_v1",
+        }
     )
 
 
@@ -173,8 +186,20 @@ def test_catalog_endpoint_requires_authentication_and_omits_hidden_load(
     assert unauthorized.status_code == 401
     assert response.status_code == 200
     payload = response.json()
-    assert len(payload["templates"]) == 11
+    assert len(payload["templates"]) == 8
     assert all("rpe_zones" in template for template in payload["templates"])
+    assert not {
+        segment["protocol_target"]["protocol_id"]
+        for template in payload["templates"]
+        for segment in template["segments"]
+        if segment["protocol_target"] is not None
+    }.intersection(
+        {
+            "start23_run_threshold_30min_v1",
+            "start23_bike_ftp_30min_v1",
+            "start23_bike_fthr_20min_v1",
+        }
+    )
     calibration = next(
         template
         for template in payload["templates"]

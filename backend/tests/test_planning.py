@@ -1602,10 +1602,10 @@ def test_deck_and_layout_validation_use_server_owned_workout_facts(
     assert incomplete.status_code == 422
 
 
-def test_generic_plan_endpoint_rejects_direct_field_test_template_selection(
+def test_generic_plan_endpoint_rejects_unconfigured_current_field_test_selection(
     planning_client: TestClient,
 ) -> None:
-    field_test_template_id = "56000000-0000-0000-0000-000000000009"
+    field_test_template_id = "56000000-0000-0000-0000-000000000008"
 
     response = planning_client.post(
         "/api/v1/weekly-plans/proposals",
@@ -1624,7 +1624,7 @@ def test_generic_plan_endpoint_rejects_direct_field_test_template_selection(
     )
 
     assert response.status_code == 409
-    assert response.json()["error"]["code"] == "field_test_assignment_required"
+    assert response.json()["error"]["code"] == "template_not_eligible"
 
 
 def test_confirmed_injury_is_excluded_from_pending_plan(

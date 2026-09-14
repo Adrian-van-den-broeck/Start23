@@ -197,7 +197,7 @@ select public.save_calibration_observation(
   jsonb_build_object(
     'activity_id', 'aa000000-0000-0000-0000-000000000085',
     'planned_workout_id', null,
-    'protocol_id', 'start23_run_threshold_30min_v1',
+    'protocol_id', 'start23_week1_run_calibration_v1',
     'discipline', 'run',
     'segment_id', 'warmup',
     'performed_at', '2026-08-13T10:00:00Z',
@@ -205,7 +205,7 @@ select public.save_calibration_observation(
     'interrupted', false,
     'quality_status', 'sufficient',
     'target_rpe', 3,
-    'duration_seconds', 900,
+    'duration_seconds', 600,
     'reported_block_rpe', null,
     'reported_session_rpe', null,
     'steady_execution', null,
@@ -297,22 +297,17 @@ select public.save_calibration_evaluation(
   'a0000000-0000-0000-0000-000000000085',
   jsonb_build_object(
     'activity_id', 'aa000000-0000-0000-0000-000000000085',
-    'protocol_id', 'start23_run_threshold_30min_v1',
+    'protocol_id', 'start23_week1_run_calibration_v1',
     'discipline', 'run',
-    'ruleset_version', 'start23-calibration-ruleset-v1',
-    'status', 'threshold_estimated',
-    'threshold_status', 'threshold_estimated',
-    'zone_status', 'pending_protocol',
-    'confidence', 'medium',
-    'reason_codes', jsonb_build_array('zone_model_not_approved'),
-    'thresholds', jsonb_build_array(
-      jsonb_build_object(
-        'metric_kind', 'run_threshold_pace_seconds_per_km',
-        'value', '290'
-      )
-    ),
-    'requires_athlete_confirmation', true,
-    'review_status', 'pending_athlete_confirmation'
+    'ruleset_version', 'phase-13-joren-ruleset-1',
+    'status', 'insufficient_data',
+    'threshold_status', 'unknown',
+    'zone_status', 'unknown',
+    'confidence', 'not_assessed',
+    'reason_codes', jsonb_build_array('required_segment_missing'),
+    'thresholds', '[]'::jsonb,
+    'requires_athlete_confirmation', false,
+    'review_status', 'not_applicable'
   ),
   repeat('d', 64)
 ) as result;
@@ -323,22 +318,17 @@ select is(
     'a0000000-0000-0000-0000-000000000085',
     jsonb_build_object(
       'activity_id', 'aa000000-0000-0000-0000-000000000085',
-      'protocol_id', 'start23_run_threshold_30min_v1',
+      'protocol_id', 'start23_week1_run_calibration_v1',
       'discipline', 'run',
-      'ruleset_version', 'start23-calibration-ruleset-v1',
-      'status', 'threshold_estimated',
-      'threshold_status', 'threshold_estimated',
-      'zone_status', 'pending_protocol',
-      'confidence', 'medium',
-      'reason_codes', jsonb_build_array('zone_model_not_approved'),
-      'thresholds', jsonb_build_array(
-        jsonb_build_object(
-          'metric_kind', 'run_threshold_pace_seconds_per_km',
-          'value', '290'
-        )
-      ),
-      'requires_athlete_confirmation', true,
-      'review_status', 'pending_athlete_confirmation'
+      'ruleset_version', 'phase-13-joren-ruleset-1',
+      'status', 'insufficient_data',
+      'threshold_status', 'unknown',
+      'zone_status', 'unknown',
+      'confidence', 'not_assessed',
+      'reason_codes', jsonb_build_array('required_segment_missing'),
+      'thresholds', '[]'::jsonb,
+      'requires_athlete_confirmation', false,
+      'review_status', 'not_applicable'
     ),
     repeat('d', 64)
   ) ->> 'id',

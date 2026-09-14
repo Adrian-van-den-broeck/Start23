@@ -81,34 +81,34 @@ def test_rpe_guidance_removes_numeric_zones_without_fake_zone_profile() -> None:
 
 
 def test_exact_test_date_is_owned_by_fixed_schedule_constraint() -> None:
-    run = next(
+    swim = next(
         template
         for template in active_catalog()
-        if template.id.hex == "56000000000000000000000000000009"
+        if template.id.hex == "56000000000000000000000000000008"
     )
     scheduled = schedule_workouts(
         selected=(
             # The selection snapshot keeps the private load while the result exposes
             # only its exact local date.
             SelectedWorkout(
-                discipline=run.discipline,
-                snapshot=snapshot_template(run),
+                discipline=swim.discipline,
+                snapshot=snapshot_template(swim),
             ),
         ),
         week_start=date(2026, 8, 24),
         timezone_name="Europe/Amsterdam",
         available_dates=(date(2026, 8, 27),),
-        fixed_template_dates={run.id: date(2026, 8, 27)},
+        fixed_template_dates={swim.id: date(2026, 8, 27)},
     )
 
     assert scheduled[0].scheduled_date == date(2026, 8, 27)
 
 
 def test_field_test_without_zone_duration_cannot_enter_load_target_selection() -> None:
-    run_test = next(
+    swim_test = next(
         template
         for template in active_catalog()
-        if template.id.hex == "56000000000000000000000000000009"
+        if template.id.hex == "56000000000000000000000000000008"
     )
 
     with pytest.raises(
@@ -121,17 +121,17 @@ def test_field_test_without_zone_duration_cannot_enter_load_target_selection() -
             race_date=date(2026, 12, 6),
             catalog=active_catalog(),
             prior_loads=(),
-            goal_disciplines=frozenset({Discipline.RUN}),
+            goal_disciplines=frozenset({Discipline.SWIM}),
             confirmed_injuries=frozenset(),
             zone_capabilities={
-                Discipline.RUN: ZoneCapability(
+                Discipline.SWIM: ZoneCapability(
                     requirements=frozenset(),
-                    protocol_ids=frozenset({"start23_run_threshold_30min_v1"}),
+                    protocol_ids=frozenset({"start23_swim_css_400_200_v1"}),
                     rpe_guided=True,
                 )
             },
             available_dates=(date(2026, 8, 27),),
-            selected_template_ids=(run_test.id,),
+            selected_template_ids=(swim_test.id,),
         )
 
 
@@ -711,11 +711,15 @@ def test_manual_schedule_can_place_multiple_workouts_on_the_same_date() -> None:
 
 
 def test_consolidation_keeps_same_discipline_high_intensity_spacing() -> None:
-    high_runs = tuple(
+    high_run = next(
         template
         for template in active_catalog()
         if template.discipline is Discipline.RUN
         and template.intensity_bucket is IntensityBucket.HIGH
+    )
+    high_runs = (
+        high_run,
+        replace(high_run, id=uuid4(), template_key=uuid4()),
     )
     selected = tuple(
         SelectedWorkout(

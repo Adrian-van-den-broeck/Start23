@@ -124,6 +124,35 @@ select jsonb_build_array(
 ) as metric_profiles;
 grant select on zone_model_fixture to service_role;
 
+create temporary table phase_13_calibration_fixture as
+select jsonb_build_array(
+  jsonb_build_object(
+    'metric_kind', 'run_lthr_bpm',
+    'source_value', '168',
+    'is_primary', true,
+    'boundary_source', 'model_derived',
+    'zone_model_version', 'phase-13-joren-ruleset-1',
+    'boundaries', jsonb_build_array(
+      jsonb_build_object(
+        'zone_number', 1, 'lower_value', '0', 'upper_value', '137'
+      ),
+      jsonb_build_object(
+        'zone_number', 2, 'lower_value', '138', 'upper_value', '150'
+      ),
+      jsonb_build_object(
+        'zone_number', 3, 'lower_value', '151', 'upper_value', '160'
+      ),
+      jsonb_build_object(
+        'zone_number', 4, 'lower_value', '161', 'upper_value', '168'
+      ),
+      jsonb_build_object(
+        'zone_number', 5, 'lower_value', '169', 'upper_value', null
+      )
+    )
+  )
+) as metric_profiles;
+grant select on phase_13_calibration_fixture to service_role;
+
 select set_config('request.jwt.claims', '{"role":"service_role"}', true);
 set local role service_role;
 
@@ -196,6 +225,54 @@ select is(
   'activation records athlete review separately from calculation provenance'
 );
 
+select set_config(
+  'request.jwt.claims',
+  '{"sub":"a0000000-0000-0000-0000-000000000105","role":"authenticated"}',
+  true
+);
+set local request.jwt.claim.sub =
+  'a0000000-0000-0000-0000-000000000105';
+set local role authenticated;
+select lives_ok(
+  $q$select public.save_calibration_observation(
+    jsonb_build_object(
+      'activity_id', 'aa000000-0000-0000-0000-000000000105',
+      'planned_workout_id', null,
+      'protocol_id', 'start23_week1_run_calibration_v1',
+      'discipline', 'run',
+      'segment_id', 'comfortable_20min',
+      'performed_at', '2026-08-24T10:00:00Z',
+      'completed', true,
+      'interrupted', false,
+      'quality_status', 'sufficient',
+      'target_rpe', 4,
+      'duration_seconds', 1200,
+      'reported_block_rpe', 4,
+      'reported_session_rpe', null,
+      'steady_execution', 'yes',
+      'average_heart_rate_bpm', 148,
+      'ending_heart_rate_bpm', null,
+      'average_heart_rate_last_20min_bpm', null,
+      'average_power_watts', null,
+      'average_power_last_20min_watts', null,
+      'average_pace_seconds_per_km', null,
+      'elapsed_time_seconds', null,
+      'pool_length_meters', null,
+      'stroke', null,
+      'equipment', null,
+      'rest_time_seconds', null,
+      'data_completeness', null,
+      'stable_segment', null,
+      'power_source_calibrated', null,
+      'repetitions', '[]'::jsonb
+    ),
+    repeat('f', 64)
+  )$q$,
+  'current run calibration observation can be persisted'
+);
+
+reset role;
+
 select set_config('request.jwt.claims', '{"role":"service_role"}', true);
 set local role service_role;
 
@@ -204,9 +281,9 @@ select public.save_calibration_evaluation(
   'a0000000-0000-0000-0000-000000000105',
   jsonb_build_object(
     'activity_id', 'aa000000-0000-0000-0000-000000000105',
-    'protocol_id', 'start23_run_threshold_30min_v1',
+    'protocol_id', 'start23_week1_run_calibration_v1',
     'discipline', 'run',
-    'ruleset_version', 'start23-calibration-ruleset-v2',
+    'ruleset_version', 'phase-13-joren-ruleset-1',
     'status', 'threshold_estimated',
     'threshold_status', 'threshold_estimated',
     'zone_status', 'pending_athlete_confirmation',
@@ -216,11 +293,11 @@ select public.save_calibration_evaluation(
     ),
     'thresholds', jsonb_build_array(
       jsonb_build_object(
-        'metric_kind', 'run_threshold_pace_seconds_per_km', 'value', '300'
+        'metric_kind', 'run_lthr_bpm', 'value', '168'
       )
     ),
-    'zone_model_version', 'start23-zone-model-1.0',
-    'zone_profiles', (select metric_profiles from zone_model_fixture),
+    'zone_model_version', 'phase-13-joren-ruleset-1',
+    'zone_profiles', (select metric_profiles from phase_13_calibration_fixture),
     'requires_athlete_confirmation', true,
     'review_status', 'pending_athlete_confirmation'
   ),
@@ -233,9 +310,9 @@ select public.save_calculated_zone_profile(
   'a0000000-0000-0000-0000-000000000105',
   jsonb_build_object(
     'discipline', 'run',
-    'source_method', 'start23_run_threshold_30min_v1',
-    'source_quality', 'reviewed_field_threshold',
-    'metric_profiles', (select metric_profiles from zone_model_fixture),
+    'source_method', 'start23_week1_run_calibration_v1',
+    'source_quality', 'submaximal_calibration_estimate',
+    'metric_profiles', (select metric_profiles from phase_13_calibration_fixture),
     'input_fingerprint', repeat('d', 64),
     'calibration_evaluation_id',
       (select result ->> 'id' from field_evaluation)
@@ -279,9 +356,9 @@ select public.save_calibration_evaluation(
   'a0000000-0000-0000-0000-000000000105',
   jsonb_build_object(
     'activity_id', 'aa000000-0000-0000-0000-000000000105',
-    'protocol_id', 'start23_run_threshold_30min_v1',
+    'protocol_id', 'start23_week1_run_calibration_v1',
     'discipline', 'run',
-    'ruleset_version', 'start23-calibration-ruleset-v2',
+    'ruleset_version', 'phase-13-joren-ruleset-1',
     'status', 'threshold_estimated',
     'threshold_status', 'threshold_estimated',
     'zone_status', 'pending_athlete_confirmation',
@@ -291,11 +368,11 @@ select public.save_calibration_evaluation(
     ),
     'thresholds', jsonb_build_array(
       jsonb_build_object(
-        'metric_kind', 'run_threshold_pace_seconds_per_km', 'value', '300'
+        'metric_kind', 'run_lthr_bpm', 'value', '168'
       )
     ),
-    'zone_model_version', 'start23-zone-model-1.0',
-    'zone_profiles', (select metric_profiles from zone_model_fixture),
+    'zone_model_version', 'phase-13-joren-ruleset-1',
+    'zone_profiles', (select metric_profiles from phase_13_calibration_fixture),
     'requires_athlete_confirmation', true,
     'review_status', 'pending_athlete_confirmation'
   ),
