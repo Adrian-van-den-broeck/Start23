@@ -279,7 +279,7 @@ select throws_ok(
       jsonb_build_object('discipline', 'run')
     )
   $$,
-  '40001',
+  'PT409',
   'activity idempotency key reused',
   'an idempotency key cannot be reused for a different summary'
 );
@@ -377,7 +377,7 @@ select throws_ok(
     $$,
     (select result ->> 'id' from phase_7_activity)
   ),
-  '40001',
+  'PT409',
   'activity rpe is immutable',
   'a later RPE score cannot rewrite completed physiological history'
 );

@@ -338,7 +338,7 @@ def verify_activity_conflict(
     conflict_code = (
         conflict.payload.get("code") if isinstance(conflict.payload, dict) else None
     )
-    if conflict.status not in {400, 409, 500} or conflict_code != "40001":
+    if conflict.status != 409 or conflict_code != "PT409":
         raise VerificationError(
             "activity idempotency conflict: "
             f"HTTP {conflict.status}, code={conflict_code!r}"

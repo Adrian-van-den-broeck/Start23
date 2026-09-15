@@ -91,7 +91,7 @@ insert into private.activity_loads(
 
 select throws_ok(
   $q$update public.activity_metrics set average_heart_rate_bpm = 152 where activity_id = 'c4000000-0000-0000-0000-000000000010'$q$,
-  '40001',
+  'PT409',
   'average heart rate is immutable after load calculation',
   'direct metric update cannot diverge from Phase 13 provenance'
 );
@@ -105,7 +105,7 @@ select set_config('request.jwt.claims', '{"role":"service_role"}', true);
 set local role service_role;
 select throws_ok(
   $q$select public.revise_activity_rpe('c4000000-0000-0000-0000-000000000001', 'c4000000-0000-0000-0000-000000000010', '{"rpe":4,"submitted_average_heart_rate_bpm":152}'::jsonb)$q$,
-  '40001',
+  'PT409',
   'average heart rate is immutable after load calculation',
   'ordinary correction rejects a changed HR before any RPE mutation'
 );
@@ -139,7 +139,7 @@ select set_config('request.jwt.claims', '{"role":"service_role"}', true);
 set local role service_role;
 select throws_ok(
   $q$select public.revise_activity_rpe('c4000000-0000-0000-0000-000000000001', 'c4000000-0000-0000-0000-000000000010', '{"rpe":6,"expected_current_rpe":4}'::jsonb)$q$,
-  '40001',
+  'PT409',
   'activity correction is stale',
   'stale correction is rejected'
 );

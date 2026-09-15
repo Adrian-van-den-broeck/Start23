@@ -455,7 +455,7 @@ select throws_ok(
      from h01_activation_results where scenario = 'current_run'),
     'deadbeef-dead-beef-dead-beefdeadbeef'
   )$q$,
-  '40001', 'zone proposal base is stale',
+  'PT409', 'zone proposal base is stale',
   'stale current calibration approval still fails'
 );
 select is(

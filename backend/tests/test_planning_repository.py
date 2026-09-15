@@ -179,7 +179,7 @@ def test_database_conflicts_map_to_stable_public_planning_codes() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
             400,
-            json={"code": "40001", "message": "plan proposal is stale"},
+            json={"code": "PT409", "message": "plan proposal is stale"},
         )
 
     async def exercise() -> None:

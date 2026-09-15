@@ -426,7 +426,7 @@ select throws_ok(
       1
     )
   $$,
-  '40001',
+  'PT409',
   'plan proposal is stale',
   'approval rejects a mismatched expected base revision'
 );

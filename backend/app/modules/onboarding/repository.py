@@ -241,6 +241,7 @@ class SupabaseOnboardingRepository:
             "23505",
             "23514",
             "40001",
+            "PT409",
         }:
             raise RepositoryConflictError
         raise RepositoryUnavailableError

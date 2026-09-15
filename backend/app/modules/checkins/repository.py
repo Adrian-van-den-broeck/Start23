@@ -183,6 +183,7 @@ class SupabaseCheckInRepository:
             "23505",
             "23514",
             "40001",
+            "PT409",
             "P0001",
         }:
             raise CheckInRepositoryConflictError(

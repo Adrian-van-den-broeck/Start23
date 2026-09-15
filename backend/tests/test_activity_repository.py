@@ -124,7 +124,7 @@ def test_rpe_correction_window_conflict_maps_to_stable_code() -> None:
             return httpx.Response(200, json=str(athlete_id))
         return httpx.Response(
             400,
-            json={"code": "40001", "message": "rpe correction window closed"},
+            json={"code": "PT409", "message": "rpe correction window closed"},
         )
 
     async def exercise() -> None:

@@ -273,7 +273,7 @@ insert into phase_8_5_tap_results (result) select throws_ok(
       repeat('c', 64)
     )
   $$,
-  '40001',
+  'PT409',
   'calibration observation is immutable',
   'a conflicting retry cannot rewrite a segment observation'
 );
