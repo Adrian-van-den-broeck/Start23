@@ -47,13 +47,15 @@ def main() -> None:
             extra_headers=headers,
             timeout_seconds=20,
         )
-        if response.status not in (statuses or {200, 201}) and path == "/onboarding/complete":
-            diagnostic = call(db, "POST", "/rest/v1/rpc/complete_current_onboarding",
-                api_key=key, bearer=token,
-                body={"p_expected_session_revision": body["expected_onboarding_revision"]})
-            if isinstance(diagnostic.payload, dict):
-                print("Onboarding SQL diagnostic:", diagnostic.payload.get("code"),
-                      diagnostic.payload.get("message"))
+        if response.status not in (statuses or {200, 201}):
+            assert_no_private_load_keys(response.payload)
+            error = (
+                response.payload.get("error", {})
+                if isinstance(response.payload, dict)
+                else {}
+            )
+            if isinstance(error, dict):
+                print("Public failure:", error.get("code"), error.get("message"))
         payload = require_status(response, statuses or {200, 201}, method + " " + path)
         assert_no_private_load_keys(payload)
         return payload
@@ -253,20 +255,64 @@ def main() -> None:
         print("PASS Railway pending planning proposal")
         proposal = plan["proposal"]
         request(
+            actors[1][0], "GET", f"/weekly-plans/{plan['plan']['id']}", statuses={404}
+        )
+        request(
             token,
             "POST",
             f"/change-proposals/{proposal['id']}/approve",
-            {"expected_base_revision": proposal["base_plan_revision"]},
+            {"expected_base_revision": 999},
+            statuses={409},
+        )
+        request(
+            token,
+            "POST",
+            f"/change-proposals/{proposal['id']}/approve",
+            {"expected_base_revision": proposal["base_plan_revision"] or 0},
         )
         processed = request(token, "PUT", f"/activities/{actors[0][2]}/rpe", {"rpe": 4})
         if processed["processing_state"] != "complete":
             raise VerificationError("activity processing incomplete")
         print("PASS Railway plan approval and realized activity processing")
+        checkin = request(
+            token,
+            "POST",
+            "/checkins",
+            {
+                "week_start": (monday + timedelta(days=7)).isoformat(),
+            },
+        )
+        path = f"/checkins/{checkin['id']}"
+        context_body = {
+            "expected_revision": checkin["context_revision"],
+            "recurring_activities_confirmed": True,
+        }
+        context = request(token, "PUT", path + "/context", context_body)
+        request(
+            token,
+            "PUT",
+            path + "/context",
+            {**context_body, "fatigue_level": "high"},
+            statuses={409},
+        )
+        request(
+            token,
+            "POST",
+            path + "/context-confirmation",
+            {
+                "expected_revision": context["context_revision"],
+                "context_fingerprint": context["context"]["fingerprint"],
+            },
+        )
+        next_plan = request(token, "POST", path + "/plan-proposals")
+        if next_plan["proposal"]["state"] != "pending":
+            raise VerificationError("next-week proposal automatically applied")
+        print("PASS Railway next-week pending progression and stale context conflict")
         print(
             json.dumps(
                 {
                     "status": "partial",
-                    "remaining": "legacy resume and next-week progression",
+                    "remaining": "legacy resume",
                 }
             )
         )

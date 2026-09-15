@@ -361,19 +361,28 @@ class PlanningService:
                 discipline = Discipline(str(zone["discipline"]))
                 fallback_active = bool(zone["fallback_active"])
                 metric = zone.get("metric")
-                requirement = (
-                    ZoneRequirement.HEART_RATE
-                    if fallback_active
-                    else _ZONE_REQUIREMENT_BY_METRIC[
-                        str(metric["kind"]) if isinstance(metric, dict) else ""
-                    ]
-                )
-            except (KeyError, ValueError) as error:
+                metric_profiles = zone.get("metric_profiles")
+                if fallback_active:
+                    requirements = frozenset({ZoneRequirement.HEART_RATE})
+                elif isinstance(metric_profiles, list) and metric_profiles:
+                    requirements = frozenset(
+                        _ZONE_REQUIREMENT_BY_METRIC[str(profile["metric_kind"])]
+                        for profile in metric_profiles
+                    )
+                else:
+                    requirements = frozenset(
+                        {
+                            _ZONE_REQUIREMENT_BY_METRIC[
+                                str(metric["kind"]) if isinstance(metric, dict) else ""
+                            ]
+                        }
+                    )
+            except (KeyError, TypeError, ValueError) as error:
                 raise PlanningDomainError(
                     "An active zone cannot drive the workout catalog."
                 ) from error
             capabilities[discipline] = ZoneCapability(
-                requirements=frozenset({requirement}),
+                requirements=requirements,
                 fallback_active=fallback_active,
             )
         setups = snapshot.get("discipline_setups", [])

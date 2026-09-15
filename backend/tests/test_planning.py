@@ -27,10 +27,39 @@ from app.modules.workouts.catalog import (
     CURRENT_CATALOG,
     TrainingPhase,
     WorkoutTemplate,
+    ZoneRequirement,
     active_catalog,
 )
 
 _NOW = datetime(2026, 8, 1, 12, tzinfo=timezone.utc)
+
+
+@pytest.mark.parametrize(
+    ("discipline", "metric_kind", "requirement"),
+    [
+        ("run", "run_lthr_bpm", ZoneRequirement.HEART_RATE),
+        ("bike", "bike_threshold_heart_rate_bpm", ZoneRequirement.HEART_RATE),
+        ("swim", "swim_css_seconds_per_100m", ZoneRequirement.PACE),
+    ],
+)
+def test_current_calibration_metric_profiles_drive_planning(
+    discipline: str, metric_kind: str, requirement: ZoneRequirement
+) -> None:
+    snapshot: JsonObject = {
+        "profile": {"timezone": "Europe/Amsterdam"},
+        "goal": {"target_date": "2099-12-06", "race_type": discipline},
+        "zones": [
+            {
+                "discipline": discipline,
+                "fallback_active": False,
+                "metric": None,
+                "metric_profiles": [{"metric_kind": metric_kind}],
+            }
+        ],
+        "discipline_setups": [],
+    }
+    _, _, _, capabilities = PlanningService._context_values(snapshot)
+    assert capabilities[Discipline(discipline)].requirements == frozenset({requirement})
 
 
 def test_week_one_calibration_is_eligible_only_for_its_pending_protocol() -> None:
