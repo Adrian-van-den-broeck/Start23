@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import secrets
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
@@ -92,8 +93,55 @@ def main() -> None:
 
     try:
         for label in ("a", "b"):
-            auth_id, token = create_actor(db, key, secret, label)
-            users.append(auth_id)
+            if label == "a":
+                email = f"start23-r6-signup-{secrets.token_hex(10)}@example.com"
+                password = f"R6!{secrets.token_urlsafe(32)}a9"
+                signed_up = require_status(
+                    call(
+                        db,
+                        "POST",
+                        "/auth/v1/signup",
+                        api_key=key,
+                        bearer=key,
+                        body={
+                            "email": email,
+                            "password": password,
+                            "data": {"purpose": "phase-13-14-r6"},
+                        },
+                    ),
+                    {200},
+                    "client signup",
+                )
+                auth_id = str(signed_up["user"]["id"])
+                users.append(auth_id)
+                require_status(
+                    call(
+                        db,
+                        "PUT",
+                        f"/auth/v1/admin/users/{auth_id}",
+                        api_key=secret,
+                        bearer=secret,
+                        body={"email_confirm": True},
+                    ),
+                    {200},
+                    "confirm development signup fixture",
+                )
+                signed_in = require_status(
+                    call(
+                        db,
+                        "POST",
+                        "/auth/v1/token?grant_type=password",
+                        api_key=key,
+                        bearer=key,
+                        body={"email": email, "password": password},
+                    ),
+                    {200},
+                    "sign in client signup",
+                )
+                token = str(signed_in["access_token"])
+            else:
+                auth_id, token = create_actor(db, key, secret, label)
+                users.append(auth_id)
             if label == "b":
                 fixture = (
                     ROOT / "scripts" / "r6_legacy_onboarding_fixture.sql"
