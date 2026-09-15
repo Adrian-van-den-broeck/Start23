@@ -1799,9 +1799,15 @@ for the four explicitly approved remediation decisions.
 
 R1, R2-R5, the final R6-entry audit remediation, the hosted historical migration
 upgrade, and the complete hosted database suite satisfy their corresponding
-implemented gates. The remaining R6 runtime, security configuration, fresh
-chain, Railway, device, and qualified external-review gates are open; Phase 13
-is not complete.
+implemented gates. The 2026-09-15 MVP continuation additionally fixes hosted
+business-conflict retries and completion-history/planning runtime mismatches;
+all 24 database suites, 632 backend tests, mobile automated gates and the
+two-real-token Data API checks pass. The Railway new/legacy build-to-recovery
+trace also passes. The undefined first-plan recovery baseline, primary-device
+execution and qualified external review remain release gates. The user
+excluded non-critical advisors, optional providers and ownership cutover from
+this MVP continuation. See the current R6 verification report; Phase 13 is not
+complete.
 
 ### Future work
 
@@ -1865,8 +1871,13 @@ material owner-table surfaces and representative split-profile, operational,
 goal, activity, identity-map, and service-only RPC boundaries; all temporary
 users and data were deleted. This closes the hosted migration, database-suite,
 and representative two-user table-isolation evidence, but not the entire R6
-gate. Exhaustive RPC, Railway new/legacy flow, device, security-configuration,
-and release evidence remain open; Phase 14 is not complete.
+gate. The 2026-09-15 continuation created isolated Railway `r6-staging`, fixed
+the hosted deterministic conflict and completion-history constraint, and
+repeated all 24 database suites and real-token Data API checks successfully.
+The Railway new/legacy build-to-recovery flow passes. An approved first-plan
+recovery baseline, device and accountable-review release evidence remain open;
+Phase 14 is not complete. Exhaustive post-MVP RPC/advisor
+hardening and compatibility removal are excluded from the current MVP scope.
 
 ### Scope
 
@@ -1920,8 +1931,9 @@ the full hosted database suite, and representative two-real-user isolation cover
 version-aware resume, the opaque identity cutover, independently protected
 identifying/physiological records,
 monitor/timezone prerequisites, and structured race goals. The Phase 14 exit
-criteria remain open pending the unresolved R6 RPC, Railway, security,
-fresh-chain, and device evidence; Phase 14 is not complete.
+criteria remain open pending the undefined first-plan recovery case,
+primary-device evidence and accountable physiological review. The current R6 report records
+the narrowed MVP scope and actual passing evidence; Phase 14 is not complete.
 
 ### Follow-up remediation roadmap
 
@@ -2166,9 +2178,10 @@ Every phase must:
   onboarding, planner-parity and calibration-contract work plus local R4/R5
   onboarding/correction/mobile work implemented; targeted earlier hosted
   RLS/owner checks pass; the bounded H-01/H-04 repository re-audit fixes are
-  present; remediation migration execution, R6, full
-  database/runtime tests, accountable external review and device gates remain
-  open`
+  present; hosted remediation through 20260915205627 and all 24 database suites
+  pass; prompt HTTP 409 conflict behavior and real-token Data API isolation
+  pass; the Railway new/legacy build-to-recovery trace passes; first-plan
+  recovery behavior, accountable external review and device gates remain open`
 - Phase 14 privacy-safe onboarding, profile, and race configuration: `in
   progress; independent two-month history collection, retired-field write/UI
   removal, and new RPE-only selection removal implemented and migrated to the
@@ -2176,8 +2189,10 @@ Every phase must:
   and R2 legacy-upgrade/planner parity implemented; local R4 monitor/timezone,
   current history, and structured race goals plus R5 mobile/correction work
   implemented; final profile pgTAP contracts are reconciled without weakening
-  production privileges; pgTAP, remediation migration execution, two-real-user RLS,
-  device evidence, and R6 remain pending`
+  production privileges; complete pgTAP and two-real-token Data API checks pass
+  on start23-dev; Railway staging exists with development-only credentials;
+  the new/legacy build-to-recovery runtime trace passes; first-plan recovery
+  behavior, device evidence and external review remain open`
 - Phase 15 calibration, activity, and weekly-planning UX: `not started`
 - Phase 16 live-test stabilization and beta readiness: `not started`
 

@@ -1,5 +1,116 @@
 # Phase 13/14 R6 runtime and release verification
 
+## Current MVP continuation — 2026-09-15
+
+This section supersedes the archived 2026-09-14 release assessment below.
+Production was not modified. Leaked-password protection, non-critical advisors,
+optional providers and legacy ownership cutover are explicitly outside this
+MVP continuation. Retaining dual-key compatibility is not a failed MVP gate.
+
+Original main baseline: `9c6be883918255a92644a8c69525a2d6cf14b071`.
+Committed runtime/verification candidate:
+`f70a17bb247c9735f28adff46f6f4701361acd22`.
+Evidence documentation is committed separately and is not a new deployed
+application candidate. All intended migrations, tests and scripts are tracked
+in the candidate. The final repository worktree is clean. No environment files
+or credential values were committed.
+
+### Environments and runtime fixes
+
+- Supabase: **start23-dev**, `isfumhgqphieoayqahjv`, explicitly non-production.
+- Railway: project `c0cf7bc7-abe8-4db5-857a-85cc39850640`, new empty environment
+  `r6-staging` (`875b7e64-0f3f-4e42-9efd-973dfb6e295b`), service `r6-api`
+  (`6c2cb45b-43e1-43c1-983f-1ed154b2ac76`). No production environment was cloned.
+  URL: `https://r6-api-r6-staging.up.railway.app`.
+- Only development Supabase URL/publishable/secret keys and
+  `START23_ENVIRONMENT=staging` were configured. Values were handled in memory,
+  not printed. No production Auth credentials, Polar or LLM credentials copied.
+- Production deployment remained `c51eb090-9e86-4773-a08b-d27eb14dbd34` at the
+  read-only comparison. No production deploy, migration or configuration write.
+
+Forward-only migrations applied to development:
+
+1. `20260915081055_r6_mvp_nonretryable_business_conflicts.sql`: changes 28
+   intentional MVP business-conflict functions from `40001` to `PT409` while
+   retaining function signatures, grants, ownership and fixed search paths.
+   Genuine PostgreSQL serialization errors are not caught or rewritten.
+   The three optional Polar-only functions are excluded from this MVP audit.
+2. `20260915082320_r6_onboarding_completion_step_vocabulary.sql`: permits the
+   already-required monitor/timezone step names in immutable completion history.
+   Real Railway onboarding exposed the old check constraint; no historical row
+   or migration was rewritten to repair it.
+3. `20260915205627_r6_checkin_context_and_account_deletion.sql`: carries current
+   onboarding completion provenance into trusted check-in planning and makes all
+   four initial-request dependents cascade deterministically on Auth account
+   deletion. The retained plan-owning test user and both final flow users then
+   deleted successfully.
+
+Backend mappings accept `PT409` as conflict. Hosted Data API exact-key/exact-body
+retries return the original activity; changed fingerprints return HTTP 409 with
+`PT409` within the verifier's 10-second bound, not a timeout/retry loop. Stale
+zone approval also returned HTTP 409 through Railway.
+
+Railway additionally exposed the planner reading only the historical `metric`
+field. It now consumes current calibration `metric_profiles`; run/bike HR and
+swim CSS planning capability regression tests cover this boundary. Physiological
+formulas were not changed.
+
+### Current gate evidence
+
+| MVP gate | Status | Evidence |
+| --- | --- | --- |
+| Immutable code and environment safety | PASS | Tracked candidate above; development-only variables and separate Railway environment. |
+| Hosted deterministic conflict | PASS | Real-token Data API same-key replay succeeds; changed fingerprint returns prompt HTTP 409/PT409; temporary users cleaned up. |
+| Database regression | PASS | All 24 tracked SQL/pgTAP suites passed, zero failing assertions, including current calibration lifecycle and historical activation guards. Hosted dry-run reports up-to-date through `20260915205627`. |
+| Real-token Data API isolation | PASS | Two real Auth password tokens; 30 accessible and 2 denied table surfaces per user; inverse read/mutation checks, split/operational profiles, goal/activity, identity authority, private schema/load and service-only boundaries passed; cleanup 2/2. |
+| Railway complete MVP flow | PASS | Deployment `a7d4b415-a329-4285-8459-e65fc6be86e7` identifies the exact candidate SHA. Health=`ok`, readiness=`ready`, environment=`staging`. New and representative legacy users passed profile/monitor/timezone/race/history, calibration, pending zone approval, onboarding/resume and inverse ownership. Initial plan stayed pending until approval; a planned partial-HR activity persisted observed-only private provenance; exact retry and stale revisions behaved deterministically; the next race-anchored recovery week produced a pending `recovery_factor` proposal. Cleanup 2/2. |
+| Automated backend/mobile | PASS | 632 backend tests; Ruff check/format (including verifiers); strict mypy 132 files; mobile 6 suites/19 tests, TypeScript and unused checks. |
+| Primary-platform real device | BLOCKED | ADB returned no attached Android device on 2026-09-15. No physical-device flow claimed. |
+| iOS device | NOT EXECUTED | Windows environment; signing/device access unavailable. |
+| Accountable physiological review | BLOCKED | Ruleset/source documents exist; no named qualified reviewer and identifiable approval record. No self-approval or fabricated evidence. |
+| Legacy compatibility removal | NOT EXECUTED | Explicitly excluded; compatibility retained. |
+
+The legacy Railway fixture is a newly created, tagged development Auth user
+with a representative old completed onboarding session. It does not claim to
+represent a migrated historical plan/activity corpus. The separate historical
+upgrade evidence below is retained without redesigning that exercise.
+
+Every successful public Railway response was recursively checked for private
+load/TSS keys. A post-flow scan of 500 staging log lines found zero matches for
+planned/realized TSS, private-load, secret-key or bearer-token patterns.
+
+An additional real runtime edge remains open: if the **first** plan itself lands
+on a race-anchored recovery week, no prior week-4 planned snapshot exists and the
+backend returns `recovery_baseline_unavailable`. The supplied rules require 60%
+of week 4 but do not define a substitute first-plan baseline. R6 therefore keeps
+this fail-closed and requests an accountable product/physiology decision; the
+passing trace deliberately uses an ordinary build week followed by a recovery
+week and does not conceal this gap.
+
+### Remaining MVP release gates and production plan
+
+Define and approve the first-plan/recovery-week behavior; complete the
+primary-platform physical-device checklist; obtain the accountable
+physiological reviewer identity and approval record for
+`phase-13-joren-ruleset-1`. Do not mark Phase 13/14 complete from automated gates.
+
+After those gates pass, request a **separate explicit production authorization**.
+The production step must: record target IDs, current deployment and migration
+ledger; confirm backup/recovery posture; compare the ledger with this candidate
+and stop on divergence; dry-run and apply only missing forward migrations in
+repository order; deploy the approved candidate with production-only secrets;
+verify health/readiness and bounded token/ownership/idempotency smoke tests;
+publish the verified signed mobile build; monitor errors and privacy signals.
+No down-migration or ownership cutover is included. Keep the previous compatible
+application available for rollback; database repairs remain forward-only.
+
+**Current outcome: R6 MVP GATES INCOMPLETE.**
+
+## Archived full-matrix assessment — 2026-09-14
+
+The following is historical evidence, not the current MVP blocker list or
+authorization to execute its older broader release plan.
+
 Date: 2026-09-14
 
 Baseline branch: `main`
