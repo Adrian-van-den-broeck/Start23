@@ -6,11 +6,19 @@ create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 select no_plan();
 
-select has_table(
+create temporary table h01_tap_results (
+  sequence bigint generated always as identity primary key,
+  result text not null
+);
+grant insert, select on h01_tap_results to authenticated, service_role;
+grant usage, select on sequence h01_tap_results_sequence_seq
+to authenticated, service_role;
+
+insert into h01_tap_results (result) select has_table(
   'private', 'calibration_protocol_lifecycle',
   'the database has one authoritative calibration lifecycle registry'
 );
-select results_eq(
+insert into h01_tap_results (result) select results_eq(
   $q$select protocol_id, discipline, protocol_type, lifecycle
     from private.calibration_protocol_lifecycle order by protocol_id$q$,
   $q$values
@@ -23,7 +31,7 @@ select results_eq(
     ('start23_week1_swim_calibration_v1', 'swim', 'submaximal_calibration', 'current_selectable')$q$,
   'current/selectable and historical/read-only classifications are exact'
 );
-select ok(
+insert into h01_tap_results (result) select ok(
   not has_table_privilege(
     'anon', 'private.calibration_protocol_lifecycle', 'select'
   )
@@ -35,7 +43,7 @@ select ok(
   ),
   'the lifecycle registry is not a client-mutable or enumerable API'
 );
-select ok(
+insert into h01_tap_results (result) select ok(
   has_function_privilege(
     'authenticated',
     'private.is_current_calibration_protocol(text,text,text)',
@@ -53,7 +61,7 @@ select ok(
   ),
   'only authenticated scheduling may call the read-only lifecycle predicate'
 );
-select ok(
+insert into h01_tap_results (result) select ok(
   private.is_current_calibration_protocol(
     'start23_week1_swim_calibration_v1', 'swim', 'submaximal_calibration'
   )
@@ -78,7 +86,7 @@ select ok(
   'all database write boundaries consume the exact lifecycle classification'
 );
 
-select ok(
+insert into h01_tap_results (result) select ok(
   exists (
     select 1 from pg_trigger
     where tgrelid = 'public.discipline_zone_setups'::regclass
@@ -111,7 +119,7 @@ select ok(
   ),
   'setup, observation, evaluation, zone-state, and scheduling guards are enabled'
 );
-select ok(
+insert into h01_tap_results (result) select ok(
   not has_function_privilege(
     'authenticated', 'public.save_integrated_test_assignment(jsonb)', 'execute'
   )
@@ -123,6 +131,14 @@ select ok(
 
 insert into auth.users(id)
 values ('c0100000-0000-0000-0000-000000000001');
+
+insert into public.athlete_profiles (
+  athlete_id, timezone, timezone_source, timezone_confirmed_at,
+  onboarding_status
+) values (
+  'c0100000-0000-0000-0000-000000000001', 'Europe/Amsterdam',
+  'manual', statement_timestamp(), 'in_progress'
+);
 
 select set_config('start23.critical_write', 'on', true);
 insert into public.activities(
@@ -157,7 +173,7 @@ select set_config(
 set local request.jwt.claim.sub = 'c0100000-0000-0000-0000-000000000001';
 set local role authenticated;
 
-select lives_ok(
+insert into h01_tap_results (result) select lives_ok(
   $q$select public.save_discipline_zone_setup(jsonb_build_object(
     'discipline', 'run', 'setup_route', 'calibration_week',
     'guidance_mode', 'heart_rate', 'setup_status', 'calibration_pending',
@@ -169,7 +185,7 @@ select lives_ok(
   ))$q$,
   'current run submaximal setup succeeds'
 );
-select lives_ok(
+insert into h01_tap_results (result) select lives_ok(
   $q$select public.save_discipline_zone_setup(jsonb_build_object(
     'discipline', 'bike', 'setup_route', 'calibration_week',
     'guidance_mode', 'combined', 'setup_status', 'calibration_pending',
@@ -181,7 +197,7 @@ select lives_ok(
   ))$q$,
   'current bike submaximal setup succeeds'
 );
-select lives_ok(
+insert into h01_tap_results (result) select lives_ok(
   $q$select public.save_discipline_zone_setup(jsonb_build_object(
     'discipline', 'swim', 'setup_route', 'calibration_week',
     'guidance_mode', 'pace', 'setup_status', 'calibration_pending',
@@ -232,12 +248,12 @@ select public.save_calibration_observation(
     'pool_length_meters', 25
   ), repeat('6', 64)
 );
-select is(
+insert into h01_tap_results (result) select is(
   (select count(*) from h01_current_observations), 3::bigint,
   'current swim, bike, and run observations are newly persistable'
 );
 
-select throws_ok(
+insert into h01_tap_results (result) select throws_ok(
   $q$select public.save_calibration_observation(jsonb_build_object(
     'activity_id', 'c0110000-0000-0000-0000-000000000001',
     'planned_workout_id', null,
@@ -250,7 +266,7 @@ select throws_ok(
   '23514', 'historical calibration protocol is read-only',
   'the authenticated observation API rejects a new historical observation'
 );
-select throws_ok(
+insert into h01_tap_results (result) select throws_ok(
   $q$select public.save_discipline_zone_setup(jsonb_build_object(
     'discipline', 'run', 'setup_route', 'field_test',
     'guidance_mode', 'heart_rate', 'setup_status', 'test_pending',
@@ -263,7 +279,7 @@ select throws_ok(
   '23514', 'historical calibration protocol is read-only',
   'authenticated setup cannot configure a historical field test'
 );
-select throws_ok(
+insert into h01_tap_results (result) select throws_ok(
   $q$select public.create_validation_test_proposal(jsonb_build_object(
     'discipline', 'run',
     'protocol_id', 'start23_run_threshold_30min_v1',
@@ -275,7 +291,7 @@ select throws_ok(
 );
 
 select set_config('start23.critical_write', 'on', true);
-select throws_ok(
+insert into h01_tap_results (result) select throws_ok(
   $q$insert into public.calibration_observations(
     athlete_id, activity_id, protocol_id, discipline, segment_id,
     performed_at, payload, fingerprint
@@ -342,11 +358,11 @@ select public.save_calibration_evaluation(
     'review_status', 'not_applicable'
   ), repeat('b', 64)
 );
-select is(
+insert into h01_tap_results (result) select is(
   (select count(*) from h01_current_evaluations), 3::bigint,
   'current swim, bike, and run observations are newly evaluable'
 );
-select throws_ok(
+insert into h01_tap_results (result) select throws_ok(
   $q$select public.save_calibration_evaluation(
     'c0100000-0000-0000-0000-000000000001',
     jsonb_build_object(
@@ -357,13 +373,14 @@ select throws_ok(
       'zone_status', 'unknown', 'confidence', 'not_assessed',
       'reason_codes', jsonb_build_array('required_segment_missing'),
       'thresholds', '[]'::jsonb, 'requires_athlete_confirmation', false,
-      'review_status', 'not_applicable'
+      'review_status', 'not_applicable',
+      'zone_model_version', null, 'zone_profiles', '[]'::jsonb
     ), repeat('c', 64)
   )$q$,
   '23514', 'historical calibration protocol is read-only',
   'the service evaluation persistence RPC rejects historical protocols'
 );
-select throws_ok(
+insert into h01_tap_results (result) select throws_ok(
   $q$select public.save_calibration_evaluation(
     'c0100000-0000-0000-0000-000000000001',
     jsonb_build_object(
@@ -374,7 +391,8 @@ select throws_ok(
       'zone_status', 'unknown', 'confidence', 'not_assessed',
       'reason_codes', jsonb_build_array('required_segment_missing'),
       'thresholds', '[]'::jsonb, 'requires_athlete_confirmation', false,
-      'review_status', 'not_applicable'
+      'review_status', 'not_applicable',
+      'zone_model_version', null, 'zone_profiles', '[]'::jsonb
     ), repeat('d', 64)
   )$q$,
   '23514', 'current evaluation requires a persisted protocol observation',
@@ -382,7 +400,7 @@ select throws_ok(
 );
 reset role;
 
-select is(
+insert into h01_tap_results (result) select is(
   (
     select count(*) from public.change_proposals
     where athlete_id = 'c0100000-0000-0000-0000-000000000001'
@@ -390,7 +408,7 @@ select is(
   0::bigint,
   'no historical protocol can generate a new pending proposal'
 );
-select ok(
+insert into h01_tap_results (result) select ok(
   has_table_privilege(
     'authenticated', 'public.calibration_observations', 'select'
   )
@@ -400,5 +418,7 @@ select ok(
   'the fix preserves authenticated owner reads of already-stored history'
 );
 
+insert into h01_tap_results (result)
 select * from finish();
+select result from h01_tap_results order by sequence;
 rollback;

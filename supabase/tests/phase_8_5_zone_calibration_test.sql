@@ -4,17 +4,25 @@ create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 select no_plan();
 
-select has_table(
+create temporary table phase_8_5_tap_results (
+  sequence bigint generated always as identity primary key,
+  result text not null
+);
+grant insert, select on phase_8_5_tap_results to authenticated, service_role;
+grant usage, select on sequence phase_8_5_tap_results_sequence_seq
+to authenticated, service_role;
+
+insert into phase_8_5_tap_results (result) select has_table(
   'public', 'discipline_zone_setups', 'discipline setup table exists'
 );
-select has_table(
+insert into phase_8_5_tap_results (result) select has_table(
   'public', 'calibration_observations', 'calibration observation table exists'
 );
-select has_table(
+insert into phase_8_5_tap_results (result) select has_table(
   'public', 'calibration_evaluations', 'calibration evaluation table exists'
 );
 
-select is(
+insert into phase_8_5_tap_results (result) select is(
   (
     select expected_rpe_max
     from public.workout_templates
@@ -24,7 +32,7 @@ select is(
   'the low-bucket heart-rate field test retains its complete segment RPE range'
 );
 
-select ok(
+insert into phase_8_5_tap_results (result) select ok(
   not exists (
     select 1 from pg_class
     where oid in (
@@ -36,7 +44,7 @@ select ok(
   'RLS is enabled and forced on every Phase 8.5 public table'
 );
 
-select ok(
+insert into phase_8_5_tap_results (result) select ok(
   not has_table_privilege('anon', 'public.discipline_zone_setups', 'select')
   and not has_table_privilege('anon', 'public.calibration_observations', 'select')
   and not has_table_privilege('anon', 'public.calibration_evaluations', 'select')
@@ -52,7 +60,7 @@ select ok(
   'explicit grants expose owner reads only to authenticated athletes'
 );
 
-select ok(
+insert into phase_8_5_tap_results (result) select ok(
   not (
     select prosecdef from pg_proc
     where oid = 'public.save_discipline_zone_setup(jsonb)'::regprocedure
@@ -68,7 +76,7 @@ select ok(
   'athlete RPCs are invoker functions and generated evaluation is service-only'
 );
 
-select ok(
+insert into phase_8_5_tap_results (result) select ok(
   has_function_privilege(
     'authenticated', 'public.save_discipline_zone_setup(jsonb)', 'execute'
   )
@@ -93,10 +101,19 @@ values
   ('a0000000-0000-0000-0000-000000000085'),
   ('b0000000-0000-0000-0000-000000000085');
 
-insert into public.athlete_profiles (athlete_id, timezone, onboarding_status)
+insert into public.athlete_profiles (
+  athlete_id, timezone, timezone_source, timezone_confirmed_at,
+  onboarding_status
+)
 values
-  ('a0000000-0000-0000-0000-000000000085', 'Europe/Amsterdam', 'in_progress'),
-  ('b0000000-0000-0000-0000-000000000085', 'Europe/Amsterdam', 'in_progress');
+  (
+    'a0000000-0000-0000-0000-000000000085', 'Europe/Amsterdam',
+    'manual', statement_timestamp(), 'in_progress'
+  ),
+  (
+    'b0000000-0000-0000-0000-000000000085', 'Europe/Amsterdam',
+    'manual', statement_timestamp(), 'in_progress'
+  );
 
 select set_config('start23.critical_write', 'on', true);
 insert into public.activities (
@@ -131,7 +148,7 @@ set local request.jwt.claim.sub =
   'a0000000-0000-0000-0000-000000000085';
 set local role authenticated;
 
-select throws_ok(
+insert into phase_8_5_tap_results (result) select throws_ok(
   $$
     select public.save_discipline_zone_setup(
       jsonb_build_object(
@@ -161,7 +178,7 @@ select throws_ok(
 -- transaction so the assertion matches the hosted request boundary.
 select set_config('start23.critical_write', '', true);
 
-select throws_ok(
+insert into phase_8_5_tap_results (result) select throws_ok(
   $$
     insert into public.discipline_zone_setups (
       athlete_id,
@@ -187,9 +204,9 @@ select throws_ok(
       'not_assessed'
     )
   $$,
-  '42501',
-  'critical object writes require a Start23 RPC',
-  'direct discipline setup writes cannot bypass the lifecycle RPC'
+  '23514',
+  'historical calibration protocol is read-only',
+  'direct discipline setup writes cannot bypass the current lifecycle contract'
 );
 
 create temporary table phase_8_5_observation as
@@ -229,7 +246,7 @@ select public.save_calibration_observation(
 ) as result;
 grant select on phase_8_5_observation to authenticated, service_role;
 
-select is(
+insert into phase_8_5_tap_results (result) select is(
   public.save_calibration_observation(
     (
       select payload from public.calibration_observations
@@ -243,7 +260,7 @@ select is(
   'identical observation retries return the immutable original'
 );
 
-select throws_ok(
+insert into phase_8_5_tap_results (result) select throws_ok(
   $$
     select public.save_calibration_observation(
       (
@@ -261,7 +278,7 @@ select throws_ok(
   'a conflicting retry cannot rewrite a segment observation'
 );
 
-select is(
+insert into phase_8_5_tap_results (result) select is(
   (select count(*)::integer from public.calibration_observations),
   1,
   'the owner can read exactly the persisted observation'
@@ -277,12 +294,12 @@ set local request.jwt.claim.sub =
   'b0000000-0000-0000-0000-000000000085';
 set local role authenticated;
 
-select is(
+insert into phase_8_5_tap_results (result) select is(
   (select count(*)::integer from public.calibration_observations),
   0,
   'a second athlete cannot read the first athlete observation'
 );
-select is(
+insert into phase_8_5_tap_results (result) select is(
   (select count(*)::integer from public.discipline_zone_setups),
   0,
   'a second athlete cannot read the first athlete setup'
@@ -313,7 +330,7 @@ select public.save_calibration_evaluation(
 ) as result;
 grant select on phase_8_5_evaluation to authenticated, service_role;
 
-select is(
+insert into phase_8_5_tap_results (result) select is(
   public.save_calibration_evaluation(
     'a0000000-0000-0000-0000-000000000085',
     jsonb_build_object(
@@ -336,7 +353,7 @@ select is(
   'deterministic evaluation persistence is retry-idempotent'
 );
 
-select throws_ok(
+insert into phase_8_5_tap_results (result) select throws_ok(
   $$
     update public.calibration_evaluations
     set status = 'insufficient_data'
@@ -359,12 +376,12 @@ set local request.jwt.claim.sub =
   'a0000000-0000-0000-0000-000000000085';
 set local role authenticated;
 
-select is(
+insert into phase_8_5_tap_results (result) select is(
   (select count(*)::integer from public.calibration_evaluations),
   1,
   'the athlete can read the pending server-generated evaluation'
 );
-select ok(
+insert into phase_8_5_tap_results (result) select ok(
   not exists (
     select 1 from information_schema.columns
     where table_schema = 'public'
@@ -379,5 +396,7 @@ select ok(
 );
 
 reset role;
+insert into phase_8_5_tap_results (result)
 select * from finish();
+select result from phase_8_5_tap_results order by sequence;
 rollback;

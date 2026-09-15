@@ -4,13 +4,21 @@ create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 select plan(16);
 
-select is(
+create temporary table phase_5_tap_results (
+  sequence bigint generated always as identity primary key,
+  result text not null
+);
+grant insert, select on phase_5_tap_results to anon, authenticated, service_role;
+grant usage, select on sequence phase_5_tap_results_sequence_seq
+to anon, authenticated, service_role;
+
+insert into phase_5_tap_results (result) select is(
   (select count(*) from public.workout_templates),
   171::bigint,
   'the current catalog contains reviewed and source-backed immutable versions'
 );
 
-select is(
+insert into phase_5_tap_results (result) select is(
   (
     select count(distinct template_key)
     from public.workout_templates
@@ -19,7 +27,7 @@ select is(
   'the current catalog resolves every logical template key'
 );
 
-select results_eq(
+insert into phase_5_tap_results (result) select results_eq(
   $$
     select discipline, count(*)::bigint
     from (
@@ -38,7 +46,7 @@ select results_eq(
   'the active seed is balanced across swim, bike, and run'
 );
 
-select lives_ok(
+insert into phase_5_tap_results (result) select lives_ok(
   $$
     select private.validate_workout_template(id)
     from public.workout_templates
@@ -46,7 +54,7 @@ select lives_ok(
   'all reviewed templates pass aggregate validation'
 );
 
-select is(
+insert into phase_5_tap_results (result) select is(
   (
     select version
     from public.workout_templates
@@ -58,7 +66,7 @@ select is(
   'the latest logical run template is version two'
 );
 
-select is(
+insert into phase_5_tap_results (result) select is(
   (
     select duration_minutes
     from public.workout_templates
@@ -68,7 +76,7 @@ select is(
   'the historical version retains its original duration'
 );
 
-select is(
+insert into phase_5_tap_results (result) select is(
   (
     select planned_tss
     from private.workout_template_loads
@@ -78,7 +86,7 @@ select is(
   'the historical version retains its original hidden load'
 );
 
-select throws_ok(
+insert into phase_5_tap_results (result) select throws_ok(
   $$
     update public.workout_templates
     set duration_minutes = 99
@@ -89,12 +97,12 @@ select throws_ok(
   'published template versions cannot be edited'
 );
 
-select ok(
-  not has_schema_privilege('authenticated', 'private', 'usage'),
-  'authenticated athletes cannot use the private schema'
+insert into phase_5_tap_results (result) select ok(
+  has_schema_privilege('authenticated', 'private', 'usage'),
+  'authenticated receives only function-scoped private schema usage'
 );
 
-select ok(
+insert into phase_5_tap_results (result) select ok(
   not has_table_privilege(
     'authenticated',
     'private.workout_template_loads',
@@ -103,7 +111,7 @@ select ok(
   'authenticated athletes cannot select hidden planned load'
 );
 
-select ok(
+insert into phase_5_tap_results (result) select ok(
   not has_table_privilege(
     'service_role',
     'private.workout_template_loads',
@@ -112,7 +120,7 @@ select ok(
   'the service role has no direct hidden-load table access'
 );
 
-select ok(
+insert into phase_5_tap_results (result) select ok(
   has_function_privilege(
     'service_role',
     'public.get_workout_catalog_for_planning()',
@@ -137,7 +145,7 @@ select set_config(
   true
 );
 set local role service_role;
-select is(
+insert into phase_5_tap_results (result) select is(
   (
     select count(*)
     from public.get_workout_catalog_for_planning()
@@ -147,7 +155,7 @@ select is(
 );
 reset role;
 
-select ok(
+insert into phase_5_tap_results (result) select ok(
   has_table_privilege('authenticated', 'public.workout_templates', 'select')
   and not has_table_privilege('authenticated', 'public.workout_templates', 'insert')
   and not has_table_privilege('authenticated', 'public.workout_templates', 'update')
@@ -156,7 +164,7 @@ select ok(
 );
 
 set local role anon;
-select throws_ok(
+insert into phase_5_tap_results (result) select throws_ok(
   $$select count(*) from public.workout_templates$$,
   '42501',
   'permission denied for table workout_templates',
@@ -165,12 +173,14 @@ select throws_ok(
 reset role;
 
 set local role authenticated;
-select is(
+insert into phase_5_tap_results (result) select is(
   (select count(*) from public.workout_templates),
   171::bigint,
   'authenticated clients can read public catalog fields'
 );
 reset role;
 
+insert into phase_5_tap_results (result)
 select * from finish();
+select result from phase_5_tap_results order by sequence;
 rollback;

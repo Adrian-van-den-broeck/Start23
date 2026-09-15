@@ -1,4 +1,4 @@
-"""Static gates for the bounded H-01/H-04 pre-R6 repository fixes."""
+"""Static gates for H-01/H-04 and the forward-only R6 remediations."""
 
 import re
 from pathlib import Path
@@ -14,16 +14,34 @@ _ACTIVATION_MIGRATION = (
     _MIGRATIONS / "20260914090000_block_historical_zone_profile_activation.sql"
 )
 _PGTAP = _ROOT / "supabase" / "tests"
+_R6_FORWARD_MIGRATIONS = {
+    "20260912070000_r6_allow_opaque_owner_backfill_for_immutable_calibration.sql",
+    "20260914162430_r6_preserve_critical_context_for_submaximal_zone_provenance.sql",
+    "20260914162711_r6_order_plan_revision_owner_before_eligibility.sql",
+    "20260914163325_r6_restore_activity_idempotency_preflight.sql",
+    "20260914170134_r6_increment_structured_race_goal_revision.sql",
+    "20260914172000_r6_refresh_planning_snapshot_after_input_change.sql",
+    "20260914172500_r6_refresh_extended_planning_snapshot_after_input_change.sql",
+    "20260914173000_r6_refresh_planning_snapshot_after_goal_rpc.sql",
+    "20260914173500_r6_force_distinct_post_rpc_snapshot_refresh.sql",
+    "20260914174000_r6_disambiguate_activity_processing_load_source.sql",
+    "20260914175000_r6_cover_foreign_key_access_paths.sql",
+    "20260914180000_r6_preserve_account_deletion_cascades.sql",
+}
 
 
 def _sql(path: Path = _CREATION_MIGRATION) -> str:
     return path.read_text(encoding="utf-8").lower()
 
 
-def test_h01_uses_unique_forward_only_pre_r6_migrations() -> None:
-    versions = [path.name.split("_", 1)[0] for path in _MIGRATIONS.glob("*.sql")]
+def test_h01_and_r6_use_unique_forward_only_migrations() -> None:
+    migration_paths = list(_MIGRATIONS.glob("*.sql"))
+    versions = [path.name.split("_", 1)[0] for path in migration_paths]
     assert len(versions) == len(set(versions))
-    assert sorted(versions)[-2:] == ["20260914080000", "20260914090000"]
+    names = {path.name for path in migration_paths}
+    assert _R6_FORWARD_MIGRATIONS <= names
+    assert _CREATION_MIGRATION.name in names
+    assert _ACTIVATION_MIGRATION.name in names
     sql = _sql()
     assert "without starting r6" in sql
     assert "delete from public.calibration_" not in sql

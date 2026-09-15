@@ -71,8 +71,7 @@ select ok(
 
 insert into phase_6_tap_results (result)
 select ok(
-  not has_schema_privilege('authenticated', 'private', 'usage')
-  and not has_table_privilege(
+  not has_table_privilege(
     'authenticated',
     'private.planned_workout_loads',
     'select'
@@ -92,7 +91,7 @@ select ok(
     'private.plan_revision_loads',
     'select'
   ),
-  'hidden workout and revision loads have no direct API-role access'
+  'function-scoped private schema usage grants no direct load-table access'
 );
 
 insert into phase_6_tap_results (result)
@@ -153,11 +152,53 @@ values
   ('70000000-0000-0000-0000-000000000007');
 
 select set_config('start23.critical_write', 'on', true);
+insert into public.athlete_profiles (
+  athlete_id, timezone, timezone_source, timezone_confirmed_at,
+  heart_rate_monitor_confirmed_at, onboarding_status
+) values (
+  '60000000-0000-0000-0000-000000000006', 'UTC', 'manual',
+  statement_timestamp(), statement_timestamp(), 'in_progress'
+);
+select set_config('start23.profile_write', 'on', true);
+insert into public.athlete_physiology_profiles (
+  athlete_id, date_of_birth, resting_heart_rate_bpm
+)
+select mapping.athlete_id, '1990-01-01'::date, 50
+from private.athlete_identity_map mapping
+where mapping.auth_user_id = '60000000-0000-0000-0000-000000000006'
+on conflict (athlete_id) do update set
+  date_of_birth = excluded.date_of_birth,
+  resting_heart_rate_bpm = excluded.resting_heart_rate_bpm;
+select set_config('start23.profile_write', '', true);
+insert into public.training_history_entries (
+  athlete_id, discipline, previous_month_weekly_minutes,
+  baseline_model_version
+) values
+  ('60000000-0000-0000-0000-000000000006', 'swim', 60, 'phase-13-joren-ruleset-1'),
+  ('60000000-0000-0000-0000-000000000006', 'bike', 120, 'phase-13-joren-ruleset-1'),
+  ('60000000-0000-0000-0000-000000000006', 'run', 90, 'phase-13-joren-ruleset-1');
+insert into public.goals (
+  athlete_id, race_type, race_name, race_date,
+  swim_distance_meters, bike_distance_meters, run_distance_meters,
+  total_target_time_seconds
+) values (
+  '60000000-0000-0000-0000-000000000006', 'triathlon',
+  'Current planning fixture', current_date + 90, 1500, 40000, 10000, 14400
+);
+insert into public.zone_profile_versions (
+  athlete_id, discipline, version, setup_method, status, validated,
+  fallback_active, needs_testing, requires_review, review_reason,
+  ruleset_version, effective_from
+) values
+  ('60000000-0000-0000-0000-000000000006', 'swim', 1, 'manual', 'active', true, false, false, true, 'soft_range_not_configured', 'phase-3-ruleset-2', statement_timestamp()),
+  ('60000000-0000-0000-0000-000000000006', 'bike', 1, 'manual', 'active', true, false, false, true, 'soft_range_not_configured', 'phase-3-ruleset-2', statement_timestamp()),
+  ('60000000-0000-0000-0000-000000000006', 'run', 1, 'manual', 'active', true, false, false, true, 'soft_range_not_configured', 'phase-3-ruleset-2', statement_timestamp());
 insert into public.initial_plan_requests (
   id,
   athlete_id,
   status,
   onboarding_revision,
+  onboarding_version,
   ruleset_version,
   input_snapshot,
   input_fingerprint
@@ -167,7 +208,8 @@ values (
   '60000000-0000-0000-0000-000000000006',
   'pending',
   1,
-  'phase-3-ruleset-2',
+  'phase-14-onboarding-v2',
+  'phase-13-joren-ruleset-1',
   jsonb_build_object(
     'profile', jsonb_build_object(
       'athlete_id', '60000000-0000-0000-0000-000000000006',
@@ -200,6 +242,17 @@ values (
       'ruleset_version', 'phase-3-ruleset-2'
     )::text
   )
+);
+insert into public.onboarding_sessions (
+  athlete_id, status, current_step, completed_steps, revision,
+  initial_plan_request_id, completed_onboarding_version,
+  completed_ruleset_version, completed_at
+) values (
+  '60000000-0000-0000-0000-000000000006', 'completed', 'completed',
+  array['profile','heart_rate_monitor','timezone','history','goal','zones','review']::text[],
+  1, '61000000-0000-0000-0000-000000000006',
+  'phase-14-onboarding-v2', 'phase-13-joren-ruleset-1',
+  statement_timestamp()
 );
 select set_config('start23.critical_write', '', true);
 
@@ -510,6 +563,7 @@ select lives_ok(
 );
 
 reset role;
+select set_config('start23.critical_write', 'on', true);
 create temporary table phase_6_rejection (
   id uuid primary key
 );
@@ -527,7 +581,8 @@ with target_revision as (
     initial_plan_request_id, total_duration_minutes, low_intensity_percent,
     high_intensity_percent, confirmed_injuries, availability, ruleset_version
   from public.plan_revisions
-  where state = 'active'
+  where athlete_id = '60000000-0000-0000-0000-000000000006'
+    and state = 'active'
   returning id, athlete_id
 ), rejected_proposal as (
   insert into public.change_proposals (

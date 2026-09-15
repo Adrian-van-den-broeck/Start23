@@ -66,10 +66,19 @@ values
   ('a0000000-0000-0000-0000-000000000105'),
   ('b0000000-0000-0000-0000-000000000105');
 
-insert into public.athlete_profiles (athlete_id, timezone, onboarding_status)
+insert into public.athlete_profiles (
+  athlete_id, timezone, timezone_source, timezone_confirmed_at,
+  onboarding_status
+)
 values
-  ('a0000000-0000-0000-0000-000000000105', 'Europe/Amsterdam', 'in_progress'),
-  ('b0000000-0000-0000-0000-000000000105', 'Europe/Amsterdam', 'in_progress');
+  (
+    'a0000000-0000-0000-0000-000000000105', 'Europe/Amsterdam',
+    'manual', statement_timestamp(), 'in_progress'
+  ),
+  (
+    'b0000000-0000-0000-0000-000000000105', 'Europe/Amsterdam',
+    'manual', statement_timestamp(), 'in_progress'
+  );
 
 select set_config('start23.critical_write', 'on', true);
 insert into public.activities (

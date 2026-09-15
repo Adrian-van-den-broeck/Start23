@@ -512,6 +512,12 @@ not execute or start R6 and does not mark Phase 13 or Phase 14 complete.
 
 ## Remediation Phase R6: database, security, integration, and release closure
 
+Status: executed on 2026-09-14 and incomplete. The hosted historical migration
+upgrade and complete tracked database suite passed, but fresh-chain, Railway,
+hosted-conflict, security-configuration, exhaustive real-token, device, and
+accountable-review gates remain open. The compatibility cutover is deferred.
+See the [R6 verification report](phase-13-and-14-r6-verification-report.md).
+
 ### Objective
 
 Verify the complete remediated implementation across real persistence,

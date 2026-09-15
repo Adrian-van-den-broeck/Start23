@@ -84,29 +84,80 @@ values
   ('a0000000-0000-0000-0000-000000000008'),
   ('b0000000-0000-0000-0000-000000000008');
 
-insert into public.athlete_profiles (athlete_id, timezone, onboarding_status)
+insert into public.athlete_profiles (
+  athlete_id, timezone, timezone_source, timezone_confirmed_at,
+  onboarding_status
+)
 values
   (
     'a0000000-0000-0000-0000-000000000008',
     'Pacific/Kiritimati',
-    'completed'
+    'manual',
+    statement_timestamp(),
+    'in_progress'
   ),
   (
     'b0000000-0000-0000-0000-000000000008',
     'America/Adak',
-    'completed'
+    'manual',
+    statement_timestamp(),
+    'in_progress'
   );
 
 select set_config('start23.critical_write', 'on', true);
+select set_config('start23.profile_write', 'on', true);
+insert into public.athlete_physiology_profiles (
+  athlete_id, date_of_birth, resting_heart_rate_bpm
+)
+select mapping.athlete_id, '1990-01-01'::date, 50
+from private.athlete_identity_map mapping
+where mapping.auth_user_id = 'a0000000-0000-0000-0000-000000000008'
+on conflict (athlete_id) do update set
+  date_of_birth = excluded.date_of_birth,
+  resting_heart_rate_bpm = excluded.resting_heart_rate_bpm;
+select set_config('start23.profile_write', '', true);
+
+update public.athlete_profiles
+set heart_rate_monitor_confirmed_at = statement_timestamp()
+where athlete_id = 'a0000000-0000-0000-0000-000000000008';
+
+insert into public.training_history_entries (
+  athlete_id, discipline, previous_month_weekly_minutes,
+  baseline_model_version
+) values
+  ('a0000000-0000-0000-0000-000000000008', 'swim', 60, 'phase-13-joren-ruleset-1'),
+  ('a0000000-0000-0000-0000-000000000008', 'bike', 120, 'phase-13-joren-ruleset-1'),
+  ('a0000000-0000-0000-0000-000000000008', 'run', 90, 'phase-13-joren-ruleset-1');
+
+insert into public.goals (
+  athlete_id, race_type, race_name, race_date,
+  run_distance_meters, total_target_time_seconds
+) values (
+  'a0000000-0000-0000-0000-000000000008', 'run',
+  'Phase 8 current fixture', current_date + 90, 10000, 3600
+);
+
+insert into public.zone_profile_versions (
+  athlete_id, discipline, version, setup_method, status, validated,
+  fallback_active, needs_testing, requires_review, review_reason,
+  ruleset_version, effective_from
+) values (
+  'a0000000-0000-0000-0000-000000000008', 'run', 1, 'manual',
+  'active', true, false, false, true, 'soft_range_not_configured',
+  'phase-3-ruleset-2', statement_timestamp()
+);
+
 insert into public.initial_plan_requests (
-  id, athlete_id, status, onboarding_revision, ruleset_version,
+  id, athlete_id, status, onboarding_revision, onboarding_version,
+  ruleset_version,
   input_snapshot, input_fingerprint
 ) values (
   'a1000000-0000-0000-0000-000000000008',
   'a0000000-0000-0000-0000-000000000008',
   'pending',
   1,
-  'phase-3-ruleset-3',
+  'phase-14-onboarding-v2',
+  'phase-13-joren-ruleset-1',
   jsonb_build_object(
     'profile', jsonb_build_object(
       'athlete_id', 'a0000000-0000-0000-0000-000000000008',
@@ -120,10 +171,25 @@ insert into public.initial_plan_requests (
       'revision', 1
     ),
     'zones', '[]'::jsonb,
-    'ruleset_version', 'phase-3-ruleset-3'
+    'ruleset_version', 'phase-13-joren-ruleset-1'
   ),
   repeat('a', 32)
 );
+
+insert into public.onboarding_sessions (
+  athlete_id, status, current_step, completed_steps, revision,
+  initial_plan_request_id, completed_onboarding_version,
+  completed_ruleset_version, completed_at
+) values (
+  'a0000000-0000-0000-0000-000000000008', 'completed', 'completed',
+  array['profile','heart_rate_monitor','timezone','history','goal','zones','review']::text[],
+  1, 'a1000000-0000-0000-0000-000000000008',
+  'phase-14-onboarding-v2', 'phase-13-joren-ruleset-1',
+  statement_timestamp()
+);
+update public.athlete_profiles
+set onboarding_status = 'completed'
+where athlete_id = 'a0000000-0000-0000-0000-000000000008';
 select set_config('start23.critical_write', '', true);
 
 select set_config('request.jwt.claims', '{"role":"service_role"}', true);
@@ -155,12 +221,17 @@ create temporary table phase_8_checkin as
 select public.start_weekly_checkin('2026-08-17') as result;
 grant select on phase_8_checkin to authenticated, service_role;
 
+-- Simulate a separate hosted RPC transaction before the direct-write denial.
+select set_config('start23.checkin_write', '', true);
+
 insert into phase_8_tap_results (result)
 select is(
   public.start_weekly_checkin('2026-08-17') ->> 'id',
   (select result ->> 'id' from phase_8_checkin),
   'the athlete-local week start is idempotent'
 );
+
+select set_config('start23.checkin_write', '', true);
 
 insert into phase_8_tap_results (result)
 select throws_ok(
@@ -322,6 +393,7 @@ select public.create_weekly_plan_proposal_v2(
     'low_only_disciplines', '[]'::jsonb,
     'goal_disciplines', jsonb_build_array('swim', 'bike', 'run'),
     'availability', '[]'::jsonb,
+    'availability_source', 'checkin',
     'workouts', '[]'::jsonb,
     'warnings', jsonb_build_array(
       jsonb_build_object(
@@ -333,10 +405,14 @@ select public.create_weekly_plan_proposal_v2(
     ),
     'target_tss', 0,
     'planned_tss', 0,
-    'ruleset_version', 'phase-3-ruleset-3'
+    'ruleset_version', 'phase-13-joren-ruleset-1'
   )
 ) as result;
 grant select on phase_8_proposal to authenticated, service_role;
+
+-- Service-role callers reach private state only through the bounded RPC.
+-- Inspect persisted audit/load state as the transaction owner.
+reset role;
 
 insert into phase_8_tap_results (result)
 select is(
@@ -372,7 +448,6 @@ select is(
   'rest-only private planned load is exactly zero'
 );
 
-reset role;
 select set_config(
   'request.jwt.claims',
   '{"sub":"a0000000-0000-0000-0000-000000000008","role":"authenticated"}',
@@ -398,28 +473,14 @@ select is(
       '2026-08-23T10:00:00Z'
     )
   ),
-  7::bigint,
-  'the approved empty calendar exposes seven intentional rest days'
+  6::bigint,
+  'the approved empty plan keeps the completed outside-activity day non-rest'
 );
 
 reset role;
-select set_config('request.jwt.claims', '{}', true);
-select set_config('start23.checkin_write', 'on', true);
-select set_config('start23.critical_write', 'on', true);
-delete from public.weekly_plans
-where athlete_id = 'a0000000-0000-0000-0000-000000000008';
-delete from public.weekly_checkins
-where athlete_id = 'a0000000-0000-0000-0000-000000000008';
-delete from public.initial_plan_requests
-where athlete_id = 'a0000000-0000-0000-0000-000000000008';
-delete from auth.users
-where id in (
-  'a0000000-0000-0000-0000-000000000008',
-  'b0000000-0000-0000-0000-000000000008'
-);
 
-select plan(count(*)::integer) from phase_8_tap_results;
-select result from phase_8_tap_results order by sequence;
+insert into phase_8_tap_results (result)
 select * from finish();
+select result from phase_8_tap_results order by sequence;
 
 rollback;

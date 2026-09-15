@@ -5,17 +5,25 @@ create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 select no_plan();
 
-select has_table('public', 'athlete_profiles');
-select has_table('public', 'change_proposals');
-select has_table('public', 'goals');
-select has_table('public', 'initial_plan_requests');
-select has_table('public', 'onboarding_sessions');
-select has_table('public', 'training_history_entries');
-select has_table('public', 'zone_boundaries');
-select has_table('public', 'zone_metrics');
-select has_table('public', 'zone_profile_versions');
+create temporary table phase_4_tap_results (
+  sequence bigint generated always as identity primary key,
+  result text not null
+);
+grant insert, select on phase_4_tap_results to authenticated, service_role;
+grant usage, select on sequence phase_4_tap_results_sequence_seq
+to authenticated, service_role;
 
-select ok(
+insert into phase_4_tap_results (result) select has_table('public', 'athlete_profiles', 'athlete_profiles');
+insert into phase_4_tap_results (result) select has_table('public', 'change_proposals', 'change_proposals');
+insert into phase_4_tap_results (result) select has_table('public', 'goals', 'goals');
+insert into phase_4_tap_results (result) select has_table('public', 'initial_plan_requests', 'initial_plan_requests');
+insert into phase_4_tap_results (result) select has_table('public', 'onboarding_sessions', 'onboarding_sessions');
+insert into phase_4_tap_results (result) select has_table('public', 'training_history_entries', 'training_history_entries');
+insert into phase_4_tap_results (result) select has_table('public', 'zone_boundaries', 'zone_boundaries');
+insert into phase_4_tap_results (result) select has_table('public', 'zone_metrics', 'zone_metrics');
+insert into phase_4_tap_results (result) select has_table('public', 'zone_profile_versions', 'zone_profile_versions');
+
+insert into phase_4_tap_results (result) select ok(
   not exists (
     select 1
     from pg_class
@@ -34,7 +42,7 @@ select ok(
   'RLS is enabled and forced on every Phase 4 table'
 );
 
-select ok(
+insert into phase_4_tap_results (result) select ok(
   not exists (
     select 1
     from (
@@ -57,11 +65,11 @@ select ok(
   'anon cannot read any Phase 4 table'
 );
 
-select ok(
+insert into phase_4_tap_results (result) select ok(
   not (
     select prosecdef
     from pg_proc
-    where oid = 'public.save_primary_race_goal(uuid,text,text,text,date,text[])'::regprocedure
+    where oid = 'public.save_primary_race_goal(uuid,text,text,date,integer,integer,integer,integer,integer,integer,integer,text)'::regprocedure
   )
   and not (
     select prosecdef
@@ -91,26 +99,26 @@ select ok(
   'all athlete-token Phase 4 RPCs are security invoker'
 );
 
-select ok(
+insert into phase_4_tap_results (result) select ok(
   has_function_privilege(
     'authenticated',
-    'public.save_primary_race_goal(uuid,text,text,text,date,text[])',
+    'public.save_primary_race_goal(uuid,text,text,date,integer,integer,integer,integer,integer,integer,integer,text)',
     'execute'
   )
   and not has_function_privilege(
     'anon',
-    'public.save_primary_race_goal(uuid,text,text,text,date,text[])',
+    'public.save_primary_race_goal(uuid,text,text,date,integer,integer,integer,integer,integer,integer,integer,text)',
     'execute'
   )
   and not has_function_privilege(
     'service_role',
-    'public.save_primary_race_goal(uuid,text,text,text,date,text[])',
+    'public.save_primary_race_goal(uuid,text,text,date,integer,integer,integer,integer,integer,integer,integer,text)',
     'execute'
   ),
   'only authenticated athletes can invoke the primary-goal RPC'
 );
 
-select ok(
+insert into phase_4_tap_results (result) select ok(
   (
     select prosecdef
     from pg_proc
@@ -159,7 +167,7 @@ values
 set local role authenticated;
 set local request.jwt.claim.sub = '30000000-0000-0000-0000-000000000003';
 
-select throws_ok(
+insert into phase_4_tap_results (result) select throws_ok(
   $$
     insert into public.goals (
       athlete_id,
@@ -183,27 +191,24 @@ select throws_ok(
   'direct critical writes are rejected even for the owner'
 );
 
-select lives_ok(
+insert into phase_4_tap_results (result) select lives_ok(
   $$
     select public.save_primary_race_goal(
-      null,
-      'Owned A race',
-      'Finish the race with an even run.',
-      'Complete all three disciplines.',
-      '2027-07-01',
-      array['swim', 'bike', 'run']
+      null, 'triathlon', 'Owned A race', '2027-07-01',
+      1500, 40000, 10000, 14400, null, null, null,
+      'Finish the race with an even run.'
     )
   $$,
   'the authenticated owner can save the goal through the invoker RPC'
 );
 
-select is(
+insert into phase_4_tap_results (result) select is(
   (select count(*) from public.goals where status = 'active'),
   1::bigint,
   'the owner sees one active primary goal'
 );
 
-select lives_ok(
+insert into phase_4_tap_results (result) select lives_ok(
   $$
     select * from public.replace_training_history(
       '[
@@ -216,13 +221,13 @@ select lives_ok(
   'the owner can atomically replace all three history rows'
 );
 
-select is(
+insert into phase_4_tap_results (result) select is(
   (select count(*) from public.training_history_entries),
   3::bigint,
   'the owner sees exactly three history rows'
 );
 
-select throws_ok(
+insert into phase_4_tap_results (result) select throws_ok(
   $$
     select public.save_zone_profile(
       'bike',
@@ -246,7 +251,7 @@ select throws_ok(
   'an authenticated athlete cannot persist forged fallback output directly'
 );
 
-select throws_ok(
+insert into phase_4_tap_results (result) select throws_ok(
   $$
     select public.save_zone_profile(
       'run',
@@ -270,7 +275,7 @@ select throws_ok(
   'an authenticated athlete cannot forge manual review metadata'
 );
 
-select lives_ok(
+insert into phase_4_tap_results (result) select lives_ok(
   $$
     select public.save_zone_profile(
       'run',
@@ -292,7 +297,7 @@ select lives_ok(
   'the first confirmed zone version activates'
 );
 
-select lives_ok(
+insert into phase_4_tap_results (result) select lives_ok(
   $$
     select public.save_zone_profile(
       'run',
@@ -314,7 +319,7 @@ select lives_ok(
   'a replacement zone version remains pending'
 );
 
-select is(
+insert into phase_4_tap_results (result) select is(
   (
     select count(*)
     from public.zone_profile_versions
@@ -324,7 +329,7 @@ select is(
   'a pending replacement does not replace the active version'
 );
 
-select lives_ok(
+insert into phase_4_tap_results (result) select lives_ok(
   $$
     select public.approve_zone_proposal(
       (
@@ -342,7 +347,7 @@ select lives_ok(
   'zone approval atomically promotes the pending version'
 );
 
-select is(
+insert into phase_4_tap_results (result) select is(
   (
     select version
     from public.zone_profile_versions
@@ -352,7 +357,7 @@ select is(
   'the approved version is the only active run profile'
 );
 
-select is(
+insert into phase_4_tap_results (result) select is(
   (
     select state
     from public.change_proposals
@@ -370,7 +375,7 @@ select set_config(
 );
 set local role service_role;
 
-select lives_ok(
+insert into phase_4_tap_results (result) select lives_ok(
   $$
     select public.save_fallback_zone_profile(
       '30000000-0000-0000-0000-000000000003',
@@ -400,7 +405,7 @@ values (
   'phase-3-ruleset-2'
 );
 
-select is(
+insert into phase_4_tap_results (result) select is(
   (
     select input_fingerprint
     from public.initial_plan_requests
@@ -421,23 +426,19 @@ select set_config(
 );
 set local role authenticated;
 
-select lives_ok(
+insert into phase_4_tap_results (result) select lives_ok(
   $$
     select public.save_primary_race_goal(
-      (
-        select id from public.goals where status = 'active'
-      ),
-      'Updated owned A race',
-      'Finish the race with a negative-split run.',
-      'Complete all three disciplines.',
-      '2027-07-01',
-      array['swim', 'bike', 'run']
+      (select id from public.goals where status = 'active'),
+      'triathlon', 'Updated owned A race', '2027-07-01',
+      1500, 40000, 10000, 14400, null, null, null,
+      'Finish the race with a negative-split run.'
     )
   $$,
   'updating a planning input refreshes the pending request snapshot'
 );
 
-select is(
+insert into phase_4_tap_results (result) select is(
   (
     select (input_snapshot #>> '{goal,revision}')::bigint
     from public.initial_plan_requests
@@ -455,19 +456,19 @@ select set_config(
 );
 set local request.jwt.claim.sub = '40000000-0000-0000-0000-000000000004';
 
-select is(
+insert into phase_4_tap_results (result) select is(
   (select count(*) from public.goals),
   0::bigint,
   'a second athlete cannot read the first athlete goal'
 );
 
-select is(
+insert into phase_4_tap_results (result) select is(
   (select count(*) from public.training_history_entries),
   0::bigint,
   'a second athlete cannot read the first athlete history'
 );
 
-select throws_ok(
+insert into phase_4_tap_results (result) select throws_ok(
   $$
     update public.athlete_profiles
     set timezone = 'Europe/Paris'
@@ -479,7 +480,7 @@ select throws_ok(
   'the final contract denies every authenticated direct profile update'
 );
 
-select throws_ok(
+insert into phase_4_tap_results (result) select throws_ok(
   $$
     update public.athlete_profiles
     set onboarding_status = 'completed'
@@ -492,5 +493,7 @@ select throws_ok(
 
 reset role;
 
+insert into phase_4_tap_results (result)
 select * from finish();
+select result from phase_4_tap_results order by sequence;
 rollback;

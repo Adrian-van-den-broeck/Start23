@@ -64,6 +64,66 @@ values
   ('90000000-0000-0000-0000-000000000009');
 
 select set_config('start23.critical_write', 'on', true);
+insert into public.athlete_profiles (
+  athlete_id, timezone, timezone_source, timezone_confirmed_at,
+  heart_rate_monitor_confirmed_at, onboarding_status
+) values (
+  '80000000-0000-0000-0000-000000000008', 'UTC', 'manual',
+  statement_timestamp(), statement_timestamp(), 'in_progress'
+);
+select set_config('start23.profile_write', 'on', true);
+insert into public.athlete_physiology_profiles (
+  athlete_id, date_of_birth, resting_heart_rate_bpm
+)
+select mapping.athlete_id, '1990-01-01'::date, 50
+from private.athlete_identity_map mapping
+where mapping.auth_user_id = '80000000-0000-0000-0000-000000000008'
+on conflict (athlete_id) do update set
+  date_of_birth = excluded.date_of_birth,
+  resting_heart_rate_bpm = excluded.resting_heart_rate_bpm;
+select set_config('start23.profile_write', '', true);
+insert into public.training_history_entries (
+  athlete_id, discipline, previous_month_weekly_minutes,
+  baseline_model_version
+) values
+  ('80000000-0000-0000-0000-000000000008', 'swim', 60, 'phase-13-joren-ruleset-1'),
+  ('80000000-0000-0000-0000-000000000008', 'bike', 120, 'phase-13-joren-ruleset-1'),
+  ('80000000-0000-0000-0000-000000000008', 'run', 90, 'phase-13-joren-ruleset-1');
+insert into public.goals (
+  athlete_id, race_type, race_name, race_date,
+  run_distance_meters, total_target_time_seconds
+) values (
+  '80000000-0000-0000-0000-000000000008', 'run',
+  'Current activity fixture', current_date + 90, 10000, 3600
+);
+insert into public.zone_profile_versions (
+  athlete_id, discipline, version, setup_method, status, validated,
+  fallback_active, needs_testing, requires_review, review_reason,
+  ruleset_version, effective_from
+) values (
+  '80000000-0000-0000-0000-000000000008', 'run', 1, 'manual',
+  'active', true, false, false, true, 'soft_range_not_configured',
+  'phase-3-ruleset-2', statement_timestamp()
+);
+insert into public.initial_plan_requests (
+  id, athlete_id, status, onboarding_revision, onboarding_version,
+  ruleset_version
+) values (
+  '80500000-0000-0000-0000-000000000008',
+  '80000000-0000-0000-0000-000000000008', 'pending', 1,
+  'phase-14-onboarding-v2', 'phase-13-joren-ruleset-1'
+);
+insert into public.onboarding_sessions (
+  athlete_id, status, current_step, completed_steps, revision,
+  initial_plan_request_id, completed_onboarding_version,
+  completed_ruleset_version, completed_at
+) values (
+  '80000000-0000-0000-0000-000000000008', 'completed', 'completed',
+  array['profile','heart_rate_monitor','timezone','history','goal','zones','review']::text[],
+  1, '80500000-0000-0000-0000-000000000008',
+  'phase-14-onboarding-v2', 'phase-13-joren-ruleset-1',
+  statement_timestamp()
+);
 insert into public.weekly_plans (
   id, athlete_id, week_start, timezone, state
 ) values (
@@ -78,7 +138,8 @@ insert into public.plan_revisions (
   id, plan_id, athlete_id, revision_number, state, source, phase,
   target_basis, input_fingerprint, generation_fingerprint,
   total_duration_minutes, low_intensity_percent, high_intensity_percent,
-  confirmed_injuries, availability, ruleset_version
+  confirmed_injuries, availability, available_dates, availability_source,
+  ruleset_version
 ) values (
   '82000000-0000-0000-0000-000000000008',
   '81000000-0000-0000-0000-000000000008',
@@ -100,6 +161,8 @@ insert into public.plan_revisions (
       'ends_at', '2026-08-11T10:00:00+00:00'
     )
   ),
+  array['2026-08-11', '2026-08-12']::date[],
+  'explicit',
   'phase-3-ruleset-2'
 );
 
@@ -410,19 +473,7 @@ select ok(
 );
 
 reset role;
-select set_config('request.jwt.claims', '{}', true);
-select set_config('start23.critical_write', 'on', true);
-delete from public.activities
-where athlete_id = '80000000-0000-0000-0000-000000000008';
-delete from public.weekly_plans
-where athlete_id = '80000000-0000-0000-0000-000000000008';
-delete from auth.users
-where id in (
-  '80000000-0000-0000-0000-000000000008',
-  '90000000-0000-0000-0000-000000000009'
-);
 
-select plan(count(*)::integer) from phase_7_tap_results;
 select result from phase_7_tap_results order by sequence;
 select * from finish();
 

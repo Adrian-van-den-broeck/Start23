@@ -23,6 +23,7 @@ Related documents:
 - [Backend zone calculation and calibration](backend-zone-calculation.md)
 - [Phase 8.5 and 9 business decision brief](phase-8-5-and-9-business-decisions.md)
 - [5 November business meeting decisions](../requirements/Decisions.md)
+- [Phase 13/14 R6 verification report](phase-13-and-14-r6-verification-report.md)
 
 ## MVP outcome
 
@@ -1728,6 +1729,17 @@ pgTAP directory now asserts the final narrow profile/RPC/grant/RLS model with
 all opaque-owner integrity triggers enabled. Local checks pass with 629 backend
 tests and 19 mobile tests; PostgreSQL/pgTAP runtime remains an R6 gate.
 
+R6 hosted execution on 2026-09-14 applied the full historical upgrade chain to
+`start23-dev`, aligned all 41 local/hosted migration versions, and passed all 23
+tracked database test files (431 planned TAP assertions plus five assertion-only
+SQL suites). Hosted calibration lifecycle coverage passed for current run,
+bike, and swim flows and historical read-only guards. Backend verification
+passed 629 tests; mobile static verification passed 6 suites/19 tests, strict
+TypeScript, and unused-code checks. Phase 13 is still not complete: a fresh
+chain, non-production Railway flow, physical devices, accountable review,
+leaked-password protection, exhaustive real-token RPC coverage, and a hosted
+business-conflict timeout remain open. See the linked R6 verification report.
+
 See [versioned rules](../requirements/phase-13-joren-ruleset-1.md),
 [historical Phase 13](../requirements/deprecated-phase-13.md), and
 [implementation and consumer trace](phase-13-implementation-plan.md).
@@ -1785,12 +1797,11 @@ for the four explicitly approved remediation decisions.
   unavailable environments remain explicit gates. A qualified accountable
   reviewer and review record for this material ruleset remain required to release.
 
-R1, the local R2-R5 implementation, and the final R6-entry audit remediation
-satisfy their repository-side artifact, contract, deterministic service, and
-typecheck criteria. The Phase 13 criteria
-above remain open for R6, execution of the unexecuted remediation migrations and
-pgTAP suites, runtime/device verification, and qualified external review; Phase
-13 is not complete.
+R1, R2-R5, the final R6-entry audit remediation, the hosted historical migration
+upgrade, and the complete hosted database suite satisfy their corresponding
+implemented gates. The remaining R6 runtime, security configuration, fresh
+chain, Railway, device, and qualified external-review gates are open; Phase 13
+is not complete.
 
 ### Future work
 
@@ -1847,6 +1858,16 @@ writes, two-owner isolation, identity-map non-enumerability, trigger enablement,
 and service-role separation are now the asserted final state. PostgreSQL/pgTAP
 execution remains intentionally deferred to R6; Phase 14 is not complete.
 
+R6 hosted execution on 2026-09-14 applied the complete identity/profile/
+onboarding remediation chain and passed the complete tracked pgTAP directory.
+Two real Supabase Auth users passed inverse owner isolation across all 32
+material owner-table surfaces and representative split-profile, operational,
+goal, activity, identity-map, and service-only RPC boundaries; all temporary
+users and data were deleted. This closes the hosted migration, database-suite,
+and representative two-user table-isolation evidence, but not the entire R6
+gate. Exhaustive RPC, Railway new/legacy flow, device, security-configuration,
+and release evidence remain open; Phase 14 is not complete.
+
 ### Scope
 
 - Split identifying profile data from medical/physiological data such as
@@ -1894,12 +1915,13 @@ execution remains intentionally deferred to R6; Phase 14 is not complete.
 - Public contracts remain TSS-free and zone activation remains a separate,
   stale-safe athlete confirmation.
 
-R1, the local R2-R5 implementation, and the final audit remediation cover
+R1, R2-R5, the final audit remediation, the hosted historical migration upgrade,
+the full hosted database suite, and representative two-real-user isolation cover
 version-aware resume, the opaque identity cutover, independently protected
 identifying/physiological records,
 monitor/timezone prerequisites, and structured race goals. The Phase 14 exit
-criteria remain open pending R6 and executed database/two-user/device evidence;
-Phase 14 is not complete.
+criteria remain open pending the unresolved R6 RPC, Railway, security,
+fresh-chain, and device evidence; Phase 14 is not complete.
 
 ### Follow-up remediation roadmap
 

@@ -113,11 +113,14 @@ select lives_ok(
   $q$select public.revise_activity_rpe('c4000000-0000-0000-0000-000000000001', 'c4000000-0000-0000-0000-000000000010', '{"rpe":4,"submitted_average_heart_rate_bpm":150}'::jsonb)$q$,
   'exact duplicate correction is idempotent'
 );
+reset role;
 select is(
   (select count(*) from public.activity_rpe_revisions where activity_id = 'c4000000-0000-0000-0000-000000000010'),
   0::bigint,
   'duplicate correction creates no audit revision'
 );
+select set_config('request.jwt.claims', '{"role":"service_role"}', true);
+set local role service_role;
 select lives_ok(
   $q$select public.revise_activity_rpe(
     'c4000000-0000-0000-0000-000000000001',
@@ -126,23 +129,26 @@ select lives_ok(
   )$q$,
   'matching stale precondition permits atomic RPE-only correction'
 );
+reset role;
 select is(
   (select count(*) from public.activity_rpe_revisions where activity_id = 'c4000000-0000-0000-0000-000000000010'),
   1::bigint,
   'successful correction appends one audit revision'
 );
+select set_config('request.jwt.claims', '{"role":"service_role"}', true);
+set local role service_role;
 select throws_ok(
   $q$select public.revise_activity_rpe('c4000000-0000-0000-0000-000000000001', 'c4000000-0000-0000-0000-000000000010', '{"rpe":6,"expected_current_rpe":4}'::jsonb)$q$,
   '40001',
   'activity correction is stale',
   'stale correction is rejected'
 );
+reset role;
 select is(
   (select rpe from public.activities where id = 'c4000000-0000-0000-0000-000000000010'),
   5::smallint,
   'stale rejection preserves the accepted RPE'
 );
-reset role;
 
 select * from finish();
 rollback;

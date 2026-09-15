@@ -1,10 +1,12 @@
 # Phase 13 review - updated 2026-09-14
 
-Status: implementation and hosted Phase 13 migration present; remediation R1,
-the coupled R3-then-R2 implementation, R4/R5, the final R6-entry audit
-remediation, and the bounded H-01/H-04 re-audit follow-up are complete locally;
-runtime, database, two-user, device, and external exit gates remain open. R6 has
-not begun.
+Status: implementation, R1-R5, the final R6-entry audit remediation, and the
+bounded H-01/H-04 follow-up are present. R6 hosted execution on 2026-09-14
+completed the historical migration upgrade and full tracked database suite, but
+R6 remains incomplete because fresh-chain, Railway, hosted-conflict, security,
+device, exhaustive real-token, and accountable-review gates remain open. The
+[R6 verification report](phase-13-and-14-r6-verification-report.md) supersedes
+the older unexecuted-runtime statements retained below as checkpoint history.
 
 ## 1. Version
 

@@ -6,12 +6,20 @@ create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 select no_plan();
 
-select has_table('public', 'athlete_profiles', 'operational compatibility table exists');
-select col_is_pk(
+create temporary table athlete_profile_tap_results (
+  sequence bigint generated always as identity primary key,
+  result text not null
+);
+grant insert, select on athlete_profile_tap_results to authenticated, service_role;
+grant usage, select on sequence athlete_profile_tap_results_sequence_seq
+to authenticated, service_role;
+
+insert into athlete_profile_tap_results (result) select has_table('public', 'athlete_profiles', 'operational compatibility table exists');
+insert into athlete_profile_tap_results (result) select col_is_pk(
   'public', 'athlete_profiles', 'athlete_id',
   'legacy auth owner remains the compatibility primary key before R6'
 );
-select ok(
+insert into athlete_profile_tap_results (result) select ok(
   (
     select relrowsecurity and relforcerowsecurity
     from pg_class
@@ -19,7 +27,7 @@ select ok(
   ),
   'operational compatibility rows have enabled and forced RLS'
 );
-select policies_are(
+insert into athlete_profile_tap_results (result) select policies_are(
   'public',
   'athlete_profiles',
   array[
@@ -31,7 +39,7 @@ select policies_are(
   'the final migration chain retains only the expected compatibility policies'
 );
 
-select ok(
+insert into athlete_profile_tap_results (result) select ok(
   not has_table_privilege('anon', 'public.athlete_profiles', 'select')
   and not has_table_privilege('anon', 'public.athlete_profiles', 'insert')
   and not has_table_privilege('anon', 'public.athlete_profiles', 'update')
@@ -46,7 +54,7 @@ select ok(
   and not has_table_privilege('service_role', 'public.athlete_profiles', 'delete'),
   'no Data API role has broad direct operational profile privileges'
 );
-select ok(
+insert into athlete_profile_tap_results (result) select ok(
   not has_any_column_privilege(
     'authenticated', 'public.athlete_profiles', 'select'
   )
@@ -59,7 +67,7 @@ select ok(
   'authenticated has no residual column-level operational-table bypass'
 );
 
-select ok(
+insert into athlete_profile_tap_results (result) select ok(
   has_function_privilege(
     'authenticated', 'public.get_operational_athlete_profile()', 'execute'
   )
@@ -82,7 +90,7 @@ select ok(
   ),
   'only authenticated owns the narrow operational read/write contracts'
 );
-select ok(
+insert into athlete_profile_tap_results (result) select ok(
   has_function_privilege(
     'authenticated', 'public.save_identifying_profile(jsonb)', 'execute'
   )
@@ -104,7 +112,7 @@ select ok(
   'identifying and physiology writes are authenticated RPC-only contracts'
 );
 
-select policies_are(
+insert into athlete_profile_tap_results (result) select policies_are(
   'public',
   'athlete_identifying_profiles',
   array[
@@ -114,7 +122,7 @@ select policies_are(
   ],
   'identifying rows retain only final owner policies'
 );
-select policies_are(
+insert into athlete_profile_tap_results (result) select policies_are(
   'public',
   'athlete_physiology_profiles',
   array[
@@ -124,7 +132,7 @@ select policies_are(
   ],
   'physiology rows retain only final owner policies'
 );
-select ok(
+insert into athlete_profile_tap_results (result) select ok(
   has_column_privilege(
     'authenticated', 'public.athlete_identifying_profiles', 'first_name', 'select'
   )
@@ -149,7 +157,7 @@ select ok(
   'authenticated reads expose only the approved split-profile projections'
 );
 
-select ok(
+insert into athlete_profile_tap_results (result) select ok(
   not has_table_privilege(
     'authenticated', 'private.athlete_identity_map', 'select'
   )
@@ -168,7 +176,7 @@ select ok(
   ),
   'identity mapping cannot be enumerated by clients and service access is column-limited'
 );
-select ok(
+insert into athlete_profile_tap_results (result) select ok(
   has_function_privilege(
     'service_role', 'public.resolve_legacy_auth_user_id(uuid)', 'execute'
   )
@@ -184,7 +192,7 @@ select ok(
   'opaque-owner adapters retain their intended role separation'
 );
 
-select ok(
+insert into athlete_profile_tap_results (result) select ok(
   exists (
     select 1 from pg_trigger
     where tgrelid = 'auth.users'::regclass
@@ -226,110 +234,111 @@ select set_config(
 set local request.jwt.claim.sub = '10000000-0000-0000-0000-000000000001';
 set local role authenticated;
 
-select throws_ok(
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$select * from public.athlete_profiles$q$,
   '42501', null,
   'authenticated broad operational reads fail before RLS can widen them'
 );
-select throws_ok(
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$insert into public.athlete_profiles(athlete_id) values (
     '10000000-0000-0000-0000-000000000001'
   )$q$,
   '42501', null,
   'authenticated direct operational inserts fail'
 );
-select throws_ok(
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$update public.athlete_profiles set timezone = 'Europe/Paris'$q$,
   '42501', null,
   'authenticated direct operational updates fail'
 );
-select throws_ok(
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$select public.save_operational_athlete_profile(
     '{"athlete_id":"20000000-0000-0000-0000-000000000002"}'::jsonb
   )$q$,
   '23514', 'invalid operational profile payload',
   'the owner-derived operational RPC rejects attacker-controlled athlete IDs'
 );
-select throws_ok(
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$select public.save_operational_athlete_profile(
     '{"timezone":"Europe/Definitely_Not_A_Zone","timezone_source":"manual","timezone_confirmed":true}'::jsonb
   )$q$,
   '23514', 'explicit valid operational confirmation is required',
   'invalid IANA timezones fail'
 );
-select throws_ok(
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$select public.save_operational_athlete_profile(
     '{"timezone":"Europe/Amsterdam","timezone_source":"manual","timezone_confirmed":true,"timezone_confirmed_at":"2000-01-01T00:00:00Z"}'::jsonb
   )$q$,
   '23514', 'invalid operational profile payload',
   'forged timezone confirmation timestamps fail'
 );
-select throws_ok(
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$select public.save_operational_athlete_profile(
     '{"heart_rate_monitor_confirmed":true,"heart_rate_monitor_confirmed_at":"2000-01-01T00:00:00Z"}'::jsonb
   )$q$,
   '23514', 'invalid operational profile payload',
   'forged monitor confirmation timestamps fail'
 );
-select lives_ok(
+insert into athlete_profile_tap_results (result) select lives_ok(
   $q$select public.save_operational_athlete_profile(
     '{"timezone":"Europe/Amsterdam","timezone_source":"manual","timezone_confirmed":true,"heart_rate_monitor_confirmed":true}'::jsonb
   )$q$,
   'valid operational writes succeed through the narrow owner-derived RPC'
 );
-select lives_ok(
+insert into athlete_profile_tap_results (result) select lives_ok(
   $q$select public.save_identifying_profile(
     '{"first_name":"Owner","last_name":"One"}'::jsonb
   )$q$,
   'valid identifying writes succeed through the guarded RPC'
 );
-select lives_ok(
+insert into athlete_profile_tap_results (result) select lives_ok(
   $q$select public.save_physiology_profile(
     '{"date_of_birth":"1990-01-01","resting_heart_rate_bpm":52}'::jsonb
   )$q$,
   'valid physiology writes succeed through the guarded RPC'
 );
-select throws_ok(
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$select public.save_identifying_profile(
     '{"athlete_id":"20000000-0000-0000-0000-000000000002","first_name":"Forged"}'::jsonb
   )$q$,
   '23514', 'invalid identifying profile payload',
   'split-profile RPCs reject attacker-controlled athlete IDs'
 );
-select throws_ok(
+select set_config('start23.profile_write', '', true);
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$update public.athlete_identifying_profiles set first_name = 'Bypass'$q$,
   '42501', 'profile writes require the intended RPC',
   'direct identifying writes fail at the RPC-integrity trigger'
 );
-select throws_ok(
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$update public.athlete_physiology_profiles
     set resting_heart_rate_bpm = 40$q$,
   '42501', 'profile writes require the intended RPC',
   'retired direct physiology writes fail at the RPC-integrity trigger'
 );
-select throws_ok(
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$select athlete_id, auth_user_id from private.athlete_identity_map$q$,
   '42501', null,
   'authenticated clients cannot enumerate the private identity map'
 );
-select is(
+insert into athlete_profile_tap_results (result) select is(
   (public.get_operational_athlete_profile() ->> 'athlete_id')::uuid,
   public.get_current_athlete_id(),
   'the operational read exposes only the JWT-derived opaque owner'
 );
-select ok(
+insert into athlete_profile_tap_results (result) select ok(
   not public.get_operational_athlete_profile() ? 'internal_athlete_id'
   and not public.get_operational_athlete_profile() ? 'date_of_birth'
   and not public.get_operational_athlete_profile() ? 'resting_heart_rate_bpm',
   'the operational projection excludes identity internals and physiology'
 );
-select results_eq(
+insert into athlete_profile_tap_results (result) select results_eq(
   $q$select first_name, last_name
     from public.athlete_identifying_profiles$q$,
   $q$values ('Owner'::text, 'One'::text)$q$,
   'the current owner can read only the narrow identifying projection'
 );
-select results_eq(
+insert into athlete_profile_tap_results (result) select results_eq(
   $q$select date_of_birth, resting_heart_rate_bpm
     from public.athlete_physiology_profiles$q$,
   $q$values ('1990-01-01'::date, 52::smallint)$q$,
@@ -344,18 +353,18 @@ select set_config(
 );
 set local request.jwt.claim.sub = '20000000-0000-0000-0000-000000000002';
 set local role authenticated;
-select lives_ok(
+insert into athlete_profile_tap_results (result) select lives_ok(
   $q$select public.save_operational_athlete_profile(
     '{"timezone":"Europe/London","timezone_source":"manual","timezone_confirmed":true}'::jsonb
   )$q$,
   'a second owner can create only their own operational record through the RPC'
 );
-select is(
+insert into athlete_profile_tap_results (result) select is(
   (select count(*) from public.athlete_identifying_profiles where first_name = 'Owner'),
   0::bigint,
   'a second owner cannot read the first owner identifying row'
 );
-select is(
+insert into athlete_profile_tap_results (result) select is(
   (
     select count(*) from public.athlete_physiology_profiles
     where resting_heart_rate_bpm = 52
@@ -363,7 +372,7 @@ select is(
   0::bigint,
   'a second owner cannot read the first owner physiology row'
 );
-select throws_ok(
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$update public.athlete_profiles
     set timezone = 'UTC'
     where athlete_id = '10000000-0000-0000-0000-000000000001'$q$,
@@ -373,12 +382,14 @@ select throws_ok(
 reset role;
 
 set local role service_role;
-select throws_ok(
+insert into athlete_profile_tap_results (result) select throws_ok(
   $q$select * from public.athlete_profiles$q$,
   '42501', null,
   'service operations do not regain broad legacy operational-table reads'
 );
 reset role;
 
+insert into athlete_profile_tap_results (result)
 select * from finish();
+select result from athlete_profile_tap_results order by sequence;
 rollback;

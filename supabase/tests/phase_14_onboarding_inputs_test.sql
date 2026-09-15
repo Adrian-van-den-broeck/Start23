@@ -5,32 +5,40 @@ create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 select no_plan();
 
-select has_column(
+create temporary table phase_14_tap_results (
+  sequence bigint generated always as identity primary key,
+  result text not null
+);
+grant insert, select on phase_14_tap_results to authenticated, service_role;
+grant usage, select on sequence phase_14_tap_results_sequence_seq
+to authenticated, service_role;
+
+insert into phase_14_tap_results (result) select has_column(
   'public',
   'training_history_entries',
   'average_weekly_distance',
   'two-month history stores average weekly distance'
 );
-select has_column(
+insert into phase_14_tap_results (result) select has_column(
   'public',
   'training_history_entries',
   'distance_unit',
   'two-month history stores the canonical distance unit'
 );
-select has_column(
+insert into phase_14_tap_results (result) select has_column(
   'public',
   'training_history_entries',
   'average_sessions_per_week',
   'two-month history stores average weekly frequency'
 );
-select has_column(
+insert into phase_14_tap_results (result) select has_column(
   'public',
   'training_history_entries',
   'history_window_months',
   'the observation window is explicit'
 );
 
-select ok(
+insert into phase_14_tap_results (result) select ok(
   not (
     select attnotnull
     from pg_attribute
@@ -46,25 +54,25 @@ select ok(
   'legacy history fields remain stored but are no longer required'
 );
 
-select ok(
+insert into phase_14_tap_results (result) select ok(
   not has_table_privilege(
     'authenticated', 'public.training_history_entries', 'delete'
   ),
   'new history replacement cannot delete historical rows'
 );
 
-select ok(
+insert into phase_14_tap_results (result) select ok(
   has_function_privilege(
     'authenticated',
-    'public.save_primary_race_goal(uuid,text,text,text,date,text[])',
+    'public.save_primary_race_goal(uuid,text,text,date,integer,integer,integer,integer,integer,integer,integer,text)',
     'execute'
   )
   and not has_function_privilege(
     'authenticated',
-    'public.save_primary_race_goal(uuid,text,text,text,smallint,date,text[])',
+    'public.save_primary_race_goal(uuid,text,text,text,date,text[])',
     'execute'
   ),
-  'only the goal RPC without retired feasibility is writable'
+  'only the structured race RPC without retired feasibility is writable'
 );
 
 insert into auth.users (id)
@@ -104,7 +112,7 @@ set local request.jwt.claim.sub =
   'a0000000-0000-0000-0000-000000000014';
 set local role authenticated;
 
-select throws_ok(
+insert into phase_14_tap_results (result) select throws_ok(
   $$
     update public.athlete_profiles
     set height_cm = 181
@@ -115,7 +123,7 @@ select throws_ok(
   'retired profile fields cannot receive new values through direct writes'
 );
 
-select lives_ok(
+insert into phase_14_tap_results (result) select lives_ok(
   $$
     select * from public.replace_training_history(
       '[
@@ -128,7 +136,7 @@ select lives_ok(
   'previous-month history is stored without exposing a private baseline'
 );
 
-select is(
+insert into phase_14_tap_results (result) select is(
   (
     select count(*)
     from public.training_history_entries
@@ -142,7 +150,7 @@ select is(
   'new history rows do not populate or reinterpret retired values'
 );
 
-select throws_ok(
+insert into phase_14_tap_results (result) select throws_ok(
   $$
     select * from public.replace_training_history(
       '[
@@ -157,21 +165,22 @@ select throws_ok(
   'the superseded history write shape is rejected'
 );
 
-select lives_ok(
+insert into phase_14_tap_results (result) select lives_ok(
   $$
     select public.save_primary_race_goal(
       null,
+      'triathlon',
       'Phase 14 race',
-      'Finish with an even run.',
-      'Complete every selected discipline.',
       '2027-07-01',
-      array['swim', 'bike', 'run']
+      1500, 40000, 10000, 14400,
+      null, null, null,
+      'Finish with an even run.'
     )
   $$,
   'a goal can be saved without feasibility'
 );
 
-select is(
+insert into phase_14_tap_results (result) select is(
   (
     select feasibility_score
     from public.goals
@@ -190,13 +199,13 @@ select set_config(
 set local request.jwt.claim.sub =
   'b0000000-0000-0000-0000-000000000014';
 
-select is(
+insert into phase_14_tap_results (result) select is(
   (select count(*) from public.training_history_entries),
   0::bigint,
   'another athlete cannot read the first athlete two-month history'
 );
 
-select is(
+insert into phase_14_tap_results (result) select is(
   (select count(*) from public.goals),
   0::bigint,
   'another athlete cannot read the first athlete goal'
@@ -204,5 +213,7 @@ select is(
 
 reset role;
 
+insert into phase_14_tap_results (result)
 select * from finish();
+select result from phase_14_tap_results order by sequence;
 rollback;

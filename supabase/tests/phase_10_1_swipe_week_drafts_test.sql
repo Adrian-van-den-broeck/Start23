@@ -116,14 +116,57 @@ values
   ('b1000000-0000-0000-0000-000000000002');
 
 select set_config('start23.critical_write', 'on', true);
+insert into public.athlete_profiles (
+  athlete_id, timezone, timezone_source, timezone_confirmed_at,
+  heart_rate_monitor_confirmed_at, onboarding_status
+) values (
+  'a1000000-0000-0000-0000-000000000001', 'UTC', 'manual',
+  statement_timestamp(), statement_timestamp(), 'in_progress'
+);
+select set_config('start23.profile_write', 'on', true);
+insert into public.athlete_physiology_profiles (
+  athlete_id, date_of_birth, resting_heart_rate_bpm
+)
+select mapping.athlete_id, '1990-01-01'::date, 50
+from private.athlete_identity_map mapping
+where mapping.auth_user_id = 'a1000000-0000-0000-0000-000000000001'
+on conflict (athlete_id) do update set
+  date_of_birth = excluded.date_of_birth,
+  resting_heart_rate_bpm = excluded.resting_heart_rate_bpm;
+select set_config('start23.profile_write', '', true);
+insert into public.training_history_entries (
+  athlete_id, discipline, previous_month_weekly_minutes,
+  baseline_model_version
+) values
+  ('a1000000-0000-0000-0000-000000000001', 'swim', 60, 'phase-13-joren-ruleset-1'),
+  ('a1000000-0000-0000-0000-000000000001', 'bike', 120, 'phase-13-joren-ruleset-1'),
+  ('a1000000-0000-0000-0000-000000000001', 'run', 90, 'phase-13-joren-ruleset-1');
+insert into public.goals (
+  athlete_id, race_type, race_name, race_date,
+  swim_distance_meters, bike_distance_meters, run_distance_meters,
+  total_target_time_seconds
+) values (
+  'a1000000-0000-0000-0000-000000000001', 'triathlon',
+  'Current swipe fixture', current_date + 90, 1500, 40000, 10000, 14400
+);
+insert into public.zone_profile_versions (
+  athlete_id, discipline, version, setup_method, status, validated,
+  fallback_active, needs_testing, requires_review, review_reason,
+  ruleset_version, effective_from
+) values
+  ('a1000000-0000-0000-0000-000000000001', 'swim', 1, 'manual', 'active', true, false, false, true, 'soft_range_not_configured', 'phase-3-ruleset-2', statement_timestamp()),
+  ('a1000000-0000-0000-0000-000000000001', 'bike', 1, 'manual', 'active', true, false, false, true, 'soft_range_not_configured', 'phase-3-ruleset-2', statement_timestamp()),
+  ('a1000000-0000-0000-0000-000000000001', 'run', 1, 'manual', 'active', true, false, false, true, 'soft_range_not_configured', 'phase-3-ruleset-2', statement_timestamp());
 insert into public.initial_plan_requests (
-  id, athlete_id, status, onboarding_revision, ruleset_version,
+  id, athlete_id, status, onboarding_revision, onboarding_version,
+  ruleset_version,
   input_snapshot, input_fingerprint
 )
 select
   'a1100000-0000-0000-0000-000000000001',
   'a1000000-0000-0000-0000-000000000001',
-  'pending', 1, 'phase-3-ruleset-2', snapshot, md5(snapshot::text)
+  'pending', 1, 'phase-14-onboarding-v2',
+  'phase-13-joren-ruleset-1', snapshot, md5(snapshot::text)
 from (
   select jsonb_build_object(
     'profile', jsonb_build_object(
@@ -140,6 +183,18 @@ from (
     'ruleset_version', 'phase-3-ruleset-2'
   ) as snapshot
 ) source;
+
+insert into public.onboarding_sessions (
+  athlete_id, status, current_step, completed_steps, revision,
+  initial_plan_request_id, completed_onboarding_version,
+  completed_ruleset_version, completed_at
+) values (
+  'a1000000-0000-0000-0000-000000000001', 'completed', 'completed',
+  array['profile','heart_rate_monitor','timezone','history','goal','zones','review']::text[],
+  1, 'a1100000-0000-0000-0000-000000000001',
+  'phase-14-onboarding-v2', 'phase-13-joren-ruleset-1',
+  statement_timestamp()
+);
 
 insert into public.swipe_week_drafts (
   id, athlete_id, initial_plan_request_id, base_plan_revision,
@@ -200,7 +255,8 @@ select lives_ok(
 insert into phase_10_1_tap_results (result)
 select is(
   (select count(*) from public.swipe_week_drafts
-   where week_start = '2026-09-14'),
+   where athlete_id = 'a1000000-0000-0000-0000-000000000001'
+     and week_start = '2026-09-14'),
   1::bigint,
   'the service-role RPC persists exactly one draft'
 );

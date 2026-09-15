@@ -44,6 +44,17 @@ insert into auth.users(id) values
   ('c0200000-0000-0000-0000-000000000005'),
   ('c0200000-0000-0000-0000-000000000006');
 
+insert into public.athlete_profiles (
+  athlete_id, timezone, timezone_source, timezone_confirmed_at,
+  onboarding_status
+) values
+  ('c0200000-0000-0000-0000-000000000001', 'Europe/Amsterdam', 'manual', statement_timestamp(), 'in_progress'),
+  ('c0200000-0000-0000-0000-000000000002', 'Europe/Amsterdam', 'manual', statement_timestamp(), 'in_progress'),
+  ('c0200000-0000-0000-0000-000000000003', 'Europe/Amsterdam', 'manual', statement_timestamp(), 'in_progress'),
+  ('c0200000-0000-0000-0000-000000000004', 'Europe/Amsterdam', 'manual', statement_timestamp(), 'in_progress'),
+  ('c0200000-0000-0000-0000-000000000005', 'Europe/Amsterdam', 'manual', statement_timestamp(), 'in_progress'),
+  ('c0200000-0000-0000-0000-000000000006', 'Europe/Amsterdam', 'manual', statement_timestamp(), 'in_progress');
+
 create temporary table h01_activation_specs (
   scenario text primary key,
   athlete_id uuid not null,

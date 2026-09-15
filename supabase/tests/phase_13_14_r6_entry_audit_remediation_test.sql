@@ -309,6 +309,12 @@ insert into public.athlete_profiles(athlete_id) values
   ('d6000000-0000-0000-0000-000000000006'),
   ('d6000000-0000-0000-0000-000000000007');
 
+create temporary table first_operational_identity as
+select mapping.athlete_id
+from private.athlete_identity_map mapping
+where mapping.auth_user_id = 'd6000000-0000-0000-0000-000000000006';
+grant select on first_operational_identity to authenticated;
+
 select set_config(
   'request.jwt.claims',
   '{"sub":"d6000000-0000-0000-0000-000000000006","role":"authenticated"}',
@@ -373,11 +379,7 @@ set local request.jwt.claim.sub = 'd6000000-0000-0000-0000-000000000007';
 set local role authenticated;
 select isnt(
   (public.get_operational_athlete_profile() ->> 'athlete_id')::uuid,
-  (
-    select mapping.athlete_id
-    from private.athlete_identity_map mapping
-    where mapping.auth_user_id = 'd6000000-0000-0000-0000-000000000006'
-  ),
+  (select athlete_id from first_operational_identity),
   'a second owner cannot receive the first owner operational identity'
 );
 reset role;
