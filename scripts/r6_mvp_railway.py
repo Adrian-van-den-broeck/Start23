@@ -83,7 +83,8 @@ def main() -> None:
                         "--linked",
                         "--project-ref",
                         "isfumhgqphieoayqahjv",
-                        fixture.replace("__R6_AUTH_ID__", str(UUID(auth_id))),
+                        "/* R6 guarded fixture */\n"
+                        + fixture.replace("__R6_AUTH_ID__", str(UUID(auth_id))),
                     ],
                     capture_output=True,
                     text=True,
