@@ -42,6 +42,29 @@ def main() -> None:
         )
     users: list[str] = []
     actors: list[tuple[str, str, str, str]] = []
+    today = datetime.now(timezone.utc).date()
+    monday = today - timedelta(days=today.weekday())
+
+    def development_query(sql):
+        result = subprocess.run(
+            [
+                cli,
+                "db",
+                "query",
+                "--linked",
+                "--project-ref",
+                "isfumhgqphieoayqahjv",
+                "/* R6 development query */\n" + sql,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        payload = json.loads(result.stdout)
+        if result.returncode or payload.get("_tag") == "Error":
+            raise VerificationError("guarded development query failed")
+        return payload["rows"]
 
     def request(token, method, path, body=None, statuses=None, headers=None):
         response = call(
@@ -134,7 +157,9 @@ def main() -> None:
                 "race_type": "run",
                 "race_name": "R6 staging race",
                 "race_date": (
-                    datetime.now(timezone.utc).date() + timedelta(days=180)
+                    # Ordinary build-week fixture; the first-plan recovery
+                    # baseline gap remains an explicit documented release gate.
+                    monday + timedelta(weeks=27, days=6)
                 ).isoformat(),
                 "run_distance_meters": 10000,
                 "total_target_time_seconds": 3600,
@@ -279,8 +304,6 @@ def main() -> None:
         print("PASS Railway inverse goal/activity/calibration ownership")
 
         token = actors[0][0]
-        today = datetime.now(timezone.utc).date()
-        monday = today - timedelta(days=today.weekday())
         plan = request(
             token,
             "POST",
@@ -310,9 +333,38 @@ def main() -> None:
             f"/change-proposals/{proposal['id']}/approve",
             {"expected_base_revision": proposal["base_plan_revision"] or 0},
         )
-        processed = request(token, "PUT", f"/activities/{actors[0][2]}/rpe", {"rpe": 4})
+        training_activity = request(
+            token,
+            "POST",
+            "/activities",
+            {
+                **summary,
+                "started_at": datetime.now(timezone.utc).isoformat(),
+            },
+            headers={"Idempotency-Key": str(uuid4())},
+        )
+        activity_path = f"/activities/{training_activity['id']}/rpe"
+        processed = request(token, "PUT", activity_path, {"rpe": 4})
         if processed["processing_state"] != "complete":
             raise VerificationError("activity processing incomplete")
+        request(token, "PUT", activity_path, {"rpe": 4})
+        request(
+            token,
+            "PUT",
+            activity_path,
+            {"rpe": 5, "expected_current_rpe": 3},
+            statuses={409},
+        )
+        rows = development_query(
+            "select count(*) = 1 as verified from private.activity_loads "
+            f"where activity_id = '{UUID(training_activity['id'])}'::uuid "
+            "and load_status = 'partial_observed' and valid_minutes = 30 "
+            "and total_minutes = 40 and coverage_ratio = 0.75 "
+            "and realized_tss is not null "
+            "and ruleset_version = 'phase-13-joren-ruleset-1'"
+        )
+        if rows != [{"verified": True}]:
+            raise VerificationError("observed-only private provenance not persisted")
         print("PASS Railway plan approval and realized activity processing")
         checkin = request(
             token,
