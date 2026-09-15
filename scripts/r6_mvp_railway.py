@@ -47,6 +47,13 @@ def main() -> None:
             extra_headers=headers,
             timeout_seconds=20,
         )
+        if response.status not in (statuses or {200, 201}) and path == "/onboarding/complete":
+            diagnostic = call(db, "POST", "/rest/v1/rpc/complete_current_onboarding",
+                api_key=key, bearer=token,
+                body={"p_expected_session_revision": body["expected_onboarding_revision"]})
+            if isinstance(diagnostic.payload, dict):
+                print("Onboarding SQL diagnostic:", diagnostic.payload.get("code"),
+                      diagnostic.payload.get("message"))
         payload = require_status(response, statuses or {200, 201}, method + " " + path)
         assert_no_private_load_keys(payload)
         return payload
