@@ -159,7 +159,7 @@ def main() -> None:
                 "race_date": (
                     # Ordinary build-week fixture; the first-plan recovery
                     # baseline gap remains an explicit documented release gate.
-                    monday + timedelta(weeks=27, days=6)
+                    monday + timedelta(weeks=26, days=6)
                 ).isoformat(),
                 "run_distance_meters": 10000,
                 "total_target_time_seconds": 3600,
@@ -333,13 +333,20 @@ def main() -> None:
             f"/change-proposals/{proposal['id']}/approve",
             {"expected_base_revision": proposal["base_plan_revision"] or 0},
         )
+        active_plan = request(token, "GET", f"/weekly-plans/{plan['plan']['id']}")
+        planned_workout = active_plan["workouts"][0]
         training_activity = request(
             token,
             "POST",
             "/activities",
             {
                 **summary,
-                "started_at": datetime.now(timezone.utc).isoformat(),
+                "planned_workout_id": planned_workout["id"],
+                "started_at": datetime.combine(
+                    datetime.fromisoformat(planned_workout["scheduled_date"]).date(),
+                    datetime.min.time(),
+                    timezone.utc,
+                ).isoformat(),
             },
             headers={"Idempotency-Key": str(uuid4())},
         )
@@ -399,6 +406,8 @@ def main() -> None:
         next_plan = request(token, "POST", path + "/plan-proposals")
         if next_plan["proposal"]["state"] != "pending":
             raise VerificationError("next-week proposal automatically applied")
+        if next_plan["plan"]["target_basis"] != "recovery_factor":
+            raise VerificationError("next-week recovery progression was not applied")
         print("PASS Railway next-week pending progression and stale context conflict")
         print(
             json.dumps(
