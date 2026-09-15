@@ -7,9 +7,11 @@ are logged; failed gates report endpoint/status and always clean up test users.
 from __future__ import annotations
 
 import json
+import os
+import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from r6_real_token_security import (
     ROOT,
@@ -33,6 +35,11 @@ def main() -> None:
         raise VerificationError("wrong Supabase target")
     key = env["START23_SUPABASE_PUBLISHABLE_KEY"]
     secret = env["START23_SUPABASE_SECRET_KEY"]
+    cli = os.environ.get("R6_SUPABASE_CLI")
+    if not cli:
+        raise VerificationError(
+            "R6_SUPABASE_CLI is required for the guarded legacy fixture"
+        )
     users: list[str] = []
     actors: list[tuple[str, str, str, str]] = []
 
@@ -64,7 +71,31 @@ def main() -> None:
         for label in ("a", "b"):
             auth_id, token = create_actor(db, key, secret, label)
             users.append(auth_id)
-            request(token, "GET", "/onboarding")
+            if label == "b":
+                fixture = (
+                    ROOT / "scripts" / "r6_legacy_onboarding_fixture.sql"
+                ).read_text()
+                result = subprocess.run(
+                    [
+                        cli,
+                        "db",
+                        "query",
+                        "--project-ref",
+                        "isfumhgqphieoayqahjv",
+                        fixture.replace("__R6_AUTH_ID__", str(UUID(auth_id))),
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
+                    check=False,
+                )
+                if result.returncode or '"_tag": "Error"' in result.stdout:
+                    raise VerificationError("guarded legacy fixture failed")
+            initial = request(token, "GET", "/onboarding")
+            if label == "b" and not initial["upgrade_required"]:
+                raise VerificationError(
+                    "legacy completion was incorrectly treated as current"
+                )
             request(
                 token,
                 "PATCH",
@@ -215,6 +246,9 @@ def main() -> None:
                 "/onboarding/complete",
                 {"expected_onboarding_revision": state["onboarding_revision"]},
             )
+            resumed = request(token, "GET", "/onboarding")
+            if resumed["upgrade_required"] or resumed["status"] != "completed":
+                raise VerificationError("completed onboarding did not resume")
             actors.append((token, goal["id"], activity["id"], evaluation["id"]))
             print(
                 f"PASS Railway user {label}: profile/monitor/timezone/race/history/calibration/pending/approval/onboarding"
@@ -311,8 +345,8 @@ def main() -> None:
         print(
             json.dumps(
                 {
-                    "status": "partial",
-                    "remaining": "legacy resume",
+                    "status": "pass",
+                    "legacy_fixture": "representative legacy completed session, no historical plan",
                 }
             )
         )
