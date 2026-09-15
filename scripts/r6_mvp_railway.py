@@ -80,6 +80,7 @@ def main() -> None:
                         cli,
                         "db",
                         "query",
+                        "--linked",
                         "--project-ref",
                         "isfumhgqphieoayqahjv",
                         fixture.replace("__R6_AUTH_ID__", str(UUID(auth_id))),
@@ -89,7 +90,10 @@ def main() -> None:
                     timeout=30,
                     check=False,
                 )
-                if result.returncode or '"_tag": "Error"' in result.stdout:
+                if (
+                    result.returncode
+                    or json.loads(result.stdout).get("_tag") == "Error"
+                ):
                     raise VerificationError("guarded legacy fixture failed")
             initial = request(token, "GET", "/onboarding")
             if label == "b" and not initial["upgrade_required"]:
@@ -251,7 +255,8 @@ def main() -> None:
                 raise VerificationError("completed onboarding did not resume")
             actors.append((token, goal["id"], activity["id"], evaluation["id"]))
             print(
-                f"PASS Railway user {label}: profile/monitor/timezone/race/history/calibration/pending/approval/onboarding"
+                f"PASS Railway user {label}: profile/monitor/timezone/race/history/"
+                "calibration/pending/approval/onboarding"
             )
 
         for actor, other in ((actors[0], actors[1]), (actors[1], actors[0])):
@@ -346,14 +351,15 @@ def main() -> None:
             json.dumps(
                 {
                     "status": "pass",
-                    "legacy_fixture": "representative legacy completed session, no historical plan",
+                    "legacy_fixture": "legacy completed session, no historical plan",
                 }
             )
         )
     finally:
         failures = sum(not delete_user(db, secret, user) for user in reversed(users))
         print(
-            f"{'FAIL' if failures else 'PASS'} Railway temporary-user cleanup: {len(users) - failures}/{len(users)}"
+            f"{'FAIL' if failures else 'PASS'} Railway temporary-user cleanup: "
+            f"{len(users) - failures}/{len(users)}"
         )
         if failures:
             raise VerificationError("temporary-user cleanup failed")

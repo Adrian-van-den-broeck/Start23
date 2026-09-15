@@ -95,7 +95,9 @@ def call(
 
 def require_status(response: Response, allowed: set[int], label: str) -> Any:
     if response.status not in allowed:
-        code = response.payload.get("code") if isinstance(response.payload, dict) else None
+        code = (
+            response.payload.get("code") if isinstance(response.payload, dict) else None
+        )
         raise VerificationError(f"{label}: HTTP {response.status}, code={code!r}")
     return response.payload
 
@@ -459,7 +461,9 @@ def verify_two_user_boundaries(
             f"cross-read identifying profile {label}",
         )
         if foreign_identifying:
-            raise VerificationError(f"cross-read identifying profile succeeded: {label}")
+            raise VerificationError(
+                f"cross-read identifying profile succeeded: {label}"
+            )
 
         foreign_physiology = rest_rows(
             base_url,
@@ -524,7 +528,9 @@ def verify_two_user_boundaries(
         )
         if tamper_goal.status == 200 and tamper_goal.payload:
             raise VerificationError(f"cross-owner goal mutation succeeded: {label}")
-        require_status(tamper_goal, {200, 401, 403}, f"cross-owner goal mutation {label}")
+        require_status(
+            tamper_goal, {200, 401, 403}, f"cross-owner goal mutation {label}"
+        )
 
         forged_owner = rpc(
             base_url,
@@ -538,7 +544,9 @@ def verify_two_user_boundaries(
                 }
             },
         )
-        require_status(forged_owner, {400}, f"reject supplied authoritative owner {label}")
+        require_status(
+            forged_owner, {400}, f"reject supplied authoritative owner {label}"
+        )
 
     for actor in (actor_a, actor_b):
         operational = rpc(
@@ -603,7 +611,9 @@ def verify_two_user_boundaries(
             bearer=actor.access_token,
             extra_headers={"Accept-Profile": "private"},
         )
-        require_status(private_map, {400, 401, 403, 404, 406}, "block identity map enumeration")
+        require_status(
+            private_map, {400, 401, 403, 404, 406}, "block identity map enumeration"
+        )
 
         private_load = call(
             base_url,
@@ -613,7 +623,9 @@ def verify_two_user_boundaries(
             bearer=actor.access_token,
             extra_headers={"Accept-Profile": "private"},
         )
-        require_status(private_load, {400, 401, 403, 404, 406}, "block private load table")
+        require_status(
+            private_load, {400, 401, 403, 404, 406}, "block private load table"
+        )
 
         service_rpc_as_user = rpc(
             base_url,
@@ -622,7 +634,9 @@ def verify_two_user_boundaries(
             "resolve_opaque_athlete_id_for_auth_user",
             {"p_auth_user_id": actor.auth_user_id},
         )
-        require_status(service_rpc_as_user, {401, 403}, "block service-only identity RPC")
+        require_status(
+            service_rpc_as_user, {401, 403}, "block service-only identity RPC"
+        )
 
         processing_context_as_user = rpc(
             base_url,
@@ -712,7 +726,9 @@ def main() -> int:
     if not all((base_url, publishable_key, secret_key)):
         raise VerificationError("required Supabase configuration is absent")
     if "isfumhgqphieoayqahjv" not in base_url:
-        raise VerificationError("configured Supabase target is not the approved start23-dev project")
+        raise VerificationError(
+            "configured Supabase target is not the approved start23-dev project"
+        )
 
     stale_count = cleanup_tagged_users(base_url, secret_key)
     if stale_count:
@@ -737,17 +753,26 @@ def main() -> int:
         checked_a, denied_a = verify_actor_surface(base_url, publishable_key, actor_a)
         checked_b, denied_b = verify_actor_surface(base_url, publishable_key, actor_b)
         if checked_a != checked_b or denied_a != denied_b:
-            raise VerificationError("public table grant surface differs between test users")
+            raise VerificationError(
+                "public table grant surface differs between test users"
+            )
         print(
             "PASS owner-table RLS list scans: "
-            f"users=2 accessible_surfaces_each={checked_a} denied_surfaces={len(denied_a)}"
+            f"users=2 accessible_surfaces_each={checked_a} "
+            f"denied_surfaces={len(denied_a)}"
         )
 
         verify_two_user_boundaries(
             base_url, publishable_key, secret_key, actor_a, actor_b
         )
-        print("PASS inverse two-user read/mutation, identity, RPC, and private-schema boundaries")
-        print("PASS recursive private-load key scan across all successful public table/RPC responses")
+        print(
+            "PASS inverse two-user read/mutation, identity, RPC, "
+            "and private-schema boundaries"
+        )
+        print(
+            "PASS recursive private-load key scan across all successful "
+            "public table/RPC responses"
+        )
         verify_activity_conflict(base_url, publishable_key, actor_a)
         print("PASS hosted activity idempotency conflict returned promptly")
         return 0
