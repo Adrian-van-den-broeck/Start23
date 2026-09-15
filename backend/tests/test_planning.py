@@ -1318,6 +1318,31 @@ def test_generated_plan_remains_pending_is_idempotent_and_hides_tss(
     )
 
 
+def test_first_plan_at_nominal_recovery_position_uses_private_start_tss(
+    planning_client: TestClient,
+) -> None:
+    response = planning_client.post(
+        "/api/v1/weekly-plans/proposals",
+        headers=_headers("athlete-b"),
+        json={
+            "week_start": "2026-08-17",
+            "available_dates": ["2026-08-17", "2026-08-19", "2026-08-21"],
+            "confirmed_injuries": [],
+        },
+    )
+
+    assert response.status_code == 201, response.text
+    result = cast(dict[str, Any], response.json())
+    assert result["plan"]["phase"] == "base"
+    assert result["plan"]["target_basis"] == "initial_catalog_baseline"
+    assert "tss" not in str(result).casefold()
+
+    app = cast(FastAPI, planning_client.app)
+    repository = cast(MemoryPlanningRepository, app.state.planning_repository)
+    stored = repository._plans[UUID(result["plan"]["id"])]
+    assert stored["_target_tss"] == "102.9"
+
+
 def test_previous_week_availability_requires_an_explicit_action_and_active_week(
     planning_client: TestClient,
 ) -> None:

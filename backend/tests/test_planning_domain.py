@@ -162,6 +162,42 @@ def test_initial_plan_uses_catalog_baseline_and_explicit_availability() -> None:
     assert "value" not in repr(draft.planned_load)
 
 
+@pytest.mark.parametrize(
+    "week_start",
+    [
+        date(2026, 8, 3),  # Ordinary race-anchored build position.
+        date(2026, 8, 17),  # Nominal race-anchored recovery position.
+    ],
+)
+def test_first_plan_uses_onboarding_baseline_without_recovery_history(
+    week_start: date,
+) -> None:
+    baseline = starting_baseline(
+        {
+            Discipline.SWIM: Decimal(60),
+            Discipline.BIKE: Decimal(60),
+            Discipline.RUN: Decimal(60),
+        }
+    )
+
+    draft = build_weekly_plan(
+        week_start=week_start,
+        timezone_name="Europe/Amsterdam",
+        race_date=date(2026, 12, 6),
+        catalog=active_catalog(REVIEWED_CATALOG),
+        prior_loads=(),
+        goal_disciplines=frozenset(Discipline),
+        confirmed_injuries=frozenset(),
+        zone_capabilities=_capabilities(),
+        available_dates=(week_start, week_start + timedelta(days=2)),
+        onboarding_baseline=baseline,
+    )
+
+    assert draft.target.phase is TrainingPhase.BASE
+    assert draft.target.basis is PlanningTargetBasis.INITIAL_CATALOG_BASELINE
+    assert draft.target.target.value == baseline.total.value == Decimal("171.6")
+
+
 def test_athlete_selection_only_template_is_manual_but_never_auto_selected() -> None:
     regular_bike = next(
         template
@@ -246,11 +282,12 @@ def test_distance_only_swim_is_planned_without_inferred_minutes() -> None:
         )
 
 
-def test_every_fifth_week_uses_recovery_target() -> None:
+def test_established_recovery_history_keeps_existing_recovery_target() -> None:
     prior = tuple(
         PlanLoadSample(
             week_start=_WEEK_START - timedelta(weeks=4 - index),
             load=InternalLoad(Decimal(10 + index)),
+            realized_load=InternalLoad(Decimal(10 + index)),
             phase=TrainingPhase.BUILD,
         )
         for index in range(4)

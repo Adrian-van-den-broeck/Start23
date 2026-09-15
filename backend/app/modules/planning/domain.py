@@ -266,13 +266,18 @@ def resolve_target(
         )
 
     week_phase = _race_anchored_phase(week_start=week_start, race_date=race_date)
+    if week_phase is WeekPhase.RECOVERY and not prior_loads:
+        # A race anchor may place a brand-new athlete at a nominal recovery
+        # position before any recovery baseline exists. Start the first valid
+        # week from the already-approved onboarding/catalog baseline; never
+        # fabricate the missing prior week that the recovery formula requires.
+        return PlanningTarget(
+            phase=TrainingPhase.BASE,
+            basis=PlanningTargetBasis.INITIAL_CATALOG_BASELINE,
+            target=initial_catalog_load,
+        )
     phase = _training_phase(week_phase, first_plan=not prior_loads)
     if week_phase is WeekPhase.RECOVERY:
-        if not prior_loads:
-            raise PlanningConstraintError(
-                "recovery_baseline_unavailable",
-                "A recovery week requires a prior planned-load snapshot.",
-            )
         recovery = calculate_recovery_target(
             week_four_planned=prior_loads[-1].load,
         )
