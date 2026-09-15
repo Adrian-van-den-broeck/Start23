@@ -1,5 +1,42 @@
 # Phase 13/14 R6 runtime and release verification
 
+## Software blocker closure — 2026-09-16
+
+The final software-level R6 MVP blocker is closed in committed candidate
+`0e0031120fb2f6f9d0482214a3ce7484cb527450`. Production and staging were not
+deployed or otherwise modified.
+
+When a brand-new athlete's first race-anchored week is a nominal recovery
+position and no prior plan/load history exists, planning now creates a normal
+base week from the existing private onboarding Start-TSS target. It does not
+call the recovery calculation, invent a week-4 value, or apply the 60%
+reduction. The race anchor is unchanged, and an established athlete with prior
+history still receives the existing deterministic recovery target from the
+latest approved planned-load snapshot.
+
+No public contract, mobile code, database schema, migration, private-load
+formula, progression factor, recovery factor, ruleset identifier, persistence
+lifecycle, revision precondition, or idempotency behavior changed.
+
+Verification from the committed software candidate:
+
+- full backend: 635 passed, with the existing Starlette/httpx deprecation
+  warning only; the optional coach key was explicitly disabled so the run used
+  the deterministic hermetic fallback;
+- targeted planning/progression/recovery: 116 passed;
+- relevant migration/database static contract tests: 21 passed;
+- Ruff lint passed and 136 Python files were already formatted;
+- strict mypy passed for 132 app/test source files;
+- `git diff --check` passed before the candidate commit.
+
+Mobile tests/typecheck and database runtime tests were not rerun because this
+change affects neither public/mobile contracts nor persistence. No migration
+was required.
+
+**Software outcome: SOFTWARE R6 MVP GATES PASSED.** Physical-device execution
+and the accountable physiological-review record remain open release gates and
+are not marked passed.
+
 ## Current MVP continuation — 2026-09-15
 
 This section supersedes the archived 2026-09-14 release assessment below.
@@ -80,19 +117,17 @@ Every successful public Railway response was recursively checked for private
 load/TSS keys. A post-flow scan of 500 staging log lines found zero matches for
 planned/realized TSS, private-load, secret-key or bearer-token patterns.
 
-An additional real runtime edge remains open: if the **first** plan itself lands
-on a race-anchored recovery week, no prior week-4 planned snapshot exists and the
-backend returns `recovery_baseline_unavailable`. The supplied rules require 60%
-of week 4 but do not define a substitute first-plan baseline. R6 therefore keeps
-this fail-closed and requests an accountable product/physiology decision; the
-passing trace deliberately uses an ordinary build week followed by a recovery
-week and does not conceal this gap.
+The first-plan race-anchored recovery edge recorded by this 2026-09-15 run is
+closed by the approved 2026-09-16 product decision and candidate
+`0e0031120fb2f6f9d0482214a3ce7484cb527450`, with the local evidence recorded
+above. The older Railway trace remains valid evidence for the established-
+athlete recovery path; no new deployment was performed for the software-only
+closure.
 
 ### Remaining MVP release gates and production plan
 
-Define and approve the first-plan/recovery-week behavior; complete the
-primary-platform physical-device checklist; obtain the accountable
-physiological reviewer identity and approval record for
+Complete the primary-platform physical-device checklist and obtain the
+accountable physiological reviewer identity and approval record for
 `phase-13-joren-ruleset-1`. Do not mark Phase 13/14 complete from automated gates.
 
 After those gates pass, request a **separate explicit production authorization**.
@@ -105,7 +140,9 @@ publish the verified signed mobile build; monitor errors and privacy signals.
 No down-migration or ownership cutover is included. Keep the previous compatible
 application available for rollback; database repairs remain forward-only.
 
-**Current outcome: R6 MVP GATES INCOMPLETE.**
+**Current software outcome: SOFTWARE R6 MVP GATES PASSED. Overall release gates
+remain incomplete because device execution and accountable physiological review
+are still open.**
 
 ## Archived full-matrix assessment — 2026-09-14
 

@@ -1803,8 +1803,15 @@ implemented gates. The 2026-09-15 MVP continuation additionally fixes hosted
 business-conflict retries and completion-history/planning runtime mismatches;
 all 24 database suites, 632 backend tests, mobile automated gates and the
 two-real-token Data API checks pass. The Railway new/legacy build-to-recovery
-trace also passes. The undefined first-plan recovery baseline, primary-device
-execution and qualified external review remain release gates. The user
+trace also passes. Candidate `0e0031120fb2f6f9d0482214a3ce7484cb527450`
+closes the final software-level R6 blocker on 2026-09-16: a first plan at a
+nominal race-anchored recovery position now uses the existing onboarding
+Start-TSS as a normal base week, without inventing week-4 history or changing
+established-athlete recovery. The full backend suite passes 635 tests; targeted
+planning/progression/recovery passes 116; relevant migration/static contracts
+pass 21; Ruff, formatting, strict mypy and `git diff --check` pass. No public
+contract, database schema or mobile code changed. Primary-device execution and
+qualified external review remain release gates. The user
 excluded non-critical advisors, optional providers and ownership cutover from
 this MVP continuation. See the current R6 verification report; Phase 13 is not
 complete.
@@ -1874,9 +1881,10 @@ and representative two-user table-isolation evidence, but not the entire R6
 gate. The 2026-09-15 continuation created isolated Railway `r6-staging`, fixed
 the hosted deterministic conflict and completion-history constraint, and
 repeated all 24 database suites and real-token Data API checks successfully.
-The Railway new/legacy build-to-recovery flow passes. An approved first-plan
-recovery baseline, device and accountable-review release evidence remain open;
-Phase 14 is not complete. Exhaustive post-MVP RPC/advisor
+The Railway new/legacy build-to-recovery flow passes. The approved first-plan
+recovery behavior is implemented and locally verified in candidate
+`0e0031120fb2f6f9d0482214a3ce7484cb527450`; device and accountable-review
+release evidence remain open. Phase 14 is not complete. Exhaustive post-MVP RPC/advisor
 hardening and compatibility removal are excluded from the current MVP scope.
 
 ### Scope
@@ -1931,8 +1939,8 @@ the full hosted database suite, and representative two-real-user isolation cover
 version-aware resume, the opaque identity cutover, independently protected
 identifying/physiological records,
 monitor/timezone prerequisites, and structured race goals. The Phase 14 exit
-criteria remain open pending the undefined first-plan recovery case,
-primary-device evidence and accountable physiological review. The current R6 report records
+criteria remain open pending primary-device evidence and accountable
+physiological review. The current R6 report records
 the narrowed MVP scope and actual passing evidence; Phase 14 is not complete.
 
 ### Follow-up remediation roadmap
@@ -2180,8 +2188,11 @@ Every phase must:
   RLS/owner checks pass; the bounded H-01/H-04 repository re-audit fixes are
   present; hosted remediation through 20260915205627 and all 24 database suites
   pass; prompt HTTP 409 conflict behavior and real-token Data API isolation
-  pass; the Railway new/legacy build-to-recovery trace passes; first-plan
-  recovery behavior, accountable external review and device gates remain open`
+  pass; the Railway new/legacy build-to-recovery trace passes; candidate
+  0e003112 closes the first-plan nominal-recovery software blocker with 635
+  backend tests, 116 targeted planning/progression/recovery tests and 21 static
+  contract tests passing; accountable external review and device gates remain
+  open`
 - Phase 14 privacy-safe onboarding, profile, and race configuration: `in
   progress; independent two-month history collection, retired-field write/UI
   removal, and new RPE-only selection removal implemented and migrated to the
@@ -2191,8 +2202,9 @@ Every phase must:
   implemented; final profile pgTAP contracts are reconciled without weakening
   production privileges; complete pgTAP and two-real-token Data API checks pass
   on start23-dev; Railway staging exists with development-only credentials;
-  the new/legacy build-to-recovery runtime trace passes; first-plan recovery
-  behavior, device evidence and external review remain open`
+  the new/legacy build-to-recovery runtime trace passes; candidate 0e003112
+  closes first-plan recovery behavior locally without a contract or migration
+  change; device evidence and external review remain open`
 - Phase 15 calibration, activity, and weekly-planning UX: `not started`
 - Phase 16 live-test stabilization and beta readiness: `not started`
 
