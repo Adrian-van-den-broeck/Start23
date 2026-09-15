@@ -9,10 +9,11 @@ MVP continuation. Retaining dual-key compatibility is not a failed MVP gate.
 
 Original main baseline: `9c6be883918255a92644a8c69525a2d6cf14b071`.
 Committed runtime/verification candidate:
-`f70a17bb247c9735f28adff46f6f4701361acd22`.
+`9f622db2511c14f805cd191cd793a8afe91de72c`.
 Evidence documentation is committed separately and is not a new deployed
 application candidate. All intended migrations, tests and scripts are tracked
-in the candidate. The final repository worktree is clean. No environment files
+in the candidate, whose worktree was clean before final deployment. The final
+repository worktree is also clean. No environment files
 or credential values were committed.
 
 ### Environments and runtime fixes
@@ -63,7 +64,7 @@ formulas were not changed.
 | Hosted deterministic conflict | PASS | Real-token Data API same-key replay succeeds; changed fingerprint returns prompt HTTP 409/PT409; temporary users cleaned up. |
 | Database regression | PASS | All 24 tracked SQL/pgTAP suites passed, zero failing assertions, including current calibration lifecycle and historical activation guards. Hosted dry-run reports up-to-date through `20260915205627`. |
 | Real-token Data API isolation | PASS | Two real Auth password tokens; 30 accessible and 2 denied table surfaces per user; inverse read/mutation checks, split/operational profiles, goal/activity, identity authority, private schema/load and service-only boundaries passed; cleanup 2/2. |
-| Railway complete MVP flow | PASS | Deployment `a7d4b415-a329-4285-8459-e65fc6be86e7` identifies the exact candidate SHA. Health=`ok`, readiness=`ready`, environment=`staging`. New and representative legacy users passed profile/monitor/timezone/race/history, calibration, pending zone approval, onboarding/resume and inverse ownership. Initial plan stayed pending until approval; a planned partial-HR activity persisted observed-only private provenance; exact retry and stale revisions behaved deterministically; the next race-anchored recovery week produced a pending `recovery_factor` proposal. Cleanup 2/2. |
+| Railway complete MVP flow | PASS | Deployment `0208f093-9bf2-4fb1-9f4c-2def3ebaee18` identifies the exact candidate SHA. Health=`ok`, readiness=`ready`, environment=`staging`. A real client signup (development email confirmation followed by password token) and a representative legacy user passed profile/monitor/timezone/race/history, calibration, pending zone approval, onboarding/resume and inverse ownership. Initial plan stayed pending until approval; a planned partial-HR activity persisted observed-only private provenance; exact retry and stale revisions behaved deterministically; the next race-anchored recovery week produced a pending `recovery_factor` proposal. Cleanup 2/2. |
 | Automated backend/mobile | PASS | 632 backend tests; Ruff check/format (including verifiers); strict mypy 132 files; mobile 6 suites/19 tests, TypeScript and unused checks. |
 | Primary-platform real device | BLOCKED | ADB returned no attached Android device on 2026-09-15. No physical-device flow claimed. |
 | iOS device | NOT EXECUTED | Windows environment; signing/device access unavailable. |
