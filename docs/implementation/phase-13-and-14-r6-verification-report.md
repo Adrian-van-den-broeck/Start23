@@ -37,6 +37,48 @@ was required.
 and the accountable physiological-review record remain open release gates and
 are not marked passed.
 
+## Final recovery staging runtime gate — 2026-09-16
+
+The final recovery software candidate
+`0e0031120fb2f6f9d0482214a3ce7484cb527450`, with only evidence documentation
+commit `2253c2c759ba1c345082f0a665d19f94317ba38f` after it, was pushed on `main`
+and confirmed at `origin/main`. The backend directory at that HEAD was deployed
+only to Railway environment `r6-staging`, service `r6-api`. Railway deployment
+`eaf5001f-910e-410f-942e-c45a5aa6acb9` completed with status `SUCCESS`; its
+deployment message records both the software candidate and deployed HEAD, and
+its immutable image digest is
+`sha256:6bb8df66d8e194c2957c53171c505c4b6911ddd811328731aaf3f01567b57d66`.
+The staging `/health` and `/ready` endpoints returned `ok` and `ready` with
+`environment=staging`. Startup logs for that bounded deployment showed a normal
+application start. Production was not targeted or modified.
+
+The deployed flow was exercised against development Supabase project
+`start23-dev` (`isfumhgqphieoayqahjv`) with two newly created, tagged test
+athletes:
+
+- The fresh athlete completed normal profile, race, previous-month training
+  history, run calibration, zone approval and onboarding steps. Their first
+  race-anchored week landed on the nominal recovery position. Planning
+  succeeded as a `base` week with `initial_catalog_baseline`; a private,
+  read-only database check found target TSS `194.1`, derived by the existing
+  Start-TSS rule from three weekly run hours. The athlete had zero prior weekly
+  plans, so no historical week-4 value was present or fabricated, and no
+  recovery reduction was applied.
+- The established control first created and approved its ordinary build week,
+  then completed and confirmed the next-week check-in. Its race-anchored next
+  week produced the existing pending `recovery` / `recovery_factor` proposal.
+  The private target exactly equalled 60% of the prior approved planned load,
+  preserving the deterministic established-athlete recovery model.
+- Every successful athlete-facing response in both flows was recursively
+  checked and contained no private TSS/load key. Private values were inspected
+  only through a guarded read-only development-database query and were not
+  exposed through the public API.
+- Cleanup deleted both temporary Auth users and their cascaded test data: 2/2.
+
+**Final recovery runtime outcome: PASSED.** This evidence does not change the
+open physical-device or accountable physiological-review gates and is not a
+production-deployment authorization.
+
 ## Current MVP continuation — 2026-09-15
 
 This section supersedes the archived 2026-09-14 release assessment below.
