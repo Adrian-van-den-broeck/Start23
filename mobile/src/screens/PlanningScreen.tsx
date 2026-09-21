@@ -67,9 +67,14 @@ import type {
 import { FadeInView } from '../components/FadeInView';
 import { FormField } from '../components/FormField';
 import { LanguageSelector } from '../components/LanguageSelector';
+import {
+  MoveWarningPanel,
+  warningPresentation,
+} from '../components/MoveWarningPanel';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
 import { TrainingCalendar } from '../components/TrainingCalendar';
+import { isDateInWeek, WeekSchedule } from '../components/WeekSchedule';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { formatIsoDateInput } from '../lib/dateInput';
 import { workoutCardDescription } from '../lib/workoutPresentation';
@@ -99,64 +104,6 @@ const disciplineTrainingLabels: Record<Discipline, string> = {
 };
 const latestPlanIdKey = 'start23.latest-plan-id';
 const latestSwipeDraftIdKey = 'start23.latest-swipe-draft-id';
-
-const warningCopy: Record<string, { message: string; title: string }> = {
-  all_disciplines_blocked_rest_only: {
-    title: 'Rustweek voorgesteld',
-    message:
-      'Alle disciplines zijn momenteel geblokkeerd. Daarom bevat dit voorstel alleen rust.',
-  },
-  anti_stack_violation: {
-    title: 'Meer herstel nodig',
-    message:
-      'Tussen deze intensieve trainingen is extra herstel nodig. Kies een andere datum.',
-  },
-  injured_disciplines_excluded: {
-    title: 'Blessure verwerkt',
-    message:
-      'Trainingen voor de bevestigde geblesseerde disciplines zijn niet opgenomen.',
-  },
-  manual_review_required: {
-    title: 'Extra controle nodig',
-    message:
-      'Er was geen veilig regulier weekdoel beschikbaar. Controleer dit herstelvoorstel extra zorgvuldig.',
-  },
-  outside_confirmed_availability: {
-    title: 'Datum niet beschikbaar',
-    message:
-      'Een training valt buiten je bevestigde beschikbare dagen. Kies een beschikbare datum.',
-  },
-  realized_intensity_debt_applied: {
-    title: 'Rustiger weekdoel',
-    message:
-      'Je recente trainingsgegevens verlagen de intensieve tijd voor deze week.',
-  },
-  restricted_disciplines_low_only: {
-    title: 'Alleen rustige training',
-    message:
-      'Voor een beperkte discipline zijn alleen rustige trainingen opgenomen.',
-  },
-  target_outside_catalog_capacity: {
-    title: 'Weekdoel nog niet compleet',
-    message:
-      'De beschikbare trainingen sluiten nog niet volledig aan op het weekdoel.',
-  },
-  workouts_consolidated_on_available_dates: {
-    title: 'Trainingen gecombineerd',
-    message:
-      'Er staan meerdere trainingen op dezelfde beschikbare dag. Plan voldoende herstel tussen de sessies.',
-  },
-};
-
-function warningPresentation(warning: PlanWarning): {
-  message: string;
-  title: string;
-} {
-  return warningCopy[warning.code] ?? {
-    title: 'Aandachtspunt',
-    message: warning.message,
-  };
-}
 
 function coachExplanation(value: string): string {
   if (value === 'A deterministic weekly plan is ready for review.') {
@@ -230,14 +177,6 @@ function dayOffsetsFor(weekStart: string, dates: string[]): Set<number> {
       ),
     ),
   );
-}
-
-function validDateInWeek(dateValue: string, weekStart: string): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) return false;
-  const parsed = new Date(`${dateValue}T12:00:00`);
-  if (Number.isNaN(parsed.getTime()) || isoDate(parsed) !== dateValue) return false;
-  const offset = dayOffsetsFor(weekStart, [dateValue]).values().next().value;
-  return typeof offset === 'number' && offset >= 0 && offset <= 6;
 }
 
 function ActionButton({
@@ -993,7 +932,11 @@ export function PlanningScreen({
   const [swipeDraft, setSwipeDraft] = useState<SwipeWeekDraft | null>(null);
   const [calendarWorkouts, setCalendarWorkouts] = useState<PlannedWorkout[]>([]);
   const [calendarRestDays, setCalendarRestDays] = useState<RestDay[]>([]);
-  const [moveDates, setMoveDates] = useState<Record<string, string>>({});
+  const [pendingMove, setPendingMove] = useState<{
+    scheduledDate: string;
+    warnings: PlanWarning[];
+    workout: PlannedWorkout;
+  } | null>(null);
   const [primaryGoal, setPrimaryGoal] = useState<PrimaryRaceGoal | null>(null);
   const [maintenanceMarked, setMaintenanceMarked] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -1257,10 +1200,30 @@ export function PlanningScreen({
     });
   };
 
-  const moveWorkout = (workout: PlannedWorkout) => {
+  const applyWorkoutMove = async (
+    workout: PlannedWorkout,
+    scheduledDate: string,
+  ) => {
     if (!plan?.active_revision) return;
-    const scheduledDate = moveDates[workout.id] ?? workout.scheduled_date;
-    if (!validDateInWeek(scheduledDate, plan.week_start)) {
+    const updated = await movePlannedWorkout(
+      accessToken,
+      workout.id,
+      plan.active_revision,
+      scheduledDate,
+    );
+    setPlan(updated);
+    setPendingMove(null);
+    void Haptics.notificationAsync(
+      Haptics.NotificationFeedbackType.Success,
+    ).catch(() => undefined);
+  };
+
+  const requestWorkoutMove = (
+    workout: PlannedWorkout,
+    scheduledDate: string,
+  ) => {
+    if (!plan?.active_revision) return;
+    if (!isDateInWeek(scheduledDate, plan.week_start)) {
       setError('Gebruik een geldige datum binnen deze planweek (JJJJ-MM-DD).');
       return;
     }
@@ -1276,31 +1239,11 @@ export function PlanningScreen({
         plan.active_revision!,
         workouts,
       );
-      const apply = async () => {
-        const updated = await movePlannedWorkout(
-          accessToken,
-          workout.id,
-          plan.active_revision!,
-          scheduledDate,
-        );
-        setPlan(updated);
-        setMoveDates((current) => ({
-          ...current,
-          [workout.id]: scheduledDate,
-        }));
-      };
       if (validation.warnings.length === 0) {
-        await apply();
+        await applyWorkoutMove(workout, scheduledDate);
         return;
       }
-      Alert.alert(
-        'Let op bij verplaatsen',
-        validation.warnings.map((warning) => warning.message).join('\n\n'),
-        [
-          { text: 'Annuleren', style: 'cancel' },
-          { text: 'Toch verplaatsen', onPress: () => void run(apply) },
-        ],
-      );
+      setPendingMove({ scheduledDate, warnings: validation.warnings, workout });
     });
   };
 
@@ -1761,49 +1704,51 @@ export function PlanningScreen({
                     </Text>
                   </View>
                 ) : null}
-                {plan.workouts.map((workout, index) => (
-                  <View key={workout.id} style={styles.workoutStack}>
-                    {plan.revision_state === 'pending_approval' &&
-                    plan.proposal?.state === 'pending' ? (
-                      <PendingWorkoutEditor
-                        accessToken={accessToken}
-                        busy={busy}
-                        onEdited={(updated) => {
-                          setPlan(updated);
-                        }}
-                        onError={setError}
-                        plan={plan}
-                        slotIndex={index}
-                        workout={workout}
+                {plan.revision_state === 'active' ? (
+                  <>
+                    <WeekSchedule
+                      busy={busy}
+                      onMove={requestWorkoutMove}
+                      weekStart={plan.week_start}
+                      workouts={plan.workouts}
+                    />
+                    {pendingMove ? (
+                      <MoveWarningPanel
+                        onCancel={() => setPendingMove(null)}
+                        onConfirm={() =>
+                          void run(() =>
+                            applyWorkoutMove(
+                              pendingMove.workout,
+                              pendingMove.scheduledDate,
+                            ),
+                          )
+                        }
+                        warnings={pendingMove.warnings}
                       />
-                    ) : (
-                      <WorkoutCard workout={workout} />
-                    )}
-                    {plan.revision_state === 'active' ? (
-                      <View style={styles.movePanel}>
-                        <FormField
-                          autoCapitalize="none"
-                          inputMode="numeric"
-                          label="Nieuwe datum (JJJJ-MM-DD)"
-                          maxLength={10}
-                          onChangeText={(value) =>
-                            setMoveDates((current) => ({
-                              ...current,
-                              [workout.id]: formatIsoDateInput(value),
-                            }))
-                          }
-                          value={moveDates[workout.id] ?? workout.scheduled_date}
-                        />
-                        <ActionButton
-                          disabled={busy}
-                          label="Controleer en verplaats"
-                          onPress={() => moveWorkout(workout)}
-                          secondary
-                        />
-                      </View>
                     ) : null}
-                  </View>
-                ))}
+                  </>
+                ) : (
+                  plan.workouts.map((workout, index) => (
+                    <View key={workout.id} style={styles.workoutStack}>
+                      {plan.revision_state === 'pending_approval' &&
+                      plan.proposal?.state === 'pending' ? (
+                        <PendingWorkoutEditor
+                          accessToken={accessToken}
+                          busy={busy}
+                          onEdited={(updated) => {
+                            setPlan(updated);
+                          }}
+                          onError={setError}
+                          plan={plan}
+                          slotIndex={index}
+                          workout={workout}
+                        />
+                      ) : (
+                        <WorkoutCard workout={workout} />
+                      )}
+                    </View>
+                  ))
+                )}
                 {plan.proposal?.state === 'pending' ? (
                   <View style={styles.approvalPanel}>
                     <Text style={styles.approvalTitle}>Klaar met kiezen?</Text>
@@ -2149,12 +2094,6 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   workoutStack: { gap: spacing.xs },
-  movePanel: {
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.md,
-    gap: spacing.sm,
-    padding: spacing.md,
-  },
   editPanel: {
     ...shadows.card,
     backgroundColor: colors.surfaceRaised,

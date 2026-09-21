@@ -15,6 +15,7 @@ import type {
   GoalPlanningOption,
   OnboardingComplete,
   OnboardingState,
+  PlanWarning,
   PlannedExternalActivity,
   PendingWorkoutAlternatives,
   PolarConnection,
@@ -927,7 +928,7 @@ export function validatePlanLayout(
   planId: string,
   expectedRevision: number,
   workouts: Array<{ workout_id: string; scheduled_date: string }>,
-): Promise<{ valid_for_generated_schedule: boolean; warnings: Array<{ message: string }> }> {
+): Promise<{ valid_for_generated_schedule: boolean; warnings: PlanWarning[] }> {
   return request(accessToken, `/api/v1/weekly-plans/${planId}/validate`, {
     method: 'POST',
     body: JSON.stringify({

@@ -202,4 +202,73 @@ describe('mobile API transport contracts', () => {
       },
     );
   });
+
+  test('same-week move uses the exact revision-safe server contract', async () => {
+    const { client, fetchMock } = loadClient();
+
+    await client.validatePlanLayout('athlete-token', 'plan-id', 4, [
+      { workout_id: 'workout-id', scheduled_date: '2026-09-23' },
+    ]);
+    await client.movePlannedWorkout(
+      'athlete-token',
+      'workout-id',
+      4,
+      '2026-09-23',
+    );
+
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      1,
+      `${API_URL}/api/v1/weekly-plans/plan-id/validate`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          expected_revision: 4,
+          workouts: [
+            { workout_id: 'workout-id', scheduled_date: '2026-09-23' },
+          ],
+        }),
+        headers,
+      },
+    );
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      `${API_URL}/api/v1/planned-workouts/workout-id`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify({
+          expected_revision: 4,
+          scheduled_date: '2026-09-23',
+        }),
+        headers,
+      },
+    );
+  });
+
+  test('stale-revision move fails safely without a retry', async () => {
+    const { client, fetchMock } = loadClient();
+    fetchMock.mockResolvedValueOnce({
+      ok: false,
+      status: 409,
+      json: async () => ({
+        error: {
+          code: 'plan_revision_stale',
+          message: 'The plan changed after this calendar edit was prepared.',
+        },
+      }),
+    } as Response);
+
+    await expect(
+      client.movePlannedWorkout(
+        'athlete-token',
+        'workout-id',
+        4,
+        '2026-09-23',
+      ),
+    ).rejects.toMatchObject({
+      code: 'plan_revision_stale',
+      retryable: false,
+      status: 409,
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
 });

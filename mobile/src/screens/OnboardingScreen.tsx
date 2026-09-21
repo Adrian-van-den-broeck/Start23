@@ -36,7 +36,6 @@ import type {
 import { FadeInView } from '../components/FadeInView';
 import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
-import { StatusPill } from '../components/StatusPill';
 import {
   formatIsoDateInput,
   isPastIsoDateInput,
@@ -830,42 +829,6 @@ function ReviewRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function CompletedStep({
-  state,
-  onOpenPlanning,
-  onSignOut,
-}: {
-  state: OnboardingState;
-  onOpenPlanning: () => void;
-  onSignOut: () => Promise<void>;
-}) {
-  return (
-    <View style={styles.completed}>
-      <View style={styles.completedMark}>
-        <Text style={styles.completedMarkText}>✓</Text>
-      </View>
-      <Text style={styles.completedTitle}>Je basis staat.</Text>
-      <Text style={styles.completedText}>
-        Het eerste planningsverzoek staat in afwachting. Een trainingsplan wordt
-        pas in de planningsfase opgebouwd en blijft daarna een voorstel.
-      </Text>
-      <View style={styles.requestCard}>
-        <StatusPill label="In afwachting" tone="brand" />
-        <Text style={styles.requestLabel}>Planningsverzoek</Text>
-        <Text numberOfLines={1} style={styles.requestId}>
-          {state.initial_plan_request_id}
-        </Text>
-      </View>
-      <ActionButton label="Naar je weekplanning" onPress={onOpenPlanning} />
-      <ActionButton
-        label="Afmelden"
-        onPress={() => void onSignOut()}
-        secondary
-      />
-    </View>
-  );
-}
-
 export function OnboardingScreen({
   accessToken,
   onOpenCalibration,
@@ -883,9 +846,13 @@ export function OnboardingScreen({
       getOnboarding(accessToken),
       getGoalPlanningOptions(accessToken),
     ]);
+    if (next.current_step === 'completed') {
+      onOpenPlanning();
+      return;
+    }
     setState(next);
     setGoalOptions(nextGoalOptions);
-  }, [accessToken]);
+  }, [accessToken, onOpenPlanning]);
 
   const retryLoad = useCallback(async () => {
     setLoading(true);
@@ -911,6 +878,10 @@ export function OnboardingScreen({
     ])
       .then(([next, nextGoalOptions]) => {
         if (mounted) {
+          if (next.current_step === 'completed') {
+            onOpenPlanning();
+            return;
+          }
           setState(next);
           setGoalOptions(nextGoalOptions);
           setError(null);
@@ -933,7 +904,7 @@ export function OnboardingScreen({
     return () => {
       mounted = false;
     };
-  }, [accessToken]);
+  }, [accessToken, onOpenPlanning]);
 
   const mutate = async (operation: () => Promise<unknown>) => {
     setSaving(true);
@@ -946,6 +917,23 @@ export function OnboardingScreen({
         caught instanceof Error
           ? caught.message
           : 'Opslaan is niet gelukt.',
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const finishOnboarding = async (expectedRevision: number) => {
+    setSaving(true);
+    setError(null);
+    try {
+      await completeOnboarding(accessToken, expectedRevision);
+      onOpenPlanning();
+    } catch (caught) {
+      setError(
+        caught instanceof Error
+          ? caught.message
+          : 'Afronden is niet gelukt.',
       );
     } finally {
       setSaving(false);
@@ -1229,21 +1217,12 @@ export function OnboardingScreen({
                 )
               }
               onComplete={() =>
-                mutate(() =>
-                  completeOnboarding(accessToken, state.onboarding_revision),
-                )
+                finishOnboarding(state.onboarding_revision)
               }
               onRejectZone={(proposalId) =>
                 mutate(() => rejectZoneProposal(accessToken, proposalId))
               }
               saving={saving}
-              state={state}
-            />
-          ) : null}
-          {step === 'completed' ? (
-            <CompletedStep
-              onOpenPlanning={onOpenPlanning}
-              onSignOut={onSignOut}
               state={state}
             />
           ) : null}
@@ -1776,53 +1755,5 @@ const styles = StyleSheet.create({
     color: colors.brand,
     fontSize: 13,
     lineHeight: 19,
-  },
-  completed: {
-    alignItems: 'center',
-    gap: spacing.lg,
-    paddingTop: 48,
-  },
-  completedMark: {
-    alignItems: 'center',
-    backgroundColor: colors.brand,
-    borderRadius: radius.pill,
-    height: 72,
-    justifyContent: 'center',
-    width: 72,
-  },
-  completedMarkText: {
-    color: colors.white,
-    fontSize: 32,
-    fontWeight: '900',
-  },
-  completedTitle: {
-    color: colors.ink,
-    fontSize: 32,
-    fontWeight: '900',
-    letterSpacing: -1,
-  },
-  completedText: {
-    color: colors.inkMuted,
-    fontSize: 14,
-    lineHeight: 22,
-    maxWidth: 350,
-    textAlign: 'center',
-  },
-  requestCard: {
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    gap: spacing.sm,
-    padding: spacing.lg,
-  },
-  requestLabel: {
-    color: colors.ink,
-    fontSize: 15,
-    fontWeight: '800',
-  },
-  requestId: {
-    color: colors.inkMuted,
-    fontSize: 11,
   },
 });

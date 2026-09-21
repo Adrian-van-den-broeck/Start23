@@ -36,6 +36,7 @@ import type {
 } from '../api/types';
 import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
+import { RpeChoiceList } from '../components/RpeChoiceList';
 import { StatusPill } from '../components/StatusPill';
 import { colors, radius, spacing } from '../theme/tokens';
 
@@ -45,7 +46,7 @@ type Props = {
   onSignOut: () => Promise<void>;
 };
 
-type Stage = 'protocol' | 'feedback' | 'result';
+type Stage = 'feedback' | 'result';
 
 type SegmentDraft = {
   included: boolean;
@@ -324,7 +325,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
   const [selectedProtocolId, setSelectedProtocolId] = useState<string | null>(
     null,
   );
-  const [stage, setStage] = useState<Stage>('protocol');
+  const [stage, setStage] = useState<Stage>('feedback');
   const [drafts, setDrafts] = useState<Record<string, SegmentDraft>>({});
   const [performedAt, setPerformedAt] = useState(new Date().toISOString());
   const [timezone, setTimezone] = useState('');
@@ -423,7 +424,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
     setResult(null);
     setThresholdDecision(null);
     setZonesActivated(false);
-    setStage('protocol');
+    setStage('feedback');
   }, [selectedProtocolId]);
 
   const updateDraft = (
@@ -457,10 +458,9 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
 
   const validateFeedback = (
     protocol: CalibrationProtocol,
-    setup: DisciplineSetup,
   ) => {
     if (Number.isNaN(new Date(performedAt).getTime())) {
-      throw new Error('Gebruik een geldig ISO-tijdstip inclusief tijdzone.');
+      throw new Error('Gebruik een geldig ISO 8601-tijdstip.');
     }
     if (!timezone.trim()) throw new Error('Vul een IANA-tijdzone in.');
     parsePositive(durationMinutes, 'Totale duur');
@@ -518,21 +518,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
           parseCsvNumbers(draft.repetitionTimes, 'Herhalingstijden', false);
           parseCsvNumbers(draft.repetitionRests, 'Rusttijden', true);
         } else {
-          if (setup.guidance_mode === 'rpe_only') continue;
-          const needsHeartRate = ['heart_rate', 'combined'].includes(
-            setup.guidance_mode,
-          );
-          const needsPace = setup.guidance_mode === 'pace';
-          const needsPower = ['power', 'combined'].includes(setup.guidance_mode);
-          if (needsHeartRate) {
-            parsePositive(draft.averageHeartRate, 'Gemiddelde hartslag');
-          }
-          if (needsPace) {
-            parsePositive(draft.averagePace, 'Gemiddeld tempo');
-          }
-          if (needsPower) {
-            parsePositive(draft.averagePower, 'Gemiddeld vermogen');
-          }
+          parsePositive(draft.averageHeartRate, 'Gemiddelde hartslag');
         }
       }
     }
@@ -657,7 +643,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
     setBusy(true);
     setError(null);
     try {
-      validateFeedback(selectedProtocol, selectedSetup);
+      validateFeedback(selectedProtocol);
       let savedActivityId = activityId;
       if (!savedActivityId) {
         const activity = await createActivity(accessToken, idempotencyKey, {
@@ -672,10 +658,25 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
         savedActivityId = activity.id;
         setActivityId(savedActivityId);
       }
+      const calibrationHeartRate =
+        selectedProtocol.protocol_type === 'submaximal_calibration' &&
+        selectedProtocol.discipline !== 'swim'
+          ? Number(
+              parsePositive(
+                drafts[
+                  selectedProtocol.segments.find(
+                    (segment) => isMainSegment(segment) && !segment.optional,
+                  )?.segment_id ?? ''
+                ]?.averageHeartRate ?? '',
+                'Gemiddelde hartslag',
+              ),
+            )
+          : undefined;
       await submitActivityRpe(
         accessToken,
         savedActivityId,
         parseRpe(sessionRpe, 'Sessie-RPE'),
+        calibrationHeartRate,
       );
       for (const segment of selectedProtocol.segments) {
         const draft = drafts[segment.segment_id];
@@ -847,8 +848,16 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                 ))}
               </View>
 
-              {selectedProtocol && selectedSetup && stage === 'protocol' ? (
+              {selectedProtocol && selectedSetup && stage === 'feedback' ? (
                 <View style={styles.card}>
+                  <View
+                    accessibilityLabel="Stop if you feel pain"
+                    accessibilityRole="alert"
+                    accessible
+                    style={styles.painWarning}
+                  >
+                    <Text style={styles.painWarningText}>Stop if you feel pain</Text>
+                  </View>
                   <View style={styles.badges}>
                     <StatusPill
                       label={
@@ -870,7 +879,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                   </Text>
                   <Text style={styles.muted}>
                     Uitvoering op {guidanceLabels[selectedSetup.guidance_mode]}.
-                    Gebruik per blok de getoonde triathlon-RPE-zone.
+                    Volg de blokken hieronder en vul je feedback direct in.
                   </Text>
                   <View style={styles.segmentList}>
                     {selectedProtocol.segments.map((segment) => (
@@ -891,79 +900,38 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                           <Text style={styles.muted}>
                             {segment.rpe_display_label} · {segment.rpe_training_type}
                           </Text>
-                          <Text style={styles.muted}>
-                            {segment.rpe_description}
-                          </Text>
+                          <Text style={styles.muted}>{segment.rpe_description}</Text>
                         </View>
                       </View>
                     ))}
                   </View>
-                  <Text style={styles.safety}>
-                    Stop bij pijn, alarmsymptomen of een onveilige situatie. Een
-                    veldtestresultaat wordt nooit automatisch een actief
-                    zoneprofiel.
-                  </Text>
-                  <ActionButton
-                    label="Training uitgevoerd · feedback invullen"
-                    onPress={() => setStage('feedback')}
-                  />
-                  {priorResults.length > 0 ? (
-                    <View style={styles.segmentList}>
-                      <Text style={styles.historyText}>
-                        {priorResults.length} eerdere evaluatie
-                        {priorResults.length === 1 ? '' : 's'} voor dit protocol.
-                      </Text>
-                      {priorResults.slice(0, 3).map((evaluation) => (
-                        <ActionButton
-                          key={evaluation.id}
-                          label={`Bekijk ${new Date(evaluation.created_at).toLocaleDateString('nl-NL')}`}
-                          onPress={() => openPriorResult(evaluation)}
-                          secondary
-                        />
-                      ))}
-                    </View>
-                  ) : null}
-                </View>
-              ) : null}
-
-              {selectedProtocol && selectedSetup && stage === 'feedback' ? (
-                <View style={styles.card}>
                   <Text style={styles.eyebrow}>Feedback</Text>
-                  <Text style={styles.pageTitle}>Objectief + jouw RPE</Text>
+                  <Text style={styles.pageTitle}>Objectief + jouw gevoel</Text>
                   <Text style={styles.muted}>
                     Ontbrekende sensordata blokkeert de activiteit niet. Laat
                     velden leeg als je ze niet betrouwbaar hebt.
                   </Text>
                   <FormField
                     autoCapitalize="none"
-                    label="Starttijd (ISO inclusief tijdzone)"
+                    label="Starttijd (ISO 8601)"
                     onChangeText={setPerformedAt}
                     placeholder="2026-08-15T09:00:00+02:00"
                     value={performedAt}
                   />
-                  <Text style={styles.muted}>
-                    Tijdzone uit je bevestigde profiel: {timezone}
-                  </Text>
-                  <View style={styles.twoColumns}>
-                    <View style={styles.column}>
-                      <FormField
-                        inputMode="decimal"
-                        label="Totale duur"
-                        onChangeText={setDurationMinutes}
-                        placeholder="minuten"
-                        value={durationMinutes}
-                      />
-                    </View>
-                    <View style={styles.column}>
-                      <FormField
-                        inputMode="numeric"
-                        label="Sessie-RPE"
-                        onChangeText={setSessionRpe}
-                        placeholder="1–10"
-                        value={sessionRpe}
-                      />
-                    </View>
-                  </View>
+                  <FormField
+                    inputMode="decimal"
+                    label="Totale duur"
+                    onChangeText={setDurationMinutes}
+                    placeholder="minuten"
+                    value={durationMinutes}
+                  />
+                  <RpeChoiceList
+                    disabled={busy}
+                    discipline={selectedProtocol.discipline}
+                    label="Hoe voelde de volledige sessie?"
+                    onSelect={(value) => setSessionRpe(String(value))}
+                    selectedValue={Number(sessionRpe) || null}
+                  />
 
                   {needsSwimConditions(selectedProtocol) ? (
                     <Toggle
@@ -1042,16 +1010,16 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                               </View>
                             </View>
                             {main ? (
-                              <FormField
-                                inputMode="numeric"
-                                label="Werkelijke blok-RPE"
-                                onChangeText={(value) =>
+                              <RpeChoiceList
+                                disabled={busy}
+                                discipline={selectedProtocol.discipline}
+                                label="Hoe voelde dit blok?"
+                                onSelect={(value) =>
                                   updateDraft(segment.segment_id, {
-                                    blockRpe: value,
+                                    blockRpe: String(value),
                                   })
                                 }
-                                placeholder="1–10"
-                                value={draft.blockRpe}
+                                selectedValue={Number(draft.blockRpe) || null}
                               />
                             ) : null}
                             {runTest ? (
@@ -1163,9 +1131,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                                 value={draft.completenessPercent}
                               />
                             ) : null}
-                            {calibrationMain &&
-                            (selectedSetup.guidance_mode !== 'rpe_only' ||
-                              selectedProtocol.discipline === 'swim') ? (
+                            {calibrationMain ? (
                               <>
                                 {selectedProtocol.discipline === 'swim' ? (
                                   <>
@@ -1204,51 +1170,18 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                                     />
                                   </>
                                 ) : (
-                                  <>
-                                    {['heart_rate', 'combined'].includes(
-                                      selectedSetup.guidance_mode,
-                                    ) ? (
-                                      <FormField
-                                        inputMode="decimal"
-                                        label="Gemiddelde hartslag"
-                                        onChangeText={(value) =>
-                                          updateDraft(segment.segment_id, {
-                                            averageHeartRate: value,
-                                          })
-                                        }
-                                        placeholder="bpm"
-                                        value={draft.averageHeartRate}
-                                      />
-                                    ) : null}
-                                    {selectedSetup.guidance_mode === 'pace' ? (
-                                      <FormField
-                                        inputMode="decimal"
-                                        label="Gemiddeld tempo"
-                                        onChangeText={(value) =>
-                                          updateDraft(segment.segment_id, {
-                                            averagePace: value,
-                                          })
-                                        }
-                                        placeholder="sec/km"
-                                        value={draft.averagePace}
-                                      />
-                                    ) : null}
-                                    {['power', 'combined'].includes(
-                                      selectedSetup.guidance_mode,
-                                    ) ? (
-                                      <FormField
-                                        inputMode="decimal"
-                                        label="Gemiddeld vermogen"
-                                        onChangeText={(value) =>
-                                          updateDraft(segment.segment_id, {
-                                            averagePower: value,
-                                          })
-                                        }
-                                        placeholder="watt"
-                                        value={draft.averagePower}
-                                      />
-                                    ) : null}
-                                  </>
+                                  <FormField
+                                    hint="Verplicht voor de deterministische drempel- en zoneberekening."
+                                    inputMode="decimal"
+                                    label="Gemiddelde hartslag"
+                                    onChangeText={(value) =>
+                                      updateDraft(segment.segment_id, {
+                                        averageHeartRate: value,
+                                      })
+                                    }
+                                    placeholder="bpm"
+                                    value={draft.averageHeartRate}
+                                  />
                                 )}
                               </>
                             ) : null}
@@ -1269,12 +1202,22 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                     loading={busy}
                     onPress={() => void submit()}
                   />
-                  <ActionButton
-                    disabled={busy || activityId !== null}
-                    label="Terug naar protocol"
-                    onPress={() => setStage('protocol')}
-                    secondary
-                  />
+                  {priorResults.length > 0 ? (
+                    <View style={styles.segmentList}>
+                      <Text style={styles.historyText}>
+                        {priorResults.length} eerdere evaluatie
+                        {priorResults.length === 1 ? '' : 's'} voor dit protocol.
+                      </Text>
+                      {priorResults.slice(0, 3).map((evaluation) => (
+                        <ActionButton
+                          key={evaluation.id}
+                          label={`Bekijk ${new Date(evaluation.created_at).toLocaleDateString('nl-NL')}`}
+                          onPress={() => openPriorResult(evaluation)}
+                          secondary
+                        />
+                      ))}
+                    </View>
+                  ) : null}
                 </View>
               ) : null}
 
@@ -1369,8 +1312,8 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                     </Text>
                   ) : null}
                   <ActionButton
-                    label="Protocoloverzicht"
-                    onPress={() => setStage('protocol')}
+                    label="Nieuwe uitvoering"
+                    onPress={() => setStage('feedback')}
                   />
                   <ActionButton label="Terug" onPress={onBack} secondary />
                 </View>
@@ -1483,6 +1426,19 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     lineHeight: 20,
     padding: spacing.md,
+  },
+  painWarning: {
+    backgroundColor: colors.dangerSoft,
+    borderColor: colors.danger,
+    borderRadius: radius.md,
+    borderWidth: 2,
+    padding: spacing.lg,
+  },
+  painWarningText: {
+    color: colors.danger,
+    fontSize: 20,
+    fontWeight: '900',
+    textAlign: 'center',
   },
   historyText: { color: colors.inkFaint, fontSize: 12, textAlign: 'center' },
   twoColumns: { flexDirection: 'row', gap: spacing.sm },

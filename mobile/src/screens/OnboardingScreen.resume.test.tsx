@@ -1,6 +1,10 @@
-import { render } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
-import { getGoalPlanningOptions, getOnboarding } from '../api/client';
+import {
+  completeOnboarding,
+  getGoalPlanningOptions,
+  getOnboarding,
+} from '../api/client';
 import type { OnboardingState } from '../api/types';
 import { OnboardingScreen } from './OnboardingScreen';
 
@@ -56,5 +60,54 @@ describe('OnboardingScreen resume behavior', () => {
     expect(screen.getByText(/Tijdzone, Doel/)).toBeTruthy();
     expect(screen.getByText('Bevestig je tijdzone')).toBeTruthy();
     expect(screen.queryByText('Waar sta je nu?')).toBeNull();
+  });
+
+  test('completion navigates directly to planning without the removed interstitial', async () => {
+    jest.mocked(getOnboarding).mockResolvedValue({
+      ...state,
+      status: 'in_progress',
+      current_step: 'review',
+      completed_steps: [
+        'profile',
+        'heart_rate_monitor',
+        'timezone',
+        'history',
+        'goal',
+        'zones',
+      ],
+      upgrade_required: false,
+      missing_upgrade_steps: [],
+      can_complete: true,
+      onboarding_revision: 9,
+    });
+    jest.mocked(getGoalPlanningOptions).mockResolvedValue([]);
+    jest.mocked(completeOnboarding).mockResolvedValue({
+      onboarding: {
+        ...state,
+        status: 'completed',
+        current_step: 'completed',
+      },
+      initial_plan_request_id: 'request-id',
+      initial_plan_request_status: 'pending',
+    });
+    const onOpenPlanning = jest.fn();
+    const screen = await render(
+      <OnboardingScreen
+        accessToken="athlete-token"
+        onOpenCalibration={jest.fn()}
+        onOpenPlanning={onOpenPlanning}
+        onSignOut={jest.fn(async () => undefined)}
+      />,
+    );
+
+    await fireEvent.press(
+      await screen.findByRole('button', { name: 'Onboarding afronden' }),
+    );
+
+    await waitFor(() => {
+      expect(completeOnboarding).toHaveBeenCalledWith('athlete-token', 9);
+      expect(onOpenPlanning).toHaveBeenCalledTimes(1);
+    });
+    expect(screen.queryByText('Je basis staat.')).toBeNull();
   });
 });

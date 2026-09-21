@@ -1958,8 +1958,50 @@ roadmap does not make Phase 13 or Phase 14 complete.
 
 ### Status
 
-Not started. Text content and calibration behavior depend on Phase 13; layout
-and navigation work can start independently.
+Implemented in the mobile client on 2026-09-22. The Phase 15 feature and
+contract tests pass locally, as do strict TypeScript and unused-code checks.
+No backend, API schema, database, migration, physiological formula, private-
+load behavior, or production environment changed.
+
+Athlete RPE entry now uses the exact ten `phase-13-joren-ruleset-1` textual
+choices for each discipline while sending the existing canonical integers.
+Onboarding completion opens planning directly, and the calibration/test screen
+opens the protocol instructions and feedback form as one actionable screen.
+The normal test flow no longer displays a timezone notice. Every currently
+executable field-test and calibration protocol renders the prominent,
+screen-reader-visible `Stop if you feel pain` warning before its instructions.
+
+Current run/bike calibration requires average heart rate in the mandatory
+observation block, sends it through both the canonical activity feedback and
+immutable calibration-observation contracts, and retains the existing
+deterministic threshold-confirmation then pending-zone-proposal lifecycle. Swim
+retains measured elapsed-time/distance/CSS behavior. Nothing auto-activates a
+zone profile.
+
+Active weekly plans now render a directly draggable Monday-Sunday date-only
+board. Drag and accessible date-button moves use the existing complete-layout
+validation, exact active revision, same-week client guard, authoritative move
+endpoint, and visible qualitative warning confirmation. A stale server response
+does not change client state. Unplanned activity creation and later HR/textual-
+RPE completion remain covered. A recursive mobile-source gate finds no public
+TSS/private-load key or copy.
+
+Verification evidence: mobile Jest passed 13 suites / 42 tests; strict
+TypeScript and unused-code checks passed; `git diff --check` passed. Backend,
+Ruff, mypy, OpenAPI, and database suites were not required because no Python,
+public contract, persistence, or migration file changed.
+
+Two non-feature verification gates remain open. Current Expo diagnostics report
+the unchanged baseline app-config duplication/schema warning and eleven SDK 57
+patch-version mismatches; Phase 15 did not upgrade Expo-managed dependencies
+because `mobile/AGENTS.md` prohibits an unrelated upgrade. An Android 15 emulator
+booted and the previously installed development client launched, but that client
+is package `com.adrivdbs.start23` while the current app config is
+`com.adrivdbs.wombo`; it reached the development-launcher error screen instead
+of loading the current bundle over the IPv6-localhost Metro/ADB bridge. A fresh
+current development build and UI smoke pass are therefore still required. The
+externally completed physical-device and accountable-review gates remain outside
+Phase 15 as directed; production was not modified.
 
 ### Scope
 
@@ -2205,7 +2247,10 @@ Every phase must:
   the new/legacy build-to-recovery runtime trace passes; candidate 0e003112
   closes first-plan recovery behavior locally without a contract or migration
   change; device evidence and external review remain open`
-- Phase 15 calibration, activity, and weekly-planning UX: `not started`
+- Phase 15 calibration, activity, and weekly-planning UX: `implemented and
+  covered by 13 mobile suites / 42 tests plus strict TypeScript and unused-code
+  checks; Expo baseline diagnostics and a fresh current-package Android
+  development-build smoke remain open; no backend or production change`
 - Phase 16 live-test stabilization and beta readiness: `not started`
 
 ## Decision review after the 5 November meeting

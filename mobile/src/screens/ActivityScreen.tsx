@@ -27,9 +27,11 @@ import type {
 } from '../api/types';
 import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
+import { RpeChoiceList } from '../components/RpeChoiceList';
 import { StatusPill } from '../components/StatusPill';
 import { type AppLanguage, useLanguage } from '../i18n/LanguageProvider';
 import { hasPartialObservedZoneTime } from '../lib/onboardingForms';
+import { rpeDescription } from '../lib/rpe';
 import { colors, radius, spacing } from '../theme/tokens';
 
 type ActivityScreenProps = {
@@ -438,21 +440,12 @@ export function ActivityScreen({
               placeholder={t('activity.heartRatePlaceholder')}
               value={heartRateByActivity[activity.id] ?? ''}
             />
-            <View style={styles.rpeGrid}>
-              {Array.from({ length: 10 }, (_, index) => index + 1).map((rpe) => (
-                <Pressable
-                  accessibilityLabel={`RPE ${rpe}`}
-                  accessibilityRole="button"
-                  disabled={busy}
-                  haptic="selection"
-                  key={rpe}
-                  onPress={() => void saveRpe(activity.id, rpe)}
-                  style={styles.rpeButton}
-                >
-                  <Text style={styles.rpeText}>{rpe}</Text>
-                </Pressable>
-              ))}
-            </View>
+            <RpeChoiceList
+              disabled={busy}
+              discipline={activity.discipline}
+              label="Hoe voelde deze training?"
+              onSelect={(rpe) => void saveRpe(activity.id, rpe)}
+            />
           </View>
         ))}
 
@@ -606,7 +599,9 @@ export function ActivityScreen({
                 {activity.duration_minutes === null
                   ? `${activity.distance_meters} m`
                   : `${Number(activity.duration_minutes)} min`}
-                {activity.rpe === null ? '' : ` · RPE ${activity.rpe}`}
+                {activity.rpe === null
+                  ? ''
+                  : ` · ${rpeDescription(activity.discipline, activity.rpe)} (RPE ${activity.rpe})`}
               </Text>
               <Text style={styles.body}>{resultMessage(activity, language)}</Text>
               <ActivityMeasurementNotices
@@ -658,29 +653,16 @@ export function ActivityScreen({
                     <Text style={styles.link}>{t('activity.correction')}</Text>
                   </Pressable>
                   {editingRpeActivityId === activity.id ? (
-                    <View style={styles.rpeGrid}>
-                      {Array.from({ length: 10 }, (_, index) => index + 1).map(
-                        (rpe) => (
-                          <Pressable
-                            accessibilityLabel={`RPE corrigeren naar ${rpe}`}
-                            accessibilityRole="button"
-                            disabled={busy || rpe === activity.rpe}
-                            haptic="selection"
-                            key={rpe}
-                            onPress={() => {
-                              setEditingRpeActivityId(null);
-                              void saveRpe(activity.id, rpe);
-                            }}
-                            style={[
-                              styles.rpeButton,
-                              rpe === activity.rpe && styles.disabled,
-                            ]}
-                          >
-                            <Text style={styles.rpeText}>{rpe}</Text>
-                          </Pressable>
-                        ),
-                      )}
-                    </View>
+                    <RpeChoiceList
+                      disabled={busy}
+                      discipline={activity.discipline}
+                      label="Gecorrigeerd gevoel"
+                      onSelect={(rpe) => {
+                        setEditingRpeActivityId(null);
+                        void saveRpe(activity.id, rpe);
+                      }}
+                      selectedValue={activity.rpe}
+                    />
                   ) : null}
                 </>
               ) : null}
@@ -738,9 +720,6 @@ const styles = StyleSheet.create({
   disciplineActive: { backgroundColor: colors.brand },
   disciplineText: { color: colors.ink, fontSize: 12, fontWeight: '700', textAlign: 'center' },
   disciplineTextActive: { color: colors.white, fontSize: 12, fontWeight: '800', textAlign: 'center' },
-  rpeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  rpeButton: { alignItems: 'center', backgroundColor: colors.surfaceRaised, borderColor: colors.lineStrong, borderRadius: radius.pill, borderWidth: 1, height: 40, justifyContent: 'center', width: 40 },
-  rpeText: { color: colors.brand, fontWeight: '900' },
   action: { alignItems: 'center', backgroundColor: colors.brand, borderRadius: radius.pill, padding: 14 },
   actionText: { color: colors.white, fontSize: 14, fontWeight: '900' },
   disabled: { opacity: 0.45 },
