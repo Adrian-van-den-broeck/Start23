@@ -422,7 +422,8 @@ export function ZoneProfileScreen({
         {profile?.disciplines.map((state, index) => {
           const pending = state.pending_profile;
           const canIntegrate =
-            state.discipline !== 'swim' && planContext !== null;
+            state.available_test_scheduling_modes.includes('weekly_plan') &&
+            planContext !== null;
           return (
             <FadeInView
               delay={70 + index * 70}
@@ -524,7 +525,7 @@ export function ZoneProfileScreen({
                 </View>
               ) : null}
 
-              {state.setup?.setup_route === 'field_test' ? (
+              {state.available_test_scheduling_modes.length > 0 ? (
                 <View style={styles.schedulePanel}>
                   <Text style={styles.valueTitle}>Veldtest plannen</Text>
                   <FormField
@@ -542,7 +543,7 @@ export function ZoneProfileScreen({
                     value={dates[state.discipline]}
                   />
                   <View style={styles.buttonRow}>
-                    {(['standalone', 'weekly_plan'] as const).map((mode) => {
+                    {state.available_test_scheduling_modes.map((mode) => {
                       const disabled = mode === 'weekly_plan' && !canIntegrate;
                       return (
                         <Pressable

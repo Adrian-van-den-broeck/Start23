@@ -40,6 +40,10 @@ from app.modules.onboarding.repository import (
     OnboardingRepository,
     SupabaseOnboardingRepository,
 )
+from app.modules.pioneer.repository import (
+    PioneerRepository,
+    SupabasePioneerRepository,
+)
 from app.modules.planning.repository import (
     PlanningRepository,
     SupabasePlanningRepository,
@@ -64,6 +68,7 @@ def _lifespan(
     weekly_plan_coach: WeeklyPlanCoach,
     checkin_context_coach: CheckInContextCoach,
     athlete_identity_repository: AthleteIdentityRepository,
+    pioneer_repository: PioneerRepository,
 ) -> Callable[[FastAPI], AbstractAsyncContextManager[None]]:
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -89,6 +94,7 @@ def _lifespan(
             weekly_plan_coach.aclose(),
             checkin_context_coach.aclose(),
             athlete_identity_repository.aclose(),
+            pioneer_repository.aclose(),
         )
         logger.info(
             "Application stopped",
@@ -116,6 +122,7 @@ def create_app(
     weekly_plan_coach: WeeklyPlanCoach | None = None,
     checkin_context_coach: CheckInContextCoach | None = None,
     athlete_identity_repository: AthleteIdentityRepository | None = None,
+    pioneer_repository: PioneerRepository | None = None,
 ) -> FastAPI:
     """Create and configure the Start23 FastAPI application."""
     app_settings = settings or get_settings()
@@ -146,6 +153,9 @@ def create_app(
     identity_repository = (
         athlete_identity_repository or SupabaseAthleteIdentityRepository(app_settings)
     )
+    beta_access_repository = pioneer_repository or SupabasePioneerRepository(
+        app_settings
+    )
     application = FastAPI(
         title=app_settings.app_name,
         version=app_settings.app_version,
@@ -162,6 +172,7 @@ def create_app(
             coach,
             context_coach,
             identity_repository,
+            beta_access_repository,
         ),
     )
     application.state.settings = app_settings
@@ -179,6 +190,7 @@ def create_app(
     application.state.weekly_plan_coach = coach
     application.state.checkin_context_coach = context_coach
     application.state.athlete_identity_repository = identity_repository
+    application.state.pioneer_repository = beta_access_repository
     configure_error_handling(application)
     application.include_router(health_router)
     application.include_router(

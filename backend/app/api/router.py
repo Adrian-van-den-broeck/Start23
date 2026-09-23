@@ -9,6 +9,7 @@ from app.modules.health.router import router as health_router
 from app.modules.identity.router import router as identity_router
 from app.modules.integrations.router import router as integrations_router
 from app.modules.onboarding.router import router as onboarding_router
+from app.modules.pioneer.router import router as pioneer_router
 from app.modules.planning.router import router as planning_router
 from app.modules.workouts.router import router as workouts_router
 
@@ -21,4 +22,5 @@ api_router.include_router(planning_router)
 api_router.include_router(activities_router)
 api_router.include_router(checkins_router)
 api_router.include_router(calibration_router)
+api_router.include_router(pioneer_router)
 api_router.include_router(integrations_router)

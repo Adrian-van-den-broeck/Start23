@@ -461,6 +461,7 @@ export type DisciplineZoneProfile = {
   pending_profile: ZoneProfileSnapshot | null;
   prior_profiles: ZoneProfileSnapshot[];
   test_assignments: TestAssignment[];
+  available_test_scheduling_modes: TestSchedulingMode[];
 };
 
 export type ZoneProfileState = {
@@ -803,6 +804,12 @@ export type CompletedActivity = {
   metrics: ActivityMetrics | null;
   created_at: string;
   updated_at: string;
+};
+
+export type PioneerRedemption = {
+  program: 'pioneer';
+  status: 'active';
+  redeemed_at: string;
 };
 
 export type PolarConnection = {

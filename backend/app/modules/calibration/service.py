@@ -183,6 +183,23 @@ class CalibrationService:
         self._repository = repository
 
     @staticmethod
+    def validate_test_scheduling_request(
+        request: FieldTestSchedulingRequest,
+    ) -> None:
+        """Reject historical or unsupported modes before any plan mutation."""
+        _require_current_mvp_field_test(
+            discipline=request.discipline,
+            protocol_id=request.protocol_id,
+        )
+        if (
+            request.scheduling_mode is TestSchedulingMode.WEEKLY_PLAN
+            and request.discipline is Discipline.SWIM
+        ):
+            raise CalibrationDomainError(
+                "The swim test has no approved planned-duration/load treatment."
+            )
+
+    @staticmethod
     def zone_options(
         discipline: Discipline,
     ) -> tuple[ZoneOptionResponse, ...]:
@@ -1047,6 +1064,17 @@ class CalibrationService:
                         if row is not active_row and row is not pending_row
                     ),
                     test_assignments=tuple(assignments_by_discipline[discipline]),
+                    available_test_scheduling_modes=(
+                        (TestSchedulingMode.STANDALONE,)
+                        if setup is not None
+                        and setup.protocol_id is not None
+                        and is_current_protocol(
+                            setup.protocol_id,
+                            discipline=discipline,
+                            protocol_type=ProtocolType.FIELD_TEST,
+                        )
+                        else ()
+                    ),
                 )
             )
         return ZoneProfileStateResponse(disciplines=tuple(discipline_states))

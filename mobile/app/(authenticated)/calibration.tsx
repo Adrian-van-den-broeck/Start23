@@ -1,17 +1,5 @@
-import { useRouter } from 'expo-router';
-
-import { useAuth } from '@/auth/AuthProvider';
-import { CalibrationScreen } from '@/screens/CalibrationScreen';
+import { Redirect, type Href } from 'expo-router';
 
 export default function CalibrationRoute() {
-  const router = useRouter();
-  const { session, signOut } = useAuth();
-  if (!session) return null;
-  return (
-    <CalibrationScreen
-      accessToken={session.access_token}
-      onBack={() => router.replace('/onboarding')}
-      onSignOut={signOut}
-    />
-  );
+  return <Redirect href={'/tests' as Href} />;
 }

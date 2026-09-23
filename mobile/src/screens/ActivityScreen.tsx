@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -17,7 +17,7 @@ import {
   getOnboarding,
   listActivities,
   listPlannedExternalActivities,
-  submitActivityRpe,
+  submitActivityRpeWithRefresh,
 } from '../api/client';
 import type {
   CompletedActivity,
@@ -203,6 +203,8 @@ export function ActivityScreen({
   const [heartRateByActivity, setHeartRateByActivity] = useState<
     Record<string, string>
   >({});
+  const createInFlightRef = useRef(false);
+  const rpeInFlightRef = useRef<Set<string>>(new Set());
 
   const pendingRpe = useMemo(
     () => activities.filter((activity) => activity.processing_state === 'awaiting_rpe'),
@@ -278,6 +280,8 @@ export function ActivityScreen({
   };
 
   const save = async () => {
+    if (createInFlightRef.current) return;
+    createInFlightRef.current = true;
     setBusy(true);
     setError(null);
     try {
@@ -329,11 +333,14 @@ export function ActivityScreen({
           : 'De activiteit kon niet worden opgeslagen.',
       );
     } finally {
+      createInFlightRef.current = false;
       setBusy(false);
     }
   };
 
   const saveRpe = async (activityId: string, rpe: number) => {
+    if (rpeInFlightRef.current.has(activityId)) return;
+    rpeInFlightRef.current.add(activityId);
     setBusy(true);
     setError(null);
     try {
@@ -347,12 +354,13 @@ export function ActivityScreen({
       ) {
         throw new Error('Vul een gemiddelde hartslag tussen 20 en 260 bpm in.');
       }
-      await submitActivityRpe(
+      const activity = activities.find((candidate) => candidate.id === activityId);
+      if (!activity) throw new Error('De activiteit is niet meer beschikbaar.');
+      await submitActivityRpeWithRefresh(
         accessToken,
-        activityId,
+        activity,
         rpe,
         averageHeartRate,
-        activities.find((activity) => activity.id === activityId)?.rpe ?? undefined,
       );
       setHeartRateByActivity((current) => {
         const next = { ...current };
@@ -365,6 +373,7 @@ export function ActivityScreen({
         caught instanceof Error ? caught.message : 'RPE opslaan is mislukt.',
       );
     } finally {
+      rpeInFlightRef.current.delete(activityId);
       setBusy(false);
     }
   };

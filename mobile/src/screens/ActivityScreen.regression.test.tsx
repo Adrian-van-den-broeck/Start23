@@ -1,4 +1,10 @@
-import { fireEvent, render, waitFor, within } from '@testing-library/react-native';
+import {
+  act,
+  fireEvent,
+  render,
+  waitFor,
+  within,
+} from '@testing-library/react-native';
 
 import {
   createActivity,
@@ -6,7 +12,7 @@ import {
   getOnboarding,
   listActivities,
   listPlannedExternalActivities,
-  submitActivityRpe,
+  submitActivityRpeWithRefresh,
 } from '../api/client';
 import type { CompletedActivity, OnboardingState } from '../api/types';
 import { LanguageProvider } from '../i18n/LanguageProvider';
@@ -19,7 +25,7 @@ jest.mock('../api/client', () => ({
   getOnboarding: jest.fn(),
   listActivities: jest.fn(),
   listPlannedExternalActivities: jest.fn(),
-  submitActivityRpe: jest.fn(),
+  submitActivityRpeWithRefresh: jest.fn(),
 }));
 
 const pending: CompletedActivity = {
@@ -45,6 +51,10 @@ const pending: CompletedActivity = {
 };
 
 describe('unplanned workout regression', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('an unplanned workout can be created and later completed with HR and textual RPE', async () => {
     let activities: CompletedActivity[] = [];
     jest.mocked(listActivities).mockImplementation(async () => activities);
@@ -65,7 +75,7 @@ describe('unplanned workout regression', () => {
       activities = [pending];
       return pending;
     });
-    jest.mocked(submitActivityRpe).mockImplementation(async () => {
+    jest.mocked(submitActivityRpeWithRefresh).mockImplementation(async () => {
       const completed = {
         ...pending,
         rpe: 7,
@@ -112,14 +122,58 @@ describe('unplanned workout regression', () => {
     );
 
     await waitFor(() =>
-      expect(submitActivityRpe).toHaveBeenCalledWith(
+      expect(submitActivityRpeWithRefresh).toHaveBeenCalledWith(
         'athlete-token',
-        'activity-id',
+        pending,
         7,
         151,
-        undefined,
       ),
     );
     expect(await screen.findByText('Extra workout')).toBeTruthy();
+  });
+
+  test('rapid repeated create taps keep one logical submission in flight', async () => {
+    let resolveCreate: ((activity: CompletedActivity) => void) | undefined;
+    jest.mocked(listActivities).mockResolvedValue([]);
+    jest.mocked(getCalendar).mockResolvedValue({
+      from_date: '2026-09-08',
+      to_date: '2026-10-06',
+      workouts: [],
+      rest_days: [],
+    });
+    jest.mocked(listPlannedExternalActivities).mockResolvedValue([]);
+    jest.mocked(getOnboarding).mockResolvedValue({
+      profile: {
+        timezone: 'Europe/Amsterdam',
+        timezone_confirmed_at: '2026-09-01T00:00:00Z',
+      },
+    } as unknown as OnboardingState);
+    jest.mocked(createActivity).mockImplementation(
+      () =>
+        new Promise<CompletedActivity>((resolve) => {
+          resolveCreate = resolve;
+        }),
+    );
+
+    const screen = await render(
+      <LanguageProvider>
+        <ActivityScreen
+          accessToken="athlete-token"
+          onBack={jest.fn()}
+          onSignOut={jest.fn(async () => undefined)}
+        />
+      </LanguageProvider>,
+    );
+    const saveButton = await screen.findByRole('button', {
+      name: 'Save activity',
+    });
+    await fireEvent.press(saveButton);
+    await fireEvent.press(saveButton);
+
+    expect(createActivity).toHaveBeenCalledTimes(1);
+    await act(() => {
+      resolveCreate?.(pending);
+    });
+    await waitFor(() => expect(listActivities).toHaveBeenCalledTimes(2));
   });
 });

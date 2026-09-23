@@ -198,9 +198,6 @@ describe('CalibrationScreen Phase 15 flow', () => {
   });
 
   test.each([
-    ['run', 'start23_run_threshold_30min_v1', 'field_test'],
-    ['bike', 'start23_bike_ftp_30min_v1', 'field_test'],
-    ['bike', 'start23_bike_fthr_20min_v1', 'field_test'],
     ['swim', 'start23_swim_css_400_200_v1', 'field_test'],
     ['run', 'start23_week1_run_calibration_v1', 'submaximal_calibration'],
     ['bike', 'start23_week1_bike_calibration_v1', 'submaximal_calibration'],
@@ -316,5 +313,50 @@ describe('CalibrationScreen Phase 15 flow', () => {
     );
     expect(await screen.findByRole('button', { name: 'Zones bevestigen' })).toBeTruthy();
     expect(approveZoneProposal).not.toHaveBeenCalled();
+  });
+
+  test('a new Tests navigation session does not retain a stale protocol selection', async () => {
+    const bikeSetup: DisciplineSetup = {
+      ...setup,
+      discipline: 'bike',
+      protocol_id: 'start23_week1_bike_calibration_v1',
+    };
+    const bikeProtocol: CalibrationProtocol = {
+      ...protocol,
+      discipline: 'bike',
+      protocol_id: 'start23_week1_bike_calibration_v1',
+    };
+    jest.mocked(getCalibrationStatus).mockResolvedValue({
+      setups: [setup, bikeSetup],
+      evaluations: [],
+      threshold_decisions: [],
+    });
+    jest.mocked(listCalibrationProtocols).mockImplementation(
+      async (_token, discipline) =>
+        discipline === 'run' ? [protocol] : [bikeProtocol],
+    );
+
+    const first = await render(
+      <CalibrationScreen
+        accessToken="athlete-token"
+        onBack={jest.fn()}
+        onSignOut={jest.fn(async () => undefined)}
+      />,
+    );
+    const bikeChoice = await first.findByRole('radio', { name: 'Fietsen' });
+    await fireEvent.press(bikeChoice);
+    expect(bikeChoice.props.accessibilityState.checked).toBe(true);
+    await first.unmount();
+
+    const second = await render(
+      <CalibrationScreen
+        accessToken="athlete-token"
+        onBack={jest.fn()}
+        onSignOut={jest.fn(async () => undefined)}
+      />,
+    );
+    const runChoice = await second.findByRole('radio', { name: 'Hardlopen' });
+
+    expect(runChoice.props.accessibilityState.checked).toBe(true);
   });
 });

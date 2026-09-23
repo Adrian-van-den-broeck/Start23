@@ -262,6 +262,7 @@ async def schedule_field_test(
 ) -> FieldTestSchedulingResponse:
     """Create a pending standalone test or exact-date plan revision."""
     try:
+        service.validate_test_scheduling_request(scheduling)
         if scheduling.scheduling_mode.value == "standalone":
             assignment = await service.schedule_standalone_test(
                 access_token,

@@ -23,6 +23,51 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
+function activityResponse(rpe: number | null, averageHeartRate = 151) {
+  return {
+    id: 'activity-id',
+    planned_workout_id: null,
+    discipline: 'run' as const,
+    source: 'canonical_summary' as const,
+    started_at: '2026-09-22T10:00:00Z',
+    timezone: 'Europe/Amsterdam',
+    duration_minutes: '45',
+    distance_meters: null,
+    elevation_gain_meters: null,
+    rpe,
+    rpe_submitted_at: rpe === null ? null : '2026-09-22T11:00:00Z',
+    match_status: 'unmatched' as const,
+    processing_state: rpe === null ? ('awaiting_rpe' as const) : ('complete' as const),
+    qualitative_result: rpe === null ? ('awaiting_rpe' as const) : ('unplanned' as const),
+    public_message: rpe === null ? 'RPE needed.' : 'Saved.',
+    correction_proposal_id: null,
+    metrics:
+      rpe === null
+        ? null
+        : {
+            average_heart_rate_bpm: averageHeartRate,
+            max_heart_rate_bpm: null,
+            normalized_power_watts: null,
+            average_speed_kmh: null,
+            max_speed_kmh: null,
+            average_pace_seconds_per_km: null,
+            zone_minutes: null,
+            low_intensity_minutes: null,
+            high_intensity_minutes: null,
+          },
+    created_at: '2026-09-22T10:45:00Z',
+    updated_at: '2026-09-22T11:00:00Z',
+  };
+}
+
+function response(status: number, body: unknown): Response {
+  return {
+    ok: status >= 200 && status < 300,
+    status,
+    json: async () => body,
+  } as Response;
+}
+
 describe('mobile API transport contracts', () => {
   test('profile save serializes only the two separated mutation contracts', async () => {
     const { client, fetchMock } = loadClient();
@@ -201,6 +246,102 @@ describe('mobile API transport contracts', () => {
         headers,
       },
     );
+  });
+
+  test('normal RPE save succeeds without refresh', async () => {
+    const { client, fetchMock } = loadClient();
+    fetchMock.mockResolvedValueOnce(response(200, activityResponse(6)));
+
+    await expect(
+      client.submitActivityRpeWithRefresh(
+        'athlete-token',
+        activityResponse(null),
+        6,
+        151,
+      ),
+    ).resolves.toMatchObject({ rpe: 6 });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  test('safe stale-state refresh retries once with the refreshed precondition', async () => {
+    const { client, fetchMock } = loadClient();
+    fetchMock
+      .mockResolvedValueOnce(
+        response(409, {
+          error: {
+            code: 'activity_state_conflict',
+            message: 'The activity state changed.',
+          },
+        }),
+      )
+      .mockResolvedValueOnce(
+        response(200, {
+          ...activityResponse(5),
+          planned_workout_id: 'newly-confirmed-workout-id',
+        }),
+      )
+      .mockResolvedValueOnce(response(200, activityResponse(6)));
+
+    await expect(
+      client.submitActivityRpeWithRefresh(
+        'athlete-token',
+        activityResponse(5),
+        6,
+        151,
+      ),
+    ).resolves.toMatchObject({ rpe: 6 });
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(fetchMock.mock.calls[2]?.[1]?.body).toBe(
+      JSON.stringify({
+        rpe: 6,
+        expected_current_rpe: 5,
+        average_heart_rate_bpm: 151,
+      }),
+    );
+  });
+
+  test('genuine stale RPE edit fails without overwriting newer state', async () => {
+    const { client, fetchMock } = loadClient();
+    fetchMock
+      .mockResolvedValueOnce(
+        response(409, {
+          error: {
+            code: 'activity_correction_stale',
+            message: 'The activity correction is stale.',
+          },
+        }),
+      )
+      .mockResolvedValueOnce(response(200, activityResponse(7)));
+
+    await expect(
+      client.submitActivityRpeWithRefresh(
+        'athlete-token',
+        activityResponse(5),
+        6,
+        151,
+      ),
+    ).rejects.toMatchObject({
+      code: 'activity_correction_stale',
+      status: 409,
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  test('lost identical RPE response resolves from refreshed server state', async () => {
+    const { client, fetchMock } = loadClient();
+    fetchMock
+      .mockRejectedValueOnce(new TypeError('connection closed'))
+      .mockResolvedValueOnce(response(200, activityResponse(6)));
+
+    await expect(
+      client.submitActivityRpeWithRefresh(
+        'athlete-token',
+        activityResponse(null),
+        6,
+        151,
+      ),
+    ).resolves.toMatchObject({ rpe: 6 });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   test('same-week move uses the exact revision-safe server contract', async () => {

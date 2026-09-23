@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { type Href, useRouter } from 'expo-router';
 
 import { useAuth } from '@/auth/AuthProvider';
 import { PlanningScreen } from '@/screens/PlanningScreen';
@@ -14,6 +14,7 @@ export default function PlanningRoute() {
       onOpenActivities={() => router.push('/activities')}
       onOpenCheckIn={() => router.push('/check-in')}
       onOpenIntegrations={() => router.push('/integrations')}
+      onOpenProfile={() => router.push('/profile' as Href)}
       onOpenZoneProfile={(planId, revision) =>
         router.push({
           pathname: '/zone-profile',

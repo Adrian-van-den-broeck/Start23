@@ -21,6 +21,7 @@ import type {
   PendingWorkoutAlternatives,
   PolarConnection,
   PolarImportRun,
+  PioneerRedemption,
   PrimaryRaceGoal,
   TrainingHistoryEntry,
   ThresholdDecision,
@@ -746,6 +747,13 @@ export function listActivities(
   );
 }
 
+export function getActivity(
+  accessToken: string,
+  activityId: string,
+): Promise<CompletedActivity> {
+  return request(accessToken, `/api/v1/activities/${activityId}`);
+}
+
 export function submitActivityRpe(
   accessToken: string,
   activityId: string,
@@ -767,6 +775,53 @@ export function submitActivityRpe(
   });
 }
 
+export async function submitActivityRpeWithRefresh(
+  accessToken: string,
+  activity: CompletedActivity,
+  rpe: number,
+  averageHeartRateBpm?: number,
+): Promise<CompletedActivity> {
+  try {
+    return await submitActivityRpe(
+      accessToken,
+      activity.id,
+      rpe,
+      averageHeartRateBpm,
+      activity.rpe ?? undefined,
+    );
+  } catch (caught) {
+    const refreshable =
+      caught instanceof ApiRequestError &&
+      (caught.retryable ||
+        caught.code === 'activity_state_conflict' ||
+        caught.code === 'activity_correction_stale');
+    if (!refreshable) throw caught;
+
+    const refreshed = await getActivity(accessToken, activity.id);
+    const requestedAlreadyStored =
+      refreshed.rpe === rpe &&
+      (averageHeartRateBpm === undefined ||
+        refreshed.metrics?.average_heart_rate_bpm === averageHeartRateBpm);
+    if (requestedAlreadyStored) return refreshed;
+
+    if (refreshed.rpe !== activity.rpe) {
+      throw new ApiRequestError(
+        'De activiteit is intussen gewijzigd. Vernieuw en controleer de opgeslagen RPE.',
+        409,
+        'activity_correction_stale',
+      );
+    }
+
+    return submitActivityRpe(
+      accessToken,
+      activity.id,
+      rpe,
+      averageHeartRateBpm,
+      refreshed.rpe ?? undefined,
+    );
+  }
+}
+
 export function confirmActivityMatch(
   accessToken: string,
   activityId: string,
@@ -780,6 +835,24 @@ export function confirmActivityMatch(
       body: JSON.stringify({ planned_workout_id: plannedWorkoutId }),
     },
   );
+}
+
+export function getPioneerRedemption(
+  accessToken: string,
+): Promise<PioneerRedemption | null> {
+  return request(accessToken, '/api/v1/pioneer-access/redemption');
+}
+
+export function redeemPioneerAccess(
+  accessToken: string,
+  idempotencyKey: string,
+  code: string,
+): Promise<PioneerRedemption> {
+  return request(accessToken, '/api/v1/pioneer-access/redemptions', {
+    method: 'POST',
+    headers: { 'Idempotency-Key': idempotencyKey },
+    body: JSON.stringify({ code: code.trim().toUpperCase() }),
+  });
 }
 
 export async function getPolarConnection(

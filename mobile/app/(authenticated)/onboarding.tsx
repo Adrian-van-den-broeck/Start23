@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { type Href, useRouter } from 'expo-router';
 
 import { useAuth } from '@/auth/AuthProvider';
 import { OnboardingScreen } from '@/screens/OnboardingScreen';
@@ -10,7 +10,7 @@ export default function OnboardingRoute() {
   return (
     <OnboardingScreen
       accessToken={session.access_token}
-      onOpenCalibration={() => router.push('/calibration')}
+      onOpenCalibration={() => router.push('/tests' as Href)}
       onOpenPlanning={() => router.push('/planning')}
       onSignOut={signOut}
     />

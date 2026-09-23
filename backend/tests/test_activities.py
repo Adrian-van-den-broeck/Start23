@@ -460,6 +460,37 @@ def test_matched_activity_rpe_can_be_corrected_in_the_current_week(
     _assert_no_load_keys(completed.json())
 
 
+def test_rpe_save_succeeds_after_another_valid_match_action(
+    activity_client: tuple[TestClient, MemoryActivityRepository],
+) -> None:
+    client, repository = activity_client
+    owner = repository._token_owners["athlete-a"]
+    created = client.post(
+        "/api/v1/activities",
+        headers=_headers(),
+        json=_summary(),
+    ).json()
+
+    matched = client.put(
+        f"/api/v1/activities/{created['id']}/planned-workout-match",
+        headers=_headers(),
+        json={"planned_workout_id": str(repository.planned_workouts[owner])},
+    )
+    completed = client.put(
+        f"/api/v1/activities/{created['id']}/rpe",
+        headers=_headers(),
+        json={"rpe": 4},
+    )
+
+    assert matched.status_code == 200
+    assert matched.json()["match_status"] == "matched"
+    assert completed.status_code == 200
+    assert completed.json()["rpe"] == 4
+    assert completed.json()["planned_workout_id"] == str(
+        repository.planned_workouts[owner]
+    )
+
+
 def test_hidden_fatigue_and_unplanned_load_create_only_pending_references(
     activity_client: tuple[TestClient, MemoryActivityRepository],
 ) -> None:

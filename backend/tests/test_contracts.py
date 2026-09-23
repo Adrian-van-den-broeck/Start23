@@ -111,6 +111,8 @@ def test_openapi_contains_expected_foundation_paths(client: TestClient) -> None:
         "/api/v1/calibration/test-assignments/{proposal_id}/approve",
         "/api/v1/calibration/test-assignments/{proposal_id}/reject",
         "/api/v1/me/zone-profile",
+        "/api/v1/pioneer-access/redemption",
+        "/api/v1/pioneer-access/redemptions",
         "/api/v1/integrations/polar/oauth/start",
         "/api/v1/integrations/polar/oauth/callback",
         "/api/v1/integrations/polar",
@@ -125,6 +127,23 @@ def test_openapi_excludes_hidden_load_fields(client: TestClient) -> None:
     schema = client.get("/openapi.json").json()
 
     _assert_no_forbidden_load_key(schema)
+
+
+def test_pioneer_public_contract_exposes_no_internal_or_privileged_identifier(
+    client: TestClient,
+) -> None:
+    schema = client.get("/openapi.json").json()
+    components = schema["components"]["schemas"]
+
+    assert set(components["PioneerRedemptionResponse"]["properties"]) == {
+        "program",
+        "status",
+        "redeemed_at",
+    }
+    assert set(components["PioneerRedemptionRequest"]["properties"]) == {"code"}
+    assert set(components["DisciplineZoneProfileResponse"]["properties"]) >= {
+        "available_test_scheduling_modes"
+    }
 
 
 def test_phase_14_write_contracts_exclude_retired_inputs(client: TestClient) -> None:

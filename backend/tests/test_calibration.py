@@ -560,6 +560,86 @@ def test_historical_run_field_test_is_not_newly_selectable_or_schedulable(
     assert scheduled.status_code == 422
 
 
+def test_historical_integrated_test_is_rejected_before_planning_service_call(
+    calibration_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = calibration_context
+
+    response = client.post(
+        "/api/v1/calibration/test-assignments",
+        headers=_headers(),
+        json={
+            "discipline": "run",
+            "protocol_id": "start23_run_threshold_30min_v1",
+            "scheduling_mode": "weekly_plan",
+            "scheduled_date": "2099-08-29",
+            "plan_id": str(uuid4()),
+            "expected_plan_revision": 1,
+        },
+    )
+
+    assert response.status_code == 422
+    assert "historical" in response.json()["error"]["message"].lower()
+
+
+def test_current_swim_field_test_schedules_standalone_and_stays_pending(
+    calibration_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = calibration_context
+    setup = client.put(
+        "/api/v1/onboarding/disciplines/swim/setup",
+        headers=_headers(),
+        json={
+            "setup_route": "field_test",
+            "guidance_mode": "pace",
+            "protocol_id": "start23_swim_css_400_200_v1",
+            "pool_length_meters": 25,
+        },
+    )
+    profile = client.get("/api/v1/me/zone-profile", headers=_headers())
+    scheduled = client.post(
+        "/api/v1/calibration/test-assignments",
+        headers=_headers(),
+        json={
+            "discipline": "swim",
+            "protocol_id": "start23_swim_css_400_200_v1",
+            "scheduling_mode": "standalone",
+            "scheduled_date": "2099-08-29",
+        },
+    )
+
+    assert setup.status_code == 200, setup.text
+    swim = next(
+        item for item in profile.json()["disciplines"] if item["discipline"] == "swim"
+    )
+    assert swim["available_test_scheduling_modes"] == ["standalone"]
+    assert scheduled.status_code == 201, scheduled.text
+    assert scheduled.json()["assignment"]["state"] == "pending_approval"
+    assert scheduled.json()["plan_proposal"] is None
+
+
+def test_current_swim_integrated_mode_fails_deterministically_before_planning(
+    calibration_context: tuple[TestClient, UUID, UUID],
+) -> None:
+    client, _, _ = calibration_context
+
+    response = client.post(
+        "/api/v1/calibration/test-assignments",
+        headers=_headers(),
+        json={
+            "discipline": "swim",
+            "protocol_id": "start23_swim_css_400_200_v1",
+            "scheduling_mode": "weekly_plan",
+            "scheduled_date": "2099-08-29",
+            "plan_id": str(uuid4()),
+            "expected_plan_revision": 1,
+        },
+    )
+
+    assert response.status_code == 422
+    assert "planned-duration/load" in response.json()["error"]["message"]
+
+
 @pytest.mark.parametrize(
     ("discipline", "protocol_id", "segment_id", "target_rpe"),
     [

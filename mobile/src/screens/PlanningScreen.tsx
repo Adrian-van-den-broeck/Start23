@@ -78,6 +78,7 @@ import { isDateInWeek, WeekSchedule } from '../components/WeekSchedule';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { formatIsoDateInput } from '../lib/dateInput';
 import { workoutCardDescription } from '../lib/workoutPresentation';
+import { createDeferredDismissAction } from '../lib/navigation';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
 
 type PlanningScreenProps = {
@@ -87,6 +88,7 @@ type PlanningScreenProps = {
   onOpenActivities: () => void;
   onOpenCheckIn: () => void;
   onOpenIntegrations: () => void;
+  onOpenProfile: () => void;
   onOpenZoneProfile: (planId?: string, revision?: number) => void;
 };
 
@@ -914,6 +916,7 @@ export function PlanningScreen({
   onOpenActivities,
   onOpenCheckIn,
   onOpenIntegrations,
+  onOpenProfile,
   onOpenZoneProfile,
   onSignOut,
 }: PlanningScreenProps) {
@@ -922,6 +925,7 @@ export function PlanningScreen({
   const [view, setView] = useState<ViewName>('plan');
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileSheetRef = useRef<BottomSheetModal>(null);
+  const profileSheetNavigationRef = useRef(createDeferredDismissAction());
   const [weekStart, setWeekStart] = useState(nextMonday);
   const [reusePreviousWeek, setReusePreviousWeek] = useState(false);
   const [selectedDays, setSelectedDays] = useState<Set<number>>(
@@ -973,8 +977,9 @@ export function PlanningScreen({
   };
 
   const closeProfileSheetThen = (action: () => void) => {
-    profileSheetRef.current?.dismiss();
-    action();
+    profileSheetNavigationRef.current.request(action, () => {
+      profileSheetRef.current?.dismiss();
+    });
   };
 
   const availableDates = useMemo(
@@ -1336,7 +1341,10 @@ export function PlanningScreen({
         enableDynamicSizing
         handleIndicatorStyle={styles.profileSheetHandle}
         onChange={(index) => setProfileMenuOpen(index >= 0)}
-        onDismiss={() => setProfileMenuOpen(false)}
+        onDismiss={() => {
+          setProfileMenuOpen(false);
+          profileSheetNavigationRef.current.completeDismiss();
+        }}
         ref={profileSheetRef}
       >
         <BottomSheetView style={styles.profileSheet}>
@@ -1354,7 +1362,7 @@ export function PlanningScreen({
             <Pressable
               accessibilityRole="button"
               haptic="selection"
-              onPress={() => closeProfileSheetThen(onBackToOnboarding)}
+              onPress={() => closeProfileSheetThen(onOpenProfile)}
               style={({ pressed }) => [
                 styles.profileMenuItem,
                 pressed && styles.pressed,
@@ -1382,8 +1390,7 @@ export function PlanningScreen({
           <Pressable
             accessibilityRole="button"
             onPress={() => {
-              profileSheetRef.current?.dismiss();
-              void onSignOut();
+              closeProfileSheetThen(() => void onSignOut());
             }}
             style={({ pressed }) => [
               styles.signOutButton,

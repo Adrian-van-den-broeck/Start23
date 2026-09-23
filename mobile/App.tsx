@@ -23,6 +23,8 @@ import { CheckInScreen } from './src/screens/CheckInScreen';
 import { IntegrationsScreen } from './src/screens/IntegrationsScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { PlanningScreen } from './src/screens/PlanningScreen';
+import { PioneerAccessScreen } from './src/screens/PioneerAccessScreen';
+import { ProfileScreen } from './src/screens/ProfileScreen';
 import { ZoneProfileScreen } from './src/screens/ZoneProfileScreen';
 import { colors, spacing } from './src/theme/tokens';
 
@@ -37,11 +39,16 @@ function AppContent() {
     | 'calibration'
     | 'integrations'
     | 'zone-profile'
+    | 'profile'
+    | 'pioneer-access'
   >('onboarding');
   const [zonePlanContext, setZonePlanContext] = useState<{
     planId: string;
     revision: number;
   } | null>(null);
+  const [testsBackView, setTestsBackView] = useState<'onboarding' | 'profile'>(
+    'onboarding',
+  );
   const [pendingRpeCount, setPendingRpeCount] = useState(0);
 
   useEffect(() => {
@@ -90,6 +97,7 @@ function AppContent() {
         onOpenActivities={() => setAuthenticatedView('activities')}
         onOpenCheckIn={() => setAuthenticatedView('checkin')}
         onOpenIntegrations={() => setAuthenticatedView('integrations')}
+        onOpenProfile={() => setAuthenticatedView('profile')}
         onOpenZoneProfile={(planId, revision) => {
           setZonePlanContext(
             planId && revision ? { planId, revision } : null,
@@ -120,7 +128,7 @@ function AppContent() {
     screen = (
       <CalibrationScreen
         accessToken={session.access_token}
-        onBack={() => setAuthenticatedView('onboarding')}
+        onBack={() => setAuthenticatedView(testsBackView)}
         onSignOut={signOut}
       />
     );
@@ -142,11 +150,34 @@ function AppContent() {
         planContext={zonePlanContext}
       />
     );
+  } else if (authenticatedView === 'profile') {
+    screen = (
+      <ProfileScreen
+        accessToken={session.access_token}
+        onBack={() => setAuthenticatedView('planning')}
+        onOpenPioneerAccess={() => setAuthenticatedView('pioneer-access')}
+        onOpenTests={() => {
+          setTestsBackView('profile');
+          setAuthenticatedView('calibration');
+        }}
+        onSignOut={signOut}
+      />
+    );
+  } else if (authenticatedView === 'pioneer-access') {
+    screen = (
+      <PioneerAccessScreen
+        accessToken={session.access_token}
+        onBack={() => setAuthenticatedView('profile')}
+      />
+    );
   } else {
     screen = (
       <OnboardingScreen
         accessToken={session.access_token}
-        onOpenCalibration={() => setAuthenticatedView('calibration')}
+        onOpenCalibration={() => {
+          setTestsBackView('onboarding');
+          setAuthenticatedView('calibration');
+        }}
         onOpenPlanning={() => setAuthenticatedView('planning')}
         onSignOut={signOut}
       />

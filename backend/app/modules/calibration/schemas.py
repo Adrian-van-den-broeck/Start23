@@ -433,6 +433,7 @@ class DisciplineZoneProfileResponse(CalibrationPublicModel):
     pending_profile: ZoneProfileSnapshotResponse | None
     prior_profiles: tuple[ZoneProfileSnapshotResponse, ...]
     test_assignments: tuple[TestAssignmentResponse, ...]
+    available_test_scheduling_modes: tuple[TestSchedulingMode, ...] = ()
 
 
 class ZoneProfileStateResponse(CalibrationPublicModel):
