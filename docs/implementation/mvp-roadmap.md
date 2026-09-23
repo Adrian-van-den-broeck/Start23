@@ -2059,7 +2059,15 @@ physical-device and accountable-review gates remain outside Phase 15 as directed
 
 ### Status
 
-Not started. This is the final MVP release-candidate phase after Phases 13-15.
+Complete. Final software candidate
+`4147c4dbfee81696ec4ffe05e583dc712f239ebf` closes the Android Profile
+regression after the Phase 16 backend/onboarding/planning candidate
+`f213a698a9ff3583f9b53ff6642b91a3cb8f5879`. The backend candidate was
+deployed only to Railway `r6-staging` as deployment
+`116b878b-66c9-483a-bb8f-ec7f8b3954d3`; `/health` and `/ready` passed. The
+final mobile-only provider-order fix required no backend redeployment and was
+verified through the current Android development bundle with a temporary local
+staging override. Production was not modified.
 
 ### Scope
 
@@ -2078,6 +2086,11 @@ Not started. This is the final MVP release-candidate phase after Phases 13-15.
 - Complete the generic Supabase-backed access-code flow for Pioneer beta users.
   Validate codes server-side, store no privileged key in the mobile app, define
   expiry/revocation and retry/rate-limit behavior, and retain RLS isolation.
+- Stabilize the additional live-test failures found during Phase 16: persist
+  calibration setup so run, bike, and multi-discipline flows do not loop;
+  identify every missing required race-goal field; align known-value labels and
+  validation with the Phase 13 contract; and limit plan catalog eligibility to
+  the disciplines required by the current goal.
 - Decide whether to bundle a heart-rate monitor with an annual subscription.
   Validate the indicated EUR 20-25 unit cost and record unit economics plus
   fulfillment/support ownership; this commercial decision does not block the
@@ -2095,6 +2108,67 @@ Not started. This is the final MVP release-candidate phase after Phases 13-15.
   unauthorized code; cross-user isolation and abuse controls are verified.
 - The full backend, mobile type/lint, database, recursive TSS-leak, and targeted
   device regression suites pass before beta release.
+
+### Completed defects and evidence
+
+- **Profile navigation crash — PASS:** the real Expo Router root now places the
+  language provider outside the bottom-sheet portal provider. A root-composition
+  regression test fails with the old ordering. On Android, week planning opened
+  both the Profile menu and Profile route without a crash; back navigation
+  restored the same usable planning state and the language context remained
+  available.
+- **RPE save/stale-state handling — PASS:** the normal save and one safe
+  refresh/retry path succeed, exact retries remain idempotent, and genuine
+  intervening edits retain deterministic stale-conflict protection without
+  overwriting server state.
+- **Duplicate activity logging — PASS:** mobile prevents a second in-flight
+  submission while the server idempotency key returns the original activity for
+  an identical retry and rejects a changed payload deterministically. Rapid-tap,
+  delayed-response, and hosted retry behavior were exercised.
+- **Field-test/calibration scheduling — PASS:** current selectable protocols
+  schedule through the supported contract; historical/read-only and invalid
+  requests fail deterministically. Pending proposal, explicit approval, and no
+  auto-activation semantics remain unchanged.
+- **Tests navigation/state restoration — PASS:** fresh, return, back, restored,
+  and direct-route navigation resolve to the intended Tests state without
+  carrying a stale protocol selection into a new session.
+- **Pioneer access codes — PASS:** validation and redemption are server-side;
+  valid, invalid, expired, revoked, unauthorized, reuse, exact-retry,
+  idempotency-conflict, rate-limit, owner-isolation, and public-contract cases
+  are covered. The mobile bundle contains no privileged backend key or private
+  identifier.
+- **Calibration setup loop — PASS:** the selected setup route is persisted
+  before navigation, server state remains authoritative, and run, bike,
+  duathlon/multi-discipline, resume, and back-navigation regressions proceed to
+  the actionable Week-1 flow without returning to setup.
+- **Required race-goal validation — PASS:** missing fields are identified on
+  their controls with an actionable form message, valid values are retained,
+  and incomplete goals do not submit. Supported valid goal forms still save.
+- **Known-values form — PASS:** run, bike, and swim labels now match their
+  actual Phase 13 requirements; empty/invalid configurations explain the
+  missing threshold, valid configurations save, and calculated zones remain
+  pending until separate confirmation.
+- **Week proposal/catalog eligibility — PASS:** planning derives required
+  disciplines from the current race goal rather than unrelated configured
+  disciplines. Marathon/run, bike, duathlon, and supported triathlon coverage,
+  known-values, and calibration-approved cases generate correctly; genuine
+  pending/missing prerequisites remain explicit blockers.
+
+### Final verification
+
+- Existing Phase 16 evidence remains valid: 663 backend tests, strict mypy,
+  Ruff and formatting, OpenAPI/privacy checks, Expo Doctor and SDK 57 checks,
+  Pioneer pgTAP 23/23, Supabase lint, migration-ledger alignment, hosted
+  Phase 16 runtime flows, and recursive private TSS/load checks passed.
+- The final navigation closure rerun passed all 18 mobile Jest/RNTL suites and
+  68 tests, strict TypeScript, unused-code checks, and `git diff --check`.
+- Android 15 development-build evidence covers the five original defects, the
+  four additional live-test failures, Pioneer redemption/rejection behavior,
+  pending prerequisite behavior, and the final Profile root-provider smoke.
+  Disposable start23-dev users and their owned verification data were deleted.
+- iOS runtime verification was not executed. The heart-rate-monitor bundle
+  remains a non-blocking commercial follow-up; no subscription, hardware,
+  fulfillment, or production system was added.
 
 ## Final deployment and security handoff
 
@@ -2273,7 +2347,12 @@ Every phase must:
   Doctor 21/21, Android export, and an authenticated Android 15 smoke against
   start23-dev; the one disposable user and all verified owned data were deleted;
   no backend or production change`
-- Phase 16 live-test stabilization and beta readiness: `not started`
+- Phase 16 live-test stabilization and beta readiness: `complete; final software
+  candidate 4147c4dbfee81696ec4ffe05e583dc712f239ebf; 663 backend tests and
+  68 mobile tests plus strict typing/lint/privacy/database gates pass; the
+  Phase 16 backend candidate is healthy on Railway r6-staging, Android runtime
+  regressions pass against start23-dev, disposable users were deleted, and
+  production was not modified`
 
 ## Decision review after the 5 November meeting
 
