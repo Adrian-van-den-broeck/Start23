@@ -27,6 +27,15 @@ export type AthleteProfile = {
   updated_at: string;
 };
 
+export type AthletePhysiologyProfile = {
+  athlete_id: string;
+  date_of_birth: string | null;
+  resting_heart_rate_bpm: number | null;
+  revision: number;
+  created_at: string;
+  updated_at: string;
+};
+
 export type TrainingHistoryEntry = {
   discipline: Discipline;
   average_weekly_distance: string | null;

@@ -512,7 +512,10 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
       ) {
         parsePositive(draft.elapsedTime, 'Zwemtesttijd');
       }
-      if (protocol.protocol_type === 'submaximal_calibration') {
+      if (
+        protocol.protocol_type === 'submaximal_calibration' &&
+        isMainSegment(segment)
+      ) {
         if (protocol.discipline === 'swim') {
           parsePositive(draft.elapsedTime, 'Gemeten totale zwemtijd');
           parseCsvNumbers(draft.repetitionTimes, 'Herhalingstijden', false);

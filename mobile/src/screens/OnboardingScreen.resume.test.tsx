@@ -4,6 +4,7 @@ import {
   completeOnboarding,
   getGoalPlanningOptions,
   getOnboarding,
+  getPhysiologyProfile,
 } from '../api/client';
 import type { OnboardingState } from '../api/types';
 import { OnboardingScreen } from './OnboardingScreen';
@@ -13,6 +14,7 @@ jest.mock('../api/client', () => ({
   completeOnboarding: jest.fn(),
   getGoalPlanningOptions: jest.fn(),
   getOnboarding: jest.fn(),
+  getPhysiologyProfile: jest.fn(),
   rejectZoneProposal: jest.fn(),
   saveCalculatedZones: jest.fn(),
   saveDisciplineSetup: jest.fn(),
@@ -44,6 +46,10 @@ const state: OnboardingState = {
 };
 
 describe('OnboardingScreen resume behavior', () => {
+  beforeEach(() => {
+    jest.mocked(getPhysiologyProfile).mockResolvedValue(null);
+  });
+
   test('renders the server-selected upgrade step without restarting history', async () => {
     jest.mocked(getOnboarding).mockResolvedValue(state);
     jest.mocked(getGoalPlanningOptions).mockResolvedValue([]);
@@ -109,5 +115,37 @@ describe('OnboardingScreen resume behavior', () => {
       expect(onOpenPlanning).toHaveBeenCalledTimes(1);
     });
     expect(screen.queryByText('Je basis staat.')).toBeNull();
+  });
+
+  test('a new athlete resumes directly after saving physiology', async () => {
+    jest.mocked(getOnboarding).mockResolvedValue({
+      ...state,
+      status: 'in_progress',
+      current_step: 'profile',
+      completed_steps: [],
+      upgrade_required: false,
+      missing_upgrade_steps: [],
+      onboarding_revision: 1,
+    });
+    jest.mocked(getGoalPlanningOptions).mockResolvedValue([]);
+    jest.mocked(getPhysiologyProfile).mockResolvedValue({
+      athlete_id: '00000000-0000-0000-0000-000000000001',
+      date_of_birth: '1990-05-20',
+      resting_heart_rate_bpm: 52,
+      revision: 1,
+      created_at: '2026-09-22T08:00:00Z',
+      updated_at: '2026-09-22T08:00:00Z',
+    });
+    const screen = await render(
+      <OnboardingScreen
+        accessToken="athlete-token"
+        onOpenCalibration={jest.fn()}
+        onOpenPlanning={jest.fn()}
+        onSignOut={jest.fn(async () => undefined)}
+      />,
+    );
+
+    expect(await screen.findByText('Heb je toegang tot een hartslagmeter?')).toBeTruthy();
+    expect(screen.queryByText('Jouw basis')).toBeNull();
   });
 });

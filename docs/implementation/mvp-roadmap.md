@@ -1958,10 +1958,11 @@ roadmap does not make Phase 13 or Phase 14 complete.
 
 ### Status
 
-Implemented in the mobile client on 2026-09-22. The Phase 15 feature and
-contract tests pass locally, as do strict TypeScript and unused-code checks.
-No backend, API schema, database, migration, physiological formula, private-
-load behavior, or production environment changed.
+Complete in the mobile client on 2026-09-22. The final authenticated Android
+15 smoke passed against the verified non-production `start23-dev` project with
+the current `com.adrivdbs.wombo` Expo SDK 57 development build. No backend, API
+schema, database, migration, physiological formula, private-load behavior, or
+production environment changed.
 
 Athlete RPE entry now uses the exact ten `phase-13-joren-ruleset-1` textual
 choices for each discipline while sending the existing canonical integers.
@@ -1986,22 +1987,42 @@ does not change client state. Unplanned activity creation and later HR/textual-
 RPE completion remain covered. A recursive mobile-source gate finds no public
 TSS/private-load key or copy.
 
-Verification evidence: mobile Jest passed 13 suites / 42 tests; strict
-TypeScript and unused-code checks passed; `git diff --check` passed. Backend,
-Ruff, mypy, OpenAPI, and database suites were not required because no Python,
-public contract, persistence, or migration file changed.
+The authenticated smoke found and closed two mobile-only runtime defects. A new
+athlete whose physiology row was already saved could not advance because the
+aggregate onboarding record is created only after the operational profile;
+resume now reads the existing physiology endpoint and advances to the heart-rate
+step. Calibration validation also incorrectly required average HR for warm-up
+and cool-down blocks; it now requires HR only for the executable observation
+block, matching the existing UI and API contract. Both fixes have regression
+coverage and do not change physiological calculation or persistence behavior.
 
-Two non-feature verification gates remain open. Current Expo diagnostics report
-the unchanged baseline app-config duplication/schema warning and eleven SDK 57
-patch-version mismatches; Phase 15 did not upgrade Expo-managed dependencies
-because `mobile/AGENTS.md` prohibits an unrelated upgrade. An Android 15 emulator
-booted and the previously installed development client launched, but that client
-is package `com.adrivdbs.start23` while the current app config is
-`com.adrivdbs.wombo`; it reached the development-launcher error screen instead
-of loading the current bundle over the IPv6-localhost Metro/ADB bridge. A fresh
-current development build and UI smoke pass are therefore still required. The
-externally completed physical-device and accountable-review gates remain outside
-Phase 15 as directed; production was not modified.
+Runtime evidence: the saved profile resumed at heart-rate setup; a run
+calibration displayed the pain warning, accepted average HR plus textual RPE,
+kept the threshold result pending, created a separate inactive zone proposal
+only after threshold approval, and activated zones only after the second athlete
+approval. Onboarding then opened planning directly. The deterministic recovery
+week of 2026-10-12 produced a pending one-run proposal and a qualitative
+week-goal warning; athlete approval activated it. The accessible same-week
+control moved `RUN-001` from Thursday 15 October to Saturday 17 October. A
+separate unplanned 45-minute run was created and completed with average HR and
+the textual RPE 3 choice. No athlete-facing surface displayed TSS/private load.
+
+Exactly one confirmed disposable Auth user was created for this smoke and was
+not reused. Before cleanup it owned 35 rows across 22 of 42 ownership-shaped
+tables inspected. The user was deleted through the hosted Auth admin API; Auth
+then returned zero matching users, and a linked read-only database scan found
+the deleted UUID in zero of 166 UUID columns across the `public` and `private`
+schemas. Android app data (including the stored refresh token and plan IDs) and
+all temporary verification artifacts were removed. Cleanup therefore succeeded;
+production was never touched.
+
+Final verification evidence: mobile Jest passed 13 suites / 43 tests; strict
+TypeScript, unused-code, `git diff --check`, Expo dependency checking, and an
+Android production export passed. Expo Doctor passed 21/21 checks after the
+current SDK 57 patch alignment and removal of the duplicate dynamic app config.
+Backend, Ruff, mypy, OpenAPI, and migration suites were not required because no
+Python, public contract, persistence, or migration file changed. The external
+physical-device and accountable-review gates remain outside Phase 15 as directed.
 
 ### Scope
 
@@ -2247,10 +2268,11 @@ Every phase must:
   the new/legacy build-to-recovery runtime trace passes; candidate 0e003112
   closes first-plan recovery behavior locally without a contract or migration
   change; device evidence and external review remain open`
-- Phase 15 calibration, activity, and weekly-planning UX: `implemented and
-  covered by 13 mobile suites / 42 tests plus strict TypeScript and unused-code
-  checks; Expo baseline diagnostics and a fresh current-package Android
-  development-build smoke remain open; no backend or production change`
+- Phase 15 calibration, activity, and weekly-planning UX: `complete; covered by
+  13 mobile suites / 43 tests, strict TypeScript and unused-code checks, Expo
+  Doctor 21/21, Android export, and an authenticated Android 15 smoke against
+  start23-dev; the one disposable user and all verified owned data were deleted;
+  no backend or production change`
 - Phase 16 live-test stabilization and beta readiness: `not started`
 
 ## Decision review after the 5 November meeting

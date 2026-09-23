@@ -5,6 +5,7 @@ import type {
   CalibrationProtocol,
   CalibrationStatus,
   CalendarResponse,
+  AthletePhysiologyProfile,
   CheckInContextCandidateResponse,
   ChangeProposal,
   CompletedActivity,
@@ -159,6 +160,20 @@ export async function getOnboarding(
       }
       await wait(delay);
     }
+  }
+}
+
+export async function getPhysiologyProfile(
+  accessToken: string,
+): Promise<AthletePhysiologyProfile | null> {
+  try {
+    return await request<AthletePhysiologyProfile>(
+      accessToken,
+      '/api/v1/me/physiology-profile',
+    );
+  } catch (caught) {
+    if (caught instanceof ApiRequestError && caught.status === 404) return null;
+    throw caught;
   }
 }
 

@@ -15,6 +15,7 @@ import {
   completeOnboarding,
   getGoalPlanningOptions,
   getOnboarding,
+  getPhysiologyProfile,
   rejectZoneProposal,
   saveCalculatedZones,
   saveDisciplineSetup,
@@ -25,6 +26,7 @@ import {
 } from '../api/client';
 import type {
   AthleteProfile,
+  AthletePhysiologyProfile,
   Discipline,
   DisciplineSetupInput,
   GoalPlanningOption,
@@ -836,15 +838,18 @@ export function OnboardingScreen({
   onSignOut,
 }: OnboardingScreenProps) {
   const [state, setState] = useState<OnboardingState | null>(null);
+  const [physiologyProfile, setPhysiologyProfile] =
+    useState<AthletePhysiologyProfile | null>(null);
   const [goalOptions, setGoalOptions] = useState<GoalPlanningOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
-    const [next, nextGoalOptions] = await Promise.all([
+    const [next, nextGoalOptions, nextPhysiologyProfile] = await Promise.all([
       getOnboarding(accessToken),
       getGoalPlanningOptions(accessToken),
+      getPhysiologyProfile(accessToken),
     ]);
     if (next.current_step === 'completed') {
       onOpenPlanning();
@@ -852,6 +857,7 @@ export function OnboardingScreen({
     }
     setState(next);
     setGoalOptions(nextGoalOptions);
+    setPhysiologyProfile(nextPhysiologyProfile);
   }, [accessToken, onOpenPlanning]);
 
   const retryLoad = useCallback(async () => {
@@ -875,8 +881,9 @@ export function OnboardingScreen({
     Promise.all([
       getOnboarding(accessToken),
       getGoalPlanningOptions(accessToken),
+      getPhysiologyProfile(accessToken),
     ])
-      .then(([next, nextGoalOptions]) => {
+      .then(([next, nextGoalOptions, nextPhysiologyProfile]) => {
         if (mounted) {
           if (next.current_step === 'completed') {
             onOpenPlanning();
@@ -884,6 +891,7 @@ export function OnboardingScreen({
           }
           setState(next);
           setGoalOptions(nextGoalOptions);
+          setPhysiologyProfile(nextPhysiologyProfile);
           setError(null);
         }
       })
@@ -941,8 +949,16 @@ export function OnboardingScreen({
   };
 
   const completed = useMemo(
-    () => new Set(state?.completed_steps ?? []),
-    [state?.completed_steps],
+    () => {
+      const steps = new Set(state?.completed_steps ?? []);
+      if (
+        physiologyProfile?.date_of_birth &&
+        physiologyProfile.resting_heart_rate_bpm !== null
+      ) {
+        steps.add('profile');
+      }
+      return steps;
+    }, [physiologyProfile, state?.completed_steps],
   );
 
   if (loading) {
@@ -972,7 +988,14 @@ export function OnboardingScreen({
     );
   }
 
-  const step = state.current_step;
+  const physiologyProfileComplete =
+    physiologyProfile?.date_of_birth !== null &&
+    physiologyProfile?.date_of_birth !== undefined &&
+    physiologyProfile.resting_heart_rate_bpm !== null;
+  const step =
+    state.current_step === 'profile' && physiologyProfileComplete
+      ? 'heart_rate_monitor'
+      : state.current_step;
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <KeyboardAvoidingView
