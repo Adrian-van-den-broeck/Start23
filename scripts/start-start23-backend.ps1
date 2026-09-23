@@ -37,7 +37,8 @@ try {
     )
 
     Invoke-Start23Npx -Package $script:Start23RailwayCli -Arguments @(
-        'up', $repositoryRoot, '--service', 'start23'
+        'up', $repositoryRoot, '--service', $script:Start23RailwayService,
+        '--environment', $script:Start23RailwayEnvironment
     )
 }
 finally {

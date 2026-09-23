@@ -22,7 +22,8 @@ else {
     Write-Host '[Start23] Updating the public Polar callback on Railway (without triggering a deploy)...'
     Invoke-Start23Npx -Package $script:Start23RailwayCli -Arguments @(
         'variable', 'set', "START23_POLAR_OAUTH_REDIRECT_URL=$polarCallback",
-        '--service', 'start23', '--skip-deploys'
+        '--service', $script:Start23RailwayService,
+        '--environment', $script:Start23RailwayEnvironment, '--skip-deploys'
     )
 }
 

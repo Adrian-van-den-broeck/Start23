@@ -2,6 +2,8 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $script:Start23RailwayCli = '@railway/cli@5.45.10'
+$script:Start23RailwayService = 'Start23'
+$script:Start23RailwayEnvironment = 'production'
 $script:Start23EasCli = 'eas-cli@23.2.0'
 $script:Start23SupabaseCli = 'supabase@2.116.0'
 
@@ -44,12 +46,14 @@ function Initialize-Start23RailwayContext {
     }
 
     try {
-        Invoke-Start23Npx -Package $script:Start23RailwayCli -Arguments @('status', '--json') -CaptureOutput | Out-Null
+        Invoke-Start23Npx -Package $script:Start23RailwayCli -Arguments @(
+            'status', '--environment', $script:Start23RailwayEnvironment, '--json'
+        ) -CaptureOutput | Out-Null
     }
     catch {
         Write-Host '[Start23] Link this directory to the existing Railway project and production environment...'
         Invoke-Start23Npx -Package $script:Start23RailwayCli -Arguments @(
-            'link', '--service', 'start23'
+            'link', '--service', $script:Start23RailwayService, '--environment', $script:Start23RailwayEnvironment
         )
     }
 }
@@ -241,9 +245,10 @@ function Resolve-Start23RailwayPublicUrl {
         return ConvertTo-Start23PublicUrl -Value $state.apiBaseUrl
     }
 
-    Write-Host '[Start23] Looking up the public Railway domain for service start23...'
+    Write-Host "[Start23] Looking up the public Railway domain for service $($script:Start23RailwayService)..."
     $domainJson = Invoke-Start23Npx -Package $script:Start23RailwayCli -Arguments @(
-        'domain', 'list', '--service', 'start23', '--json'
+        'domain', 'list', '--service', $script:Start23RailwayService,
+        '--environment', $script:Start23RailwayEnvironment, '--json'
     ) -CaptureOutput
     $publicUrl = Get-Start23PublicUrlFromJson -Json $domainJson
     if ($null -ne $publicUrl) {
@@ -252,7 +257,8 @@ function Resolve-Start23RailwayPublicUrl {
 
     Write-Host '[Start23] No public domain exists yet; generating a Railway domain...'
     $domainJson = Invoke-Start23Npx -Package $script:Start23RailwayCli -Arguments @(
-        'domain', '--service', 'start23', '--json'
+        'domain', '--service', $script:Start23RailwayService,
+        '--environment', $script:Start23RailwayEnvironment, '--json'
     ) -CaptureOutput
     $publicUrl = Get-Start23PublicUrlFromJson -Json $domainJson
     if ($null -eq $publicUrl) {
