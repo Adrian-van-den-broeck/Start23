@@ -64,6 +64,7 @@ const stepLabels: Array<{ step: OnboardingStep; label: string }> = [
 
 type OnboardingScreenProps = {
   accessToken: string;
+  active?: boolean;
   onOpenCalibration: () => void;
   onOpenPlanning: () => void;
   onSignOut: () => Promise<void>;
@@ -428,6 +429,7 @@ function normalizeRaceDate(value: string): string | null {
 }
 
 export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
+  const [validationAttempted, setValidationAttempted] = useState(false);
   const [selectedKind, setSelectedKind] = useState<
     GoalPlanningOption['goal_kind'] | null
   >(goal ? 'race_event' : null);
@@ -486,6 +488,60 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
       parsedTotalTime !== null &&
       individualTotal <= parsedTotalTime,
   );
+  const distanceErrors = Object.fromEntries(
+    disciplines.map((discipline) => {
+      const value = distances[discipline].trim();
+      return [
+        discipline,
+        !value
+          ? 'Afstand is verplicht.'
+          : parsedDistances[discipline] === null
+            ? 'Vul een positief aantal meters in.'
+            : null,
+      ];
+    }),
+  ) as Record<Discipline, string | null>;
+  const disciplineTimeErrors = Object.fromEntries(
+    disciplines.map((discipline) => [
+      discipline,
+      disciplineTimes[discipline].trim() &&
+      parsedDisciplineTimes[discipline] === null
+        ? 'Gebruik het formaat U:MM:SS.'
+        : null,
+    ]),
+  ) as Record<Discipline, string | null>;
+  const goalValidationMessages = [
+    !raceName.trim() ? 'naam van de race' : null,
+    !targetDate.trim()
+      ? 'racedatum'
+      : !normalizedTargetDate
+        ? 'geldige toekomstige racedatum'
+        : null,
+    ...disciplines.map((discipline) =>
+      distanceErrors[discipline]
+        ? `afstand ${
+            discipline === 'swim'
+              ? 'zwemmen'
+              : discipline === 'bike'
+                ? 'fietsen'
+                : 'lopen'
+          }`
+        : null,
+    ),
+    !totalTime.trim()
+      ? 'totale richttijd'
+      : parsedTotalTime === null
+        ? 'geldige totale richttijd'
+        : null,
+    ...disciplines.map((discipline) =>
+      disciplineTimeErrors[discipline]
+        ? `geldige richttijd ${discipline}`
+        : null,
+    ),
+    parsedTotalTime !== null && individualTotal > parsedTotalTime
+      ? 'een totale richttijd die niet korter is dan de onderdeeltijden'
+      : null,
+  ].filter((message): message is string => message !== null);
   const raceOption = options.find(
     (option) => option.goal_family === 'race_event',
   );
@@ -585,18 +641,29 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
               ))}
             </View>
             <FormField
+              error={
+                validationAttempted && !raceName.trim()
+                  ? 'Naam van de race is verplicht.'
+                  : undefined
+              }
               label="Naam van de race"
               onChangeText={setRaceName}
               placeholder="Amsterdam Olympic Triathlon"
               value={raceName}
+              required
             />
             <FormField
               autoCapitalize="none"
-              hint={
-                targetDate && !normalizedTargetDate
-                  ? 'Gebruik een toekomstige datum: JJJJ-MM-DD'
-                  : 'JJJJ-MM-DD'
+              error={
+                validationAttempted
+                  ? !targetDate.trim()
+                    ? 'Racedatum is verplicht.'
+                    : !normalizedTargetDate
+                      ? 'Gebruik een geldige toekomstige datum.'
+                      : undefined
+                  : undefined
               }
+              hint="JJJJ-MM-DD"
               inputMode="numeric"
               label="Racedatum"
               maxLength={10}
@@ -605,6 +672,7 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
               }
               placeholder="2027-06-15"
               value={targetDate}
+              required
             />
             {disciplines.map((discipline) => (
               <View key={discipline} style={styles.disciplineCard}>
@@ -616,6 +684,11 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                       : 'Lopen'}
                 </Text>
                 <FormField
+                  error={
+                    validationAttempted
+                      ? distanceErrors[discipline] ?? undefined
+                      : undefined
+                  }
                   inputMode="numeric"
                   label="Afstand"
                   onChangeText={(value) =>
@@ -627,8 +700,14 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                   placeholder={discipline === 'swim' ? '1500' : '10000'}
                   suffix={<Text style={styles.unit}>meter</Text>}
                   value={distances[discipline]}
+                  required
                 />
                 <FormField
+                  error={
+                    validationAttempted
+                      ? disciplineTimeErrors[discipline] ?? undefined
+                      : undefined
+                  }
                   hint="Optioneel, formaat U:MM:SS"
                   label="Richttijd onderdeel"
                   onChangeText={(value) =>
@@ -643,11 +722,23 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
               </View>
             ))}
             <FormField
+              error={
+                validationAttempted
+                  ? !totalTime.trim()
+                    ? 'Totale richttijd is verplicht.'
+                    : parsedTotalTime === null
+                      ? 'Gebruik het formaat U:MM:SS.'
+                      : individualTotal > parsedTotalTime
+                        ? 'De totale richttijd mag niet korter zijn dan de onderdeeltijden samen.'
+                        : undefined
+                  : undefined
+              }
               hint="Verplicht, formaat U:MM:SS"
               label="Totale richttijd"
               onChangeText={setTotalTime}
               placeholder="3:00:00"
               value={totalTime}
+              required
             />
             <FormField
               label="Specifieke focus (optioneel)"
@@ -658,11 +749,18 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
               value={specificFocus}
             />
           </View>
+          {validationAttempted && goalValidationMessages.length > 0 ? (
+            <Text accessibilityRole="alert" style={styles.errorBanner}>
+              Vul de gemarkeerde verplichte velden in: {' '}
+              {goalValidationMessages.join(', ')}.
+            </Text>
+          ) : null}
           <ActionButton
-            disabled={!valid}
             label="A-doel opslaan"
             loading={saving}
-            onPress={() =>
+            onPress={() => {
+              setValidationAttempted(true);
+              if (!valid) return;
               void onSave({
                 race_type: raceType,
                 race_name: raceName.trim(),
@@ -688,8 +786,8 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                 ...(specificFocus.trim()
                   ? { specific_focus: specificFocus.trim() }
                   : {}),
-              })
-            }
+              });
+            }}
           />
         </>
       ) : null}
@@ -833,6 +931,7 @@ function ReviewRow({ label, value }: { label: string; value: string }) {
 
 export function OnboardingScreen({
   accessToken,
+  active = true,
   onOpenCalibration,
   onOpenPlanning,
   onSignOut,
@@ -877,6 +976,7 @@ export function OnboardingScreen({
   }, [reload]);
 
   useEffect(() => {
+    if (!active) return;
     let mounted = true;
     Promise.all([
       getOnboarding(accessToken),
@@ -912,14 +1012,21 @@ export function OnboardingScreen({
     return () => {
       mounted = false;
     };
-  }, [accessToken, onOpenPlanning]);
+  }, [accessToken, active, onOpenPlanning]);
 
-  const mutate = async (operation: () => Promise<unknown>) => {
+  const mutate = async (
+    operation: () => Promise<unknown>,
+    options: {
+      reloadAfter?: boolean;
+      onSuccess?: () => void;
+    } = {},
+  ) => {
     setSaving(true);
     setError(null);
     try {
       await operation();
-      await reload();
+      if (options.reloadAfter ?? true) await reload();
+      options.onSuccess?.();
     } catch (caught) {
       setError(
         caught instanceof Error
@@ -1171,16 +1278,24 @@ export function OnboardingScreen({
                   ),
                 ].join(':')}
                 onSave={(discipline, input: DisciplineSetupInput) =>
-                  mutate(async () => {
-                    if (input.setup_route === 'known_values') {
-                      await saveCalculatedZones(accessToken, discipline, {
-                        thresholds: input.thresholds,
-                        source_quality: input.source_quality,
-                        boundary_overrides: input.zone_profiles,
-                      });
-                    }
-                    await saveDisciplineSetup(accessToken, discipline, input);
-                  })
+                  mutate(
+                    async () => {
+                      if (input.setup_route === 'known_values') {
+                        await saveCalculatedZones(accessToken, discipline, {
+                          thresholds: input.thresholds,
+                          source_quality: input.source_quality,
+                          boundary_overrides: input.zone_profiles,
+                        });
+                      }
+                      await saveDisciplineSetup(accessToken, discipline, input);
+                    },
+                    input.setup_route === 'known_values'
+                      ? {}
+                      : {
+                          reloadAfter: false,
+                          onSuccess: onOpenCalibration,
+                        },
+                  )
                 }
                 saving={saving}
                 state={state}

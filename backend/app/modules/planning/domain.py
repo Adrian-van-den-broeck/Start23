@@ -444,13 +444,19 @@ def eligible_workouts(
             )
         ):
             continue
-        if not capability.rpe_guided and not set(template.zone_requirements).issubset(
+        requirements_supported = set(template.zone_requirements).issubset(
             capability.requirements
-        ):
-            continue
-        eligible.append(
-            as_rpe_guided_template(template) if capability.rpe_guided else template
         )
+        if capability.rpe_guided:
+            eligible.append(as_rpe_guided_template(template))
+        elif requirements_supported:
+            eligible.append(template)
+        elif capability.requirements and not capability.fallback_active:
+            # A confirmed profile can use the catalog's already-reviewed textual
+            # RPE projection when its numeric metric differs from this template.
+            # This changes execution guidance only; the authoritative catalog
+            # load, version, phase tags, and physiological rules remain unchanged.
+            eligible.append(as_rpe_guided_template(template))
     return tuple(
         sorted(
             eligible,
@@ -941,6 +947,23 @@ def build_weekly_plan(
         low_only_disciplines=low_only_disciplines,
         zone_capabilities=zone_capabilities,
     )
+    covered_disciplines = {template.discipline for template in deck}
+    missing_disciplines = uninjured - covered_disciplines
+    if missing_disciplines:
+        missing_labels = ", ".join(
+            sorted(discipline.value for discipline in missing_disciplines)
+        )
+        if target.phase is TrainingPhase.TAPER:
+            raise PlanningConstraintError(
+                "taper_catalog_coverage_unavailable",
+                "No reviewed taper workout is available for: "
+                f"{missing_labels}. This pre-race week cannot be generated yet.",
+            )
+        raise PlanningConstraintError(
+            "catalog_phase_coverage_unavailable",
+            f"No reviewed {target.phase.value} workout is available for: "
+            f"{missing_labels}.",
+        )
     fixed_dates = dict(fixed_template_dates or {})
     if selected_template_ids is not None:
         selected_ids = set(selected_template_ids)

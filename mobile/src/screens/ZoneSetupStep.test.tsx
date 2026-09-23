@@ -106,4 +106,55 @@ describe('ZoneSetupStep', () => {
       }),
     );
   });
+
+  test.each([
+    ['run', 'LTHR', '171', 'run_lthr_bpm', 'heart_rate'],
+    ['bike', 'FTP', '245', 'bike_ftp_watts', 'power'],
+    ['swim', 'CSS', '105', 'swim_css_seconds_per_100m', 'pace'],
+  ] as const)(
+    '%s known-values route explains the required threshold and saves a valid value',
+    async (discipline, fieldLabel, value, metricKind, guidanceMode) => {
+      const onSave = jest.fn(async () => undefined);
+      const screen = await render(
+        <ZoneSetupStep
+          accessToken="athlete-token"
+          disciplineOverride={discipline}
+          onSave={onSave}
+          saving={false}
+          state={{ ...state, required_disciplines: [discipline] }}
+        />,
+      );
+
+      await screen.findByText('Bekende waarden');
+      await fireEvent.press(
+        screen.getByRole('radio', { name: /Bekende waarden/ }),
+      );
+      await fireEvent.press(
+        screen.getByRole('button', { name: 'Bekende waarden bewaren' }),
+      );
+
+      expect(onSave).not.toHaveBeenCalled();
+      expect(
+        screen.getByText(/Vul minstens één bekende drempelwaarde in/),
+      ).toBeTruthy();
+      expect(
+        screen.getByLabelText(fieldLabel).props['aria-invalid'],
+      ).toBe(true);
+
+      await fireEvent.changeText(screen.getByLabelText(fieldLabel), value);
+      await fireEvent.press(
+        screen.getByRole('button', { name: 'Bekende waarden bewaren' }),
+      );
+
+      await waitFor(() =>
+        expect(onSave).toHaveBeenCalledWith(discipline, {
+          setup_route: 'known_values',
+          guidance_mode: guidanceMode,
+          source_quality: 'athlete_entered',
+          thresholds: [{ metric_kind: metricKind, value }],
+          zone_profiles: [],
+        }),
+      );
+    },
+  );
 });

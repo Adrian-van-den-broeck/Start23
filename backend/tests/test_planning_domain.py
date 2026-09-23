@@ -80,6 +80,131 @@ def test_rpe_guidance_removes_numeric_zones_without_fake_zone_profile() -> None:
     assert all(segment.rpe_target is not None for segment in regular.segments)
 
 
+@pytest.mark.parametrize(
+    ("goal_disciplines", "capabilities"),
+    [
+        (
+            frozenset({Discipline.RUN}),
+            {Discipline.RUN: ZoneCapability(frozenset({ZoneRequirement.HEART_RATE}))},
+        ),
+        (
+            frozenset({Discipline.BIKE}),
+            {Discipline.BIKE: ZoneCapability(frozenset({ZoneRequirement.POWER}))},
+        ),
+        (
+            frozenset({Discipline.BIKE, Discipline.RUN}),
+            {
+                Discipline.BIKE: ZoneCapability(
+                    frozenset({ZoneRequirement.HEART_RATE})
+                ),
+                Discipline.RUN: ZoneCapability(frozenset({ZoneRequirement.HEART_RATE})),
+            },
+        ),
+        (
+            frozenset(Discipline),
+            {
+                Discipline.SWIM: ZoneCapability(frozenset({ZoneRequirement.PACE})),
+                Discipline.BIKE: ZoneCapability(frozenset({ZoneRequirement.POWER})),
+                Discipline.RUN: ZoneCapability(frozenset({ZoneRequirement.HEART_RATE})),
+            },
+        ),
+    ],
+)
+def test_confirmed_known_values_cover_supported_build_goal_compositions(
+    goal_disciplines: frozenset[Discipline],
+    capabilities: dict[Discipline, ZoneCapability],
+) -> None:
+    draft = build_weekly_plan(
+        week_start=_WEEK_START,
+        timezone_name="Europe/Amsterdam",
+        race_date=date(2026, 12, 6),
+        catalog=active_catalog(),
+        prior_loads=(
+            PlanLoadSample(
+                week_start=_WEEK_START - timedelta(days=7),
+                load=InternalLoad(Decimal("100")),
+                phase=TrainingPhase.BASE,
+            ),
+        ),
+        goal_disciplines=goal_disciplines,
+        confirmed_injuries=frozenset(),
+        zone_capabilities=capabilities,
+        available_dates=(_WEEK_START,),
+    )
+
+    assert draft.target.phase is TrainingPhase.BUILD
+    assert {workout.discipline for workout in draft.workouts} == set(goal_disciplines)
+
+
+def test_confirmed_run_hr_uses_existing_reviewed_rpe_projection_in_build() -> None:
+    deck = eligible_workouts(
+        catalog=active_catalog(),
+        phase=TrainingPhase.BUILD,
+        goal_disciplines=frozenset({Discipline.RUN}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities={
+            Discipline.RUN: ZoneCapability(frozenset({ZoneRequirement.HEART_RATE}))
+        },
+    )
+
+    assert deck
+    assert all(segment.zone_target is None for segment in deck[0].segments)
+    assert all(segment.rpe_target is not None for segment in deck[0].segments)
+
+
+@pytest.mark.parametrize(
+    ("discipline", "requirement"),
+    [
+        (Discipline.RUN, ZoneRequirement.HEART_RATE),
+        (Discipline.RUN, ZoneRequirement.PACE),
+        (Discipline.BIKE, ZoneRequirement.HEART_RATE),
+        (Discipline.BIKE, ZoneRequirement.POWER),
+        (Discipline.SWIM, ZoneRequirement.PACE),
+    ],
+)
+def test_each_supported_confirmed_metric_has_build_catalog_coverage(
+    discipline: Discipline,
+    requirement: ZoneRequirement,
+) -> None:
+    deck = eligible_workouts(
+        catalog=active_catalog(),
+        phase=TrainingPhase.BUILD,
+        goal_disciplines=frozenset({discipline}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities={
+            discipline: ZoneCapability(frozenset({requirement})),
+        },
+    )
+
+    assert {template.discipline for template in deck} == {discipline}
+
+
+def test_genuine_taper_catalog_gap_has_an_actionable_error() -> None:
+    with pytest.raises(PlanningConstraintError) as captured:
+        build_weekly_plan(
+            week_start=date(2026, 11, 30),
+            timezone_name="Europe/Amsterdam",
+            race_date=date(2026, 12, 7),
+            catalog=active_catalog(),
+            prior_loads=(
+                PlanLoadSample(
+                    week_start=date(2026, 11, 23),
+                    load=InternalLoad(Decimal("100")),
+                    phase=TrainingPhase.BUILD,
+                ),
+            ),
+            goal_disciplines=frozenset({Discipline.BIKE}),
+            confirmed_injuries=frozenset(),
+            zone_capabilities={
+                Discipline.BIKE: ZoneCapability(frozenset({ZoneRequirement.POWER}))
+            },
+            available_dates=(date(2026, 11, 30),),
+        )
+
+    assert captured.value.code == "taper_catalog_coverage_unavailable"
+    assert "bike" in str(captured.value)
+
+
 def test_exact_test_date_is_owned_by_fixed_schedule_constraint() -> None:
     swim = next(
         template

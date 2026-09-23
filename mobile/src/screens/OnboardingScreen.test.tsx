@@ -196,6 +196,81 @@ describe('onboarding components', () => {
     });
   });
 
+  test.each([
+    ['run', 'Lopen', ['run']],
+    ['bike', 'Fietsen', ['bike']],
+    ['swim', 'Zwemmen', ['swim']],
+    ['duathlon', 'Duatlon', ['bike', 'run']],
+    ['triathlon', 'Triatlon', ['swim', 'bike', 'run']],
+  ] as const)(
+    '%s goal identifies every missing required field and submits once complete',
+    async (raceType, raceLabel, disciplines) => {
+      const onSave = jest.fn(async () => undefined);
+      const screen = await render(
+        <GoalStep
+          goal={null}
+          onSave={onSave}
+          options={goalOptions}
+          saving={false}
+        />,
+      );
+      await fireEvent.press(
+        screen.getByRole('radio', { name: /Wedstrijd of evenement/ }),
+      );
+      await fireEvent.press(screen.getByRole('radio', { name: raceLabel }));
+      await fireEvent.changeText(
+        screen.getByLabelText('Naam van de race'),
+        'Bewaarde race',
+      );
+
+      await fireEvent.press(
+        screen.getByRole('button', { name: 'A-doel opslaan' }),
+      );
+
+      expect(onSave).not.toHaveBeenCalled();
+      expect(screen.getByLabelText('Naam van de race').props.value).toBe(
+        'Bewaarde race',
+      );
+      expect(screen.getByText('Racedatum is verplicht.')).toBeTruthy();
+      expect(screen.getByText('Totale richttijd is verplicht.')).toBeTruthy();
+      expect(screen.getAllByText('Afstand is verplicht.')).toHaveLength(
+        disciplines.length,
+      );
+      expect(
+        screen.getByText(/Vul de gemarkeerde verplichte velden in/),
+      ).toBeTruthy();
+
+      await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
+      await fireEvent.changeText(
+        screen.getByLabelText('Totale richttijd'),
+        '3:00:00',
+      );
+      const distanceFields = screen.getAllByLabelText('Afstand');
+      for (const field of distanceFields) {
+        await fireEvent.changeText(field, '1000');
+      }
+      await fireEvent.press(
+        screen.getByRole('button', { name: 'A-doel opslaan' }),
+      );
+
+      await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
+      expect(onSave).toHaveBeenCalledWith(
+        expect.objectContaining({
+          race_type: raceType,
+          race_name: 'Bewaarde race',
+          race_date: '2099-06-15',
+          total_target_time_seconds: 10800,
+          ...Object.fromEntries(
+            disciplines.map((discipline) => [
+              `${discipline}_distance_meters`,
+              1000,
+            ]),
+          ),
+        }),
+      );
+    },
+  );
+
   test('pending required zone remains a separate approval action', async () => {
     const onApproveZone = jest.fn(async () => undefined);
     const pendingZone = {

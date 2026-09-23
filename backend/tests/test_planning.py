@@ -16,7 +16,10 @@ from app.main import create_app
 from app.modules.onboarding.repository import RepositoryNotFoundError
 from app.modules.onboarding.versioning import CURRENT_ONBOARDING_VERSION
 from app.modules.physiology.models import Discipline
-from app.modules.planning.domain import ZoneCapability, eligible_workouts
+from app.modules.planning.domain import (
+    ZoneCapability,
+    eligible_workouts,
+)
 from app.modules.planning.repository import (
     JsonObject,
     PlanningRepositoryConflictError,
@@ -114,7 +117,16 @@ def test_calibration_route_marks_regular_workouts_as_zone_evidence() -> None:
             "race_type": "bike",
             "race_discipline_profile": ["bike"],
         },
-        "zones": [],
+        "zones": [
+            {
+                "discipline": "bike",
+                "fallback_active": False,
+                "metric": {
+                    "kind": "bike_threshold_heart_rate_bpm",
+                    "value": 165,
+                },
+            }
+        ],
         "discipline_setups": [
             {
                 "discipline": "bike",
@@ -134,9 +146,43 @@ def test_calibration_route_marks_regular_workouts_as_zone_evidence() -> None:
         ].calibration_evidence,
     )
 
-    assert capabilities[Discipline.BIKE].rpe_guided is True
+    assert capabilities[Discipline.BIKE].rpe_guided is False
     assert card.workout_kind == "standard"
     assert card.contributes_to_zone_calibration is True
+
+
+@pytest.mark.parametrize(
+    ("race_type", "disciplines"),
+    [
+        ("run", ["run"]),
+        ("bike", ["bike"]),
+        ("duathlon", ["bike", "run"]),
+        ("triathlon", ["swim", "bike", "run"]),
+    ],
+)
+def test_pending_calibration_retains_reviewed_rpe_guided_planning(
+    race_type: str,
+    disciplines: list[str],
+) -> None:
+    snapshot: JsonObject = {
+        "profile": {"timezone": "Europe/Amsterdam"},
+        "goal": {"target_date": "2099-12-06", "race_type": race_type},
+        "zones": [],
+        "discipline_setups": [
+            {
+                "discipline": discipline,
+                "setup_route": "calibration_week",
+                "setup_status": "calibration_pending",
+                "protocol_id": f"start23_week1_{discipline}_calibration_v1",
+            }
+            for discipline in disciplines
+        ],
+    }
+
+    _, _, goal_disciplines, capabilities = PlanningService._context_values(snapshot)
+
+    assert goal_disciplines == frozenset(Discipline(value) for value in disciplines)
+    assert all(capabilities[Discipline(value)].rpe_guided for value in disciplines)
 
 
 @pytest.mark.parametrize(
@@ -161,7 +207,21 @@ def test_planner_derives_disciplines_from_race_type(
             # A stale compatibility array cannot expand current race scope.
             "race_discipline_profile": ["swim", "bike", "run"],
         },
-        "zones": [],
+        "zones": [
+            {
+                "discipline": discipline.value,
+                "fallback_active": False,
+                "metric": {
+                    "kind": {
+                        Discipline.SWIM: "swim_css_seconds_per_100m",
+                        Discipline.BIKE: "bike_ftp_watts",
+                        Discipline.RUN: "run_lthr_bpm",
+                    }[discipline],
+                    "value": 100,
+                },
+            }
+            for discipline in expected
+        ],
         "discipline_setups": [],
     }
 

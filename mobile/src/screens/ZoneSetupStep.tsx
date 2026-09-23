@@ -250,6 +250,8 @@ export function ZoneSetupStep({
     availableMetrics[0].guidance,
   );
   const [poolLength, setPoolLength] = useState<25 | 50>(25);
+  const [knownValuesValidationAttempted, setKnownValuesValidationAttempted] =
+    useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -331,6 +333,21 @@ export function ZoneSetupStep({
   const selectedThresholdPresent = enteredThresholds.some(
     (option) => option.kind === boundaryMetric,
   );
+  const invalidThresholds = availableMetrics.filter((option) => {
+    const rawValue = knownValues[option.kind]?.trim() ?? '';
+    if (!rawValue) return false;
+    const numericValue = Number(rawValue);
+    return (
+      !Number.isFinite(numericValue) ||
+      numericValue <= 0 ||
+      (option.descending && !Number.isInteger(numericValue))
+    );
+  });
+  const knownValuesValid =
+    enteredThresholds.length > 0 &&
+    invalidThresholds.length === 0 &&
+    boundariesValid &&
+    (!includeBoundaries || selectedThresholdPresent);
 
   const selectRoute = (nextRoute: SelectableZoneSetupRoute) => {
     setRoute(nextRoute);
@@ -349,6 +366,8 @@ export function ZoneSetupStep({
   };
 
   const submitKnownValues = () => {
+    setKnownValuesValidationAttempted(true);
+    if (!knownValuesValid) return;
     const thresholds = enteredThresholds.map((option) => ({
       metric_kind: option.kind,
       value: knownValues[option.kind]!,
@@ -448,9 +467,10 @@ export function ZoneSetupStep({
         <View style={styles.panel}>
           <Text style={styles.panelTitle}>Bekende waarden</Text>
           <Text style={styles.panelText}>
-            Eén bekende drempel is genoeg. Laat de optionele grenzen leeg om
-            het geversioneerde Wombo-model te gebruiken. De zones blijven
-            daarna eerst een apart voorstel.
+            Vul minstens één bekende drempel in. Voor zwemmen is CSS verplicht;
+            voor fietsen en hardlopen kies je minstens één van de getoonde
+            waarden. Zonegrenzen blijven optioneel. De zones worden daarna eerst
+            een apart voorstel.
           </Text>
           <View accessibilityRole="radiogroup" style={styles.chips}>
             <Chip
@@ -466,6 +486,21 @@ export function ZoneSetupStep({
           </View>
           {availableMetrics.map((option) => (
             <FormField
+              error={
+                knownValuesValidationAttempted
+                  ? invalidThresholds.includes(option)
+                    ? option.descending
+                      ? 'Vul een positief geheel aantal seconden in.'
+                      : 'Vul een positieve waarde in.'
+                    : enteredThresholds.length === 0
+                      ? availableMetrics.length === 1
+                        ? `${option.label} is verplicht.`
+                        : `Vul minstens ${availableMetrics
+                            .map((candidate) => candidate.label)
+                            .join(' of ')} in.`
+                      : undefined
+                  : undefined
+              }
               hint={
                 option.descending
                   ? 'Gebruik hele seconden in de canonieke eenheid.'
@@ -497,7 +532,12 @@ export function ZoneSetupStep({
                   guidanceForKnownValues(availableMetrics, nextValues),
                 );
               }}
-              placeholder="Optioneel"
+              placeholder={
+                availableMetrics.length === 1
+                  ? 'Verplicht'
+                  : 'Minstens één waarde vereist'
+              }
+              required={availableMetrics.length === 1}
               suffix={<Text style={styles.unit}>{option.unit}</Text>}
               value={knownValues[option.kind] ?? ''}
             />
@@ -506,6 +546,12 @@ export function ZoneSetupStep({
           {!wholePaceThresholds ? (
             <Text style={styles.error}>
               CSS en drempeltempo gebruiken alleen hele seconden.
+            </Text>
+          ) : null}
+
+          {knownValuesValidationAttempted && enteredThresholds.length === 0 ? (
+            <Text accessibilityRole="alert" style={styles.error}>
+              Vul minstens één bekende drempelwaarde in voordat je bewaart.
             </Text>
           ) : null}
 
@@ -589,12 +635,7 @@ export function ZoneSetupStep({
           ) : null}
 
           <SaveButton
-            disabled={
-              enteredThresholds.length === 0 ||
-              !wholePaceThresholds ||
-              !boundariesValid ||
-              (includeBoundaries && !selectedThresholdPresent)
-            }
+            disabled={false}
             label="Bekende waarden bewaren"
             onPress={submitKnownValues}
             saving={saving}
