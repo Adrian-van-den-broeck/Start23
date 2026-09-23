@@ -812,6 +812,62 @@ def test_generated_schedule_can_consolidate_all_workouts_on_one_available_day() 
     }
 
 
+def test_live_run_first_week_uses_best_available_day() -> None:
+    """Regression: the Android default Mon/Wed/Sat flow must reach the deck."""
+
+    available_dates = (date(2026, 8, 3), date(2026, 8, 5), date(2026, 8, 8))
+    draft = build_weekly_plan(
+        week_start=_WEEK_START,
+        timezone_name="Europe/Amsterdam",
+        race_date=date(2026, 12, 6),
+        catalog=active_catalog(REVIEWED_CATALOG),
+        prior_loads=(),
+        goal_disciplines=frozenset({Discipline.RUN}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities={
+            Discipline.RUN: ZoneCapability(frozenset({ZoneRequirement.HEART_RATE}))
+        },
+        available_dates=available_dates,
+        onboarding_baseline=starting_baseline({Discipline.RUN: Decimal("36")}),
+    )
+
+    assert len(draft.workouts) == 1
+    assert draft.workouts[0].scheduled_date == date(2026, 8, 5)
+
+
+def test_schedule_enforces_feasible_rest_limit() -> None:
+    low_bike = next(
+        template
+        for template in active_catalog(REVIEWED_CATALOG)
+        if template.discipline is Discipline.BIKE
+        and template.intensity_bucket is IntensityBucket.LOW
+        and not template.explicit_scheduling_only
+        and not template.athlete_selection_only
+    )
+    low_bikes = tuple(
+        SelectedWorkout(
+            discipline=template.discipline,
+            snapshot=snapshot_template(template),
+        )
+        for template in (
+            low_bike,
+            replace(low_bike, id=uuid4(), template_key=uuid4()),
+        )
+    )
+
+    proposed = schedule_workouts(
+        selected=low_bikes,
+        available_dates=(date(2026, 8, 3), date(2026, 8, 6)),
+        week_start=_WEEK_START,
+        timezone_name="Europe/Amsterdam",
+    )
+
+    assert {workout.scheduled_date for workout in proposed} == {
+        date(2026, 8, 3),
+        date(2026, 8, 6),
+    }
+
+
 def test_generated_schedule_balances_three_workouts_over_two_available_days() -> None:
     available_dates = (date(2026, 8, 3), date(2026, 8, 5))
 

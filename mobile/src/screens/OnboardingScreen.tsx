@@ -35,6 +35,7 @@ import type {
   PrimaryRaceGoal,
   RaceType,
 } from '../api/types';
+import { DurationPicker } from '../components/DurationPicker';
 import { FadeInView } from '../components/FadeInView';
 import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
@@ -44,8 +45,6 @@ import {
 } from '../lib/dateInput';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
 import {
-  formatClockDuration,
-  parseClockDuration,
   parsePositiveInteger,
   raceDisciplines,
   resolveDeviceTimezone,
@@ -439,54 +438,45 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
   const [raceName, setRaceName] = useState(goal?.race_name ?? '');
   const [specificFocus, setSpecificFocus] = useState(goal?.specific_focus ?? '');
   const [targetDate, setTargetDate] = useState(goal?.race_date ?? '');
-  const [totalTime, setTotalTime] = useState(
-    formatClockDuration(goal?.total_target_time_seconds ?? null),
+  const [totalTimeSeconds, setTotalTimeSeconds] = useState<number | null>(
+    goal?.total_target_time_seconds ?? null,
   );
   const [distances, setDistances] = useState<Record<Discipline, string>>({
     swim: goal?.swim_distance_meters?.toString() ?? '',
     bike: goal?.bike_distance_meters?.toString() ?? '',
     run: goal?.run_distance_meters?.toString() ?? '',
   });
-  const [disciplineTimes, setDisciplineTimes] = useState<
-    Record<Discipline, string>
+  const [disciplineTimeSeconds, setDisciplineTimeSeconds] = useState<
+    Record<Discipline, number | null>
   >({
-    swim: formatClockDuration(goal?.swim_target_time_seconds ?? null),
-    bike: formatClockDuration(goal?.bike_target_time_seconds ?? null),
-    run: formatClockDuration(goal?.run_target_time_seconds ?? null),
+    swim: goal?.swim_target_time_seconds ?? null,
+    bike: goal?.bike_target_time_seconds ?? null,
+    run: goal?.run_target_time_seconds ?? null,
   });
   const normalizedTargetDate = normalizeRaceDate(targetDate);
   const disciplines = raceDisciplines[raceType];
-  const parsedTotalTime = parseClockDuration(totalTime);
   const parsedDistances = Object.fromEntries(
     disciplines.map((discipline) => [
       discipline,
       parsePositiveInteger(distances[discipline]),
     ]),
   ) as Partial<Record<Discipline, number | null>>;
-  const parsedDisciplineTimes = Object.fromEntries(
-    disciplines.map((discipline) => [
-      discipline,
-      disciplineTimes[discipline].trim()
-        ? parseClockDuration(disciplineTimes[discipline])
-        : undefined,
-    ]),
-  ) as Partial<Record<Discipline, number | null | undefined>>;
-  const individualTotal = Object.values(parsedDisciplineTimes).reduce<number>(
-    (sum, value) => sum + (value ?? 0),
+  const individualTotal = disciplines.reduce<number>(
+    (sum, discipline) => sum + (disciplineTimeSeconds[discipline] ?? 0),
     0,
   );
   const valid = Boolean(
     raceName.trim() &&
       normalizedTargetDate &&
-      parsedTotalTime &&
+      totalTimeSeconds !== null &&
+      totalTimeSeconds > 0 &&
       disciplines.every((discipline) => parsedDistances[discipline]) &&
       disciplines.every(
         (discipline) =>
-          !disciplineTimes[discipline].trim() ||
-          parsedDisciplineTimes[discipline] !== null,
+          disciplineTimeSeconds[discipline] === null ||
+          disciplineTimeSeconds[discipline] > 0,
       ) &&
-      parsedTotalTime !== null &&
-      individualTotal <= parsedTotalTime,
+      individualTotal <= totalTimeSeconds,
   );
   const distanceErrors = Object.fromEntries(
     disciplines.map((discipline) => {
@@ -504,9 +494,9 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
   const disciplineTimeErrors = Object.fromEntries(
     disciplines.map((discipline) => [
       discipline,
-      disciplineTimes[discipline].trim() &&
-      parsedDisciplineTimes[discipline] === null
-        ? 'Gebruik het formaat U:MM:SS.'
+      disciplineTimeSeconds[discipline] !== null &&
+      disciplineTimeSeconds[discipline] <= 0
+        ? 'Kies een tijd langer dan 00:00:00 of wis deze optionele tijd.'
         : null,
     ]),
   ) as Record<Discipline, string | null>;
@@ -528,9 +518,9 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
           }`
         : null,
     ),
-    !totalTime.trim()
+    totalTimeSeconds === null
       ? 'totale richttijd'
-      : parsedTotalTime === null
+      : totalTimeSeconds <= 0
         ? 'geldige totale richttijd'
         : null,
     ...disciplines.map((discipline) =>
@@ -538,7 +528,7 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
         ? `geldige richttijd ${discipline}`
         : null,
     ),
-    parsedTotalTime !== null && individualTotal > parsedTotalTime
+    totalTimeSeconds !== null && individualTotal > totalTimeSeconds
       ? 'een totale richttijd die niet korter is dan de onderdeeltijden'
       : null,
   ].filter((message): message is string => message !== null);
@@ -702,42 +692,40 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                   value={distances[discipline]}
                   required
                 />
-                <FormField
+                <DurationPicker
                   error={
                     validationAttempted
                       ? disciplineTimeErrors[discipline] ?? undefined
                       : undefined
                   }
-                  hint="Optioneel, formaat U:MM:SS"
+                  hint="Optioneel. Kies uren, minuten en seconden zonder toetsenbord."
                   label="Richttijd onderdeel"
-                  onChangeText={(value) =>
-                    setDisciplineTimes((current) => ({
+                  onChange={(value) =>
+                    setDisciplineTimeSeconds((current) => ({
                       ...current,
                       [discipline]: value,
                     }))
                   }
-                  placeholder="0:45:00"
-                  value={disciplineTimes[discipline]}
+                  valueSeconds={disciplineTimeSeconds[discipline]}
                 />
               </View>
             ))}
-            <FormField
+            <DurationPicker
               error={
                 validationAttempted
-                  ? !totalTime.trim()
+                  ? totalTimeSeconds === null
                     ? 'Totale richttijd is verplicht.'
-                    : parsedTotalTime === null
-                      ? 'Gebruik het formaat U:MM:SS.'
-                      : individualTotal > parsedTotalTime
+                    : totalTimeSeconds <= 0
+                      ? 'Kies een tijd langer dan 00:00:00.'
+                      : individualTotal > totalTimeSeconds
                         ? 'De totale richttijd mag niet korter zijn dan de onderdeeltijden samen.'
                         : undefined
                   : undefined
               }
-              hint="Verplicht, formaat U:MM:SS"
+              hint="Verplicht. Kies uren, minuten en seconden zonder toetsenbord."
               label="Totale richttijd"
-              onChangeText={setTotalTime}
-              placeholder="3:00:00"
-              value={totalTime}
+              onChange={setTotalTimeSeconds}
+              valueSeconds={totalTimeSeconds}
               required
             />
             <FormField
@@ -771,16 +759,16 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                     parsedDistances[discipline],
                   ]),
                 ),
-                total_target_time_seconds: parsedTotalTime!,
+                total_target_time_seconds: totalTimeSeconds!,
                 ...Object.fromEntries(
                   disciplines
                     .filter(
                       (discipline) =>
-                        parsedDisciplineTimes[discipline] !== undefined,
+                        disciplineTimeSeconds[discipline] !== null,
                     )
                     .map((discipline) => [
                       `${discipline}_target_time_seconds`,
-                      parsedDisciplineTimes[discipline],
+                      disciplineTimeSeconds[discipline],
                     ]),
                 ),
                 ...(specificFocus.trim()

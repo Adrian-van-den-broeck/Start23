@@ -683,12 +683,27 @@ def schedule_workouts(
                 maximum_rest = max(maximum_rest, consecutive_rest)
         return maximum_rest
 
-    # Do not reject a plan for rest spacing the athlete's confirmed availability
-    # makes impossible. A manual fixed placement is also an explicit athlete
-    # choice and may intentionally consolidate the week.
-    enforce_rest_limit = (
-        not fixed and maximum_consecutive_rest_days(set(sorted_dates)) <= 3
-    )
+    def rest_limit_is_feasible(workout_count: int) -> bool:
+        """Return whether this selection can occupy enough available dates.
+
+        Availability alone is not sufficient: a one-workout prescription cannot
+        use three available dates. Treating every available date as a training
+        date made ordinary low-volume weeks fail before workout selection even
+        though the approved rule is best-effort when the requested week cannot
+        realize the spacing.
+        """
+
+        maximum_training_days = min(workout_count, len(sorted_dates))
+        return any(
+            maximum_consecutive_rest_days(set(training_dates)) <= 3
+            for count in range(1, maximum_training_days + 1)
+            for training_dates in combinations(sorted_dates, count)
+        )
+
+    # Do not reject a plan when its selected workout count and confirmed
+    # availability cannot realize the rest spacing. A manual fixed placement is
+    # also an explicit athlete choice and may intentionally consolidate the week.
+    enforce_rest_limit = not fixed and rest_limit_is_feasible(len(ordered))
     assigned: list[ProposedWorkout] = []
     usage = {scheduled_date: 0 for scheduled_date in sorted_dates}
 
@@ -709,7 +724,18 @@ def schedule_workouts(
         candidate_dates = (
             (fixed_date,)
             if fixed_date is not None
-            else tuple(sorted(sorted_dates, key=lambda value: (usage[value], value)))
+            else tuple(
+                sorted(
+                    sorted_dates,
+                    key=lambda value: (
+                        usage[value],
+                        maximum_consecutive_rest_days(
+                            {item.scheduled_date for item in assigned} | {value}
+                        ),
+                        value,
+                    ),
+                )
+            )
         )
         for assigned_day in candidate_dates:
             proposal = ProposedWorkout(

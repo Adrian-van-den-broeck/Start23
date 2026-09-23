@@ -2170,6 +2170,36 @@ staging override. Production was not modified.
   remains a non-blocking commercial follow-up; no subscription, hardware,
   fulfillment, or production system was added.
 
+### Post-Phase-16 live stabilization: 2026-09-24
+
+Phase 16 remains complete. A later Android report exposed a planner feasibility
+bug in an ordinary run-only first week: the default Monday/Wednesday/Saturday
+availability was treated as if all three dates could contain workouts, although
+the deterministic target contained one workout. The scheduler now decides
+whether the three-consecutive-rest-day preference is realizable from both the
+confirmed dates and the selected workout count. When it is not realizable, it
+keeps anti-stack enforcement and chooses the available date with the smallest
+rest gap. When it is realizable, the existing rest limit remains enforced.
+
+Race-goal total and discipline durations now use one keyboard-free Android
+picker for hours, minutes, and seconds. Exact saved seconds round-trip unchanged
+and remain the canonical API representation. Known deterministic planning
+errors map to actionable Dutch copy; unknown server text is not rendered
+directly and no private load value is exposed.
+
+Local verification passed 666 backend tests, Ruff, formatting, strict mypy, 19
+mobile suites with 72 tests, strict TypeScript, unused-code checks, Expo Doctor
+21/21, and `git diff --check`. The exact reported run flow reaches workout
+selection, submits an automatically placed pending proposal, and retains its
+date-only availability and stale-safe revision semantics. No database or API
+contract changed.
+
+The new Android smoke remains open on this workstation: no physical device was
+attached and both existing API-35 AVDs exited before boot because the installed
+emulator lacks the required virtualization-feature support. Staging deployment
+was also unavailable because no Railway CLI or callable Railway MCP tool was
+present. Production was not accessed or modified.
+
 ## Final deployment and security handoff
 
 These are end-of-MVP deployment gates, not blockers for continuing scoped local

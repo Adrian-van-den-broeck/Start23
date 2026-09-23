@@ -3,6 +3,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import type {
   GoalPlanningOption,
   OnboardingState,
+  PrimaryRaceGoal,
   ZoneProfile,
 } from '../api/types';
 import {
@@ -184,7 +185,12 @@ describe('onboarding components', () => {
     await fireEvent.changeText(screen.getByLabelText('Naam van de race'), '10K');
     await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
     await fireEvent.changeText(screen.getByLabelText('Afstand'), '10000');
-    await fireEvent.changeText(screen.getByLabelText('Totale richttijd'), '1:00:00');
+    await fireEvent.press(
+      screen.getByRole('button', {
+        name: 'Kies uren voor Totale richttijd',
+      }),
+    );
+    await fireEvent.press(screen.getByRole('radio', { name: '1 uur' }));
     await fireEvent.press(screen.getByRole('button', { name: 'A-doel opslaan' }));
 
     expect(onSave).toHaveBeenCalledWith({
@@ -194,6 +200,54 @@ describe('onboarding components', () => {
       run_distance_meters: 10000,
       total_target_time_seconds: 3600,
     });
+  });
+
+  test('editing a saved goal loads and preserves exact canonical durations', async () => {
+    const onSave = jest.fn(async () => undefined);
+    const goal: PrimaryRaceGoal = {
+      id: 'goal-id',
+      race_type: 'triathlon',
+      race_name: 'Bewaarde triatlon',
+      race_date: '2099-06-15',
+      swim_distance_meters: 1500,
+      bike_distance_meters: 40000,
+      run_distance_meters: 10000,
+      total_target_time_seconds: 13_530,
+      swim_target_time_seconds: 1803,
+      bike_target_time_seconds: 7207,
+      run_target_time_seconds: 3601,
+      specific_focus: null,
+      priority: 'A',
+      goal_type: 'race',
+      status: 'active',
+      revision: 2,
+      created_at: '2026-09-01T10:00:00Z',
+      updated_at: '2026-09-01T10:00:00Z',
+    };
+    const screen = await render(
+      <GoalStep
+        goal={goal}
+        onSave={onSave}
+        options={goalOptions}
+        saving={false}
+      />,
+    );
+
+    expect(screen.getByLabelText('Totale richttijd: 03:45:30')).toBeTruthy();
+    expect(screen.getByLabelText('Richttijd onderdeel: 00:30:03')).toBeTruthy();
+    expect(screen.getByLabelText('Richttijd onderdeel: 02:00:07')).toBeTruthy();
+    expect(screen.getByLabelText('Richttijd onderdeel: 01:00:01')).toBeTruthy();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'A-doel opslaan' }));
+
+    expect(onSave).toHaveBeenCalledWith(
+      expect.objectContaining({
+        total_target_time_seconds: 13_530,
+        swim_target_time_seconds: 1803,
+        bike_target_time_seconds: 7207,
+        run_target_time_seconds: 3601,
+      }),
+    );
   });
 
   test.each([
@@ -241,10 +295,12 @@ describe('onboarding components', () => {
       ).toBeTruthy();
 
       await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
-      await fireEvent.changeText(
-        screen.getByLabelText('Totale richttijd'),
-        '3:00:00',
+      await fireEvent.press(
+        screen.getByRole('button', {
+          name: 'Kies uren voor Totale richttijd',
+        }),
       );
+      await fireEvent.press(screen.getByRole('radio', { name: '3 uur' }));
       const distanceFields = screen.getAllByLabelText('Afstand');
       for (const field of distanceFields) {
         await fireEvent.changeText(field, '1000');

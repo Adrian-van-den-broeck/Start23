@@ -94,6 +94,39 @@ function validationMessage(body: ErrorEnvelope): string | null {
   return 'Controleer de ingevulde velden en probeer opnieuw.';
 }
 
+function deterministicErrorMessage(code: string | undefined): string | null {
+  switch (code) {
+    case 'rest_or_anti_stack_unsatisfied':
+    case 'swipe_draft_no_completion':
+    case 'swipe_selection_invalid':
+      return 'Deze trainingscombinatie past niet veilig op de gekozen dagen. Kies extra beschikbare dagen, liefst verder uit elkaar, of kies een andere training.';
+    case 'availability_required':
+      return 'Kies minstens één beschikbare trainingsdag.';
+    case 'availability_outside_week':
+    case 'swipe_date_unavailable':
+    case 'fixed_date_unavailable':
+      return 'Kies alleen beschikbare dagen binnen deze planweek.';
+    case 'previous_week_availability_unavailable':
+      return 'Er is geen bevestigde beschikbaarheid van vorige week. Kies de dagen voor deze week zelf.';
+    case 'swipe_draft_stale':
+    case 'swipe_draft_context_stale':
+    case 'swipe_draft_base_stale':
+    case 'proposal_stale':
+      return 'Je weekplanning is intussen gewijzigd. Vernieuw de week en probeer opnieuw.';
+    case 'swipe_selection_incomplete':
+    case 'swipe_layout_incomplete':
+      return 'Rond eerst alle trainingskeuzes en datums af.';
+    case 'catalog_coverage_unsatisfied':
+    case 'catalog_phase_coverage_unavailable':
+    case 'taper_catalog_coverage_unavailable':
+      return 'Voor deze week is nog geen volledige veilige trainingscombinatie beschikbaar. Pas je keuzes aan of probeer een andere week.';
+    case 'average_heart_rate_immutable':
+      return 'De gemiddelde hartslag kan niet meer worden gewijzigd nadat deze training is verwerkt.';
+    default:
+      return null;
+  }
+}
+
 async function request<T>(
   accessToken: string,
   path: string,
@@ -124,11 +157,14 @@ async function request<T>(
     const body = (await response.json().catch(() => ({}))) as ErrorEnvelope;
     const message =
       validationMessage(body) ??
+      deterministicErrorMessage(body.error?.code) ??
       (response.status === 401
         ? 'Je sessie is verlopen. Meld je opnieuw aan.'
         : response.status === 503
           ? 'De Wombo-server is tijdelijk niet beschikbaar. Probeer het zo opnieuw.'
-          : body.error?.message ?? 'De wijziging kon niet worden opgeslagen.');
+          : response.status === 409
+            ? 'Deze wijziging is niet meer actueel. Vernieuw het scherm en probeer opnieuw.'
+            : 'De wijziging kon niet veilig worden opgeslagen. Probeer opnieuw.');
     throw new ApiRequestError(
       message,
       response.status,

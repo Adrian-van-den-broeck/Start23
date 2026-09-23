@@ -20,7 +20,7 @@ describe('onboarding form rules', () => {
     expect(parseClockDuration('3:45:30')).toBe(13_530);
     expect(parseClockDuration('1:60')).toBeNull();
     expect(parseClockDuration('0:00')).toBeNull();
-    expect(formatClockDuration(13_530)).toBe('3:45:30');
+    expect(formatClockDuration(13_530)).toBe('03:45:30');
     expect(parsePositiveInteger('10000')).toBe(10_000);
     expect(parsePositiveInteger('10.5')).toBeNull();
   });

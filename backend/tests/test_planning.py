@@ -1001,6 +1001,89 @@ def _create_swipe_draft(client: TestClient) -> dict[str, Any]:
     return cast(dict[str, Any], response.json())
 
 
+def test_live_android_run_flow_reaches_workout_selection_with_default_days(
+    planning_client: TestClient,
+) -> None:
+    """Regression for the post-Phase-16 Monday/Wednesday/Saturday report."""
+
+    app = cast(FastAPI, planning_client.app)
+    repository = cast(MemoryPlanningRepository, app.state.planning_repository)
+    owner = repository._owner("athlete-a")
+    snapshot = repository._requests[owner]["input_snapshot"]
+    goal = cast(dict[str, Any], snapshot["goal"])
+    goal.update(
+        {
+            "race_type": "run",
+            "race_name": "Live Android 10K",
+            "swim_distance_meters": None,
+            "bike_distance_meters": None,
+            "run_distance_meters": 10000,
+            "total_target_time_seconds": 3600,
+            "swim_target_time_seconds": None,
+            "bike_target_time_seconds": None,
+            "run_target_time_seconds": None,
+            "race_discipline_profile": ["run"],
+        }
+    )
+    snapshot["zones"] = [
+        {
+            "discipline": "run",
+            "fallback_active": False,
+            "metric": {"kind": "run_lthr_bpm", "value": 170},
+        }
+    ]
+    snapshot["discipline_setups"] = []
+
+    response = planning_client.post(
+        "/api/v1/weekly-plans/swipe-drafts",
+        headers=_headers(),
+        json={
+            "week_start": "2026-08-03",
+            "available_dates": ["2026-08-03", "2026-08-05", "2026-08-08"],
+            "confirmed_injuries": [],
+        },
+    )
+
+    assert response.status_code == 201, response.text
+    draft = response.json()
+    assert draft["state"] == "collecting"
+    assert draft["target_composition"] == {"swim": 0, "bike": 0, "run": 1}
+    assert draft["available_dates"] == [
+        "2026-08-03",
+        "2026-08-05",
+        "2026-08-08",
+    ]
+    assert draft["current_candidate"]["discipline"] == "run"
+    assert "tss" not in str(draft).casefold()
+
+    accepted = planning_client.post(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions",
+        headers=_headers(),
+        json={
+            "expected_revision": draft["revision"],
+            "action": "accept",
+            "candidate_template_id": draft["current_candidate"]["id"],
+        },
+    )
+    assert accepted.status_code == 200, accepted.text
+    ready = accepted.json()
+    assert ready["state"] == "placement"
+
+    submitted = planning_client.post(
+        f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/submit",
+        headers=_headers(),
+        json={
+            "expected_revision": ready["revision"],
+            "placement_mode": "automatic",
+        },
+    )
+    assert submitted.status_code == 201, submitted.text
+    result = submitted.json()
+    assert result["plan"]["workouts"][0]["scheduled_date"] == "2026-08-05"
+    assert result["plan"]["revision_state"] == "pending_approval"
+    assert "tss" not in str(result).casefold()
+
+
 def test_swipe_draft_is_owner_scoped_idempotent_and_submits_only_pending(
     planning_client: TestClient,
 ) -> None:

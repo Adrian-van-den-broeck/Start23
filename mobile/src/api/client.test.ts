@@ -69,6 +69,35 @@ function response(status: number, body: unknown): Response {
 }
 
 describe('mobile API transport contracts', () => {
+  test('maps impossible planner failures to actionable Dutch copy without private load', async () => {
+    const { client, fetchMock } = loadClient();
+    const publicMessage =
+      'Deze trainingscombinatie past niet veilig op de gekozen dagen. Kies extra beschikbare dagen, liefst verder uit elkaar, of kies een andere training.';
+    fetchMock.mockResolvedValueOnce(
+      response(409, {
+        error: {
+          code: 'rest_or_anti_stack_unsatisfied',
+          message:
+            'The generated schedule cannot satisfy rest-day and anti-stack constraints.',
+        },
+      }),
+    );
+
+    await expect(
+      client.createSwipeWeekDraft('athlete-token', {
+        week_start: '2026-09-28',
+        available_dates: ['2026-09-28'],
+        confirmed_injuries: [],
+      }),
+    ).rejects.toMatchObject({
+      code: 'rest_or_anti_stack_unsatisfied',
+      message: publicMessage,
+    });
+
+    expect(publicMessage.toLowerCase()).not.toContain('tss');
+    expect(publicMessage.toLowerCase()).not.toContain('load');
+  });
+
   test('profile save serializes only the two separated mutation contracts', async () => {
     const { client, fetchMock } = loadClient();
 
@@ -228,7 +257,8 @@ describe('mobile API transport contracts', () => {
     await expect(
       client.submitActivityRpe('athlete-token', 'activity-id', 6, 151, 5),
     ).rejects.toMatchObject({
-      message: 'Average heart rate cannot change after load calculation.',
+      message:
+        'De gemiddelde hartslag kan niet meer worden gewijzigd nadat deze training is verwerkt.',
       status: 409,
       code: 'average_heart_rate_immutable',
       retryable: false,
