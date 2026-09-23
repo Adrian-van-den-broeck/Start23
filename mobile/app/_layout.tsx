@@ -17,9 +17,9 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <BottomSheetModalProvider>
-          <StatusBar style="dark" />
-          <LanguageProvider>
+        <LanguageProvider>
+          <BottomSheetModalProvider>
+            <StatusBar style="dark" />
             <AuthProvider>
               <Stack
                 screenOptions={{
@@ -30,8 +30,8 @@ export default function RootLayout() {
                 }}
               />
             </AuthProvider>
-          </LanguageProvider>
-        </BottomSheetModalProvider>
+          </BottomSheetModalProvider>
+        </LanguageProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
