@@ -315,6 +315,32 @@ describe('CalibrationScreen Phase 15 flow', () => {
     expect(approveZoneProposal).not.toHaveBeenCalled();
   });
 
+  test('shows the below-140 warning before threshold approval', async () => {
+    const lowEvaluation: CalibrationEvaluation = {
+      ...evaluation,
+      reason_codes: [
+        'calculated_threshold_unusually_low',
+        'zone_profile_pending_athlete_confirmation',
+      ],
+      thresholds: [{ metric_kind: 'run_lthr_bpm', value: '119' }],
+    };
+    jest.mocked(getCalibrationStatus).mockResolvedValue({
+      setups: [setup],
+      evaluations: [lowEvaluation],
+      threshold_decisions: [],
+    });
+    const screen = await render(
+      <CalibrationScreen
+        accessToken="athlete-token"
+        onBack={jest.fn()}
+        onSignOut={jest.fn(async () => undefined)}
+      />,
+    );
+    await fireEvent.press(await screen.findByRole('button', { name: /Bekijk/ }));
+    expect(screen.getByText(/berekende drempel lijkt ongewoon laag/)).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Drempel bevestigen' })).toBeTruthy();
+  });
+
   test('a new Tests navigation session does not retain a stale protocol selection', async () => {
     const bikeSetup: DisciplineSetup = {
       ...setup,

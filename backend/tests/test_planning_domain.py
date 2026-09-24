@@ -305,22 +305,110 @@ def test_first_plan_uses_onboarding_baseline_without_recovery_history(
         }
     )
 
-    draft = build_weekly_plan(
+    target = resolve_target(
+        week_start=week_start,
+        race_date=date(2026, 12, 6),
+        prior_loads=(),
+        initial_catalog_load=baseline.total,
+    )
+    assert target.phase is TrainingPhase.BASE
+    assert target.basis is PlanningTargetBasis.INITIAL_CATALOG_BASELINE
+    assert target.target.value == baseline.total.value == Decimal("171.6")
+    # The target still exists; the small reviewed automatic catalog cannot
+    # represent it and now rejects the one-use fallback explicitly.
+    with pytest.raises(PlanningConstraintError) as error:
+        build_weekly_plan(
+            week_start=week_start,
+            timezone_name="Europe/Amsterdam",
+            race_date=date(2026, 12, 6),
+            catalog=active_catalog(REVIEWED_CATALOG),
+            prior_loads=(),
+            goal_disciplines=frozenset(Discipline),
+            confirmed_injuries=frozenset(),
+            zone_capabilities=_capabilities(),
+            available_dates=(week_start, week_start + timedelta(days=2)),
+            onboarding_baseline=baseline,
+        )
+    assert error.value.code == "catalog_capacity_unsatisfied"
+
+
+@pytest.mark.parametrize("hours", ["0", "1", "3", "6", "15"])
+@pytest.mark.parametrize("week_start", [_WEEK_START, date(2026, 8, 17)])
+def test_run_first_week_history_reaches_target_and_catalog_capacity(
+    hours: str, week_start: date
+) -> None:
+    """The old one-card fallback masked a large approved first-week target."""
+    baseline = starting_baseline({Discipline.RUN: Decimal(hours) * Decimal(60)})
+    assert baseline.total.value == (
+        Decimal("45.0")
+        if hours == "0"
+        else (Decimal(hours) * Decimal("64.6875")).quantize(Decimal("0.1"))
+    )
+    values = dict(
         week_start=week_start,
         timezone_name="Europe/Amsterdam",
         race_date=date(2026, 12, 6),
-        catalog=active_catalog(REVIEWED_CATALOG),
+        catalog=active_catalog(),
         prior_loads=(),
-        goal_disciplines=frozenset(Discipline),
+        goal_disciplines=frozenset({Discipline.RUN}),
         confirmed_injuries=frozenset(),
-        zone_capabilities=_capabilities(),
+        zone_capabilities={
+            Discipline.RUN: ZoneCapability(frozenset({ZoneRequirement.HEART_RATE}))
+        },
         available_dates=(week_start, week_start + timedelta(days=2)),
         onboarding_baseline=baseline,
     )
+    if Decimal(hours) >= Decimal(3):
+        with pytest.raises(PlanningConstraintError) as error:
+            build_weekly_plan(**values)
+        assert error.value.code == "catalog_capacity_unsatisfied"
+    else:
+        draft = build_weekly_plan(**values)
+        assert draft.target.phase is TrainingPhase.BASE
+        assert draft.target.target == baseline.total
+        assert len(draft.workouts) == 1
 
-    assert draft.target.phase is TrainingPhase.BASE
-    assert draft.target.basis is PlanningTargetBasis.INITIAL_CATALOG_BASELINE
-    assert draft.target.target.value == baseline.total.value == Decimal("171.6")
+
+def test_run_history_can_increase_count_when_reviewed_automatic_deck_exists() -> None:
+    regular = next(
+        template
+        for template in active_catalog()
+        if template.discipline is Discipline.RUN
+        and TrainingPhase.BASE in template.training_phases
+        and not template.athlete_selection_only
+    )
+    catalog = active_catalog(
+        tuple(active_catalog())
+        + tuple(
+            replace(
+                regular,
+                id=uuid4(),
+                template_key=uuid4(),
+                name=f"Reviewed run alternative {index}",
+            )
+            for index in range(4)
+        )
+    )
+    counts = []
+    for hours in ("0", "1", "3"):
+        draft = build_weekly_plan(
+            week_start=_WEEK_START,
+            timezone_name="Europe/Amsterdam",
+            race_date=date(2026, 12, 6),
+            catalog=catalog,
+            prior_loads=(),
+            goal_disciplines=frozenset({Discipline.RUN}),
+            confirmed_injuries=frozenset(),
+            zone_capabilities={
+                Discipline.RUN: ZoneCapability(frozenset({ZoneRequirement.HEART_RATE}))
+            },
+            available_dates=_availability(),
+            onboarding_baseline=starting_baseline(
+                {Discipline.RUN: Decimal(hours) * Decimal(60)}
+            ),
+        )
+        counts.append(len(draft.workouts))
+    assert counts[0] < counts[1] < counts[2]
 
 
 def test_athlete_selection_only_template_is_manual_but_never_auto_selected() -> None:

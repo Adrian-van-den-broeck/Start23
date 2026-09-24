@@ -120,6 +120,8 @@ function deterministicErrorMessage(code: string | undefined): string | null {
     case 'catalog_phase_coverage_unavailable':
     case 'taper_catalog_coverage_unavailable':
       return 'Voor deze week is nog geen volledige veilige trainingscombinatie beschikbaar. Pas je keuzes aan of probeer een andere week.';
+    case 'catalog_capacity_unsatisfied':
+      return 'De beschikbare trainingen vormen nog geen passend weekvoorstel voor je bevestigde trainingsgeschiedenis. Controleer je ingevulde uren of vraag om een beoordeeld trainingsvoorstel.';
     case 'average_heart_rate_immutable':
       return 'De gemiddelde hartslag kan niet meer worden gewijzigd nadat deze training is verwerkt.';
     default:

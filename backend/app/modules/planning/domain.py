@@ -538,6 +538,17 @@ def select_workouts(
             if not template.explicit_scheduling_only
             and not template.athlete_selection_only
         )
+        # The fixed swipe count is derived from this automatic selection. The
+        # existing closest-catalog rule can absorb a small mismatch, but a gap
+        # large enough for another eligible workout cannot silently be reduced
+        # to the entire one-use catalog. No new physiological limit is involved.
+        loads = tuple(require_planned_load(template).value for template in deck)
+        if loads and target.value - sum(loads, Decimal(0)) >= min(loads):
+            raise PlanningConstraintError(
+                "catalog_capacity_unsatisfied",
+                "The reviewed automatic workout catalog cannot cover this "
+                "week. A reviewed training combination is required.",
+            )
         candidates: list[tuple[WorkoutTemplate, ...]] = []
         for count in range(1, len(deck) + 1):
             for selection in combinations(deck, count):

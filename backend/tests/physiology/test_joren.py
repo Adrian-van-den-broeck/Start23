@@ -103,6 +103,22 @@ def test_suspicious_threshold_is_warning_only(threshold: int, warn: bool) -> Non
         assert len(result.zones) == 5 and result.requires_athlete_confirmation
 
 
+def test_reproduced_low_run_zone_boundaries_come_from_lthr_119() -> None:
+    # One possible observation is HR 119 at RPE 8 (anchor 1.00). The observed
+    # boundaries alone cannot identify the athlete's actual HR or selected RPE.
+    result = calibrate(discipline=Discipline.RUN, observation=D("119"), rpe=8)
+    assert HR_ANCHORS[7] == D("1.00")
+    assert result.threshold == 119
+    assert [(zone.lower, zone.upper) for zone in result.zones] == [
+        (None, 97),
+        (98, 106),
+        (107, 113),
+        (114, 119),
+        (120, None),
+    ]
+    assert result.warning_codes == ("calculated_threshold_unusually_low",)
+
+
 @pytest.mark.parametrize(
     "sport,coefficients",
     [

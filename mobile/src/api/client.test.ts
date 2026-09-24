@@ -98,6 +98,29 @@ describe('mobile API transport contracts', () => {
     expect(publicMessage.toLowerCase()).not.toContain('load');
   });
 
+  test('explains catalog capacity failure without exposing private load', async () => {
+    const { client, fetchMock } = loadClient();
+    fetchMock.mockResolvedValueOnce(
+      response(409, {
+        error: {
+          code: 'catalog_capacity_unsatisfied',
+          message: 'The reviewed automatic workout catalog cannot cover this week.',
+        },
+      }),
+    );
+
+    await expect(
+      client.createSwipeWeekDraft('athlete-token', {
+        week_start: '2026-09-28',
+        available_dates: ['2026-09-28'],
+        confirmed_injuries: [],
+      }),
+    ).rejects.toMatchObject({
+      code: 'catalog_capacity_unsatisfied',
+      message: expect.stringContaining('beoordeeld trainingsvoorstel'),
+    });
+  });
+
   test('profile save serializes only the two separated mutation contracts', async () => {
     const { client, fetchMock } = loadClient();
 

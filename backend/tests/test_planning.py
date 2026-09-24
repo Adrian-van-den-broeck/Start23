@@ -1001,6 +1001,49 @@ def _create_swipe_draft(client: TestClient) -> dict[str, Any]:
     return cast(dict[str, Any], response.json())
 
 
+def test_run_marathon_high_history_fails_closed_before_swipe_count(
+    planning_client: TestClient,
+) -> None:
+    app = cast(FastAPI, planning_client.app)
+    repository = cast(MemoryPlanningRepository, app.state.planning_repository)
+    owner = repository._owner("athlete-a")
+    snapshot = repository._requests[owner]["input_snapshot"]
+    goal = cast(dict[str, Any], snapshot["goal"])
+    goal.update(
+        race_type="run",
+        race_name="Marathon Gent",
+        run_distance_meters=42195,
+        race_discipline_profile=["run"],
+    )
+    snapshot["zones"] = [
+        {
+            "discipline": "run",
+            "fallback_active": False,
+            "metric": {"kind": "run_lthr_bpm", "value": 119},
+        }
+    ]
+    snapshot["discipline_setups"] = []
+    for row in snapshot["training_history"]:
+        if row["discipline"] == "run":
+            row["previous_month_weekly_minutes"] = "900"
+
+    response = planning_client.post(
+        "/api/v1/weekly-plans/swipe-drafts",
+        headers=_headers(),
+        json={
+            "week_start": "2026-08-03",
+            "available_dates": ["2026-08-03", "2026-08-05", "2026-08-08"],
+            "confirmed_injuries": [],
+        },
+    )
+
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "catalog_capacity_unsatisfied"
+    assert "tss" not in str(response.json()).casefold()
+    assert "970" not in str(response.json())
+    assert not repository._swipe_drafts
+
+
 def test_live_android_run_flow_reaches_workout_selection_with_default_days(
     planning_client: TestClient,
 ) -> None:
