@@ -171,3 +171,24 @@ PHASE_13_RULESET_V1 = PhysiologySpecification(
     test_references=("backend/tests/physiology/test_joren.py",),
     production_review=None,
 )
+
+
+# The Joren planning decisions supersede the Phase 10 spacing interpretation and
+# Phase 13 zero-redistribution policy for newly generated plans. Phase 13 remains
+# the load calculation provenance for those plans.
+JOREN_PLANNING_RULESET_V2 = PhysiologySpecification(
+    version=RulesetVersion("joren-planning-ruleset-2"),
+    status=SpecificationStatus.APPROVED,
+    approved_rules=PHASE_13_RULESET_V1.approved_rules,
+    evidence_references=(
+        "docs/requirements/joren-workout-selection-phase-2026-09-28.md",
+    ),
+    applicability=PHASE_13_RULESET_V1.applicability,
+    contraindications=("No diagnosis or medical clearance.",),
+    test_references=(
+        "backend/tests/test_planning_domain.py",
+        "backend/tests/physiology/test_anti_stack.py",
+        "backend/tests/physiology/test_injury.py",
+    ),
+    production_review=None,
+)

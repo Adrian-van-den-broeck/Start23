@@ -649,11 +649,11 @@ function SwipeDraftPanel({
     outputRange: [1, 0],
     extrapolate: 'clamp',
   });
-  const placementByTemplate = useMemo(
+  const placementByOccurrence = useMemo(
     () =>
       new Map(
         draft.placements.map((placement) => [
-          placement.template_id,
+          placement.occurrence_id,
           placement.scheduled_date,
         ]),
       ),
@@ -844,7 +844,7 @@ function SwipeDraftPanel({
             onPress={() => onSubmit('automatic')}
           />
           {draft.accepted_workouts.map((workout) => (
-            <View key={workout.id} style={styles.placementCard}>
+            <View key={workout.occurrence_id} style={styles.placementCard}>
               <View style={styles.cardHeader}>
                 <Text style={styles.cardTitle}>{workout.name}</Text>
                 <StatusPill
@@ -860,7 +860,7 @@ function SwipeDraftPanel({
               >
                 {weekDates.map((scheduledDate) => {
                   const selected =
-                    placementByTemplate.get(workout.id) === scheduledDate;
+                    placementByOccurrence.get(workout.occurrence_id) === scheduledDate;
                   const available = draft.available_dates.includes(scheduledDate);
                   return (
                     <Pressable
@@ -868,7 +868,7 @@ function SwipeDraftPanel({
                       accessibilityState={{ checked: selected }}
                       disabled={busy || !available}
                       key={scheduledDate}
-                      onPress={() => onPlace(workout.id, scheduledDate)}
+                      onPress={() => onPlace(workout.occurrence_id, scheduledDate)}
                       style={[
                         styles.dateChoice,
                         selected && styles.choiceActive,
@@ -932,6 +932,9 @@ export function PlanningScreen({
     () => new Set([0, 2, 5]),
   );
   const [injuries, setInjuries] = useState<Set<Discipline>>(() => new Set());
+  const [crossTrainingOptIns, setCrossTrainingOptIns] = useState<Set<Discipline>>(
+    () => new Set(),
+  );
   const [plan, setPlan] = useState<WeeklyPlan | null>(null);
   const [swipeDraft, setSwipeDraft] = useState<SwipeWeekDraft | null>(null);
   const [calendarWorkouts, setCalendarWorkouts] = useState<PlannedWorkout[]>([]);
@@ -1013,6 +1016,7 @@ export function PlanningScreen({
           }
           if (mounted) {
             setSwipeDraft(restored);
+            setCrossTrainingOptIns(new Set(restored.cross_training_opt_ins));
             setWeekStart(restored.week_start);
             setReusePreviousWeek(
               restored.availability_source === 'previous_week',
@@ -1094,6 +1098,20 @@ export function PlanningScreen({
       else next.add(discipline);
       return next;
     });
+    setCrossTrainingOptIns((current) => {
+      const next = new Set(current);
+      next.delete(discipline);
+      return next;
+    });
+  };
+
+  const toggleCrossTraining = (discipline: Discipline) => {
+    setCrossTrainingOptIns((current) => {
+      const next = new Set(current);
+      if (next.has(discipline)) next.delete(discipline);
+      else next.add(discipline);
+      return next;
+    });
   };
 
   const generate = () =>
@@ -1109,6 +1127,7 @@ export function PlanningScreen({
           ? { reuse_previous_week: true }
           : { available_dates: dates }),
         confirmed_injuries: [...injuries],
+        cross_training_opt_ins: [...crossTrainingOptIns],
         ...(boundPlan
           ? {
               plan_id: boundPlan.id,
@@ -1149,7 +1168,9 @@ export function PlanningScreen({
     (action: 'accept' | 'pass' | 'undo' | 'reset_passed') => {
       if (!swipeDraft) return;
       const candidateId = swipeDraft.current_candidate?.id;
-      if ((action === 'accept' || action === 'pass') && !candidateId) return;
+      const candidateOccurrenceId = swipeDraft.current_candidate?.occurrence_id;
+      if ((action === 'accept' || action === 'pass') &&
+        (!candidateId || !candidateOccurrenceId)) return;
       void run(async () => {
         const updated = await transitionSwipeWeekDraft(
           accessToken,
@@ -1158,7 +1179,10 @@ export function PlanningScreen({
             expected_revision: swipeDraft.revision,
             action,
             ...(candidateId && (action === 'accept' || action === 'pass')
-              ? { candidate_template_id: candidateId }
+              ? {
+                  candidate_template_id: candidateId,
+                  candidate_occurrence_id: candidateOccurrenceId,
+                }
               : {}),
           },
         );
@@ -1583,6 +1607,41 @@ export function PlanningScreen({
                     </Pressable>
                   ))}
                 </View>
+                {injuries.size > 0 ? (
+                  <>
+                    <Text style={styles.fieldLabel}>
+                      Vrijwillige alternatieve training
+                    </Text>
+                    <Text style={styles.hint}>
+                      Kies fietsen of zwemmen alleen als je dit als alternatief
+                      wilt gebruiken. Een keuze voegt geen training toe zonder
+                      veilige, bekende opbouwruimte.
+                    </Text>
+                    <View style={styles.choiceRow}>
+                      {(['bike', 'swim'] as const)
+                        .filter((discipline) => !injuries.has(discipline))
+                        .map((discipline) => (
+                          <Pressable
+                            accessibilityRole="checkbox"
+                            accessibilityState={{
+                              checked: crossTrainingOptIns.has(discipline),
+                            }}
+                            key={`cross-${discipline}`}
+                            onPress={() => toggleCrossTraining(discipline)}
+                            style={[
+                              styles.disciplineChoice,
+                              crossTrainingOptIns.has(discipline) &&
+                                styles.choiceActive,
+                            ]}
+                          >
+                            <Text style={styles.choiceText}>
+                              {disciplineLabels[discipline]}
+                            </Text>
+                          </Pressable>
+                        ))}
+                    </View>
+                  </>
+                ) : null}
                 <ActionButton
                   disabled={
                     busy || (!reusePreviousWeek && availableDates.length === 0)

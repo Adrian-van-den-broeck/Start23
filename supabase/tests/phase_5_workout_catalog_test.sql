@@ -4,6 +4,8 @@ create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 select plan(16);
 
+-- Joren ruleset 2 adds 154 immutable source successors to the historical 171.
+
 create temporary table phase_5_tap_results (
   sequence bigint generated always as identity primary key,
   result text not null
@@ -14,8 +16,8 @@ to anon, authenticated, service_role;
 
 insert into phase_5_tap_results (result) select is(
   (select count(*) from public.workout_templates),
-  171::bigint,
-  'the current catalog contains reviewed and source-backed immutable versions'
+  325::bigint,
+  'the catalog retains historical versions and all source successors'
 );
 
 insert into phase_5_tap_results (result) select is(
@@ -150,7 +152,7 @@ insert into phase_5_tap_results (result) select is(
     select count(*)
     from public.get_workout_catalog_for_planning()
   ),
-  171::bigint,
+  325::bigint,
   'the trusted planning RPC returns every immutable version with hidden load'
 );
 reset role;
@@ -175,7 +177,7 @@ reset role;
 set local role authenticated;
 insert into phase_5_tap_results (result) select is(
   (select count(*) from public.workout_templates),
-  171::bigint,
+  325::bigint,
   'authenticated clients can read public catalog fields'
 );
 reset role;

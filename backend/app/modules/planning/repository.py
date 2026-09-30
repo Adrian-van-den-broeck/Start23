@@ -438,7 +438,7 @@ class SupabasePlanningRepository:
         rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         payload = await self._request(
             "POST",
-            "rpc/get_plan_load_history_for_planning_v13",
+            "rpc/get_plan_load_history_for_planning_v14",
             service=True,
             json={
                 "p_athlete_id": str(rpc_athlete_id),
@@ -457,7 +457,7 @@ class SupabasePlanningRepository:
         rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
-            "rpc/create_weekly_plan_proposal_v2",
+            "rpc/create_weekly_plan_proposal_v3",
             service=True,
             json={
                 "p_athlete_id": str(rpc_athlete_id),
@@ -476,7 +476,7 @@ class SupabasePlanningRepository:
         rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
-            "rpc/create_swipe_week_draft",
+            "rpc/create_swipe_week_draft_v2",
             service=True,
             json={
                 "p_athlete_id": str(rpc_athlete_id),
@@ -503,6 +503,8 @@ class SupabasePlanningRepository:
                     "available_dates,availability_source,confirmed_injuries,"
                     "low_only_disciplines,input_fingerprint,context_fingerprint,"
                     "ruleset_version,target_workout_count,target_composition,"
+                    "cross_training_opt_ins,current_occurrence_id,"
+                    "accepted_occurrence_ids,passed_occurrence_ids,"
                     "accepted_template_ids,passed_template_ids,current_template_id,"
                     "decision_history,placements,state,revision,proposal_id,"
                     "created_at,updated_at,submitted_at"

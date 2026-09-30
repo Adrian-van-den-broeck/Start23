@@ -3,14 +3,22 @@
 import csv
 import json
 import re
-from decimal import Decimal
 from pathlib import Path
 
-from app.modules.physiology.models import Discipline, InternalLoad
-from app.modules.planning.domain import eligible_workouts, select_workouts
+from app.modules.physiology.models import Discipline
+from app.modules.planning.domain import (
+    ZoneCapability,
+    eligible_workouts,
+    select_workouts,
+)
 from app.modules.planning.repository import JsonObject
 from app.modules.planning.service import PlanningService
-from app.modules.workouts.catalog import TrainingPhase, WorkoutTemplate
+from app.modules.workouts.catalog import (
+    CURRENT_CATALOG,
+    TrainingPhase,
+    WorkoutTemplate,
+    active_catalog,
+)
 from app.modules.workouts.repository import parse_planning_catalog
 
 _ROOT = Path(__file__).resolve().parents[2]
@@ -102,6 +110,75 @@ def test_distance_only_swim_payload_parses_as_runtime_catalog_template() -> None
     assert template.source_catalog == "start23-v0.1"
 
 
+def test_active_catalog_separates_distance_swim_source_load_from_planned_load() -> None:
+    source = (_runtime_template("RUN-001"), _runtime_template("SWI-007"))
+    current = active_catalog((*CURRENT_CATALOG, *source))
+    run = next(item for item in current if item.id == source[0].id)
+    swim = next(item for item in current if item.id == source[1].id)
+
+    assert run.internal_planned_load == source[0].internal_planned_load
+    assert source[1].internal_planned_load is not None  # immutable source provenance
+    assert swim.internal_planned_load is None  # no Phase 13 planned load
+    assert swim.duration_minutes is None
+    assert all(segment.duration_minutes is None for segment in swim.segments)
+    assert swim not in eligible_workouts(
+        catalog=current,
+        phase=TrainingPhase.BASE,
+        goal_disciplines=frozenset({Discipline.SWIM}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities={Discipline.SWIM: ZoneCapability(frozenset())},
+    )
+
+
+def test_all_source_successors_separate_provenance_from_swim_planned_load() -> None:
+    rows = []
+    for source in _migration_catalog():
+        segments = source["segments"]
+        assert isinstance(segments, list)
+        rows.append(
+            {
+                **source,
+                "version": 2,
+                "source_catalog": "start23-v0.1",
+                "athlete_selection_only": False,
+                "explicit_scheduling_only": False,
+                "fallback_compatibility": "compatible",
+                "zone_requirements": [],
+                "training_phases": (
+                    ["build"]
+                    if any(segment["zone_number"] > 2 for segment in segments)
+                    else ["base", "build", "recovery", "taper"]
+                ),
+                "segments": [
+                    {**segment, "is_swim_technique": False} for segment in segments
+                ],
+            }
+        )
+    imported = parse_planning_catalog(tuple(rows))
+    current = active_catalog((*CURRENT_CATALOG, *imported))
+    source_loads = {
+        item.source_workout_id: item.internal_planned_load for item in imported
+    }
+    successors = {
+        item.source_workout_id: item for item in current if item.source_catalog
+    }
+
+    assert len(successors) == 154
+    for source in rows:
+        source_id = str(source["source_workout_id"])
+        item = successors[source_id]
+        source_load = source_loads[source_id]
+        assert item.version == 2
+        assert source_load is not None
+        assert source_load.value == source["planned_tss"]
+        if source["discipline"] == "swim":
+            assert item.internal_planned_load is None
+            assert item.duration_minutes is None
+        else:
+            assert item.internal_planned_load == source_load
+        assert not item.athlete_selection_only
+
+
 def test_calibration_week_can_choose_source_workout_without_calibration_test() -> None:
     source_workout = _runtime_template("BIK-001")
     snapshot: JsonObject = {
@@ -130,10 +207,11 @@ def test_calibration_week_can_choose_source_workout_without_calibration_test() -
         zone_capabilities=capabilities,
     )
 
+    assert source_workout.internal_planned_load is not None
     selected = select_workouts(
         deck=deck,
         required_disciplines=frozenset({Discipline.BIKE}),
-        target=InternalLoad(Decimal("999")),
+        target=source_workout.internal_planned_load,
         selected_template_ids=(source_workout.id,),
     )
 

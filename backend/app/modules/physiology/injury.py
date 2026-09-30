@@ -13,6 +13,7 @@ from app.modules.physiology.models import (
     RulesetVersion,
 )
 from app.modules.physiology.specification import (
+    JOREN_PLANNING_RULESET_V2,
     PHASE_3_RULESET_V3,
     PhysiologySpecification,
 )
@@ -125,6 +126,104 @@ class InjuryRedistributionResult:
     allocations: tuple[DisciplineAllocation, ...]
     rest_only: bool
     requires_review: bool
+    cross_training_consent_required: bool = False
+
+
+def redistribute_confirmed_injury_load(
+    *,
+    pre_injury_targets: Mapping[Discipline, InternalLoad],
+    recipient_safe_caps: Mapping[Discipline, InternalLoad],
+    blocked_disciplines: frozenset[Discipline],
+    cross_training_opt_ins: frozenset[Discipline] = frozenset(),
+    specification: PhysiologySpecification = JOREN_PLANNING_RULESET_V2,
+) -> InjuryRedistributionResult:
+    """Allocate at most 80% of blocked load to safe low-impact capacity.
+
+    Positive current/historical discipline basis supplies proportional weights.
+    A zero-basis opt-in records athlete choice, but cannot create an unreviewed
+    nonzero capacity. The caller supplies only caps from the existing progression
+    boundary; this function never invents a sport load coefficient.
+    """
+    specification.require_approved(frozenset({RuleId.INJURY_REDISTRIBUTION}))
+    removed = sum(
+        (
+            target.value
+            for sport, target in pre_injury_targets.items()
+            if sport in blocked_disciplines
+        ),
+        Decimal(0),
+    )
+    transferable = removed * _REDISTRIBUTION_COEFFICIENT
+    low_impact = (Discipline.BIKE, Discipline.SWIM)
+    consent_required = any(
+        sport not in blocked_disciplines
+        and sport in recipient_safe_caps
+        and pre_injury_targets.get(sport, InternalLoad(Decimal(0))).value == 0
+        and sport not in cross_training_opt_ins
+        for sport in low_impact
+    )
+    weights = {
+        sport: pre_injury_targets[sport].value
+        for sport in low_impact
+        if sport not in blocked_disciplines
+        and pre_injury_targets.get(sport, InternalLoad(Decimal(0))).value > 0
+        and recipient_safe_caps.get(sport, InternalLoad(Decimal(0))).value
+        > pre_injury_targets[sport].value
+    }
+    capacity = {
+        sport: recipient_safe_caps[sport].value - pre_injury_targets[sport].value
+        for sport in weights
+    }
+    allocations = {sport: Decimal(0) for sport in weights}
+    remaining = transferable
+    active = set(weights)
+    while remaining > 0 and active:
+        total_weight = sum((weights[sport] for sport in active), Decimal(0))
+        provisional = {
+            sport: remaining * weights[sport] / total_weight for sport in active
+        }
+        capped = {
+            sport
+            for sport in active
+            if provisional[sport] >= capacity[sport] - allocations[sport]
+        }
+        if not capped:
+            ordered = sorted(active, key=lambda sport: sport.value)
+            allocated = Decimal(0)
+            for sport in ordered[:-1]:
+                allocations[sport] += provisional[sport]
+                allocated += provisional[sport]
+            allocations[ordered[-1]] += remaining - allocated
+            remaining = Decimal(0)
+            break
+        for sport in capped:
+            amount = capacity[sport] - allocations[sport]
+            allocations[sport] += amount
+            remaining -= amount
+        active -= capped
+    distributed = transferable - remaining
+    return InjuryRedistributionResult(
+        ruleset_version=specification.version,
+        evaluated=bool(blocked_disciplines),
+        removed_load=InternalLoad(removed),
+        redistributed_load=InternalLoad(distributed),
+        allocations=tuple(
+            DisciplineAllocation(sport, InternalLoad(value))
+            for sport, value in sorted(
+                allocations.items(), key=lambda item: item[0].value
+            )
+            if value > 0
+        ),
+        rest_only=bool(blocked_disciplines)
+        and all(
+            sport in blocked_disciplines
+            for sport in pre_injury_targets
+            if pre_injury_targets[sport].value > 0
+        )
+        and distributed == 0,
+        requires_review=False,
+        cross_training_consent_required=consent_required,
+    )
 
 
 def redistribute_injury_load(

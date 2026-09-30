@@ -22,6 +22,7 @@ class SwipeDecision:
 
     action: SwipeDecisionKind
     template_id: UUID
+    occurrence_id: UUID | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -39,9 +40,25 @@ class SwipeSelectionState:
         )
 
     @property
-    def passed_template_ids(self) -> frozenset[UUID]:
-        return frozenset(
+    def accepted_occurrence_ids(self) -> tuple[UUID, ...]:
+        return tuple(
+            decision.occurrence_id or decision.template_id
+            for decision in self.history
+            if decision.action is SwipeDecisionKind.ACCEPT
+        )
+
+    @property
+    def passed_template_ids(self) -> tuple[UUID, ...]:
+        return tuple(
             decision.template_id
+            for decision in self.history
+            if decision.action is SwipeDecisionKind.PASS
+        )
+
+    @property
+    def passed_occurrence_ids(self) -> tuple[UUID, ...]:
+        return tuple(
+            decision.occurrence_id or decision.template_id
             for decision in self.history
             if decision.action is SwipeDecisionKind.PASS
         )
@@ -54,6 +71,8 @@ def apply_swipe_decision(
     current_template_id: UUID,
     expected_template_id: UUID,
     target_workout_count: int,
+    current_occurrence_id: UUID | None = None,
+    expected_occurrence_id: UUID | None = None,
 ) -> SwipeSelectionState:
     """Apply one decision only to the exact server-selected current card."""
 
@@ -62,9 +81,15 @@ def apply_swipe_decision(
             "swipe_candidate_stale",
             "The visible workout card changed. Refresh the swipe draft.",
         )
+    if current_occurrence_id != expected_occurrence_id:
+        raise PlanningConstraintError(
+            "swipe_candidate_stale",
+            "The visible workout card changed. Refresh the swipe draft.",
+        )
     accepted = state.accepted_template_ids
-    passed = state.passed_template_ids
-    if current_template_id in accepted or current_template_id in passed:
+    decided_occurrences = state.accepted_occurrence_ids + state.passed_occurrence_ids
+    occurrence_id = current_occurrence_id or current_template_id
+    if occurrence_id in decided_occurrences:
         raise PlanningConstraintError(
             "swipe_candidate_decided",
             "This workout card was already decided in the current draft.",
@@ -76,7 +101,13 @@ def apply_swipe_decision(
         )
     return SwipeSelectionState(
         history=state.history
-        + (SwipeDecision(action=action, template_id=current_template_id),)
+        + (
+            SwipeDecision(
+                action=action,
+                template_id=current_template_id,
+                occurrence_id=current_occurrence_id,
+            ),
+        )
     )
 
 

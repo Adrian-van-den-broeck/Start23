@@ -643,8 +643,12 @@ export type WorkoutDeck = {
 };
 
 export type SwipeDraftPlacement = {
-  template_id: string;
+  occurrence_id: string;
   scheduled_date: string;
+};
+
+export type SwipeWorkoutOccurrence = WorkoutDeckItem & {
+  occurrence_id: string;
 };
 
 export type SwipeWeekDraft = {
@@ -656,8 +660,9 @@ export type SwipeWeekDraft = {
   availability_source: 'explicit' | 'previous_week';
   target_workout_count: number;
   target_composition: Record<Discipline, number>;
-  accepted_workouts: WorkoutDeckItem[];
-  current_candidate: WorkoutDeckItem | null;
+  cross_training_opt_ins: Discipline[];
+  accepted_workouts: SwipeWorkoutOccurrence[];
+  current_candidate: SwipeWorkoutOccurrence | null;
   placements: SwipeDraftPlacement[];
   warnings: PlanWarning[];
   passed_count: number;

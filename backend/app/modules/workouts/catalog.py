@@ -175,6 +175,7 @@ class WorkoutTemplate:
     athlete_selection_only: bool = False
     source_catalog: str | None = None
     source_workout_id: str | None = None
+    reviewed_zone_numbers: frozenset[TrainingZone] = frozenset()
 
     def __post_init__(self) -> None:
         if self.version < 1:
@@ -368,6 +369,11 @@ def as_rpe_guided_template(template: WorkoutTemplate) -> WorkoutTemplate:
         expected_rpe_max=maximum_rpe,
         zone_requirements=(),
         segments=projected_segments,
+        reviewed_zone_numbers=frozenset(
+            segment.zone_target
+            for segment in template.segments
+            if segment.zone_target is not None
+        ),
     )
 
 
@@ -1014,6 +1020,13 @@ def active_catalog(
 
 def with_current_load(template: WorkoutTemplate) -> WorkoutTemplate:
     """Snapshot the new method without changing a historical catalog version."""
+    if template.source_catalog is not None and template.duration_minutes is None:
+        # The imported value belongs to the reviewed source prescription. A
+        # distance-only swim has no Phase 13 duration-based planned load.
+        return replace(template, internal_planned_load=None)
+    if template.source_catalog is not None:
+        # Reviewed timed source prescriptions retain their explicit load.
+        return template
     totals = [Decimal(0)] * 5
     reliable = template.duration_minutes is not None
     for segment in template.segments:

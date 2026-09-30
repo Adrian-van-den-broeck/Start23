@@ -1,9 +1,9 @@
 """Framework-independent deterministic weekly planning policies."""
 
-from collections.abc import Collection, Mapping
+from collections.abc import Callable, Collection, Mapping
 from dataclasses import dataclass, field
 from datetime import date, datetime, time, timedelta, timezone
-from decimal import ROUND_HALF_UP, Decimal
+from decimal import Decimal
 from enum import Enum
 from itertools import combinations
 from uuid import UUID
@@ -17,6 +17,7 @@ from app.modules.physiology.debt import (
     calculate_reliable_intensity_debt,
     calculate_volume_debt,
 )
+from app.modules.physiology.injury import redistribute_confirmed_injury_load
 from app.modules.physiology.intensity import (
     STANDARD_RACE_INTENSITY_TARGET,
     IntensitySegment,
@@ -114,6 +115,9 @@ class PlanLoadSample:
     completed_activity_count: int | None = None
     sick_week: bool = False
     reduced_realized_progression: bool = False
+    discipline_loads: Mapping[Discipline, InternalLoad] = field(
+        default_factory=dict, repr=False
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -126,6 +130,13 @@ class PlanningTarget:
     taper_period: TaperPeriod | None = None
     desired_high_fraction: Fraction = STANDARD_RACE_INTENSITY_TARGET.high_fraction
     manual_review_required: bool = False
+    build_week: int | None = None
+    discipline_caps: Mapping[Discipline, InternalLoad] = field(
+        default_factory=dict, repr=False
+    )
+    replacement_disciplines: frozenset[Discipline] = frozenset()
+    injury_load_unallocated: bool = False
+    cross_training_consent_required: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -134,6 +145,7 @@ class SelectedWorkout:
 
     discipline: Discipline
     snapshot: PlannedWorkoutSnapshot
+    occurrence_id: UUID | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -143,6 +155,7 @@ class ProposedWorkout:
     discipline: Discipline
     snapshot: PlannedWorkoutSnapshot
     scheduled_date: date
+    occurrence_id: UUID | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -184,6 +197,13 @@ def _race_anchored_phase(*, week_start: date, race_date: date) -> WeekPhase:
     if any(is_taper_day(week_start + timedelta(days=i), race_date) for i in range(7)):
         return WeekPhase.TAPER
     return WeekPhase.RECOVERY if weeks_before_race % 5 == 0 else WeekPhase.BUILD
+
+
+def _build_week(*, week_start: date, race_date: date) -> int:
+    """Position inside the race-anchored four-build/one-recovery rhythm."""
+    race_week_start = race_date - timedelta(days=race_date.weekday())
+    weeks_before_race = (race_week_start - week_start).days // 7
+    return 5 - weeks_before_race % 5
 
 
 def resolve_target(
@@ -402,6 +422,101 @@ def _desired_high_fraction(
     return evaluation.result.corrected_high_fraction
 
 
+def _injury_adjusted_target(
+    *,
+    target: PlanningTarget,
+    prior_loads: tuple[PlanLoadSample, ...],
+    onboarding_baseline: StartingBaseline | None,
+    blocked: frozenset[Discipline],
+    goal_disciplines: frozenset[Discipline],
+    eligible_recipients: frozenset[Discipline],
+    cross_training_opt_ins: frozenset[Discipline],
+    desired_high_fraction: Fraction,
+) -> tuple[PlanningTarget, frozenset[Discipline], frozenset[Discipline]]:
+    """Bound new recipient load by the existing per-sport 10% progression cap."""
+    if not blocked:
+        return target, frozenset(), frozenset()
+    basis = next(
+        (
+            sample.discipline_loads
+            for sample in reversed(prior_loads)
+            if sample.discipline_loads
+        ),
+        onboarding_baseline.by_discipline if onboarding_baseline else {},
+    )
+    if not basis or sum((load.value for load in basis.values()), Decimal(0)) == 0:
+        raise PlanningConstraintError(
+            "injury_discipline_basis_unavailable",
+            "A reviewed discipline load basis is required for this restriction.",
+        )
+    basis_total = sum((load.value for load in basis.values()), Decimal(0))
+    normal = {
+        sport: InternalLoad(target.target.value * load.value / basis_total)
+        for sport, load in basis.items()
+    }
+    caps = {
+        sport: InternalLoad(max(normal[sport].value, load.value * Decimal("1.10")))
+        for sport, load in basis.items()
+    }
+    result = redistribute_confirmed_injury_load(
+        pre_injury_targets=normal,
+        recipient_safe_caps={
+            sport: cap for sport, cap in caps.items() if sport in eligible_recipients
+        },
+        blocked_disciplines=blocked,
+        cross_training_opt_ins=cross_training_opt_ins,
+    )
+    unblocked_normal = sum(
+        (
+            load.value
+            for sport, load in normal.items()
+            if sport not in blocked
+            and (sport in goal_disciplines or sport in eligible_recipients)
+        ),
+        Decimal(0),
+    )
+    replacement = {
+        allocation.discipline: allocation.load for allocation in result.allocations
+    }
+    new_total = unblocked_normal + result.redistributed_load.value
+    recipient_caps = {
+        sport: InternalLoad(
+            normal[sport].value + replacement.get(sport, InternalLoad(Decimal(0))).value
+        )
+        for sport in normal
+        if sport not in blocked
+        and (sport in goal_disciplines or sport in eligible_recipients)
+    }
+    adjusted_fraction = Fraction(
+        min(
+            Decimal(1),
+            unblocked_normal * desired_high_fraction.value / new_total,
+        )
+        if new_total > 0
+        else Decimal(0)
+    )
+    return (
+        PlanningTarget(
+            phase=target.phase,
+            basis=target.basis,
+            target=InternalLoad(new_total),
+            taper_period=target.taper_period,
+            desired_high_fraction=adjusted_fraction,
+            manual_review_required=target.manual_review_required,
+            build_week=target.build_week,
+            discipline_caps=recipient_caps,
+            replacement_disciplines=frozenset(replacement),
+            injury_load_unallocated=(
+                result.redistributed_load.value
+                < result.removed_load.value * Decimal("0.80")
+            ),
+            cross_training_consent_required=(result.cross_training_consent_required),
+        ),
+        frozenset(sport for sport, load in recipient_caps.items() if load.value > 0),
+        frozenset(replacement),
+    )
+
+
 def eligible_workouts(
     *,
     catalog: tuple[WorkoutTemplate, ...],
@@ -410,16 +525,44 @@ def eligible_workouts(
     confirmed_injuries: frozenset[Discipline],
     low_only_disciplines: frozenset[Discipline] = frozenset(),
     zone_capabilities: Mapping[Discipline, ZoneCapability],
+    build_week: int | None = None,
 ) -> tuple[WorkoutTemplate, ...]:
     """Filter immutable catalog versions by phase, injury, goal, and zones."""
     eligible: list[WorkoutTemplate] = []
     for template in catalog:
         if template.internal_planned_load is None:
             continue
+        zone_numbers = {
+            segment.zone_target
+            for segment in template.segments
+            if segment.zone_target is not None
+        }
+        low_only_phase = phase in {
+            TrainingPhase.BASE,
+            TrainingPhase.RECOVERY,
+            TrainingPhase.TAPER,
+        }
         if (
             template.discipline not in goal_disciplines
             or template.discipline in confirmed_injuries
-            or phase not in template.training_phases
+            or (
+                phase not in template.training_phases
+                and not (
+                    phase is TrainingPhase.TAPER
+                    and template.source_catalog == "start23-v0.1"
+                    and template.intensity_bucket is IntensityBucket.LOW
+                )
+            )
+            or (
+                low_only_phase
+                and any(zone > TrainingZone.ZONE_2 for zone in zone_numbers)
+            )
+            or (low_only_phase and template.intensity_bucket is IntensityBucket.HIGH)
+            or (
+                phase is TrainingPhase.BUILD
+                and build_week != 4
+                and TrainingZone.ZONE_5 in zone_numbers
+            )
             or (
                 template.discipline in low_only_disciplines
                 and template.intensity_bucket is IntensityBucket.HIGH
@@ -507,6 +650,321 @@ def _selection_key(
     )
 
 
+def _selection_policy_valid(
+    selection: tuple[WorkoutTemplate, ...],
+    *,
+    target: InternalLoad,
+    phase: TrainingPhase,
+    build_week: int | None,
+    desired_high_fraction: Fraction,
+    high_available: bool,
+    z5_available: bool,
+    minimum_load: Decimal,
+    discipline_caps: Mapping[Discipline, InternalLoad] | None = None,
+) -> bool:
+    if discipline_caps is not None and any(
+        sum(
+            (
+                require_planned_load(item).value
+                for item in selection
+                if item.discipline is sport
+            ),
+            Decimal(0),
+        )
+        > cap.value
+        for sport, cap in discipline_caps.items()
+    ):
+        return False
+    total = sum((require_planned_load(item).value for item in selection), Decimal(0))
+    if abs(target.value - total) >= minimum_load:
+        return False
+    high = sum(
+        (
+            require_planned_load(item).value
+            for item in selection
+            if item.intensity_bucket is IntensityBucket.HIGH
+        ),
+        Decimal(0),
+    )
+    if phase is not TrainingPhase.BUILD:
+        return high == 0
+    budget = target.value * desired_high_fraction.value
+    if high > budget:
+        return False
+    if not high_available:
+        return high == 0
+    if build_week != 4:
+        return budget * Decimal("0.70") <= high <= budget * Decimal("0.90")
+    return high > 0 and (
+        not z5_available or any(_has_zone_five(item) for item in selection)
+    )
+
+
+def _has_zone_five(template: WorkoutTemplate) -> bool:
+    return TrainingZone.ZONE_5 in template.reviewed_zone_numbers or any(
+        segment.zone_target is TrainingZone.ZONE_5 for segment in template.segments
+    )
+
+
+def _bounded_selection(
+    *,
+    deck: tuple[WorkoutTemplate, ...],
+    prefix: tuple[WorkoutTemplate, ...],
+    required_disciplines: frozenset[Discipline],
+    target: InternalLoad,
+    phase: TrainingPhase,
+    build_week: int | None,
+    desired_high_fraction: Fraction,
+    required_count: int | None = None,
+    required_composition: Mapping[Discipline, int] | None = None,
+    maximum_uses: Mapping[UUID, int] | None = None,
+    discipline_caps: Mapping[Discipline, InternalLoad] | None = None,
+    feasible: Callable[[tuple[WorkoutTemplate, ...]], bool] | None = None,
+) -> tuple[WorkoutTemplate, ...] | None:
+    """Fit a bounded multiset by exact private load, bucket and sport counts.
+
+    Catalog rows with the same load, sport, bucket and Z5 status are equivalent
+    for composition. The smallest immutable ID represents each equivalence
+    class in the automatic prescription; the swipe deck retains every row.
+    """
+    if not deck or len(prefix) > 24:
+        return None
+    if maximum_uses is not None and any(
+        sum(item.id == template_id for item in prefix) > limit
+        for template_id, limit in maximum_uses.items()
+    ):
+        return None
+    minimum_load = min(require_planned_load(item).value for item in deck)
+    budget = target.value * desired_high_fraction.value
+    high_available = phase is TrainingPhase.BUILD and any(
+        item.intensity_bucket is IntensityBucket.HIGH
+        and require_planned_load(item).value <= budget
+        for item in deck
+    )
+    z5_available = build_week == 4 and any(
+        item.intensity_bucket is IntensityBucket.HIGH
+        and require_planned_load(item).value <= budget
+        and _has_zone_five(item)
+        for item in deck
+    )
+    groups: dict[
+        tuple[Discipline, Decimal, IntensityBucket, bool], WorkoutTemplate
+    ] = {}
+    for item in deck:
+        key = (
+            item.discipline,
+            require_planned_load(item).value,
+            item.intensity_bucket,
+            _has_zone_five(item),
+        )
+        prior = groups.get(key)
+        if prior is None or str(item.id) < str(prior.id):
+            groups[key] = item
+    options = tuple(
+        sorted(
+            deck if maximum_uses is not None else groups.values(),
+            key=lambda item: (
+                require_planned_load(item).value,
+                item.discipline.value,
+                str(item.id),
+            ),
+        )
+    )
+    sports = tuple(Discipline)
+    prefix_counts = tuple(
+        sum(item.discipline is sport for item in prefix) for sport in sports
+    )
+    prefix_high_counts = tuple(
+        sum(
+            item.discipline is sport and item.intensity_bucket is IntensityBucket.HIGH
+            for item in prefix
+        )
+        for sport in sports
+    )
+    limited_ids = tuple(
+        sorted(
+            (
+                template_id
+                for template_id, limit in (maximum_uses or {}).items()
+                if limit < (required_count or 24)
+            ),
+            key=str,
+        )
+    )
+    prefix_limited_counts = tuple(
+        sum(item.id == template_id for item in prefix) for template_id in limited_ids
+    )
+    prefix_total = sum(
+        (require_planned_load(item).value for item in prefix), Decimal(0)
+    )
+    prefix_high = sum(
+        (
+            require_planned_load(item).value
+            for item in prefix
+            if item.intensity_bucket is IntensityBucket.HIGH
+        ),
+        Decimal(0),
+    )
+    prefix_z5 = any(_has_zone_five(item) for item in prefix)
+    if prefix_high > budget and phase is TrainingPhase.BUILD:
+        return None
+    states: dict[
+        tuple[
+            Decimal,
+            Decimal,
+            tuple[int, ...],
+            tuple[int, ...],
+            tuple[int, ...],
+            bool,
+        ],
+        tuple[WorkoutTemplate, ...],
+    ] = {
+        (
+            prefix_total,
+            prefix_high,
+            prefix_counts,
+            prefix_high_counts,
+            prefix_limited_counts,
+            prefix_z5,
+        ): prefix
+    }
+    best: tuple[WorkoutTemplate, ...] | None = None
+    best_key: tuple[Decimal, Decimal, int, tuple[str, ...]] | None = None
+    max_count = required_count if required_count is not None else 24
+    max_total = target.value + max(require_planned_load(item).value for item in deck)
+    for count in range(len(prefix), max_count + 1):
+        for (
+            total,
+            high,
+            counts,
+            high_counts,
+            limited_counts,
+            has_z5,
+        ), selection in states.items():
+            if required_count is not None and count != required_count:
+                continue
+            if not all(
+                counts[sports.index(sport)] > 0 for sport in required_disciplines
+            ):
+                continue
+            if required_composition is not None and any(
+                counts[index] != required_composition.get(sport, 0)
+                for index, sport in enumerate(sports)
+            ):
+                continue
+            if not _selection_policy_valid(
+                selection,
+                target=target,
+                phase=phase,
+                build_week=build_week,
+                desired_high_fraction=desired_high_fraction,
+                high_available=high_available,
+                z5_available=z5_available,
+                minimum_load=minimum_load,
+                discipline_caps=discipline_caps,
+            ):
+                continue
+            score = (
+                abs(total - target.value),
+                abs(high - budget) if phase is TrainingPhase.BUILD else Decimal(0),
+                count,
+                tuple(str(item.id) for item in selection),
+            )
+            if (best_key is None or score < best_key) and (
+                feasible is None or feasible(selection)
+            ):
+                best, best_key = selection, score
+        if count == max_count or (best_key is not None and best_key[0] == 0):
+            break
+        next_states: dict[
+            tuple[
+                Decimal,
+                Decimal,
+                tuple[int, ...],
+                tuple[int, ...],
+                tuple[int, ...],
+                bool,
+            ],
+            tuple[WorkoutTemplate, ...],
+        ] = {}
+        for (
+            total,
+            high,
+            counts,
+            high_counts,
+            limited_counts,
+            has_z5,
+        ), selection in states.items():
+            for item in options:
+                if maximum_uses is not None and sum(
+                    existing.id == item.id for existing in selection
+                ) >= maximum_uses.get(item.id, 24):
+                    continue
+                new_total = total + require_planned_load(item).value
+                if new_total > max_total:
+                    continue
+                new_high = high + (
+                    require_planned_load(item).value
+                    if item.intensity_bucket is IntensityBucket.HIGH
+                    else Decimal(0)
+                )
+                if phase is TrainingPhase.BUILD and new_high > budget:
+                    continue
+                index = sports.index(item.discipline)
+                new_counts = counts[:index] + (counts[index] + 1,) + counts[index + 1 :]
+                new_high_counts = (
+                    high_counts[:index]
+                    + (
+                        high_counts[index]
+                        + (item.intensity_bucket is IntensityBucket.HIGH),
+                    )
+                    + high_counts[index + 1 :]
+                )
+                if required_composition is not None and new_counts[
+                    index
+                ] > required_composition.get(item.discipline, 0):
+                    continue
+                if discipline_caps is not None and item.discipline in discipline_caps:
+                    sport_total = (
+                        sum(
+                            (
+                                require_planned_load(existing).value
+                                for existing in selection
+                                if existing.discipline is item.discipline
+                            ),
+                            Decimal(0),
+                        )
+                        + require_planned_load(item).value
+                    )
+                    if sport_total > discipline_caps[item.discipline].value:
+                        continue
+                new_z5 = has_z5 or _has_zone_five(item)
+                new_limited_counts = tuple(
+                    value + (item.id == template_id)
+                    for template_id, value in zip(
+                        limited_ids, limited_counts, strict=True
+                    )
+                )
+                state = (
+                    new_total,
+                    new_high,
+                    new_counts,
+                    new_high_counts,
+                    new_limited_counts,
+                    new_z5,
+                )
+                path = selection + (item,)
+                previous = next_states.get(state)
+                if previous is None or tuple(str(value.id) for value in path) < tuple(
+                    str(value.id) for value in previous
+                ):
+                    next_states[state] = path
+        states = next_states
+        if not states:
+            break
+    return best
+
+
 def select_workouts(
     *,
     deck: tuple[WorkoutTemplate, ...],
@@ -515,15 +973,17 @@ def select_workouts(
     desired_high_fraction: Fraction = STANDARD_RACE_INTENSITY_TARGET.high_fraction,
     selected_template_ids: Collection[UUID] | None = None,
     maintenance_active: bool = False,
+    phase: TrainingPhase = TrainingPhase.BASE,
+    build_week: int | None = None,
+    required_count: int | None = None,
+    required_composition: Mapping[Discipline, int] | None = None,
+    selected_occurrence_ids: Collection[UUID] | None = None,
+    discipline_caps: Mapping[Discipline, InternalLoad] | None = None,
+    feasible: Callable[[tuple[WorkoutTemplate, ...]], bool] | None = None,
 ) -> tuple[SelectedWorkout, ...]:
     """Select an explicit valid deck or the closest discipline-covering subset."""
     by_id = {template.id: template for template in deck}
     if selected_template_ids is not None:
-        if len(set(selected_template_ids)) != len(selected_template_ids):
-            raise PlanningConstraintError(
-                "duplicate_template_selection",
-                "A template can be selected only once per revision.",
-            )
         missing = set(selected_template_ids) - set(by_id)
         if missing:
             raise PlanningConstraintError(
@@ -531,53 +991,80 @@ def select_workouts(
                 "One or more selected workout templates are not eligible.",
             )
         chosen = tuple(by_id[template_id] for template_id in selected_template_ids)
+        automatic = tuple(item for item in deck if not item.explicit_scheduling_only)
+        if not automatic or not _selection_policy_valid(
+            chosen,
+            target=target,
+            phase=phase,
+            build_week=build_week,
+            desired_high_fraction=desired_high_fraction,
+            high_available=any(
+                item.intensity_bucket is IntensityBucket.HIGH
+                and require_planned_load(item).value
+                <= target.value * desired_high_fraction.value
+                for item in automatic
+            ),
+            z5_available=build_week == 4
+            and any(
+                item.intensity_bucket is IntensityBucket.HIGH
+                and require_planned_load(item).value
+                <= target.value * desired_high_fraction.value
+                and _has_zone_five(item)
+                for item in automatic
+            ),
+            minimum_load=min(require_planned_load(item).value for item in automatic),
+            discipline_caps=discipline_caps,
+        ):
+            raise PlanningConstraintError(
+                "swipe_selection_invalid",
+                "The selected workout combination does not fit this week.",
+            )
     else:
         deck = tuple(
-            template
-            for template in deck
-            if not template.explicit_scheduling_only
-            and not template.athlete_selection_only
+            template for template in deck if not template.explicit_scheduling_only
         )
-        # The fixed swipe count is derived from this automatic selection. The
-        # existing closest-catalog rule can absorb a small mismatch, but a gap
-        # large enough for another eligible workout cannot silently be reduced
-        # to the entire one-use catalog. No new physiological limit is involved.
-        loads = tuple(require_planned_load(template).value for template in deck)
-        if loads and target.value - sum(loads, Decimal(0)) >= min(loads):
+        fitted = _bounded_selection(
+            deck=deck,
+            prefix=(),
+            required_disciplines=required_disciplines,
+            target=target,
+            phase=phase,
+            build_week=build_week,
+            desired_high_fraction=desired_high_fraction,
+            required_count=required_count,
+            required_composition=required_composition,
+            discipline_caps=discipline_caps,
+            feasible=feasible,
+        )
+        if fitted is None:
             raise PlanningConstraintError(
                 "catalog_capacity_unsatisfied",
-                "The reviewed automatic workout catalog cannot cover this "
-                "week. A reviewed training combination is required.",
+                "No safe workout combination fits the current week.",
             )
-        candidates: list[tuple[WorkoutTemplate, ...]] = []
-        for count in range(1, len(deck) + 1):
-            for selection in combinations(deck, count):
-                if {item.discipline for item in selection} >= required_disciplines:
-                    candidates.append(selection)
-        if not candidates:
-            raise PlanningConstraintError(
-                "catalog_coverage_unsatisfied",
-                "The current workout catalog cannot cover every eligible discipline.",
-            )
-        chosen = min(
-            candidates,
-            key=lambda selection: _selection_key(
-                selection,
-                target=target,
-                desired_high_fraction=desired_high_fraction,
-            ),
-        )
+        chosen = fitted
     if {item.discipline for item in chosen} < required_disciplines:
         raise PlanningConstraintError(
             "discipline_selection_incomplete",
             "The selected workouts do not cover every eligible discipline.",
         )
+    occurrence_ids = tuple(selected_occurrence_ids or ())
+    if occurrence_ids and len(occurrence_ids) != len(chosen):
+        raise PlanningConstraintError(
+            "swipe_selection_invalid",
+            "The selected card identities do not match the workout selection.",
+        )
+    if len(set(occurrence_ids)) != len(occurrence_ids):
+        raise PlanningConstraintError(
+            "swipe_selection_invalid",
+            "Workout card identities must be distinct.",
+        )
     return tuple(
         SelectedWorkout(
             discipline=template.discipline,
             snapshot=snapshot_template(template),
+            occurrence_id=occurrence_ids[index] if occurrence_ids else None,
         )
-        for template in chosen
+        for index, template in enumerate(chosen)
     )
 
 
@@ -636,6 +1123,7 @@ def schedule_workouts(
     week_start: date,
     timezone_name: str,
     fixed_template_dates: Mapping[UUID, date] | None = None,
+    fixed_occurrence_dates: Mapping[UUID, date] | None = None,
 ) -> tuple[ProposedWorkout, ...]:
     """Place deterministic snapshots on explicit athlete-local dates.
 
@@ -655,11 +1143,17 @@ def schedule_workouts(
             "Available dates must be unique.",
         )
     fixed = dict(fixed_template_dates or {})
-    selected_ids = {workout.snapshot.template_id for workout in selected}
+    fixed.update(fixed_occurrence_dates or {})
+    selected_ids = {
+        identity
+        for workout in selected
+        for identity in (workout.snapshot.template_id, workout.occurrence_id)
+        if identity is not None
+    }
     if not set(fixed) <= selected_ids:
         raise PlanningConstraintError(
             "fixed_template_not_selected",
-            "A fixed workout date must reference an explicitly selected template.",
+            "A fixed workout date must reference an accepted workout.",
         )
     week_dates = {week_start + timedelta(days=offset) for offset in range(7)}
     if not set(available_dates) <= week_dates:
@@ -731,7 +1225,7 @@ def schedule_workouts(
             return tuple(sorted(assigned, key=lambda item: item.scheduled_date))
 
         workout = ordered[index]
-        fixed_date = fixed.get(workout.snapshot.template_id)
+        fixed_date = fixed.get(workout.occurrence_id or workout.snapshot.template_id)
         candidate_dates = (
             (fixed_date,)
             if fixed_date is not None
@@ -753,12 +1247,13 @@ def schedule_workouts(
                 discipline=workout.discipline,
                 snapshot=workout.snapshot,
                 scheduled_date=assigned_day,
+                occurrence_id=workout.occurrence_id,
             )
             candidate = (*assigned, proposal)
             violations = find_anti_stack_violations(
                 tuple(
                     ScheduledWorkout(
-                        workout_id=str(item.snapshot.template_id),
+                        workout_id=str(item.occurrence_id or item.snapshot.template_id),
                         disciplines=frozenset({item.discipline}),
                         intensity=item.snapshot.intensity_bucket,
                         starts_at=canonical_schedule_instant(
@@ -809,6 +1304,28 @@ def _workout_intensity(workout: ProposedWorkout) -> WorkoutIntensity | None:
     )
 
 
+def _schedule_is_feasible(
+    *,
+    selection: tuple[WorkoutTemplate, ...],
+    week_start: date,
+    available_dates: tuple[date, ...],
+    timezone_name: str,
+) -> bool:
+    try:
+        schedule_workouts(
+            selected=tuple(
+                SelectedWorkout(item.discipline, snapshot_template(item))
+                for item in selection
+            ),
+            available_dates=available_dates,
+            week_start=week_start,
+            timezone_name=timezone_name,
+        )
+    except PlanningConstraintError:
+        return False
+    return True
+
+
 def build_weekly_plan(
     *,
     week_start: date,
@@ -819,17 +1336,39 @@ def build_weekly_plan(
     goal_disciplines: frozenset[Discipline],
     confirmed_injuries: frozenset[Discipline],
     low_only_disciplines: frozenset[Discipline] = frozenset(),
+    cross_training_opt_ins: frozenset[Discipline] = frozenset(),
     zone_capabilities: Mapping[Discipline, ZoneCapability],
     available_dates: tuple[date, ...],
     selected_template_ids: Collection[UUID] | None = None,
     fixed_template_dates: Mapping[UUID, date] | None = None,
+    selected_occurrence_ids: Collection[UUID] | None = None,
+    fixed_occurrence_dates: Mapping[UUID, date] | None = None,
     maintenance_active: bool = False,
     onboarding_baseline: StartingBaseline | None = None,
 ) -> WeeklyPlanDraft:
     """Build a deterministic, TSS-private plan ready to remain pending."""
     prior_loads = tuple(sample for sample in prior_loads if not sample.sick_week)
     uninjured = goal_disciplines - confirmed_injuries
-    if not uninjured:
+    historical_recipients = frozenset(
+        sport
+        for sport in (Discipline.BIKE, Discipline.SWIM)
+        if sport not in confirmed_injuries
+        and sport in zone_capabilities
+        and (
+            any(
+                sample.discipline_loads.get(sport, InternalLoad(Decimal(0))).value > 0
+                for sample in prior_loads
+            )
+            or (
+                onboarding_baseline is not None
+                and onboarding_baseline.by_discipline.get(
+                    sport, InternalLoad(Decimal(0))
+                ).value
+                > 0
+            )
+        )
+    )
+    if not uninjured and not historical_recipients:
         phase = _training_phase(
             _race_anchored_phase(week_start=week_start, race_date=race_date),
             first_plan=not prior_loads,
@@ -879,9 +1418,8 @@ def build_weekly_plan(
         else template
         for template in catalog
         if template.internal_planned_load is not None
-        and template.discipline in uninjured
+        and template.discipline in uninjured | historical_recipients
         and not template.explicit_scheduling_only
-        and not template.athlete_selection_only
         and not (
             template.discipline in low_only_disciplines
             and template.intensity_bucket is IntensityBucket.HIGH
@@ -944,19 +1482,7 @@ def build_weekly_plan(
                 "A reviewed starting allocation is required for this restricted "
                 "introduction week.",
             )
-        initial_load = (
-            onboarding_baseline.total
-            if not confirmed_injuries
-            else InternalLoad(
-                sum(
-                    (
-                        onboarding_baseline.by_discipline[sport].value
-                        for sport in uninjured
-                    ),
-                    Decimal(0),
-                ).quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
-            )
-        )
+        initial_load = onboarding_baseline.total
     target = resolve_target(
         week_start=week_start,
         race_date=race_date,
@@ -975,17 +1501,72 @@ def build_weekly_plan(
         taper_period=target.taper_period,
         desired_high_fraction=desired_high_fraction,
         manual_review_required=target.manual_review_required,
+        build_week=(
+            _build_week(week_start=week_start, race_date=race_date)
+            if target.phase is TrainingPhase.BUILD
+            else None
+        ),
     )
+    planning_disciplines = uninjured
+    replacement_disciplines: frozenset[Discipline] = frozenset()
+    if confirmed_injuries:
+        eligible_recipients = frozenset(
+            template.discipline
+            for template in eligible_workouts(
+                catalog=catalog,
+                phase=target.phase,
+                goal_disciplines=frozenset({Discipline.BIKE, Discipline.SWIM}),
+                confirmed_injuries=confirmed_injuries,
+                low_only_disciplines=frozenset({Discipline.BIKE, Discipline.SWIM}),
+                zone_capabilities=zone_capabilities,
+                build_week=target.build_week,
+            )
+            if not template.explicit_scheduling_only
+        )
+        target, planning_disciplines, replacement_disciplines = _injury_adjusted_target(
+            target=target,
+            prior_loads=prior_loads,
+            onboarding_baseline=onboarding_baseline,
+            blocked=confirmed_injuries,
+            goal_disciplines=goal_disciplines,
+            eligible_recipients=eligible_recipients,
+            cross_training_opt_ins=cross_training_opt_ins,
+            desired_high_fraction=desired_high_fraction,
+        )
+        if target.target.value == 0:
+            return WeeklyPlanDraft(
+                target=PlanningTarget(
+                    phase=target.phase,
+                    basis=PlanningTargetBasis.INJURY_REST_ONLY,
+                    target=InternalLoad(Decimal(0)),
+                ),
+                workouts=(),
+                warnings=(
+                    PlanningWarning(
+                        rule_id=RuleId.INJURY_REDISTRIBUTION,
+                        code="all_disciplines_blocked_rest_only",
+                        message=(
+                            "No safe training remains under the confirmed restriction."
+                        ),
+                    ),
+                ),
+                total_duration_minutes=Decimal(0),
+                low_intensity_percent=Decimal(0),
+                high_intensity_percent=Decimal(0),
+                planned_load=InternalLoad(Decimal(0)),
+            )
+    restricted_low_only = low_only_disciplines | replacement_disciplines
     deck = eligible_workouts(
         catalog=catalog,
         phase=target.phase,
-        goal_disciplines=goal_disciplines,
+        goal_disciplines=planning_disciplines,
         confirmed_injuries=confirmed_injuries,
-        low_only_disciplines=low_only_disciplines,
+        low_only_disciplines=restricted_low_only,
         zone_capabilities=zone_capabilities,
+        build_week=target.build_week,
     )
     covered_disciplines = {template.discipline for template in deck}
-    missing_disciplines = uninjured - covered_disciplines
+    missing_disciplines = planning_disciplines - covered_disciplines
     if missing_disciplines:
         missing_labels = ", ".join(
             sorted(discipline.value for discipline in missing_disciplines)
@@ -1016,10 +1597,26 @@ def build_weekly_plan(
             )
     selected = select_workouts(
         deck=deck,
-        required_disciplines=uninjured,
+        required_disciplines=planning_disciplines,
         target=target.target,
         desired_high_fraction=target.desired_high_fraction,
         selected_template_ids=selected_template_ids,
+        selected_occurrence_ids=selected_occurrence_ids,
+        phase=target.phase,
+        build_week=target.build_week,
+        discipline_caps=target.discipline_caps,
+        feasible=(
+            (
+                lambda selection: _schedule_is_feasible(
+                    selection=selection,
+                    week_start=week_start,
+                    available_dates=available_dates,
+                    timezone_name=timezone_name,
+                )
+            )
+            if target.phase is TrainingPhase.BUILD
+            else None
+        ),
     )
     proposed = schedule_workouts(
         selected=selected,
@@ -1027,6 +1624,7 @@ def build_weekly_plan(
         week_start=week_start,
         timezone_name=timezone_name,
         fixed_template_dates=fixed_dates,
+        fixed_occurrence_dates=fixed_occurrence_dates,
     )
     timed_intensities = tuple(
         intensity
@@ -1119,6 +1717,31 @@ def build_weekly_plan(
                 message="Confirmed injured disciplines were excluded from this plan.",
             )
         )
+        if target.injury_load_unallocated:
+            warnings.append(
+                PlanningWarning(
+                    rule_id=RuleId.INJURY_REDISTRIBUTION,
+                    code="injury_replacement_capacity_limited",
+                    message=(
+                        "Only the alternative training that fits your current "
+                        "training history was included."
+                    ),
+                    severity="info",
+                )
+            )
+        if target.cross_training_consent_required:
+            warnings.append(
+                PlanningWarning(
+                    rule_id=RuleId.INJURY_REDISTRIBUTION,
+                    code="cross_training_choice_available",
+                    message=(
+                        "You can explicitly choose an available alternative "
+                        "sport for cross-training; a safe starting capacity "
+                        "is still required."
+                    ),
+                    severity="info",
+                )
+            )
     if low_only_disciplines:
         warnings.append(
             PlanningWarning(
@@ -1154,29 +1777,19 @@ def validate_manual_schedule(
     workouts: tuple[ScheduledWorkout, ...],
     moved_workout_id: str | None,
 ) -> tuple[PlanningWarning, ...]:
-    """Return non-blocking qualitative anti-stack warnings for a direct edit."""
+    """Reject hard spacing violations for generated and direct placements."""
     violations = find_anti_stack_violations(workouts)
-    return tuple(
-        PlanningWarning(
-            rule_id=RuleId.ANTI_STACK,
-            code="anti_stack_violation",
-            message=(
-                (
-                    "Keep two complete athlete-local rest dates between "
-                    f"high-intensity {violation.discipline.value} workouts."
-                )
-                if violation.required_complete_rest_dates is not None
-                else (
-                    f"Keep at least {violation.required_hours} hours between "
-                    f"high-intensity {violation.discipline.value} workouts."
-                )
-            ),
-        )
-        for violation in violations
-        if moved_workout_id is None
+    if any(
+        moved_workout_id is None
         or moved_workout_id
         in {violation.earlier_workout_id, violation.later_workout_id}
-    )
+        for violation in violations
+    ):
+        raise PlanningConstraintError(
+            "anti_stack_violation",
+            "High-intensity workouts need more time between sessions.",
+        )
+    return ()
 
 
 def as_utc(value: datetime) -> datetime:

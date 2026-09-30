@@ -7,7 +7,6 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from decimal import Decimal
-from itertools import combinations
 from typing import Any, Protocol
 from uuid import UUID
 from zoneinfo import ZoneInfo
@@ -37,7 +36,10 @@ from app.modules.physiology.models import (
     InternalLoad,
     RuleId,
 )
-from app.modules.physiology.specification import PHASE_13_RULESET_V1
+from app.modules.physiology.specification import (
+    JOREN_PLANNING_RULESET_V2,
+    PHASE_13_RULESET_V1,
+)
 from app.modules.workouts.catalog import (
     TrainingPhase,
     WorkoutTemplate,
@@ -52,9 +54,12 @@ from app.modules.workouts.repository import (
 from .domain import (
     PlanLoadSample,
     PlanningConstraintError,
+    PlanningTarget,
     PlanningTargetBasis,
     PlanningWarning,
     ZoneCapability,
+    _bounded_selection,
+    _schedule_is_feasible,
     build_weekly_plan,
     canonical_schedule_instant,
     eligible_workouts,
@@ -81,6 +86,7 @@ from .schemas import (
     SwipeDraftTransitionRequest,
     SwipeTargetComposition,
     SwipeWeekDraftResponse,
+    SwipeWorkoutOccurrenceResponse,
     WeeklyPlanProposalRequest,
     WeeklyPlanProposalResponse,
     WeeklyPlanResponse,
@@ -92,7 +98,6 @@ from .swipe import (
     SwipeDecisionKind,
     SwipeSelectionState,
     apply_swipe_decision,
-    composition_can_extend,
     composition_is_complete,
     discipline_composition,
     reset_passed_cards,
@@ -155,6 +160,9 @@ class _SwipePlanningContext:
     eligible_deck: tuple[WorkoutTemplate, ...]
     target_workout_count: int
     target_composition: dict[Discipline, int]
+    target: PlanningTarget
+    automatic_template_ids: tuple[UUID, ...]
+    cross_training_opt_ins: frozenset[Discipline]
     context_fingerprint: str
 
 
@@ -518,6 +526,12 @@ class PlanningService:
                         if row.get("completed_activity_count") is not None
                         else None
                     ),
+                    discipline_loads={
+                        Discipline(str(sport)): InternalLoad(Decimal(str(value)))
+                        for sport, value in (
+                            row.get("discipline_planned_tss") or {}
+                        ).items()
+                    },
                 )
                 for row in rows
             )
@@ -538,6 +552,7 @@ class PlanningService:
         availability_source: str,
         injuries: frozenset[Discipline],
         low_only_disciplines: frozenset[Discipline],
+        cross_training_opt_ins: frozenset[Discipline] = frozenset(),
     ) -> _SwipePlanningContext:
         """Rebuild the exact deterministic context and its non-sensitive hash."""
 
@@ -557,6 +572,7 @@ class PlanningService:
             goal_disciplines=disciplines,
             confirmed_injuries=injuries,
             low_only_disciplines=low_only_disciplines,
+            cross_training_opt_ins=cross_training_opt_ins,
             zone_capabilities=capabilities,
             available_dates=available_dates,
             onboarding_baseline=self._onboarding_baseline(snapshot),
@@ -567,10 +583,17 @@ class PlanningService:
             for template in eligible_workouts(
                 catalog=catalog,
                 phase=automatic.target.phase,
-                goal_disciplines=disciplines,
+                goal_disciplines=(
+                    frozenset(automatic.target.discipline_caps)
+                    if injuries
+                    else disciplines
+                ),
                 confirmed_injuries=injuries,
-                low_only_disciplines=low_only_disciplines,
+                low_only_disciplines=(
+                    low_only_disciplines | automatic.target.replacement_disciplines
+                ),
                 zone_capabilities=capabilities,
+                build_week=automatic.target.build_week,
             )
             if not template.explicit_scheduling_only
         )
@@ -595,8 +618,11 @@ class PlanningService:
             "availability_source": availability_source,
             "confirmed_injuries": sorted(item.value for item in injuries),
             "low_only_disciplines": sorted(item.value for item in low_only_disciplines),
+            "cross_training_opt_ins": sorted(
+                item.value for item in cross_training_opt_ins
+            ),
             "maintenance_active": bool(input_source.get("maintenance_active", False)),
-            "ruleset_version": PHASE_13_RULESET_V1.version.value,
+            "ruleset_version": JOREN_PLANNING_RULESET_V2.version.value,
             "history": history_rows,
             "catalog": [
                 {"id": str(template.id), "version": template.version}
@@ -626,6 +652,11 @@ class PlanningService:
             eligible_deck=eligible,
             target_workout_count=len(automatic.workouts),
             target_composition=composition,
+            target=automatic.target,
+            automatic_template_ids=tuple(
+                workout.snapshot.template_id for workout in automatic.workouts
+            ),
+            cross_training_opt_ins=cross_training_opt_ins,
             context_fingerprint=context_fingerprint,
         )
 
@@ -640,6 +671,11 @@ class PlanningService:
                     SwipeDecision(
                         action=SwipeDecisionKind(str(entry["action"])),
                         template_id=UUID(str(entry["template_id"])),
+                        occurrence_id=(
+                            UUID(str(entry["occurrence_id"]))
+                            if entry.get("occurrence_id") is not None
+                            else None
+                        ),
                     )
                     for entry in raw
                     if isinstance(entry, dict)
@@ -659,37 +695,64 @@ class PlanningService:
         injuries: frozenset[Discipline],
         low_only_disciplines: frozenset[Discipline],
         accepted_template_ids: tuple[UUID, ...],
-        passed_template_ids: frozenset[UUID],
-    ) -> bool:
+        passed_template_ids: tuple[UUID, ...],
+    ) -> tuple[UUID, ...] | None:
         by_id = {template.id: template for template in context.eligible_deck}
         if not set(accepted_template_ids) <= set(by_id):
-            return False
+            return None
         remaining_slots = context.target_workout_count - len(accepted_template_ids)
         if remaining_slots < 0:
-            return False
-        pool = tuple(
-            template
+            return None
+        passed_count = {
+            template_id: passed_template_ids.count(template_id)
+            for template_id in set(passed_template_ids)
+        }
+        maximum_uses = {
+            template.id: context.target_workout_count - passed_count.get(template.id, 0)
             for template in context.eligible_deck
-            if template.id not in accepted_template_ids
-            and template.id not in passed_template_ids
-        )
-        candidate_sets = (
-            (accepted_template_ids,)
-            if remaining_slots == 0
-            else tuple(
-                accepted_template_ids + tuple(template.id for template in choice)
-                for choice in combinations(pool, remaining_slots)
-            )
-        )
-        for selected_ids in candidate_sets:
-            selected_disciplines = tuple(
-                by_id[value].discipline for value in selected_ids
-            )
-            if not composition_is_complete(
-                accepted_disciplines=selected_disciplines,
-                target_composition=context.target_composition,
-            ):
+        }
+        # Prefer fresh templates after a pass. A later occurrence of the same
+        # immutable template remains available when composition requires it.
+        for pool in (
+            tuple(
+                item for item in context.eligible_deck if item.id not in passed_count
+            ),
+            tuple(item for item in context.eligible_deck if maximum_uses[item.id] > 0),
+        ):
+            if not pool and remaining_slots:
                 continue
+            fitted = _bounded_selection(
+                deck=pool if pool else context.eligible_deck,
+                prefix=tuple(by_id[value] for value in accepted_template_ids),
+                required_disciplines=(
+                    frozenset(context.target.discipline_caps)
+                    if injuries
+                    else context.goal_disciplines
+                ),
+                target=context.target.target,
+                phase=context.target.phase,
+                build_week=context.target.build_week,
+                desired_high_fraction=context.target.desired_high_fraction,
+                required_count=context.target_workout_count,
+                required_composition=context.target_composition,
+                maximum_uses=maximum_uses,
+                discipline_caps=context.target.discipline_caps,
+                feasible=(
+                    (
+                        lambda selection: _schedule_is_feasible(
+                            selection=selection,
+                            week_start=week_start,
+                            available_dates=available_dates,
+                            timezone_name=context.timezone_name,
+                        )
+                    )
+                    if context.target.phase is TrainingPhase.BUILD
+                    else None
+                ),
+            )
+            if fitted is None:
+                continue
+            selected_ids = tuple(item.id for item in fitted)
             try:
                 build_weekly_plan(
                     week_start=week_start,
@@ -700,6 +763,7 @@ class PlanningService:
                     goal_disciplines=context.goal_disciplines,
                     confirmed_injuries=injuries,
                     low_only_disciplines=low_only_disciplines,
+                    cross_training_opt_ins=context.cross_training_opt_ins,
                     zone_capabilities=context.capabilities,
                     available_dates=available_dates,
                     selected_template_ids=selected_ids,
@@ -712,8 +776,8 @@ class PlanningService:
                 )
             except PlanningConstraintError:
                 continue
-            return True
-        return False
+            return selected_ids
+        return None
 
     def _next_swipe_candidate(
         self,
@@ -726,29 +790,20 @@ class PlanningService:
         selection: SwipeSelectionState,
     ) -> UUID | None:
         accepted = selection.accepted_template_ids
-        passed = selection.passed_template_ids
-        by_id = {template.id: template for template in context.eligible_deck}
-        accepted_disciplines = tuple(by_id[value].discipline for value in accepted)
-        for template in context.eligible_deck:
-            if template.id in accepted or template.id in passed:
-                continue
-            if not composition_can_extend(
-                accepted_disciplines=accepted_disciplines,
-                candidate_discipline=template.discipline,
-                target_composition=context.target_composition,
-            ):
-                continue
-            if self._selection_has_completion(
-                context=context,
-                week_start=week_start,
-                available_dates=available_dates,
-                injuries=injuries,
-                low_only_disciplines=low_only_disciplines,
-                accepted_template_ids=accepted + (template.id,),
-                passed_template_ids=passed,
-            ):
-                return template.id
-        return None
+        completion = self._selection_has_completion(
+            context=context,
+            week_start=week_start,
+            available_dates=available_dates,
+            injuries=injuries,
+            low_only_disciplines=low_only_disciplines,
+            accepted_template_ids=accepted,
+            passed_template_ids=selection.passed_template_ids,
+        )
+        return (
+            completion[len(accepted)]
+            if completion is not None and len(completion) > len(accepted)
+            else None
+        )
 
     @staticmethod
     def _swipe_update_payload(
@@ -767,7 +822,7 @@ class PlanningService:
                 str(value) for value in selection.accepted_template_ids
             ],
             "passed_template_ids": [
-                str(value) for value in sorted(selection.passed_template_ids, key=str)
+                str(value) for value in selection.passed_template_ids
             ],
             "current_template_id": (
                 str(current_template_id) if current_template_id is not None else None
@@ -776,6 +831,9 @@ class PlanningService:
                 {
                     "action": decision.action.value,
                     "template_id": str(decision.template_id),
+                    "occurrence_id": str(
+                        decision.occurrence_id or decision.template_id
+                    ),
                 }
                 for decision in selection.history
             ],
@@ -802,13 +860,22 @@ class PlanningService:
         by_id = {template.id: template for template in context.eligible_deck}
         try:
             accepted = tuple(
-                self._deck_item(
-                    by_id[template_id],
-                    contributes_to_zone_calibration=context.capabilities[
-                        by_id[template_id].discipline
-                    ].calibration_evidence,
+                SwipeWorkoutOccurrenceResponse.model_validate(
+                    {
+                        **self._deck_item(
+                            by_id[template_id],
+                            contributes_to_zone_calibration=context.capabilities[
+                                by_id[template_id].discipline
+                            ].calibration_evidence,
+                        ).model_dump(),
+                        "occurrence_id": occurrence_id,
+                    }
                 )
-                for template_id in selection.accepted_template_ids
+                for template_id, occurrence_id in zip(
+                    selection.accepted_template_ids,
+                    selection.accepted_occurrence_ids,
+                    strict=True,
+                )
             )
             current_id = (
                 UUID(str(row["current_template_id"]))
@@ -816,11 +883,16 @@ class PlanningService:
                 else None
             )
             current = (
-                self._deck_item(
-                    by_id[current_id],
-                    contributes_to_zone_calibration=context.capabilities[
-                        by_id[current_id].discipline
-                    ].calibration_evidence,
+                SwipeWorkoutOccurrenceResponse.model_validate(
+                    {
+                        **self._deck_item(
+                            by_id[current_id],
+                            contributes_to_zone_calibration=context.capabilities[
+                                by_id[current_id].discipline
+                            ].calibration_evidence,
+                        ).model_dump(),
+                        "occurrence_id": UUID(str(row["current_occurrence_id"])),
+                    }
                 )
                 if current_id
                 else None
@@ -830,13 +902,13 @@ class PlanningService:
                 raise ValueError
             placements = tuple(
                 {
-                    "template_id": template_id,
+                    "occurrence_id": occurrence_id,
                     "scheduled_date": date.fromisoformat(
-                        str(raw_placements[str(template_id)])
+                        str(raw_placements[str(occurrence_id)])
                     ),
                 }
-                for template_id in selection.accepted_template_ids
-                if str(template_id) in raw_placements
+                for occurrence_id in selection.accepted_occurrence_ids
+                if str(occurrence_id) in raw_placements
             )
             composition = SwipeTargetComposition(
                 **{
@@ -866,10 +938,12 @@ class PlanningService:
                         Discipline(str(value))
                         for value in row.get("low_only_disciplines", [])
                     ),
+                    cross_training_opt_ins=context.cross_training_opt_ins,
                     zone_capabilities=context.capabilities,
                     available_dates=available_dates,
                     selected_template_ids=selection.accepted_template_ids,
-                    fixed_template_dates={
+                    selected_occurrence_ids=selection.accepted_occurrence_ids,
+                    fixed_occurrence_dates={
                         UUID(str(key)): date.fromisoformat(str(value))
                         for key, value in raw_placements.items()
                     },
@@ -910,6 +984,10 @@ class PlanningService:
                 placements=placements,
                 warnings=public_warnings,
                 passed_count=len(selection.passed_template_ids),
+                cross_training_opt_ins=frozenset(
+                    Discipline(str(value))
+                    for value in row.get("cross_training_opt_ins", [])
+                ),
                 exhausted=state == "collecting" and current is None,
                 can_undo=bool(selection.history),
                 ruleset_version=str(row["ruleset_version"]),
@@ -936,8 +1014,11 @@ class PlanningService:
         availability_source: str,
         injuries: frozenset[Discipline],
         low_only_disciplines: frozenset[Discipline],
+        cross_training_opt_ins: frozenset[Discipline] = frozenset(),
         selected_template_ids: tuple[UUID, ...] | None,
         fixed_template_dates: Mapping[UUID, date] | None = None,
+        selected_occurrence_ids: tuple[UUID, ...] | None = None,
+        fixed_occurrence_dates: Mapping[UUID, date] | None = None,
         checkin_id: UUID | None = None,
     ) -> str:
         canonical = {
@@ -947,16 +1028,31 @@ class PlanningService:
             "availability_source": availability_source,
             "confirmed_injuries": sorted(item.value for item in injuries),
             "low_only_disciplines": sorted(item.value for item in low_only_disciplines),
+            "cross_training_opt_ins": sorted(
+                item.value for item in cross_training_opt_ins
+            ),
             "checkin_id": str(checkin_id) if checkin_id is not None else None,
             "selected_template_ids": (
-                sorted(str(value) for value in selected_template_ids)
+                [str(value) for value in selected_template_ids]
                 if selected_template_ids is not None
+                else None
+            ),
+            "selected_occurrence_ids": (
+                [str(value) for value in selected_occurrence_ids]
+                if selected_occurrence_ids is not None
                 else None
             ),
             "fixed_template_dates": {
                 str(template_id): scheduled_date.isoformat()
                 for template_id, scheduled_date in sorted(
                     (fixed_template_dates or {}).items(),
+                    key=lambda item: str(item[0]),
+                )
+            },
+            "fixed_occurrence_dates": {
+                str(occurrence_id): scheduled_date.isoformat()
+                for occurrence_id, scheduled_date in sorted(
+                    (fixed_occurrence_dates or {}).items(),
                     key=lambda item: str(item[0]),
                 )
             },
@@ -979,6 +1075,7 @@ class PlanningService:
         availability_source: str,
         injuries: frozenset[Discipline],
         low_only_disciplines: frozenset[Discipline],
+        cross_training_opt_ins: frozenset[Discipline] = frozenset(),
         goal_disciplines: frozenset[Discipline],
         draft: Any,
         workout_source: str,
@@ -1007,6 +1104,9 @@ class PlanningService:
             "high_intensity_percent": str(draft.high_intensity_percent),
             "confirmed_injuries": sorted(item.value for item in injuries),
             "low_only_disciplines": sorted(item.value for item in low_only_disciplines),
+            "cross_training_opt_ins": sorted(
+                item.value for item in cross_training_opt_ins
+            ),
             "goal_disciplines": sorted(item.value for item in goal_disciplines),
             "checkin_id": str(checkin_id) if checkin_id is not None else None,
             # The legacy column keeps only date strings from Phase 10 onward.
@@ -1017,6 +1117,11 @@ class PlanningService:
                 {
                     "planned_tss": str(workout.snapshot.internal_planned_load.value),
                     "template_id": str(workout.snapshot.template_id),
+                    "occurrence_id": (
+                        str(workout.occurrence_id)
+                        if workout.occurrence_id is not None
+                        else None
+                    ),
                     "discipline": workout.discipline.value,
                     "scheduled_date": workout.scheduled_date.isoformat(),
                     # Internal compatibility projection for pre-Phase-10 activity
@@ -1045,6 +1150,7 @@ class PlanningService:
             ],
             "planned_tss": str(draft.planned_load.value),
             "ruleset_version": PHASE_13_RULESET_V1.version.value,
+            "planning_ruleset_version": JOREN_PLANNING_RULESET_V2.version.value,
         }
 
     async def _build_and_persist(
@@ -1060,8 +1166,11 @@ class PlanningService:
         availability_source: str,
         injuries: frozenset[Discipline],
         low_only_disciplines: frozenset[Discipline],
+        cross_training_opt_ins: frozenset[Discipline] = frozenset(),
         selected_template_ids: tuple[UUID, ...] | None,
         fixed_template_dates: Mapping[UUID, date] | None = None,
+        selected_occurrence_ids: tuple[UUID, ...] | None = None,
+        fixed_occurrence_dates: Mapping[UUID, date] | None = None,
         checkin_id: UUID | None = None,
         allow_explicit_test_selection: bool = False,
     ) -> JsonObject:
@@ -1092,10 +1201,13 @@ class PlanningService:
             goal_disciplines=disciplines,
             confirmed_injuries=injuries,
             low_only_disciplines=low_only_disciplines,
+            cross_training_opt_ins=cross_training_opt_ins,
             zone_capabilities=capabilities,
             available_dates=available_dates,
             selected_template_ids=selected_template_ids,
             fixed_template_dates=fixed_template_dates,
+            selected_occurrence_ids=selected_occurrence_ids,
+            fixed_occurrence_dates=fixed_occurrence_dates,
             onboarding_baseline=self._onboarding_baseline(snapshot),
             maintenance_active=bool(input_source.get("maintenance_active", False)),
         )
@@ -1112,8 +1224,11 @@ class PlanningService:
             availability_source=availability_source,
             injuries=injuries,
             low_only_disciplines=low_only_disciplines,
+            cross_training_opt_ins=cross_training_opt_ins,
             selected_template_ids=selected_template_ids,
             fixed_template_dates=fixed_template_dates,
+            selected_occurrence_ids=selected_occurrence_ids,
+            fixed_occurrence_dates=fixed_occurrence_dates,
             checkin_id=checkin_id,
         )
         result = await self._repository.create_plan_proposal(
@@ -1130,6 +1245,7 @@ class PlanningService:
                 availability_source=availability_source,
                 injuries=injuries,
                 low_only_disciplines=low_only_disciplines,
+                cross_training_opt_ins=cross_training_opt_ins,
                 goal_disciplines=disciplines,
                 draft=draft,
                 workout_source=(
@@ -1214,6 +1330,7 @@ class PlanningService:
             availability_source=availability_source,
             injuries=request.confirmed_injuries,
             low_only_disciplines=request.low_only_disciplines,
+            cross_training_opt_ins=request.cross_training_opt_ins,
             selected_template_ids=request.selected_template_ids,
             fixed_template_dates={
                 item.template_id: item.scheduled_date
@@ -1325,6 +1442,10 @@ class PlanningService:
             availability_source=str(row["availability_source"]),
             injuries=injuries,
             low_only_disciplines=low_only,
+            cross_training_opt_ins=frozenset(
+                Discipline(str(value))
+                for value in row.get("cross_training_opt_ins", [])
+            ),
         )
         if context.context_fingerprint != str(row["context_fingerprint"]):
             raise PlanningConstraintError(
@@ -1398,6 +1519,7 @@ class PlanningService:
             availability_source=availability_source,
             injuries=request.confirmed_injuries,
             low_only_disciplines=request.low_only_disciplines,
+            cross_training_opt_ins=request.cross_training_opt_ins,
         )
         selection = SwipeSelectionState()
         current = self._next_swipe_candidate(
@@ -1430,9 +1552,12 @@ class PlanningService:
                 "low_only_disciplines": sorted(
                     value.value for value in request.low_only_disciplines
                 ),
+                "cross_training_opt_ins": sorted(
+                    value.value for value in request.cross_training_opt_ins
+                ),
                 "input_fingerprint": str(source["input_fingerprint"]),
                 "context_fingerprint": context.context_fingerprint,
-                "ruleset_version": PHASE_13_RULESET_V1.version.value,
+                "ruleset_version": JOREN_PLANNING_RULESET_V2.version.value,
                 "target_workout_count": context.target_workout_count,
                 "target_composition": {
                     discipline.value: context.target_composition[discipline]
@@ -1479,12 +1604,14 @@ class PlanningService:
             if (
                 request.action in {"accept", "pass"}
                 and request.candidate_template_id is not None
+                and request.candidate_occurrence_id is not None
                 and request.expected_revision == stored_revision - 1
                 and selection.history
                 and selection.history[-1]
                 == SwipeDecision(
                     action=SwipeDecisionKind(request.action),
                     template_id=request.candidate_template_id,
+                    occurrence_id=request.candidate_occurrence_id,
                 )
             ):
                 return self._swipe_response(row, context)
@@ -1544,11 +1671,14 @@ class PlanningService:
                     "The current workout card can no longer be validated.",
                 )
             assert request.candidate_template_id is not None
+            assert request.candidate_occurrence_id is not None
             selection = apply_swipe_decision(
                 selection,
                 action=SwipeDecisionKind(request.action),
                 current_template_id=recomputed_current,
                 expected_template_id=request.candidate_template_id,
+                current_occurrence_id=UUID(str(row["current_occurrence_id"])),
+                expected_occurrence_id=request.candidate_occurrence_id,
                 target_workout_count=context.target_workout_count,
             )
 
@@ -1569,7 +1699,7 @@ class PlanningService:
                 injuries=injuries,
                 low_only_disciplines=low_only,
                 accepted_template_ids=selection.accepted_template_ids,
-                passed_template_ids=frozenset(),
+                passed_template_ids=(),
             ):
                 raise PlanningConstraintError(
                     "swipe_selection_invalid",
@@ -1606,7 +1736,7 @@ class PlanningService:
         access_token: str,
         athlete_id: UUID,
         draft_id: UUID,
-        template_id: UUID,
+        occurrence_id: UUID,
         request: SwipeDraftPlacementRequest,
     ) -> SwipeWeekDraftResponse:
         """Validate the complete layout after one exact manual date placement."""
@@ -1627,9 +1757,9 @@ class PlanningService:
                 "Complete workout selection before placing cards.",
             )
         selection = self._swipe_history(row)
-        if template_id not in selection.accepted_template_ids:
+        if occurrence_id not in selection.accepted_occurrence_ids:
             raise PlanningConstraintError(
-                "swipe_template_not_accepted",
+                "swipe_occurrence_not_accepted",
                 "Only an accepted workout card can be placed.",
             )
         week_start = date.fromisoformat(str(row["week_start"]))
@@ -1648,7 +1778,7 @@ class PlanningService:
             UUID(str(key)): date.fromisoformat(str(value))
             for key, value in raw_placements.items()
         }
-        placements[template_id] = request.scheduled_date
+        placements[occurrence_id] = request.scheduled_date
         injuries = frozenset(
             Discipline(str(value)) for value in row["confirmed_injuries"]
         )
@@ -1664,10 +1794,12 @@ class PlanningService:
             goal_disciplines=context.goal_disciplines,
             confirmed_injuries=injuries,
             low_only_disciplines=low_only,
+            cross_training_opt_ins=context.cross_training_opt_ins,
             zone_capabilities=context.capabilities,
             available_dates=available_dates,
             selected_template_ids=selection.accepted_template_ids,
-            fixed_template_dates=placements,
+            selected_occurrence_ids=selection.accepted_occurrence_ids,
+            fixed_occurrence_dates=placements,
             onboarding_baseline=self._onboarding_baseline(
                 self._planning_input(context.source)
             ),
@@ -1732,7 +1864,7 @@ class PlanningService:
             for key, value in raw_placements.items()
         }
         if request.placement_mode == "manual" and set(placements) != set(
-            selection.accepted_template_ids
+            selection.accepted_occurrence_ids
         ):
             raise PlanningConstraintError(
                 "swipe_layout_incomplete",
@@ -1765,8 +1897,10 @@ class PlanningService:
             availability_source=str(row["availability_source"]),
             injuries=injuries,
             low_only_disciplines=low_only,
+            cross_training_opt_ins=context.cross_training_opt_ins,
             selected_template_ids=selection.accepted_template_ids,
-            fixed_template_dates=fixed_dates,
+            selected_occurrence_ids=selection.accepted_occurrence_ids,
+            fixed_occurrence_dates=fixed_dates,
         )
         plan_id = UUID(str(result["plan_id"]))
         proposal_id = UUID(str(result["proposal_id"]))
@@ -1774,8 +1908,30 @@ class PlanningService:
         plan = WeeklyPlanResponse.model_validate(
             await self._repository.fetch_plan(access_token, plan_id, revision)
         )
+        final_preview = build_weekly_plan(
+            week_start=week_start,
+            timezone_name=context.timezone_name,
+            race_date=context.race_date,
+            catalog=context.catalog,
+            prior_loads=context.prior_loads,
+            goal_disciplines=context.goal_disciplines,
+            confirmed_injuries=injuries,
+            low_only_disciplines=low_only,
+            cross_training_opt_ins=context.cross_training_opt_ins,
+            zone_capabilities=context.capabilities,
+            available_dates=available_dates,
+            selected_template_ids=selection.accepted_template_ids,
+            selected_occurrence_ids=selection.accepted_occurrence_ids,
+            fixed_occurrence_dates=fixed_dates,
+            onboarding_baseline=self._onboarding_baseline(
+                self._planning_input(context.source)
+            ),
+            maintenance_active=bool(context.source.get("maintenance_active", False)),
+        )
         final_placements = {
-            workout.template_id: workout.scheduled_date for workout in plan.workouts
+            workout.occurrence_id: workout.scheduled_date
+            for workout in final_preview.workouts
+            if workout.occurrence_id is not None
         }
         await self._repository.update_swipe_draft(
             athlete_id,
@@ -1828,6 +1984,7 @@ class PlanningService:
             availability_source="explicit",
             injuries=request.confirmed_injuries,
             low_only_disciplines=request.low_only_disciplines,
+            cross_training_opt_ins=request.cross_training_opt_ins,
             selected_template_ids=request.selected_template_ids,
             fixed_template_dates={
                 item.template_id: item.scheduled_date

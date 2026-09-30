@@ -6,7 +6,7 @@ select plan(12);
 
 select is(
   (select count(*) from public.workout_templates
-   where source_catalog = 'start23-v0.1'),
+   where source_catalog = 'start23-v0.1' and version = 1),
   154::bigint,
   'all time- or distance-driven source workouts are imported'
 );
@@ -15,7 +15,7 @@ select results_eq(
   $$
     select discipline, count(*)::bigint
     from public.workout_templates
-    where source_catalog = 'start23-v0.1'
+    where source_catalog = 'start23-v0.1' and version = 1
     group by discipline
     order by discipline
   $$,
@@ -29,14 +29,15 @@ select results_eq(
 
 select is(
   (select count(*) from public.workout_templates
-   where source_catalog = 'start23-v0.1' and discipline = 'swim'),
+   where source_catalog = 'start23-v0.1' and version = 1
+     and discipline = 'swim'),
   54::bigint,
   'all distance-driven swim rows are available'
 );
 
 select is(
   (select count(*) from public.workout_templates
-   where source_catalog = 'start23-v0.1'
+   where source_catalog = 'start23-v0.1' and version = 1
      and discipline = 'swim'
      and duration_minutes is null
      and distance_meters > 0),
@@ -48,6 +49,7 @@ select is(
   (select count(*)
    from public.workout_templates template
    where template.source_catalog = 'start23-v0.1'
+     and template.version = 1
      and template.discipline = 'swim'
      and template.distance_meters = (
        select sum(segment.distance_meters)
@@ -61,14 +63,15 @@ select is(
 
 select is(
   (select count(*) from public.workout_templates
-   where source_catalog = 'start23-v0.1' and athlete_selection_only),
+   where source_catalog = 'start23-v0.1' and version = 1
+     and athlete_selection_only),
   154::bigint,
   'source workouts are explicit athlete choices only'
 );
 
 select is(
   (select count(distinct source_workout_id) from public.workout_templates
-   where source_catalog = 'start23-v0.1'),
+   where source_catalog = 'start23-v0.1' and version = 1),
   154::bigint,
   'source workout identifiers remain unique and attributable'
 );
@@ -77,7 +80,7 @@ select lives_ok(
   $$
     select private.validate_workout_template(id)
     from public.workout_templates
-    where source_catalog = 'start23-v0.1'
+    where source_catalog = 'start23-v0.1' and version = 1
   $$,
   'every imported template passes aggregate catalog validation'
 );
@@ -86,6 +89,7 @@ select is(
   (select count(*) from private.workout_template_loads load
    join public.workout_templates template on template.id = load.template_id
    where template.source_catalog = 'start23-v0.1'
+     and template.version = 1
      and load.calculation_method = 'source_catalog_predefined_tss'),
   154::bigint,
   'predefined source load stays in the private catalog boundary'

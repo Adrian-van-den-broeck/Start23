@@ -54,7 +54,7 @@ def test_generated_plan_persistence_uses_only_the_server_secret() -> None:
     asyncio.run(exercise())
 
     assert captured is not None
-    assert captured.url.path.endswith("/rest/v1/rpc/create_weekly_plan_proposal_v2")
+    assert captured.url.path.endswith("/rest/v1/rpc/create_weekly_plan_proposal_v3")
     assert captured.headers["apikey"] == "sb_secret_test"
     assert "authorization" not in captured.headers
     assert str(athlete_id).encode() in captured.content

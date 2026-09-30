@@ -545,6 +545,7 @@ export function createSwipeWeekDraft(
     reuse_previous_week?: boolean;
     confirmed_injuries: Discipline[];
     low_only_disciplines?: Discipline[];
+    cross_training_opt_ins?: Discipline[];
     plan_id?: string;
     expected_base_revision?: number;
   },
@@ -572,6 +573,7 @@ export function transitionSwipeWeekDraft(
     expected_revision: number;
     action: 'accept' | 'pass' | 'undo' | 'reset_passed';
     candidate_template_id?: string;
+    candidate_occurrence_id?: string;
   },
 ): Promise<SwipeWeekDraft> {
   return request(
@@ -584,13 +586,13 @@ export function transitionSwipeWeekDraft(
 export function placeSwipeWeekWorkout(
   accessToken: string,
   draftId: string,
-  templateId: string,
+  occurrenceId: string,
   expectedRevision: number,
   scheduledDate: string,
 ): Promise<SwipeWeekDraft> {
   return request(
     accessToken,
-    `/api/v1/weekly-plans/swipe-drafts/${draftId}/placements/${templateId}`,
+    `/api/v1/weekly-plans/swipe-drafts/${draftId}/placements/${occurrenceId}`,
     {
       method: 'PUT',
       body: JSON.stringify({

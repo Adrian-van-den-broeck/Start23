@@ -227,13 +227,13 @@ async def transition_swipe_week_draft(
 
 
 @router.put(
-    "/weekly-plans/swipe-drafts/{draft_id}/placements/{template_id}",
+    "/weekly-plans/swipe-drafts/{draft_id}/placements/{occurrence_id}",
     response_model=SwipeWeekDraftResponse,
     responses=error_responses,
 )
 async def place_swipe_week_workout(
     draft_id: UUID,
-    template_id: UUID,
+    occurrence_id: UUID,
     placement: SwipeDraftPlacementRequest,
     access_token: Annotated[str, Depends(get_access_token)],
     identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
@@ -246,7 +246,7 @@ async def place_swipe_week_workout(
             access_token,
             identity.athlete_id,
             draft_id,
-            template_id,
+            occurrence_id,
             placement,
         )
     except Exception as error:

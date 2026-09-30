@@ -10,7 +10,7 @@ from app.modules.physiology.models import (
     RulesetVersion,
 )
 from app.modules.physiology.specification import (
-    PHASE_10_RULESET_V1,
+    JOREN_PLANNING_RULESET_V2,
     PhysiologySpecification,
 )
 
@@ -56,9 +56,9 @@ class AntiStackViolation:
 def find_anti_stack_violations(
     workouts: tuple[ScheduledWorkout, ...],
     *,
-    specification: PhysiologySpecification = PHASE_10_RULESET_V1,
+    specification: PhysiologySpecification = JOREN_PLANNING_RULESET_V2,
 ) -> tuple[AntiStackViolation, ...]:
-    """Apply the approved mixed elapsed-hour/local-rest-date BR-006 policy."""
+    """Apply the approved same-sport elapsed-hour BR-006 policy."""
     specification.require_approved(frozenset({RuleId.ANTI_STACK}))
 
     violations: list[AntiStackViolation] = []
@@ -76,16 +76,7 @@ def find_anti_stack_violations(
             interval = later.starts_at.astimezone(
                 timezone.utc
             ) - earlier.starts_at.astimezone(timezone.utc)
-            complete_rest_dates = (
-                later.starts_at.date() - earlier.starts_at.date()
-            ).days - 1
-            uses_local_rest_dates = required_hours == 48
-            violates = (
-                complete_rest_dates < 2
-                if uses_local_rest_dates
-                else interval < timedelta(hours=required_hours)
-            )
-            if violates:
+            if interval < timedelta(hours=required_hours):
                 violations.append(
                     AntiStackViolation(
                         ruleset_version=specification.version,
@@ -94,12 +85,6 @@ def find_anti_stack_violations(
                         later_workout_id=later.workout_id,
                         required_hours=required_hours,
                         actual_interval=interval,
-                        required_complete_rest_dates=(
-                            2 if uses_local_rest_dates else None
-                        ),
-                        actual_complete_rest_dates=(
-                            complete_rest_dates if uses_local_rest_dates else None
-                        ),
                     )
                 )
     return tuple(violations)

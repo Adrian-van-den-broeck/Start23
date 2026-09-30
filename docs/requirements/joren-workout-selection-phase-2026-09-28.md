@@ -39,7 +39,18 @@ calculations or authorize production activation.
   swimming is superseded by the specified 48 elapsed hours. The prior
   nonblocking manual spacing warning is superseded by server rejection.
 
-## Open decisions and preserved behavior
+## Final decision addendum, 2026-09-29
+
+The later explicit Joren answers supplied with the implementation request
+resolve the open items below. Base is Z1/Z2 only. Build weeks 1–3 fit Z3/Z4
+work to 70–90% of the nominal private high budget; week 4 releases Z5.
+Recovery and taper are Z1/Z2 only. Injury redistribution explicitly supersedes
+Phase 13 zero redistribution for new proposals: at most 80% of blocked sport
+load may move to safe, positive-basis bike/swim capacity under the existing
+10% progression boundary. The implementation and provenance are recorded in
+`docs/implementation/joren-planning-ruleset-v2.md`.
+
+## Historical open decisions and preserved behavior
 
 1. **Base high budget:** the current 80/20 model includes a 20% high target,
    while the new base description admits Z1/Z2 and puts Z3 in review. Decide

@@ -3,7 +3,7 @@
 from dataclasses import replace
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import pytest
 
@@ -12,20 +12,26 @@ from app.modules.physiology.joren import starting_baseline
 from app.modules.physiology.models import (
     Discipline,
     DurationMinutes,
+    Fraction,
     IntensityBucket,
     InternalLoad,
 )
 from app.modules.planning.domain import (
     PlanLoadSample,
     PlanningConstraintError,
+    PlanningTarget,
     PlanningTargetBasis,
     SelectedWorkout,
     ZoneCapability,
+    _bounded_selection,
+    _injury_adjusted_target,
+    _schedule_is_feasible,
     build_weekly_plan,
     eligible_workouts,
     remaining_workout_deck,
     resolve_target,
     schedule_workouts,
+    select_workouts,
     validate_manual_schedule,
 )
 from app.modules.workouts.catalog import (
@@ -114,7 +120,7 @@ def test_confirmed_known_values_cover_supported_build_goal_compositions(
     goal_disciplines: frozenset[Discipline],
     capabilities: dict[Discipline, ZoneCapability],
 ) -> None:
-    draft = build_weekly_plan(
+    values = dict(
         week_start=_WEEK_START,
         timezone_name="Europe/Amsterdam",
         race_date=date(2026, 12, 6),
@@ -131,9 +137,18 @@ def test_confirmed_known_values_cover_supported_build_goal_compositions(
         zone_capabilities=capabilities,
         available_dates=(_WEEK_START,),
     )
-
-    assert draft.target.phase is TrainingPhase.BUILD
-    assert {workout.discipline for workout in draft.workouts} == set(goal_disciplines)
+    if goal_disciplines == frozenset({Discipline.BIKE}):
+        draft = build_weekly_plan(**values)
+        assert draft.target.phase is TrainingPhase.BUILD
+        assert {workout.discipline for workout in draft.workouts} == set(
+            goal_disciplines
+        )
+    else:
+        # The small built-in catalog has no Z3/Z4 load inside the newly
+        # approved 70%-90% private high-budget window for this target.
+        with pytest.raises(PlanningConstraintError) as error:
+            build_weekly_plan(**values)
+        assert error.value.code == "catalog_capacity_unsatisfied"
 
 
 def test_confirmed_run_hr_uses_existing_reviewed_rpe_projection_in_build() -> None:
@@ -314,22 +329,21 @@ def test_first_plan_uses_onboarding_baseline_without_recovery_history(
     assert target.phase is TrainingPhase.BASE
     assert target.basis is PlanningTargetBasis.INITIAL_CATALOG_BASELINE
     assert target.target.value == baseline.total.value == Decimal("171.6")
-    # The target still exists; the small reviewed automatic catalog cannot
-    # represent it and now rejects the one-use fallback explicitly.
-    with pytest.raises(PlanningConstraintError) as error:
-        build_weekly_plan(
-            week_start=week_start,
-            timezone_name="Europe/Amsterdam",
-            race_date=date(2026, 12, 6),
-            catalog=active_catalog(REVIEWED_CATALOG),
-            prior_loads=(),
-            goal_disciplines=frozenset(Discipline),
-            confirmed_injuries=frozenset(),
-            zone_capabilities=_capabilities(),
-            available_dates=(week_start, week_start + timedelta(days=2)),
-            onboarding_baseline=baseline,
-        )
-    assert error.value.code == "catalog_capacity_unsatisfied"
+    # Approved bounded repeats can now cover a first-week target.
+    draft = build_weekly_plan(
+        week_start=week_start,
+        timezone_name="Europe/Amsterdam",
+        race_date=date(2026, 12, 6),
+        catalog=active_catalog(REVIEWED_CATALOG),
+        prior_loads=(),
+        goal_disciplines=frozenset(Discipline),
+        confirmed_injuries=frozenset(),
+        zone_capabilities=_capabilities(),
+        available_dates=(week_start, week_start + timedelta(days=2)),
+        onboarding_baseline=baseline,
+    )
+    assert draft.target.target == baseline.total
+    assert len(draft.workouts) > len(Discipline)
 
 
 @pytest.mark.parametrize("hours", ["0", "1", "3", "6", "15"])
@@ -358,15 +372,18 @@ def test_run_first_week_history_reaches_target_and_catalog_capacity(
         available_dates=(week_start, week_start + timedelta(days=2)),
         onboarding_baseline=baseline,
     )
-    if Decimal(hours) >= Decimal(3):
+    if hours == "15":
+        # Repeating the tiny built-in deck still has a finite 24-card bound.
+        # The reviewed source catalog matrix covers this volume separately.
         with pytest.raises(PlanningConstraintError) as error:
             build_weekly_plan(**values)
         assert error.value.code == "catalog_capacity_unsatisfied"
-    else:
-        draft = build_weekly_plan(**values)
-        assert draft.target.phase is TrainingPhase.BASE
-        assert draft.target.target == baseline.total
-        assert len(draft.workouts) == 1
+        return
+    draft = build_weekly_plan(**values)
+    assert draft.target.phase is TrainingPhase.BASE
+    assert draft.target.target == baseline.total
+    assert 1 <= len(draft.workouts) <= 24
+    assert abs(draft.target.target.value - draft.planned_load.value) < Decimal("36.3")
 
 
 def test_run_history_can_increase_count_when_reviewed_automatic_deck_exists() -> None:
@@ -411,7 +428,7 @@ def test_run_history_can_increase_count_when_reviewed_automatic_deck_exists() ->
     assert counts[0] < counts[1] < counts[2]
 
 
-def test_athlete_selection_only_template_is_manual_but_never_auto_selected() -> None:
+def test_reviewed_source_option_is_eligible_for_normal_selection() -> None:
     regular_bike = next(
         template
         for template in active_catalog(REVIEWED_CATALOG)
@@ -450,11 +467,21 @@ def test_athlete_selection_only_template_is_manual_but_never_auto_selected() -> 
         selected_template_ids=(source_option.id,),
     )
 
-    assert automatic.workouts[0].snapshot.template_id != source_option.id
+    assert source_option.id in {
+        template.id
+        for template in eligible_workouts(
+            catalog=catalog,
+            phase=TrainingPhase.BASE,
+            goal_disciplines=frozenset({Discipline.BIKE}),
+            confirmed_injuries=frozenset(),
+            zone_capabilities=_capabilities(),
+        )
+    }
+    assert automatic.workouts
     assert explicit.workouts[0].snapshot.template_id == source_option.id
 
 
-def test_distance_only_swim_is_planned_without_inferred_minutes() -> None:
+def test_distance_only_swim_source_load_cannot_enter_phase_13_target_fit() -> None:
     regular_swim = next(
         template
         for template in active_catalog(REVIEWED_CATALOG)
@@ -479,20 +506,24 @@ def test_distance_only_swim_is_planned_without_inferred_minutes() -> None:
     stored = next(template for template in current if template.id == distance_swim.id)
     assert stored.duration_minutes is None
     assert stored.distance_meters == distance_swim.distance_meters
+    assert distance_swim.internal_planned_load is not None
     assert stored.internal_planned_load is None
-    with pytest.raises(PlanningConstraintError, match="not eligible"):
-        build_weekly_plan(
-            week_start=_WEEK_START,
-            timezone_name="UTC",
-            race_date=date(2026, 12, 6),
-            catalog=current,
-            prior_loads=(),
-            goal_disciplines=frozenset({Discipline.SWIM}),
-            confirmed_injuries=frozenset(),
-            zone_capabilities=_capabilities(),
-            available_dates=(_WEEK_START,),
+    deck = eligible_workouts(
+        catalog=current,
+        phase=TrainingPhase.BASE,
+        goal_disciplines=frozenset({Discipline.SWIM}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities=_capabilities(),
+    )
+    assert distance_swim.id not in {template.id for template in deck}
+    with pytest.raises(PlanningConstraintError) as error:
+        select_workouts(
+            deck=deck,
+            required_disciplines=frozenset({Discipline.SWIM}),
+            target=distance_swim.internal_planned_load,
             selected_template_ids=(distance_swim.id,),
         )
+    assert error.value.code == "template_not_eligible"
 
 
 def test_established_recovery_history_keeps_existing_recovery_target() -> None:
@@ -802,6 +833,9 @@ def test_confirmed_injury_excludes_discipline_before_selection() -> None:
         confirmed_injuries=frozenset({Discipline.RUN}),
         zone_capabilities=_capabilities(),
         available_dates=_availability(),
+        onboarding_baseline=starting_baseline(
+            {sport: Decimal(60) for sport in Discipline}
+        ),
     )
 
     assert {workout.discipline for workout in draft.workouts} == {
@@ -1046,26 +1080,150 @@ def test_consolidation_keeps_same_discipline_high_intensity_spacing() -> None:
     assert captured.value.code == "rest_or_anti_stack_unsatisfied"
 
 
-def test_manual_anti_stack_violation_warns_at_71_hours_but_not_72() -> None:
+@pytest.mark.parametrize("discipline", [Discipline.BIKE, Discipline.SWIM])
+def test_auto_placement_uses_exact_48_hour_boundary_for_high_repeats(
+    discipline: Discipline,
+) -> None:
+    template = next(
+        item
+        for item in active_catalog()
+        if item.discipline is discipline
+        and item.intensity_bucket is IntensityBucket.HIGH
+        and not item.explicit_scheduling_only
+    )
+    first_id, second_id = uuid4(), uuid4()
+    selected = (
+        SelectedWorkout(discipline, snapshot_template(template), first_id),
+        SelectedWorkout(discipline, snapshot_template(template), second_id),
+    )
+    scheduled = schedule_workouts(
+        selected=selected,
+        available_dates=(_WEEK_START, _WEEK_START + timedelta(days=2)),
+        week_start=_WEEK_START,
+        timezone_name="UTC",
+        fixed_occurrence_dates={
+            first_id: _WEEK_START,
+            second_id: _WEEK_START + timedelta(days=2),
+        },
+    )
+    assert {item.scheduled_date for item in scheduled} == {
+        _WEEK_START,
+        _WEEK_START + timedelta(days=2),
+    }
+    with pytest.raises(PlanningConstraintError) as error:
+        schedule_workouts(
+            selected=selected,
+            available_dates=(_WEEK_START, _WEEK_START + timedelta(days=1)),
+            week_start=_WEEK_START,
+            timezone_name="UTC",
+            fixed_occurrence_dates={
+                first_id: _WEEK_START,
+                second_id: _WEEK_START + timedelta(days=1),
+            },
+        )
+    assert error.value.code == "rest_or_anti_stack_unsatisfied"
+
+
+def test_build_selection_uses_safe_alternative_when_best_load_fit_stacks() -> None:
+    catalog = active_catalog()
+    low = next(
+        item
+        for item in catalog
+        if item.discipline is Discipline.RUN
+        and item.intensity_bucket is IntensityBucket.LOW
+    )
+    high = next(
+        item
+        for item in catalog
+        if item.discipline is Discipline.RUN
+        and item.intensity_bucket is IntensityBucket.HIGH
+    )
+    deck = (
+        replace(
+            high,
+            id=UUID(int=1),
+            template_key=UUID(int=1),
+            internal_planned_load=InternalLoad(Decimal(8)),
+        ),
+        replace(
+            high,
+            id=UUID(int=2),
+            template_key=UUID(int=2),
+            internal_planned_load=InternalLoad(Decimal(16)),
+        ),
+        replace(
+            low,
+            id=UUID(int=3),
+            template_key=UUID(int=3),
+            internal_planned_load=InternalLoad(Decimal(84)),
+        ),
+        replace(
+            low,
+            id=UUID(int=4),
+            template_key=UUID(int=4),
+            internal_planned_load=InternalLoad(Decimal(42)),
+        ),
+    )
+    common = dict(
+        deck=deck,
+        prefix=(),
+        required_disciplines=frozenset({Discipline.RUN}),
+        target=InternalLoad(Decimal(100)),
+        phase=TrainingPhase.BUILD,
+        build_week=1,
+        desired_high_fraction=Fraction(Decimal("0.2")),
+        required_count=3,
+        required_composition={Discipline.RUN: 3},
+    )
+    unplaced = _bounded_selection(**common)
+    assert unplaced is not None
+    assert [item.id for item in unplaced] == [UUID(int=1), UUID(int=1), UUID(int=3)]
+    placed = _bounded_selection(
+        **common,
+        feasible=lambda selection: _schedule_is_feasible(
+            selection=selection,
+            week_start=_WEEK_START,
+            available_dates=(_WEEK_START, _WEEK_START + timedelta(days=2)),
+            timezone_name="UTC",
+        ),
+    )
+    assert placed is not None
+    assert [item.id for item in placed] == [UUID(int=2), UUID(int=4), UUID(int=4)]
+    assert (
+        _bounded_selection(
+            **{**common, "deck": (deck[0], deck[2])},
+            feasible=lambda selection: _schedule_is_feasible(
+                selection=selection,
+                week_start=_WEEK_START,
+                available_dates=(_WEEK_START,),
+                timezone_name="UTC",
+            ),
+        )
+        is None
+    )
+
+
+def test_manual_anti_stack_violation_rejects_at_71_hours_but_not_72() -> None:
     start = datetime(2026, 8, 3, 7, tzinfo=timezone.utc)
 
-    warning = validate_manual_schedule(
-        workouts=(
-            ScheduledWorkout(
-                "first",
-                frozenset({Discipline.RUN}),
-                IntensityBucket.HIGH,
-                start,
+    with pytest.raises(PlanningConstraintError) as error:
+        validate_manual_schedule(
+            workouts=(
+                ScheduledWorkout(
+                    "first",
+                    frozenset({Discipline.RUN}),
+                    IntensityBucket.HIGH,
+                    start,
+                ),
+                ScheduledWorkout(
+                    "moved",
+                    frozenset({Discipline.RUN}),
+                    IntensityBucket.HIGH,
+                    start + timedelta(hours=71),
+                ),
             ),
-            ScheduledWorkout(
-                "moved",
-                frozenset({Discipline.RUN}),
-                IntensityBucket.HIGH,
-                start + timedelta(hours=71),
-            ),
-        ),
-        moved_workout_id="moved",
-    )
+            moved_workout_id="moved",
+        )
     exact = validate_manual_schedule(
         workouts=(
             ScheduledWorkout(
@@ -1084,7 +1242,7 @@ def test_manual_anti_stack_violation_warns_at_71_hours_but_not_72() -> None:
         moved_workout_id="moved",
     )
 
-    assert [item.code for item in warning] == ["anti_stack_violation"]
+    assert error.value.code == "anti_stack_violation"
     assert exact == ()
 
 
@@ -1170,7 +1328,7 @@ def test_onboarding_never_invents_discipline_minimum_or_injury_allocation(
     assert captured.value.code == expected_code
 
 
-def test_injury_baseline_does_not_redistribute_other_discipline_load() -> None:
+def test_injury_baseline_does_not_transfer_into_running() -> None:
     drafts = [
         build_weekly_plan(
             week_start=_WEEK_START,
@@ -1192,9 +1350,40 @@ def test_injury_baseline_does_not_redistribute_other_discipline_load() -> None:
         )
         for other_minutes in (Decimal(0), Decimal(600))
     ]
-    assert (
-        drafts[0].target.target.value
-        == drafts[1].target.target.value
-        == Decimal("64.7")
+    assert all(
+        abs(draft.target.target.value - Decimal("64.7")) < Decimal("0.1")
+        for draft in drafts
     )
     assert all(workout.discipline is Discipline.RUN for workout in drafts[1].workouts)
+
+
+def test_injury_target_uses_private_sport_caps_and_keeps_transfer_low_only() -> None:
+    prior = PlanLoadSample(
+        week_start=_WEEK_START - timedelta(days=7),
+        load=InternalLoad(Decimal("480")),
+        phase=TrainingPhase.BUILD,
+        discipline_loads={
+            Discipline.RUN: InternalLoad(Decimal("300")),
+            Discipline.BIKE: InternalLoad(Decimal("120")),
+            Discipline.SWIM: InternalLoad(Decimal("60")),
+        },
+    )
+    adjusted, disciplines, replacements = _injury_adjusted_target(
+        target=PlanningTarget(
+            phase=TrainingPhase.BUILD,
+            basis=PlanningTargetBasis.PRIOR_PLANNED_HOLD,
+            target=InternalLoad(Decimal("480")),
+        ),
+        prior_loads=(prior,),
+        onboarding_baseline=None,
+        blocked=frozenset({Discipline.RUN}),
+        goal_disciplines=frozenset(Discipline),
+        eligible_recipients=frozenset({Discipline.BIKE, Discipline.SWIM}),
+        cross_training_opt_ins=frozenset(),
+        desired_high_fraction=Fraction(Decimal("0.20")),
+    )
+    assert adjusted.target.value == Decimal("198")
+    assert adjusted.discipline_caps[Discipline.BIKE].value == Decimal("132")
+    assert adjusted.discipline_caps[Discipline.SWIM].value == Decimal("66")
+    assert adjusted.desired_high_fraction.value <= Decimal("0.20")
+    assert disciplines == replacements == frozenset({Discipline.BIKE, Discipline.SWIM})

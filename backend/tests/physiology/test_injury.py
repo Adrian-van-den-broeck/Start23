@@ -8,6 +8,7 @@ from app.modules.physiology.injury import (
     AllowedIntensity,
     DisciplineRestriction,
     apply_mvp_injury_policy,
+    redistribute_confirmed_injury_load,
     redistribute_injury_load,
 )
 from app.modules.physiology.models import Discipline, InternalLoad
@@ -130,3 +131,73 @@ def test_self_reported_limited_restriction_rechecks_without_auto_clear() -> None
     assert restriction.requires_recheck(as_of=started + timedelta(days=6)) is False
     assert restriction.requires_recheck(as_of=started + timedelta(days=7)) is True
     assert restriction.end_at is None
+
+
+def test_new_ruleset_distributes_only_to_safe_low_impact_capacity() -> None:
+    result = redistribute_confirmed_injury_load(
+        pre_injury_targets={
+            Discipline.RUN: _load("300"),
+            Discipline.BIKE: _load("120"),
+            Discipline.SWIM: _load("60"),
+        },
+        recipient_safe_caps={
+            Discipline.BIKE: _load("180"),
+            Discipline.SWIM: _load("90"),
+        },
+        blocked_disciplines=frozenset({Discipline.RUN}),
+    )
+    assert result.removed_load.value == Decimal("300")
+    assert result.redistributed_load.value == Decimal("90")
+    assert {
+        allocation.discipline: allocation.load.value
+        for allocation in result.allocations
+    } == {Discipline.BIKE: Decimal("60"), Discipline.SWIM: Decimal("30")}
+
+
+def test_new_ruleset_uses_remaining_recipient_when_other_saturates() -> None:
+    result = redistribute_confirmed_injury_load(
+        pre_injury_targets={
+            Discipline.RUN: _load("100"),
+            Discipline.BIKE: _load("120"),
+            Discipline.SWIM: _load("60"),
+        },
+        recipient_safe_caps={
+            Discipline.BIKE: _load("130"),
+            Discipline.SWIM: _load("100"),
+        },
+        blocked_disciplines=frozenset({Discipline.RUN}),
+    )
+    assert result.redistributed_load.value == Decimal("50")
+    assert {
+        allocation.discipline: allocation.load.value
+        for allocation in result.allocations
+    } == {Discipline.BIKE: Decimal("10"), Discipline.SWIM: Decimal("40")}
+
+
+def test_new_ruleset_never_auto_adds_zero_basis_even_after_opt_in() -> None:
+    values = {Discipline.RUN: _load("100"), Discipline.BIKE: _load("0")}
+    caps = {Discipline.BIKE: _load("0")}
+    for opt_ins in (frozenset(), frozenset({Discipline.BIKE})):
+        result = redistribute_confirmed_injury_load(
+            pre_injury_targets=values,
+            recipient_safe_caps=caps,
+            blocked_disciplines=frozenset({Discipline.RUN}),
+            cross_training_opt_ins=opt_ins,
+        )
+        assert result.allocations == ()
+        assert result.redistributed_load.value == 0
+        assert result.rest_only
+    assert result.cross_training_consent_required is False
+
+
+def test_new_ruleset_never_transfers_into_running() -> None:
+    result = redistribute_confirmed_injury_load(
+        pre_injury_targets={
+            Discipline.BIKE: _load("100"),
+            Discipline.RUN: _load("120"),
+        },
+        recipient_safe_caps={Discipline.RUN: _load("200")},
+        blocked_disciplines=frozenset({Discipline.BIKE}),
+    )
+    assert result.allocations == ()
+    assert result.redistributed_load.value == 0

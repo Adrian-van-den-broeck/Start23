@@ -75,7 +75,7 @@ def test_openapi_contains_expected_foundation_paths(client: TestClient) -> None:
         "/api/v1/weekly-plans/swipe-drafts",
         "/api/v1/weekly-plans/swipe-drafts/{draft_id}",
         "/api/v1/weekly-plans/swipe-drafts/{draft_id}/transitions",
-        "/api/v1/weekly-plans/swipe-drafts/{draft_id}/placements/{template_id}",
+        "/api/v1/weekly-plans/swipe-drafts/{draft_id}/placements/{occurrence_id}",
         "/api/v1/weekly-plans/swipe-drafts/{draft_id}/submit",
         "/api/v1/weekly-plans/{plan_id}",
         "/api/v1/weekly-plans/{plan_id}/deck",
