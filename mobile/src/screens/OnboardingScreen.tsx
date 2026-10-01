@@ -44,6 +44,7 @@ import {
   isPastIsoDateInput,
 } from '../lib/dateInput';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
+import { parseRunPace } from '../lib/runPace';
 import {
   parsePositiveInteger,
   raceDisciplines,
@@ -441,6 +442,8 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
   const [totalTimeSeconds, setTotalTimeSeconds] = useState<number | null>(
     goal?.total_target_time_seconds ?? null,
   );
+  const [runGoalInput, setRunGoalInput] = useState<'time' | 'pace'>('time');
+  const [runGoalPace, setRunGoalPace] = useState('');
   const [distances, setDistances] = useState<Record<Discipline, string>>({
     swim: goal?.swim_distance_meters?.toString() ?? '',
     bike: goal?.bike_distance_meters?.toString() ?? '',
@@ -461,6 +464,12 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
       parsePositiveInteger(distances[discipline]),
     ]),
   ) as Partial<Record<Discipline, number | null>>;
+  const paceSeconds = parseRunPace(runGoalPace);
+  const effectiveTotalTimeSeconds = raceType === 'run' && runGoalInput === 'pace'
+    ? paceSeconds !== null && parsedDistances.run
+      ? Math.round(paceSeconds * parsedDistances.run / 1000)
+      : null
+    : totalTimeSeconds;
   const individualTotal = disciplines.reduce<number>(
     (sum, discipline) => sum + (disciplineTimeSeconds[discipline] ?? 0),
     0,
@@ -468,15 +477,15 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
   const valid = Boolean(
     raceName.trim() &&
       normalizedTargetDate &&
-      totalTimeSeconds !== null &&
-      totalTimeSeconds > 0 &&
+      effectiveTotalTimeSeconds !== null &&
+      effectiveTotalTimeSeconds > 0 &&
       disciplines.every((discipline) => parsedDistances[discipline]) &&
       disciplines.every(
         (discipline) =>
           disciplineTimeSeconds[discipline] === null ||
           disciplineTimeSeconds[discipline] > 0,
       ) &&
-      individualTotal <= totalTimeSeconds,
+      individualTotal <= effectiveTotalTimeSeconds,
   );
   const distanceErrors = Object.fromEntries(
     disciplines.map((discipline) => {
@@ -518,9 +527,9 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
           }`
         : null,
     ),
-    totalTimeSeconds === null
-      ? 'totale richttijd'
-      : totalTimeSeconds <= 0
+    effectiveTotalTimeSeconds === null
+      ? raceType === 'run' && runGoalInput === 'pace' ? 'geldig richttempo' : 'totale richttijd'
+      : effectiveTotalTimeSeconds <= 0
         ? 'geldige totale richttijd'
         : null,
     ...disciplines.map((discipline) =>
@@ -528,7 +537,7 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
         ? `geldige richttijd ${discipline}`
         : null,
     ),
-    totalTimeSeconds !== null && individualTotal > totalTimeSeconds
+    effectiveTotalTimeSeconds !== null && individualTotal > effectiveTotalTimeSeconds
       ? 'een totale richttijd die niet korter is dan de onderdeeltijden'
       : null,
   ].filter((message): message is string => message !== null);
@@ -692,7 +701,7 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                   value={distances[discipline]}
                   required
                 />
-                <DurationPicker
+                {raceType !== 'run' ? <DurationPicker
                   error={
                     validationAttempted
                       ? disciplineTimeErrors[discipline] ?? undefined
@@ -707,17 +716,37 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                     }))
                   }
                   valueSeconds={disciplineTimeSeconds[discipline]}
-                />
+                /> : null}
               </View>
             ))}
-            <DurationPicker
+            {raceType === 'run' ? (
+              <View accessibilityRole="radiogroup" style={styles.goalModeList}>
+                <Pressable accessibilityRole="radio" accessibilityState={{ checked: runGoalInput === 'time' }}
+                  onPress={() => setRunGoalInput('time')} style={styles.goalModeCard}>
+                  <Text style={styles.goalModeTitle}>Richttijd</Text>
+                </Pressable>
+                <Pressable accessibilityRole="radio" accessibilityState={{ checked: runGoalInput === 'pace' }}
+                  onPress={() => {
+                    setRunGoalInput('pace');
+                    setDisciplineTimeSeconds((current) => ({ ...current, run: null }));
+                  }} style={styles.goalModeCard}>
+                  <Text style={styles.goalModeTitle}>Richttempo (min/km)</Text>
+                </Pressable>
+              </View>
+            ) : null}
+            {raceType === 'run' && runGoalInput === 'pace' ? (
+              <FormField label="Richttempo" inputMode="text" placeholder="5:00"
+                hint="min:sec per km" value={runGoalPace} onChangeText={setRunGoalPace}
+                error={validationAttempted && paceSeconds === null ? 'Gebruik min:sec per km, bijvoorbeeld 5:00.' : undefined}
+                required />
+            ) : <DurationPicker
               error={
                 validationAttempted
-                  ? totalTimeSeconds === null
+                  ? effectiveTotalTimeSeconds === null
                     ? 'Totale richttijd is verplicht.'
-                    : totalTimeSeconds <= 0
+                    : effectiveTotalTimeSeconds <= 0
                       ? 'Kies een tijd langer dan 00:00:00.'
-                      : individualTotal > totalTimeSeconds
+                      : individualTotal > effectiveTotalTimeSeconds
                         ? 'De totale richttijd mag niet korter zijn dan de onderdeeltijden samen.'
                         : undefined
                   : undefined
@@ -727,7 +756,7 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
               onChange={setTotalTimeSeconds}
               valueSeconds={totalTimeSeconds}
               required
-            />
+            />}
             <FormField
               label="Specifieke focus (optioneel)"
               multiline
@@ -759,7 +788,7 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                     parsedDistances[discipline],
                   ]),
                 ),
-                total_target_time_seconds: totalTimeSeconds!,
+                total_target_time_seconds: effectiveTotalTimeSeconds!,
                 ...Object.fromEntries(
                   disciplines
                     .filter(

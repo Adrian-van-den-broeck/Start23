@@ -38,6 +38,7 @@ import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { RpeChoiceList } from '../components/RpeChoiceList';
 import { StatusPill } from '../components/StatusPill';
+import { formatRunPace, parseRunPace } from '../lib/runPace';
 import { colors, radius, spacing } from '../theme/tokens';
 
 type Props = {
@@ -105,7 +106,7 @@ const metricLabels: Record<ZoneMetricKind, string> = {
   swim_css_seconds_per_100m: 'CSS (sec/100 m)',
   bike_ftp_watts: 'FTP (watt)',
   bike_threshold_heart_rate_bpm: 'Fietsdrempelhartslag (bpm)',
-  run_threshold_pace_seconds_per_km: 'Loopdrempeltempo (sec/km)',
+  run_threshold_pace_seconds_per_km: 'Loopdrempeltempo (min/km)',
   run_lthr_bpm: 'Loop-LTHR (bpm)',
 };
 
@@ -199,6 +200,12 @@ function parsePositive(value: string, label: string): string {
     throw new Error(`${label} moet positief zijn.`);
   }
   return String(parsed);
+}
+
+function parseRunPaceRequired(value: string): string {
+  const seconds = parseRunPace(value);
+  if (seconds === null) throw new Error('Vul looptempo in als min:sec per km, bijvoorbeeld 5:00.');
+  return String(seconds);
 }
 
 function parseCompleteness(value: string): string {
@@ -481,7 +488,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
         protocol.protocol_id === 'start23_run_threshold_30min_v1' &&
         segment.segment_id === 'test_30min'
       ) {
-        parsePositive(draft.averagePace, 'Gemiddeld drempeltempo');
+        parseRunPaceRequired(draft.averagePace);
         parseCompleteness(draft.completenessPercent);
         if (!draft.stableSegment) {
           throw new Error('Bevestig dat het looptestblok stabiel is uitgevoerd.');
@@ -593,10 +600,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
       );
     }
     if (draft.averagePace) {
-      input.average_pace_seconds_per_km = parsePositive(
-        draft.averagePace,
-        'Gemiddeld tempo',
-      );
+      input.average_pace_seconds_per_km = parseRunPaceRequired(draft.averagePace);
     }
     if (draft.elapsedTime) {
       input.elapsed_time_seconds = parsePositive(
@@ -1035,7 +1039,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                                       averagePace: value,
                                     })
                                   }
-                                  placeholder="hele sec/km"
+                                  placeholder="bijv. 5:00 min/km"
                                   value={draft.averagePace}
                                 />
                                 <FormField
@@ -1237,7 +1241,10 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                       <Text style={styles.resultMetricLabel}>
                         {metricLabels[threshold.metric_kind]}
                       </Text>
-                      <Text style={styles.resultMetricValue}>{threshold.value}</Text>
+                      <Text style={styles.resultMetricValue}>
+                        {threshold.metric_kind === 'run_threshold_pace_seconds_per_km'
+                          ? formatRunPace(threshold.value) : threshold.value}
+                      </Text>
                     </View>
                   ))}
                   {result.zone_profiles.map((profile) => (
@@ -1248,9 +1255,11 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                       </Text>
                       {profile.boundaries.map((boundary) => (
                         <Text key={boundary.zone_number} style={styles.reason}>
-                          Z{boundary.zone_number}: {boundary.lower_value ?? 'open'}
+                          Z{boundary.zone_number}: {profile.metric_kind === 'run_threshold_pace_seconds_per_km'
+                            ? formatRunPace(boundary.lower_value) : boundary.lower_value ?? 'open'}
                           {' – '}
-                          {boundary.upper_value ?? 'open'}
+                          {profile.metric_kind === 'run_threshold_pace_seconds_per_km'
+                            ? formatRunPace(boundary.upper_value) : boundary.upper_value ?? 'open'}
                         </Text>
                       ))}
                     </View>

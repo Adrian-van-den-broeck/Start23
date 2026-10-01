@@ -38,6 +38,7 @@ import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
 import { formatIsoDateInput } from '../lib/dateInput';
+import { formatRunPace } from '../lib/runPace';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
 import { ZoneSetupStep } from './ZoneSetupStep';
 
@@ -107,8 +108,10 @@ function ActionButton({
 
 function BoundaryList({
   boundaries,
+  runPace,
 }: {
   boundaries: ZoneProfileSnapshot['boundaries'];
+  runPace: boolean;
 }) {
   return (
     <View style={styles.boundaryList}>
@@ -116,7 +119,9 @@ function BoundaryList({
         <View key={boundary.zone_number} style={styles.boundaryChip}>
           <Text style={styles.boundaryZone}>Z{boundary.zone_number}</Text>
           <Text style={styles.boundaryValue}>
-            {boundary.lower_value ?? 'open'} - {boundary.upper_value ?? 'open'}
+            {runPace ? formatRunPace(boundary.lower_value) : boundary.lower_value ?? 'open'}
+            {' - '}
+            {runPace ? formatRunPace(boundary.upper_value) : boundary.upper_value ?? 'open'}
           </Text>
         </View>
       ))}
@@ -146,20 +151,28 @@ function ProfileValues({ profile }: { profile: ZoneProfileSnapshot }) {
           <Text style={styles.primaryMetricLabel}>
             {profile.metric.metric_kind}
           </Text>
-          <Text style={styles.primaryMetricValue}>{profile.metric.value}</Text>
+          <Text style={styles.primaryMetricValue}>
+            {profile.metric.metric_kind === 'run_threshold_pace_seconds_per_km'
+              ? formatRunPace(profile.metric.value) : profile.metric.value}
+          </Text>
         </View>
       ) : null}
       {metricProfiles.map((metric) => (
         <View key={metric.metric_kind} style={styles.valueBlock}>
           <View style={styles.metricHeader}>
             <Text style={styles.metricLabel}>{metric.metric_kind}</Text>
-            <Text style={styles.metricValue}>{metric.source_value}</Text>
+            <Text style={styles.metricValue}>
+              {metric.metric_kind === 'run_threshold_pace_seconds_per_km'
+                ? formatRunPace(metric.source_value) : metric.source_value}
+            </Text>
           </View>
-          <BoundaryList boundaries={metric.boundaries} />
+          <BoundaryList boundaries={metric.boundaries}
+            runPace={metric.metric_kind === 'run_threshold_pace_seconds_per_km'} />
         </View>
       ))}
       {metricProfiles.length === 0 && profile.boundaries.length > 0 ? (
-        <BoundaryList boundaries={profile.boundaries} />
+        <BoundaryList boundaries={profile.boundaries}
+          runPace={profile.metric?.metric_kind === 'run_threshold_pace_seconds_per_km'} />
       ) : null}
       <View style={styles.sourceRow}>
         <Text style={styles.sourceLabel}>Bron</Text>

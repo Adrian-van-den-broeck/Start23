@@ -24,6 +24,7 @@ import type {
 import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
+import { parseRunPace } from '../lib/runPace';
 import { colors, radius, spacing } from '../theme/tokens';
 
 type MetricOption = {
@@ -70,7 +71,7 @@ const metricOptions: Record<Discipline, readonly MetricOption[]> = {
     {
       kind: 'run_threshold_pace_seconds_per_km',
       label: 'Drempeltempo',
-      unit: 'sec/km',
+      unit: 'min/km',
       guidance: 'pace',
       descending: true,
     },
@@ -120,9 +121,15 @@ function guidanceForKnownValues(
   options: readonly MetricOption[],
   values: Partial<Record<ZoneMetricKind, string>>,
 ): GuidanceMode {
-  const entered = options.filter((option) => Number(values[option.kind]) > 0);
+  const entered = options.filter((option) => metricValue(option, values[option.kind]) > 0);
   if (entered.length > 1) return 'combined';
   return entered[0]?.guidance ?? options[0].guidance;
+}
+
+function metricValue(option: MetricOption, raw?: string): number {
+  return option.kind === 'run_threshold_pace_seconds_per_km'
+    ? parseRunPace(raw ?? '') ?? NaN
+    : Number(raw);
 }
 
 function Chip({
@@ -301,21 +308,21 @@ export function ZoneSetupStep({
   );
   const positiveWidths = boundaries.every(
     (boundary) =>
-      Number(boundary.lower_value) >= 0 &&
-      Number(boundary.upper_value) > Number(boundary.lower_value),
+      metricValue(boundaryOption, boundary.lower_value) >= 0 &&
+      metricValue(boundaryOption, boundary.upper_value) > metricValue(boundaryOption, boundary.lower_value),
   );
   const contiguous = boundaries.slice(1).every((current, index) => {
     const previous = boundaries[index];
     return boundaryOption.descending
-      ? Number(previous.lower_value) === Number(current.upper_value)
-      : Number(previous.upper_value) === Number(current.lower_value);
+      ? metricValue(boundaryOption, previous.lower_value) === metricValue(boundaryOption, current.upper_value)
+      : metricValue(boundaryOption, previous.upper_value) === metricValue(boundaryOption, current.lower_value);
   });
   const wholePaceBoundaries =
     !boundaryOption.descending ||
     boundaries.every(
       (boundary) =>
-        Number.isInteger(Number(boundary.lower_value)) &&
-        Number.isInteger(Number(boundary.upper_value)),
+        Number.isInteger(metricValue(boundaryOption, boundary.lower_value)) &&
+        Number.isInteger(metricValue(boundaryOption, boundary.upper_value)),
     );
   const boundariesValid =
     !includeBoundaries ||
@@ -324,11 +331,11 @@ export function ZoneSetupStep({
       contiguous &&
       wholePaceBoundaries);
   const enteredThresholds = availableMetrics.filter(
-    (option) => Number(knownValues[option.kind]) > 0,
+    (option) => metricValue(option, knownValues[option.kind]) > 0,
   );
   const wholePaceThresholds = enteredThresholds.every(
     (option) =>
-      !option.descending || Number.isInteger(Number(knownValues[option.kind])),
+      !option.descending || Number.isInteger(metricValue(option, knownValues[option.kind])),
   );
   const selectedThresholdPresent = enteredThresholds.some(
     (option) => option.kind === boundaryMetric,
@@ -336,7 +343,7 @@ export function ZoneSetupStep({
   const invalidThresholds = availableMetrics.filter((option) => {
     const rawValue = knownValues[option.kind]?.trim() ?? '';
     if (!rawValue) return false;
-    const numericValue = Number(rawValue);
+    const numericValue = metricValue(option, rawValue);
     return (
       !Number.isFinite(numericValue) ||
       numericValue <= 0 ||
@@ -370,7 +377,7 @@ export function ZoneSetupStep({
     if (!knownValuesValid) return;
     const thresholds = enteredThresholds.map((option) => ({
       metric_kind: option.kind,
-      value: knownValues[option.kind]!,
+      value: String(metricValue(option, knownValues[option.kind])),
     }));
     void onSave(discipline, {
       setup_route: 'known_values',
@@ -378,7 +385,11 @@ export function ZoneSetupStep({
       source_quality: knownValueSource,
       thresholds,
       zone_profiles: includeBoundaries
-        ? [{ metric_kind: boundaryMetric, boundaries }]
+        ? [{ metric_kind: boundaryMetric, boundaries: boundaries.map((boundary) => ({
+            ...boundary,
+            lower_value: String(metricValue(boundaryOption, boundary.lower_value)),
+            upper_value: String(metricValue(boundaryOption, boundary.upper_value)),
+          })) }]
         : [],
     });
   };
@@ -490,7 +501,9 @@ export function ZoneSetupStep({
                 knownValuesValidationAttempted
                   ? invalidThresholds.includes(option)
                     ? option.descending
-                      ? 'Vul een positief geheel aantal seconden in.'
+                      ? option.kind === 'run_threshold_pace_seconds_per_km'
+                        ? 'Gebruik min:sec per km, bijvoorbeeld 5:00.'
+                        : 'Vul een positief geheel aantal seconden in.'
                       : 'Vul een positieve waarde in.'
                     : enteredThresholds.length === 0
                       ? availableMetrics.length === 1
@@ -503,10 +516,12 @@ export function ZoneSetupStep({
               }
               hint={
                 option.descending
-                  ? 'Gebruik hele seconden in de canonieke eenheid.'
+                  ? option.kind === 'run_threshold_pace_seconds_per_km'
+                    ? 'Gebruik min:sec per km, bijvoorbeeld 5:00.'
+                    : 'Gebruik hele seconden in de canonieke eenheid.'
                   : undefined
               }
-              inputMode="decimal"
+              inputMode={option.kind === 'run_threshold_pace_seconds_per_km' ? 'text' : 'decimal'}
               key={option.kind}
               label={option.label}
               onChangeText={(value) => {
@@ -519,11 +534,11 @@ export function ZoneSetupStep({
                   [option.kind]: value,
                 }));
                 if (
-                  Number(value) > 0 &&
+                  metricValue(option, value) > 0 &&
                   availableMetrics.filter(
                     (candidate) =>
                       candidate.kind !== option.kind &&
-                      Number(knownValues[candidate.kind]) > 0,
+                      metricValue(candidate, knownValues[candidate.kind]) > 0,
                   ).length === 0
                 ) {
                   setBoundaryMetric(option.kind);
@@ -533,7 +548,9 @@ export function ZoneSetupStep({
                 );
               }}
               placeholder={
-                availableMetrics.length === 1
+                option.kind === 'run_threshold_pace_seconds_per_km'
+                  ? '5:00'
+                  : availableMetrics.length === 1
                   ? 'Verplicht'
                   : 'Minstens één waarde vereist'
               }
@@ -591,7 +608,7 @@ export function ZoneSetupStep({
                   <Text style={styles.zoneLabel}>Z{boundary.zone_number}</Text>
                   <View style={styles.boundaryInput}>
                     <FormField
-                      inputMode="decimal"
+                      inputMode={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? 'text' : 'decimal'}
                       label="Onder"
                       onChangeText={(value) =>
                         setBoundaries((current) =>
@@ -602,13 +619,13 @@ export function ZoneSetupStep({
                           ),
                         )
                       }
-                      placeholder="0"
+                      placeholder={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? '5:00' : '0'}
                       value={boundary.lower_value}
                     />
                   </View>
                   <View style={styles.boundaryInput}>
                     <FormField
-                      inputMode="decimal"
+                      inputMode={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? 'text' : 'decimal'}
                       label="Boven"
                       onChangeText={(value) =>
                         setBoundaries((current) =>
@@ -619,7 +636,7 @@ export function ZoneSetupStep({
                           ),
                         )
                       }
-                      placeholder="0"
+                      placeholder={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? '5:00' : '0'}
                       value={boundary.upper_value}
                     />
                   </View>

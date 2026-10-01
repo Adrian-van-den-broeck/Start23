@@ -202,6 +202,25 @@ describe('onboarding components', () => {
     });
   });
 
+  test('run pace input derives the existing total-time contract without a pace field', async () => {
+    const onSave = jest.fn(async () => undefined);
+    const screen = await render(
+      <GoalStep goal={null} onSave={onSave} options={goalOptions} saving={false} />,
+    );
+    await fireEvent.press(screen.getByRole('radio', { name: /Wedstrijd of evenement/ }));
+    await fireEvent.press(screen.getByRole('radio', { name: 'Lopen' }));
+    await fireEvent.changeText(screen.getByLabelText('Naam van de race'), '10K');
+    await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
+    await fireEvent.changeText(screen.getByLabelText('Afstand'), '10000');
+    await fireEvent.press(screen.getByRole('radio', { name: 'Richttempo (min/km)' }));
+    await fireEvent.changeText(screen.getByLabelText('Richttempo'), '5:00');
+    await fireEvent.press(screen.getByRole('button', { name: 'A-doel opslaan' }));
+    expect(onSave).toHaveBeenCalledWith({
+      race_type: 'run', race_name: '10K', race_date: '2099-06-15',
+      run_distance_meters: 10000, total_target_time_seconds: 3000,
+    });
+  });
+
   test('editing a saved goal loads and preserves exact canonical durations', async () => {
     const onSave = jest.fn(async () => undefined);
     const goal: PrimaryRaceGoal = {
