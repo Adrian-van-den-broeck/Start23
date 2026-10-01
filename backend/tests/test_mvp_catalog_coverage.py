@@ -148,6 +148,8 @@ def test_descriptive_source_event_labels_do_not_restrict_run_deck() -> None:
         ("1", "64.7"),
         ("3", "194.1"),
         ("6", "388.1"),
+        ("8", "517.5"),
+        ("10", "646.9"),
         ("15", "970.3"),
     ],
 )
@@ -167,6 +169,7 @@ def test_marathon_history_matrix_uses_reviewed_catalog_and_bounded_repeats(
         confirmed_injuries=frozenset(),
         zone_capabilities={Discipline.RUN: _run_capability(mode)},
     )
+    assert len(deck) == 21
     assert any(template.source_catalog for template in deck)
 
     kwargs = dict(
@@ -198,7 +201,7 @@ def test_marathon_history_matrix_uses_reviewed_catalog_and_bounded_repeats(
         )
 
 
-@pytest.mark.parametrize("hours", ["0", "3", "6", "15"])
+@pytest.mark.parametrize("hours", ["0", "1", "3", "6", "8", "10", "15"])
 def test_october_monday_wednesday_saturday_supports_run_history(hours: str) -> None:
     week_start = date(2026, 10, 5)
     available_dates = tuple(week_start + timedelta(days=offset) for offset in (0, 2, 5))
@@ -226,7 +229,10 @@ def test_october_monday_wednesday_saturday_supports_run_history(hours: str) -> N
         )
 
 
-@pytest.mark.parametrize(("hours", "expected_count"), [("3", 2), ("6", 9), ("15", 11)])
+@pytest.mark.parametrize(
+    ("hours", "expected_count"),
+    [("0", 2), ("1", 1), ("3", 2), ("6", 9), ("8", 10), ("10", 8), ("15", 11)],
+)
 def test_complete_run_swipes_place_distinct_occurrences_and_submit_payload(
     hours: str, expected_count: int
 ) -> None:
@@ -306,8 +312,38 @@ def test_complete_run_swipes_place_distinct_occurrences_and_submit_payload(
     assert {row["occurrence_id"] for row in rows} == {
         str(occurrence_id) for occurrence_id in selection.accepted_occurrence_ids
     }
-    if hours != "3":
+    if hours in {"6", "8", "10", "15"}:
         assert len({row["template_id"] for row in rows}) < len(rows)
+
+
+def test_eight_hour_run_has_independent_exact_repeat_safe_witness() -> None:
+    """A catalog witness protects the 8 h gap independently of selector search."""
+    deck = eligible_workouts(
+        catalog=_durable_run_catalog(),
+        phase=TrainingPhase.BASE,
+        goal_disciplines=frozenset({Discipline.RUN}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities={Discipline.RUN: _run_capability("known_values")},
+    )
+    loads = {
+        template.internal_planned_load.value
+        for template in deck
+        if template.internal_planned_load is not None
+        and not template.explicit_scheduling_only
+    }
+    witness = (
+        (Decimal("36.30"), 5),
+        (Decimal("60"), 1),
+        (Decimal("64"), 2),
+        (Decimal("130"), 1),
+        (Decimal("18"), 1),
+    )
+    assert len(deck) == 21
+    assert all(load in loads for load, _ in witness)
+    assert sum(count for _, count in witness) == 10 <= 24
+    assert sum((load * count for load, count in witness), Decimal(0)) == Decimal(
+        "517.5"
+    )
 
 
 @pytest.mark.parametrize(

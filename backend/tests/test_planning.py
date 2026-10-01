@@ -1212,6 +1212,102 @@ def test_october_week_mobile_swipe_contract_is_accepted_and_stale_safe(
     assert invalid.json()["error"]["code"] == "validation_failed"
 
 
+def test_eight_hour_run_october_mobile_swipe_and_placement(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Use the reviewed source catalog on the exact reported mobile route."""
+    from test_mvp_catalog_coverage import _durable_run_catalog
+
+    async def reviewed_catalog(
+        _provider: StaticCatalogProvider,
+    ) -> tuple[WorkoutTemplate, ...]:
+        return _durable_run_catalog()
+
+    # The memory repository resolves stored snapshots through this provider too.
+    monkeypatch.setattr(StaticCatalogProvider, "fetch_catalog", reviewed_catalog)
+
+    owners = {"athlete-a": uuid4()}
+    repository = MemoryPlanningRepository(owners)
+    snapshot = repository._requests[owners["athlete-a"]]["input_snapshot"]
+    snapshot["profile"]["timezone"] = "Europe/Amsterdam"
+    snapshot["goal"].update(
+        race_type="run",
+        race_date="2027-04-04",
+        target_date="2027-04-04",
+        race_discipline_profile=["run"],
+    )
+    snapshot["zones"] = [
+        {
+            "discipline": "run",
+            "fallback_active": False,
+            "metric": {"kind": "run_lthr_bpm", "value": 170},
+        }
+    ]
+    snapshot["discipline_setups"] = []
+    for row in snapshot["training_history"]:
+        row["previous_month_weekly_minutes"] = 480 if row["discipline"] == "run" else 0
+
+    with TestClient(
+        create_app(
+            Settings(environment="test"),
+            access_token_verifier=PlanningTokenVerifier(owners),
+            onboarding_repository=ZoneRejectStub(),  # type: ignore[arg-type]
+            planning_repository=repository,
+            planning_catalog_provider=StaticCatalogProvider(),
+        )
+    ) as client:
+        response = client.post(
+            "/api/v1/weekly-plans/swipe-drafts",
+            headers=_headers(),
+            json={
+                "week_start": "2026-10-05",
+                "available_dates": ["2026-10-05", "2026-10-07", "2026-10-10"],
+                "confirmed_injuries": [],
+                "cross_training_opt_ins": [],
+            },
+        )
+        assert response.status_code == 201, response.text
+        draft = response.json()
+        assert draft["ruleset_version"] == "joren-planning-ruleset-2"
+        assert draft["target_workout_count"] == 10
+        assert draft["target_composition"] == {"swim": 0, "bike": 0, "run": 10}
+        assert draft["current_candidate"] is not None
+        assert "tss" not in str(draft).casefold()
+        assert "planned_load" not in str(draft).casefold()
+
+        while draft["state"] == "collecting":
+            current = draft["current_candidate"]
+            accepted = client.post(
+                f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions",
+                headers=_headers(),
+                json={
+                    "expected_revision": draft["revision"],
+                    "action": "accept",
+                    "candidate_template_id": current["id"],
+                    "candidate_occurrence_id": current["occurrence_id"],
+                },
+            )
+            assert accepted.status_code == 200, accepted.text
+            draft = accepted.json()
+
+        assert len(draft["accepted_workouts"]) == 10
+        assert draft["state"] == "placement"
+        submitted = client.post(
+            f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/submit",
+            headers=_headers(),
+            json={
+                "expected_revision": draft["revision"],
+                "placement_mode": "automatic",
+            },
+        )
+        assert submitted.status_code == 201, submitted.text
+        plan = submitted.json()["plan"]
+        assert len(plan["workouts"]) == 10
+        assert len({item["scheduled_date"] for item in plan["workouts"]}) == 3
+        assert "tss" not in str(submitted.json()).casefold()
+        assert "planned_load" not in str(submitted.json()).casefold()
+
+
 def test_swipe_draft_is_owner_scoped_idempotent_and_submits_only_pending(
     planning_client: TestClient,
 ) -> None:
