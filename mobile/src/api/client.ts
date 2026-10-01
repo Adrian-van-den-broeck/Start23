@@ -74,6 +74,9 @@ function validationMessage(body: ErrorEnvelope): string | null {
   if (body.error?.code !== 'validation_failed') return null;
   const violations = body.error.details?.violations ?? [];
   if (violations.length === 0) return null;
+  if (violations.some((violation) => violation.type === 'extra_forbidden')) {
+    return 'De app en de Wombo-server gebruiken verschillende versies. Probeer het later opnieuw.';
+  }
   const fields = new Set(
     violations
       .flatMap((violation) => violation.location ?? [])

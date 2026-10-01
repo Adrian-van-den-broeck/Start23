@@ -121,6 +121,76 @@ describe('mobile API transport contracts', () => {
     });
   });
 
+  test('sends October Monday/Wednesday/Saturday as local dates with the v2 contract', async () => {
+    const { client, fetchMock } = loadClient();
+    const input = {
+      week_start: '2026-10-05',
+      available_dates: ['2026-10-05', '2026-10-07', '2026-10-10'],
+      confirmed_injuries: [] as Array<'run'>,
+      cross_training_opt_ins: [] as Array<'bike'>,
+    };
+
+    await client.createSwipeWeekDraft('athlete-token', input);
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      `${API_URL}/api/v1/weekly-plans/swipe-drafts`,
+      {
+        method: 'POST',
+        body: JSON.stringify(input),
+        headers,
+      },
+    );
+  });
+
+  test('reports a stale server request contract instead of blaming athlete fields', async () => {
+    const { client, fetchMock } = loadClient();
+    fetchMock.mockResolvedValueOnce(
+      response(422, {
+        error: {
+          code: 'validation_failed',
+          details: {
+            violations: [
+              { location: ['body', 'cross_training_opt_ins'], type: 'extra_forbidden' },
+            ],
+          },
+        },
+      }),
+    );
+
+    await expect(
+      client.createSwipeWeekDraft('athlete-token', {
+        week_start: '2026-10-05',
+        available_dates: ['2026-10-05', '2026-10-07', '2026-10-10'],
+        confirmed_injuries: [],
+        cross_training_opt_ins: [],
+      }),
+    ).rejects.toMatchObject({
+      code: 'validation_failed',
+      message: expect.stringContaining('verschillende versies'),
+    });
+  });
+
+  test('explains recoverable swipe feasibility without a field-validation message', async () => {
+    const { client, fetchMock } = loadClient();
+    fetchMock.mockResolvedValueOnce(
+      response(409, {
+        error: { code: 'swipe_draft_no_completion' },
+      }),
+    );
+
+    await expect(
+      client.createSwipeWeekDraft('athlete-token', {
+        week_start: '2026-10-05',
+        available_dates: ['2026-10-05', '2026-10-07', '2026-10-10'],
+        confirmed_injuries: [],
+        cross_training_opt_ins: [],
+      }),
+    ).rejects.toMatchObject({
+      code: 'swipe_draft_no_completion',
+      message: expect.stringContaining('Kies extra beschikbare dagen'),
+    });
+  });
+
   test('profile save serializes only the two separated mutation contracts', async () => {
     const { client, fetchMock } = loadClient();
 

@@ -198,6 +198,34 @@ def test_marathon_history_matrix_uses_reviewed_catalog_and_bounded_repeats(
         )
 
 
+@pytest.mark.parametrize("hours", ["0", "3", "6", "15"])
+def test_october_monday_wednesday_saturday_supports_run_history(hours: str) -> None:
+    week_start = date(2026, 10, 5)
+    available_dates = tuple(week_start + timedelta(days=offset) for offset in (0, 2, 5))
+    draft = build_weekly_plan(
+        week_start=week_start,
+        timezone_name="Europe/Amsterdam",
+        race_date=date(2027, 4, 4),
+        catalog=_durable_run_catalog(),
+        prior_loads=(),
+        goal_disciplines=frozenset({Discipline.RUN}),
+        confirmed_injuries=frozenset(),
+        zone_capabilities={Discipline.RUN: _run_capability("approved_calibration")},
+        available_dates=available_dates,
+        onboarding_baseline=starting_baseline(
+            {Discipline.RUN: Decimal(hours) * Decimal(60)}
+        ),
+    )
+    assert draft.workouts
+    assert {workout.scheduled_date for workout in draft.workouts} <= set(
+        available_dates
+    )
+    if len(draft.workouts) > len(available_dates):
+        assert len(draft.workouts) > len(
+            {workout.scheduled_date for workout in draft.workouts}
+        )
+
+
 @pytest.mark.parametrize(("hours", "expected_count"), [("3", 2), ("6", 9), ("15", 11)])
 def test_complete_run_swipes_place_distinct_occurrences_and_submit_payload(
     hours: str, expected_count: int

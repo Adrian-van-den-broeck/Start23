@@ -1156,6 +1156,62 @@ def test_live_android_run_flow_reaches_workout_selection_with_default_days(
     assert "tss" not in str(result).casefold()
 
 
+def test_october_week_mobile_swipe_contract_is_accepted_and_stale_safe(
+    planning_client: TestClient,
+) -> None:
+    """The mobile v2 field must reach planning instead of failing request validation."""
+
+    app = cast(FastAPI, planning_client.app)
+    repository = cast(MemoryPlanningRepository, app.state.planning_repository)
+    owner = repository._owner("athlete-a")
+    snapshot = repository._requests[owner]["input_snapshot"]
+    snapshot["profile"]["timezone"] = "Europe/Amsterdam"
+    snapshot["goal"].update(race_type="run", target_date="2027-04-04")
+    snapshot["zones"] = [
+        {
+            "discipline": "run",
+            "fallback_active": False,
+            "metric": {"kind": "run_lthr_bpm", "value": 170},
+        }
+    ]
+    snapshot["discipline_setups"] = []
+    payload = {
+        "week_start": "2026-10-05",
+        "available_dates": ["2026-10-05", "2026-10-07", "2026-10-10"],
+        "confirmed_injuries": [],
+        "cross_training_opt_ins": [],
+    }
+    path = "/api/v1/weekly-plans/swipe-drafts"
+
+    created = planning_client.post(path, headers=_headers(), json=payload)
+    assert created.status_code == 201, created.text
+    draft = created.json()
+    assert draft["week_start"] == payload["week_start"]
+    assert draft["available_dates"] == payload["available_dates"]
+    assert draft["state"] == "collecting"
+    assert draft["current_candidate"] is not None
+    assert draft["target_workout_count"] == sum(draft["target_composition"].values())
+    assert "tss" not in str(draft).casefold()
+
+    replay = planning_client.post(path, headers=_headers(), json=payload)
+    assert replay.status_code == 201, replay.text
+    assert replay.json()["id"] == draft["id"]
+
+    stale = planning_client.post(
+        f"{path}/{draft['id']}/transitions",
+        headers=_headers(),
+        json={"expected_revision": draft["revision"] + 1, "action": "undo"},
+    )
+    assert stale.status_code == 409
+    assert stale.json()["error"]["code"] == "swipe_draft_stale"
+
+    invalid = planning_client.post(
+        path, headers=_headers(), json={**payload, "week_start": "2026-10-06"}
+    )
+    assert invalid.status_code == 422
+    assert invalid.json()["error"]["code"] == "validation_failed"
+
+
 def test_swipe_draft_is_owner_scoped_idempotent_and_submits_only_pending(
     planning_client: TestClient,
 ) -> None:
