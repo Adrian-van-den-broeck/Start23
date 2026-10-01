@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
   compactEventTitle: { color: colors.brandDeep, flex: 1, fontSize: 7, fontWeight: '800' },
   compactRest: { backgroundColor: colors.surfaceMuted, borderRadius: 3, padding: 2 },
   compactRestText: { color: colors.inkMuted, fontSize: 7, fontWeight: '700' },
-  weekAgenda: { borderColor: colors.line, borderRadius: radius.md, borderWidth: 1, overflow: 'hidden' },
+  weekAgenda: { borderColor: colors.line, borderRadius: radius.md, borderWidth: 1 },
   agendaDay: { borderBottomColor: colors.line, borderBottomWidth: 1, flexDirection: 'row', minHeight: 72 },
   agendaToday: { backgroundColor: colors.highlightSoft },
   agendaDate: { alignItems: 'center', borderRightColor: colors.line, borderRightWidth: 1, justifyContent: 'center', padding: spacing.sm, width: 52 },
