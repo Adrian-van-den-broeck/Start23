@@ -246,7 +246,7 @@ export function AuthScreen() {
             <View accessibilityLabel="Staging build diagnostics" style={styles.verificationBuild}>
               <Text style={styles.verificationText}>
                 Staging candidate {Constants.expoConfig?.version ?? 'unknown'}
-                {' ('}{Constants.platform?.android?.versionCode ?? 'unknown'}{')'}
+                {' · build '}{process.env.EXPO_PUBLIC_BUILD_NUMBER ?? 'unknown'}
                 {' · '}{process.env.EXPO_PUBLIC_BUILD_GIT_SHA ?? 'unknown'}
               </Text>
               <Text style={styles.verificationText}>API: {verificationHost}</Text>
