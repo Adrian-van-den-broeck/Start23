@@ -41,9 +41,9 @@ const warningCopy: Record<string, { message: string; title: string }> = {
       'Voor een beperkte discipline zijn alleen rustige trainingen opgenomen.',
   },
   target_outside_catalog_capacity: {
-    title: 'Weekdoel nog niet compleet',
+    title: 'Weekcombinatie vraagt aandacht',
     message:
-      'De beschikbare trainingen sluiten nog niet volledig aan op het weekdoel.',
+      'De gekozen trainingen sluiten niet precies aan op dit weekvoorstel. Controleer de combinatie voor goedkeuring.',
   },
   workouts_consolidated_on_available_dates: {
     title: 'Trainingen gecombineerd',

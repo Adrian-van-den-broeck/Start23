@@ -75,6 +75,7 @@ import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
 import { TrainingCalendar } from '../components/TrainingCalendar';
 import { isDateInWeek, WeekSchedule } from '../components/WeekSchedule';
+import { WorkoutDetail } from '../components/WorkoutDetail';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { formatIsoDateInput } from '../lib/dateInput';
 import { workoutCardDescription } from '../lib/workoutPresentation';
@@ -939,6 +940,8 @@ export function PlanningScreen({
   const [swipeDraft, setSwipeDraft] = useState<SwipeWeekDraft | null>(null);
   const [calendarWorkouts, setCalendarWorkouts] = useState<PlannedWorkout[]>([]);
   const [calendarRestDays, setCalendarRestDays] = useState<RestDay[]>([]);
+  const [detailWorkout, setDetailWorkout] = useState<PlannedWorkout | null>(null);
+  const calendarRequestRef = useRef(0);
   const [pendingMove, setPendingMove] = useState<{
     scheduledDate: string;
     warnings: PlanWarning[];
@@ -1301,23 +1304,28 @@ export function PlanningScreen({
 
   const loadCalendarRange = useCallback(
     (fromDate: string, toDate: string) => {
+      const requestNumber = ++calendarRequestRef.current;
       setBusy(true);
       setError(null);
       getCalendar(accessToken, fromDate, toDate)
         .then((result) => {
+          if (requestNumber !== calendarRequestRef.current) return;
           setCalendarWorkouts(result.workouts);
           setCalendarRestDays(result.rest_days);
         })
-        .catch((caught) =>
+        .catch((caught) => {
+          if (requestNumber !== calendarRequestRef.current) return;
           setError(
             caught instanceof Error
               ? caught.message
               : language === 'nl'
                 ? 'De kalender kon niet worden geladen.'
                 : 'The calendar could not be loaded.',
-          ),
-        )
-        .finally(() => setBusy(false));
+          );
+        })
+        .finally(() => {
+          if (requestNumber === calendarRequestRef.current) setBusy(false);
+        });
     },
     [accessToken, language],
   );
@@ -1774,6 +1782,7 @@ export function PlanningScreen({
                   <>
                     <WeekSchedule
                       busy={busy}
+                      onOpenWorkout={setDetailWorkout}
                       onMove={requestWorkoutMove}
                       weekStart={plan.week_start}
                       workouts={plan.workouts}
@@ -1874,6 +1883,7 @@ export function PlanningScreen({
               initialDate={plan?.week_start ?? weekStart}
               loading={busy}
               onRangeChange={loadCalendarRange}
+              onOpenWorkout={setDetailWorkout}
               restDays={calendarRestDays}
               workouts={calendarWorkouts}
             />
@@ -1882,6 +1892,7 @@ export function PlanningScreen({
         </FadeInView>
         </ScrollView>
       </KeyboardAvoidingView>
+      <WorkoutDetail workout={detailWorkout} onClose={() => setDetailWorkout(null)} />
     </SafeAreaView>
   );
 }

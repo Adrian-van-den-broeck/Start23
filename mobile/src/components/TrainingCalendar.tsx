@@ -13,6 +13,7 @@ type TrainingCalendarProps = {
   initialDate: string;
   loading: boolean;
   onRangeChange: (fromDate: string, toDate: string) => void;
+  onOpenWorkout: (workout: PlannedWorkout) => void;
   restDays: RestDay[];
   workouts: PlannedWorkout[];
 };
@@ -60,6 +61,7 @@ export function TrainingCalendar({
   initialDate,
   loading,
   onRangeChange,
+  onOpenWorkout,
   restDays,
   workouts,
 }: TrainingCalendarProps) {
@@ -126,7 +128,12 @@ export function TrainingCalendar({
     return (
       <>
         {dayWorkouts.map((workout) => (
-          <View key={workout.id} style={compact ? styles.compactEvent : styles.event}>
+          <Pressable
+            accessibilityRole="button"
+            key={workout.id}
+            onPress={() => onOpenWorkout(workout)}
+            style={compact ? styles.compactEvent : styles.event}
+          >
             <View style={styles.eventMarker} />
             <View style={styles.eventCopy}>
               <Text numberOfLines={compact ? 1 : 2} style={compact ? styles.compactEventTitle : styles.eventTitle}>
@@ -142,7 +149,7 @@ export function TrainingCalendar({
                 </Text>
               ) : null}
             </View>
-          </View>
+          </Pressable>
         ))}
         {restDay ? (
           <View style={compact ? styles.compactRest : styles.restEvent}>

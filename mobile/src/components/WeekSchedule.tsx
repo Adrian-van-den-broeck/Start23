@@ -64,35 +64,58 @@ export function resolveWeekDragDate(
   return addDays(weekStart, targetIndex);
 }
 
+export function resolveMeasuredWeekDragDate(
+  weekDates: string[],
+  currentDate: string,
+  verticalDistance: number,
+  centers: ReadonlyMap<string, number>,
+): string {
+  const origin = centers.get(currentDate);
+  if (origin === undefined || weekDates.some((date) => !centers.has(date))) {
+    return resolveWeekDragDate(weekDates[0], currentDate, verticalDistance);
+  }
+  const destination = origin + verticalDistance;
+  return weekDates.reduce((best, date) =>
+    Math.abs(centers.get(date)! - destination) < Math.abs(centers.get(best)! - destination)
+      ? date : best,
+  currentDate);
+}
+
 function DraggableWorkout({
   busy,
+  onOpenWorkout,
   onMove,
+  resolveDropDate,
   weekDates,
   weekStart,
   workout,
 }: {
   busy: boolean;
+  onOpenWorkout: (workout: PlannedWorkout) => void;
   onMove: (workout: PlannedWorkout, scheduledDate: string) => void;
+  resolveDropDate: (workout: PlannedWorkout, verticalDistance: number) => string;
   weekDates: string[];
   weekStart: string;
   workout: PlannedWorkout;
 }) {
   const { locale } = useLanguage();
   const [showDateChoices, setShowDateChoices] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const dragY = useRef(new Animated.Value(0)).current;
   const panResponder = useMemo(
     () =>
       PanResponder.create({
+        onStartShouldSetPanResponder: () => !busy,
         onMoveShouldSetPanResponder: (_, gesture) =>
-          !busy && Math.abs(gesture.dy) > 7,
-        onPanResponderGrant: () => dragY.setValue(0),
+          !busy && Math.abs(gesture.dy) > 2,
+        onPanResponderGrant: () => {
+          dragY.setValue(0);
+          setDragging(true);
+        },
         onPanResponderMove: (_, gesture) => dragY.setValue(gesture.dy),
         onPanResponderRelease: (_, gesture) => {
-          const target = resolveWeekDragDate(
-            weekStart,
-            workout.scheduled_date,
-            gesture.dy,
-          );
+          const target = resolveDropDate(workout, gesture.dy);
+          setDragging(false);
           Animated.spring(dragY, {
             friction: 7,
             tension: 55,
@@ -102,13 +125,15 @@ function DraggableWorkout({
           if (target !== workout.scheduled_date) onMove(workout, target);
         },
         onPanResponderTerminate: () => {
+          setDragging(false);
           Animated.spring(dragY, {
             toValue: 0,
             useNativeDriver: true,
           }).start();
         },
+        onPanResponderTerminationRequest: () => false,
       }),
-    [busy, dragY, onMove, weekStart, workout],
+    [busy, dragY, onMove, resolveDropDate, workout],
   );
 
   const moveOneDay = (amount: -1 | 1) => {
@@ -135,17 +160,21 @@ function DraggableWorkout({
           if (event.nativeEvent.actionName === 'decrement') moveOneDay(-1);
           if (event.nativeEvent.actionName === 'increment') moveOneDay(1);
         }}
-        style={[styles.draggable, { transform: [{ translateY: dragY }] }]}
-        {...panResponder.panHandlers}
+        style={[styles.draggable, dragging && styles.dragging, { transform: [{ translateY: dragY }] }]}
       >
         <View style={styles.workoutHeader}>
           <StatusPill
             label={workout.intensity_bucket === 'high' ? 'Intensief' : 'Rustig'}
             tone={workout.intensity_bucket === 'high' ? 'accent' : 'neutral'}
           />
-          <Text style={styles.dragHint}>↕ Sleep</Text>
+          <View accessibilityLabel={`Sleep ${workout.name} naar een andere dag`}
+            accessibilityRole="button" style={styles.dragHandle} {...panResponder.panHandlers}>
+            <Text style={styles.dragHint}>↕ Sleep hier</Text>
+          </View>
         </View>
-        <Text style={styles.workoutTitle}>{workout.name}</Text>
+        <Pressable accessibilityRole="button" onPress={() => onOpenWorkout(workout)}>
+          <Text style={styles.workoutTitle}>{workout.name}</Text>
+        </Pressable>
         <Text numberOfLines={2} style={styles.workoutDescription}>
           {workoutCardDescription(workout.description)}
         </Text>
@@ -191,11 +220,13 @@ function DraggableWorkout({
 
 export function WeekSchedule({
   busy,
+  onOpenWorkout,
   onMove,
   weekStart,
   workouts,
 }: {
   busy: boolean;
+  onOpenWorkout: (workout: PlannedWorkout) => void;
   onMove: (workout: PlannedWorkout, scheduledDate: string) => void;
   weekStart: string;
   workouts: PlannedWorkout[];
@@ -205,12 +236,15 @@ export function WeekSchedule({
     () => Array.from({ length: 7 }, (_, index) => addDays(weekStart, index)),
     [weekStart],
   );
+  const dayCenters = useRef(new Map<string, number>());
+  const resolveDropDate = (workout: PlannedWorkout, verticalDistance: number) =>
+    resolveMeasuredWeekDragDate(weekDates, workout.scheduled_date, verticalDistance, dayCenters.current);
 
   return (
     <View style={styles.board}>
       <Text style={styles.boardTitle}>Weekplanning</Text>
       <Text style={styles.boardHint}>
-        Sleep een trainingsblok naar een andere dag. Alleen de datum verandert;
+        Sleep via de greep op de training naar een andere dag. Alleen de datum verandert;
         Wombo controleert de volledige week eerst op de server.
       </Text>
       {weekDates.map((date) => {
@@ -218,7 +252,11 @@ export function WeekSchedule({
           (workout) => workout.scheduled_date === date,
         );
         return (
-          <View accessibilityLabel={`Planning voor ${date}`} key={date} style={styles.dayRow}>
+          <View accessibilityLabel={`Planning voor ${date}`} key={date} style={styles.dayRow}
+            onLayout={(event) => {
+              const { y, height } = event.nativeEvent.layout;
+              dayCenters.current.set(date, y + height / 2);
+            }}>
             <View style={styles.dayDate}>
               <Text style={styles.dayWeekday}>
                 {parseDate(date)
@@ -233,7 +271,9 @@ export function WeekSchedule({
                   <DraggableWorkout
                     busy={busy}
                     key={workout.id}
+                    onOpenWorkout={onOpenWorkout}
                     onMove={onMove}
+                    resolveDropDate={resolveDropDate}
                     weekDates={weekDates}
                     weekStart={weekStart}
                     workout={workout}
@@ -294,6 +334,8 @@ const styles = StyleSheet.create({
     padding: spacing.sm,
     ...shadows.card,
   },
+  dragging: { opacity: 0.85, zIndex: 2 },
+  dragHandle: { paddingHorizontal: spacing.sm, paddingVertical: spacing.sm },
   workoutHeader: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   dragHint: { color: colors.brand, fontSize: 10, fontWeight: '900' },
   workoutTitle: { color: colors.ink, fontSize: 13, fontWeight: '900' },

@@ -4,6 +4,7 @@ import type { PlannedWorkout } from '../api/types';
 import { LanguageProvider } from '../i18n/LanguageProvider';
 import {
   isDateInWeek,
+  resolveMeasuredWeekDragDate,
   resolveWeekDragDate,
   WeekSchedule,
 } from './WeekSchedule';
@@ -47,12 +48,22 @@ describe('WeekSchedule', () => {
     ).toThrow('outside the active week');
   });
 
+  test('drop resolution follows measured row heights', () => {
+    const dates = ['2026-09-21', '2026-09-22', '2026-09-23'];
+    const centers = new Map([
+      [dates[0], 58], [dates[1], 240], [dates[2], 500],
+    ]);
+    expect(resolveMeasuredWeekDragDate(dates, dates[0], 175, centers)).toBe(dates[1]);
+    expect(resolveMeasuredWeekDragDate(dates, dates[0], 450, centers)).toBe(dates[2]);
+  });
+
   test('accessible non-drag date selection requests the same server move', async () => {
     const onMove = jest.fn();
     const screen = await render(
       <LanguageProvider>
         <WeekSchedule
           busy={false}
+          onOpenWorkout={jest.fn()}
           onMove={onMove}
           weekStart="2026-09-21"
           workouts={[workout]}
@@ -70,5 +81,17 @@ describe('WeekSchedule', () => {
     );
 
     expect(onMove).toHaveBeenCalledWith(workout, '2026-09-23');
+  });
+
+  test('workout title opens the catalog-backed detail', async () => {
+    const onOpenWorkout = jest.fn();
+    const screen = await render(
+      <LanguageProvider>
+        <WeekSchedule busy={false} onOpenWorkout={onOpenWorkout} onMove={jest.fn()}
+          weekStart="2026-09-21" workouts={[workout]} />
+      </LanguageProvider>,
+    );
+    await fireEvent.press(screen.getByRole('button', { name: 'Rustige duurloop' }));
+    expect(onOpenWorkout).toHaveBeenCalledWith(workout);
   });
 });
