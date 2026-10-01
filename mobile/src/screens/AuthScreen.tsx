@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Constants from 'expo-constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   ActivityIndicator,
@@ -18,6 +19,12 @@ import { getSupabaseClient } from '../lib/supabase';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
 
 export function AuthScreen() {
+  const verificationHost = 'r6-api-r6-staging.up.railway.app';
+  const showVerificationBuild =
+    process.env.EXPO_PUBLIC_VERIFICATION_BUILD === '1' &&
+    process.env.EXPO_PUBLIC_API_BASE_URL === `https://${verificationHost}` &&
+    process.env.EXPO_PUBLIC_SUPABASE_URL ===
+      'https://isfumhgqphieoayqahjv.supabase.co';
   const [mode, setMode] = useState<'sign-in' | 'sign-up'>('sign-in');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -235,6 +242,16 @@ export function AuthScreen() {
               worden nooit zonder jouw bevestiging toegepast.
             </Text>
           </FadeInView>
+          {showVerificationBuild ? (
+            <View accessibilityLabel="Staging build diagnostics" style={styles.verificationBuild}>
+              <Text style={styles.verificationText}>
+                Staging candidate {Constants.expoConfig?.version ?? 'unknown'}
+                {' ('}{Constants.platform?.android?.versionCode ?? 'unknown'}{')'}
+                {' · '}{process.env.EXPO_PUBLIC_BUILD_GIT_SHA ?? 'unknown'}
+              </Text>
+              <Text style={styles.verificationText}>API: {verificationHost}</Text>
+            </View>
+          ) : null}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -242,6 +259,8 @@ export function AuthScreen() {
 }
 
 const styles = StyleSheet.create({
+  verificationBuild: { alignItems: 'center', gap: spacing.xs },
+  verificationText: { color: colors.inkMuted, fontSize: 11 },
   safeArea: {
     backgroundColor: colors.canvas,
     flex: 1,
