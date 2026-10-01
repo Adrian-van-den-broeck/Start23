@@ -940,6 +940,7 @@ export function PlanningScreen({
   const [swipeDraft, setSwipeDraft] = useState<SwipeWeekDraft | null>(null);
   const [calendarWorkouts, setCalendarWorkouts] = useState<PlannedWorkout[]>([]);
   const [calendarRestDays, setCalendarRestDays] = useState<RestDay[]>([]);
+  const [calendarLoading, setCalendarLoading] = useState(false);
   const [detailWorkout, setDetailWorkout] = useState<PlannedWorkout | null>(null);
   const calendarRequestRef = useRef(0);
   const [pendingMove, setPendingMove] = useState<{
@@ -1305,7 +1306,7 @@ export function PlanningScreen({
   const loadCalendarRange = useCallback(
     (fromDate: string, toDate: string) => {
       const requestNumber = ++calendarRequestRef.current;
-      setBusy(true);
+      setCalendarLoading(true);
       setError(null);
       getCalendar(accessToken, fromDate, toDate)
         .then((result) => {
@@ -1324,7 +1325,7 @@ export function PlanningScreen({
           );
         })
         .finally(() => {
-          if (requestNumber === calendarRequestRef.current) setBusy(false);
+          if (requestNumber === calendarRequestRef.current) setCalendarLoading(false);
         });
     },
     [accessToken, language],
@@ -1881,7 +1882,7 @@ export function PlanningScreen({
           <View style={styles.panel}>
             <TrainingCalendar
               initialDate={plan?.week_start ?? weekStart}
-              loading={busy}
+              loading={calendarLoading}
               onRangeChange={loadCalendarRange}
               onOpenWorkout={setDetailWorkout}
               restDays={calendarRestDays}
