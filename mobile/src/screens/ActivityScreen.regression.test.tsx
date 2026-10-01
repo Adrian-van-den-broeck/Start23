@@ -130,6 +130,16 @@ describe('unplanned workout regression', () => {
       ),
     );
     expect(await screen.findByText('Extra workout')).toBeTruthy();
+    await screen.unmount();
+    const reopened = await render(
+      <LanguageProvider>
+        <ActivityScreen accessToken="athlete-token" onBack={jest.fn()}
+          onSignOut={jest.fn(async () => undefined)} />
+      </LanguageProvider>,
+    );
+    expect(await reopened.findByText('Extra workout')).toBeTruthy();
+    expect(createActivity).toHaveBeenCalledTimes(1);
+    expect(submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
   });
 
   test('rapid repeated create taps keep one logical submission in flight', async () => {
@@ -175,5 +185,39 @@ describe('unplanned workout regression', () => {
       resolveCreate?.(pending);
     });
     await waitFor(() => expect(listActivities).toHaveBeenCalledTimes(2));
+  });
+
+  test('timeout retry reuses the activity key and successful create leaves one feedback form', async () => {
+    let activities: CompletedActivity[] = [];
+    jest.mocked(listActivities).mockImplementation(async () => activities);
+    jest.mocked(getCalendar).mockResolvedValue({
+      from_date: '2026-09-08', to_date: '2026-10-06', workouts: [], rest_days: [],
+    });
+    jest.mocked(listPlannedExternalActivities).mockResolvedValue([]);
+    jest.mocked(getOnboarding).mockResolvedValue({
+      profile: { timezone: 'Europe/Amsterdam', timezone_confirmed_at: '2026-09-01T00:00:00Z' },
+    } as unknown as OnboardingState);
+    jest.mocked(createActivity)
+      .mockRejectedValueOnce(new Error('network timeout'))
+      .mockImplementationOnce(async () => {
+        activities = [pending];
+        return pending;
+      });
+
+    const screen = await render(
+      <LanguageProvider>
+        <ActivityScreen accessToken="athlete-token" onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} />
+      </LanguageProvider>,
+    );
+    const save = await screen.findByRole('button', { name: 'Save activity' });
+    await fireEvent.press(save);
+    await screen.findByText('network timeout');
+    await fireEvent.press(save);
+    await waitFor(() => expect(createActivity).toHaveBeenCalledTimes(2));
+    const keys = jest.mocked(createActivity).mock.calls.map((call) => call[1]);
+    expect(keys[0]).toBe(keys[1]);
+    expect(await screen.findAllByText('How hard did this workout feel?')).toHaveLength(1);
+    await fireEvent.press(save);
+    expect(createActivity).toHaveBeenCalledTimes(2);
   });
 });

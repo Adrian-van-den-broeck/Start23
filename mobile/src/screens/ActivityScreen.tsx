@@ -32,6 +32,7 @@ import { StatusPill } from '../components/StatusPill';
 import { type AppLanguage, useLanguage } from '../i18n/LanguageProvider';
 import { hasPartialObservedZoneTime } from '../lib/onboardingForms';
 import { rpeDescription } from '../lib/rpe';
+import { observedRunPace } from '../lib/runPace';
 import { colors, radius, spacing } from '../theme/tokens';
 
 type ActivityScreenProps = {
@@ -195,6 +196,7 @@ export function ActivityScreen({
   const [startedAt, setStartedAt] = useState(() => new Date().toISOString());
   const [athleteTimezone, setAthleteTimezone] = useState('');
   const [idempotencyKey, setIdempotencyKey] = useState(newIdempotencyKey);
+  const [createdActivityId, setCreatedActivityId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingRpeActivityId, setEditingRpeActivityId] = useState<string | null>(
@@ -210,6 +212,9 @@ export function ActivityScreen({
     () => activities.filter((activity) => activity.processing_state === 'awaiting_rpe'),
     [activities],
   );
+  const feedbackActivity =
+    pendingRpe.find((activity) => activity.id === createdActivityId) ??
+    pendingRpe[0];
 
   const load = async () => {
     const now = new Date();
@@ -285,6 +290,15 @@ export function ActivityScreen({
     setBusy(true);
     setError(null);
     try {
+      // A completed POST can be followed by a failed refresh. Keep the same
+      // logical submission until feedback is stored instead of creating again.
+      if (createdActivityId) {
+        await load();
+        return;
+      }
+      if (pendingRpe.length > 0) {
+        throw new Error('Rond eerst de RPE van de opgeslagen activiteit af.');
+      }
       if (!athleteTimezone) {
         throw new Error('Bevestig eerst je tijdzone in de intake.');
       }
@@ -306,7 +320,7 @@ export function ActivityScreen({
       if (Number.isNaN(new Date(startedAt).getTime())) {
         throw new Error('Gebruik een geldig werkelijk starttijdstip in ISO-formaat.');
       }
-      await createActivity(accessToken, idempotencyKey, {
+      const created = await createActivity(accessToken, idempotencyKey, {
         ...(selectedWorkout
           ? { planned_workout_id: selectedWorkout.id }
           : {}),
@@ -321,7 +335,7 @@ export function ActivityScreen({
           ? {}
           : { distance_meters: numericDistance }),
       });
-      setIdempotencyKey(newIdempotencyKey());
+      setCreatedActivityId(created.id);
       setSelectedWorkout(null);
       setSelectedExternal(null);
       setStartedAt(new Date().toISOString());
@@ -362,6 +376,10 @@ export function ActivityScreen({
         rpe,
         averageHeartRate,
       );
+      if (createdActivityId === activityId) {
+        setCreatedActivityId(null);
+        setIdempotencyKey(newIdempotencyKey());
+      }
       setHeartRateByActivity((current) => {
         const next = { ...current };
         delete next[activityId];
@@ -426,7 +444,7 @@ export function ActivityScreen({
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {busy ? <ActivityIndicator color={colors.brand} /> : null}
 
-        {pendingRpe.map((activity) => (
+        {feedbackActivity ? [feedbackActivity].map((activity) => (
           <View key={activity.id} style={styles.alertCard}>
             <StatusPill label={t('rpe.awaiting')} tone="accent" />
             <Text style={styles.cardTitle}>
@@ -456,7 +474,7 @@ export function ActivityScreen({
               onSelect={(rpe) => void saveRpe(activity.id, rpe)}
             />
           </View>
-        ))}
+        )) : null}
 
         <View style={styles.panel}>
           <Text style={styles.title}>{t('activity.register')}</Text>
@@ -567,11 +585,11 @@ export function ActivityScreen({
           />
           <Pressable
             accessibilityRole="button"
-            disabled={busy || !athleteTimezone}
+            disabled={busy || !athleteTimezone || pendingRpe.length > 0}
             onPress={() => void save()}
             style={[
               styles.action,
-              (busy || !athleteTimezone) && styles.disabled,
+              (busy || !athleteTimezone || pendingRpe.length > 0) && styles.disabled,
             ]}
           >
             <Text style={styles.actionText}>{t('activity.save')}</Text>
@@ -613,6 +631,11 @@ export function ActivityScreen({
                   : ` · ${rpeDescription(activity.discipline, activity.rpe)} (RPE ${activity.rpe})`}
               </Text>
               <Text style={styles.body}>{resultMessage(activity, language)}</Text>
+              {activity.discipline === 'run' && observedRunPace(activity.duration_minutes, activity.distance_meters) ? (
+                <Text style={styles.meta}>
+                  Gemiddeld tempo: {observedRunPace(activity.duration_minutes, activity.distance_meters)}
+                </Text>
+              ) : null}
               <ActivityMeasurementNotices
                 distanceMeters={activity.distance_meters}
                 durationMinutes={activity.duration_minutes}
