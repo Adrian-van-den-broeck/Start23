@@ -11,6 +11,7 @@ import os
 import secrets
 import subprocess
 import sys
+import tempfile
 from datetime import datetime, timedelta, timezone
 from uuid import UUID, uuid4
 
@@ -55,7 +56,7 @@ def main() -> None:
                 "--linked",
                 "--project-ref",
                 "isfumhgqphieoayqahjv",
-                "/* R6 development query */\n" + sql,
+                sql,
             ],
             capture_output=True,
             text=True,
@@ -143,32 +144,62 @@ def main() -> None:
                 auth_id, token = create_actor(db, key, secret, label)
                 users.append(auth_id)
             if label == "b":
+                before_fixture = development_query(
+                    "select exists(select 1 from auth.users "
+                    f"where id = '{UUID(auth_id)}'::uuid) as auth_exists, "
+                    "exists(select 1 from private.athlete_identity_map "
+                    f"where auth_user_id = '{UUID(auth_id)}'::uuid) as mapping_exists"
+                )
+                if before_fixture != [{"auth_exists": True, "mapping_exists": True}]:
+                    raise VerificationError("legacy fixture actor identity is missing")
                 fixture = (
                     ROOT / "scripts" / "r6_legacy_onboarding_fixture.sql"
                 ).read_text()
-                result = subprocess.run(
-                    [
-                        cli,
-                        "db",
-                        "query",
-                        "--linked",
-                        "--project-ref",
-                        "isfumhgqphieoayqahjv",
-                        "/* R6 guarded fixture */\n"
-                        + fixture.replace("__R6_AUTH_ID__", str(UUID(auth_id))),
-                    ],
-                    capture_output=True,
-                    text=True,
-                    timeout=30,
-                    check=False,
+                fixture = "\n".join(
+                    line
+                    for line in fixture.splitlines()
+                    if not line.lstrip().startswith("--")
                 )
-                if (
-                    result.returncode
-                    or json.loads(result.stdout).get("_tag") == "Error"
-                ):
+                with tempfile.NamedTemporaryFile(
+                    mode="w", suffix=".sql", encoding="utf-8", delete=False
+                ) as fixture_file:
+                    fixture_file.write(
+                        fixture.replace("__R6_AUTH_ID__", str(UUID(auth_id)))
+                    )
+                try:
+                    result = subprocess.run(
+                        [
+                            cli,
+                            "db",
+                            "query",
+                            "--linked",
+                            "--project-ref",
+                            "isfumhgqphieoayqahjv",
+                            "--file",
+                            fixture_file.name,
+                        ],
+                        capture_output=True,
+                        text=True,
+                        timeout=30,
+                        check=False,
+                    )
+                finally:
+                    os.unlink(fixture_file.name)
+                fixture_result = json.loads(result.stdout)
+                if result.returncode or fixture_result.get("rows") != [
+                    {"status": "completed"}
+                ]:
                     raise VerificationError("guarded legacy fixture failed")
             initial = request(token, "GET", "/onboarding")
             if label == "b" and not initial["upgrade_required"]:
+                rows = development_query(
+                    "select session.status, session.completed_onboarding_version "
+                    "from private.athlete_identity_map mapping "
+                    "left join public.onboarding_sessions session "
+                    "on session.internal_athlete_id = mapping.athlete_id "
+                    f"where mapping.auth_user_id = '{UUID(auth_id)}'::uuid"
+                )
+                print("Legacy fixture diagnostic:", rows, initial["status"])
                 raise VerificationError(
                     "legacy completion was incorrectly treated as current"
                 )
