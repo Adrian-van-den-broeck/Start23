@@ -1,5 +1,6 @@
 """Authenticated weekly-planning, deck, calendar, and proposal routes."""
 
+import logging
 from datetime import date
 from typing import Annotated, Any, Literal, NoReturn
 from uuid import UUID
@@ -14,6 +15,7 @@ from app.api.dependencies import (
 from app.core.errors import ErrorResponse
 from app.core.security import AuthenticatedAthlete, AuthenticatedIdentity
 from app.modules.coach.weekly_plan import WeeklyPlanCoach
+from app.modules.physiology.specification import JOREN_PLANNING_RULESET_V2
 from app.modules.workouts.repository import PlanningCatalogUnavailableError
 
 from .domain import PlanningConstraintError
@@ -162,6 +164,7 @@ async def create_initial_weekly_plan_proposal(
 )
 async def create_swipe_week_draft(
     draft: SwipeDraftCreateRequest,
+    request: Request,
     access_token: Annotated[str, Depends(get_access_token)],
     identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
     service: Annotated[PlanningService, Depends(get_planning_service)],
@@ -175,6 +178,30 @@ async def create_swipe_week_draft(
             draft,
         )
     except Exception as error:
+        if (
+            isinstance(error, PlanningConstraintError)
+            and error.code == "catalog_capacity_unsatisfied"
+            and request.app.state.settings.environment in {"local", "test", "staging"}
+        ):
+            logging.getLogger(__name__).info(
+                "Swipe draft combination search returned no selection",
+                extra={
+                    "event": "swipe_draft_selection_diagnostic",
+                    "request_id": request.state.request_id,
+                    "failure_stage": "NO_COMBINATION_FOUND",
+                    "ruleset_version": JOREN_PLANNING_RULESET_V2.version.value,
+                    "week_start": draft.week_start.isoformat(),
+                    "available_dates": sorted(
+                        value.isoformat() for value in draft.available_dates
+                    ),
+                    "availability_count": len(draft.available_dates),
+                    "reuse_previous_week": draft.reuse_previous_week,
+                    "injury_count": len(draft.confirmed_injuries),
+                    "low_only_count": len(draft.low_only_disciplines),
+                    "cross_training_count": len(draft.cross_training_opt_ins),
+                    "bound_plan": draft.plan_id is not None,
+                },
+            )
         raise_planning_error(error)
 
 

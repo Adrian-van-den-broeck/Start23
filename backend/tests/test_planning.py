@@ -1031,6 +1031,7 @@ def _create_swipe_draft(client: TestClient) -> dict[str, Any]:
 
 def test_run_marathon_high_history_fails_closed_before_swipe_count(
     planning_client: TestClient,
+    caplog: pytest.LogCaptureFixture,
 ) -> None:
     app = cast(FastAPI, planning_client.app)
     repository = cast(MemoryPlanningRepository, app.state.planning_repository)
@@ -1055,21 +1056,56 @@ def test_run_marathon_high_history_fails_closed_before_swipe_count(
         if row["discipline"] == "run":
             row["previous_month_weekly_minutes"] = "900"
 
-    response = planning_client.post(
-        "/api/v1/weekly-plans/swipe-drafts",
-        headers=_headers(),
-        json={
-            "week_start": "2026-08-03",
-            "available_dates": ["2026-08-03", "2026-08-05", "2026-08-08"],
-            "confirmed_injuries": [],
-        },
-    )
+    with caplog.at_level("INFO", logger="app.modules.planning.router"):
+        response = planning_client.post(
+            "/api/v1/weekly-plans/swipe-drafts",
+            headers=_headers(),
+            json={
+                "week_start": "2026-08-03",
+                "available_dates": ["2026-08-03", "2026-08-05", "2026-08-08"],
+                "confirmed_injuries": [],
+            },
+        )
 
     assert response.status_code == 409
     assert response.json()["error"]["code"] == "catalog_capacity_unsatisfied"
     assert "tss" not in str(response.json()).casefold()
     assert "970" not in str(response.json())
     assert not repository._swipe_drafts
+    diagnostics = [
+        record
+        for record in caplog.records
+        if getattr(record, "event", None) == "swipe_draft_selection_diagnostic"
+    ]
+    assert len(diagnostics) == 1
+    diagnostic = diagnostics[0]
+    assert diagnostic.request_id == response.headers["X-Request-ID"]
+    assert diagnostic.failure_stage == "NO_COMBINATION_FOUND"
+    assert diagnostic.ruleset_version == "joren-planning-ruleset-2"
+    assert diagnostic.availability_count == 3
+    assert diagnostic.available_dates == ["2026-08-03", "2026-08-05", "2026-08-08"]
+    assert "tss" not in str(diagnostic.__dict__).casefold()
+    assert "planned_load" not in str(diagnostic.__dict__).casefold()
+
+    caplog.clear()
+    app.state.settings.environment = "production"
+    try:
+        production_response = planning_client.post(
+            "/api/v1/weekly-plans/swipe-drafts",
+            headers=_headers(),
+            json={
+                "week_start": "2026-08-03",
+                "available_dates": ["2026-08-03", "2026-08-05", "2026-08-08"],
+                "confirmed_injuries": [],
+            },
+        )
+    finally:
+        app.state.settings.environment = "test"
+    assert production_response.status_code == 409
+    assert not any(
+        getattr(record, "event", None) == "swipe_draft_selection_diagnostic"
+        for record in caplog.records
+    )
 
 
 def test_live_android_run_flow_reaches_workout_selection_with_default_days(
