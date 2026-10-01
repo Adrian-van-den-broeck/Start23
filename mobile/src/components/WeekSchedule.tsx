@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
     padding: spacing.sm,
     ...shadows.card,
   },
-  dragging: { opacity: 0.85, zIndex: 2 },
+  dragging: { elevation: 8, opacity: 0.85, zIndex: 2 },
   dragHandle: { paddingHorizontal: spacing.sm, paddingVertical: spacing.sm },
   workoutHeader: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   dragHint: { color: colors.brand, fontSize: 10, fontWeight: '900' },

@@ -29,6 +29,18 @@ The quoted Dutch message is the generic mobile fallback for a server response ou
 
 The latest local mobile screen contains no HR/RPE modal. The reported stack therefore needs comparison with the installed build before calling its exact modal implementation fixed. The checkout now prevents multiple inline feedback instances and duplicate creates in the same session, including retry after a timeout.
 
+## Workout detail field audit
+
+| Field | Source status | Detail behavior |
+| --- | --- | --- |
+| Warm-up, main set, recovery, cool-down | Available as ordered segment names and instructions where the reviewed catalog contains them | Show verbatim in catalog order; there is no separate phase enum. |
+| Zone 1–5 or RPE target | Available as a segment target | Show the stored zone or RPE range. |
+| Duration or distance | Available per workout and segment | Show the stored unit; distance-only swims receive no invented duration. |
+| Intervals and repetitions | Only available when explicitly written in segment names/instructions | Show source text; no inferred count or recovery. |
+| Technique notes | Available in instructions and the swim-technique flag | Show both when present. |
+| Equipment | Missing from the planned-workout public snapshot | No equipment claim is generated. |
+| Conversational-pace wording | Only available if the reviewed catalog instructions say it | No new prose is generated. |
+
 ## Calibration and units
 
 The 30 km / 150 minute fixture yields `300 s/km`, displayed as `5:00 /km`. Activity HR and RPE are persisted feedback and can affect approved activity decisions, but ordinary activity completion does not recalculate LTHR or a threshold pace. Reviewed calibration protocols create a separate observation, evaluation, pending threshold and pending zone profile. Its RUN submaximal path uses the protocol block HR/RPE; its RUN field-test path uses stable test-block pace and optionally last-20-minute HR. A zone must be separately confirmed before activation. There is no approved rule mapping the example long run to a Zone 2 pace bound.

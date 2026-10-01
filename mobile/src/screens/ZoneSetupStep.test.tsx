@@ -158,3 +158,17 @@ describe('ZoneSetupStep', () => {
     },
   );
 });
+
+  test('known run threshold pace accepts min/km and submits canonical seconds/km', async () => {
+    const onSave = jest.fn(async () => undefined);
+    const screen = await render(
+      <ZoneSetupStep accessToken="athlete-token" onSave={onSave}
+        saving={false} state={state} />,
+    );
+    await fireEvent.press(screen.getByRole('radio', { name: /Bekende waarden/ }));
+    await fireEvent.changeText(screen.getByLabelText('Drempeltempo'), '5:00');
+    await fireEvent.press(screen.getByRole('button', { name: 'Bekende waarden bewaren' }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledWith('run', expect.objectContaining({
+      thresholds: [{ metric_kind: 'run_threshold_pace_seconds_per_km', value: '300' }],
+    })));
+  });
