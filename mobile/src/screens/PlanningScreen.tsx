@@ -75,7 +75,8 @@ import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
 import { TrainingCalendar } from '../components/TrainingCalendar';
 import { isDateInWeek, WeekSchedule } from '../components/WeekSchedule';
-import { WorkoutDetail } from '../components/WorkoutDetail';
+import { WorkoutDetailBoundary } from '../ui/WorkoutDetailBoundary';
+import { UiVersionControl } from '../ui/UiVersionControl';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { formatIsoDateInput } from '../lib/dateInput';
 import { workoutCardDescription } from '../lib/workoutPresentation';
@@ -1367,6 +1368,8 @@ export function PlanningScreen({
         </Pressable>
       </View>
 
+      <UiVersionControl />
+
       <BottomSheetModal
         backdropComponent={renderProfileBackdrop}
         backgroundStyle={styles.profileSheetBackground}
@@ -1893,7 +1896,7 @@ export function PlanningScreen({
         </FadeInView>
         </ScrollView>
       </KeyboardAvoidingView>
-      <WorkoutDetail workout={detailWorkout} onClose={() => setDetailWorkout(null)} />
+      <WorkoutDetailBoundary workout={detailWorkout} onClose={() => setDetailWorkout(null)} />
     </SafeAreaView>
   );
 }

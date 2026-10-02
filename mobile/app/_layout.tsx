@@ -11,6 +11,7 @@ import {
 
 import { AuthProvider } from '@/auth/AuthProvider';
 import { LanguageProvider } from '@/i18n/LanguageProvider';
+import { UiVersionProvider } from '@/ui/UiVersionProvider';
 import { colors } from '@/theme/tokens';
 
 export default function RootLayout() {
@@ -21,14 +22,16 @@ export default function RootLayout() {
           <BottomSheetModalProvider>
             <StatusBar style="dark" />
             <AuthProvider>
-              <Stack
-                screenOptions={{
-                  animation: 'fade_from_bottom',
-                  animationDuration: 240,
-                  contentStyle: { backgroundColor: colors.canvas },
-                  headerShown: false,
-                }}
-              />
+              <UiVersionProvider>
+                <Stack
+                  screenOptions={{
+                    animation: 'fade_from_bottom',
+                    animationDuration: 240,
+                    contentStyle: { backgroundColor: colors.canvas },
+                    headerShown: false,
+                  }}
+                />
+              </UiVersionProvider>
             </AuthProvider>
           </BottomSheetModalProvider>
         </LanguageProvider>

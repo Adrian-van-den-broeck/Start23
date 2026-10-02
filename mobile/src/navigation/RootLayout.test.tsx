@@ -29,7 +29,11 @@ jest.mock('expo-router', () => {
   const ReactNative = jest.requireActual<typeof import('react-native')>(
     'react-native',
   );
-  return { Stack: () => <ReactNative.Text>router-stack</ReactNative.Text> };
+  const version = jest.requireActual<typeof import('../ui/UiVersionProvider')>('../ui/UiVersionProvider');
+  return { Stack: () => {
+    const { requested } = version.useUiVersion();
+    return <><ReactNative.Text>router-stack</ReactNative.Text><ReactNative.Text>{`stack-ui:${requested}`}</ReactNative.Text></>;
+  } };
 });
 
 jest.mock('expo-status-bar', () => ({
@@ -76,5 +80,6 @@ describe('RootLayout provider order', () => {
 
     expect(view.getByText('bottom-sheet-language:system')).toBeTruthy();
     expect(view.getByText('router-stack')).toBeTruthy();
+    expect(view.getByText('stack-ui:v1')).toBeTruthy();
   });
 });

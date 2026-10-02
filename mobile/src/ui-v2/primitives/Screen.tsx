@@ -22,7 +22,7 @@ export function Screen({ title, children, onBack, scrollProps, topInsetOwned = f
             AccessibilityInfo.sendAccessibilityEvent(heading.current, 'focus');
           }
         }}>
-        <Text variant="sectionTitle">{title}</Text>
+        <Text variant="sectionTitle" accessible={false} importantForAccessibility="no">{title}</Text>
       </View>
     </View>
     <ScrollView testID="workout-detail-scroll" {...scrollProps} style={styles.scroll} contentContainerStyle={styles.content}>

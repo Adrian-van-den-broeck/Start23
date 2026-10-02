@@ -45,7 +45,7 @@ export function Button({ label, onPress, variant = 'primary', busy = false,
         pressed && (variant === 'primary' ? states.pressed : states.selected),
         blocked && styles.disabled, focused && { borderColor: variant === 'primary' ? colors.textInverse : colors.focus }]}>
         {isBusy ? <ActivityIndicator accessible={false} color={color} /> : null}
-        <Text variant="button" style={{ color, flexShrink: 1 }}>{label}</Text>
+        <Text variant="button" accessible={false} importantForAccessibility="no" style={{ color, flexShrink: 1 }}>{label}</Text>
       </Pressable>
       {disabledReason ? <Text variant="supporting">{disabledReason}</Text> : null}
     </View>

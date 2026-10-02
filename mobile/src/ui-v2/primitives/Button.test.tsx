@@ -8,7 +8,8 @@ test('busy button retains label, explicit busy/disabled state and suppresses dup
   const view = await render(<Button label="Read workout" busy onPress={press} />);
   const button = view.getByRole('button', { name: 'Read workout' });
   expect(button.props.accessibilityState).toEqual({ busy: true, disabled: true });
-  expect(view.getByText('Read workout')).toBeTruthy();
+  expect(view.getByText('Read workout').props.accessible).toBe(false);
+  expect(view.getByText('Read workout').props.importantForAccessibility).toBe('no');
   await fireEvent.press(button);
   await fireEvent.press(button);
   expect(press).not.toHaveBeenCalled();
