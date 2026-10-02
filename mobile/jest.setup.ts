@@ -22,6 +22,7 @@ jest.mock('react-native-reanimated', () => {
       createAnimatedComponent: (component: unknown) => component,
     },
     LinearTransition: transition,
+    Easing: ReactNative.Easing,
     cancelAnimation: jest.fn(),
     interpolateColor: (
       _value: number,
