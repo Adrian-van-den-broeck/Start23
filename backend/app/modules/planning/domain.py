@@ -118,6 +118,8 @@ class PlanLoadSample:
     discipline_loads: Mapping[Discipline, InternalLoad] = field(
         default_factory=dict, repr=False
     )
+    # Actor-level provenance includes approved plans outside the history window.
+    has_prior_approved_plan: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -213,9 +215,20 @@ def resolve_target(
     prior_loads: tuple[PlanLoadSample, ...],
     initial_catalog_load: InternalLoad,
     maintenance_active: bool = False,
+    prior_approved_plan_exists: bool | None = None,
 ) -> PlanningTarget:
     """Resolve current targets with historical records explicitly filtered."""
+    has_prior_approved_plan = (
+        any(sample.has_prior_approved_plan for sample in prior_loads)
+        if prior_approved_plan_exists is None
+        else prior_approved_plan_exists
+    )
     prior_loads = tuple(sample for sample in prior_loads if not sample.sick_week)
+    if has_prior_approved_plan and not prior_loads:
+        raise PlanningConstraintError(
+            "approved_plan_baseline_unavailable",
+            "An eligible historical baseline is required for a returning athlete.",
+        )
     if week_start.weekday() != 0:
         raise ValueError("The training week must start on Monday.")
     if race_date < week_start and not maintenance_active:
@@ -285,17 +298,17 @@ def resolve_target(
             taper_period=taper_period,
         )
 
-    week_phase = _race_anchored_phase(week_start=week_start, race_date=race_date)
-    if week_phase is WeekPhase.RECOVERY and not prior_loads:
-        # A race anchor may place a brand-new athlete at a nominal recovery
-        # position before any recovery baseline exists. Start the first valid
-        # week from the already-approved onboarding/catalog baseline; never
-        # fabricate the missing prior week that the recovery formula requires.
+    if not has_prior_approved_plan:
+        # Activity-only calendar rows are not approved planned-load history.
+        # Calibration can create such a row before the athlete's first plan;
+        # retain the approved first-week BASE/onboarding behavior even at a
+        # nominal recovery position, without inventing a week-four baseline.
         return PlanningTarget(
             phase=TrainingPhase.BASE,
             basis=PlanningTargetBasis.INITIAL_CATALOG_BASELINE,
             target=initial_catalog_load,
         )
+    week_phase = _race_anchored_phase(week_start=week_start, race_date=race_date)
     phase = _training_phase(week_phase, first_plan=not prior_loads)
     if week_phase is WeekPhase.RECOVERY:
         recovery = calculate_recovery_target(
@@ -1347,6 +1360,9 @@ def build_weekly_plan(
     onboarding_baseline: StartingBaseline | None = None,
 ) -> WeeklyPlanDraft:
     """Build a deterministic, TSS-private plan ready to remain pending."""
+    has_prior_approved_plan = any(
+        sample.has_prior_approved_plan for sample in prior_loads
+    )
     prior_loads = tuple(sample for sample in prior_loads if not sample.sick_week)
     uninjured = goal_disciplines - confirmed_injuries
     historical_recipients = frozenset(
@@ -1489,6 +1505,7 @@ def build_weekly_plan(
         prior_loads=prior_loads,
         initial_catalog_load=initial_load,
         maintenance_active=maintenance_active,
+        prior_approved_plan_exists=has_prior_approved_plan,
     )
     desired_high_fraction = _desired_high_fraction(
         target=target,

@@ -478,6 +478,9 @@ class PlanningService:
             return tuple(
                 PlanLoadSample(
                     week_start=date.fromisoformat(str(row["week_start"])),
+                    has_prior_approved_plan=(
+                        row.get("has_prior_approved_plan") is True
+                    ),
                     load=InternalLoad(Decimal(str(row["planned_tss"]))),
                     phase=TrainingPhase(str(row["phase"])),
                     sick_week=bool(row.get("sick_week", False)),

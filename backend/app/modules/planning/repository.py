@@ -438,16 +438,20 @@ class SupabasePlanningRepository:
         rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         payload = await self._request(
             "POST",
-            "rpc/get_plan_load_history_for_planning_v14",
+            "rpc/get_plan_load_history_for_planning_v15",
             service=True,
             json={
                 "p_athlete_id": str(rpc_athlete_id),
                 "p_before_week": before_week.isoformat(),
             },
         )
-        if not isinstance(payload, list):
+        if not isinstance(payload, list) or any(
+            not isinstance(row, dict)
+            or type(row.get("has_prior_approved_plan")) is not bool
+            for row in payload
+        ):
             raise PlanningRepositoryUnavailableError
-        return tuple(dict(row) for row in payload if isinstance(row, dict))
+        return tuple(dict(row) for row in payload)
 
     async def create_plan_proposal(
         self,
