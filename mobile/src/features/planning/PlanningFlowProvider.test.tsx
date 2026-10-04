@@ -44,7 +44,7 @@ function resume(kind: 'plan' | 'draft', id: string) {
 }
 async function loadedPlan(plan = activePlan) {
   resume('plan', plan.id);
-  jest.mocked(api.getWeeklyPlan).mockResolvedValue(plan);
+  jest.mocked(api.getWeeklyPlan).mockImplementation(async (_token, _id, revision) => revision === 2 ? activePlan : plan);
   const view = await render(<Host />);
   await waitFor(() => expect(flow.plan).toBe(plan));
   return view;
@@ -82,13 +82,14 @@ test('initial load has one owner, no plan discovery, no duplicate effects or wri
   expect(api.getCalendar).not.toHaveBeenCalled(); expect(api.submitSwipeWeekDraft).not.toHaveBeenCalled();
 });
 
-test('active revision, pending proposal, warnings and inputs coexist without an additional active read', async () => {
+test('active revision is read once separately from the pending proposal; rerender preserves both', async () => {
   const view = await loadedPlan(pendingPlan);
   expect(flow.plan?.active_revision).toBe(2); expect(flow.plan?.revision).toBe(3);
   expect(flow.plan?.proposal).toBe(proposal); expect(flow.plan?.warnings).toEqual([warning]);
   expect(flow.injuries).toEqual(new Set(['run'])); expect(flow.availableDates).toEqual(activePlan.available_dates);
   await view.rerender(<Host />);
-  expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1); expect(api.getWeeklyPlan).toHaveBeenCalledWith('token-a', 'plan-a');
+  expect(api.getWeeklyPlan).toHaveBeenCalledTimes(2); expect(api.getWeeklyPlan).toHaveBeenCalledWith('token-a', 'plan-a', 2);
+  expect(flow.activePlan).toBe(activePlan);
 });
 
 test('resumed draft takes precedence over remembered plan and preserves exact occurrence/placement/consent', async () => {
@@ -200,13 +201,13 @@ test.each(['approve', 'reject'] as const)('%s preserves mutation-then-read order
   jest.mocked(api.rejectPlanProposal).mockImplementation(async () => { await request.promise; return { state: 'rejected', plan_id: pendingPlan.id }; });
   await act(() => flow[action]());
   await view.rerender(<Host />);
-  expect(mutation).toHaveBeenCalledTimes(1); expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
+  expect(mutation).toHaveBeenCalledTimes(1); expect(api.getWeeklyPlan).toHaveBeenCalledTimes(2);
   if (action === 'approve') expect(mutation).toHaveBeenCalledWith('token-a', proposal.id, 2);
   else expect(mutation).toHaveBeenCalledWith('token-a', proposal.id);
   const result = action === 'approve' ? activePlan : { ...pendingPlan, revision_state: 'rejected' as const };
   jest.mocked(api.getWeeklyPlan).mockResolvedValueOnce(result);
   await act(async () => request.resolve());
-  expect(jest.mocked(api.getWeeklyPlan).mock.calls[1]).toEqual(action === 'approve' ? ['token-a', pendingPlan.id] : ['token-a', pendingPlan.id, 3]);
+  expect(jest.mocked(api.getWeeklyPlan).mock.calls[2]).toEqual(action === 'approve' ? ['token-a', pendingPlan.id] : ['token-a', pendingPlan.id, 3]);
   expect(flow.plan).toBe(result); expect(flow.busy).toBe(false);
 });
 
@@ -215,7 +216,7 @@ test('stale approve keeps reviewed proposal/warnings, reports safe error and nev
   jest.mocked(api.approvePlanProposal).mockRejectedValue(new Error('Je week is gewijzigd.'));
   await act(() => flow.approve()); await view.rerender(<Host />);
   expect(flow.plan).toBe(pendingPlan); expect(flow.error).toBe('Je week is gewijzigd.'); expect(flow.busy).toBe(false);
-  expect(api.approvePlanProposal).toHaveBeenCalledTimes(1); expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
+  expect(api.approvePlanProposal).toHaveBeenCalledTimes(1); expect(api.getWeeklyPlan).toHaveBeenCalledTimes(2);
 });
 
 test('alternatives and edits use options proposal/revision, preserve can_remove, and keep slot loading separate', async () => {
@@ -378,4 +379,26 @@ test('released pending editor discards late local options/loading without contam
   await act(async () => { current.resolve(options); await second; });
   expect(flow.pendingWorkouts.editors[workout.id]).toEqual({ options, loading: false });
   expect(api.getPendingWorkoutAlternatives).toHaveBeenCalledTimes(2);
+});
+
+test('failed resume exposes uncertainty without changing reference clearing or retrying on rerender', async () => {
+  resume('plan', activePlan.id);
+  jest.mocked(api.getWeeklyPlan).mockRejectedValue(new Error('Safe transport error'));
+  const view = await render(<Host />);
+  await waitFor(() => expect(flow.resumeState).toBe('failed'));
+  expect(flow.plan).toBeNull();
+  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.latest-plan-id');
+  await view.rerender(<Host />);
+  expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
+});
+test('late active-revision read cannot cross an identity reset', async () => {
+  const request = deferred<typeof activePlan>();
+  resume('plan', pendingPlan.id);
+  jest.mocked(api.getWeeklyPlan).mockImplementation(async (_token, _id, revision) => revision === 2 ? request.promise : pendingPlan);
+  const view = await render(<Host />);
+  await waitFor(() => expect(flow.activeReadState).toBe('loading'));
+  jest.mocked(SecureStore.getItemAsync).mockResolvedValue(null);
+  await view.rerender(<Host identity="athlete-b" token="token-b" />);
+  await act(async () => request.resolve(activePlan));
+  expect(flow.plan).toBeNull(); expect(flow.activePlan).toBeNull();
 });

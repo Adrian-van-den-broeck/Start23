@@ -37,6 +37,9 @@ export function usePlanningController(accessToken: string) {
   const [crossTrainingOptIns, setCrossTrainingOptIns] = useState<Set<Discipline>>(
     () => new Set(),
   );
+  const [resumeState, setResumeState] = useState<'loading' | 'ready' | 'failed'>(Platform.OS === 'web' ? 'ready' : 'loading');
+  const [activeSnapshot, setActiveSnapshot] = useState<WeeklyPlan | null>(null);
+  const [activeReadState, setActiveReadState] = useState<'ready' | 'loading' | 'failed'>('ready');
   const [plan, setPlan] = useState<WeeklyPlan | null>(null);
   const [swipeDraft, setSwipeDraft] = useState<SwipeWeekDraft | null>(null);
   const [pendingMove, setPendingMove] = useState<{
@@ -56,6 +59,13 @@ export function usePlanningController(accessToken: string) {
   useEffect(() => {
     if (Platform.OS === 'web') return;
     let mounted = true;
+    setResumeState('loading');
+    let readFailed = false;
+    const recordReadFailure = (caught: unknown) => {
+      // Existing transport metadata; no message parsing or new recovery/retry.
+      if (caught && typeof caught === 'object' && 'status' in caught && caught.status === 404) return;
+      readFailed = true;
+    };
     SecureStore.getItemAsync(latestSwipeDraftIdKey)
       .then(async (draftId) => {
         if (!draftId) return false;
@@ -90,7 +100,8 @@ export function usePlanningController(accessToken: string) {
             setView('deck');
           }
           return true;
-        } catch {
+        } catch (caught) {
+          recordReadFailure(caught);
           await rememberSwipeDraftId(null);
           return false;
         }
@@ -112,11 +123,13 @@ export function usePlanningController(accessToken: string) {
             );
             setInjuries(new Set(restored.confirmed_injuries));
           }
-        } catch {
+        } catch (caught) {
+          recordReadFailure(caught);
           await rememberPlanId(null);
         }
       })
-      .catch(() => undefined);
+      .catch(recordReadFailure)
+      .finally(() => { if (mounted) setResumeState(readFailed ? 'failed' : 'ready'); });
     return () => {
       mounted = false;
     };
@@ -127,6 +140,37 @@ export function usePlanningController(accessToken: string) {
       .then((state) => setPrimaryGoal(state.primary_goal))
       .catch(() => undefined);
   }, [accessToken]);
+
+  // Week needs the identified active snapshot, never the pending workout rows.
+  // This owner alone reads a known revision; presentation toggles are not dependencies.
+  useEffect(() => { if (plan?.revision_state === 'active') setActiveSnapshot(plan); }, [plan]);
+  const activeId = plan?.id;
+  const activeRevision = plan?.active_revision;
+  const isActive = plan?.revision_state === 'active';
+  useEffect(() => {
+    if (!activeId || !activeRevision || isActive) {
+      setActiveReadState('ready');
+      return;
+    }
+    let mounted = true;
+    setActiveReadState('loading');
+    getWeeklyPlan(accessToken, activeId, activeRevision)
+      .then((snapshot) => {
+        if (!mounted) return;
+        if (snapshot.id === activeId && snapshot.revision === activeRevision &&
+          snapshot.revision_state === 'active') {
+          setActiveSnapshot(snapshot);
+          setActiveReadState('ready');
+        } else {
+          setActiveReadState('failed');
+        }
+      })
+      .catch(() => { if (mounted) setActiveReadState('failed'); });
+    return () => { mounted = false; };
+  }, [accessToken, activeId, activeRevision, isActive]);
+  const activePlan = isActive ? plan : activeSnapshot && activeSnapshot.id === activeId &&
+    activeSnapshot.revision === activeRevision && activeSnapshot.week_start === plan?.week_start
+      ? activeSnapshot : null;
 
   const run = async (operation: () => Promise<void>) => {
     setBusy(true);
@@ -363,6 +407,7 @@ export function usePlanningController(accessToken: string) {
   };
 
   return {
+    resumeState, activePlan, activeReadState,
     view, setView, weekStart, setWeekStart, reusePreviousWeek, setReusePreviousWeek,
     selectedDays, injuries, crossTrainingOptIns, plan, swipeDraft, pendingMove,
     primaryGoal, maintenanceMarked, busy, error, setError, availableDates,

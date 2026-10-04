@@ -5,7 +5,7 @@ import { Text } from '../ui-v2/primitives/Text';
 import { space } from '../ui-v2/tokens';
 import { useUiVersion } from './UiVersionProvider';
 
-export function UiVersionControl() {
+export function UiVersionControl({ disabled = false, onSelect }: { disabled?: boolean; onSelect?: (version: 'v1' | 'v2') => void }) {
   const { requested, setRequested } = useUiVersion();
   const { t } = useLanguage();
   if (!__DEV__) return null;
@@ -15,7 +15,7 @@ export function UiVersionControl() {
       {(['v1', 'v2'] as const).map((version) => <Button key={version}
         label={t('uiVersion.choose', { version: version.toUpperCase() })}
         variant={requested === version ? 'primary' : 'secondary'} accessibilityState={{ selected: requested === version }}
-        onPress={() => setRequested(version)} />)}
+        disabled={disabled} onPress={() => { setRequested(version); onSelect?.(version); }} />)}
     </View>
   </View>;
 }

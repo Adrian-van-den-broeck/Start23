@@ -14,6 +14,7 @@ import {
 } from 'react';
 import {
   ActivityIndicator,
+  BackHandler,
   Alert,
   Animated,
   Easing,
@@ -54,6 +55,10 @@ import { StatusPill } from '../components/StatusPill';
 import { TrainingCalendar } from '../components/TrainingCalendar';
 import { WeekSchedule } from '../components/WeekSchedule';
 import { WorkoutDetailBoundary } from '../ui/WorkoutDetailBoundary';
+import { useUiVersion } from '../ui/UiVersionProvider';
+import { Button as V2Button } from '../ui-v2/primitives/Button';
+import { WeekScreen } from '../ui-v2/screens/WeekScreen';
+import { weekHomeViewModel, type WeekAction } from '../ui-v2/utils/weekHomeViewModel';
 import { UiVersionControl } from '../ui/UiVersionControl';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { formatIsoDateInput } from '../lib/dateInput';
@@ -771,12 +776,81 @@ function SwipeDraftPanel({
 export function PlanningScreen({ accessToken, athleteIdentity, ...presentation }: PlanningScreenProps) {
   return (
     <PlanningFlowProvider accessToken={accessToken} athleteIdentity={athleteIdentity}>
-      <PlanningPresentation {...presentation} />
+      <PlanningBoundary {...presentation} />
     </PlanningFlowProvider>
   );
 }
 
+// Presentation host remains inside the one provider across root/task/detail switches.
+function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' | 'athleteIdentity'>) {
+  const flow = usePlanningFlow();
+  const { effectiveVersion, requested } = useUiVersion();
+  const { t } = useLanguage();
+  const [rootVersion, setRootVersion] = useState(() => effectiveVersion('week'));
+  const previousRequest = useRef(requested);
+  const [task, setTask] = useState<'prepare' | 'existing' | null>(null);
+  const [detailWorkout, setDetailWorkout] = useState<PlannedWorkout | null>(null);
+  const weekScroll = useRef(0);
+  const locked = flow.busy || !!flow.pendingMove || Object.values(flow.pendingWorkouts.editors).some((slot) => slot.loading);
+  // Detail comparison changes the preference, while its origin stays put.
+  useEffect(() => {
+    if (previousRequest.current !== requested && !task && !detailWorkout && !locked) setRootVersion(effectiveVersion('week'));
+    previousRequest.current = requested;
+  }, [requested, effectiveVersion, task, detailWorkout, locked]);
+  useEffect(() => {
+    if (task === 'prepare' && flow.view === 'deck') setTask('existing');
+  }, [task, flow.view]);
+  const returnToWeek = () => { if (!locked) setTask(null); };
+  useEffect(() => {
+    if (!task) return;
+    const handler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (!locked) setTask(null);
+      return true;
+    });
+    return () => handler.remove();
+  }, [task, locked]);
+  const action = (kind: WeekAction) => {
+    if (locked) return;
+    if (kind === 'draft' || (kind === 'prepare' && flow.swipeDraft)) flow.openDeck();
+    else if (kind === 'calendar') flow.openCalendar();
+    else flow.setView('plan');
+    setTask(kind === 'prepare' && !flow.swipeDraft ? 'prepare' : 'existing');
+  };
+  const controls = <UiVersionControl disabled={locked} onSelect={(version) => {
+    if (!locked && !detailWorkout && !task) setRootVersion(__DEV__ ? version : 'v1');
+  }} />;
+  // Date-only planning uses local noon. Actual "today" follows the loaded plan's
+  // confirmed timezone; without a plan, retain the existing device-date convention.
+  const now = new Date();
+  const todayParts = flow.plan ? new Intl.DateTimeFormat('en-CA', {
+    timeZone: flow.plan.timezone, year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(now) : null;
+  const part = (name: Intl.DateTimeFormatPartTypes) => todayParts?.find((item) => item.type === name)?.value;
+  const today = todayParts ? [part('year'), part('month'), part('day')].join('-') : isoDate(now);
+  const model = weekHomeViewModel({ plan: flow.plan, activePlan: flow.activePlan, draft: flow.swipeDraft,
+    today, resumeState: flow.resumeState, activeReadState: flow.activeReadState });
+  return <View style={{ flex: 1 }}>
+    {rootVersion === 'v2' && !task ? <WeekScreen model={model} error={flow.error} busy={locked}
+      onAction={action} onOpenWorkout={(id) => {
+        const workout = flow.activePlan?.workouts.find((item) => item.id === id);
+        if (workout) setDetailWorkout(workout);
+      }} onProfile={props.onOpenProfile} onActivities={props.onOpenActivities}
+      onCheckIn={props.onOpenCheckIn} onZones={() => props.onOpenZoneProfile(flow.plan?.id, flow.plan?.active_revision ?? undefined)}
+      goalName={flow.primaryGoal?.race_name ?? null} onGoal={props.onOpenProfile}
+      controls={controls} scrollProps={{ contentOffset: { x: 0, y: weekScroll.current }, scrollEventThrottle: 16,
+        onScroll: (event) => { weekScroll.current = event.nativeEvent.contentOffset.y; } }} />
+      : <PlanningPresentation {...props} onOpenWorkout={setDetailWorkout}
+        prepareWeek={task === 'prepare'} versionControl={controls}
+        taskBack={rootVersion === 'v2' && task ? <V2Button variant="tertiary" label={t('week.return')} disabled={locked} onPress={returnToWeek} /> : null} />}
+    <WorkoutDetailBoundary workout={detailWorkout} onClose={() => setDetailWorkout(null)} />
+  </View>;
+}
+
 function PlanningPresentation({
+  onOpenWorkout,
+  prepareWeek,
+  versionControl,
+  taskBack,
   onBackToOnboarding,
   onOpenActivities,
   onOpenCheckIn,
@@ -784,13 +858,15 @@ function PlanningPresentation({
   onOpenProfile,
   onOpenZoneProfile,
   onSignOut,
-}: Omit<PlanningScreenProps, 'accessToken' | 'athleteIdentity'>) {
+}: Omit<PlanningScreenProps, 'accessToken' | 'athleteIdentity'> & {
+  onOpenWorkout: (workout: PlannedWorkout) => void; prepareWeek: boolean;
+  versionControl: React.ReactNode; taskBack: React.ReactNode;
+}) {
   const { locale, t } = useLanguage();
   const safeAreaInsets = useSafeAreaInsets();
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileSheetRef = useRef<BottomSheetModal>(null);
   const profileSheetNavigationRef = useRef(createDeferredDismissAction());
-  const [detailWorkout, setDetailWorkout] = useState<PlannedWorkout | null>(null);
   const {
     view, setView, weekStart, setWeekStart, reusePreviousWeek, setReusePreviousWeek,
     selectedDays, injuries, crossTrainingOptIns, plan, swipeDraft, pendingMove,
@@ -855,6 +931,7 @@ function PlanningPresentation({
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+      {taskBack}
       <View style={styles.header}>
         <View style={styles.brandLockup}>
           <View style={styles.logoMark}>
@@ -889,7 +966,7 @@ function PlanningPresentation({
         </Pressable>
       </View>
 
-      <UiVersionControl />
+      {versionControl}
 
       <BottomSheetModal
         backdropComponent={renderProfileBackdrop}
@@ -1056,7 +1133,7 @@ function PlanningPresentation({
         <FadeInView key={view} style={styles.viewContent}>
         {view === 'plan' ? (
           <>
-            {!plan ? (
+            {!plan || prepareWeek ? (
               <View style={styles.panel}>
                 <StatusPill label="Jij bevestigt" tone="brand" />
                 <Text style={styles.title}>Wanneer kun je trainen?</Text>
@@ -1304,7 +1381,7 @@ function PlanningPresentation({
                   <>
                     <WeekSchedule
                       busy={busy}
-                      onOpenWorkout={setDetailWorkout}
+                      onOpenWorkout={onOpenWorkout}
                       onMove={requestWorkoutMove}
                       weekStart={plan.week_start}
                       workouts={plan.workouts}
@@ -1393,7 +1470,7 @@ function PlanningPresentation({
               initialDate={plan?.week_start ?? weekStart}
               loading={calendarLoading}
               onRangeChange={loadCalendarRange}
-              onOpenWorkout={setDetailWorkout}
+              onOpenWorkout={onOpenWorkout}
               restDays={calendarRestDays}
               workouts={calendarWorkouts}
             />
@@ -1402,7 +1479,6 @@ function PlanningPresentation({
         </FadeInView>
         </ScrollView>
       </KeyboardAvoidingView>
-      <WorkoutDetailBoundary workout={detailWorkout} onClose={() => setDetailWorkout(null)} />
     </SafeAreaView>
   );
 }

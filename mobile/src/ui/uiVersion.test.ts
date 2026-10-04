@@ -7,8 +7,10 @@ describe('development UI resolution', () => {
   test('valid V2 is development-only and implemented slices are allowlisted', () => {
     expect(initialUiVersion(true, 'v2')).toBe('v2');
     expect(effectiveUiVersion(true, 'v2', 'workoutDetail')).toBe('v2');
-    expect(Object.keys(implementedSlices)).toEqual(['workoutDetail']);
-    for (const slice of ['week', 'calendar', 'activity', 'toString', '']) {
+    expect(effectiveUiVersion(true, 'v2', 'week')).toBe('v2');
+    expect(effectiveUiVersion(false, 'v2', 'week')).toBe('v1');
+    expect(Object.keys(implementedSlices)).toEqual(['workoutDetail', 'week']);
+    for (const slice of ['calendar', 'activity', 'toString', '']) {
       expect(effectiveUiVersion(true, 'v2', slice)).toBe('v1');
     }
     expect(effectiveUiVersion(true, 'v1', 'workoutDetail')).toBe('v1');

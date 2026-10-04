@@ -5,7 +5,7 @@ import * as SecureStore from 'expo-secure-store';
 import * as api from '../api/client';
 import { LanguageProvider } from '../i18n/LanguageProvider';
 import { UiVersionProvider } from '../ui/UiVersionProvider';
-import { draft, occurrence, onboarding, pendingPlan, proposal, workout } from '../features/planning/planning.test-fixtures';
+import { activePlan, draft, occurrence, onboarding, pendingPlan, proposal, workout } from '../features/planning/planning.test-fixtures';
 import { PlanningScreen } from './PlanningScreen';
 
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: jest.fn(), deleteItemAsync: jest.fn() }));
@@ -43,7 +43,9 @@ beforeEach(() => {
   jest.clearAllMocks();
   for (const method of Object.values(api).filter(jest.isMockFunction)) method.mockReset();
   jest.mocked(SecureStore.getItemAsync).mockResolvedValue(null);
+  process.env.EXPO_PUBLIC_UI_VERSION = 'v1';
   jest.mocked(api.getOnboarding).mockResolvedValue(onboarding);
+  jest.mocked(api.getWeeklyPlan).mockImplementation(async (_token, _id, revision) => revision === 2 ? activePlan : pendingPlan);
 });
 function resume(kind: 'plan' | 'draft') {
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) =>
@@ -104,7 +106,7 @@ test('V1 manual completion and request busy disable submit; rerender never resub
 
 test.each(['approve', 'reject'] as const)('V1 %s and pending editor read once per slot/revision; rerender and UI toggle never repeat', async (action) => {
   resume('plan');
-  jest.mocked(api.getWeeklyPlan).mockResolvedValue(pendingPlan);
+  jest.mocked(api.getWeeklyPlan).mockImplementation(async (_token, _id, revision) => revision === 2 ? activePlan : pendingPlan);
   jest.mocked(api.getPendingWorkoutAlternatives).mockResolvedValue({ plan_id: pendingPlan.id, revision: 3, proposal_id: proposal.id, workout_id: workout.id, alternatives: [], can_remove: true });
   let finish!: () => void;
   const gate = new Promise<void>((yes) => { finish = yes; });
@@ -114,7 +116,8 @@ test.each(['approve', 'reject'] as const)('V1 %s and pending editor read once pe
   await view.findByText('Week van 2026-10-05');
   await waitFor(() => expect(api.getPendingWorkoutAlternatives).toHaveBeenCalledTimes(1));
   await view.rerender(presentation());
-  await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
+  // Slice 2b now implements Week; V1 mutation regression stays on V1.
+  await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
   expect(api.getPendingWorkoutAlternatives).toHaveBeenCalledTimes(1);
   // The baseline carries can_remove but exposes no remove button.
   expect(view.queryByRole('button', { name: /Verwijder/ })).toBeNull();
@@ -126,6 +129,8 @@ test.each(['approve', 'reject'] as const)('V1 %s and pending editor read once pe
   const mutation = action === 'approve' ? api.approvePlanProposal : api.rejectPlanProposal;
   expect(mutation).toHaveBeenCalledTimes(1);
   finish();
-  await waitFor(() => expect(api.getWeeklyPlan).toHaveBeenCalledTimes(2));
+  await waitFor(() => expect(api.getWeeklyPlan).toHaveBeenCalledTimes(3));
   expect(api.getPendingWorkoutAlternatives).toHaveBeenCalledTimes(1);
 });
+
+afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; });
