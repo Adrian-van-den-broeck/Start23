@@ -3,7 +3,6 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import * as SecureStore from 'expo-secure-store';
 import * as Haptics from 'expo-haptics';
 import {
   type ComponentProps,
@@ -36,30 +35,9 @@ import {
   type CarouselRef,
 } from 'react-native-reanimated-carousel';
 
-import {
-  approvePlanProposal,
-  createSwipeWeekDraft,
-  editPendingWorkout,
-  getCalendar,
-  getOnboarding,
-  getPendingWorkoutAlternatives,
-  getSwipeWeekDraft,
-  getWeeklyPlan,
-  markGoalAchieved,
-  movePlannedWorkout,
-  placeSwipeWeekWorkout,
-  rejectPlanProposal,
-  submitSwipeWeekDraft,
-  transitionSwipeWeekDraft,
-  validatePlanLayout,
-} from '../api/client';
 import type {
   Discipline,
-  PendingWorkoutAlternatives,
-  PlanWarning,
   PlannedWorkout,
-  PrimaryRaceGoal,
-  RestDay,
   SwipeWeekDraft,
   WeeklyPlan,
   WorkoutDeckItem,
@@ -74,7 +52,7 @@ import {
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { StatusPill } from '../components/StatusPill';
 import { TrainingCalendar } from '../components/TrainingCalendar';
-import { isDateInWeek, WeekSchedule } from '../components/WeekSchedule';
+import { WeekSchedule } from '../components/WeekSchedule';
 import { WorkoutDetailBoundary } from '../ui/WorkoutDetailBoundary';
 import { UiVersionControl } from '../ui/UiVersionControl';
 import { useLanguage } from '../i18n/LanguageProvider';
@@ -82,9 +60,12 @@ import { formatIsoDateInput } from '../lib/dateInput';
 import { workoutCardDescription } from '../lib/workoutPresentation';
 import { createDeferredDismissAction } from '../lib/navigation';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
+import { addDays, isoDate } from '../features/planning/planningDates';
+import { PlanningFlowProvider, usePlanningFlow, usePlanningCalendar } from '../features/planning/PlanningFlowProvider';
 
 type PlanningScreenProps = {
   accessToken: string;
+  athleteIdentity?: string;
   onSignOut: () => Promise<void>;
   onBackToOnboarding: () => void;
   onOpenActivities: () => void;
@@ -93,8 +74,6 @@ type PlanningScreenProps = {
   onOpenProfile: () => void;
   onOpenZoneProfile: (planId?: string, revision?: number) => void;
 };
-
-type ViewName = 'plan' | 'deck' | 'calendar';
 
 const disciplineLabels: Record<Discipline, string> = {
   swim: 'Zwemmen',
@@ -106,9 +85,6 @@ const disciplineTrainingLabels: Record<Discipline, string> = {
   bike: 'fietstraining',
   run: 'looptraining',
 };
-const latestPlanIdKey = 'start23.latest-plan-id';
-const latestSwipeDraftIdKey = 'start23.latest-swipe-draft-id';
-
 function coachExplanation(value: string): string {
   if (value === 'A deterministic weekly plan is ready for review.') {
     return 'Je persoonlijke weekvoorstel staat klaar om te controleren.';
@@ -117,70 +93,6 @@ function coachExplanation(value: string): string {
     return 'Je herstelvoorstel met alleen rust staat klaar om te controleren.';
   }
   return value;
-}
-
-async function rememberPlanId(planId: string | null): Promise<void> {
-  if (Platform.OS === 'web') return;
-  if (planId === null) {
-    await SecureStore.deleteItemAsync(latestPlanIdKey);
-  } else {
-    await SecureStore.setItemAsync(latestPlanIdKey, planId, {
-      keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-    });
-  }
-}
-
-async function rememberSwipeDraftId(draftId: string | null): Promise<void> {
-  if (Platform.OS === 'web') return;
-  if (draftId === null) {
-    await SecureStore.deleteItemAsync(latestSwipeDraftIdKey);
-  } else {
-    await SecureStore.setItemAsync(latestSwipeDraftIdKey, draftId, {
-      keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-    });
-  }
-}
-
-function isoDate(value: Date): string {
-  const year = value.getFullYear();
-  const month = String(value.getMonth() + 1).padStart(2, '0');
-  const day = String(value.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
-function nextMonday(): string {
-  const value = new Date();
-  value.setHours(12, 0, 0, 0);
-  const daysUntilMonday = (8 - value.getDay()) % 7 || 7;
-  value.setDate(value.getDate() + daysUntilMonday);
-  return isoDate(value);
-}
-
-function addDays(dateValue: string, days: number): Date {
-  const value = new Date(`${dateValue}T12:00:00`);
-  value.setDate(value.getDate() + days);
-  return value;
-}
-
-function availableDatesFor(
-  weekStart: string,
-  selectedDays: ReadonlySet<number>,
-): string[] {
-  return [...selectedDays]
-    .sort((left, right) => left - right)
-    .map((dayOffset) => isoDate(addDays(weekStart, dayOffset)));
-}
-
-function dayOffsetsFor(weekStart: string, dates: string[]): Set<number> {
-  const start = new Date(`${weekStart}T12:00:00`);
-  return new Set(
-    dates.map((value) =>
-      Math.round(
-        (new Date(`${value}T12:00:00`).getTime() - start.getTime()) /
-          86_400_000,
-      ),
-    ),
-  );
 }
 
 function ActionButton({
@@ -310,25 +222,20 @@ function WorkoutSignals({ workout }: { workout: WorkoutDeckItem }) {
 }
 
 function PendingWorkoutEditor({
-  accessToken,
   busy,
-  onEdited,
-  onError,
   plan,
   slotIndex,
   workout,
 }: {
-  accessToken: string;
   busy: boolean;
-  onEdited: (updated: WeeklyPlan) => void;
-  onError: (message: string) => void;
   plan: WeeklyPlan;
   slotIndex: number;
   workout: PlannedWorkout;
 }) {
-  const [options, setOptions] = useState<PendingWorkoutAlternatives | null>(null);
+  const { pendingWorkouts } = usePlanningFlow();
+  const { load, apply, release } = pendingWorkouts;
+  const { options, loading } = pendingWorkouts.editors[workout.id] ?? { options: null, loading: false };
   const [optionIndex, setOptionIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
   const carouselRef = useRef<CarouselRef>(null);
   const candidates = useMemo(
     () => [
@@ -347,62 +254,11 @@ function PendingWorkoutEditor({
     else carouselRef.current?.next({ animated: true });
   };
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    onError('');
-    try {
-      const result = await getPendingWorkoutAlternatives(
-        accessToken,
-        plan.id,
-        workout.id,
-        plan.revision,
-      );
-      setOptions(result);
-      setOptionIndex(0);
-    } catch (caught) {
-      onError(
-        caught instanceof Error
-          ? caught.message
-          : 'De vervangingen konden niet worden geladen.',
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [accessToken, onError, plan.id, plan.revision, workout.id]);
-
   useEffect(() => {
-    void load();
-  }, [load]);
+    void load(workout.id, () => setOptionIndex(0));
+  }, [load, workout.id]);
 
-  const apply = async (replacementTemplateId: string | null) => {
-    if (!options) return;
-    setLoading(true);
-    onError('');
-    try {
-      const result = await editPendingWorkout(
-        accessToken,
-        plan.id,
-        workout.id,
-        {
-          expected_revision: options.revision,
-          expected_proposal_id: options.proposal_id,
-          replacement_template_id: replacementTemplateId,
-        },
-      );
-      onEdited(result.plan);
-      void Haptics.notificationAsync(
-        Haptics.NotificationFeedbackType.Success,
-      ).catch(() => undefined);
-    } catch (caught) {
-      onError(
-        caught instanceof Error
-          ? caught.message
-          : 'De wijziging kon niet als nieuw voorstel worden opgeslagen.',
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => () => release(workout.id), [release, workout.id]);
 
   return (
     <View style={styles.editPanel}>
@@ -482,7 +338,7 @@ function PendingWorkoutEditor({
       <ActionButton
         disabled={busy || loading || selectedIsCurrent || !options}
         label={selectedIsCurrent ? 'Deze training is gekozen' : 'Kies deze training'}
-        onPress={() => void apply(selected.id)}
+        onPress={() => void apply(workout.id, selected.id)}
       />
       {options && candidates.length === 1 ? (
         <Text style={styles.hint}>
@@ -912,8 +768,15 @@ function SwipeDraftPanel({
   );
 }
 
-export function PlanningScreen({
-  accessToken,
+export function PlanningScreen({ accessToken, athleteIdentity, ...presentation }: PlanningScreenProps) {
+  return (
+    <PlanningFlowProvider accessToken={accessToken} athleteIdentity={athleteIdentity}>
+      <PlanningPresentation {...presentation} />
+    </PlanningFlowProvider>
+  );
+}
+
+function PlanningPresentation({
   onBackToOnboarding,
   onOpenActivities,
   onOpenCheckIn,
@@ -921,38 +784,23 @@ export function PlanningScreen({
   onOpenProfile,
   onOpenZoneProfile,
   onSignOut,
-}: PlanningScreenProps) {
-  const { language, locale, t } = useLanguage();
+}: Omit<PlanningScreenProps, 'accessToken' | 'athleteIdentity'>) {
+  const { locale, t } = useLanguage();
   const safeAreaInsets = useSafeAreaInsets();
-  const [view, setView] = useState<ViewName>('plan');
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileSheetRef = useRef<BottomSheetModal>(null);
   const profileSheetNavigationRef = useRef(createDeferredDismissAction());
-  const [weekStart, setWeekStart] = useState(nextMonday);
-  const [reusePreviousWeek, setReusePreviousWeek] = useState(false);
-  const [selectedDays, setSelectedDays] = useState<Set<number>>(
-    () => new Set([0, 2, 5]),
-  );
-  const [injuries, setInjuries] = useState<Set<Discipline>>(() => new Set());
-  const [crossTrainingOptIns, setCrossTrainingOptIns] = useState<Set<Discipline>>(
-    () => new Set(),
-  );
-  const [plan, setPlan] = useState<WeeklyPlan | null>(null);
-  const [swipeDraft, setSwipeDraft] = useState<SwipeWeekDraft | null>(null);
-  const [calendarWorkouts, setCalendarWorkouts] = useState<PlannedWorkout[]>([]);
-  const [calendarRestDays, setCalendarRestDays] = useState<RestDay[]>([]);
-  const [calendarLoading, setCalendarLoading] = useState(false);
   const [detailWorkout, setDetailWorkout] = useState<PlannedWorkout | null>(null);
-  const calendarRequestRef = useRef(0);
-  const [pendingMove, setPendingMove] = useState<{
-    scheduledDate: string;
-    warnings: PlanWarning[];
-    workout: PlannedWorkout;
-  } | null>(null);
-  const [primaryGoal, setPrimaryGoal] = useState<PrimaryRaceGoal | null>(null);
-  const [maintenanceMarked, setMaintenanceMarked] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    view, setView, weekStart, setWeekStart, reusePreviousWeek, setReusePreviousWeek,
+    selectedDays, injuries, crossTrainingOptIns, plan, swipeDraft, pendingMove,
+    primaryGoal, maintenanceMarked, busy, error, availableDates, toggleDay,
+    toggleInjury, toggleCrossTraining, generate, approve, reject, openDeck,
+    transitionDraft, placeDraftWorkout, submitDraft, requestWorkoutMove,
+    markGoalAchievement, openCalendar, clearPlan, cancelWorkoutMove,
+    confirmWorkoutMove,
+  } = usePlanningFlow();
+  const { calendarWorkouts, calendarRestDays, calendarLoading, loadCalendarRange } = usePlanningCalendar();
   const dayLabels = useMemo(
     () =>
       Array.from({ length: 7 }, (_, index) =>
@@ -990,297 +838,6 @@ export function PlanningScreen({
     });
   };
 
-  const availableDates = useMemo(
-    () => availableDatesFor(weekStart, selectedDays),
-    [selectedDays, weekStart],
-  );
-
-  useEffect(() => {
-    if (Platform.OS === 'web') return;
-    let mounted = true;
-    SecureStore.getItemAsync(latestSwipeDraftIdKey)
-      .then(async (draftId) => {
-        if (!draftId) return false;
-        try {
-          const restored = await getSwipeWeekDraft(accessToken, draftId);
-          if (restored.state === 'submitted' && restored.plan_id) {
-            const submittedPlan = await getWeeklyPlan(
-              accessToken,
-              restored.plan_id,
-            );
-            await Promise.all([
-              rememberPlanId(submittedPlan.id),
-              rememberSwipeDraftId(null),
-            ]);
-            if (mounted) {
-              setPlan(submittedPlan);
-              setWeekStart(submittedPlan.week_start);
-              setView('plan');
-            }
-            return true;
-          }
-          if (mounted) {
-            setSwipeDraft(restored);
-            setCrossTrainingOptIns(new Set(restored.cross_training_opt_ins));
-            setWeekStart(restored.week_start);
-            setReusePreviousWeek(
-              restored.availability_source === 'previous_week',
-            );
-            setSelectedDays(
-              dayOffsetsFor(restored.week_start, restored.available_dates),
-            );
-            setView('deck');
-          }
-          return true;
-        } catch {
-          await rememberSwipeDraftId(null);
-          return false;
-        }
-      })
-      .then(async (draftRestored) => {
-        if (draftRestored) return;
-        const planId = await SecureStore.getItemAsync(latestPlanIdKey);
-        if (!planId) return;
-        try {
-          const restored = await getWeeklyPlan(accessToken, planId);
-          if (mounted) {
-            setPlan(restored);
-            setWeekStart(restored.week_start);
-            setReusePreviousWeek(
-              restored.availability_source === 'previous_week',
-            );
-            setSelectedDays(
-              dayOffsetsFor(restored.week_start, restored.available_dates),
-            );
-            setInjuries(new Set(restored.confirmed_injuries));
-          }
-        } catch {
-          await rememberPlanId(null);
-        }
-      })
-      .catch(() => undefined);
-    return () => {
-      mounted = false;
-    };
-  }, [accessToken]);
-
-  useEffect(() => {
-    getOnboarding(accessToken)
-      .then((state) => setPrimaryGoal(state.primary_goal))
-      .catch(() => undefined);
-  }, [accessToken]);
-
-  const run = async (operation: () => Promise<void>) => {
-    setBusy(true);
-    setError(null);
-    try {
-      await operation();
-    } catch (caught) {
-      setError(
-        caught instanceof Error
-          ? caught.message
-          : 'De planningsactie is niet gelukt.',
-      );
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const toggleDay = (day: number) => {
-    setReusePreviousWeek(false);
-    setSelectedDays((current) => {
-      const next = new Set(current);
-      if (next.has(day)) next.delete(day);
-      else next.add(day);
-      return next;
-    });
-  };
-
-  const toggleInjury = (discipline: Discipline) => {
-    setInjuries((current) => {
-      const next = new Set(current);
-      if (next.has(discipline)) next.delete(discipline);
-      else next.add(discipline);
-      return next;
-    });
-    setCrossTrainingOptIns((current) => {
-      const next = new Set(current);
-      next.delete(discipline);
-      return next;
-    });
-  };
-
-  const toggleCrossTraining = (discipline: Discipline) => {
-    setCrossTrainingOptIns((current) => {
-      const next = new Set(current);
-      if (next.has(discipline)) next.delete(discipline);
-      else next.add(discipline);
-      return next;
-    });
-  };
-
-  const generate = () =>
-    run(async () => {
-      const dates = availableDatesFor(weekStart, selectedDays);
-      if (!reusePreviousWeek && dates.length === 0) {
-        throw new Error('Kies minstens één beschikbare trainingsdag.');
-      }
-      const boundPlan = plan?.revision_state === 'active' ? plan : null;
-      const result = await createSwipeWeekDraft(accessToken, {
-        week_start: weekStart,
-        ...(reusePreviousWeek
-          ? { reuse_previous_week: true }
-          : { available_dates: dates }),
-        confirmed_injuries: [...injuries],
-        cross_training_opt_ins: [...crossTrainingOptIns],
-        ...(boundPlan
-          ? {
-              plan_id: boundPlan.id,
-              expected_base_revision: boundPlan.active_revision ?? 0,
-            }
-          : {}),
-      });
-      await rememberSwipeDraftId(result.id);
-      setSwipeDraft(result);
-      setView('deck');
-    });
-
-  const approve = () => {
-    if (!plan?.proposal) return;
-    void run(async () => {
-      await approvePlanProposal(
-        accessToken,
-        plan.proposal!.id,
-        plan.proposal!.base_plan_revision ?? 0,
-      );
-      setPlan(await getWeeklyPlan(accessToken, plan.id));
-    });
-  };
-
-  const reject = () => {
-    if (!plan?.proposal) return;
-    void run(async () => {
-      await rejectPlanProposal(accessToken, plan.proposal!.id);
-      setPlan(await getWeeklyPlan(accessToken, plan.id, plan.revision));
-    });
-  };
-
-  const openDeck = () => {
-    setView('deck');
-  };
-
-  const transitionDraft = useCallback(
-    (action: 'accept' | 'pass' | 'undo' | 'reset_passed') => {
-      if (!swipeDraft) return;
-      const candidateId = swipeDraft.current_candidate?.id;
-      const candidateOccurrenceId = swipeDraft.current_candidate?.occurrence_id;
-      if ((action === 'accept' || action === 'pass') &&
-        (!candidateId || !candidateOccurrenceId)) return;
-      void run(async () => {
-        const updated = await transitionSwipeWeekDraft(
-          accessToken,
-          swipeDraft.id,
-          {
-            expected_revision: swipeDraft.revision,
-            action,
-            ...(candidateId && (action === 'accept' || action === 'pass')
-              ? {
-                  candidate_template_id: candidateId,
-                  candidate_occurrence_id: candidateOccurrenceId,
-                }
-              : {}),
-          },
-        );
-        setSwipeDraft(updated);
-        void Haptics.selectionAsync().catch(() => undefined);
-      });
-    },
-    [accessToken, swipeDraft],
-  );
-
-  const placeDraftWorkout = (templateId: string, scheduledDate: string) => {
-    if (!swipeDraft) return;
-    void run(async () => {
-      const updated = await placeSwipeWeekWorkout(
-        accessToken,
-        swipeDraft.id,
-        templateId,
-        swipeDraft.revision,
-        scheduledDate,
-      );
-      setSwipeDraft(updated);
-    });
-  };
-
-  const submitDraft = (placementMode: 'automatic' | 'manual') => {
-    if (!swipeDraft) return;
-    void run(async () => {
-      const result = await submitSwipeWeekDraft(
-        accessToken,
-        swipeDraft.id,
-        swipeDraft.revision,
-        placementMode,
-      );
-      await Promise.all([
-        rememberPlanId(result.plan.id),
-        rememberSwipeDraftId(null),
-      ]);
-      setSwipeDraft(null);
-      setPlan(result.plan);
-      setView('plan');
-      void Haptics.notificationAsync(
-        Haptics.NotificationFeedbackType.Success,
-      ).catch(() => undefined);
-    });
-  };
-
-  const applyWorkoutMove = async (
-    workout: PlannedWorkout,
-    scheduledDate: string,
-  ) => {
-    if (!plan?.active_revision) return;
-    const updated = await movePlannedWorkout(
-      accessToken,
-      workout.id,
-      plan.active_revision,
-      scheduledDate,
-    );
-    setPlan(updated);
-    setPendingMove(null);
-    void Haptics.notificationAsync(
-      Haptics.NotificationFeedbackType.Success,
-    ).catch(() => undefined);
-  };
-
-  const requestWorkoutMove = (
-    workout: PlannedWorkout,
-    scheduledDate: string,
-  ) => {
-    if (!plan?.active_revision) return;
-    if (!isDateInWeek(scheduledDate, plan.week_start)) {
-      setError('Gebruik een geldige datum binnen deze planweek (JJJJ-MM-DD).');
-      return;
-    }
-    void run(async () => {
-      const workouts = plan.workouts.map((item) => ({
-        workout_id: item.id,
-        scheduled_date:
-          item.id === workout.id ? scheduledDate : item.scheduled_date,
-      }));
-      const validation = await validatePlanLayout(
-        accessToken,
-        plan.id,
-        plan.active_revision!,
-        workouts,
-      );
-      if (validation.warnings.length === 0) {
-        await applyWorkoutMove(workout, scheduledDate);
-        return;
-      }
-      setPendingMove({ scheduledDate, warnings: validation.warnings, workout });
-    });
-  };
-
   const confirmGoalAchievement = () => {
     if (!primaryGoal) return;
     Alert.alert(
@@ -1290,47 +847,11 @@ export function PlanningScreen({
         { text: 'Annuleren', style: 'cancel' },
         {
           text: 'Bevestigen',
-          onPress: () =>
-            void run(async () => {
-              await markGoalAchieved(accessToken, primaryGoal.id, isoDate(new Date()));
-              setMaintenanceMarked(true);
-            }),
+          onPress: markGoalAchievement,
         },
       ],
     );
   };
-
-  const openCalendar = () => {
-    setView('calendar');
-  };
-
-  const loadCalendarRange = useCallback(
-    (fromDate: string, toDate: string) => {
-      const requestNumber = ++calendarRequestRef.current;
-      setCalendarLoading(true);
-      setError(null);
-      getCalendar(accessToken, fromDate, toDate)
-        .then((result) => {
-          if (requestNumber !== calendarRequestRef.current) return;
-          setCalendarWorkouts(result.workouts);
-          setCalendarRestDays(result.rest_days);
-        })
-        .catch((caught) => {
-          if (requestNumber !== calendarRequestRef.current) return;
-          setError(
-            caught instanceof Error
-              ? caught.message
-              : language === 'nl'
-                ? 'De kalender kon niet worden geladen.'
-                : 'The calendar could not be loaded.',
-          );
-        })
-        .finally(() => {
-          if (requestNumber === calendarRequestRef.current) setCalendarLoading(false);
-        });
-    },
-    [accessToken, language],
-  );
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
@@ -1761,10 +1282,7 @@ export function PlanningScreen({
                   {['rejected', 'expired'].includes(plan.revision_state) ? (
                     <ActionButton
                       label="Nieuw voorstel voorbereiden"
-                      onPress={() => {
-                        setPlan(null);
-                        void rememberPlanId(null);
-                      }}
+                      onPress={clearPlan}
                       secondary
                     />
                   ) : null}
@@ -1793,15 +1311,8 @@ export function PlanningScreen({
                     />
                     {pendingMove ? (
                       <MoveWarningPanel
-                        onCancel={() => setPendingMove(null)}
-                        onConfirm={() =>
-                          void run(() =>
-                            applyWorkoutMove(
-                              pendingMove.workout,
-                              pendingMove.scheduledDate,
-                            ),
-                          )
-                        }
+                        onCancel={cancelWorkoutMove}
+                        onConfirm={confirmWorkoutMove}
                         warnings={pendingMove.warnings}
                       />
                     ) : null}
@@ -1812,12 +1323,7 @@ export function PlanningScreen({
                       {plan.revision_state === 'pending_approval' &&
                       plan.proposal?.state === 'pending' ? (
                         <PendingWorkoutEditor
-                          accessToken={accessToken}
                           busy={busy}
-                          onEdited={(updated) => {
-                            setPlan(updated);
-                          }}
-                          onError={setError}
                           plan={plan}
                           slotIndex={index}
                           workout={workout}

@@ -10,6 +10,7 @@ export default function PlanningRoute() {
   return (
     <PlanningScreen
       accessToken={session.access_token}
+      athleteIdentity={session.user.id}
       onBackToOnboarding={() => router.push('/onboarding')}
       onOpenActivities={() => router.push('/activities')}
       onOpenCheckIn={() => router.push('/check-in')}
