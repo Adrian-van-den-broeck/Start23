@@ -1,7 +1,8 @@
 """Transport tests for owner-scoped and trusted Phase 6 RPC calls."""
 
 import asyncio
-from datetime import datetime, timezone
+import json
+from datetime import date, datetime, timezone
 from uuid import uuid4
 
 import httpx
@@ -21,6 +22,72 @@ def _settings() -> Settings:
         supabase_publishable_key="sb_publishable_test",
         supabase_secret_key="sb_secret_test",
     )
+
+
+@pytest.mark.parametrize("approved", [False, True])
+def test_activity_history_retains_explicit_approved_plan_provenance(
+    approved: bool,
+) -> None:
+    athlete_id = uuid4()
+    requests: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
+        assert request.url.path.endswith("get_plan_load_history_for_planning_v15")
+        assert json.loads(request.content) == {
+            "p_athlete_id": str(athlete_id),
+            "p_before_week": "2026-10-05",
+        }
+        return httpx.Response(
+            200,
+            json=[
+                {
+                    "week_start": "2026-09-21",
+                    "planned_tss": 0,
+                    "has_prior_approved_plan": approved,
+                },
+                {
+                    "week_start": "2026-09-28",
+                    "planned_tss": 0,
+                    "has_prior_approved_plan": approved,
+                },
+            ],
+        )
+
+    async def exercise() -> tuple[dict[str, object], ...]:
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            repository = SupabasePlanningRepository(_settings(), client=client)
+            return await repository.fetch_load_history(athlete_id, date(2026, 10, 5))
+
+    result = asyncio.run(exercise())
+    assert all(row["has_prior_approved_plan"] is approved for row in result)
+    assert all(request.headers["apikey"] == "sb_secret_test" for request in requests)
+    assert all("authorization" not in request.headers for request in requests)
+
+
+@pytest.mark.parametrize(
+    "malformed",
+    [None, {}, [{"week_start": "2026-09-28"}], [{"has_prior_approved_plan": "true"}]],
+)
+def test_unavailable_approved_history_cannot_claim_a_fresh_athlete(
+    malformed: object,
+) -> None:
+    athlete_id = uuid4()
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete_id))
+        return httpx.Response(200, json=malformed)
+
+    async def exercise() -> None:
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            repository = SupabasePlanningRepository(_settings(), client=client)
+            with pytest.raises(PlanningRepositoryUnavailableError):
+                await repository.fetch_load_history(athlete_id, date(2026, 10, 5))
+
+    asyncio.run(exercise())
 
 
 def test_generated_plan_persistence_uses_only_the_server_secret() -> None:

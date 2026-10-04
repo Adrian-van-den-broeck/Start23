@@ -1079,11 +1079,15 @@ def test_run_marathon_high_history_fails_closed_before_swipe_count(
     ]
     assert len(diagnostics) == 1
     diagnostic = diagnostics[0]
-    assert diagnostic.request_id == response.headers["X-Request-ID"]
-    assert diagnostic.failure_stage == "NO_COMBINATION_FOUND"
-    assert diagnostic.ruleset_version == "joren-planning-ruleset-2"
-    assert diagnostic.availability_count == 3
-    assert diagnostic.available_dates == ["2026-08-03", "2026-08-05", "2026-08-08"]
+    assert getattr(diagnostic, "request_id") == response.headers["X-Request-ID"]
+    assert getattr(diagnostic, "failure_stage") == "NO_COMBINATION_FOUND"
+    assert getattr(diagnostic, "ruleset_version") == "joren-planning-ruleset-2"
+    assert getattr(diagnostic, "availability_count") == 3
+    assert getattr(diagnostic, "available_dates") == [
+        "2026-08-03",
+        "2026-08-05",
+        "2026-08-08",
+    ]
     assert "tss" not in str(diagnostic.__dict__).casefold()
     assert "planned_load" not in str(diagnostic.__dict__).casefold()
 
@@ -2227,3 +2231,161 @@ def test_new_plan_cannot_reinterpret_legacy_training_history() -> None:
     ]
     with pytest.raises(ValueError, match="previous-month training history"):
         PlanningService._onboarding_baseline(snapshot)
+
+
+@pytest.mark.parametrize("hours", [0, 1, 3, 6, 8, 10, 15])
+def test_fresh_calibrated_run_athlete_can_start_october_week(
+    hours: int, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The real review fixture includes a pending-RPE calibration activity week."""
+    from test_mvp_catalog_coverage import _durable_run_catalog
+
+    from app.modules.planning import service as planning_service
+    from app.modules.planning.domain import (
+        PlanningTargetBasis,
+        WeeklyPlanDraft,
+        build_weekly_plan,
+    )
+
+    build_plan = build_weekly_plan
+
+    def verify_first_plan(**kwargs: Any) -> WeeklyPlanDraft:
+        result = build_plan(**kwargs)
+        assert result.target.phase is TrainingPhase.BASE
+        assert result.target.basis is PlanningTargetBasis.INITIAL_CATALOG_BASELINE
+        assert result.target.target == kwargs["onboarding_baseline"].total
+        assert result.workouts
+        return result
+
+    monkeypatch.setattr(planning_service, "build_weekly_plan", verify_first_plan)
+
+    async def reviewed_catalog(
+        _provider: StaticCatalogProvider,
+    ) -> tuple[WorkoutTemplate, ...]:
+        return _durable_run_catalog()
+
+    async def calibration_week(
+        _repository: MemoryPlanningRepository, athlete_id: UUID, before_week: date
+    ) -> tuple[JsonObject, ...]:
+        del athlete_id, before_week
+        return (
+            {
+                "week_start": "2026-09-28",
+                "phase": "base",
+                "target_basis": "realized_baseline",
+                "planned_tss": 0,
+                "realized_tss": None,
+                "planned_high_minutes": 0,
+                "planned_total_minutes": 0,
+                "realized_high_minutes": None,
+                "realized_classified_minutes": None,
+                "realized_total_minutes": None,
+                "completed_activity_count": 1,
+                "sick_week": False,
+                "reduced_realized_progression": False,
+                "discipline_planned_tss": {},
+                "has_prior_approved_plan": False,
+            },
+        )
+
+    monkeypatch.setattr(StaticCatalogProvider, "fetch_catalog", reviewed_catalog)
+    monkeypatch.setattr(
+        MemoryPlanningRepository, "fetch_load_history", calibration_week
+    )
+    owners = {"athlete-a": uuid4()}
+    repository = MemoryPlanningRepository(owners)
+    snapshot = repository._requests[owners["athlete-a"]]["input_snapshot"]
+    snapshot["profile"].update(
+        timezone="Europe/Amsterdam",
+        date_of_birth="1990-01-01",
+        resting_heart_rate_bpm=55,
+    )
+    snapshot["goal"].update(
+        race_type="run",
+        race_date="2027-04-04",
+        target_date="2027-04-04",
+        race_discipline_profile=["run"],
+        run_distance_meters=10000,
+        total_target_time_seconds=3600,
+    )
+    snapshot["zones"] = [
+        {
+            "discipline": "run",
+            "fallback_active": False,
+            "metric": None,
+            "metric_profiles": [{"metric_kind": "run_lthr_bpm", "source_value": "168"}],
+        }
+    ]
+    snapshot["discipline_setups"] = [
+        {
+            "discipline": "run",
+            "setup_route": "calibration_week",
+            "guidance_mode": "heart_rate",
+            "setup_status": "completed",
+            "protocol_id": "start23_week1_run_calibration_v1",
+        }
+    ]
+    for row in snapshot["training_history"]:
+        row["previous_month_weekly_minutes"] = (
+            hours * 60 if row["discipline"] == "run" else 0
+        )
+    with TestClient(
+        create_app(
+            Settings(environment="test"),
+            access_token_verifier=PlanningTokenVerifier(owners),
+            onboarding_repository=ZoneRejectStub(),  # type: ignore[arg-type]
+            planning_repository=repository,
+            planning_catalog_provider=StaticCatalogProvider(),
+        )
+    ) as client:
+        request = {
+            "week_start": "2026-10-05",
+            "available_dates": ["2026-10-05", "2026-10-07", "2026-10-10"],
+            "confirmed_injuries": [],
+            "cross_training_opt_ins": [],
+        }
+        response = client.post(
+            "/api/v1/weekly-plans/swipe-drafts", headers=_headers(), json=request
+        )
+        assert response.status_code == 201, response.text
+        draft = response.json()
+        assert draft["ruleset_version"] == "joren-planning-ruleset-2"
+        assert draft["current_candidate"] is not None
+        assert draft["target_workout_count"] > 0
+        assert "tss" not in str(draft).casefold()
+        assert "planned_load" not in str(draft).casefold()
+        retry = client.post(
+            "/api/v1/weekly-plans/swipe-drafts", headers=_headers(), json=request
+        )
+        assert retry.status_code == 201
+        assert retry.json()["id"] == draft["id"]
+
+
+@pytest.mark.parametrize("marker", [None, False, "true", 1])
+def test_private_history_cannot_infer_approval_from_load_or_row_existence(
+    marker: object,
+) -> None:
+    from decimal import Decimal
+
+    from app.modules.physiology.models import InternalLoad
+    from app.modules.planning.domain import PlanningTargetBasis, resolve_target
+
+    row: JsonObject = {
+        "week_start": "2026-09-28",
+        "planned_tss": 100,
+        "realized_tss": 100,
+        "phase": "build",
+        "completed_activity_count": 1,
+    }
+    if marker is not None:
+        row["has_prior_approved_plan"] = marker
+    samples = PlanningService._load_samples((row,))
+    assert not samples[0].has_prior_approved_plan
+    target = resolve_target(
+        week_start=date(2026, 10, 5),
+        race_date=date(2027, 4, 4),
+        prior_loads=samples,
+        initial_catalog_load=InternalLoad(Decimal("194.1")),
+    )
+    assert target.phase is TrainingPhase.BASE
+    assert target.basis is PlanningTargetBasis.INITIAL_CATALOG_BASELINE

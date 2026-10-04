@@ -36,6 +36,7 @@ from app.modules.workouts.catalog import (
     WorkoutTemplate,
     ZoneRequirement,
     active_catalog,
+    require_planned_load,
 )
 from app.modules.workouts.repository import parse_planning_catalog
 
@@ -172,7 +173,7 @@ def test_marathon_history_matrix_uses_reviewed_catalog_and_bounded_repeats(
     assert len(deck) == 21
     assert any(template.source_catalog for template in deck)
 
-    kwargs = dict(
+    kwargs: dict[str, Any] = dict(
         week_start=_WEEK_START,
         timezone_name="Europe/Amsterdam",
         race_date=date(2026, 12, 6),
@@ -393,6 +394,7 @@ def test_race_anchored_build_block_progresses_and_releases_z5_in_week_four() -> 
     )
     history = [
         PlanLoadSample(
+            has_prior_approved_plan=True,
             week_start=starts[0] - timedelta(days=7),
             load=InternalLoad(Decimal("300")),
             realized_load=InternalLoad(Decimal("300")),
@@ -420,7 +422,7 @@ def test_race_anchored_build_block_progresses_and_releases_z5_in_week_four() -> 
         targets.append(target)
         high_load = sum(
             (
-                workout.snapshot.internal_planned_load.value
+                require_planned_load(workout.snapshot).value
                 for workout in draft.workouts
                 if workout.snapshot.intensity_bucket is IntensityBucket.HIGH
             ),
@@ -441,6 +443,7 @@ def test_race_anchored_build_block_progresses_and_releases_z5_in_week_four() -> 
             assert has_z5
         history.append(
             PlanLoadSample(
+                has_prior_approved_plan=True,
                 week_start=week_start,
                 load=draft.target.target,
                 realized_load=draft.target.target,

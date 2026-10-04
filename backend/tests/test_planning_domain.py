@@ -3,6 +3,7 @@
 from dataclasses import replace
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
+from typing import Any
 from uuid import UUID, uuid4
 
 import pytest
@@ -120,13 +121,14 @@ def test_confirmed_known_values_cover_supported_build_goal_compositions(
     goal_disciplines: frozenset[Discipline],
     capabilities: dict[Discipline, ZoneCapability],
 ) -> None:
-    values = dict(
+    values: dict[str, Any] = dict(
         week_start=_WEEK_START,
         timezone_name="Europe/Amsterdam",
         race_date=date(2026, 12, 6),
         catalog=active_catalog(),
         prior_loads=(
             PlanLoadSample(
+                has_prior_approved_plan=True,
                 week_start=_WEEK_START - timedelta(days=7),
                 load=InternalLoad(Decimal("100")),
                 phase=TrainingPhase.BASE,
@@ -203,6 +205,7 @@ def test_genuine_taper_catalog_gap_has_an_actionable_error() -> None:
             catalog=active_catalog(),
             prior_loads=(
                 PlanLoadSample(
+                    has_prior_approved_plan=True,
                     week_start=date(2026, 11, 23),
                     load=InternalLoad(Decimal("100")),
                     phase=TrainingPhase.BUILD,
@@ -346,6 +349,102 @@ def test_first_plan_uses_onboarding_baseline_without_recovery_history(
     assert len(draft.workouts) > len(Discipline)
 
 
+@pytest.mark.parametrize("hours", ["0", "1", "3", "6", "8", "10", "15"])
+@pytest.mark.parametrize("week_start", [date(2026, 10, 5), date(2026, 10, 12)])
+def test_calibration_activity_week_is_not_a_first_plan_baseline(
+    hours: str, week_start: date
+) -> None:
+    baseline = starting_baseline({Discipline.RUN: Decimal(hours) * Decimal(60)})
+    activity_only = PlanLoadSample(
+        week_start=date(2026, 9, 28),
+        load=InternalLoad(Decimal(0)),
+        phase=TrainingPhase.BASE,
+        target_basis=PlanningTargetBasis.REALIZED_BASELINE,
+        planned_total_minutes=DurationMinutes(Decimal(0)),
+        completed_activity_count=1,
+        has_prior_approved_plan=False,
+    )
+    target = resolve_target(
+        week_start=week_start,
+        race_date=date(2027, 4, 4),
+        prior_loads=(activity_only,),
+        initial_catalog_load=baseline.total,
+    )
+    assert target.phase is TrainingPhase.BASE
+    assert target.basis is PlanningTargetBasis.INITIAL_CATALOG_BASELINE
+    assert target.target == baseline.total
+
+
+def test_approved_zero_load_recovery_is_not_replaced_by_onboarding() -> None:
+    target = resolve_target(
+        week_start=date(2026, 10, 5),
+        race_date=date(2027, 4, 4),
+        prior_loads=(
+            PlanLoadSample(
+                week_start=date(2026, 9, 28),
+                load=InternalLoad(Decimal(0)),
+                phase=TrainingPhase.BUILD,
+                has_prior_approved_plan=True,
+            ),
+        ),
+        initial_catalog_load=InternalLoad(Decimal("194.1")),
+    )
+    assert target.phase is TrainingPhase.RECOVERY
+    assert target.basis is PlanningTargetBasis.RECOVERY_FACTOR
+    assert target.target.value == 0
+
+
+@pytest.mark.parametrize("completed_activity_count", [0, 1])
+@pytest.mark.parametrize("week_start", [date(2026, 10, 5), date(2026, 10, 12)])
+def test_returning_athlete_with_activity_only_recent_week_stays_returning(
+    completed_activity_count: int, week_start: date
+) -> None:
+    # The repository checked an approved historical revision outside its window.
+    # Recent calibration/missed weeks retain existing returning-athlete rules.
+    recent = PlanLoadSample(
+        week_start=date(2026, 9, 28),
+        load=InternalLoad(Decimal(0)),
+        phase=TrainingPhase.BASE,
+        completed_activity_count=completed_activity_count,
+        has_prior_approved_plan=True,
+    )
+    target = resolve_target(
+        week_start=week_start,
+        race_date=date(2027, 4, 4),
+        prior_loads=(recent,),
+        initial_catalog_load=InternalLoad(Decimal("194.1")),
+    )
+    assert target.phase is not TrainingPhase.BASE
+    assert target.basis is not PlanningTargetBasis.INITIAL_CATALOG_BASELINE
+
+
+def test_sick_history_does_not_reset_an_approved_athlete_to_first_plan() -> None:
+    prior = (
+        PlanLoadSample(
+            week_start=date(2026, 9, 28),
+            load=InternalLoad(Decimal(100)),
+            phase=TrainingPhase.BUILD,
+            sick_week=True,
+            has_prior_approved_plan=True,
+        ),
+    )
+    with pytest.raises(PlanningConstraintError) as error:
+        build_weekly_plan(
+            week_start=date(2026, 10, 5),
+            timezone_name="Europe/Amsterdam",
+            race_date=date(2027, 4, 4),
+            catalog=active_catalog(),
+            prior_loads=prior,
+            goal_disciplines=frozenset({Discipline.RUN}),
+            confirmed_injuries=frozenset(),
+            zone_capabilities=_capabilities(),
+            available_dates=(date(2026, 10, 5),),
+            onboarding_baseline=starting_baseline({Discipline.RUN: Decimal(180)}),
+        )
+    assert error.value.code == "approved_plan_baseline_unavailable"
+    assert prior[0].sick_week
+
+
 @pytest.mark.parametrize("hours", ["0", "1", "3", "6", "15"])
 @pytest.mark.parametrize("week_start", [_WEEK_START, date(2026, 8, 17)])
 def test_run_first_week_history_reaches_target_and_catalog_capacity(
@@ -358,7 +457,7 @@ def test_run_first_week_history_reaches_target_and_catalog_capacity(
         if hours == "0"
         else (Decimal(hours) * Decimal("64.6875")).quantize(Decimal("0.1"))
     )
-    values = dict(
+    values: dict[str, Any] = dict(
         week_start=week_start,
         timezone_name="Europe/Amsterdam",
         race_date=date(2026, 12, 6),
@@ -529,6 +628,7 @@ def test_distance_only_swim_source_load_cannot_enter_phase_13_target_fit() -> No
 def test_established_recovery_history_keeps_existing_recovery_target() -> None:
     prior = tuple(
         PlanLoadSample(
+            has_prior_approved_plan=True,
             week_start=_WEEK_START - timedelta(weeks=4 - index),
             load=InternalLoad(Decimal(10 + index)),
             realized_load=InternalLoad(Decimal(10 + index)),
@@ -553,6 +653,7 @@ def test_race_date_anchors_cycle_independently_of_prior_plan_count() -> None:
     race_date = date(2026, 12, 6)
     samples = tuple(
         PlanLoadSample(
+            has_prior_approved_plan=True,
             week_start=_WEEK_START - timedelta(weeks=index + 1),
             load=InternalLoad(Decimal("10")),
             phase=TrainingPhase.BUILD,
@@ -583,6 +684,7 @@ def test_regular_build_uses_canonical_realized_progression() -> None:
         race_date=date(2026, 12, 6),
         prior_loads=(
             PlanLoadSample(
+                has_prior_approved_plan=True,
                 week_start=_WEEK_START - timedelta(weeks=1),
                 load=InternalLoad(Decimal("10")),
                 realized_load=InternalLoad(Decimal("8")),
@@ -602,6 +704,7 @@ def test_heavy_undershoot_uses_available_realized_baseline() -> None:
         race_date=date(2026, 12, 6),
         prior_loads=(
             PlanLoadSample(
+                has_prior_approved_plan=True,
                 week_start=_WEEK_START - timedelta(weeks=1),
                 load=InternalLoad(Decimal("10")),
                 realized_load=InternalLoad(Decimal("7")),
@@ -621,6 +724,7 @@ def test_realized_overshoot_applies_debt_before_progression() -> None:
         race_date=date(2026, 12, 6),
         prior_loads=(
             PlanLoadSample(
+                has_prior_approved_plan=True,
                 week_start=_WEEK_START - timedelta(weeks=1),
                 load=InternalLoad(Decimal("10")),
                 realized_load=InternalLoad(Decimal("12")),
@@ -640,6 +744,7 @@ def test_non_positive_debt_creates_a_pending_manual_review_recovery_target() -> 
         race_date=date(2026, 12, 6),
         prior_loads=(
             PlanLoadSample(
+                has_prior_approved_plan=True,
                 week_start=_WEEK_START - timedelta(weeks=1),
                 load=InternalLoad(Decimal("100")),
                 realized_load=InternalLoad(Decimal("500")),
@@ -662,6 +767,7 @@ def test_repeated_unsafe_debt_requires_qualified_escalation() -> None:
             race_date=date(2026, 12, 6),
             prior_loads=(
                 PlanLoadSample(
+                    has_prior_approved_plan=True,
                     week_start=_WEEK_START - timedelta(weeks=1),
                     load=InternalLoad(Decimal("100")),
                     realized_load=InternalLoad(Decimal("500")),
@@ -683,6 +789,7 @@ def test_reliable_realized_intensity_reduces_first_eligible_week_target() -> Non
         catalog=active_catalog(REVIEWED_CATALOG),
         prior_loads=(
             PlanLoadSample(
+                has_prior_approved_plan=True,
                 week_start=_WEEK_START - timedelta(weeks=1),
                 load=InternalLoad(Decimal("100")),
                 realized_load=InternalLoad(Decimal("80")),
@@ -717,6 +824,7 @@ def test_missing_realized_week_retains_the_safe_planned_hold() -> None:
         race_date=date(2026, 12, 6),
         prior_loads=(
             PlanLoadSample(
+                has_prior_approved_plan=True,
                 week_start=_WEEK_START - timedelta(weeks=1),
                 load=InternalLoad(Decimal("10")),
                 phase=TrainingPhase.BUILD,
@@ -733,6 +841,7 @@ def test_missed_week_progresses_from_explicit_zero_without_inventing_load() -> N
     realized = ("8", "12", "4", "0")
     prior = tuple(
         PlanLoadSample(
+            has_prior_approved_plan=True,
             week_start=_WEEK_START - timedelta(weeks=4 - index),
             load=InternalLoad(Decimal("10")),
             realized_load=InternalLoad(Decimal(value)),
@@ -759,6 +868,7 @@ def test_missed_week_does_not_require_four_week_history() -> None:
         race_date=date(2026, 12, 6),
         prior_loads=(
             PlanLoadSample(
+                has_prior_approved_plan=True,
                 week_start=_WEEK_START - timedelta(weeks=1),
                 load=InternalLoad(Decimal(10)),
                 realized_load=InternalLoad(Decimal(0)),
@@ -778,6 +888,7 @@ def test_explicit_maintenance_holds_prior_plan_without_progression() -> None:
         race_date=date(2026, 7, 26),
         prior_loads=(
             PlanLoadSample(
+                has_prior_approved_plan=True,
                 week_start=_WEEK_START - timedelta(weeks=1),
                 load=InternalLoad(Decimal("10")),
                 realized_load=InternalLoad(Decimal("10")),
@@ -799,6 +910,7 @@ def test_exact_monday_race_taper_retains_reviewed_reduction() -> None:
         race_date=date(2026, 8, 17),
         prior_loads=(
             PlanLoadSample(
+                has_prior_approved_plan=True,
                 week_start=date(2026, 8, 3),
                 load=InternalLoad(Decimal(10)),
                 phase=TrainingPhase.BUILD,
@@ -1164,7 +1276,7 @@ def test_build_selection_uses_safe_alternative_when_best_load_fit_stacks() -> No
             internal_planned_load=InternalLoad(Decimal(42)),
         ),
     )
-    common = dict(
+    common: dict[str, Any] = dict(
         deck=deck,
         prefix=(),
         required_disciplines=frozenset({Discipline.RUN}),
@@ -1252,6 +1364,7 @@ def test_fatigue_uses_lower_realized_times_ten_percent() -> None:
         race_date=date(2026, 12, 6),
         prior_loads=(
             PlanLoadSample(
+                has_prior_approved_plan=True,
                 week_start=_WEEK_START - timedelta(days=7),
                 load=InternalLoad(Decimal(100)),
                 realized_load=InternalLoad(Decimal(30)),
@@ -1267,12 +1380,14 @@ def test_fatigue_uses_lower_realized_times_ten_percent() -> None:
 def test_sick_week_is_excluded_without_deleting_history() -> None:
     prior = (
         PlanLoadSample(
+            has_prior_approved_plan=True,
             week_start=_WEEK_START - timedelta(days=14),
             load=InternalLoad(Decimal(100)),
             realized_load=InternalLoad(Decimal(100)),
             phase=TrainingPhase.BUILD,
         ),
         PlanLoadSample(
+            has_prior_approved_plan=True,
             week_start=_WEEK_START - timedelta(days=7),
             load=InternalLoad(Decimal(5)),
             realized_load=InternalLoad(Decimal(1)),
@@ -1359,6 +1474,7 @@ def test_injury_baseline_does_not_transfer_into_running() -> None:
 
 def test_injury_target_uses_private_sport_caps_and_keeps_transfer_low_only() -> None:
     prior = PlanLoadSample(
+        has_prior_approved_plan=True,
         week_start=_WEEK_START - timedelta(days=7),
         load=InternalLoad(Decimal("480")),
         phase=TrainingPhase.BUILD,
