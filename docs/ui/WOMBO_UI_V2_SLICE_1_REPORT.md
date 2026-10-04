@@ -1,7 +1,172 @@
 # Wombo UI V2 Slice 1 verification report
 
-Date: 2026-10-02 (Europe/Amsterdam).
-Implementation is functionally complete. Physical Android visual/TalkBack acceptance remains pending.
+## Authenticated emulator acceptance - 2026-10-05
+
+This record supersedes the earlier fixture-only/authenticated-blocked review.
+Acceptance covers emulator-5554 / Pixel_4_API_35, Android API 35 x86_64,
+the existing SDK 57 debug development client, and the normal Expo Router app.
+Physical Android gates remain open. No UI redesign or physiology change was made.
+
+### Integration and preserved provenance
+
+The isolated local branch `sync/wombo-ui-v2-first-plan-provenance` started at
+exact Slice-1 head `45e948484f769516ba1d1626641b71a62e50d58c`. The clean
+`git cherry-pick -x 6b1189b70a6505726fef70c4616a2f3d6dd4c94a` produced
+`1a5138f0626460e11558c788083a7aef4cc799f3`. Its message records the exact
+original fix SHA. Cherry-picking necessarily creates a new commit SHA; the
+original fix remains on `fix/catalog-capacity-fresh-athlete`. Both patches have
+stable patch ID `d8b124ef285be361e6279042052c2bab24372961`.
+
+All six UI commits remain unchanged ancestors, in order:
+
+1. `0358166286076e30d9cef4501362b2622ffa4c21`
+2. `1607142f9621c87cf37305b542a3136ad6157d77`
+3. `f0c0402d09ca3a13b70ebdeccf7387aebaad1637`
+4. `ee33e449b0dbf1dfa68304461f896cd211e5a9f1`
+5. `53a647ec072f2adcccaff5cfe080bb4a1eb04c2f`
+6. `45e948484f769516ba1d1626641b71a62e50d58c`
+
+The sync adds only the verified fix and this acceptance-report commit. No
+coach/Garmin/PDF/user changes were included. The Slice-1 branch remains at
+`45e9484`. The annotated V1 tag object remains
+`d39bfcd2cf6dcc17aca231502ac4ab4e46c0465a`, peeling to
+`6bb3a047139d91c71ac065c35a8af595221b54c5`. Package, lockfile, app/native
+configuration, EAS and Railway configuration match the baseline. No rebuild,
+dependency installation, upgrade, rebase, squash or published-history rewrite.
+
+`F:/wv2` now uses the sync branch. Metro was restarted from `F:/wv2/mobile`;
+its manifest reports that project root, normal `expo-router/entry.bundle`, and
+`dev=true`. Requested V2 is selected; only Workout Detail is enabled as V2.
+The existing review data image was retained. Software rendering/headless boot
+recovered a desktop graphics startup crash; an IPv4 listener recovered the ADB
+bridge. Neither recovery required native/source changes.
+
+### Sync checks
+
+| Check | Result |
+| --- | --- |
+| First-plan/provenance/API/domain/repository/public contracts | 158 passed across test_planning.py, test_planning_domain.py, test_planning_repository.py and test_contracts.py; existing Starlette/httpx deprecation warning only |
+| Relevant hosted migration/grant/RLS check | 10/10 pgTAP assertions, rollback-only, on start23-dev; original migration content preserved |
+| All mobile tests | 31 suites / 125 tests passed, including focused V2, Week/Calendar boundary and recursive privacy suites |
+| Strict TypeScript | Passed |
+| Unused-code check | Passed |
+| Ruff / format | Passed for all seven changed planning/test files |
+| Strict mypy | Passed: 139 backend/test files |
+| Whitespace / patch equivalence | Passed; identical bugfix patch IDs |
+
+The full previously verified 778-test / 27-suite database run was not repeated.
+The default system Python initially lacked pydantic-settings; the required
+backend checks subsequently passed with the existing phase-review virtualenv.
+No verification gate remains open for this emulator slice.
+
+### Environment and real product flow
+
+Only API `https://r6-api-r6-staging.up.railway.app` and Supabase `start23-dev`
+(`isfumhgqphieoayqahjv`) were used. API health/readiness both reported staging
+and passed. Verified fix deployment `7b499763-a64b-4762-b67c-e606172cf5ba`
+was read back as SUCCESS; its approved-history RPC/provenance pgTAP checks passed.
+There was no deployment or production access during this review.
+
+Exactly one tagged disposable athlete was created with the existing supported
+Auth test fixture. Random credentials stayed in helper memory and were entered
+through normal app email/password sign-in; no session/token injection. Supported
+profile, history, calibration observation, threshold confirmation, separate
+pending-zone approval and onboarding-completion APIs were used, without direct
+domain/database writes. RUN history was 180 min/week; BIKE/SWIM zero, no injuries
+and no cross-training opt-ins. Calibration activity/history existed; no previous
+approved weekly plan was injected.
+
+In the actual running app, Week preparation selected 5 October 2026 and explicit
+Monday/Tuesday/Wednesday/Saturday availability. `Maak weekvoorstel` returned
+**HTTP 201**. The server supplied a two-RUN swipe deck. Both workouts were chosen;
+`Verspreid over beschikbare dagen` placed/submitted the pending proposal with
+**HTTP 201**. Its qualitative combination warning was visible and retained.
+`Week goedkeuren` explicitly approved it with **HTTP 200**. The subsequent public
+plan read was active revision 1, BASE / initial_catalog_baseline, with two
+scheduled RUN occurrences visible in Week and Calendar. No approval DB shortcut.
+
+Plan ID: `acd5d9a7-750e-4029-a4e3-39416ac44542`.
+Acceptance occurrence: `2d843c5e-cb95-43ec-beb7-46a6c38f65e7`, RUN-013
+Wisselduur, scheduled 7 October 2026, template version 2. Source name and
+instructions contain an existing replacement character; both presentations
+preserve it. The other approved occurrence was RUN-010 on 10 October.
+
+### Authenticated detail and real V1/V2 parity
+
+| Acceptance | Observed result |
+| --- | --- |
+| Week -> V2 Detail | Exact real occurrence, 90 minutes, absent distance stays absent, supplied low intensity, expected RPE 2-4; five blocks in source order |
+| Source execution | Durations 15/15/15/15/30 minutes; zone targets 1/2/1/2/1; literal source instructions retained; supplied RPE reference expanded and inspected; no invented content |
+| V2 Detail -> Week | Visible Close restored the same Week, selected 2026-10-05 plan and scroll position; before/after accessibility XML byte-identical |
+| Calendar -> V2 Detail | Normal Calendar, October Month mode, selected 2026-10-07; same real occurrence and execution fields; detail-top accessibility labels identical to Week entry |
+| V2 Detail -> Calendar | Native Android Back restored Calendar, Month mode, selected date, October anchor, range 2026-09-28 through exclusive 2026-11-02 and scroll position; before/after XML byte-identical |
+| Real V1/V2 parity | Existing in-modal switch compared the same selected real object. Identity/name, 90 minutes/null distance, all five ordered blocks, targets/instructions and supplied RPE matched. V1 native Back restored the same Week position. Approved presentation differs; V1 source unchanged |
+| No mutation/refetch/reset | Public plan before/after deeply identical, active revision still 1. Network mark counts unchanged during Week detail, V1/V2 comparison and Calendar detail: zero additional API requests, including writes. No navigation reset |
+| Privacy | Public responses, rendered text and accessibility evidence contain no private TSS/load; recursive mobile and poison-field tests also passed |
+
+Calendar adds the existing plan-level `target_outside_catalog_capacity` warning
+to its workout envelope; Week carries that warning on the plan. Every other
+occurrence field, including all execution data, matches. That warning placement
+is outside the read-only detail snapshot. It was retained, not transformed.
+
+The read-only CDP observer records some events three times with the same request
+ID. Deduplication gives 16 actual app requests from 48 records. They are not three
+mutations. Some response-body captures were unavailable; authenticated read-only
+API snapshots supply the retained plan/Calendar evidence. HTTP status and detail
+boundary request-count observations remained available.
+
+### Screenshots and evidence
+
+All required PNGs were produced with matching accessibility XML in the ignored
+local `F:/wv2/mobile/.runtime` directory and visually inspected:
+
+- [Week before](../../mobile/.runtime/authenticated-week-before-detail.png)
+- [V2 RUN top](../../mobile/.runtime/authenticated-v2-run-detail-top.png)
+- [V2 RUN lower](../../mobile/.runtime/authenticated-v2-run-detail-lower.png)
+- [Week after](../../mobile/.runtime/authenticated-week-after-detail.png)
+- [Calendar before](../../mobile/.runtime/authenticated-calendar-before-detail.png)
+- [Calendar V2 detail](../../mobile/.runtime/authenticated-calendar-v2-detail.png)
+- [Calendar after](../../mobile/.runtime/authenticated-calendar-after-detail.png)
+
+Additional evidence: V2 middle, V1 top/lower, V1 Back origin and signed-out PNGs;
+`sync-metro-provenance.json`, `sync-approved-plan-before.json`,
+`sync-approved-plan-after.json`, `sync-calendar-public.json`,
+`sync-authenticated-network.json`, and
+[acceptance audit](../../mobile/.runtime/sync-authenticated-acceptance-audit.json).
+These local artifacts are retained but are not Git-tracked or bundled.
+
+### Cleanup, promotion and remaining gates
+
+Normal app `Veilig afmelden` returned to the sign-in screen. The exact owned
+athlete was metadata/email-guarded, sessions globally revoked, and Auth-deleted.
+Admin lookup returned 404. Independent start23-dev readback found zero matching
+Auth users, zero sessions for that actor, and zero Slice-1-tagged disposable
+athletes. Exactly one actor was created and deleted in this run. No real athlete
+was deleted. Cleanup evidence: `sync-authenticated-cleanup.json` and
+`sync-cleanup-db-verification.json`.
+
+After these gates passed, local `feat/wombo-ui-v2` was fast-forwarded from the V1
+baseline to the sync branch's acceptance-report head, using an ancestry check
+and the expected old ref. `git rev-parse sync/wombo-ui-v2-first-plan-provenance
+feat/wombo-ui-v2` identifies both final equal SHAs; the documentation commit
+cannot embed its own SHA. Slice-1 and V1 rollback references remain unchanged.
+
+Physical gates remain separately open: activity/HR/RPE; delayed-response retry;
+physical Month/Week; drag/drop and performance; physical workout detail;
+TalkBack, initial/return focus, reduced motion, default/200% text, NL/EN and
+physical gesture-navigation inset behavior. No physical-device acceptance.
+
+Main remains `fb56c51d983564c652d83fc15e02b039e9063d3f`. The original dirty
+checkout, coach file hash and Garmin/privacy/PDF documents are unchanged.
+Nothing was pushed. Production remains untouched.
+
+WOMBO UI V2 SLICE 1 EMULATOR ACCEPTED — PHYSICAL DEVICE GATES REMAIN
+
+## Historical implementation record - 2026-10-02
+
+The original implementation/fixture verification below is preserved for
+provenance. Its branch/status statements describe that earlier date.
+
 
 | Requested report item | Result |
 | --- | --- |
@@ -106,4 +271,4 @@ Emulator evidence is a local fixture smoke, not physical-phone or authenticated 
 
 Ignored local evidence/artifacts: `.runtime/mobile-test-final.log`, `android-development-final.log`, `android-release-final.log`, Android development/release export directories, fixture-only harness/server scripts, screenshot/XML pairs and fresh emulator data image. They are not staged or bundled through the normal Expo Router application entry. This report links retained local evidence; those ignored artifacts will not travel in a future Git PR.
 
-WOMBO UI V2 SLICE 1 IMPLEMENTED — DEVICE VISUAL ACCEPTANCE PENDING
+Historical result: Slice 1 implemented; device visual acceptance pending.
