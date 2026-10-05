@@ -226,6 +226,39 @@ test('resumed draft and revisions survive tabs and safe V1/V2 navigator replacem
   expect(api.createSwipeWeekDraft).not.toHaveBeenCalled(); expect(api.transitionSwipeWeekDraft).not.toHaveBeenCalled();
 });
 
+test('approved roots replace tab and stack navigators after all destinations have been visited', async () => {
+  const view = await renderRouter(routes, { initialUrl: '/planning' });
+  await view.findByText('Approved');
+  const owner = flow.setWeekStart;
+  const calendarOwner = calendar.loadCalendarRange;
+  await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
+  await view.findByText('Training calendar');
+  await fireEvent.press(view.getByRole('tab', { name: 'Month' }));
+  await waitFor(() => expect(api.getCalendar).toHaveBeenCalledTimes(2));
+  await act(() => navigation.calendarNavigation.selectDate('2026-10-07'));
+  await fireEvent.press(view.getByRole('tab', { name: 'Activities' }));
+  await view.findByText('Existing V1 Activities');
+  await fireEvent.press(view.getByRole('tab', { name: 'Week' }));
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
+    await view.findByText('Your training week');
+    expect(view.queryByTestId('training-root-navigation')).toBeNull();
+    await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
+    await view.findByText('Approved');
+    await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
+    await view.findByText('Training calendar');
+    expect(navigation.calendarNavigation.mode).toBe('month');
+    expect(navigation.calendarNavigation.selectedDate).toBe('2026-10-07');
+    await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: 'Week' }));
+  }
+  expect(flow.setWeekStart).toBe(owner);
+  expect(calendar.loadCalendarRange).toBe(calendarOwner);
+  expect(flow.plan).toBe(activePlan);
+  expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
+  expect(api.getCalendar).toHaveBeenCalledTimes(2);
+  expect(api.approvePlanProposal).not.toHaveBeenCalled();
+});
+
 test('existing V1 task hides root navigation, keeps version while open, then returns settled Week', async () => {
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : null);
   const view = await renderRouter(routes, { initialUrl: '/planning' });
