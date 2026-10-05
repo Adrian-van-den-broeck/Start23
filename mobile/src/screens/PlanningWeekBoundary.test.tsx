@@ -57,11 +57,11 @@ function restore(kind: 'plan' | 'draft') {
     key === 'start23.language-preference' ? 'en' :
       key === (kind === 'plan' ? 'start23.latest-plan-id' : 'start23.latest-swipe-draft-id') ? (kind === 'plan' ? activePlan.id : draft.id) : null);
 }
-test('V2 no plan opens V1 preparation without a draft/create/read, and returns to Week', async () => {
+test('V2 no plan opens provisional availability without a draft/create/read, and returns to Week', async () => {
   const view = await render(presentation());
   await view.findByText('Prepare your training week');
   await fireEvent.press(view.getByRole('button', { name: 'Prepare week' }));
-  await view.findByText('Wanneer kun je trainen?');
+  await view.findByText('When can you train?');
   expect(api.createSwipeWeekDraft).not.toHaveBeenCalled();
   expect(api.getWeeklyPlan).not.toHaveBeenCalled();
   await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
@@ -91,8 +91,8 @@ test('resumed draft entry uses its exact candidate and revision, with no second 
   const view = await render(presentation());
   await view.findAllByText('Workout selection in progress');
   await fireEvent.press(view.getAllByRole('button', { name: 'Continue choosing' })[0]);
-  await view.findByText('Stel je week samen');
-  await fireEvent.press(view.getByRole('button', { name: 'Overslaan' }));
+  await view.findByText('Choose your workouts');
+  await fireEvent.press(view.getByRole('button', { name: `Pass · ${occurrence.name}` }));
   await waitFor(() => expect(api.transitionSwipeWeekDraft).toHaveBeenCalledTimes(1));
   expect(api.transitionSwipeWeekDraft).toHaveBeenCalledWith('token-a', draft.id, { expected_revision: draft.revision, action: 'pass', candidate_template_id: occurrence.id, candidate_occurrence_id: occurrence.occurrence_id });
   await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));

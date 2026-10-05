@@ -6,15 +6,15 @@ import { colors, layout, space } from '../tokens';
 import { Button } from './Button';
 import { Text } from './Text';
 
-export function Screen({ title, children, onBack, scrollProps, topInsetOwned = false, focusHeading = true }: {
-  title: string; children: ReactNode; onBack: () => void; scrollProps?: ScrollViewProps; topInsetOwned?: boolean; focusHeading?: boolean;
+export function Screen({ title, children, onBack, scrollProps, topInsetOwned = false, focusHeading = true, backLabel, backDisabled = false }: {
+  title: string; children: ReactNode; onBack: () => void; scrollProps?: ScrollViewProps; topInsetOwned?: boolean; focusHeading?: boolean; backLabel?: string; backDisabled?: boolean;
 }) {
   const { t } = useLanguage();
   const heading = useRef<View>(null);
   const focused = useRef(false);
   return <SafeAreaView edges={topInsetOwned ? ['bottom'] : ['top', 'bottom']} style={styles.frame}>
     <View style={styles.header}>
-      <Button variant="tertiary" label={t('common.close')} onPress={onBack} />
+      <Button variant="tertiary" label={backLabel ?? t('common.close')} disabled={backDisabled} onPress={onBack} />
       <View ref={heading} accessible accessibilityRole="header" accessibilityLabel={title}
         onLayout={() => {
           if (focusHeading && !focused.current && heading.current) {

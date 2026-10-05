@@ -61,6 +61,8 @@ import { useUiVersion } from '../ui/UiVersionProvider';
 import { Button as V2Button } from '../ui-v2/primitives/Button';
 import { WeekScreen } from '../ui-v2/screens/WeekScreen';
 import { CalendarScreen } from '../ui-v2/screens/CalendarScreen';
+import { AvailabilityScreen, PlacementScreen, SelectionScreen } from '../ui-v2/screens/PlanningCreationScreens';
+import { planningCreationViewModel } from '../ui-v2/utils/planningCreationViewModel';
 import { calendarViewModel } from '../ui-v2/utils/calendarViewModel';
 import { type CalendarNavigation } from '../features/calendar/useCalendarNavigation';
 import { weekHomeViewModel, type WeekAction } from '../ui-v2/utils/weekHomeViewModel';
@@ -801,7 +803,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
   const { t } = useLanguage();
   const { rootVersion, setRootVersion, calendarVersion, setCalendarVersion, task, setTask,
     detailWorkout, setDetailWorkout, weekScroll, calendarPositions, calendarNavigation, locked,
-    sheetOpen, setCalendarVisited } = usePlanningPresentation();
+    sheetOpen, setCalendarVisited, creationStep, setCreationStep, placementMode, setPlacementMode } = usePlanningPresentation();
   const active = props.active ?? true;
   const previousRequest = useRef(requested);
   const calendarOpen = props.destination === 'calendar' ||
@@ -829,8 +831,17 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
     previousRequest.current = requested;
   }, [requested, effectiveVersion, task, detailWorkout, locked, calendarOpen, active, sheetOpen, props.destination, setCalendarVersion, setRootVersion]);
   useEffect(() => {
-    if (task === 'prepare' && flow.view === 'deck') setTask('existing');
-  }, [task, flow.view]);
+    if (task === 'prepare' && flow.view === 'deck' && flow.swipeDraft) {
+      setCreationStep('selection');
+      setPlacementMode('automatic');
+      setTask('creation');
+    }
+    // A successful shared submit sets plan/view only after resume storage settles.
+    if (task === 'creation' && !flow.swipeDraft && flow.view === 'plan') {
+      setTask(null);
+      setRootVersion(effectiveVersion('week'));
+    }
+  }, [task, flow.view, flow.swipeDraft, setTask, setCreationStep, setPlacementMode, setRootVersion, effectiveVersion]);
   const returnToWeek = () => { if (!locked) { setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); if (props.destination === 'calendar') props.onWeekRoot?.(); } };
   useEffect(() => {
     if (!active || sheetOpen || (!locked && !task && !calendarOpen) || (!locked && props.destination === 'calendar' && !task)) return;
@@ -846,7 +857,8 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
     if (kind === 'draft' || (kind === 'prepare' && flow.swipeDraft)) flow.openDeck();
     else if (kind === 'calendar') { setCalendarVersion(effectiveVersion('calendar')); flow.openCalendar(); }
     else flow.setView('plan');
-    setTask(kind === 'prepare' && !flow.swipeDraft ? 'prepare' : 'existing');
+    setTask(kind === 'prepare' && !flow.swipeDraft ? 'prepare' :
+      kind === 'draft' || (kind === 'prepare' && flow.swipeDraft) ? 'creation' : 'existing');
   };
   const controls = <UiVersionControl disabled={locked || sheetOpen} onSelect={(version) => {
     if (!locked && !detailWorkout) {
@@ -883,7 +895,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
       onProfile={props.destination === 'calendar' ? props.onOpenProfile : undefined}
       onOpenWorkout={(id) => { const workout = calendar.calendarWorkouts.find((item) => item.id === id); if (workout) setDetailWorkout(workout); }}
       controls={controls} scrollProps={calendarScrollProps} />
-      : rootVersion === 'v2' && !task ? <WeekScreen model={model} error={flow.error} busy={locked}
+      : rootVersion === 'v2' && (!task || (task === 'creation' && !flow.swipeDraft && flow.view === 'plan')) ? <WeekScreen model={model} error={flow.error} busy={locked}
         onAction={action} onOpenWorkout={(id) => {
           const workout = flow.activePlan?.workouts.find((item) => item.id === id);
           if (workout) setDetailWorkout(workout);
@@ -894,7 +906,22 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
           contentOffset: { x: 0, y: weekScroll.current }, scrollEventThrottle: 16,
           onScroll: (event) => { weekScroll.current = event.nativeEvent.contentOffset.y; }
         }} />
-        : <PlanningPresentation {...props} onOpenWorkout={setDetailWorkout}
+        : task === 'prepare' && effectiveVersion('planningCreation') === 'v2' ? <AvailabilityScreen
+          busy={locked} error={flow.error} controls={controls} onBack={returnToWeek}
+          weekStart={flow.weekStart} selectedDays={flow.selectedDays} reusePreviousWeek={flow.reusePreviousWeek}
+          injuries={flow.injuries} crossTrainingOptIns={flow.crossTrainingOptIns}
+          onWeekStart={flow.setWeekStart} onToggleDay={flow.toggleDay}
+          onReuse={() => flow.setReusePreviousWeek((current) => !current)}
+          onInjury={flow.toggleInjury} onCrossTraining={flow.toggleCrossTraining} onCreate={flow.generate} />
+        : task === 'creation' && flow.swipeDraft && flow.view === 'deck' && effectiveVersion('planningCreation') === 'v2' ? (
+          creationStep === 'placement' && flow.swipeDraft.state === 'placement' ? <PlacementScreen
+            model={planningCreationViewModel(flow.swipeDraft)} busy={locked} error={flow.error} controls={controls}
+            onBack={returnToWeek} mode={placementMode} onMode={setPlacementMode}
+            onPlace={flow.placeDraftWorkout} onSubmit={flow.submitDraft} onSelection={() => setCreationStep('selection')} />
+          : <SelectionScreen model={planningCreationViewModel(flow.swipeDraft)} busy={locked} error={flow.error}
+            controls={controls} onBack={returnToWeek} onTransition={flow.transitionDraft}
+            onContinue={() => setCreationStep('placement')} />
+        ) : <PlanningPresentation {...props} onOpenWorkout={setDetailWorkout}
           calendarNavigation={calendarNavigation} calendarScrollProps={calendarOpen ? calendarScrollProps : undefined}
           onOpenCalendar={() => { if (props.onCalendarRoot && rootVersion === 'v2') { props.onCalendarRoot(); return; } setCalendarVersion(effectiveVersion('calendar')); flow.openCalendar(); }}
           prepareWeek={task === 'prepare'} versionControl={controls}

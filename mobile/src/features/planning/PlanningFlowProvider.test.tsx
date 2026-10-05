@@ -82,6 +82,83 @@ test('initial load has one owner, no plan discovery, no duplicate effects or wri
   expect(api.getCalendar).not.toHaveBeenCalled(); expect(api.submitSwipeWeekDraft).not.toHaveBeenCalled();
 });
 
+test('same-tick repeated creation is locked before busy renders, including preference changes', async () => {
+  const response = deferred<typeof draft>();
+  jest.mocked(api.createSwipeWeekDraft).mockReturnValue(response.promise);
+  const view = await render(<Host />);
+  await waitFor(() => expect(flow.resumeState).toBe('ready'));
+  await act(() => { void flow.generate(); void flow.generate(); ui.setRequested('v2'); });
+  await view.rerender(<Host />);
+  expect(api.createSwipeWeekDraft).toHaveBeenCalledTimes(1);
+  await act(() => response.resolve(draft));
+  await waitFor(() => expect(flow.swipeDraft).toBe(draft));
+  expect(api.createSwipeWeekDraft).toHaveBeenCalledTimes(1);
+});
+
+test.each(['accept', 'pass', 'undo', 'reset_passed'] as const)('shared synchronous lock prevents duplicate %s and cross-control writes', async (action) => {
+  const initial = { ...draft, can_undo: true, passed_count: 1 };
+  const response = deferred<typeof draft>();
+  jest.mocked(api.transitionSwipeWeekDraft).mockReturnValue(response.promise);
+  await loadedDraft(initial);
+  await act(() => { flow.transitionDraft(action); flow.transitionDraft(action); flow.placeDraftWorkout(occurrence.occurrence_id, '2026-10-05'); flow.submitDraft('automatic'); });
+  expect(api.transitionSwipeWeekDraft).toHaveBeenCalledTimes(1);
+  expect(api.transitionSwipeWeekDraft).toHaveBeenCalledWith('token-a', initial.id, {
+    expected_revision: initial.revision, action,
+    ...(action === 'accept' || action === 'pass' ? { candidate_template_id: occurrence.id, candidate_occurrence_id: occurrence.occurrence_id } : {}),
+  });
+  expect(api.placeSwipeWeekWorkout).not.toHaveBeenCalled();
+  expect(api.submitSwipeWeekDraft).not.toHaveBeenCalled();
+  await act(() => response.resolve({ ...initial, revision: initial.revision + 1 }));
+});
+
+test('same-tick repeated placement writes only the exact occurrence/date/revision once', async () => {
+  const response = deferred<typeof draft>();
+  jest.mocked(api.placeSwipeWeekWorkout).mockReturnValue(response.promise);
+  await loadedDraft({ ...draft, state: 'placement', accepted_workouts: [occurrence] });
+  await act(() => { flow.placeDraftWorkout(occurrence.occurrence_id, '2026-10-05'); flow.placeDraftWorkout(occurrence.occurrence_id, '2026-10-07'); });
+  expect(api.placeSwipeWeekWorkout).toHaveBeenCalledTimes(1);
+  expect(api.placeSwipeWeekWorkout).toHaveBeenCalledWith('token-a', draft.id, occurrence.occurrence_id, draft.revision, '2026-10-05');
+  await act(() => response.resolve({ ...draft, revision: 5 }));
+});
+
+test.each(['automatic', 'manual'] as const)('same-tick duplicate %s submit is locked through persistence and clears to pending only', async (mode) => {
+  const response = deferred<{ plan: typeof pendingPlan; proposal: typeof proposal }>();
+  const stored = deferred<void>();
+  const deleted = deferred<void>();
+  jest.mocked(api.submitSwipeWeekDraft).mockReturnValue(response.promise);
+  const initial = { ...draft, state: 'placement' as const, accepted_workouts: [occurrence] };
+  await loadedDraft(initial);
+  jest.mocked(SecureStore.setItemAsync).mockReturnValue(stored.promise);
+  jest.mocked(SecureStore.deleteItemAsync).mockReturnValue(deleted.promise);
+  await act(() => { flow.submitDraft(mode); flow.submitDraft(mode); });
+  expect(api.submitSwipeWeekDraft).toHaveBeenCalledTimes(1);
+  expect(api.submitSwipeWeekDraft).toHaveBeenCalledWith('token-a', draft.id, draft.revision, mode);
+  await act(() => response.resolve({ plan: pendingPlan, proposal }));
+  expect(flow.swipeDraft).toBe(initial); expect(flow.plan).toBeNull(); expect(flow.busy).toBe(true);
+  expect(SecureStore.setItemAsync).toHaveBeenCalledWith('start23.latest-plan-id', pendingPlan.id, { keychainAccessible: 'device-only' });
+  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.latest-swipe-draft-id');
+  await act(() => stored.resolve());
+  expect(flow.swipeDraft).toBe(initial); expect(flow.plan).toBeNull();
+  await act(() => { flow.submitDraft(mode); deleted.resolve(); });
+  await waitFor(() => expect(flow.swipeDraft).toBeNull());
+  expect(flow.plan?.revision_state).toBe('pending_approval'); expect(flow.plan?.proposal?.state).toBe('pending');
+  expect(flow.view).toBe('plan'); expect(api.submitSwipeWeekDraft).toHaveBeenCalledTimes(1);
+  expect(api.approvePlanProposal).not.toHaveBeenCalled();
+});
+
+test('failed mutation releases the lock but keeps exact draft and uses the safe existing error', async () => {
+  await loadedDraft(draft);
+  jest.mocked(api.transitionSwipeWeekDraft).mockRejectedValue(new Error('Refresh required'));
+  await act(() => { flow.transitionDraft('accept'); flow.transitionDraft('pass'); });
+  await waitFor(() => expect(flow.busy).toBe(false));
+  expect(flow.swipeDraft).toBe(draft); expect(flow.error).toBe('Refresh required');
+  expect(api.transitionSwipeWeekDraft).toHaveBeenCalledTimes(1);
+  jest.mocked(api.transitionSwipeWeekDraft).mockResolvedValue({ ...draft, revision: 5 });
+  await act(() => flow.transitionDraft('undo'));
+  expect(api.transitionSwipeWeekDraft).toHaveBeenCalledTimes(2);
+  expect(api.createSwipeWeekDraft).not.toHaveBeenCalled();
+});
+
 test('active revision is read once separately from the pending proposal; rerender preserves both', async () => {
   const view = await loadedPlan(pendingPlan);
   expect(flow.plan?.active_revision).toBe(2); expect(flow.plan?.revision).toBe(3);

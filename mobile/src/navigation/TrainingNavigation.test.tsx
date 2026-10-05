@@ -226,6 +226,63 @@ test('resumed draft and revisions survive tabs and safe V1/V2 navigator replacem
   expect(api.createSwipeWeekDraft).not.toHaveBeenCalled(); expect(api.transitionSwipeWeekDraft).not.toHaveBeenCalled();
 });
 
+test('Slice 4A task transition locks roots and comparison, then re-entry across roots retains the exact returned draft', async () => {
+  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.latest-swipe-draft-id' ? draft.id : null);
+  jest.mocked(api.getSwipeWeekDraft).mockResolvedValue(draft);
+  const view = await renderRouter(routes, { initialUrl: '/planning' });
+  await view.findByText('Choose your workouts');
+  const owner = flow.setWeekStart;
+  const reader = calendar.loadCalendarRange;
+  await fireEvent.press(view.getAllByRole('button', { name: 'Continue choosing' })[0]);
+  await view.findByText('Choose your workouts');
+  expect(view.queryByTestId('training-root-navigation')).toBeNull();
+  let finish!: () => void;
+  const updated = { ...draft, revision: 5, passed_count: 1, can_undo: true };
+  jest.mocked(api.transitionSwipeWeekDraft).mockImplementation(async () => {
+    await new Promise<void>((resolve) => { finish = resolve; }); return updated;
+  });
+  const pass = view.getByRole('button', { name: `Pass · ${draft.current_candidate!.name}` });
+  await fireEvent.press(pass); await fireEvent.press(pass);
+  expect(view.getByRole('button', { name: 'Back to Week' })).toBeDisabled();
+  expect(view.getByRole('button', { name: 'UI V1' })).toBeDisabled();
+  expect(api.transitionSwipeWeekDraft).toHaveBeenCalledTimes(1);
+  await act(() => finish());
+  await waitFor(() => expect(flow.swipeDraft).toBe(updated));
+  await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
+  await fireEvent.press(view.getByRole('tab', { name: 'Activities' }));
+  await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
+  await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: 'Week' }));
+  await fireEvent.press(view.getAllByRole('button', { name: 'Continue choosing' })[0]);
+  expect(flow.swipeDraft).toBe(updated);
+  expect(flow.setWeekStart).toBe(owner); expect(calendar.loadCalendarRange).toBe(reader);
+  expect(api.getSwipeWeekDraft).toHaveBeenCalledTimes(1);
+  expect(api.createSwipeWeekDraft).not.toHaveBeenCalled();
+  expect(api.transitionSwipeWeekDraft).toHaveBeenCalledTimes(1);
+});
+
+test('Slice 4A automatic submit restores root tabs directly at pending Week without mounting proposal review', async () => {
+  const ready = { ...draft, state: 'placement' as const, current_candidate: null };
+  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.latest-swipe-draft-id' ? draft.id : null);
+  jest.mocked(api.getSwipeWeekDraft).mockResolvedValue(ready);
+  const pending = { ...pendingPlan, active_revision: null };
+  jest.mocked(api.submitSwipeWeekDraft).mockResolvedValue({ plan: pending, proposal: pending.proposal! });
+  const view = await renderRouter(routes, { initialUrl: '/planning' });
+  await view.findByText('Confirm your training dates');
+  const owner = flow.setWeekStart;
+  await fireEvent.press(view.getAllByRole('button', { name: 'Continue choosing' })[0]);
+  await fireEvent.press(view.getByRole('button', { name: 'Continue to placement' }));
+  await view.findByText('Place your workouts');
+  await fireEvent.press(view.getByRole('button', { name: 'Place automatically and submit proposal' }));
+  await view.findByText('Proposal awaiting review');
+  expect(view.getByTestId('training-root-navigation')).toBeTruthy();
+  expect(navigation.task).toBeNull(); expect(flow.setWeekStart).toBe(owner);
+  expect(flow.swipeDraft).toBeNull(); expect(flow.plan).toBe(pending);
+  expect(api.submitSwipeWeekDraft).toHaveBeenCalledTimes(1);
+  expect(api.getPendingWorkoutAlternatives).not.toHaveBeenCalled();
+  expect(api.approvePlanProposal).not.toHaveBeenCalled();
+  expect(api.rejectPlanProposal).not.toHaveBeenCalled();
+});
+
 test('approved roots replace tab and stack navigators after all destinations have been visited', async () => {
   const view = await renderRouter(routes, { initialUrl: '/planning' });
   await view.findByText('Approved');
@@ -275,12 +332,12 @@ test('detail keeps the measured navigation footprint to avoid clamping Calendar 
   expect(view.getByTestId('training-root-navigation')).toBeTruthy();
 });
 
-test('existing V1 task hides root navigation, keeps version while open, then returns settled Week', async () => {
+test('creation task hides root navigation, retains root owner during comparison, then returns settled Week', async () => {
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : null);
   const view = await renderRouter(routes, { initialUrl: '/planning' });
   await view.findByText('Prepare your training week');
   await fireEvent.press(view.getByRole('button', { name: 'Prepare week' }));
-  await view.findByText('Wanneer kun je trainen?');
+  await view.findByText('When can you train?');
   expect(view.queryByRole('tab', { name: 'Activities' })).toBeNull();
   await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
   expect(navigation.rootVersion).toBe('v2');

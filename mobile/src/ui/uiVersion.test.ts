@@ -11,7 +11,9 @@ describe('development UI resolution', () => {
     expect(effectiveUiVersion(false, 'v2', 'week')).toBe('v1');
     expect(effectiveUiVersion(true, 'v2', 'calendar')).toBe('v2');
     expect(effectiveUiVersion(false, 'v2', 'calendar')).toBe('v1');
-    expect(Object.keys(implementedSlices)).toEqual(['workoutDetail', 'week', 'calendar']);
+    expect(effectiveUiVersion(true, 'v2', 'planningCreation')).toBe('v2');
+    expect(effectiveUiVersion(false, 'v2', 'planningCreation')).toBe('v1');
+    expect(Object.keys(implementedSlices)).toEqual(['workoutDetail', 'week', 'calendar', 'planningCreation']);
     for (const slice of ['activity', 'planning', 'profile', 'onboarding', 'zones', 'toString', '']) {
       expect(effectiveUiVersion(true, 'v2', slice)).toBe('v1');
     }

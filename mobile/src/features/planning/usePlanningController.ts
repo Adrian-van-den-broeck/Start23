@@ -51,6 +51,9 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
   const [primaryGoal, setPrimaryGoal] = useState<PrimaryRaceGoal | null>(null);
   const [maintenanceMarked, setMaintenanceMarked] = useState(false);
   const [busy, setBusy] = useState(false);
+  // Shared across presentations: React's busy render alone cannot block two
+  // actions dispatched in the same tick, or from two different controls.
+  const mutationInFlight = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const availableDates = useMemo(
     () => availableDatesFor(weekStart, selectedDays),
@@ -179,6 +182,8 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
       ? activeSnapshot : null;
 
   const run = async (operation: () => Promise<void>) => {
+    if (mutationInFlight.current) return;
+    mutationInFlight.current = true;
     setBusy(true);
     setError(null);
     try {
@@ -190,6 +195,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
           : 'De planningsactie is niet gelukt.',
       );
     } finally {
+      mutationInFlight.current = false;
       setBusy(false);
     }
   };

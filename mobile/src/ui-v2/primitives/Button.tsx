@@ -45,9 +45,10 @@ export function Button({ label, accessibilityLabel = label, accessibilityRole = 
         onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
         style={[styles.button, variant === 'primary' ? styles.primary : variant === 'secondary' ? styles.secondary : styles.tertiary,
         pressed && (variant === 'primary' ? states.pressed : states.selected),
+        (accessibilityState?.checked === true || accessibilityState?.selected === true) && { borderColor: colors.focus },
         blocked && styles.disabled, focused && { borderColor: variant === 'primary' ? colors.textInverse : colors.focus }]}>
         {isBusy ? <ActivityIndicator accessible={false} color={color} /> : null}
-        <Text variant="button" accessible={false} importantForAccessibility="no" style={{ color, flexShrink: 1 }}>{label}</Text>
+        <Text variant="button" accessible={false} importantForAccessibility="no" style={{ color, flexShrink: 1 }}>{accessibilityState?.checked === true ? '✓ ' : ''}{label}</Text>
       </Pressable>
       {disabledReason ? <Text variant="supporting">{disabledReason}</Text> : null}
     </View>
