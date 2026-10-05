@@ -9,6 +9,8 @@ import * as api from '../api/client';
 import { LanguageProvider } from '../i18n/LanguageProvider';
 import { UiVersionProvider } from '../ui/UiVersionProvider';
 import * as detailBoundary from '../ui/WorkoutDetailBoundary';
+import { useActivityFlow } from '../features/activities/ActivityFlowProvider';
+import { activityOnboarding, pendingActivity } from '../features/activities/activities.test-fixtures';
 import { usePlanningCalendar, usePlanningFlow } from '../features/planning/PlanningFlowProvider';
 import { activePlan, draft, onboarding, pendingPlan, warning, workout } from '../features/planning/planning.test-fixtures';
 import { useOptionalPlanningPresentation } from './PlanningPresentationProvider';
@@ -23,7 +25,7 @@ import CalibrationRoute from '../../app/(authenticated)/calibration';
 
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: jest.fn(), deleteItemAsync: jest.fn() }));
 jest.mock('../api/client', () => ({
-  listActivities: jest.fn(), approvePlanProposal: jest.fn(), createSwipeWeekDraft: jest.fn(), editPendingWorkout: jest.fn(),
+  listActivities: jest.fn(), listPlannedExternalActivities: jest.fn(), createActivity: jest.fn(), submitActivityRpeWithRefresh: jest.fn(), confirmActivityMatch: jest.fn(), approvePlanProposal: jest.fn(), createSwipeWeekDraft: jest.fn(), editPendingWorkout: jest.fn(),
   getCalendar: jest.fn(), getOnboarding: jest.fn(), getPendingWorkoutAlternatives: jest.fn(), getSwipeWeekDraft: jest.fn(),
   getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(), movePlannedWorkout: jest.fn(), placeSwipeWeekWorkout: jest.fn(),
   rejectPlanProposal: jest.fn(), submitSwipeWeekDraft: jest.fn(), transitionSwipeWeekDraft: jest.fn(), validatePlanLayout: jest.fn(),
@@ -79,10 +81,12 @@ jest.mock('../screens/ActivityScreen', () => {
   };
 });
 
+let activityFlow: ReturnType<typeof useActivityFlow>;
 let flow: ReturnType<typeof usePlanningFlow>;
 let calendar: ReturnType<typeof usePlanningCalendar>;
 let navigation: NonNullable<ReturnType<typeof useOptionalPlanningPresentation>>;
 function Probe() {
+  activityFlow = useActivityFlow();
   const value = useOptionalPlanningPresentation();
   const path = usePathname();
   return <View><Text testID="path">{path}</Text>{value ? <OwnerProbe /> : null}</View>;
@@ -117,9 +121,53 @@ beforeEach(() => {
   jest.mocked(api.getOnboarding).mockResolvedValue({ ...onboarding, current_step: 'completed' });
   jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
   jest.mocked(api.listActivities).mockResolvedValue([]);
+  jest.mocked(api.listPlannedExternalActivities).mockResolvedValue([]);
   jest.mocked(api.getCalendar).mockImplementation(async (_token, from, to) => ({ from_date: from, to_date: to, workouts: [workout], rest_days: [] }));
 });
 afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.useRealTimers(); jest.restoreAllMocks(); });
+
+test('Slice 5A one Activity owner survives Week Activities Calendar Activities and presentation preference changes', async () => {
+  jest.mocked(api.getOnboarding).mockResolvedValue(activityOnboarding);
+  const view = await renderRouter(routes, { initialUrl: '/planning' });
+  await view.findByText('Approved');
+  const owner = activityFlow.ensureActivitiesLoaded;
+  await act(() => activityFlow.ensureActivitiesLoaded());
+  await act(() => { activityFlow.setDuration('52'); activityFlow.setHeartRateByActivity({ 'activity-a': '148' }); });
+  for (const destination of ['Activities', 'Calendar', 'Activities', 'Week']) {
+    await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: destination }));
+    expect(activityFlow.ensureActivitiesLoaded).toBe(owner); expect(activityFlow.duration).toBe('52');
+  }
+  await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
+  expect(activityFlow.ensureActivitiesLoaded).toBe(owner); expect(activityFlow.duration).toBe('52');
+  expect(activityFlow.heartRateByActivity).toEqual({ 'activity-a': '148' });
+  expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(1);
+  expect(api.createActivity).not.toHaveBeenCalled(); expect(api.submitActivityRpeWithRefresh).not.toHaveBeenCalled();
+});
+
+test('Slice 5A token rotation keeps Activity state; identity replacement and sign-out remove it', async () => {
+  jest.mocked(api.getOnboarding).mockResolvedValue(activityOnboarding);
+  const view = await renderRouter(routes, { initialUrl: '/planning' }); await view.findByText('Approved');
+  await act(() => activityFlow.ensureActivitiesLoaded()); await act(() => activityFlow.setDistance('5000'));
+  const owner = activityFlow.ensureActivitiesLoaded;
+  await act(() => { mockAuth.session = { access_token: 'rotated-token', user: { id: 'athlete-a' } }; mockAuthListeners.forEach(listener => listener()); });
+  expect(activityFlow.ensureActivitiesLoaded).toBe(owner); expect(activityFlow.distance).toBe('5000');
+  await act(() => { mockAuth.session = { access_token: 'token-b', user: { id: 'athlete-b' } }; mockAuthListeners.forEach(listener => listener()); });
+  expect(activityFlow.ensureActivitiesLoaded).not.toBe(owner); expect(activityFlow.distance).toBe(''); expect(activityFlow.activities).toEqual([]);
+  const old = activityFlow;
+  await act(() => mockSignOut()); await view.findByText('Auth destination');
+  await act(() => old.save()); expect(api.createActivity).not.toHaveBeenCalled();
+});
+
+test('Slice 5A shared authoritative refresh updates the one shell reminder after feedback', async () => {
+  jest.mocked(api.getOnboarding).mockResolvedValue(activityOnboarding); jest.mocked(api.listActivities).mockResolvedValue([pendingActivity]);
+  const view = await renderRouter(routes, { initialUrl: '/planning' }); await view.findByText('Approved');
+  const label = '1 workout waiting for RPE · open Training & RPE'; await view.findByText(label);
+  await act(() => activityFlow.ensureActivitiesLoaded()); expect(view.getAllByText(label)).toHaveLength(1);
+  jest.mocked(api.listActivities).mockResolvedValue([]); jest.mocked(api.submitActivityRpeWithRefresh).mockResolvedValue({ ...pendingActivity, rpe: 4, processing_state: 'complete' });
+  await act(() => activityFlow.saveRpe(pendingActivity.id, 4));
+  expect(view.queryByText(label)).toBeNull(); expect(activityFlow.pendingRpe).toEqual([]);
+  expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1); expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(2);
+});
 
 test('real JS tabs keep one owner, one restore and loaded Calendar context across roots', async () => {
   const view = await renderRouter(routes, { initialUrl: '/planning' });
