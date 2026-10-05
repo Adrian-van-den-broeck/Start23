@@ -1,6 +1,6 @@
 export type UiVersion = 'v1' | 'v2';
 
-export const implementedSlices = { workoutDetail: true, week: true, calendar: true, planningCreation: true } as const;
+export const implementedSlices = { workoutDetail: true, week: true, calendar: true, planningCreation: true, proposalReview: true } as const;
 
 export function initialUiVersion(isDevelopment: boolean, flag?: string): UiVersion {
   return isDevelopment && flag === 'v2' ? 'v2' : 'v1';

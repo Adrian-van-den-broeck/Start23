@@ -9,7 +9,8 @@ function usePresentationOwner() {
   const { effectiveVersion } = useUiVersion();
   const [rootVersion, setRootVersion] = useState(() => effectiveVersion('week'));
   const [calendarVersion, setCalendarVersion] = useState(() => effectiveVersion('calendar'));
-  const [task, setTask] = useState<'prepare' | 'creation' | 'existing' | null>(null);
+  const [task, setTask] = useState<'prepare' | 'creation' | 'review' | 'existing' | null>(null);
+  const [reviewWorkoutId, setReviewWorkoutId] = useState<string | null>(null);
   // Navigation choices only; draft, revision and placements belong to flow.
   const [creationStep, setCreationStep] = useState<'selection' | 'placement'>('selection');
   const [placementMode, setPlacementMode] = useState<'automatic' | 'manual'>('automatic');
@@ -24,6 +25,7 @@ function usePresentationOwner() {
   const locked = flow.busy || transientBusy || !!flow.pendingMove || Object.values(flow.pendingWorkouts.editors).some((slot) => slot.loading);
   return {
     rootVersion, setRootVersion, calendarVersion, setCalendarVersion, task, setTask,
+    reviewWorkoutId, setReviewWorkoutId,
     creationStep, setCreationStep, placementMode, setPlacementMode,
     detailWorkout, setDetailWorkout, sheetOpen, setSheetOpen, weekScroll, calendarPositions,
     calendarNavigation, setCalendarVisited, activityBusy, setActivityBusy, setTransientBusy,

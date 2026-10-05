@@ -62,6 +62,7 @@ import { Button as V2Button } from '../ui-v2/primitives/Button';
 import { WeekScreen } from '../ui-v2/screens/WeekScreen';
 import { CalendarScreen } from '../ui-v2/screens/CalendarScreen';
 import { AvailabilityScreen, PlacementScreen, SelectionScreen } from '../ui-v2/screens/PlanningCreationScreens';
+import { PlanningProposalTask } from './PlanningProposalTask';
 import { planningCreationViewModel } from '../ui-v2/utils/planningCreationViewModel';
 import { calendarViewModel } from '../ui-v2/utils/calendarViewModel';
 import { type CalendarNavigation } from '../features/calendar/useCalendarNavigation';
@@ -803,7 +804,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
   const { t } = useLanguage();
   const { rootVersion, setRootVersion, calendarVersion, setCalendarVersion, task, setTask,
     detailWorkout, setDetailWorkout, weekScroll, calendarPositions, calendarNavigation, locked,
-    sheetOpen, setCalendarVisited, creationStep, setCreationStep, placementMode, setPlacementMode } = usePlanningPresentation();
+    sheetOpen, setCalendarVisited, creationStep, setCreationStep, placementMode, setPlacementMode, reviewWorkoutId, setReviewWorkoutId } = usePlanningPresentation();
   const active = props.active ?? true;
   const previousRequest = useRef(requested);
   const calendarOpen = props.destination === 'calendar' ||
@@ -837,20 +838,21 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
       setTask('creation');
     }
     // A successful shared submit sets plan/view only after resume storage settles.
-    if (task === 'creation' && !flow.swipeDraft && flow.view === 'plan') {
+    if ((task === 'creation' && !flow.swipeDraft && flow.view === 'plan') ||
+      (task === 'review' && ['active', 'rejected'].includes(flow.plan?.revision_state ?? ''))) {
       setTask(null);
       setRootVersion(effectiveVersion('week'));
     }
-  }, [task, flow.view, flow.swipeDraft, setTask, setCreationStep, setPlacementMode, setRootVersion, effectiveVersion]);
+  }, [task, flow.view, flow.swipeDraft, flow.plan?.revision_state, setTask, setCreationStep, setPlacementMode, setRootVersion, effectiveVersion]);
   const returnToWeek = () => { if (!locked) { setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); if (props.destination === 'calendar') props.onWeekRoot?.(); } };
   useEffect(() => {
     if (!active || sheetOpen || (!locked && !task && !calendarOpen) || (!locked && props.destination === 'calendar' && !task)) return;
     const handler = BackHandler.addEventListener('hardwareBackPress', () => {
-      if (!locked) { setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); }
+      if (!locked) { if (task === 'review' && reviewWorkoutId) setReviewWorkoutId(null); else { setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); } }
       return true;
     });
     return () => handler.remove();
-  }, [task, locked, calendarOpen, rootVersion, flow.setView, active, props.destination, setTask, sheetOpen]);
+  }, [task, locked, calendarOpen, rootVersion, flow.setView, active, props.destination, setTask, sheetOpen, reviewWorkoutId, setReviewWorkoutId]);
   const action = (kind: WeekAction) => {
     if (locked) return;
     if (kind === 'calendar' && props.onCalendarRoot) { props.onCalendarRoot(); return; }
@@ -858,7 +860,8 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
     else if (kind === 'calendar') { setCalendarVersion(effectiveVersion('calendar')); flow.openCalendar(); }
     else flow.setView('plan');
     setTask(kind === 'prepare' && !flow.swipeDraft ? 'prepare' :
-      kind === 'draft' || (kind === 'prepare' && flow.swipeDraft) ? 'creation' : 'existing');
+      kind === 'draft' || (kind === 'prepare' && flow.swipeDraft) ? 'creation' : kind === 'review' ? 'review' : 'existing');
+    if (kind === 'review') setReviewWorkoutId(null);
   };
   const controls = <UiVersionControl disabled={locked || sheetOpen} onSelect={(version) => {
     if (!locked && !detailWorkout) {
@@ -895,7 +898,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
       onProfile={props.destination === 'calendar' ? props.onOpenProfile : undefined}
       onOpenWorkout={(id) => { const workout = calendar.calendarWorkouts.find((item) => item.id === id); if (workout) setDetailWorkout(workout); }}
       controls={controls} scrollProps={calendarScrollProps} />
-      : rootVersion === 'v2' && (!task || (task === 'creation' && !flow.swipeDraft && flow.view === 'plan')) ? <WeekScreen model={model} error={flow.error} busy={locked}
+      : rootVersion === 'v2' && (!task || (task === 'creation' && !flow.swipeDraft && flow.view === 'plan') || (task === 'review' && ['active', 'rejected'].includes(flow.plan?.revision_state ?? ''))) ? <WeekScreen model={model} error={flow.error} busy={locked}
         onAction={action} onOpenWorkout={(id) => {
           const workout = flow.activePlan?.workouts.find((item) => item.id === id);
           if (workout) setDetailWorkout(workout);
@@ -906,6 +909,8 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
           contentOffset: { x: 0, y: weekScroll.current }, scrollEventThrottle: 16,
           onScroll: (event) => { weekScroll.current = event.nativeEvent.contentOffset.y; }
         }} />
+        : task === 'review' && flow.plan && effectiveVersion('proposalReview') === 'v2' ? <PlanningProposalTask
+          controls={controls} busy={locked} workoutId={reviewWorkoutId} onEdit={setReviewWorkoutId} onBack={returnToWeek} />
         : task === 'prepare' && effectiveVersion('planningCreation') === 'v2' ? <AvailabilityScreen
           busy={locked} error={flow.error} controls={controls} onBack={returnToWeek}
           weekStart={flow.weekStart} selectedDays={flow.selectedDays} reusePreviousWeek={flow.reusePreviousWeek}

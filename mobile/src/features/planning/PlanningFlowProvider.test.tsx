@@ -305,7 +305,7 @@ test('alternatives and edits use options proposal/revision, preserve can_remove,
   expect(flow.pendingWorkouts.editors[workout.id].options?.can_remove).toBe(false);
   const request = deferred<{ plan: typeof pendingPlan; proposal: typeof proposal; }>();
   jest.mocked(api.editPendingWorkout).mockReturnValue(request.promise);
-  let operation!: Promise<void>;
+  let operation!: Promise<boolean>;
   await act(() => { operation = flow.pendingWorkouts.apply(workout.id, occurrence.id); });
   expect(flow.busy).toBe(false); expect(flow.pendingWorkouts.editors[workout.id].loading).toBe(true);
   expect(api.editPendingWorkout).toHaveBeenCalledWith('token-a', pendingPlan.id, workout.id, { expected_revision: 8, expected_proposal_id: 'options-proposal', replacement_template_id: occurrence.id });
@@ -478,4 +478,76 @@ test('late active-revision read cannot cross an identity reset', async () => {
   await view.rerender(<Host identity="athlete-b" token="token-b" />);
   await act(async () => request.resolve(activePlan));
   expect(flow.plan).toBeNull(); expect(flow.activePlan).toBeNull();
+});
+
+
+test('Slice 4B alternatives deduplicate same-tick load, rerender and shared decision while unresolved', async () => {
+  const view = await loadedPlan(pendingPlan);
+  const options: PendingWorkoutAlternatives = { plan_id: pendingPlan.id, revision: 3, proposal_id: proposal.id, workout_id: workout.id, can_remove: false, alternatives: [occurrence] };
+  const request = deferred<PendingWorkoutAlternatives>(); jest.mocked(api.getPendingWorkoutAlternatives).mockReturnValue(request.promise);
+  let first!: Promise<boolean>;
+  await act(() => { first = flow.pendingWorkouts.load(workout.id); void flow.pendingWorkouts.load(workout.id); flow.approve(); flow.reject(); });
+  await view.rerender(<Host />);
+  expect(api.getPendingWorkoutAlternatives).toHaveBeenCalledTimes(1);
+  expect(api.approvePlanProposal).not.toHaveBeenCalled(); expect(api.rejectPlanProposal).not.toHaveBeenCalled();
+  await act(async () => { request.resolve(options); await first; });
+  expect(flow.pendingWorkouts.editors[workout.id]).toEqual({ options, loading: false });
+});
+test.each(['replacement', 'removal'] as const)('Slice 4B %s has one shared synchronous lock across duplicate/edit/approve/reject', async action => {
+  await loadedPlan(pendingPlan);
+  const options: PendingWorkoutAlternatives = { plan_id: pendingPlan.id, revision: 3, proposal_id: proposal.id, workout_id: workout.id, can_remove: true, alternatives: [occurrence] };
+  jest.mocked(api.getPendingWorkoutAlternatives).mockResolvedValue(options);
+  await act(async () => { await flow.pendingWorkouts.load(workout.id); });
+  const request = deferred<{ plan: typeof pendingPlan; proposal: typeof proposal }>(); jest.mocked(api.editPendingWorkout).mockReturnValue(request.promise);
+  let operation!: Promise<boolean>;
+  const replacement = action === 'removal' ? null : occurrence.id;
+  await act(() => { operation = flow.pendingWorkouts.apply(workout.id, replacement); void flow.pendingWorkouts.apply(workout.id, replacement); flow.approve(); flow.reject(); });
+  expect(api.editPendingWorkout).toHaveBeenCalledTimes(1); expect(api.approvePlanProposal).not.toHaveBeenCalled(); expect(api.rejectPlanProposal).not.toHaveBeenCalled();
+  expect(api.editPendingWorkout).toHaveBeenCalledWith('token-a', pendingPlan.id, workout.id, { expected_revision: 3, expected_proposal_id: proposal.id, replacement_template_id: replacement });
+  const result = { ...pendingPlan, revision: 4, proposal: { ...proposal, id: 'new-proposal' } };
+  await act(async () => { request.resolve({ plan: result, proposal: result.proposal }); expect(await operation).toBe(true); });
+  expect(flow.plan).toBe(result);
+});
+test.each([false, undefined])('Slice 4B cannot remove with unknown/false capability %s or choose unreturned template', async can_remove => {
+  await loadedPlan(pendingPlan);
+  jest.mocked(api.getPendingWorkoutAlternatives).mockResolvedValue({ plan_id: pendingPlan.id, revision: 3, proposal_id: proposal.id, workout_id: workout.id, can_remove: can_remove as boolean, alternatives: [occurrence] });
+  await act(async () => { await flow.pendingWorkouts.load(workout.id); await flow.pendingWorkouts.apply(workout.id, null); await flow.pendingWorkouts.apply(workout.id, 'not-returned'); });
+  expect(api.editPendingWorkout).not.toHaveBeenCalled();
+});
+test.each(['approve', 'reject'] as const)('Slice 4B rapid %s and cross-decision writes execute only one exact transaction', async action => {
+  await loadedPlan(pendingPlan);
+  const gate = deferred<void>();
+  jest.mocked(api.approvePlanProposal).mockImplementation(async () => { await gate.promise; return { state: 'applied', plan_id: pendingPlan.id, active_revision: 3 }; });
+  jest.mocked(api.rejectPlanProposal).mockImplementation(async () => { await gate.promise; return { state: 'rejected', plan_id: pendingPlan.id }; });
+  await act(() => { flow[action](); flow[action](); flow[action === 'approve' ? 'reject' : 'approve'](); });
+  expect(api.approvePlanProposal).toHaveBeenCalledTimes(action === 'approve' ? 1 : 0); expect(api.rejectPlanProposal).toHaveBeenCalledTimes(action === 'reject' ? 1 : 0);
+  jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
+  await act(async () => gate.resolve());
+});
+test.each(['expired', 'superseded', 'rejected', 'active'] as const)('Slice 4B %s snapshot cannot approve/reject even if old proposal ID is present', async revision_state => {
+  await loadedPlan({ ...pendingPlan, revision_state });
+  await act(() => { flow.approve(); flow.reject(); });
+  expect(api.approvePlanProposal).not.toHaveBeenCalled(); expect(api.rejectPlanProposal).not.toHaveBeenCalled();
+});
+test('Slice 4B callbacks from an old snapshot cannot act after authoritative replacement', async () => {
+  await loadedPlan(pendingPlan); const oldApprove = flow.approve; const oldReject = flow.reject;
+  jest.mocked(api.getPendingWorkoutAlternatives).mockResolvedValue({ plan_id: pendingPlan.id, revision: 3, proposal_id: proposal.id, workout_id: workout.id, can_remove: false, alternatives: [occurrence] });
+  await act(async () => { await flow.pendingWorkouts.load(workout.id); });
+  const next = { ...pendingPlan, revision: 4, proposal: { ...proposal, id: 'new-proposal' } };
+  jest.mocked(api.editPendingWorkout).mockResolvedValue({ plan: next, proposal: next.proposal });
+  await act(async () => { await flow.pendingWorkouts.apply(workout.id, occurrence.id); });
+  await act(() => { oldApprove(); oldReject(); });
+  expect(flow.plan).toBe(next); expect(api.approvePlanProposal).not.toHaveBeenCalled(); expect(api.rejectPlanProposal).not.toHaveBeenCalled();
+});
+test('Slice 4B late options and edit acknowledgments cannot resurrect a cleared/replaced reviewed snapshot', async () => {
+  await loadedPlan(pendingPlan);
+  const options = { plan_id: pendingPlan.id, revision: 3, proposal_id: proposal.id, workout_id: workout.id, can_remove: true, alternatives: [occurrence] };
+  jest.mocked(api.getPendingWorkoutAlternatives).mockResolvedValue(options);
+  await act(async () => { await flow.pendingWorkouts.load(workout.id); });
+  const request = deferred<{ plan: typeof pendingPlan; proposal: typeof proposal }>(); jest.mocked(api.editPendingWorkout).mockReturnValue(request.promise);
+  let operation!: Promise<boolean>;
+  await act(() => { operation = flow.pendingWorkouts.apply(workout.id, occurrence.id); });
+  await act(() => flow.clearPlan());
+  await act(async () => { request.resolve({ plan: pendingPlan, proposal }); expect(await operation).toBe(false); });
+  expect(flow.plan).toBeNull();
 });

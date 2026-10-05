@@ -503,3 +503,45 @@ test('V1 swipe animation locks presentation switching before its deferred write'
   expect(navigation.rootVersion).toBe('v1'); expect(navigation.locked).toBe(true);
   expect(api.transitionSwipeWeekDraft).not.toHaveBeenCalled();
 });
+
+
+test('Slice 4B review/editor Back preserve one owner and pending proposal while roots remain usable', async () => {
+  jest.mocked(api.getWeeklyPlan).mockImplementation(async (_token, _id, revision) => revision === 2 ? activePlan : pendingPlan);
+  jest.mocked(api.getPendingWorkoutAlternatives).mockResolvedValue({ plan_id: pendingPlan.id, revision: 3, proposal_id: pendingPlan.proposal!.id, workout_id: workout.id, can_remove: false, alternatives: [] });
+  const view = await renderRouter(routes, { initialUrl: '/planning' });
+  await view.findByText('Review proposal'); const owner = flow.setWeekStart; const reader = calendar.loadCalendarRange;
+  await fireEvent.press(view.getByRole('button', { name: 'Review proposal' }));
+  await view.findByText('Review your week proposal'); expect(view.queryByTestId('training-root-navigation')).toBeNull();
+  await fireEvent.press(view.getByRole('button', { name: /^View alternatives/ }));
+  await view.findByText('There are currently no alternatives for this workout.');
+  await fireEvent.press(view.getByRole('button', { name: 'Back to proposal' }));
+  await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
+  expect(flow.plan).toBe(pendingPlan); expect(flow.activePlan).toBe(activePlan);
+  for (const root of ['Calendar', 'Activities', 'Week']) await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: root }));
+  expect(flow.setWeekStart).toBe(owner); expect(calendar.loadCalendarRange).toBe(reader);
+  expect(api.approvePlanProposal).not.toHaveBeenCalled(); expect(api.rejectPlanProposal).not.toHaveBeenCalled(); expect(api.editPendingWorkout).not.toHaveBeenCalled();
+  expect(api.getPendingWorkoutAlternatives).toHaveBeenCalledTimes(1);
+});
+test('Slice 4B editor write locks shell and comparison, then explicit approval restores active Week without another owner', async () => {
+  jest.mocked(api.getWeeklyPlan).mockImplementation(async (_token, _id, revision) => revision === 2 ? activePlan : pendingPlan);
+  const candidate = { ...draft.current_candidate!, id: 'returned-alternative' };
+  jest.mocked(api.getPendingWorkoutAlternatives).mockResolvedValue({ plan_id: pendingPlan.id, revision: 3, proposal_id: pendingPlan.proposal!.id, workout_id: workout.id, can_remove: false, alternatives: [candidate] });
+  const view = await renderRouter(routes, { initialUrl: '/planning' }); await view.findByText('Review proposal');
+  const owner = flow.setWeekStart; const reader = calendar.loadCalendarRange;
+  await fireEvent.press(view.getByRole('button', { name: 'Review proposal' }));
+  await fireEvent.press(view.getByRole('button', { name: /^View alternatives/ }));
+  await view.findByRole('radio'); await fireEvent.press(view.getByRole('radio'));
+  let finish!: () => void;
+  const updated = { ...pendingPlan, revision: 4, revision_id: 'revision-4', proposal: { ...pendingPlan.proposal!, id: 'proposal-4' } };
+  jest.mocked(api.editPendingWorkout).mockImplementation(async () => { await new Promise<void>(resolve => { finish = resolve; }); return { plan: updated, proposal: updated.proposal }; });
+  await fireEvent.press(view.getByRole('button', { name: 'Replace workout in proposal' }));
+  expect(view.getByRole('button', { name: 'Back to proposal' })).toBeDisabled(); expect(view.getByRole('button', { name: 'UI V1' })).toBeDisabled();
+  expect(view.queryByTestId('training-root-navigation')).toBeNull(); expect(api.approvePlanProposal).not.toHaveBeenCalled();
+  await act(() => finish()); await view.findByText('Review your week proposal');
+  const approved = { ...activePlan, revision: 4, active_revision: 4, revision_id: 'revision-4' };
+  jest.mocked(api.approvePlanProposal).mockResolvedValue({ state: 'applied', plan_id: activePlan.id, active_revision: 4 }); jest.mocked(api.getWeeklyPlan).mockResolvedValue(approved);
+  await fireEvent.press(view.getByRole('button', { name: 'Approve week' })); await view.findByText('Approved');
+  expect(flow.plan).toBe(approved); expect(flow.activePlan).toBe(approved); expect(navigation.task).toBeNull();
+  expect(view.getByTestId('training-root-navigation')).toBeTruthy(); expect(flow.setWeekStart).toBe(owner); expect(calendar.loadCalendarRange).toBe(reader);
+  expect(api.approvePlanProposal).toHaveBeenCalledWith('token-a', updated.proposal.id, 2); expect(api.editPendingWorkout).toHaveBeenCalledTimes(1);
+});

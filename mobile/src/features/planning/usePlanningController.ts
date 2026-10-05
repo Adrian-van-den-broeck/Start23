@@ -42,6 +42,8 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
   const [activeSnapshot, setActiveSnapshot] = useState<WeeklyPlan | null>(null);
   const [activeReadState, setActiveReadState] = useState<'ready' | 'loading' | 'failed'>('ready');
   const [plan, setPlan] = useState<WeeklyPlan | null>(null);
+  const currentPlan = useRef(plan);
+  currentPlan.current = plan;
   const [swipeDraft, setSwipeDraft] = useState<SwipeWeekDraft | null>(null);
   const [pendingMove, setPendingMove] = useState<{
     scheduledDate: string;
@@ -182,7 +184,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
       ? activeSnapshot : null;
 
   const run = async (operation: () => Promise<void>) => {
-    if (mutationInFlight.current) return;
+    if (mutationInFlight.current || pendingWorkouts.isLoading()) return;
     mutationInFlight.current = true;
     setBusy(true);
     setError(null);
@@ -260,7 +262,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     });
 
   const approve = () => {
-    if (!plan?.proposal) return;
+    if (currentPlan.current !== plan || plan?.revision_state !== 'pending_approval' || plan.proposal?.state !== 'pending') return;
     void run(async () => {
       await approvePlanProposal(
         accessToken,
@@ -272,7 +274,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
   };
 
   const reject = () => {
-    if (!plan?.proposal) return;
+    if (currentPlan.current !== plan || plan?.revision_state !== 'pending_approval' || plan.proposal?.state !== 'pending') return;
     void run(async () => {
       await rejectPlanProposal(accessToken, plan.proposal!.id);
       setPlan(await getWeeklyPlan(accessToken, plan.id, plan.revision));
@@ -407,7 +409,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     setView('calendar');
   };
 
-  const pendingWorkouts = usePendingWorkoutActions(accessToken, plan, setPlan, setError);
+  const pendingWorkouts = usePendingWorkoutActions(accessToken, plan, setPlan, setError, mutationInFlight);
   const clearPlan = () => {
     setPlan(null);
     void rememberPlanId(null);
