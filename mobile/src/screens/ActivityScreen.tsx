@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -10,19 +10,10 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import {
-  confirmActivityMatch,
-  createActivity,
-  getCalendar,
-  getOnboarding,
-  listActivities,
-  listPlannedExternalActivities,
-  submitActivityRpeWithRefresh,
-} from '../api/client';
+import { useActivityFlow } from '../features/activities/ActivityFlowProvider';
 import type {
   CompletedActivity,
   Discipline,
-  PlannedExternalActivity,
   PlannedWorkout,
 } from '../api/types';
 import { FormField } from '../components/FormField';
@@ -36,11 +27,9 @@ import { observedRunPace } from '../lib/runPace';
 import { colors, radius, spacing } from '../theme/tokens';
 
 type ActivityScreenProps = {
-  accessToken: string;
   onBack: () => void;
   onNavigationBusyChange?: (busy: boolean) => void;
   onOpenProfile?: () => void;
-  onPendingRpeChange?: (count: number) => void;
   onSignOut: () => Promise<void>;
 };
 
@@ -79,21 +68,6 @@ export function ActivityMeasurementNotices({
       ) : null}
     </>
   );
-}
-
-function newIdempotencyKey(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (value) => {
-    const random = Math.floor(Math.random() * 16);
-    const digit = value === 'x' ? random : (random & 0x3) | 0x8;
-    return digit.toString(16);
-  });
-}
-
-function isoDate(value: Date): string {
-  const year = value.getFullYear();
-  const month = String(value.getMonth() + 1).padStart(2, '0');
-  const day = String(value.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
 }
 
 function resultLabel(activity: CompletedActivity, language: AppLanguage): string {
@@ -172,11 +146,9 @@ function suggestedWorkout(
 }
 
 export function ActivityScreen({
-  accessToken,
   onBack,
   onNavigationBusyChange,
   onOpenProfile,
-  onPendingRpeChange,
   onSignOut,
 }: ActivityScreenProps) {
   const { language, locale, t } = useLanguage();
@@ -184,243 +156,17 @@ export function ActivityScreen({
     language === 'nl'
       ? disciplineLabels
       : { swim: 'Swimming', bike: 'Cycling', run: 'Running' };
-  const [activities, setActivities] = useState<CompletedActivity[]>([]);
-  const [workouts, setWorkouts] = useState<PlannedWorkout[]>([]);
-  const [externalActivities, setExternalActivities] = useState<
-    PlannedExternalActivity[]
-  >([]);
-  const [selectedWorkout, setSelectedWorkout] = useState<PlannedWorkout | null>(
-    null,
-  );
-  const [selectedExternal, setSelectedExternal] =
-    useState<PlannedExternalActivity | null>(null);
-  const [discipline, setDiscipline] = useState<Discipline>('run');
-  const [duration, setDuration] = useState('45');
-  const [distance, setDistance] = useState('');
-  const [startedAt, setStartedAt] = useState(() => new Date().toISOString());
-  const [athleteTimezone, setAthleteTimezone] = useState('');
-  const [idempotencyKey, setIdempotencyKey] = useState(newIdempotencyKey);
-  const [createdActivityId, setCreatedActivityId] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [editingRpeActivityId, setEditingRpeActivityId] = useState<string | null>(
-    null,
-  );
-  const [heartRateByActivity, setHeartRateByActivity] = useState<
-    Record<string, string>
-  >({});
-  const createInFlightRef = useRef(false);
-  const rpeInFlightRef = useRef<Set<string>>(new Set());
-
+  const { activities, workouts, externalActivities, selectedWorkout, selectedExternal,
+    discipline, setDiscipline, duration, setDuration, distance, setDistance, startedAt, setStartedAt,
+    athleteTimezone, busy, error, heartRateByActivity, setHeartRateByActivity, pendingRpe,
+    feedbackActivity, selectWorkout, selectExternal, save, saveRpe, confirmMatch, ensureActivitiesLoaded,
+  } = useActivityFlow();
+  const [editingRpeActivityId, setEditingRpeActivityId] = useState<string | null>(null);
+  useEffect(() => { void ensureActivitiesLoaded(); }, [ensureActivitiesLoaded]);
   useEffect(() => {
     onNavigationBusyChange?.(busy);
     return () => onNavigationBusyChange?.(false);
   }, [busy, onNavigationBusyChange]);
-
-  const pendingRpe = useMemo(
-    () => activities.filter((activity) => activity.processing_state === 'awaiting_rpe'),
-    [activities],
-  );
-  const feedbackActivity =
-    pendingRpe.find((activity) => activity.id === createdActivityId) ??
-    pendingRpe[0];
-
-  const load = async () => {
-    const now = new Date();
-    const from = new Date(now);
-    const to = new Date(now);
-    from.setDate(from.getDate() - 14);
-    to.setDate(to.getDate() + 14);
-    const [activityRows, calendar, onboarding, plannedExternal] = await Promise.all([
-      listActivities(accessToken),
-      getCalendar(accessToken, isoDate(from), isoDate(to)),
-      getOnboarding(accessToken),
-      listPlannedExternalActivities(accessToken),
-    ]);
-    setActivities(activityRows);
-    onPendingRpeChange?.(
-      activityRows.filter(
-        (activity) => activity.processing_state === 'awaiting_rpe',
-      ).length,
-    );
-    setWorkouts(calendar.workouts.filter((workout) => workout.status === 'scheduled'));
-    setExternalActivities(
-      plannedExternal.filter((activity) => activity.status === 'planned'),
-    );
-    if (
-      !onboarding.profile?.timezone_confirmed_at ||
-      !onboarding.profile.timezone
-    ) {
-      throw new Error(
-        'Bevestig eerst je tijdzone in de intake voordat je activiteiten registreert.',
-      );
-    }
-    setAthleteTimezone(onboarding.profile.timezone);
-  };
-
-  useEffect(() => {
-    setBusy(true);
-    load()
-      .catch((caught) =>
-        setError(caught instanceof Error ? caught.message : 'Laden is mislukt.'),
-      )
-      .finally(() => setBusy(false));
-    // The callback is stable in AppContent; load is intentionally local.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accessToken]);
-
-  const selectWorkout = (workout: PlannedWorkout | null) => {
-    setSelectedWorkout(workout);
-    setSelectedExternal(null);
-    if (workout) {
-      setDiscipline(workout.discipline);
-      setDuration(
-        workout.duration_minutes === null
-          ? ''
-          : String(Number(workout.duration_minutes)),
-      );
-      setDistance(
-        workout.distance_meters === null ? '' : String(workout.distance_meters),
-      );
-    }
-  };
-
-  const selectExternal = (activity: PlannedExternalActivity) => {
-    setSelectedWorkout(null);
-    setSelectedExternal(activity);
-    setDiscipline(activity.discipline);
-    setDuration(String(Number(activity.duration_minutes)));
-    setDistance('');
-  };
-
-  const save = async () => {
-    if (createInFlightRef.current) return;
-    createInFlightRef.current = true;
-    setBusy(true);
-    setError(null);
-    try {
-      // A completed POST can be followed by a failed refresh. Keep the same
-      // logical submission until feedback is stored instead of creating again.
-      if (createdActivityId) {
-        await load();
-        return;
-      }
-      if (pendingRpe.length > 0) {
-        throw new Error('Rond eerst de RPE van de opgeslagen activiteit af.');
-      }
-      if (!athleteTimezone) {
-        throw new Error('Bevestig eerst je tijdzone in de intake.');
-      }
-      const numericDuration = duration.trim() === '' ? null : Number(duration);
-      const numericDistance = distance ? Number(distance) : undefined;
-      if (
-        numericDuration === null
-          ? discipline !== 'swim' || numericDistance === undefined
-          : !Number.isFinite(numericDuration) || numericDuration <= 0
-      ) {
-        throw new Error('Vul een geldige duur in minuten in.');
-      }
-      if (
-        numericDistance !== undefined &&
-        (!Number.isInteger(numericDistance) || numericDistance <= 0)
-      ) {
-        throw new Error('Vul afstand in hele meters in.');
-      }
-      if (Number.isNaN(new Date(startedAt).getTime())) {
-        throw new Error('Gebruik een geldig werkelijk starttijdstip in ISO-formaat.');
-      }
-      const created = await createActivity(accessToken, idempotencyKey, {
-        ...(selectedWorkout
-          ? { planned_workout_id: selectedWorkout.id }
-          : {}),
-        ...(selectedExternal
-          ? { planned_external_activity_id: selectedExternal.id }
-          : {}),
-        discipline,
-        started_at: startedAt,
-        timezone: athleteTimezone,
-        duration_minutes: numericDuration === null ? null : String(numericDuration),
-        ...(numericDistance === undefined
-          ? {}
-          : { distance_meters: numericDistance }),
-      });
-      setCreatedActivityId(created.id);
-      setSelectedWorkout(null);
-      setSelectedExternal(null);
-      setStartedAt(new Date().toISOString());
-      await load();
-    } catch (caught) {
-      setError(
-        caught instanceof Error
-          ? caught.message
-          : 'De activiteit kon niet worden opgeslagen.',
-      );
-    } finally {
-      createInFlightRef.current = false;
-      setBusy(false);
-    }
-  };
-
-  const saveRpe = async (activityId: string, rpe: number) => {
-    if (rpeInFlightRef.current.has(activityId)) return;
-    rpeInFlightRef.current.add(activityId);
-    setBusy(true);
-    setError(null);
-    try {
-      const rawHeartRate = heartRateByActivity[activityId]?.trim() ?? '';
-      const averageHeartRate = rawHeartRate ? Number(rawHeartRate) : undefined;
-      if (
-        averageHeartRate !== undefined &&
-        (!Number.isInteger(averageHeartRate) ||
-          averageHeartRate < 20 ||
-          averageHeartRate > 260)
-      ) {
-        throw new Error('Vul een gemiddelde hartslag tussen 20 en 260 bpm in.');
-      }
-      const activity = activities.find((candidate) => candidate.id === activityId);
-      if (!activity) throw new Error('De activiteit is niet meer beschikbaar.');
-      await submitActivityRpeWithRefresh(
-        accessToken,
-        activity,
-        rpe,
-        averageHeartRate,
-      );
-      if (createdActivityId === activityId) {
-        setCreatedActivityId(null);
-        setIdempotencyKey(newIdempotencyKey());
-      }
-      setHeartRateByActivity((current) => {
-        const next = { ...current };
-        delete next[activityId];
-        return next;
-      });
-      await load();
-    } catch (caught) {
-      setError(
-        caught instanceof Error ? caught.message : 'RPE opslaan is mislukt.',
-      );
-    } finally {
-      rpeInFlightRef.current.delete(activityId);
-      setBusy(false);
-    }
-  };
-
-  const confirmMatch = async (activityId: string, workoutId: string) => {
-    setBusy(true);
-    setError(null);
-    try {
-      await confirmActivityMatch(accessToken, activityId, workoutId);
-      await load();
-    } catch (caught) {
-      setError(
-        caught instanceof Error
-          ? caught.message
-          : 'De koppeling kon niet worden bevestigd.',
-      );
-    } finally {
-      setBusy(false);
-    }
-  };
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>

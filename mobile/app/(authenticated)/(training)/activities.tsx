@@ -19,7 +19,6 @@ export default function ActivitiesRoute() {
   if (!session) return null;
   return (
     <ActivityScreen
-      accessToken={session.access_token}
       onBack={() => { if (!activityBusy) { if (rootVersion === 'v2') router.navigate('/planning'); else router.replace('/planning'); } }}
       onNavigationBusyChange={setActivityBusy}
       onOpenProfile={rootVersion === 'v2' ? () => router.push('/profile') : undefined}

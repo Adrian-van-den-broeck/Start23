@@ -13,7 +13,7 @@ import {
 } from 'react-native-safe-area-context';
 
 import { AuthProvider, useAuth } from './src/auth/AuthProvider';
-import { listActivities } from './src/api/client';
+import { ActivityFlowProvider, useActivityFlow } from './src/features/activities/ActivityFlowProvider';
 import { FadeInView } from './src/components/FadeInView';
 import { LanguageProvider, useLanguage } from './src/i18n/LanguageProvider';
 import { AuthScreen } from './src/screens/AuthScreen';
@@ -29,44 +29,7 @@ import { ZoneProfileScreen } from './src/screens/ZoneProfileScreen';
 import { colors, spacing } from './src/theme/tokens';
 
 function AppContent() {
-  const { configurationError, loading, session, signOut } = useAuth();
-  const { language, t } = useLanguage();
-  const [authenticatedView, setAuthenticatedView] = useState<
-    | 'onboarding'
-    | 'planning'
-    | 'activities'
-    | 'checkin'
-    | 'calibration'
-    | 'integrations'
-    | 'zone-profile'
-    | 'profile'
-    | 'pioneer-access'
-  >('onboarding');
-  const [zonePlanContext, setZonePlanContext] = useState<{
-    planId: string;
-    revision: number;
-  } | null>(null);
-  const [testsBackView, setTestsBackView] = useState<'onboarding' | 'profile'>(
-    'onboarding',
-  );
-  const [pendingRpeCount, setPendingRpeCount] = useState(0);
-
-  useEffect(() => {
-    if (!session) {
-      setPendingRpeCount(0);
-      return;
-    }
-    let mounted = true;
-    listActivities(session.access_token, true)
-      .then((activities) => {
-        if (mounted) setPendingRpeCount(activities.length);
-      })
-      .catch(() => undefined);
-    return () => {
-      mounted = false;
-    };
-  }, [session]);
-
+  const { configurationError, loading, session } = useAuth();
   if (loading) {
     return (
       <View style={styles.centered}>
@@ -87,6 +50,37 @@ function AppContent() {
   if (!session) {
     return <AuthScreen />;
   }
+
+  return <ActivityFlowProvider accessToken={session.access_token} athleteIdentity={session.user.id}>
+    <AuthenticatedAppContent />
+  </ActivityFlowProvider>;
+}
+
+function AuthenticatedAppContent() {
+  const { session, signOut } = useAuth();
+  const { language, t } = useLanguage();
+  const [authenticatedView, setAuthenticatedView] = useState<
+    | 'onboarding'
+    | 'planning'
+    | 'activities'
+    | 'checkin'
+    | 'calibration'
+    | 'integrations'
+    | 'zone-profile'
+    | 'profile'
+    | 'pioneer-access'
+  >('onboarding');
+  const [zonePlanContext, setZonePlanContext] = useState<{
+    planId: string;
+    revision: number;
+  } | null>(null);
+  const [testsBackView, setTestsBackView] = useState<'onboarding' | 'profile'>(
+    'onboarding',
+  );
+  const { pendingRpe, refreshPendingRpe } = useActivityFlow();
+  const pendingRpeCount = pendingRpe.length;
+  useEffect(() => { void refreshPendingRpe('legacy-shell'); }, [session?.access_token, refreshPendingRpe]);
+  if (!session) return null;
 
   let screen;
   if (authenticatedView === 'planning') {
@@ -110,9 +104,7 @@ function AppContent() {
   } else if (authenticatedView === 'activities') {
     screen = (
       <ActivityScreen
-        accessToken={session.access_token}
         onBack={() => setAuthenticatedView('planning')}
-        onPendingRpeChange={setPendingRpeCount}
         onSignOut={signOut}
       />
     );

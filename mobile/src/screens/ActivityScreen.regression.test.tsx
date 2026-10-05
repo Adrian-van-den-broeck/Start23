@@ -17,6 +17,7 @@ import {
 import type { CompletedActivity, OnboardingState } from '../api/types';
 import { LanguageProvider } from '../i18n/LanguageProvider';
 import { ActivityScreen } from './ActivityScreen';
+import { ActivityFlowProvider } from '../features/activities/ActivityFlowProvider';
 
 jest.mock('../api/client', () => ({
   confirmActivityMatch: jest.fn(),
@@ -88,13 +89,12 @@ describe('unplanned workout regression', () => {
     });
 
     const screen = await render(
-      <LanguageProvider>
+      <LanguageProvider><ActivityFlowProvider accessToken="athlete-token" athleteIdentity="fixture-athlete">
         <ActivityScreen
-          accessToken="athlete-token"
           onBack={jest.fn()}
           onSignOut={jest.fn(async () => undefined)}
         />
-      </LanguageProvider>,
+      </ActivityFlowProvider></LanguageProvider>,
     );
     await screen.findByText('Record a workout');
     await fireEvent.press(
@@ -132,10 +132,10 @@ describe('unplanned workout regression', () => {
     expect(await screen.findByText('Extra workout')).toBeTruthy();
     await screen.unmount();
     const reopened = await render(
-      <LanguageProvider>
-        <ActivityScreen accessToken="athlete-token" onBack={jest.fn()}
+      <LanguageProvider><ActivityFlowProvider accessToken="athlete-token" athleteIdentity="fixture-athlete">
+        <ActivityScreen onBack={jest.fn()}
           onSignOut={jest.fn(async () => undefined)} />
-      </LanguageProvider>,
+      </ActivityFlowProvider></LanguageProvider>,
     );
     expect(await reopened.findByText('Extra workout')).toBeTruthy();
     expect(createActivity).toHaveBeenCalledTimes(1);
@@ -166,13 +166,12 @@ describe('unplanned workout regression', () => {
     );
 
     const screen = await render(
-      <LanguageProvider>
+      <LanguageProvider><ActivityFlowProvider accessToken="athlete-token" athleteIdentity="fixture-athlete">
         <ActivityScreen
-          accessToken="athlete-token"
           onBack={jest.fn()}
           onSignOut={jest.fn(async () => undefined)}
         />
-      </LanguageProvider>,
+      </ActivityFlowProvider></LanguageProvider>,
     );
     const saveButton = await screen.findByRole('button', {
       name: 'Save activity',
@@ -205,9 +204,9 @@ describe('unplanned workout regression', () => {
       });
 
     const screen = await render(
-      <LanguageProvider>
-        <ActivityScreen accessToken="athlete-token" onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} />
-      </LanguageProvider>,
+      <LanguageProvider><ActivityFlowProvider accessToken="athlete-token" athleteIdentity="fixture-athlete">
+        <ActivityScreen onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} />
+      </ActivityFlowProvider></LanguageProvider>,
     );
     const save = await screen.findByRole('button', { name: 'Save activity' });
     await fireEvent.press(save);

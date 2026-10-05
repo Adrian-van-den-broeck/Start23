@@ -1,13 +1,13 @@
 import { BlurView } from 'expo-blur';
 import { Redirect, Stack, usePathname, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { TrainingFlowHost } from '@/navigation/TrainingFlowHost';
 import { useOptionalPlanningPresentation } from '@/navigation/PlanningPresentationProvider';
 
-import { listActivities } from '@/api/client';
+import { ActivityFlowProvider, useActivityFlow } from '@/features/activities/ActivityFlowProvider';
 import { useAuth } from '@/auth/AuthProvider';
 import { MotionPressable } from '@/components/MotionPressable';
 import { useLanguage } from '@/i18n/LanguageProvider';
@@ -16,33 +16,14 @@ import { colors, spacing } from '@/theme/tokens';
 
 export default function AuthenticatedLayout() {
   const { configurationError, loading, session } = useAuth();
-  const pathname = usePathname();
-  const [pendingRpeCount, setPendingRpeCount] = useState(0);
-  useEffect(() => { setPendingRpeCount(0); }, [session?.user.id]);
-
-  useEffect(() => {
-    if (!session) {
-      setPendingRpeCount(0);
-      return;
-    }
-    let mounted = true;
-    listActivities(session.access_token, true)
-      .then((activities) => {
-        if (mounted) setPendingRpeCount(activities.length);
-      })
-      .catch(() => undefined);
-    return () => {
-      mounted = false;
-    };
-  }, [pathname, session]);
-
   if (loading) return <ScreenState loading title="Je sessie wordt gecontroleerd" />;
   if (configurationError || !session) return <Redirect href="/" />;
 
   return (
     <View style={styles.shell}>
+      <ActivityFlowProvider accessToken={session.access_token} athleteIdentity={session.user.id}>
       <TrainingFlowHost key={session.user.id} accessToken={session.access_token} athleteIdentity={session.user.id}>
-        <PendingRpeReminder count={pendingRpeCount} />
+        <PendingRpeReminder accessToken={session.access_token} />
         <Stack
           screenOptions={{
             animation: 'fade_from_bottom',
@@ -52,11 +33,16 @@ export default function AuthenticatedLayout() {
           }}
         />
       </TrainingFlowHost>
+      </ActivityFlowProvider>
     </View>
   );
 }
 
-function PendingRpeReminder({ count }: { count: number; }) {
+function PendingRpeReminder({ accessToken }: { accessToken: string; }) {
+  const { pendingRpe, refreshPendingRpe } = useActivityFlow();
+  const count = pendingRpe.length;
+  const pathname = usePathname();
+  useEffect(() => { void refreshPendingRpe(pathname); }, [pathname, accessToken, refreshPendingRpe]);
   const { language, t } = useLanguage();
   const router = useRouter();
   const presentation = useOptionalPlanningPresentation();
