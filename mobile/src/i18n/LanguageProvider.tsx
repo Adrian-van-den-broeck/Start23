@@ -17,6 +17,17 @@ const preferenceStorageKey = 'start23.language-preference';
 
 const nl = {
   'week.warningAction': 'Controleer aandachtspunten',
+  'week.task.draft': 'Kies je trainingen',
+  'week.task.placement': 'Bevestig je trainingsdatums',
+  'week.task.review': 'Controleer je week',
+  'week.tools': 'Trainingshulpmiddelen',
+  'week.goalLabel': 'Doel',
+  'week.todayLabel': 'Vandaag',
+  'week.nextDay': 'Volgende trainingsdag',
+  'week.sessionCount.one': '{count} training',
+  'week.sessionCount.other': '{count} trainingen',
+  'week.progress.one': '{completed} van {planned} geplande training afgerond',
+  'week.viewWorkoutLabel': 'Bekijk training',
   'week.state.loading': 'Week wordt geladen',
   'week.state.failed': 'Week niet beschikbaar',
   'week.state.noPlan': 'Nog geen week geladen',
@@ -149,6 +160,17 @@ type TranslationKey = keyof typeof nl;
 
 const en: Record<TranslationKey, string> = {
   'week.warningAction': 'Review attention items',
+  'week.task.draft': 'Choose your workouts',
+  'week.task.placement': 'Confirm your training dates',
+  'week.task.review': 'Review your week',
+  'week.tools': 'Training tools',
+  'week.goalLabel': 'Goal',
+  'week.todayLabel': 'Today',
+  'week.nextDay': 'Next training day',
+  'week.sessionCount.one': '{count} workout',
+  'week.sessionCount.other': '{count} workouts',
+  'week.progress.one': '{completed} of {planned} planned workout completed',
+  'week.viewWorkoutLabel': 'View workout',
   'week.state.loading': 'Loading week',
   'week.state.failed': 'Week unavailable',
   'week.state.noPlan': 'No week loaded yet',
@@ -312,7 +334,7 @@ async function writePreference(preference: LanguagePreference): Promise<void> {
   });
 }
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
+export function LanguageProvider({ children }: { children: ReactNode; }) {
   const [preference, setStoredPreference] =
     useState<LanguagePreference>('system');
 
