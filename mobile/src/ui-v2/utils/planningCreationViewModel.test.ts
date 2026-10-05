@@ -48,4 +48,3 @@ test('server collecting/exhaustion/placement state is copied without composition
   })).toMatchObject({ state: 'collecting', candidate: null, exhausted: true });
   expect(planningCreationViewModel({ ...draft, state: 'placement', accepted_workouts: [] })).toMatchObject({ state: 'placement', accepted: [] });
 });
-
