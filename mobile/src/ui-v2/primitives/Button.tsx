@@ -5,6 +5,7 @@ import { Text } from './Text';
 
 type Props = {
   label: string;
+  accessibilityLabel?: string;
   onPress: () => void | Promise<void>;
   variant?: 'primary' | 'secondary' | 'tertiary';
   busy?: boolean;
@@ -13,7 +14,7 @@ type Props = {
   accessibilityState?: AccessibilityState;
 };
 
-export function Button({ label, onPress, variant = 'primary', busy = false,
+export function Button({ label, accessibilityLabel = label, onPress, variant = 'primary', busy = false,
   disabled = false, disabledReason, accessibilityState }: Props) {
   const lock = useRef(false);
   const [pending, setPending] = useState(false);
@@ -35,7 +36,7 @@ export function Button({ label, onPress, variant = 'primary', busy = false,
   const color = blocked ? colors.text : variant === 'primary' ? colors.textInverse : colors.primary;
   return (
     <View>
-      <Pressable accessibilityRole="button" accessibilityLabel={label}
+      <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel}
         accessibilityHint={disabledReason}
         accessibilityState={{ ...accessibilityState, busy: isBusy, disabled: blocked }}
         disabled={blocked} onPress={() => { void press(); }}

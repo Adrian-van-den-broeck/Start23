@@ -3,6 +3,14 @@ import { StyleSheet } from 'react-native';
 import { Button } from './Button';
 import { Text } from './Text';
 
+test('concise visible CTA retains the full supplied workout in its accessible name', async () => {
+  const press = jest.fn();
+  const view = await render(<Button label="View workout" accessibilityLabel="View workout · Exact supplied long name" onPress={press} />);
+  expect(view.getByText('View workout')).toBeTruthy();
+  await fireEvent.press(view.getByRole('button', { name: 'View workout · Exact supplied long name' }));
+  expect(press).toHaveBeenCalledTimes(1);
+});
+
 test('busy button retains label, explicit busy/disabled state and suppresses duplicate calls', async () => {
   const press = jest.fn();
   const view = await render(<Button label="Read workout" busy onPress={press} />);
