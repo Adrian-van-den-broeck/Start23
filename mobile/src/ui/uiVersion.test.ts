@@ -9,8 +9,10 @@ describe('development UI resolution', () => {
     expect(effectiveUiVersion(true, 'v2', 'workoutDetail')).toBe('v2');
     expect(effectiveUiVersion(true, 'v2', 'week')).toBe('v2');
     expect(effectiveUiVersion(false, 'v2', 'week')).toBe('v1');
-    expect(Object.keys(implementedSlices)).toEqual(['workoutDetail', 'week']);
-    for (const slice of ['calendar', 'activity', 'toString', '']) {
+    expect(effectiveUiVersion(true, 'v2', 'calendar')).toBe('v2');
+    expect(effectiveUiVersion(false, 'v2', 'calendar')).toBe('v1');
+    expect(Object.keys(implementedSlices)).toEqual(['workoutDetail', 'week', 'calendar']);
+    for (const slice of ['activity', 'planning', 'profile', 'onboarding', 'zones', 'toString', '']) {
       expect(effectiveUiVersion(true, 'v2', slice)).toBe('v1');
     }
     expect(effectiveUiVersion(true, 'v1', 'workoutDetail')).toBe('v1');

@@ -22,6 +22,7 @@ import {
   PanResponder,
   Platform,
   ScrollView,
+  type ScrollViewProps,
   StyleSheet,
   Text,
   useWindowDimensions,
@@ -59,6 +60,9 @@ import { effectiveUiVersion } from '../ui/uiVersion';
 import { useUiVersion } from '../ui/UiVersionProvider';
 import { Button as V2Button } from '../ui-v2/primitives/Button';
 import { WeekScreen } from '../ui-v2/screens/WeekScreen';
+import { CalendarScreen } from '../ui-v2/screens/CalendarScreen';
+import { calendarViewModel } from '../ui-v2/utils/calendarViewModel';
+import { useCalendarNavigation, type CalendarNavigation } from '../features/calendar/useCalendarNavigation';
 import { weekHomeViewModel, type WeekAction } from '../ui-v2/utils/weekHomeViewModel';
 import { UiVersionControl } from '../ui/UiVersionControl';
 import { useLanguage } from '../i18n/LanguageProvider';
@@ -785,40 +789,65 @@ export function PlanningScreen({ accessToken, athleteIdentity, ...presentation }
 // Presentation host remains inside the one provider across root/task/detail switches.
 function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' | 'athleteIdentity'>) {
   const flow = usePlanningFlow();
+  const calendar = usePlanningCalendar();
   const { effectiveVersion, requested } = useUiVersion();
   const { t } = useLanguage();
   const [rootVersion, setRootVersion] = useState(() => effectiveVersion('week'));
+  const [calendarVersion, setCalendarVersion] = useState(() => effectiveVersion('calendar'));
   const previousRequest = useRef(requested);
   const [task, setTask] = useState<'prepare' | 'existing' | null>(null);
   const [detailWorkout, setDetailWorkout] = useState<PlannedWorkout | null>(null);
   const weekScroll = useRef(0);
+  const calendarOpen = flow.view === 'calendar' && (rootVersion === 'v1' || task === 'existing');
+  const calendarNavigation = useCalendarNavigation(flow.plan?.week_start ?? flow.weekStart, calendarOpen);
+  const { fromDate, toDate } = calendarNavigation.range;
+  const { loadCalendarRange } = calendar;
+  // One range effect above both presentations; neither Calendar view fetches.
+  useEffect(() => {
+    if (calendarOpen) loadCalendarRange(fromDate, toDate);
+  }, [calendarOpen, fromDate, toDate, loadCalendarRange]);
+  const calendarPositions = useRef<Record<string, number>>({});
+  const calendarScrollKey = `${calendarVersion}:${calendarNavigation.mode}:${fromDate}:${toDate}`;
+  const calendarScrollProps: ScrollViewProps = {
+    contentOffset: { x: 0, y: calendarPositions.current[calendarScrollKey] ?? 0 }, scrollEventThrottle: 16,
+    onScroll: (event) => { calendarPositions.current[calendarScrollKey] = event.nativeEvent.contentOffset.y; },
+  };
   const locked = flow.busy || !!flow.pendingMove || Object.values(flow.pendingWorkouts.editors).some((slot) => slot.loading);
   // Detail comparison changes the preference, while its origin stays put.
   useEffect(() => {
-    if (previousRequest.current !== requested && !task && !detailWorkout && !locked) setRootVersion(effectiveVersion('week'));
+    if (previousRequest.current !== requested && !detailWorkout && !locked) {
+      if (calendarOpen) setCalendarVersion(effectiveVersion('calendar'));
+      else if (!task) setRootVersion(effectiveVersion('week'));
+    }
     previousRequest.current = requested;
-  }, [requested, effectiveVersion, task, detailWorkout, locked]);
+  }, [requested, effectiveVersion, task, detailWorkout, locked, calendarOpen]);
   useEffect(() => {
     if (task === 'prepare' && flow.view === 'deck') setTask('existing');
   }, [task, flow.view]);
-  const returnToWeek = () => { if (!locked) setTask(null); };
+  const returnToWeek = () => { if (!locked) { setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); } };
   useEffect(() => {
-    if (!task) return;
+    if (!task && !calendarOpen) return;
     const handler = BackHandler.addEventListener('hardwareBackPress', () => {
-      if (!locked) setTask(null);
+      if (!locked) { setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); }
       return true;
     });
     return () => handler.remove();
-  }, [task, locked]);
+  }, [task, locked, calendarOpen, rootVersion, flow.setView]);
   const action = (kind: WeekAction) => {
     if (locked) return;
     if (kind === 'draft' || (kind === 'prepare' && flow.swipeDraft)) flow.openDeck();
-    else if (kind === 'calendar') flow.openCalendar();
+    else if (kind === 'calendar') { setCalendarVersion(effectiveVersion('calendar')); flow.openCalendar(); }
     else flow.setView('plan');
     setTask(kind === 'prepare' && !flow.swipeDraft ? 'prepare' : 'existing');
   };
   const controls = <UiVersionControl disabled={locked} onSelect={(version) => {
-    if (!locked && !detailWorkout && !task) setRootVersion(effectiveUiVersion(__DEV__, version, 'week'));
+    if (!locked && !detailWorkout) {
+      if (calendarOpen) setCalendarVersion(effectiveUiVersion(__DEV__, version, 'calendar'));
+      else if (!task) {
+        setRootVersion(effectiveUiVersion(__DEV__, version, 'week'));
+        setCalendarVersion(effectiveUiVersion(__DEV__, version, 'calendar'));
+      }
+    }
   }} />;
   // Date-only planning uses local noon. Actual "today" follows the loaded plan's
   // confirmed timezone; without a plan, retain the existing device-date convention.
@@ -828,21 +857,38 @@ function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' | 'athl
   }).formatToParts(now) : null;
   const part = (name: Intl.DateTimeFormatPartTypes) => todayParts?.find((item) => item.type === name)?.value;
   const today = todayParts ? [part('year'), part('month'), part('day')].join('-') : isoDate(now);
-  const model = weekHomeViewModel({ plan: flow.plan, activePlan: flow.activePlan, draft: flow.swipeDraft,
-    today, resumeState: flow.resumeState, activeReadState: flow.activeReadState });
+  const model = weekHomeViewModel({
+    plan: flow.plan, activePlan: flow.activePlan, draft: flow.swipeDraft,
+    today, resumeState: flow.resumeState, activeReadState: flow.activeReadState
+  });
   return <View style={{ flex: 1 }}>
-    {rootVersion === 'v2' && !task ? <WeekScreen model={model} error={flow.error} busy={locked}
-      onAction={action} onOpenWorkout={(id) => {
-        const workout = flow.activePlan?.workouts.find((item) => item.id === id);
-        if (workout) setDetailWorkout(workout);
-      }} onProfile={props.onOpenProfile} onActivities={props.onOpenActivities}
-      onCheckIn={props.onOpenCheckIn} onZones={() => props.onOpenZoneProfile(flow.plan?.id, flow.plan?.active_revision ?? undefined)}
-      goalName={flow.primaryGoal?.race_name ?? null} onGoal={() => action('planning')}
-      controls={controls} scrollProps={{ contentOffset: { x: 0, y: weekScroll.current }, scrollEventThrottle: 16,
-        onScroll: (event) => { weekScroll.current = event.nativeEvent.contentOffset.y; } }} />
-      : <PlanningPresentation {...props} onOpenWorkout={setDetailWorkout}
-        prepareWeek={task === 'prepare'} versionControl={controls}
-        taskBack={rootVersion === 'v2' && task ? <V2Button variant="tertiary" label={t('week.return')} disabled={locked} onPress={returnToWeek} /> : null} />}
+    {calendarOpen && calendarVersion === 'v2' ? <CalendarScreen
+      model={calendarViewModel({
+        dates: calendarNavigation.dates, anchor: calendarNavigation.anchor,
+        selectedDate: calendarNavigation.selectedDate, today: isoDate(now), workouts: calendar.calendarWorkouts,
+        restDays: calendar.calendarRestDays, loadedRange: calendar.calendarRange
+      })}
+      mode={calendarNavigation.mode} anchor={calendarNavigation.anchor} loading={calendar.calendarLoading} error={flow.error}
+      onModeChange={calendarNavigation.changeMode} onMove={calendarNavigation.move} onToday={calendarNavigation.goToday}
+      onSelectDate={calendarNavigation.selectDate} onRetry={() => loadCalendarRange(fromDate, toDate)} onBack={returnToWeek}
+      onOpenWorkout={(id) => { const workout = calendar.calendarWorkouts.find((item) => item.id === id); if (workout) setDetailWorkout(workout); }}
+      controls={controls} scrollProps={calendarScrollProps} />
+      : rootVersion === 'v2' && !task ? <WeekScreen model={model} error={flow.error} busy={locked}
+        onAction={action} onOpenWorkout={(id) => {
+          const workout = flow.activePlan?.workouts.find((item) => item.id === id);
+          if (workout) setDetailWorkout(workout);
+        }} onProfile={props.onOpenProfile} onActivities={props.onOpenActivities}
+        onCheckIn={props.onOpenCheckIn} onZones={() => props.onOpenZoneProfile(flow.plan?.id, flow.plan?.active_revision ?? undefined)}
+        goalName={flow.primaryGoal?.race_name ?? null} onGoal={() => action('planning')}
+        controls={controls} scrollProps={{
+          contentOffset: { x: 0, y: weekScroll.current }, scrollEventThrottle: 16,
+          onScroll: (event) => { weekScroll.current = event.nativeEvent.contentOffset.y; }
+        }} />
+        : <PlanningPresentation {...props} onOpenWorkout={setDetailWorkout}
+          calendarNavigation={calendarNavigation} calendarScrollProps={calendarOpen ? calendarScrollProps : undefined}
+          onOpenCalendar={() => { setCalendarVersion(effectiveVersion('calendar')); flow.openCalendar(); }}
+          prepareWeek={task === 'prepare'} versionControl={controls}
+          taskBack={rootVersion === 'v2' && task ? <V2Button variant="tertiary" label={t('week.return')} disabled={locked} onPress={returnToWeek} /> : null} />}
     <WorkoutDetailBoundary workout={detailWorkout} onClose={() => setDetailWorkout(null)} />
   </View>;
 }
@@ -852,6 +898,9 @@ function PlanningPresentation({
   prepareWeek,
   versionControl,
   taskBack,
+  calendarNavigation,
+  calendarScrollProps,
+  onOpenCalendar,
   onBackToOnboarding,
   onOpenActivities,
   onOpenCheckIn,
@@ -862,6 +911,7 @@ function PlanningPresentation({
 }: Omit<PlanningScreenProps, 'accessToken' | 'athleteIdentity'> & {
   onOpenWorkout: (workout: PlannedWorkout) => void; prepareWeek: boolean;
   versionControl: React.ReactNode; taskBack: React.ReactNode;
+  calendarNavigation: CalendarNavigation; calendarScrollProps?: ScrollViewProps; onOpenCalendar: () => void;
 }) {
   const { locale, t } = useLanguage();
   const safeAreaInsets = useSafeAreaInsets();
@@ -874,7 +924,7 @@ function PlanningPresentation({
     primaryGoal, maintenanceMarked, busy, error, availableDates, toggleDay,
     toggleInjury, toggleCrossTraining, generate, approve, reject, openDeck,
     transitionDraft, placeDraftWorkout, submitDraft, requestWorkoutMove,
-    markGoalAchievement, openCalendar, clearPlan, cancelWorkoutMove,
+    markGoalAchievement, clearPlan, cancelWorkoutMove,
     confirmWorkoutMove,
   } = usePlanningFlow();
   const { calendarWorkouts, calendarRestDays, calendarLoading, loadCalendarRange } = usePlanningCalendar();
@@ -1105,7 +1155,7 @@ function PlanningPresentation({
         <Pressable
           accessibilityRole="tab"
           accessibilityState={{ selected: view === 'calendar' }}
-          onPress={openCalendar}
+          onPress={onOpenCalendar}
           style={[styles.tab, view === 'calendar' && styles.tabActive]}
         >
           <Text
@@ -1121,6 +1171,7 @@ function PlanningPresentation({
         style={styles.keyboard}
       >
         <ScrollView
+          {...calendarScrollProps}
           automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
           contentContainerStyle={styles.content}
           keyboardDismissMode="on-drag"
@@ -1468,6 +1519,7 @@ function PlanningPresentation({
         {view === 'calendar' ? (
           <View style={styles.panel}>
             <TrainingCalendar
+              navigation={calendarNavigation}
               initialDate={plan?.week_start ?? weekStart}
               loading={calendarLoading}
               onRangeChange={loadCalendarRange}

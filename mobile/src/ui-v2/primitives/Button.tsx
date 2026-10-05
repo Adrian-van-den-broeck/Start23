@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, View, type AccessibilityState } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, View, type AccessibilityRole, type AccessibilityState } from 'react-native';
 import { colors, layout, radius, space, states } from '../tokens';
 import { Text } from './Text';
 
 type Props = {
   label: string;
   accessibilityLabel?: string;
+  accessibilityRole?: AccessibilityRole;
   onPress: () => void | Promise<void>;
   variant?: 'primary' | 'secondary' | 'tertiary';
   busy?: boolean;
@@ -14,7 +15,7 @@ type Props = {
   accessibilityState?: AccessibilityState;
 };
 
-export function Button({ label, accessibilityLabel = label, onPress, variant = 'primary', busy = false,
+export function Button({ label, accessibilityLabel = label, accessibilityRole = 'button', onPress, variant = 'primary', busy = false,
   disabled = false, disabledReason, accessibilityState }: Props) {
   const lock = useRef(false);
   const [pending, setPending] = useState(false);
@@ -36,7 +37,7 @@ export function Button({ label, accessibilityLabel = label, onPress, variant = '
   const color = blocked ? colors.text : variant === 'primary' ? colors.textInverse : colors.primary;
   return (
     <View>
-      <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel}
+      <Pressable accessibilityRole={accessibilityRole} accessibilityLabel={accessibilityLabel}
         accessibilityHint={disabledReason}
         accessibilityState={{ ...accessibilityState, busy: isBusy, disabled: blocked }}
         disabled={blocked} onPress={() => { void press(); }}

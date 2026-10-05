@@ -16,6 +16,21 @@ export type LanguagePreference = 'system' | AppLanguage;
 const preferenceStorageKey = 'start23.language-preference';
 
 const nl = {
+  'calendar.chooseDay': 'Dag kiezen',
+  'calendar.rangeUnknown': 'Deze datum is nog niet geladen.',
+  'calendar.loadFailed': 'Deze periode kon niet worden geladen.',
+  'calendar.retry': 'Periode opnieuw laden',
+  'calendar.retainedRange': 'Laatst geladen periode: {from} – {to}.',
+  'calendar.retainedEmpty': 'Die periode bevatte geen trainingen of rustdagen.',
+  'calendar.selectedWeek': 'Bekijk de week van deze datum',
+  'calendar.previousWeek': 'Vorige week',
+  'calendar.nextWeek': 'Volgende week',
+  'calendar.previousMonth': 'Vorige maand',
+  'calendar.nextMonth': 'Volgende maand',
+  'calendar.sportShort.run': 'L',
+  'calendar.sportShort.bike': 'F',
+  'calendar.sportShort.swim': 'Z',
+  'calendar.restShort': 'Rust',
   'week.warningAction': 'Controleer aandachtspunten',
   'week.task.draft': 'Kies je trainingen',
   'week.task.placement': 'Bevestig je trainingsdatums',
@@ -159,6 +174,21 @@ const nl = {
 type TranslationKey = keyof typeof nl;
 
 const en: Record<TranslationKey, string> = {
+  'calendar.chooseDay': 'Choose a day',
+  'calendar.rangeUnknown': 'This date has not loaded yet.',
+  'calendar.loadFailed': 'This period could not be loaded.',
+  'calendar.retry': 'Reload period',
+  'calendar.retainedRange': 'Last loaded period: {from} – {to}.',
+  'calendar.retainedEmpty': 'That period contained no workouts or rest days.',
+  'calendar.selectedWeek': 'View this date’s week',
+  'calendar.previousWeek': 'Previous week',
+  'calendar.nextWeek': 'Next week',
+  'calendar.previousMonth': 'Previous month',
+  'calendar.nextMonth': 'Next month',
+  'calendar.sportShort.run': 'R',
+  'calendar.sportShort.bike': 'B',
+  'calendar.sportShort.swim': 'S',
+  'calendar.restShort': 'Rest',
   'week.warningAction': 'Review attention items',
   'week.task.draft': 'Choose your workouts',
   'week.task.placement': 'Confirm your training dates',

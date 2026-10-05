@@ -55,7 +55,7 @@ afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.restoreAllMock
 function restore(kind: 'plan' | 'draft') {
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) =>
     key === 'start23.language-preference' ? 'en' :
-    key === (kind === 'plan' ? 'start23.latest-plan-id' : 'start23.latest-swipe-draft-id') ? (kind === 'plan' ? activePlan.id : draft.id) : null);
+      key === (kind === 'plan' ? 'start23.latest-plan-id' : 'start23.latest-swipe-draft-id') ? (kind === 'plan' ? activePlan.id : draft.id) : null);
 }
 test('V2 no plan opens V1 preparation without a draft/create/read, and returns to Week', async () => {
   const view = await render(presentation());
@@ -133,7 +133,7 @@ test('active plus pending reads each snapshot once and review approves exact pro
   expect(api.getWeeklyPlan).toHaveBeenCalledTimes(3);
   expect(api.approvePlanProposal).toHaveBeenCalledTimes(1);
 });
-test('V1 Calendar entry has one range effect and detail comparison retains V2 Week origin and scroll', async () => {
+test('Calendar entry has one range effect and detail comparison retains V2 Week origin and scroll', async () => {
   restore('plan');
   const today = new Date().toLocaleDateString('en-CA', { timeZone: activePlan.timezone });
   const real = { ...workout, scheduled_date: today };
@@ -161,16 +161,110 @@ test('V1 Calendar entry has one range effect and detail comparison retains V2 We
 
 test('goal entry preserves the existing V1 explicit achievement confirmation surface without writing', async () => {
   restore('plan'); jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
-  jest.mocked(api.getOnboarding).mockResolvedValue({ ...onboarding, primary_goal: {
-    id: 'goal-a', race_type: 'run', race_name: 'Known race', race_date: '2027-04-11',
-    swim_distance_meters: null, bike_distance_meters: null, run_distance_meters: 10000,
-    total_target_time_seconds: 3600, swim_target_time_seconds: null, bike_target_time_seconds: null,
-    run_target_time_seconds: null, specific_focus: null, priority: 'A', goal_type: 'race',
-    status: 'active', revision: 1, created_at: '2026-10-05T00:00:00Z', updated_at: '2026-10-05T00:00:00Z',
-  } });
+  jest.mocked(api.getOnboarding).mockResolvedValue({
+    ...onboarding, primary_goal: {
+      id: 'goal-a', race_type: 'run', race_name: 'Known race', race_date: '2027-04-11',
+      swim_distance_meters: null, bike_distance_meters: null, run_distance_meters: 10000,
+      total_target_time_seconds: 3600, swim_target_time_seconds: null, bike_target_time_seconds: null,
+      run_target_time_seconds: null, specific_focus: null, priority: 'A', goal_type: 'race',
+      status: 'active', revision: 1, created_at: '2026-10-05T00:00:00Z', updated_at: '2026-10-05T00:00:00Z',
+    }
+  });
   const view = await render(presentation());
   await fireEvent.press(await view.findByRole('button', { name: 'Goal · Known race' }));
   await view.findByRole('button', { name: 'Markeer “Known race” als behaald' });
   expect(api.markGoalAchieved).not.toHaveBeenCalled();
+  expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
+});
+
+test.each(['week', 'month'] as const)('Calendar %s detail and V1/V2 return retain range/date/scroll/origin with no reads or mutations', async (mode) => {
+  restore('plan'); jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
+  const loaded = { ...workout, id: 'calendar-occurrence', name: 'Exact loaded Calendar occurrence' };
+  jest.mocked(api.getCalendar).mockImplementation(async (_token, from_date, to_date) => ({ from_date, to_date, workouts: [loaded], rest_days: [] }));
+  const detail = jest.spyOn(detailBoundary, 'WorkoutDetailBoundary');
+  const view = await render(presentation()); await view.findByText('Approved');
+  await fireEvent.scroll(view.getByTestId('week-home-scroll'), { nativeEvent: { contentOffset: { x: 0, y: 88 } } });
+  await fireEvent.press(view.getByRole('button', { name: 'View week' }));
+  await view.findByText(loaded.name);
+  if (mode === 'month') {
+    await fireEvent.press(view.getByRole('tab', { name: 'Month' }));
+    await waitFor(() => expect(api.getCalendar).toHaveBeenCalledTimes(2));
+    await fireEvent.press(view.getByTestId('calendar-date-2026-10-07'));
+  }
+  const calls = mode === 'month' ? 2 : 1;
+  await view.findByRole('button', { name: 'View workout · ' + loaded.name });
+  await fireEvent.scroll(view.getByTestId('calendar-scroll'), { nativeEvent: { contentOffset: { x: 0, y: 133 } } });
+  await fireEvent.press(view.getByRole('button', { name: 'View workout · ' + loaded.name }));
+  expect(detail.mock.calls.at(-1)?.[0].workout).toBe(loaded);
+  const modal = view.getByTestId('workout-detail-modal');
+  await fireEvent.press(within(modal).getByRole('button', { name: 'UI V1' }));
+  await fireEvent.press(within(modal).getByRole('button', { name: 'UI V2' }));
+  await fireEvent(modal, 'requestClose');
+  expect(view.getByTestId('calendar-scroll').props.contentOffset.y).toBe(133);
+  expect(view.getByRole('tab', { name: mode === 'month' ? 'Month' : 'Week' }).props.accessibilityState.selected).toBe(true);
+  await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
+  await view.findByText('Training calendar'); expect(view.queryByTestId('calendar-scroll')).toBeNull();
+  if (mode === 'month') expect(view.getByLabelText('View 7 October 2026').props.accessibilityState.selected).toBe(true);
+  await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
+  expect(view.getByTestId('calendar-scroll').props.contentOffset.y).toBe(133);
+  if (mode === 'month') expect(view.getByTestId('calendar-date-2026-10-07').props.accessibilityState.selected).toBe(true);
+  await view.rerender(presentation()); expect(api.getCalendar).toHaveBeenCalledTimes(calls);
+  expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1); expect(api.getOnboarding).toHaveBeenCalledTimes(1);
+  expect(api.movePlannedWorkout).not.toHaveBeenCalled(); expect(api.validatePlanLayout).not.toHaveBeenCalled(); expect(api.approvePlanProposal).not.toHaveBeenCalled();
+  await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
+  expect(view.getByTestId('week-home-scroll').props.contentOffset.y).toBe(88);
+});
+
+test('rapid Calendar Week/Month requests use one reader; stale month completion cannot replace the latest week', async () => {
+  restore('plan'); jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
+  let finishMonth!: (value: Awaited<ReturnType<typeof api.getCalendar>>) => void;
+  jest.mocked(api.getCalendar).mockImplementation(async (_token, from_date, to_date) => from_date === '2026-09-28'
+    ? new Promise((yes) => { finishMonth = yes; }) : { from_date, to_date, workouts: [workout], rest_days: [] });
+  const view = await render(presentation()); await view.findByText('Approved');
+  await fireEvent.press(view.getByRole('button', { name: 'View week' })); await view.findByText(workout.name);
+  await fireEvent.press(view.getByRole('tab', { name: 'Month' }));
+  await fireEvent.press(view.getByRole('tab', { name: 'Week' })); await view.findByText(workout.name);
+  await act(() => finishMonth({ from_date: '2026-09-28', to_date: '2026-11-02', workouts: [{ ...workout, name: 'Stale Month row' }], rest_days: [] }));
+  expect(view.queryByText('Stale Month row')).toBeNull(); expect(view.getByTestId('calendar-week-agenda')).toBeTruthy();
+  expect(view.queryByTestId('calendar-month-grid')).toBeNull(); expect(view.queryByTestId('calendar-month-day-list')).toBeNull();
+  expect(jest.mocked(api.getCalendar).mock.calls).toEqual([
+    ['token-a', '2026-10-05', '2026-10-12'], ['token-a', '2026-09-28', '2026-11-02'], ['token-a', '2026-10-05', '2026-10-12'],
+  ]);
+});
+
+test('Month selection opens its exact Week; previous/next/Today retain date-only ranges', async () => {
+  restore('plan'); jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
+  jest.mocked(api.getCalendar).mockImplementation(async (_token, from_date, to_date) => ({ from_date, to_date, workouts: [], rest_days: [] }));
+  const view = await render(presentation()); await view.findByText('Approved');
+  await fireEvent.press(view.getByRole('button', { name: 'View week' }));
+  await fireEvent.press(view.getByRole('tab', { name: 'Month' }));
+  await fireEvent.press(view.getByRole('button', { name: 'Next month' }));
+  await waitFor(() => expect(api.getCalendar).toHaveBeenLastCalledWith('token-a', '2026-10-26', '2026-12-07'));
+  await fireEvent.press(view.getByRole('button', { name: 'Previous month' }));
+  await waitFor(() => expect(api.getCalendar).toHaveBeenLastCalledWith('token-a', '2026-09-28', '2026-11-02'));
+  await fireEvent.press(view.getByTestId('calendar-date-2026-11-01'));
+  await fireEvent.press(view.getByRole('button', { name: 'View this date’s week' }));
+  await waitFor(() => expect(api.getCalendar).toHaveBeenLastCalledWith('token-a', '2026-10-26', '2026-11-02'));
+  await fireEvent.press(view.getByRole('button', { name: 'Today' }));
+  const now = new Date(); const day = now.getDay() || 7; now.setDate(now.getDate() - day + 1);
+  const start = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
+  expect(jest.mocked(api.getCalendar).mock.calls.at(-1)?.[1]).toBe(start);
+});
+
+
+test('Calendar entered from V1 retains the V1 origin across safe Calendar V2 comparison, without another read', async () => {
+  restore('plan'); jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
+  process.env.EXPO_PUBLIC_UI_VERSION = 'v1';
+  const view = await render(presentation());
+  await view.findByText('Week van 2026-10-05');
+  await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
+  await waitFor(() => expect(api.getCalendar).toHaveBeenCalledTimes(1));
+  await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
+  await view.findByTestId('calendar-scroll');
+  expect(view.queryByTestId('week-home-scroll')).toBeNull();
+  expect(api.getCalendar).toHaveBeenCalledTimes(1);
+  await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
+  await view.findByText('Week van 2026-10-05');
+  expect(view.queryByTestId('calendar-scroll')).toBeNull();
   expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
 });
