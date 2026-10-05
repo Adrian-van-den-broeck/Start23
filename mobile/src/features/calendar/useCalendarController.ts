@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { getCalendar } from '../../api/client';
-import type { PlannedWorkout, RestDay } from '../../api/types';
+import type { PlannedWorkout, RestDay, WeeklyPlan } from '../../api/types';
+import { isDateInWeek } from '../../components/WeekSchedule';
 import type { CalendarRange } from './calendarDates';
 
 export function useCalendarController(
@@ -68,5 +69,28 @@ export function useCalendarController(
     setCalendarGeneration((value) => value + 1);
   }, []);
 
-  return { calendarWorkouts, calendarRestDays, calendarLoading, calendarRange, loadCalendarRange, ensureCalendarRange, invalidateCalendarRange };
+  const replaceApprovedPlan = useCallback((previous: WeeklyPlan, updated: WeeklyPlan) => {
+    const range = loadedRangeRef.current;
+    // A returned plan supplies the complete approved week, including rest rows.
+    // Supersede any read begun before this authoritative mutation completed.
+    ++calendarRequestRef.current;
+    requestedRangeRef.current = null;
+    setCalendarLoading(false);
+    if (range) {
+      const inside = (date: string) => date >= range.fromDate && date < range.toDate;
+      const ids = new Set([...previous.workouts, ...updated.workouts].map(workout => workout.id));
+      setCalendarWorkouts(rows => [
+        ...rows.filter(workout => !ids.has(workout.id)),
+        ...updated.workouts.filter(workout => inside(workout.scheduled_date)),
+      ]);
+      setCalendarRestDays(rows => [
+        ...rows.filter(rest => !isDateInWeek(rest.date, updated.week_start)),
+        ...updated.rest_days.filter(rest => inside(rest.date)),
+      ]);
+    }
+    // A different currently displayed range still uses the existing range read.
+    setCalendarGeneration(value => value + 1);
+  }, []);
+
+  return { calendarWorkouts, calendarRestDays, calendarLoading, calendarRange, loadCalendarRange, ensureCalendarRange, invalidateCalendarRange, replaceApprovedPlan };
 }

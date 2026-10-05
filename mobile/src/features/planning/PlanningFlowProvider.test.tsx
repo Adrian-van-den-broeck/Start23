@@ -1,3 +1,4 @@
+import { weekHomeViewModel } from '../../ui-v2/utils/weekHomeViewModel';
 import { act, render, waitFor } from '@testing-library/react-native';
 import * as SecureStore from 'expo-secure-store';
 import type { PropsWithChildren } from 'react';
@@ -550,4 +551,137 @@ test('Slice 4B late options and edit acknowledgments cannot resurrect a cleared/
   await act(() => flow.clearPlan());
   await act(async () => { request.resolve({ plan: pendingPlan, proposal }); expect(await operation).toBe(false); });
   expect(flow.plan).toBeNull();
+});
+
+
+// Slice 4C: active movement remains a distinct shared transaction.
+test('same-date direct call retains baseline complete validation; presentation suppresses no-op choice', async () => {
+  await loadedPlan();
+  jest.mocked(api.validatePlanLayout).mockResolvedValue({ valid_for_generated_schedule: true, warnings: [] });
+  jest.mocked(api.movePlannedWorkout).mockResolvedValue(activePlan);
+  await act(() => flow.requestWorkoutMove(workout, workout.scheduled_date));
+  expect(api.validatePlanLayout).toHaveBeenCalledWith('token-a', activePlan.id, 2, [{ workout_id: workout.id, scheduled_date: workout.scheduled_date }]);
+  expect(api.movePlannedWorkout).toHaveBeenCalledWith('token-a', workout.id, 2, workout.scheduled_date);
+});
+
+test.each(['2026-10-04', '2026-10-12', '2026-02-30', '2026-10-08T00:00:00'])('outside/invalid date %s is rejected without clamping or requests', async date => {
+  await loadedPlan(); await act(() => flow.requestWorkoutMove(workout, date));
+  expect(api.validatePlanLayout).not.toHaveBeenCalled(); expect(api.movePlannedWorkout).not.toHaveBeenCalled(); expect(flow.plan).toBe(activePlan);
+});
+
+test.each(['pending_approval', 'rejected', 'expired', 'superseded'] as const)('non-active %s never enters active move operation', async revision_state => {
+  await loadedPlan({ ...pendingPlan, revision_state });
+  await act(() => flow.requestWorkoutMove(workout, '2026-10-10'));
+  expect(api.validatePlanLayout).not.toHaveBeenCalled(); expect(api.editPendingWorkout).not.toHaveBeenCalled();
+});
+
+test.each(['completed', 'cancelled'] as const)('non-movable %s occurrence and foreign ID are refused', async status => {
+  const row = { ...workout, status }; await loadedPlan({ ...activePlan, workouts: [row] });
+  await act(() => { flow.requestWorkoutMove(row, '2026-10-10'); flow.requestWorkoutMove({ ...workout, id: 'foreign' }, '2026-10-10'); });
+  expect(api.validatePlanLayout).not.toHaveBeenCalled(); expect(api.movePlannedWorkout).not.toHaveBeenCalled();
+});
+
+test('rapid requests, rerender/preferences and warning confirmations produce one validation and one PATCH', async () => {
+  const view = await loadedPlan(); const validation = deferred<{ valid_for_generated_schedule: boolean; warnings: typeof warning[] }>();
+  jest.mocked(api.validatePlanLayout).mockReturnValue(validation.promise);
+  const request = flow.requestWorkoutMove;
+  await act(() => { request(workout, '2026-10-10'); request(workout, '2026-10-09'); ui.setRequested('v2'); });
+  await view.rerender(<Host />); expect(api.validatePlanLayout).toHaveBeenCalledTimes(1);
+  await act(() => validation.resolve({ valid_for_generated_schedule: false, warnings: [warning, { ...warning, id: 'second-warning', code: 'supplied-public-warning', message: 'Exact second warning' }] }));
+  expect(api.movePlannedWorkout).not.toHaveBeenCalled(); expect(flow.pendingMove?.warnings).toHaveLength(2);
+  await act(() => request(workout, '2026-10-09')); expect(api.validatePlanLayout).toHaveBeenCalledTimes(1);
+  const confirm = flow.confirmWorkoutMove; const patch = deferred<typeof activePlan>(); jest.mocked(api.movePlannedWorkout).mockReturnValue(patch.promise);
+  await act(() => { confirm(); confirm(); flow.cancelWorkoutMove(); ui.setRequested('v1'); });
+  expect(flow.pendingMove).not.toBeNull(); expect(api.movePlannedWorkout).toHaveBeenCalledTimes(1);
+  await view.rerender(<Host />);
+  const updated = { ...activePlan, revision: 9, active_revision: 9, workouts: [{ ...workout, scheduled_date: '2026-10-10' }] };
+  await act(() => patch.resolve(updated));
+  await act(() => { confirm(); flow.confirmWorkoutMove(); });
+  expect(flow.plan).toBe(updated); expect(flow.activePlan).toBe(updated); expect(flow.pendingMove).toBeNull();
+  expect(api.movePlannedWorkout).toHaveBeenCalledTimes(1); expect(api.movePlannedWorkout).toHaveBeenCalledWith('token-a', workout.id, 2, '2026-10-10');
+});
+
+test('Cancel consumes warning intent and old confirm cannot target a subsequent reviewed move', async () => {
+  await loadedPlan(); jest.mocked(api.validatePlanLayout).mockResolvedValue({ valid_for_generated_schedule: false, warnings: [warning] });
+  await act(() => flow.requestWorkoutMove(workout, '2026-10-10')); const confirm = flow.confirmWorkoutMove;
+  await act(() => { flow.cancelWorkoutMove(); confirm(); });
+  await act(() => flow.requestWorkoutMove(workout, '2026-10-09'));
+  await act(() => confirm()); expect(api.movePlannedWorkout).not.toHaveBeenCalled();
+  expect(flow.pendingMove?.scheduledDate).toBe('2026-10-09'); expect(flow.plan).toBe(activePlan);
+});
+
+test.each([{ warnings: [] }, { warnings: [warning] }])('late validation after authoritative context changes cannot PATCH or install warnings %j', async ({ warnings }) => {
+  const view = await loadedPlan(); const validation = deferred<{ valid_for_generated_schedule: boolean; warnings: typeof warning[] }>();
+  jest.mocked(api.validatePlanLayout).mockReturnValue(validation.promise);
+  await act(() => flow.requestWorkoutMove(workout, '2026-10-10'));
+  const updated = { ...activePlan, revision: 7, active_revision: 7 }; jest.mocked(api.getWeeklyPlan).mockResolvedValue(updated);
+  await view.rerender(<Host token="token-b" />); await waitFor(() => expect(flow.plan).toBe(updated));
+  await act(() => validation.resolve({ valid_for_generated_schedule: true, warnings }));
+  expect(flow.pendingMove).toBeNull(); expect(api.movePlannedWorkout).not.toHaveBeenCalled(); expect(flow.plan).toBe(updated);
+});
+
+test('review context changed elsewhere never rebinds explicit confirmation to newer revision', async () => {
+  const view = await loadedPlan(); jest.mocked(api.validatePlanLayout).mockResolvedValue({ valid_for_generated_schedule: false, warnings: [warning] });
+  await act(() => flow.requestWorkoutMove(workout, '2026-10-10')); const confirm = flow.confirmWorkoutMove;
+  const updated = { ...activePlan, revision: 7, active_revision: 7 }; jest.mocked(api.getWeeklyPlan).mockResolvedValue(updated);
+  await view.rerender(<Host token="token-b" />); await waitFor(() => expect(flow.plan).toBe(updated));
+  await act(() => { confirm(); flow.confirmWorkoutMove(); });
+  expect(api.movePlannedWorkout).not.toHaveBeenCalled(); expect(flow.plan).toBe(updated);
+  await act(() => flow.cancelWorkoutMove()); expect(flow.pendingMove).toBeNull();
+});
+
+test('late PATCH cannot replace a different authoritative snapshot', async () => {
+  const view = await loadedPlan(); jest.mocked(api.validatePlanLayout).mockResolvedValue({ valid_for_generated_schedule: true, warnings: [] });
+  const patch = deferred<typeof activePlan>(); jest.mocked(api.movePlannedWorkout).mockReturnValue(patch.promise);
+  await act(() => flow.requestWorkoutMove(workout, '2026-10-10'));
+  const current = { ...activePlan, revision: 8, active_revision: 8 }; jest.mocked(api.getWeeklyPlan).mockResolvedValue(current);
+  await view.rerender(<Host token="token-b" />); await waitFor(() => expect(flow.plan).toBe(current));
+  await act(() => patch.resolve({ ...activePlan, revision: 3, active_revision: 3 })); expect(flow.plan).toBe(current);
+});
+
+test('unmounted owner discards late validation before PATCH', async () => {
+  const view = await loadedPlan(); const validation = deferred<{ valid_for_generated_schedule: boolean; warnings: typeof warning[] }>();
+  jest.mocked(api.validatePlanLayout).mockReturnValue(validation.promise);
+  await act(() => flow.requestWorkoutMove(workout, '2026-10-10')); await view.unmount();
+  await act(() => validation.resolve({ valid_for_generated_schedule: true, warnings: [] })); expect(api.movePlannedWorkout).not.toHaveBeenCalled();
+});
+
+test.each(['Safe stale validation', 'Safe network failure', 'Safe rejected layout'])('validation failure %s never moves or fabricates recovery', async message => {
+  await loadedPlan(); jest.mocked(api.validatePlanLayout).mockRejectedValue(new Error(message));
+  await act(() => flow.requestWorkoutMove(workout, '2026-10-10'));
+  expect(flow.plan).toBe(activePlan); expect(flow.error).toBe(message); expect(flow.pendingMove).toBeNull();
+  expect(api.movePlannedWorkout).not.toHaveBeenCalled(); expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
+});
+
+test('returned plan moves only selected repeated-template occurrence; Calendar updates once without read and preserves server rest coexistence', async () => {
+  const sibling = { ...workout, id: 'same-template-sibling' }; const otherWeek = { ...workout, id: 'other-week', scheduled_date: '2026-10-14' };
+  const previous = { ...activePlan, workouts: [workout, sibling] }; await loadedPlan(previous);
+  jest.mocked(api.getCalendar).mockResolvedValue({ from_date: '2026-10-01', to_date: '2026-11-01', workouts: [workout, sibling, otherWeek], rest_days: [{ date: '2026-10-08', reason: 'planned_rest' }, { date: '2026-10-14', reason: 'planned_rest' }] });
+  await act(() => calendar.loadCalendarRange('2026-10-01', '2026-11-01'));
+  jest.mocked(api.validatePlanLayout).mockResolvedValue({ valid_for_generated_schedule: true, warnings: [] });
+  const moved = { ...workout, scheduled_date: '2026-10-10' }; const updated = { ...previous, revision: 5, active_revision: 5, workouts: [moved, sibling], rest_days: [{ date: '2026-10-10', reason: 'planned_rest' as const }] };
+  jest.mocked(api.movePlannedWorkout).mockResolvedValue(updated);
+  await act(() => flow.requestWorkoutMove(workout, '2026-10-10'));
+  expect(api.validatePlanLayout).toHaveBeenCalledWith('token-a', previous.id, 2, [{ workout_id: workout.id, scheduled_date: '2026-10-10' }, { workout_id: sibling.id, scheduled_date: sibling.scheduled_date }]);
+  expect(flow.plan).toBe(updated); expect(flow.activePlan?.workouts[1]).toBe(sibling);
+  const week = (today: string) => weekHomeViewModel({ plan: flow.plan, activePlan: flow.activePlan, draft: null, today, resumeState: 'ready', activeReadState: 'ready' });
+  expect(week('2026-10-08').sessionDate).toBe('2026-10-10'); expect(week('2026-10-10').isToday).toBe(true);
+  expect(week('2026-10-10').sessions.map(item => item.id)).toEqual([workout.id]);
+  expect(week('2026-10-10').progress).toEqual({ completed: 0, planned: 2 });
+  expect(calendar.calendarWorkouts).toEqual([otherWeek, moved, sibling]);
+  expect(calendar.calendarRestDays).toEqual([{ date: '2026-10-14', reason: 'planned_rest' }, ...updated.rest_days]);
+  await act(() => calendar.ensureCalendarRange('2026-10-01', '2026-11-01')); expect(api.getCalendar).toHaveBeenCalledTimes(1);
+});
+
+
+test('server-returned revision may renew every workout ID; only selected repeated template date changes and all returned IDs replace state', async () => {
+  const sibling = { ...workout, id: 'repeat-template-old-b' }; const previous = { ...activePlan, workouts: [workout, sibling] };
+  await loadedPlan(previous); jest.mocked(api.validatePlanLayout).mockResolvedValue({ valid_for_generated_schedule: true, warnings: [] });
+  const moved = { ...workout, id: 'returned-occurrence-a', scheduled_date: '2026-10-10' }; const returnedSibling = { ...sibling, id: 'returned-occurrence-b' };
+  const updated = { ...previous, revision: 3, active_revision: 3, workouts: [moved, returnedSibling] };
+  jest.mocked(api.movePlannedWorkout).mockResolvedValue(updated);
+  await act(() => flow.requestWorkoutMove(workout, '2026-10-10'));
+  expect(api.movePlannedWorkout).toHaveBeenCalledWith('token-a', workout.id, 2, '2026-10-10');
+  expect(flow.plan).toBe(updated); expect(flow.activePlan?.workouts).toEqual([moved, returnedSibling]);
+  expect(returnedSibling.template_id).toBe(workout.template_id); expect(returnedSibling.scheduled_date).toBe(sibling.scheduled_date);
 });

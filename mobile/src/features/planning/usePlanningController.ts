@@ -44,12 +44,20 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
   const [plan, setPlan] = useState<WeeklyPlan | null>(null);
   const currentPlan = useRef(plan);
   currentPlan.current = plan;
+  const moveOwnerAlive = useRef(true);
+  useEffect(() => {
+    moveOwnerAlive.current = true;
+    return () => { moveOwnerAlive.current = false; };
+  }, []);
   const [swipeDraft, setSwipeDraft] = useState<SwipeWeekDraft | null>(null);
   const [pendingMove, setPendingMove] = useState<{
     scheduledDate: string;
     warnings: PlanWarning[];
     workout: PlannedWorkout;
+    reviewedPlan: WeeklyPlan;
   } | null>(null);
+  const currentMove = useRef(pendingMove);
+  currentMove.current = pendingMove;
   const [primaryGoal, setPrimaryGoal] = useState<PrimaryRaceGoal | null>(null);
   const [maintenanceMarked, setMaintenanceMarked] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -353,15 +361,18 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
   const applyWorkoutMove = async (
     workout: PlannedWorkout,
     scheduledDate: string,
+    reviewedPlan: WeeklyPlan,
   ) => {
-    if (!plan?.active_revision) return;
+    if (!moveOwnerAlive.current || currentPlan.current !== reviewedPlan || !reviewedPlan.active_revision) return;
     const updated = await movePlannedWorkout(
       accessToken,
       workout.id,
-      plan.active_revision,
+      reviewedPlan.active_revision,
       scheduledDate,
     );
+    if (!moveOwnerAlive.current || currentPlan.current !== reviewedPlan) return;
     setPlan(updated);
+    currentMove.current = null;
     setPendingMove(null);
     void Haptics.notificationAsync(
       Haptics.NotificationFeedbackType.Success,
@@ -372,7 +383,8 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     workout: PlannedWorkout,
     scheduledDate: string,
   ) => {
-    if (!plan?.active_revision) return;
+    if (!moveOwnerAlive.current || currentPlan.current !== plan || plan?.revision_state !== 'active' || !plan.active_revision ||
+      currentMove.current || !plan.workouts.some(item => item.id === workout.id && item.status === 'scheduled' && item.scheduled_date === workout.scheduled_date)) return;
     if (!isDateInWeek(scheduledDate, plan.week_start)) {
       setError('Gebruik een geldige datum binnen deze planweek (JJJJ-MM-DD).');
       return;
@@ -389,11 +401,14 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
         plan.active_revision!,
         workouts,
       );
+      if (!moveOwnerAlive.current || currentPlan.current !== plan) return;
       if (validation.warnings.length === 0) {
-        await applyWorkoutMove(workout, scheduledDate);
+        await applyWorkoutMove(workout, scheduledDate, plan);
         return;
       }
-      setPendingMove({ scheduledDate, warnings: validation.warnings, workout });
+      const review = { scheduledDate, warnings: validation.warnings, workout, reviewedPlan: plan };
+      currentMove.current = review;
+      setPendingMove(review);
     });
   };
 
@@ -414,10 +429,14 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     setPlan(null);
     void rememberPlanId(null);
   };
-  const cancelWorkoutMove = () => setPendingMove(null);
+  const cancelWorkoutMove = () => {
+    if (mutationInFlight.current) return;
+    currentMove.current = null;
+    setPendingMove(null);
+  };
   const confirmWorkoutMove = () => {
-    if (!pendingMove) return;
-    void run(() => applyWorkoutMove(pendingMove.workout, pendingMove.scheduledDate));
+    if (!pendingMove || currentMove.current !== pendingMove || currentPlan.current !== pendingMove.reviewedPlan) return;
+    void run(() => applyWorkoutMove(pendingMove.workout, pendingMove.scheduledDate, pendingMove.reviewedPlan));
   };
 
   return {

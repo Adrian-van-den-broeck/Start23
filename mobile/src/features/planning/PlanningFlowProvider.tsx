@@ -1,7 +1,7 @@
-import { createContext, type PropsWithChildren, useContext, useEffect } from 'react';
+import { createContext, type PropsWithChildren, useContext, useEffect, useRef } from 'react';
 
 import { useLanguage } from '../../i18n/LanguageProvider';
-import type { OnboardingState } from '../../api/types';
+import type { OnboardingState, WeeklyPlan } from '../../api/types';
 import { useCalendarController } from '../calendar/useCalendarController';
 import { type PlanningController, usePlanningController } from './usePlanningController';
 
@@ -19,12 +19,19 @@ function PlanningOwner({ accessToken, initialOnboarding, children }: PlanningFlo
   const controller = usePlanningController(accessToken, initialOnboarding);
   const { language } = useLanguage();
   const calendar = useCalendarController(accessToken, language, controller.setError);
-  const { invalidateCalendarRange } = calendar;
+  const { invalidateCalendarRange, replaceApprovedPlan } = calendar;
+  const previousPlan = useRef<WeeklyPlan | null>(null);
   // Approved calendar data is reusable across roots, but a changed approved
   // plan context invalidates it. Pending draft edits alone do not reload it.
   useEffect(() => {
-    invalidateCalendarRange();
-  }, [controller.plan?.id, controller.plan?.active_revision, invalidateCalendarRange]);
+    const previous = previousPlan.current;
+    const updated = controller.plan;
+    if (previous?.revision_state === 'active' && updated?.revision_state === 'active' &&
+      previous.id === updated.id && previous.week_start === updated.week_start && previous.active_revision !== updated.active_revision) {
+      replaceApprovedPlan(previous, updated);
+    } else invalidateCalendarRange();
+    previousPlan.current = updated;
+  }, [controller.plan?.id, controller.plan?.active_revision, invalidateCalendarRange, replaceApprovedPlan]);
   return (
     <PlanningContext.Provider value={controller}>
       <CalendarContext.Provider value={calendar}>{children}</CalendarContext.Provider>

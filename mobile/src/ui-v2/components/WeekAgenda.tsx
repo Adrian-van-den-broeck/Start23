@@ -8,7 +8,7 @@ import type { CalendarDay } from '../utils/calendarViewModel';
 import { DayHeader } from './DayHeader';
 import { SportIndicator } from './SportIndicator';
 
-export function CalendarDayList({ day, known, onOpenWorkout }: { day: CalendarDay; known: boolean; onOpenWorkout: (id: string) => void; }) {
+export function CalendarDayList({ day, known, onOpenWorkout, onMoveWorkout }: { day: CalendarDay; known: boolean; onOpenWorkout: (id: string) => void; onMoveWorkout?: (id: string) => (() => void) | undefined; }) {
   const { t, locale } = useLanguage();
   return <View style={styles.rows}>
     {!known ? <Text tone="textMuted">{t('calendar.rangeUnknown')}</Text> : null}
@@ -20,6 +20,7 @@ export function CalendarDayList({ day, known, onOpenWorkout }: { day: CalendarDa
       <Text variant="supporting">{t(`detail.intensity.${summary.intensity}`)} · {t(`detail.status.${summary.status}`)}</Text>
       {summary.description ? <Text variant="supporting">{summary.description}</Text> : null}
       <Button variant="tertiary" label={t('week.viewWorkoutLabel')} accessibilityLabel={t('week.viewWorkout', { name: summary.name })} onPress={() => onOpenWorkout(id)} />
+      {onMoveWorkout?.(id) ? <Button variant="secondary" label={t('move.entry')} accessibilityLabel={t('move.entryLabel', { name: summary.name })} onPress={onMoveWorkout(id)!} /> : null}
       <Divider />
     </View>)}
     {day.restDays.map((rest, index) => <View key={`${rest.reason}-${index}`} style={styles.rows}>
@@ -30,11 +31,11 @@ export function CalendarDayList({ day, known, onOpenWorkout }: { day: CalendarDa
   </View>;
 }
 
-export function WeekAgenda({ days, known, onOpenWorkout }: { days: readonly CalendarDay[]; known: boolean; onOpenWorkout: (id: string) => void; }) {
+export function WeekAgenda({ days, known, onOpenWorkout, onMoveWorkout }: { days: readonly CalendarDay[]; known: boolean; onOpenWorkout: (id: string) => void; onMoveWorkout?: (id: string) => (() => void) | undefined; }) {
   return <View testID="calendar-week-agenda" style={styles.days}>
     {days.map((day) => <View key={day.date} testID={`calendar-day-${day.date}`} style={styles.day}>
       <DayHeader day={day} known={known} />
-      <CalendarDayList day={day} known={known} onOpenWorkout={onOpenWorkout} />
+      <CalendarDayList day={day} known={known} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} />
       <Divider />
     </View>)}
   </View>;

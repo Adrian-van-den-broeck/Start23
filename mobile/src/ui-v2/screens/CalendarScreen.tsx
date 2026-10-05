@@ -13,10 +13,11 @@ import { Text } from '../primitives/Text';
 import { colors, layout, space } from '../tokens';
 import type { CalendarViewModel } from '../utils/calendarViewModel';
 
-export function CalendarScreen({ model, mode, anchor, loading, error, onModeChange, onMove, onToday, onSelectDate, onRetry, onOpenWorkout, onBack, onProfile, controls, scrollProps }: {
+export function CalendarScreen({ model, mode, anchor, loading, error, onModeChange, onMove, onToday, onSelectDate, onRetry, onOpenWorkout, onMoveWorkout, onBack, onProfile, controls, scrollProps }: {
   model: CalendarViewModel; mode: CalendarMode; anchor: string; loading: boolean; error: string | null;
   onModeChange: (mode: CalendarMode) => void; onMove: (direction: -1 | 1) => void; onToday: () => void;
   onSelectDate: (date: string) => void; onRetry: () => void; onOpenWorkout: (id: string) => void; onBack: () => void;
+  onMoveWorkout?: (id: string) => (() => void) | undefined;
   controls?: ReactNode; scrollProps?: ScrollViewProps;
   onProfile?: () => void;
 }) {
@@ -42,17 +43,17 @@ export function CalendarScreen({ model, mode, anchor, loading, error, onModeChan
       </View>
       {loading ? <Text accessibilityLiveRegion="polite">{t('common.loading')}</Text> : null}
       {error ? <View style={styles.notice}><Text accessibilityLiveRegion="polite" style={{ color: colors.destructive }}>{t('calendar.loadFailed')}</Text><Text>{error}</Text><Button label={t('calendar.retry')} onPress={onRetry} /></View> : null}
-      {mode === 'week' ? <WeekAgenda days={model.days} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} /> : <>
+      {mode === 'week' ? <WeekAgenda days={model.days} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : <>
         <MonthGrid days={model.days} known={model.rangeKnown} onSelectDate={onSelectDate} />
         <View testID="calendar-selected-day" style={styles.notice}>
           <DayHeader day={model.selectedDay} known={model.rangeKnown} />
           <Button variant="secondary" label={t('calendar.selectedWeek')} onPress={() => onModeChange('week')} />
-          <CalendarDayList day={model.selectedDay} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} />
+          <CalendarDayList day={model.selectedDay} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} />
         </View>
       </>}
       {!model.rangeKnown && model.loadedRange ? <View testID="calendar-retained-range" style={styles.notice}>
         <Text variant="label">{t('calendar.retainedRange', { from: fullDate(model.loadedRange.fromDate), to: fullDate(isoDate(addDays(model.loadedRange.toDate, -1))) })}</Text>
-        {model.retainedDays.length ? <WeekAgenda days={model.retainedDays} known onOpenWorkout={onOpenWorkout} /> : <Text>{t('calendar.retainedEmpty')}</Text>}
+        {model.retainedDays.length ? <WeekAgenda days={model.retainedDays} known onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : <Text>{t('calendar.retainedEmpty')}</Text>}
       </View> : null}
       {__DEV__ && controls ? <View style={styles.notice}><Divider />{controls}</View> : null}
     </ScrollView>

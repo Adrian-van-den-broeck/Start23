@@ -417,7 +417,7 @@ test('language switching localizes the same three root destinations', async () =
   expect(bar.getByRole('tab', { name: 'Week' }).props.accessibilityState.selected).toBe(true);
 });
 
-test.each(['planning write', 'pending move', 'activity write', 'sheet dismissal'])('%s prevents root navigation and global RPE navigation', async (reason) => {
+test.each(['planning write', 'pending move', 'move chooser', 'activity write', 'sheet dismissal'])('%s prevents root navigation and global RPE navigation', async (reason) => {
   jest.mocked(api.listActivities).mockResolvedValue([{}] as Awaited<ReturnType<typeof api.listActivities>>);
   const view = await renderRouter(routes, { initialUrl: '/planning' });
   await view.findByText('Approved');
@@ -426,6 +426,7 @@ test.each(['planning write', 'pending move', 'activity write', 'sheet dismissal'
   await act(() => {
     if (reason === 'planning write') void flow.generate();
     else if (reason === 'pending move') void flow.requestWorkoutMove(workout, '2026-10-08');
+    else if (reason === 'move chooser') navigation.setMoveWorkoutId(workout.id);
     else if (reason === 'activity write') navigation.setActivityBusy(true);
     else navigation.setSheetOpen(true);
   });

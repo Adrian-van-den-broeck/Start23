@@ -11,6 +11,7 @@ function usePresentationOwner() {
   const [calendarVersion, setCalendarVersion] = useState(() => effectiveVersion('calendar'));
   const [task, setTask] = useState<'prepare' | 'creation' | 'review' | 'existing' | null>(null);
   const [reviewWorkoutId, setReviewWorkoutId] = useState<string | null>(null);
+  const [moveWorkoutId, setMoveWorkoutId] = useState<string | null>(null);
   // Navigation choices only; draft, revision and placements belong to flow.
   const [creationStep, setCreationStep] = useState<'selection' | 'placement'>('selection');
   const [placementMode, setPlacementMode] = useState<'automatic' | 'manual'>('automatic');
@@ -22,10 +23,11 @@ function usePresentationOwner() {
   const weekScroll = useRef(0);
   const calendarPositions = useRef<Record<string, number>>({});
   const calendarNavigation = useCalendarNavigation(flow.plan?.week_start ?? flow.weekStart, calendarVisited);
-  const locked = flow.busy || transientBusy || !!flow.pendingMove || Object.values(flow.pendingWorkouts.editors).some((slot) => slot.loading);
+  const locked = flow.busy || transientBusy || !!flow.pendingMove || !!moveWorkoutId || Object.values(flow.pendingWorkouts.editors).some((slot) => slot.loading);
   return {
     rootVersion, setRootVersion, calendarVersion, setCalendarVersion, task, setTask,
     reviewWorkoutId, setReviewWorkoutId,
+    moveWorkoutId, setMoveWorkoutId,
     creationStep, setCreationStep, placementMode, setPlacementMode,
     detailWorkout, setDetailWorkout, sheetOpen, setSheetOpen, weekScroll, calendarPositions,
     calendarNavigation, setCalendarVisited, activityBusy, setActivityBusy, setTransientBusy,

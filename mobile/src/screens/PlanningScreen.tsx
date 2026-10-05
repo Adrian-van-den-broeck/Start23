@@ -1,3 +1,4 @@
+import { PlanningWorkoutMoveTask } from './PlanningWorkoutMoveTask';
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
@@ -804,7 +805,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
   const { t } = useLanguage();
   const { rootVersion, setRootVersion, calendarVersion, setCalendarVersion, task, setTask,
     detailWorkout, setDetailWorkout, weekScroll, calendarPositions, calendarNavigation, locked,
-    sheetOpen, setCalendarVisited, creationStep, setCreationStep, placementMode, setPlacementMode, reviewWorkoutId, setReviewWorkoutId } = usePlanningPresentation();
+    sheetOpen, setCalendarVisited, creationStep, setCreationStep, placementMode, setPlacementMode, reviewWorkoutId, setReviewWorkoutId, moveWorkoutId, setMoveWorkoutId } = usePlanningPresentation();
   const active = props.active ?? true;
   const previousRequest = useRef(requested);
   const calendarOpen = props.destination === 'calendar' ||
@@ -897,6 +898,11 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
       onSelectDate={calendarNavigation.selectDate} onRetry={() => loadCalendarRange(fromDate, toDate)} onBack={returnToWeek}
       onProfile={props.destination === 'calendar' ? props.onOpenProfile : undefined}
       onOpenWorkout={(id) => { const workout = calendar.calendarWorkouts.find((item) => item.id === id); if (workout) setDetailWorkout(workout); }}
+      onMoveWorkout={id => {
+        const workout = flow.plan?.revision_state === 'active' && flow.plan.workouts.find(item => item.id === id && item.status === 'scheduled');
+        const shown = calendar.calendarWorkouts.find(item => item.id === id);
+        return workout && shown?.scheduled_date === workout.scheduled_date ? () => { if (!locked) { flow.setError(null); setMoveWorkoutId(id); } } : undefined;
+      }}
       controls={controls} scrollProps={calendarScrollProps} />
       : rootVersion === 'v2' && (!task || (task === 'creation' && !flow.swipeDraft && flow.view === 'plan') || (task === 'review' && ['active', 'rejected'].includes(flow.plan?.revision_state ?? ''))) ? <WeekScreen model={model} error={flow.error} busy={locked}
         onAction={action} onOpenWorkout={(id) => {
@@ -931,6 +937,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
           onOpenCalendar={() => { if (props.onCalendarRoot && rootVersion === 'v2') { props.onCalendarRoot(); return; } setCalendarVersion(effectiveVersion('calendar')); flow.openCalendar(); }}
           prepareWeek={task === 'prepare'} versionControl={controls}
           taskBack={rootVersion === 'v2' && task ? <V2Button variant="tertiary" label={t('week.return')} disabled={locked} onPress={returnToWeek} /> : null} />}
+    {moveWorkoutId ? <PlanningWorkoutMoveTask key={moveWorkoutId} workoutId={moveWorkoutId} onClose={() => setMoveWorkoutId(null)} controls={controls} /> : null}
     <WorkoutDetailBoundary workout={detailWorkout} onClose={() => setDetailWorkout(null)} />
   </View>;
 }
