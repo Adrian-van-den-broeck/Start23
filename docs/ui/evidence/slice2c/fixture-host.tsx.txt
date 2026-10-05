@@ -1,0 +1,43 @@
+// Temporary, local component review host. Removed before committing runtime work.
+import { useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
+import { View, Text as NativeText } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { BlurView } from 'expo-blur';
+import { MotionPressable } from '../src/components/MotionPressable';
+import { colors as v1Colors, spacing } from '../src/theme/tokens';
+import { useLanguage } from '../src/i18n/LanguageProvider';
+import { UiVersionControl } from '../src/ui/UiVersionControl';
+import { WeekScreen } from '../src/ui-v2/screens/WeekScreen';
+import { weekHomeViewModel } from '../src/ui-v2/utils/weekHomeViewModel';
+import { activePlan, draft, pendingPlan, workout } from '../src/features/planning/planning.test-fixtures';
+
+const noop = () => undefined;
+export default function Review() {
+  const { state = 'B', language = 'en', long = 'false', reminder = 'false' } = useLocalSearchParams<{ state: string; language: 'nl' | 'en'; long: string; reminder: string }>();
+  const { setPreference, t } = useLanguage();
+  useEffect(() => { void setPreference(language); }, [language, setPreference]);
+  if (!__DEV__) return null;
+  const plan = state === 'D' ? pendingPlan : ['E', 'F', 'G', 'H'].includes(state) ? activePlan : null;
+  const active = ['E', 'F', 'G', 'H'].includes(state) ? {
+    ...activePlan,
+    workouts: state === 'H' ? [] : state === 'E' ? [workout, { ...workout, id: 'repeat', name: long === 'true' ? 'Second supplied session with a deliberately long name for wrapping verification' : 'Second supplied session' }] : [workout],
+    rest_days: state === 'H' ? [{ date: '2026-10-07', reason: 'planned_rest' as const }] : [],
+  } : null;
+  const model = weekHomeViewModel({ plan: state === 'G' ? pendingPlan : state === 'H' ? active : plan, activePlan: active,
+    draft: ['B', 'C'].includes(state) ? { ...draft, week_start: '2026-10-12', warnings: [], state: state === 'C' ? 'placement' : 'collecting' } : null,
+    today: state === 'F' ? '2026-10-05' : '2026-10-07', resumeState: 'ready', activeReadState: 'ready' });
+  return <View style={{ flex: 1, backgroundColor: v1Colors.canvas }}>
+    {/* Native inset fixture of the owning shell's exact reminder wrapper/styles; no RPE state logic. */}
+    {reminder === 'true' ? <SafeAreaView edges={['top']}><MotionPressable accessibilityRole="button" onPress={noop}>
+      <BlurView intensity={55} tint="light" style={{ backgroundColor: 'rgba(253, 229, 221, 0.78)', paddingHorizontal: spacing.lg, paddingVertical: spacing.sm }}>
+        <NativeText style={{ color: v1Colors.ink, fontSize: 13, fontWeight: '800', textAlign: 'center' }}>
+          {t('rpe.reminder', { count: 1, suffix: '', verbSuffix: '' })}
+        </NativeText>
+      </BlurView></MotionPressable></SafeAreaView> : null}
+    <WeekScreen key={`${state}-${language}-${long}-${reminder}`} model={model} error={null} busy={false} onAction={noop} onOpenWorkout={noop}
+    onProfile={noop} onActivities={noop} onCheckIn={noop} onZones={noop} onGoal={noop}
+    goalName={long === 'true' ? 'Disposable component fixture with a deliberately long supplied race goal name for wrapping verification' : 'Disposable V2 development review'}
+    scrollProps={{ contentOffset: { x: 0, y: 0 } }}
+    controls={<UiVersionControl />} /></View>;
+}

@@ -1,0 +1,23 @@
+{
+  "components": [
+    {
+      "loading": false,
+      "name": "AuthProvider",
+      "sessionPresent": false
+    },
+    {
+      "name": "UiVersionProvider",
+      "requested": "v2"
+    },
+    {
+      "name": "AuthScreen"
+    }
+  ],
+  "hook": true,
+  "renderers": [
+    {
+      "id": 1,
+      "name": "react-native-renderer"
+    }
+  ]
+}

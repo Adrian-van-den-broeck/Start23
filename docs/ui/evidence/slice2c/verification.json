@@ -1,0 +1,217 @@
+{
+  "success": true,
+  "numPassedTests": 231,
+  "numTotalTests": 231,
+  "numPassedTestSuites": 41,
+  "numTotalTestSuites": 41,
+  "numPendingTests": 0,
+  "numFailedTests": 0,
+  "runtimeCommit": "d96701fed3a61faa091e10ad0470ba8756dc5dbc",
+  "suites": [
+    {
+      "file": "mobile/src/screens/PlanningWeekBoundary.test.tsx",
+      "status": "passed",
+      "passedTests": 6
+    },
+    {
+      "file": "mobile/src/ui-v2/screens/WeekScreen.refinement.test.tsx",
+      "status": "passed",
+      "passedTests": 26
+    },
+    {
+      "file": "mobile/src/screens/OnboardingScreen.test.tsx",
+      "status": "passed",
+      "passedTests": 14
+    },
+    {
+      "file": "mobile/src/screens/PlanningControllerBoundary.test.tsx",
+      "status": "passed",
+      "passedTests": 5
+    },
+    {
+      "file": "mobile/src/screens/CalibrationScreen.test.tsx",
+      "status": "passed",
+      "passedTests": 8
+    },
+    {
+      "file": "mobile/src/screens/PlanningDetailBoundary.test.tsx",
+      "status": "passed",
+      "passedTests": 2
+    },
+    {
+      "file": "mobile/src/screens/ActivityScreen.regression.test.tsx",
+      "status": "passed",
+      "passedTests": 3
+    },
+    {
+      "file": "mobile/src/ui-v2/screens/WorkoutDetailScreen.test.tsx",
+      "status": "passed",
+      "passedTests": 5
+    },
+    {
+      "file": "mobile/src/ui-v2/screens/WeekScreen.test.tsx",
+      "status": "passed",
+      "passedTests": 5
+    },
+    {
+      "file": "mobile/src/screens/OnboardingScreen.resume.test.tsx",
+      "status": "passed",
+      "passedTests": 8
+    },
+    {
+      "file": "mobile/src/components/TrainingCalendar.test.tsx",
+      "status": "passed",
+      "passedTests": 1
+    },
+    {
+      "file": "mobile/src/features/planning/PlanningFlowProvider.test.tsx",
+      "status": "passed",
+      "passedTests": 31
+    },
+    {
+      "file": "mobile/src/ui/WorkoutDetailBoundary.test.tsx",
+      "status": "passed",
+      "passedTests": 3
+    },
+    {
+      "file": "mobile/src/screens/ZoneSetupStep.test.tsx",
+      "status": "passed",
+      "passedTests": 5
+    },
+    {
+      "file": "mobile/src/navigation/AuthenticatedLayout.test.tsx",
+      "status": "passed",
+      "passedTests": 3
+    },
+    {
+      "file": "mobile/src/components/DurationPicker.test.tsx",
+      "status": "passed",
+      "passedTests": 2
+    },
+    {
+      "file": "mobile/src/screens/ZoneProfileScreen.regression.test.tsx",
+      "status": "passed",
+      "passedTests": 2
+    },
+    {
+      "file": "mobile/src/components/WeekSchedule.test.tsx",
+      "status": "passed",
+      "passedTests": 5
+    },
+    {
+      "file": "mobile/src/screens/ActivityScreen.test.tsx",
+      "status": "passed",
+      "passedTests": 2
+    },
+    {
+      "file": "mobile/src/ui-v2/components/AttentionRow.test.tsx",
+      "status": "passed",
+      "passedTests": 3
+    },
+    {
+      "file": "mobile/src/screens/ProfileScreen.test.tsx",
+      "status": "passed",
+      "passedTests": 1
+    },
+    {
+      "file": "mobile/src/ui-v2/components/WeekContext.test.tsx",
+      "status": "passed",
+      "passedTests": 2
+    },
+    {
+      "file": "mobile/src/api/client.test.ts",
+      "status": "passed",
+      "passedTests": 15
+    },
+    {
+      "file": "mobile/src/navigation/RootLayout.test.tsx",
+      "status": "passed",
+      "passedTests": 1
+    },
+    {
+      "file": "mobile/src/components/WorkoutDetail.test.tsx",
+      "status": "passed",
+      "passedTests": 1
+    },
+    {
+      "file": "mobile/src/screens/PioneerAccessScreen.test.tsx",
+      "status": "passed",
+      "passedTests": 2
+    },
+    {
+      "file": "mobile/src/ui-v2/components/WeekCompositions.test.tsx",
+      "status": "passed",
+      "passedTests": 6
+    },
+    {
+      "file": "mobile/src/ui-v2/primitives/Button.test.tsx",
+      "status": "passed",
+      "passedTests": 4
+    },
+    {
+      "file": "mobile/src/components/RpeChoiceList.test.tsx",
+      "status": "passed",
+      "passedTests": 1
+    },
+    {
+      "file": "mobile/src/ui-v2/motion/useMotionPolicy.test.tsx",
+      "status": "passed",
+      "passedTests": 2
+    },
+    {
+      "file": "mobile/src/screens/PlanningWarnings.test.tsx",
+      "status": "passed",
+      "passedTests": 1
+    },
+    {
+      "file": "mobile/src/privacy.test.ts",
+      "status": "passed",
+      "passedTests": 1
+    },
+    {
+      "file": "mobile/src/ui-v2/utils/workoutDetailViewModel.test.ts",
+      "status": "passed",
+      "passedTests": 9
+    },
+    {
+      "file": "mobile/src/lib/rpe.test.ts",
+      "status": "passed",
+      "passedTests": 4
+    },
+    {
+      "file": "mobile/src/ui/uiVersion.test.ts",
+      "status": "passed",
+      "passedTests": 10
+    },
+    {
+      "file": "mobile/src/lib/navigation.test.ts",
+      "status": "passed",
+      "passedTests": 3
+    },
+    {
+      "file": "mobile/src/lib/onboardingForms.test.ts",
+      "status": "passed",
+      "passedTests": 4
+    },
+    {
+      "file": "mobile/src/ui-v2/tokens/tokens.test.ts",
+      "status": "passed",
+      "passedTests": 3
+    },
+    {
+      "file": "mobile/src/ui-v2/utils/weekHomeViewModel.test.ts",
+      "status": "passed",
+      "passedTests": 18
+    },
+    {
+      "file": "mobile/src/ui-v2/utils/workoutSummaryViewModel.test.ts",
+      "status": "passed",
+      "passedTests": 1
+    },
+    {
+      "file": "mobile/src/lib/runPace.test.ts",
+      "status": "passed",
+      "passedTests": 3
+    }
+  ]
+}

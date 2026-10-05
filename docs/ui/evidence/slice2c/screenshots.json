@@ -1,0 +1,310 @@
+{
+  "evidenceKind": "native emulator component fixtures, not live authenticated planning",
+  "serial": "emulator-5554",
+  "physicalViewport": "1080x2280",
+  "densityDpi": 440,
+  "defaultFontScale": 1.0,
+  "files": [
+    {
+      "file": "slice2c-before-clean-B.png",
+      "sha256": "90b610ed141dd5754e8dcf5b5e4436bedc3fc6c3a0a56a4023184d0058d52379"
+    },
+    {
+      "file": "slice2c-before-clean-B.xml",
+      "sha256": "4593bd87f60ee15afd79567480cf6fb2ebc4b2493af15a7361bf60b544023cbc"
+    },
+    {
+      "file": "slice2c-before-clean-E.png",
+      "sha256": "e3e3bf74fca5e9c85bb7bb65f54952e2f4b81caae3dfeeb6cd709c94dc0a78b3"
+    },
+    {
+      "file": "slice2c-before-clean-E.xml",
+      "sha256": "bd9fe5d3d3ee93ca78a7e28964e8963df77286753a87243eff6abd909b9367c6"
+    },
+    {
+      "file": "slice2c-after-clean-A.png",
+      "sha256": "c9955d73c5ad5e003f71150ba78db8b6ab479bbb0c531c4320a9e99748f9fa2f"
+    },
+    {
+      "file": "slice2c-after-clean-A.xml",
+      "sha256": "1e3415405cc57e8713672e40d0ef0a443021dd51aacfc14b4f0a15f7a01a8013"
+    },
+    {
+      "file": "slice2c-after-clean-B.png",
+      "sha256": "1c123ea679272f2aa71f65e9f327e3d3b0bb54183af6d9dec9223d0fb7492eae"
+    },
+    {
+      "file": "slice2c-after-clean-B.xml",
+      "sha256": "73588ae2940d6267ae6ce85ea1cc008afbdbfe8f719a58545bf6fb7d1cfd45d5"
+    },
+    {
+      "file": "slice2c-after-clean-C.png",
+      "sha256": "4e6a275642e9a86ea1a5e5f24c3c3f142cdf00b8e47639fb50e86c4426d0dbdb"
+    },
+    {
+      "file": "slice2c-after-clean-C.xml",
+      "sha256": "ff76066694695864f44c56dc31625477d1952617e0792c26000be7f92c8e1f9c"
+    },
+    {
+      "file": "slice2c-after-clean-D.png",
+      "sha256": "46c61656a62c9a1499258f0196dcbcc16d74fcc11577b4b9a445ed7c89033b66"
+    },
+    {
+      "file": "slice2c-after-clean-D.xml",
+      "sha256": "478266aabc0d3f00eb68f449ae1178c642769dbc47e41e69c809a75423b287d6"
+    },
+    {
+      "file": "slice2c-after-clean-E.png",
+      "sha256": "32d38232492fd016a78ef95a7ca3bb5e4de837a7428df6471dabc08921406dc6"
+    },
+    {
+      "file": "slice2c-after-clean-E.xml",
+      "sha256": "62fcfa8e65a400301769a897a5f2abd4f6c0ae839bbfea2d8a307c62781d6fd1"
+    },
+    {
+      "file": "slice2c-after-clean-F.png",
+      "sha256": "75d992f9866827e491ae1e051f9d82bfbbb18adaba49fd511603b181d9275bf8"
+    },
+    {
+      "file": "slice2c-after-clean-F.xml",
+      "sha256": "243d75c56356264ba20e89820f7188428bb3f76f0b43412425ad17bc3279c8ce"
+    },
+    {
+      "file": "slice2c-after-clean-G.png",
+      "sha256": "a876a2fa31045ccd1d99354832042662d0abb4d05c07d4422edede350af88b5f"
+    },
+    {
+      "file": "slice2c-after-clean-G.xml",
+      "sha256": "9128bb74aa3694ff58fc38b875a90870aeff5ff3cc1e604e6786f29e3a9d704f"
+    },
+    {
+      "file": "slice2c-after-clean-H.png",
+      "sha256": "2e52344499f2bd8c43e7d59eb7b2ae4252860b8a308840aad0d621322474d21d"
+    },
+    {
+      "file": "slice2c-after-clean-H.xml",
+      "sha256": "5c2803e73aefa83e854ecb326e8eadddae49367bb4eb9bb59637edc4f2c9d530"
+    },
+    {
+      "file": "slice2c-development-v1.png",
+      "sha256": "287a86a174c1511ac645e17bb7d7c167471a68e5d1107f0a0f4d3de4afbcd062"
+    },
+    {
+      "file": "slice2c-development-v1.xml",
+      "sha256": "dc94dc988ff0531df07c7e4c6625b955a8a78677cd7bb7cb97305cdcd541c6c2"
+    },
+    {
+      "file": "slice2c-development-v2.png",
+      "sha256": "25db400d3a9c5685d054d2accf99bb9b87e336126be1e81f4a4ccf3a63d7a282"
+    },
+    {
+      "file": "slice2c-development-v2.xml",
+      "sha256": "8fe3c5d8255e62b988f98f83d7c21e6af25c8ab34c53c3fc4a7a6a3cb940bf86"
+    },
+    {
+      "file": "slice2c-rpe-inset-fixture.png",
+      "sha256": "a63367a6a9ff6dc771f1d6c797a697eca6afce7661d569b870b240a16c4db0b0"
+    },
+    {
+      "file": "slice2c-rpe-inset-fixture.xml",
+      "sha256": "6762a9efac2eeb9173bfda55918a095b5b9692541924125e8b65ed88fae8c217"
+    },
+    {
+      "file": "slice2c-width-320-font-1.0-nl-B-end.png",
+      "sha256": "5a3ea406ce047c461f51864cccd9b0a7b60dd808bdebd6bb50ce21df5e79b310"
+    },
+    {
+      "file": "slice2c-width-320-font-1.0-nl-B-end.xml",
+      "sha256": "a28633bf40f0e430d9c42661cede6d808c63cefd5849125e89b3e82f8615c3d4"
+    },
+    {
+      "file": "slice2c-width-320-font-1.0-nl-B.png",
+      "sha256": "b2f50bac55673e50ceb28123187561ad20ff164b2d7a6cf5ab24beb1605264ea"
+    },
+    {
+      "file": "slice2c-width-320-font-1.0-nl-B.xml",
+      "sha256": "57db456f366a2d09801a22beae0797e2209fc8fa8ed3b93f6bbeb94f57e892cc"
+    },
+    {
+      "file": "slice2c-width-320-font-1.0-nl-E-end.png",
+      "sha256": "15ae27b2873c77fdcdb6f32b08d9b85a0bde1b6ff3e9f769fa980f158b93aceb"
+    },
+    {
+      "file": "slice2c-width-320-font-1.0-nl-E-end.xml",
+      "sha256": "33d3722f12705ae1f7e79defb7aa135ec321cfa0a2ba167e45b46021cc7859fd"
+    },
+    {
+      "file": "slice2c-width-320-font-1.0-nl-E.png",
+      "sha256": "55d2528509a4c23a5acb39b6f1e9e6628720ebea755027445c44111735af87c2"
+    },
+    {
+      "file": "slice2c-width-320-font-1.0-nl-E.xml",
+      "sha256": "e42e993f6d189ac368a0d92a5c8d3b4e0f565b4e57b449fe96831a17c5f00e6e"
+    },
+    {
+      "file": "slice2c-width-320-font-2.0-en-B-end.png",
+      "sha256": "05818d293e20b9e9cd0252771822194f3a0af55b5b8cf377fad08d596beb5df5"
+    },
+    {
+      "file": "slice2c-width-320-font-2.0-en-B-end.xml",
+      "sha256": "073d8f5bd4d366f641014252097e2d21bea62b5887f5e8d13e517cdf4f7a311b"
+    },
+    {
+      "file": "slice2c-width-320-font-2.0-en-B.png",
+      "sha256": "d18e42b9b2bb4bd72814a31b302308f1aea655992bfd7d5ff6ee03d17e2427be"
+    },
+    {
+      "file": "slice2c-width-320-font-2.0-en-B.xml",
+      "sha256": "304d1816c6e5e42c1361f113892b212fd32818e3a2c02ed22de6e2f8bc50bc4f"
+    },
+    {
+      "file": "slice2c-width-320-font-2.0-en-E-end.png",
+      "sha256": "c4882d0f3de73b1a4d92bae4504bd615eb61a9e2dc29a64e73e0d69b10f898ae"
+    },
+    {
+      "file": "slice2c-width-320-font-2.0-en-E-end.xml",
+      "sha256": "8f85ec677814b3e76fde3c6916fcb048618851fc6b9db9d388b9254dc9021fc2"
+    },
+    {
+      "file": "slice2c-width-320-font-2.0-en-E.png",
+      "sha256": "befda42069301f2f1bc411ff565f997ba7e566a8c74a7f1e44f6d26c5a8f71b2"
+    },
+    {
+      "file": "slice2c-width-320-font-2.0-en-E.xml",
+      "sha256": "cd515e8ed4529830e49b0fe24be932173f40bc2b5588ee84af9b2cc108b36126"
+    },
+    {
+      "file": "slice2c-width-360-font-1.0-nl-B-end.png",
+      "sha256": "5c30b605fded6f3628e4803ff7111d572b04886514ac5dba1b6358a25840de84"
+    },
+    {
+      "file": "slice2c-width-360-font-1.0-nl-B-end.xml",
+      "sha256": "c2f652b2bbb3f36f81fdf7076856e1ab16e7d95628adce04d10199f57ba6096f"
+    },
+    {
+      "file": "slice2c-width-360-font-1.0-nl-B.png",
+      "sha256": "f311561c0bde95654330b05af8d3080346e97d998397e5ffbc8955dd260f5412"
+    },
+    {
+      "file": "slice2c-width-360-font-1.0-nl-B.xml",
+      "sha256": "3e4cc1e087d70ecebd39c395f4bc3f28f51479d75ff9596ec3b6399ed609309c"
+    },
+    {
+      "file": "slice2c-width-360-font-1.0-nl-E-end.png",
+      "sha256": "a7b40e928524a18f4548b73333a69898a2088715bbe0993789840ed9b5f07c32"
+    },
+    {
+      "file": "slice2c-width-360-font-1.0-nl-E-end.xml",
+      "sha256": "7b46cabf805dab97f1417864c104045ee8d462e3a75b7ca61ea1591b960d94d5"
+    },
+    {
+      "file": "slice2c-width-360-font-1.0-nl-E.png",
+      "sha256": "ce21a4d1eafb0bc4775e32ed6415ec4e084234c126915e5291ae7e3a77463cf3"
+    },
+    {
+      "file": "slice2c-width-360-font-1.0-nl-E.xml",
+      "sha256": "17c34f3f9c43d590dace7512e1792c883e30018c7fe785dbd4e242c1650f4f43"
+    },
+    {
+      "file": "slice2c-width-360-font-2.0-en-B-end.png",
+      "sha256": "1d7237477ce391a0e29832bb7de9700100e4ff8f5b5fc44088450e8d994fecca"
+    },
+    {
+      "file": "slice2c-width-360-font-2.0-en-B-end.xml",
+      "sha256": "3fb065d999a3df736f902109260042c5d0ea18ce49fb0722bff36b84ceca7911"
+    },
+    {
+      "file": "slice2c-width-360-font-2.0-en-B.png",
+      "sha256": "00a42e0913f5a2a481c4add984e87e0745576b66ee2dda2a53c0364136cd1edd"
+    },
+    {
+      "file": "slice2c-width-360-font-2.0-en-B.xml",
+      "sha256": "42b2e6b53c6a86b12af4d4ad538af0fcfa7ad5d64e033b9fd5d57cddb94671cf"
+    },
+    {
+      "file": "slice2c-width-360-font-2.0-en-E-end.png",
+      "sha256": "925253b2827acd278bbfed85ac346b1085145fc2e664cf831e14014d4fb32dcb"
+    },
+    {
+      "file": "slice2c-width-360-font-2.0-en-E-end.xml",
+      "sha256": "19ffd884aa6463ea2afc5bafca3d6370f10faf1de301fe222ed068ef2d6a3c28"
+    },
+    {
+      "file": "slice2c-width-360-font-2.0-en-E.png",
+      "sha256": "4c86e98f858c7dd3fe558320a4093d5d44ebb0454cf0c84324885e312a59f4e4"
+    },
+    {
+      "file": "slice2c-width-360-font-2.0-en-E.xml",
+      "sha256": "8a094505a6a3f6465e533feaf3773081f2a0551b8c083989afa58e393ac31ce2"
+    },
+    {
+      "file": "slice2c-width-412-font-1.0-en-B-end.png",
+      "sha256": "029d48f8d606716bc80fb25d6481b7ce8ab2b22fd59dcf6ac17e241a14c8076b"
+    },
+    {
+      "file": "slice2c-width-412-font-1.0-en-B-end.xml",
+      "sha256": "9299040cf2dee4238434c3806c254bc75c5d7faa0e51eb5eb8a44db4163e3ecf"
+    },
+    {
+      "file": "slice2c-width-412-font-1.0-en-B.png",
+      "sha256": "181a03706a91b78089d736b09903206c9b586a5e0ca2b573007abfb3eaa01925"
+    },
+    {
+      "file": "slice2c-width-412-font-1.0-en-B.xml",
+      "sha256": "9ea28264b88f09fd8811f7a22e9f783c03d57e3e5bfc98b25ad51f5e8194e1ab"
+    },
+    {
+      "file": "slice2c-width-412-font-1.0-en-E-end.png",
+      "sha256": "f7f6af564f11727add61b3fca0aac2ef52e014205da9ea9d29a7c6c21339b8d3"
+    },
+    {
+      "file": "slice2c-width-412-font-1.0-en-E-end.xml",
+      "sha256": "287bc57f7c9e6ac97c123073df5ced87be1256503da5dd199f22e4e4ffc5159c"
+    },
+    {
+      "file": "slice2c-width-412-font-1.0-en-E.png",
+      "sha256": "5644906bf61bf143f90a2aff754821234b5dd3130d09223c7da7cdd72813dccd"
+    },
+    {
+      "file": "slice2c-width-412-font-1.0-en-E.xml",
+      "sha256": "744d44adda20b4404eafa3b72d36235d075c21cf1a2f0793f47f2ee4ee43da8c"
+    },
+    {
+      "file": "slice2c-width-412-font-2.0-nl-B-end.png",
+      "sha256": "2de7c71707662be0f9fbf1e2f473d27eda12a092ad3b35bb7c1487ba03875a90"
+    },
+    {
+      "file": "slice2c-width-412-font-2.0-nl-B-end.xml",
+      "sha256": "424c64cd7d252018026730bfa1ddf84990f060733e013c946c7cf5760589c783"
+    },
+    {
+      "file": "slice2c-width-412-font-2.0-nl-B.png",
+      "sha256": "b0855e150047e59bf28e5915d7bc51aff3d4d3949a502fbf7502498ed8562e8d"
+    },
+    {
+      "file": "slice2c-width-412-font-2.0-nl-B.xml",
+      "sha256": "1eaf6c582c767f299033adaafa6b9b947c0e2c84d27b6794fe0866dea8657efa"
+    },
+    {
+      "file": "slice2c-width-412-font-2.0-nl-E-end.png",
+      "sha256": "9a534b279d00b067ee1ea7323e593463f941a1f175c17631660dc432d5535776"
+    },
+    {
+      "file": "slice2c-width-412-font-2.0-nl-E-end.xml",
+      "sha256": "77bd55b44048bad17489c800682abf0ac99b2212b917df81b70182869be09515"
+    },
+    {
+      "file": "slice2c-width-412-font-2.0-nl-E.png",
+      "sha256": "e4749af5cb4f4ceda68da0e8c4d9035b4ec6e61e19a76a7dc8d7e163cfa5f904"
+    },
+    {
+      "file": "slice2c-width-412-font-2.0-nl-E.xml",
+      "sha256": "af17272ee03505f8071097dbca0fc937cd58a515df08cb3052152224c8cafbae"
+    }
+  ],
+  "historicalLiveReference": {
+    "file": "slice2b-accepted-draft-reference.png",
+    "sha256": "983d133d39eb471da3428445dadc1be0eaf9c1aac822386ac8d98992c07c5c28",
+    "sourceCommit": "7a7259125d2a6a907cf9c175379ae6570aabf71b"
+  }
+}
