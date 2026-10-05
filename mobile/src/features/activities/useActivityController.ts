@@ -44,6 +44,7 @@ export function useActivityController(accessToken: string) {
   const createInFlightRef = useRef(false);
   const rpeInFlightRef = useRef<Set<string>>(new Set());
   const historyLoaded = useRef(false);
+  const activityEntered = useRef(false);
   const loadInFlight = useRef<Promise<void> | null>(null);
   const pendingSequence = useRef(0);
   const pendingInFlight = useRef<{ token: string; promise: Promise<void> } | null>(null);
@@ -84,6 +85,12 @@ export function useActivityController(accessToken: string) {
 
   const ensureActivitiesLoaded = useCallback(async () => {
     if (!alive.current || historyLoaded.current || loadInFlight.current) return;
+    // V1 initialized the actual-start default on Activity entry, not shell entry.
+    // Later mounts keep the same unresolved form and logical attempt.
+    if (!activityEntered.current) {
+      activityEntered.current = true;
+      setStartedAt(new Date().toISOString());
+    }
     setBusy(true);
     try { await load(); }
     catch (caught) { if (alive.current) setError(caught instanceof Error ? caught.message : 'Laden is mislukt.'); }

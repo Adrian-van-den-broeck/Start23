@@ -87,6 +87,23 @@ test('rapid create and rerender during transport yield one create with exact exi
   await act(async () => { create.resolve(pendingActivity); await save; });
   expect(api.listActivities).toHaveBeenCalledTimes(2); expect(api.getCalendar).toHaveBeenCalledTimes(2);
   expect(flow.feedbackActivity).toBe(pendingActivity); expect(flow.pendingRpe).toEqual([pendingActivity]); expect(flow.busy).toBe(false);
+  expect(api.submitActivityRpeWithRefresh).not.toHaveBeenCalled();
+});
+
+test('actual-start default is initialized at first Activity entry and retained on later entries', async () => {
+  jest.useFakeTimers();
+  try {
+    jest.setSystemTime(new Date('2026-10-06T10:00:00Z'));
+    const view = await render(<Host />);
+    jest.setSystemTime(new Date('2026-10-06T12:00:00Z'));
+    await act(() => flow.ensureActivitiesLoaded());
+    expect(flow.startedAt).toBe('2026-10-06T12:00:00.000Z');
+    await act(() => flow.setStartedAt('2026-10-06T11:00:00Z'));
+    jest.setSystemTime(new Date('2026-10-06T13:00:00Z'));
+    await view.rerender(<Host entry={false} />); await view.rerender(<Host entry />);
+    await act(() => flow.ensureActivitiesLoaded());
+    expect(flow.startedAt).toBe('2026-10-06T11:00:00Z'); expect(api.listActivities).toHaveBeenCalledTimes(1);
+  } finally { jest.useRealTimers(); }
 });
 
 test('ambiguous create retains key, form and unresolved attempt across navigation and explicit retry', async () => {
