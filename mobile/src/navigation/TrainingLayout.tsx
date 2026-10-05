@@ -13,6 +13,7 @@ export function TrainingLayout() {
   const { t } = useLanguage();
   const rootVersion = presentation?.rootVersion;
   const [navigatorVersion, setNavigatorVersion] = useState(rootVersion);
+  const [destinationHeight, setDestinationHeight] = useState(56);
   useEffect(() => { setNavigatorVersion(rootVersion); }, [rootVersion]);
   // A direct task -> root transition can mount the child layout before its
   // parent's pathname update. Never expose root content before the ready host.
@@ -26,9 +27,15 @@ export function TrainingLayout() {
   return <Tabs key="v2-training" initialRouteName="planning" backBehavior="initialRoute" screenOptions={{
     headerShown: false, lazy: true,
   }} screenListeners={{ tabPress: (event) => { if (navigationLocked) event.preventDefault(); } }}
-    tabBar={({ state, descriptors, navigation }) => navigationLocked ? null : (
+    tabBar={({ state, descriptors, navigation }) => navigationLocked ? (
+      presentation.detailWorkout ? <SafeAreaView testID="training-detail-footprint" edges={['bottom']} style={styles.bar} pointerEvents="none"
+        accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        <View style={{ height: destinationHeight }} />
+      </SafeAreaView> : null
+    ) : (
       <SafeAreaView edges={['bottom']} style={styles.bar}>
-        <View testID="training-root-navigation" accessibilityRole="tablist" style={styles.destinations}>
+        <View testID="training-root-navigation" accessibilityRole="tablist" style={styles.destinations}
+          onLayout={(event) => setDestinationHeight(event.nativeEvent.layout.height)}>
           {state.routes.map((route, index) => {
             const selected = state.index === index;
             const label = descriptors[route.key].options.title ?? route.name;

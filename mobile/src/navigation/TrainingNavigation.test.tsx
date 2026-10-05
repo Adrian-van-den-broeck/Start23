@@ -259,6 +259,22 @@ test('approved roots replace tab and stack navigators after all destinations hav
   expect(api.approvePlanProposal).not.toHaveBeenCalled();
 });
 
+test('detail keeps the measured navigation footprint to avoid clamping Calendar scroll', async () => {
+  const view = await renderRouter(routes, { initialUrl: '/calendar' });
+  await view.findByText('Training calendar');
+  await fireEvent(view.getByTestId('training-root-navigation'), 'layout', {
+    nativeEvent: { layout: { x: 0, y: 0, width: 393, height: 80 } }
+  });
+  await act(() => navigation.setDetailWorkout(workout));
+  expect(view.queryByTestId('training-root-navigation')).toBeNull();
+  const footprint = view.getByTestId('training-detail-footprint', { includeHiddenElements: true });
+  expect(footprint.props.children.props.style.height).toBe(80);
+  expect(footprint.props.pointerEvents).toBe('none');
+  expect(footprint.props.accessibilityElementsHidden).toBe(true);
+  await act(() => navigation.setDetailWorkout(null));
+  expect(view.getByTestId('training-root-navigation')).toBeTruthy();
+});
+
 test('existing V1 task hides root navigation, keeps version while open, then returns settled Week', async () => {
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : null);
   const view = await renderRouter(routes, { initialUrl: '/planning' });
