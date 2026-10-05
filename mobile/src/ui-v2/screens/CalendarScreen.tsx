@@ -13,11 +13,12 @@ import { Text } from '../primitives/Text';
 import { colors, layout, space } from '../tokens';
 import type { CalendarViewModel } from '../utils/calendarViewModel';
 
-export function CalendarScreen({ model, mode, anchor, loading, error, onModeChange, onMove, onToday, onSelectDate, onRetry, onOpenWorkout, onBack, controls, scrollProps }: {
+export function CalendarScreen({ model, mode, anchor, loading, error, onModeChange, onMove, onToday, onSelectDate, onRetry, onOpenWorkout, onBack, onProfile, controls, scrollProps }: {
   model: CalendarViewModel; mode: CalendarMode; anchor: string; loading: boolean; error: string | null;
   onModeChange: (mode: CalendarMode) => void; onMove: (direction: -1 | 1) => void; onToday: () => void;
   onSelectDate: (date: string) => void; onRetry: () => void; onOpenWorkout: (id: string) => void; onBack: () => void;
   controls?: ReactNode; scrollProps?: ScrollViewProps;
+  onProfile?: () => void;
 }) {
   const { locale, t } = useLanguage();
   const fullDate = (date: string) => parseCalendarDate(date).toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -25,6 +26,7 @@ export function CalendarScreen({ model, mode, anchor, loading, error, onModeChan
     : `${fullDate(model.days[0].date)} – ${fullDate(model.days[6].date)}`;
   return <SafeAreaView edges={['top', 'bottom']} style={styles.frame}>
     <ScrollView testID="calendar-scroll" {...scrollProps} style={styles.scroll} contentContainerStyle={styles.content}>
+      {onProfile ? <Button variant="tertiary" label={t('planning.profile')} onPress={onProfile} /> : null}
       <Button variant="tertiary" label={t('week.return')} onPress={onBack} />
       <Text variant="screenTitle" accessibilityRole="header">{t('calendar.title')}</Text>
       <Text variant="supporting">{t('calendar.approvedOnly')}</Text>

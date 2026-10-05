@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 import * as Haptics from 'expo-haptics';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 
 import {
@@ -17,7 +17,7 @@ import {
   transitionSwipeWeekDraft,
   validatePlanLayout,
 } from '../../api/client';
-import type { Discipline, PlanWarning, PlannedWorkout, PrimaryRaceGoal, SwipeWeekDraft, WeeklyPlan } from '../../api/types';
+import type { Discipline, OnboardingState, PlanWarning, PlannedWorkout, PrimaryRaceGoal, SwipeWeekDraft, WeeklyPlan } from '../../api/types';
 import { isDateInWeek } from '../../components/WeekSchedule';
 import { availableDatesFor, dayOffsetsFor, isoDate, nextMonday } from './planningDates';
 import { latestPlanIdKey, latestSwipeDraftIdKey, rememberPlanId, rememberSwipeDraftId } from './planningResume';
@@ -26,7 +26,8 @@ import { usePendingWorkoutActions } from './usePendingWorkoutActions';
 export type PlanningView = 'plan' | 'deck' | 'calendar';
 
 // Called once by PlanningFlowProvider; presentations consume its context.
-export function usePlanningController(accessToken: string) {
+export function usePlanningController(accessToken: string, initialOnboarding?: OnboardingState) {
+  const initialOnboardingRef = useRef({ accessToken, state: initialOnboarding });
   const [view, setView] = useState<PlanningView>('plan');
   const [weekStart, setWeekStart] = useState(nextMonday);
   const [reusePreviousWeek, setReusePreviousWeek] = useState(false);
@@ -136,6 +137,11 @@ export function usePlanningController(accessToken: string) {
   }, [accessToken]);
 
   useEffect(() => {
+    const initial = initialOnboardingRef.current;
+    if (initial.accessToken === accessToken && initial.state) {
+      setPrimaryGoal(initial.state.primary_goal);
+      return;
+    }
     getOnboarding(accessToken)
       .then((state) => setPrimaryGoal(state.primary_goal))
       .catch(() => undefined);

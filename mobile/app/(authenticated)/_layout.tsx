@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { TrainingFlowHost } from '@/navigation/TrainingFlowHost';
+import { useOptionalPlanningPresentation } from '@/navigation/PlanningPresentationProvider';
+
 import { listActivities } from '@/api/client';
 import { useAuth } from '@/auth/AuthProvider';
 import { MotionPressable } from '@/components/MotionPressable';
@@ -13,10 +16,9 @@ import { colors, spacing } from '@/theme/tokens';
 
 export default function AuthenticatedLayout() {
   const { configurationError, loading, session } = useAuth();
-  const { language, t } = useLanguage();
-  const router = useRouter();
   const pathname = usePathname();
   const [pendingRpeCount, setPendingRpeCount] = useState(0);
+  useEffect(() => { setPendingRpeCount(0); }, [session?.user.id]);
 
   useEffect(() => {
     if (!session) {
@@ -39,40 +41,52 @@ export default function AuthenticatedLayout() {
 
   return (
     <View style={styles.shell}>
-      {pendingRpeCount > 0 ? (
-        <SafeAreaView edges={['top']}>
-          <MotionPressable
-            accessibilityRole="button"
-            haptic="selection"
-            onPress={() => router.push('/activities')}
-          >
-            <BlurView intensity={55} style={styles.reminder} tint="light">
-              <Text style={styles.reminderText}>
-                {t('rpe.reminder', {
-                  count: pendingRpeCount,
-                  suffix: pendingRpeCount === 1 ? '' : language === 'nl' ? 'en' : 's',
-                  verbSuffix: pendingRpeCount === 1 ? '' : 'en',
-                })}
-              </Text>
-            </BlurView>
-          </MotionPressable>
-        </SafeAreaView>
-      ) : null}
-      <Stack
-        screenOptions={{
-          animation: 'fade_from_bottom',
-          animationDuration: 220,
-          contentStyle: { backgroundColor: colors.canvas },
-          headerShown: false,
-        }}
-      />
+      <TrainingFlowHost key={session.user.id} accessToken={session.access_token} athleteIdentity={session.user.id}>
+        <PendingRpeReminder count={pendingRpeCount} />
+        <Stack
+          screenOptions={{
+            animation: 'fade_from_bottom',
+            animationDuration: 220,
+            contentStyle: { backgroundColor: colors.canvas },
+            headerShown: false,
+          }}
+        />
+      </TrainingFlowHost>
     </View>
   );
+}
+
+function PendingRpeReminder({ count }: { count: number; }) {
+  const { language, t } = useLanguage();
+  const router = useRouter();
+  const presentation = useOptionalPlanningPresentation();
+  return count > 0 ? (
+    <SafeAreaView edges={['top']}>
+      <MotionPressable
+        accessibilityRole="button"
+        haptic="selection"
+        disabled={presentation?.navigationLocked}
+        onPress={() => { if (presentation?.rootVersion === 'v2') router.navigate('/activities'); else router.push('/activities'); }}
+      >
+        <BlurView intensity={55} style={styles.reminder} tint="light">
+          <Text style={styles.reminderText}>
+            {t('rpe.reminder', {
+              count,
+              suffix: count === 1 ? '' : language === 'nl' ? 'en' : 's',
+              verbSuffix: count === 1 ? '' : 'en',
+            })}
+          </Text>
+        </BlurView>
+      </MotionPressable>
+    </SafeAreaView>
+  ) : null;
 }
 
 const styles = StyleSheet.create({
   shell: { backgroundColor: colors.canvas, flex: 1 },
   reminder: {
+    minHeight: 48,
+    justifyContent: 'center',
     backgroundColor: 'rgba(253, 229, 221, 0.78)',
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,

@@ -38,6 +38,8 @@ import { colors, radius, spacing } from '../theme/tokens';
 type ActivityScreenProps = {
   accessToken: string;
   onBack: () => void;
+  onNavigationBusyChange?: (busy: boolean) => void;
+  onOpenProfile?: () => void;
   onPendingRpeChange?: (count: number) => void;
   onSignOut: () => Promise<void>;
 };
@@ -172,6 +174,8 @@ function suggestedWorkout(
 export function ActivityScreen({
   accessToken,
   onBack,
+  onNavigationBusyChange,
+  onOpenProfile,
   onPendingRpeChange,
   onSignOut,
 }: ActivityScreenProps) {
@@ -207,6 +211,11 @@ export function ActivityScreen({
   >({});
   const createInFlightRef = useRef(false);
   const rpeInFlightRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    onNavigationBusyChange?.(busy);
+    return () => onNavigationBusyChange?.(false);
+  }, [busy, onNavigationBusyChange]);
 
   const pendingRpe = useMemo(
     () => activities.filter((activity) => activity.processing_state === 'awaiting_rpe'),
@@ -423,8 +432,8 @@ export function ActivityScreen({
           <Text style={styles.logo}>Wombo</Text>
           <Text style={styles.caption}>{t('activity.title')}</Text>
         </View>
-        <Pressable accessibilityRole="button" onPress={() => void onSignOut()}>
-          <Text style={styles.link}>{t('activity.signOut')}</Text>
+        <Pressable accessibilityRole="button" style={onOpenProfile ? { minHeight: 48, minWidth: 48, justifyContent: 'center' } : undefined} disabled={!!onOpenProfile && busy} onPress={() => { if (onOpenProfile) onOpenProfile(); else void onSignOut(); }}>
+          <Text style={styles.link}>{t(onOpenProfile ? 'planning.profile' : 'activity.signOut')}</Text>
         </Pressable>
       </View>
 

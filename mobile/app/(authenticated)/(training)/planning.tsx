@@ -1,16 +1,19 @@
-import { type Href, useRouter } from 'expo-router';
+import { type Href, useRouter, useIsFocused } from 'expo-router';
 
 import { useAuth } from '@/auth/AuthProvider';
-import { PlanningScreen } from '@/screens/PlanningScreen';
+import { PlanningBoundary } from '@/screens/PlanningScreen';
 
-export default function PlanningRoute() {
+export default function PlanningRoute({ destination = 'week' }: { destination?: 'week' | 'calendar'; }) {
   const router = useRouter();
+  const active = useIsFocused();
   const { session, signOut } = useAuth();
   if (!session) return null;
   return (
-    <PlanningScreen
-      accessToken={session.access_token}
-      athleteIdentity={session.user.id}
+    <PlanningBoundary
+      active={active}
+      destination={destination}
+      onCalendarRoot={() => router.navigate('/calendar')}
+      onWeekRoot={() => router.navigate('/planning')}
       onBackToOnboarding={() => router.push('/onboarding')}
       onOpenActivities={() => router.push('/activities')}
       onOpenCheckIn={() => router.push('/check-in')}

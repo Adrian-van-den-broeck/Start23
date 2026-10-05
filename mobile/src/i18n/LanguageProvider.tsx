@@ -16,6 +16,12 @@ export type LanguagePreference = 'system' | AppLanguage;
 const preferenceStorageKey = 'start23.language-preference';
 
 const nl = {
+  'shell.week': 'Week',
+  'shell.calendar': 'Kalender',
+  'shell.activities': 'Activiteiten',
+  'shell.readinessLoading': 'Je intake wordt gecontroleerd',
+  'shell.readinessFailed': 'Je intake kon niet worden gecontroleerd',
+  'shell.retry': 'Opnieuw proberen',
   'calendar.chooseDay': 'Dag kiezen',
   'calendar.rangeUnknown': 'Deze datum is nog niet geladen.',
   'calendar.loadFailed': 'Deze periode kon niet worden geladen.',
@@ -174,6 +180,12 @@ const nl = {
 type TranslationKey = keyof typeof nl;
 
 const en: Record<TranslationKey, string> = {
+  'shell.week': 'Week',
+  'shell.calendar': 'Calendar',
+  'shell.activities': 'Activities',
+  'shell.readinessLoading': 'Checking your onboarding',
+  'shell.readinessFailed': 'Could not check your onboarding',
+  'shell.retry': 'Try again',
   'calendar.chooseDay': 'Choose a day',
   'calendar.rangeUnknown': 'This date has not loaded yet.',
   'calendar.loadFailed': 'This period could not be loaded.',

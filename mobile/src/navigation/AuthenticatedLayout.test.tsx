@@ -8,8 +8,9 @@ import AuthenticatedLayout from '../../app/(authenticated)/_layout';
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ usePathname: () => '/planning', useRouter: () => ({ push: mockPush }), Stack: () => null, Redirect: () => null }));
 jest.mock('../api/client', () => ({ listActivities: jest.fn() }));
+jest.mock('./TrainingFlowHost', () => ({ TrainingFlowHost: ({ children }: PropsWithChildren) => children }));
 jest.mock('../auth/AuthProvider', () => {
-  const auth = { configurationError: null, loading: false, session: { access_token: 'verified-test-token' } };
+  const auth = { configurationError: null, loading: false, session: { access_token: 'verified-test-token', user: { id: 'fixture-athlete' } } };
   return { useAuth: () => auth };
 });
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: jest.fn() }));

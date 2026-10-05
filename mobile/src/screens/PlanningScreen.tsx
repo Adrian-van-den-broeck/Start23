@@ -62,7 +62,7 @@ import { Button as V2Button } from '../ui-v2/primitives/Button';
 import { WeekScreen } from '../ui-v2/screens/WeekScreen';
 import { CalendarScreen } from '../ui-v2/screens/CalendarScreen';
 import { calendarViewModel } from '../ui-v2/utils/calendarViewModel';
-import { useCalendarNavigation, type CalendarNavigation } from '../features/calendar/useCalendarNavigation';
+import { type CalendarNavigation } from '../features/calendar/useCalendarNavigation';
 import { weekHomeViewModel, type WeekAction } from '../ui-v2/utils/weekHomeViewModel';
 import { UiVersionControl } from '../ui/UiVersionControl';
 import { useLanguage } from '../i18n/LanguageProvider';
@@ -72,6 +72,8 @@ import { createDeferredDismissAction } from '../lib/navigation';
 import { colors, radius, shadows, spacing } from '../theme/tokens';
 import { addDays, isoDate } from '../features/planning/planningDates';
 import { PlanningFlowProvider, usePlanningFlow, usePlanningCalendar } from '../features/planning/PlanningFlowProvider';
+
+import { PlanningPresentationProvider, usePlanningPresentation } from '../navigation/PlanningPresentationProvider';
 
 type PlanningScreenProps = {
   accessToken: string;
@@ -380,6 +382,7 @@ function SwipeDraftPanel({
   const swipeAnimation = useRef<Animated.CompositeAnimation | null>(null);
   const animatingSwipe = useRef(false);
   const [swipeInFlight, setSwipeInFlight] = useState(false);
+  const { setTransientBusy } = usePlanningPresentation();
   const useNativeDriver = Platform.OS !== 'web';
 
   const resetSwipePosition = useCallback(
@@ -416,6 +419,7 @@ function SwipeDraftPanel({
       );
 
       animatingSwipe.current = true;
+      setTransientBusy(true);
       setSwipeInFlight(true);
       swipeAnimation.current?.stop();
       const animation = Animated.timing(swipePosition, {
@@ -433,12 +437,14 @@ function SwipeDraftPanel({
         if (!finished) {
           animatingSwipe.current = false;
           setSwipeInFlight(false);
+          setTransientBusy(false);
           return;
         }
         onTransition(action);
+        setTransientBusy(false);
       });
     },
-    [busy, candidate, onTransition, swipePosition, useNativeDriver, windowWidth],
+    [busy, candidate, onTransition, swipePosition, useNativeDriver, windowWidth, setTransientBusy],
   );
 
   useEffect(() => {
@@ -458,8 +464,9 @@ function SwipeDraftPanel({
   useEffect(
     () => () => {
       swipeAnimation.current?.stop();
+      setTransientBusy(false);
     },
-    [],
+    [setTransientBusy],
   );
 
   const panResponder = useMemo(
@@ -781,68 +788,69 @@ function SwipeDraftPanel({
 export function PlanningScreen({ accessToken, athleteIdentity, ...presentation }: PlanningScreenProps) {
   return (
     <PlanningFlowProvider accessToken={accessToken} athleteIdentity={athleteIdentity}>
-      <PlanningBoundary {...presentation} />
+      <PlanningPresentationProvider><PlanningBoundary {...presentation} /></PlanningPresentationProvider>
     </PlanningFlowProvider>
   );
 }
 
 // Presentation host remains inside the one provider across root/task/detail switches.
-function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' | 'athleteIdentity'>) {
+export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' | 'athleteIdentity'> & { destination?: 'week' | 'calendar'; active?: boolean; onCalendarRoot?: () => void; onWeekRoot?: () => void; }) {
   const flow = usePlanningFlow();
   const calendar = usePlanningCalendar();
   const { effectiveVersion, requested } = useUiVersion();
   const { t } = useLanguage();
-  const [rootVersion, setRootVersion] = useState(() => effectiveVersion('week'));
-  const [calendarVersion, setCalendarVersion] = useState(() => effectiveVersion('calendar'));
+  const { rootVersion, setRootVersion, calendarVersion, setCalendarVersion, task, setTask,
+    detailWorkout, setDetailWorkout, weekScroll, calendarPositions, calendarNavigation, locked,
+    sheetOpen, setCalendarVisited } = usePlanningPresentation();
+  const active = props.active ?? true;
   const previousRequest = useRef(requested);
-  const [task, setTask] = useState<'prepare' | 'existing' | null>(null);
-  const [detailWorkout, setDetailWorkout] = useState<PlannedWorkout | null>(null);
-  const weekScroll = useRef(0);
-  const calendarOpen = flow.view === 'calendar' && (rootVersion === 'v1' || task === 'existing');
-  const calendarNavigation = useCalendarNavigation(flow.plan?.week_start ?? flow.weekStart, calendarOpen);
+  const calendarOpen = props.destination === 'calendar' ||
+    (flow.view === 'calendar' && (rootVersion === 'v1' || task === 'existing'));
   const { fromDate, toDate } = calendarNavigation.range;
-  const { loadCalendarRange } = calendar;
+  const { loadCalendarRange, ensureCalendarRange } = calendar;
+  useEffect(() => {
+    if (active && calendarOpen) setCalendarVisited(true);
+  }, [active, calendarOpen, setCalendarVisited]);
   // One range effect above both presentations; neither Calendar view fetches.
   useEffect(() => {
-    if (calendarOpen) loadCalendarRange(fromDate, toDate);
-  }, [calendarOpen, fromDate, toDate, loadCalendarRange]);
-  const calendarPositions = useRef<Record<string, number>>({});
+    if (active && calendarOpen) ensureCalendarRange(fromDate, toDate);
+  }, [active, calendarOpen, fromDate, toDate, ensureCalendarRange]);
   const calendarScrollKey = `${calendarVersion}:${calendarNavigation.mode}:${fromDate}:${toDate}`;
   const calendarScrollProps: ScrollViewProps = {
     contentOffset: { x: 0, y: calendarPositions.current[calendarScrollKey] ?? 0 }, scrollEventThrottle: 16,
     onScroll: (event) => { calendarPositions.current[calendarScrollKey] = event.nativeEvent.contentOffset.y; },
   };
-  const locked = flow.busy || !!flow.pendingMove || Object.values(flow.pendingWorkouts.editors).some((slot) => slot.loading);
   // Detail comparison changes the preference, while its origin stays put.
   useEffect(() => {
-    if (previousRequest.current !== requested && !detailWorkout && !locked) {
-      if (calendarOpen) setCalendarVersion(effectiveVersion('calendar'));
+    if (active && previousRequest.current !== requested && !detailWorkout && !locked && !sheetOpen) {
+      if (calendarOpen) { setCalendarVersion(effectiveVersion('calendar')); if (props.destination && !task) setRootVersion(effectiveVersion('week')); }
       else if (!task) setRootVersion(effectiveVersion('week'));
     }
     previousRequest.current = requested;
-  }, [requested, effectiveVersion, task, detailWorkout, locked, calendarOpen]);
+  }, [requested, effectiveVersion, task, detailWorkout, locked, calendarOpen, active, sheetOpen, props.destination, setCalendarVersion, setRootVersion]);
   useEffect(() => {
     if (task === 'prepare' && flow.view === 'deck') setTask('existing');
   }, [task, flow.view]);
-  const returnToWeek = () => { if (!locked) { setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); } };
+  const returnToWeek = () => { if (!locked) { setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); if (props.destination === 'calendar') props.onWeekRoot?.(); } };
   useEffect(() => {
-    if (!task && !calendarOpen) return;
+    if (!active || sheetOpen || (!locked && !task && !calendarOpen) || (!locked && props.destination === 'calendar' && !task)) return;
     const handler = BackHandler.addEventListener('hardwareBackPress', () => {
       if (!locked) { setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); }
       return true;
     });
     return () => handler.remove();
-  }, [task, locked, calendarOpen, rootVersion, flow.setView]);
+  }, [task, locked, calendarOpen, rootVersion, flow.setView, active, props.destination, setTask, sheetOpen]);
   const action = (kind: WeekAction) => {
     if (locked) return;
+    if (kind === 'calendar' && props.onCalendarRoot) { props.onCalendarRoot(); return; }
     if (kind === 'draft' || (kind === 'prepare' && flow.swipeDraft)) flow.openDeck();
     else if (kind === 'calendar') { setCalendarVersion(effectiveVersion('calendar')); flow.openCalendar(); }
     else flow.setView('plan');
     setTask(kind === 'prepare' && !flow.swipeDraft ? 'prepare' : 'existing');
   };
-  const controls = <UiVersionControl disabled={locked} onSelect={(version) => {
+  const controls = <UiVersionControl disabled={locked || sheetOpen} onSelect={(version) => {
     if (!locked && !detailWorkout) {
-      if (calendarOpen) setCalendarVersion(effectiveUiVersion(__DEV__, version, 'calendar'));
+      if (calendarOpen) { setCalendarVersion(effectiveUiVersion(__DEV__, version, 'calendar')); if (props.destination && !task) { if (version === 'v1') flow.openCalendar(); setRootVersion(effectiveUiVersion(__DEV__, version, 'week')); } }
       else if (!task) {
         setRootVersion(effectiveUiVersion(__DEV__, version, 'week'));
         setCalendarVersion(effectiveUiVersion(__DEV__, version, 'calendar'));
@@ -861,6 +869,7 @@ function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' | 'athl
     plan: flow.plan, activePlan: flow.activePlan, draft: flow.swipeDraft,
     today, resumeState: flow.resumeState, activeReadState: flow.activeReadState
   });
+  if (!active) return null;
   return <View style={{ flex: 1 }}>
     {calendarOpen && calendarVersion === 'v2' ? <CalendarScreen
       model={calendarViewModel({
@@ -871,6 +880,7 @@ function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' | 'athl
       mode={calendarNavigation.mode} anchor={calendarNavigation.anchor} loading={calendar.calendarLoading} error={flow.error}
       onModeChange={calendarNavigation.changeMode} onMove={calendarNavigation.move} onToday={calendarNavigation.goToday}
       onSelectDate={calendarNavigation.selectDate} onRetry={() => loadCalendarRange(fromDate, toDate)} onBack={returnToWeek}
+      onProfile={props.destination === 'calendar' ? props.onOpenProfile : undefined}
       onOpenWorkout={(id) => { const workout = calendar.calendarWorkouts.find((item) => item.id === id); if (workout) setDetailWorkout(workout); }}
       controls={controls} scrollProps={calendarScrollProps} />
       : rootVersion === 'v2' && !task ? <WeekScreen model={model} error={flow.error} busy={locked}
@@ -886,7 +896,7 @@ function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' | 'athl
         }} />
         : <PlanningPresentation {...props} onOpenWorkout={setDetailWorkout}
           calendarNavigation={calendarNavigation} calendarScrollProps={calendarOpen ? calendarScrollProps : undefined}
-          onOpenCalendar={() => { setCalendarVersion(effectiveVersion('calendar')); flow.openCalendar(); }}
+          onOpenCalendar={() => { if (props.onCalendarRoot && rootVersion === 'v2') { props.onCalendarRoot(); return; } setCalendarVersion(effectiveVersion('calendar')); flow.openCalendar(); }}
           prepareWeek={task === 'prepare'} versionControl={controls}
           taskBack={rootVersion === 'v2' && task ? <V2Button variant="tertiary" label={t('week.return')} disabled={locked} onPress={returnToWeek} /> : null} />}
     <WorkoutDetailBoundary workout={detailWorkout} onClose={() => setDetailWorkout(null)} />
@@ -915,9 +925,17 @@ function PlanningPresentation({
 }) {
   const { locale, t } = useLanguage();
   const safeAreaInsets = useSafeAreaInsets();
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const { sheetOpen: profileMenuOpen, setSheetOpen: setProfileMenuOpen } = usePlanningPresentation();
   const profileSheetRef = useRef<BottomSheetModal>(null);
   const profileSheetNavigationRef = useRef(createDeferredDismissAction());
+  useEffect(() => {
+    if (!profileMenuOpen) return;
+    const handler = BackHandler.addEventListener('hardwareBackPress', () => {
+      profileSheetRef.current?.dismiss();
+      return true;
+    });
+    return () => handler.remove();
+  }, [profileMenuOpen]);
   const {
     view, setView, weekStart, setWeekStart, reusePreviousWeek, setReusePreviousWeek,
     selectedDays, injuries, crossTrainingOptIns, plan, swipeDraft, pendingMove,
@@ -956,6 +974,7 @@ function PlanningPresentation({
       profileSheetRef.current?.dismiss();
       return;
     }
+    setProfileMenuOpen(true);
     profileSheetRef.current?.present();
   };
 
