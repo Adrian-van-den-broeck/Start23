@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { getCalendar } from '../../api/client';
 import type { PlannedWorkout, RestDay } from '../../api/types';
+import type { CalendarRange } from './calendarDates';
 
 export function useCalendarController(
   accessToken: string,
@@ -10,6 +11,7 @@ export function useCalendarController(
   const [calendarWorkouts, setCalendarWorkouts] = useState<PlannedWorkout[]>([]);
   const [calendarRestDays, setCalendarRestDays] = useState<RestDay[]>([]);
   const [calendarLoading, setCalendarLoading] = useState(false);
+  const [calendarRange, setCalendarRange] = useState<CalendarRange | null>(null);
   const calendarRequestRef = useRef(0);
 
   const loadCalendarRange = useCallback(
@@ -22,6 +24,7 @@ export function useCalendarController(
           if (requestNumber !== calendarRequestRef.current) return;
           setCalendarWorkouts(result.workouts);
           setCalendarRestDays(result.rest_days);
+          setCalendarRange({ fromDate: result.from_date, toDate: result.to_date });
         })
         .catch((caught) => {
           if (requestNumber !== calendarRequestRef.current) return;
@@ -40,5 +43,5 @@ export function useCalendarController(
     [accessToken, language, setError],
   );
 
-  return { calendarWorkouts, calendarRestDays, calendarLoading, loadCalendarRange };
+  return { calendarWorkouts, calendarRestDays, calendarLoading, calendarRange, loadCalendarRange };
 }

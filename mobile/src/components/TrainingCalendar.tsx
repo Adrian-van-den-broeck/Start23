@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import type { PlannedWorkout, RestDay } from '../api/types';
@@ -6,8 +6,11 @@ import { useLanguage } from '../i18n/LanguageProvider';
 import { colors, radius, spacing } from '../theme/tokens';
 import { MotionPressable as Pressable } from './MotionPressable';
 import { StatusPill } from './StatusPill';
+import { parseCalendarDate as parseDate } from '../features/calendar/calendarDates';
+import { isoDate } from '../features/planning/planningDates';
+import { useCalendarNavigation, type CalendarNavigation } from '../features/calendar/useCalendarNavigation';
 
-export type CalendarMode = 'week' | 'month';
+export type { CalendarMode } from '../features/calendar/calendarDates';
 
 type TrainingCalendarProps = {
   initialDate: string;
@@ -16,60 +19,33 @@ type TrainingCalendarProps = {
   onOpenWorkout: (workout: PlannedWorkout) => void;
   restDays: RestDay[];
   workouts: PlannedWorkout[];
+  navigation?: CalendarNavigation;
 };
 
 const mondayFirstWeekdayIndexes = [1, 2, 3, 4, 5, 6, 0] as const;
 
-function parseDate(value: string): Date {
-  return new Date(`${value}T12:00:00`);
+export function TrainingCalendar(props: TrainingCalendarProps) {
+  return props.navigation ? <TrainingCalendarBody {...props} navigation={props.navigation} /> : <StandaloneCalendar {...props} />;
 }
 
-function isoDate(value: Date): string {
-  const year = value.getFullYear();
-  const month = String(value.getMonth() + 1).padStart(2, '0');
-  const day = String(value.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+function StandaloneCalendar(props: TrainingCalendarProps) {
+  const navigation = useCalendarNavigation(props.initialDate);
+  const { fromDate, toDate } = navigation.range;
+  useEffect(() => { props.onRangeChange(fromDate, toDate); }, [fromDate, toDate, props.onRangeChange]);
+  return <TrainingCalendarBody {...props} navigation={navigation} />;
 }
 
-function addDays(value: Date, amount: number): Date {
-  const result = new Date(value);
-  result.setDate(result.getDate() + amount);
-  return result;
-}
-
-function startOfWeek(value: Date): Date {
-  const result = new Date(value);
-  const weekday = result.getDay() || 7;
-  result.setDate(result.getDate() - weekday + 1);
-  return result;
-}
-
-function visibleDates(anchor: Date, mode: CalendarMode): Date[] {
-  if (mode === 'week') {
-    const start = startOfWeek(anchor);
-    return Array.from({ length: 7 }, (_, index) => addDays(start, index));
-  }
-  const firstOfMonth = new Date(anchor.getFullYear(), anchor.getMonth(), 1, 12);
-  const gridStart = startOfWeek(firstOfMonth);
-  const lastOfMonth = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0, 12);
-  const gridEnd = addDays(startOfWeek(lastOfMonth), 6);
-  const dayCount = Math.round((gridEnd.getTime() - gridStart.getTime()) / 86_400_000) + 1;
-  return Array.from({ length: dayCount }, (_, index) => addDays(gridStart, index));
-}
-
-export function TrainingCalendar({
-  initialDate,
+function TrainingCalendarBody({
   loading,
-  onRangeChange,
   onOpenWorkout,
   restDays,
   workouts,
-}: TrainingCalendarProps) {
+  navigation,
+}: TrainingCalendarProps & { navigation: CalendarNavigation; }) {
   const { locale, t } = useLanguage();
-  const [mode, setMode] = useState<CalendarMode>('week');
-  const [anchor, setAnchor] = useState(() => parseDate(initialDate));
-  const [selectedDate, setSelectedDate] = useState(initialDate);
-  const dates = useMemo(() => visibleDates(anchor, mode), [anchor, mode]);
+  const { mode, selectedDate, selectDate: setSelectedDate, move, goToday, changeMode } = navigation;
+  const anchor = parseDate(navigation.anchor);
+  const dates = navigation.dates.map(parseDate);
   const today = isoDate(new Date());
 
   const workoutsByDate = useMemo(() => {
@@ -86,33 +62,6 @@ export function TrainingCalendar({
     () => new Map(restDays.map((restDay) => [restDay.date, restDay])),
     [restDays],
   );
-
-  useEffect(() => {
-    const first = dates[0];
-    const last = dates[dates.length - 1];
-    // Calendar API ranges use an exclusive end date, so include the final
-    // visible Sunday by requesting the following day as the upper bound.
-    if (first && last) onRangeChange(isoDate(first), isoDate(addDays(last, 1)));
-  }, [dates, onRangeChange]);
-
-  const move = (direction: -1 | 1) => {
-    const next = new Date(anchor);
-    if (mode === 'week') next.setDate(next.getDate() + direction * 7);
-    else next.setMonth(next.getMonth() + direction, 1);
-    setAnchor(next);
-    setSelectedDate(isoDate(next));
-  };
-
-  const goToday = () => {
-    const now = new Date();
-    setAnchor(now);
-    setSelectedDate(isoDate(now));
-  };
-
-  const changeMode = (nextMode: CalendarMode) => {
-    setMode(nextMode);
-    setSelectedDate(isoDate(anchor));
-  };
 
   const periodLabel =
     mode === 'month'
@@ -143,8 +92,8 @@ export function TrainingCalendar({
                 <Text style={styles.eventMeta}>
                   {workout.duration_minutes !== null
                     ? t('common.durationMinutes', {
-                        minutes: Number(workout.duration_minutes),
-                      })
+                      minutes: Number(workout.duration_minutes),
+                    })
                     : `${workout.distance_meters?.toLocaleString(locale)} m · afstandgestuurd`}
                 </Text>
               ) : null}
