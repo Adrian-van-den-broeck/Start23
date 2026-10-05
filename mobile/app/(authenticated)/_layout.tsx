@@ -2,6 +2,7 @@ import { BlurView } from 'expo-blur';
 import { Redirect, Stack, usePathname, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { listActivities } from '@/api/client';
 import { useAuth } from '@/auth/AuthProvider';
@@ -39,21 +40,23 @@ export default function AuthenticatedLayout() {
   return (
     <View style={styles.shell}>
       {pendingRpeCount > 0 ? (
-        <MotionPressable
-          accessibilityRole="button"
-          haptic="selection"
-          onPress={() => router.push('/activities')}
-        >
-          <BlurView intensity={55} style={styles.reminder} tint="light">
-            <Text style={styles.reminderText}>
-              {t('rpe.reminder', {
-                count: pendingRpeCount,
-                suffix: pendingRpeCount === 1 ? '' : language === 'nl' ? 'en' : 's',
-                verbSuffix: pendingRpeCount === 1 ? '' : 'en',
-              })}
-            </Text>
-          </BlurView>
-        </MotionPressable>
+        <SafeAreaView edges={['top']}>
+          <MotionPressable
+            accessibilityRole="button"
+            haptic="selection"
+            onPress={() => router.push('/activities')}
+          >
+            <BlurView intensity={55} style={styles.reminder} tint="light">
+              <Text style={styles.reminderText}>
+                {t('rpe.reminder', {
+                  count: pendingRpeCount,
+                  suffix: pendingRpeCount === 1 ? '' : language === 'nl' ? 'en' : 's',
+                  verbSuffix: pendingRpeCount === 1 ? '' : 'en',
+                })}
+              </Text>
+            </BlurView>
+          </MotionPressable>
+        </SafeAreaView>
       ) : null}
       <Stack
         screenOptions={{
