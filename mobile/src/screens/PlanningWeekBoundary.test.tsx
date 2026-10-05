@@ -158,3 +158,19 @@ test('V1 Calendar entry has one range effect and detail comparison retains V2 We
   await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
   expect(view.getByTestId('week-home-scroll').props.contentOffset.y).toBe(123);
 });
+
+test('goal entry preserves the existing V1 explicit achievement confirmation surface without writing', async () => {
+  restore('plan'); jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
+  jest.mocked(api.getOnboarding).mockResolvedValue({ ...onboarding, primary_goal: {
+    id: 'goal-a', race_type: 'run', race_name: 'Known race', race_date: '2027-04-11',
+    swim_distance_meters: null, bike_distance_meters: null, run_distance_meters: 10000,
+    total_target_time_seconds: 3600, swim_target_time_seconds: null, bike_target_time_seconds: null,
+    run_target_time_seconds: null, specific_focus: null, priority: 'A', goal_type: 'race',
+    status: 'active', revision: 1, created_at: '2026-10-05T00:00:00Z', updated_at: '2026-10-05T00:00:00Z',
+  } });
+  const view = await render(presentation());
+  await fireEvent.press(await view.findByRole('button', { name: 'Goal · Known race' }));
+  await view.findByRole('button', { name: 'Markeer “Known race” als behaald' });
+  expect(api.markGoalAchieved).not.toHaveBeenCalled();
+  expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
+});

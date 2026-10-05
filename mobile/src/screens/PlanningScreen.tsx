@@ -55,6 +55,7 @@ import { StatusPill } from '../components/StatusPill';
 import { TrainingCalendar } from '../components/TrainingCalendar';
 import { WeekSchedule } from '../components/WeekSchedule';
 import { WorkoutDetailBoundary } from '../ui/WorkoutDetailBoundary';
+import { effectiveUiVersion } from '../ui/uiVersion';
 import { useUiVersion } from '../ui/UiVersionProvider';
 import { Button as V2Button } from '../ui-v2/primitives/Button';
 import { WeekScreen } from '../ui-v2/screens/WeekScreen';
@@ -817,7 +818,7 @@ function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' | 'athl
     setTask(kind === 'prepare' && !flow.swipeDraft ? 'prepare' : 'existing');
   };
   const controls = <UiVersionControl disabled={locked} onSelect={(version) => {
-    if (!locked && !detailWorkout && !task) setRootVersion(__DEV__ ? version : 'v1');
+    if (!locked && !detailWorkout && !task) setRootVersion(effectiveUiVersion(__DEV__, version, 'week'));
   }} />;
   // Date-only planning uses local noon. Actual "today" follows the loaded plan's
   // confirmed timezone; without a plan, retain the existing device-date convention.
@@ -836,7 +837,7 @@ function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' | 'athl
         if (workout) setDetailWorkout(workout);
       }} onProfile={props.onOpenProfile} onActivities={props.onOpenActivities}
       onCheckIn={props.onOpenCheckIn} onZones={() => props.onOpenZoneProfile(flow.plan?.id, flow.plan?.active_revision ?? undefined)}
-      goalName={flow.primaryGoal?.race_name ?? null} onGoal={props.onOpenProfile}
+      goalName={flow.primaryGoal?.race_name ?? null} onGoal={() => action('planning')}
       controls={controls} scrollProps={{ contentOffset: { x: 0, y: weekScroll.current }, scrollEventThrottle: 16,
         onScroll: (event) => { weekScroll.current = event.nativeEvent.contentOffset.y; } }} />
       : <PlanningPresentation {...props} onOpenWorkout={setDetailWorkout}
