@@ -37,4 +37,3 @@ export function suggestedWorkout(
     .sort((left, right) => left.difference - right.difference);
   return candidates[0]?.workout ?? null;
 }
-

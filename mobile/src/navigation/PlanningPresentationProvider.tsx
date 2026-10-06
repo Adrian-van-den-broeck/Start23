@@ -18,6 +18,9 @@ function usePresentationOwner() {
   const [detailWorkout, setDetailWorkout] = useState<PlannedWorkout | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [calendarVisited, setCalendarVisited] = useState(false);
+  // Activity task navigation only; all draft/feedback data remain in ActivityFlowProvider.
+  const [activityView, setActivityView] = useState<'history' | 'entry' | 'feedback'>('history');
+  const [activityCorrectionId, setActivityCorrectionId] = useState<string | null>(null);
   const [activityBusy, setActivityBusy] = useState(false);
   const [transientBusy, setTransientBusy] = useState(false);
   const weekScroll = useRef(0);
@@ -30,7 +33,7 @@ function usePresentationOwner() {
     moveWorkoutId, setMoveWorkoutId,
     creationStep, setCreationStep, placementMode, setPlacementMode,
     detailWorkout, setDetailWorkout, sheetOpen, setSheetOpen, weekScroll, calendarPositions,
-    calendarNavigation, setCalendarVisited, activityBusy, setActivityBusy, setTransientBusy,
+    calendarNavigation, setCalendarVisited, activityView, setActivityView, activityCorrectionId, setActivityCorrectionId, activityBusy, setActivityBusy, setTransientBusy,
     locked, navigationLocked: locked || activityBusy || !!task || !!detailWorkout || sheetOpen
   };
 }

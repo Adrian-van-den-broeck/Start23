@@ -52,7 +52,7 @@ function PendingRpeReminder({ accessToken }: { accessToken: string; }) {
         accessibilityRole="button"
         haptic="selection"
         disabled={presentation?.navigationLocked}
-        onPress={() => { if (presentation?.rootVersion === 'v2') router.navigate('/activities'); else router.push('/activities'); }}
+        onPress={() => { if (presentation?.rootVersion === 'v2') { presentation.setActivityView('feedback'); presentation.setActivityCorrectionId(null); router.navigate('/activities'); } else router.push('/activities'); }}
       >
         <BlurView intensity={55} style={styles.reminder} tint="light">
           <Text style={styles.reminderText}>
