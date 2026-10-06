@@ -118,13 +118,110 @@ beforeEach(() => {
   mockAuth.session = { access_token: 'token-a', user: { id: 'athlete-a' } };
   for (const method of Object.values(api).filter(jest.isMockFunction)) method.mockReset();
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.latest-plan-id' ? activePlan.id : null);
-  jest.mocked(api.getOnboarding).mockResolvedValue({ ...onboarding, current_step: 'completed' });
+  jest.mocked(api.getOnboarding).mockResolvedValue({ ...onboarding, ...activityOnboarding, current_step: 'completed' });
   jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
   jest.mocked(api.listActivities).mockResolvedValue([]);
   jest.mocked(api.listPlannedExternalActivities).mockResolvedValue([]);
   jest.mocked(api.getCalendar).mockImplementation(async (_token, from, to) => ({ from_date: from, to_date: to, workouts: [workout], rest_days: [] }));
 });
 afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.useRealTimers(); jest.restoreAllMocks(); });
+
+test('Slice 5B real create pending reminder return and feedback retain one owner and exact identity across roots', async () => {
+  let activities: typeof pendingActivity[] = [];
+  jest.mocked(api.listActivities).mockImplementation(async (_token, pending) => pending ? activities.filter(activity => activity.processing_state === 'awaiting_rpe') : activities);
+  jest.mocked(api.createActivity).mockImplementation(async () => { activities = [pendingActivity]; return pendingActivity; });
+  jest.mocked(api.submitActivityRpeWithRefresh).mockImplementation(async (_token, activity, rpe) => {
+    const updated = { ...activity, rpe, processing_state: 'complete' as const, qualitative_result: 'unplanned' as const };
+    activities = [updated]; return updated;
+  });
+  const view = await renderRouter(routes, { initialUrl: '/planning' }); await view.findByText('Approved');
+  const planningOwner = flow.setWeekStart, calendarOwner = calendar.loadCalendarRange, activityOwner = activityFlow.ensureActivitiesLoaded;
+  await fireEvent.press(view.getByRole('tab', { name: 'Activities' })); await view.findByText('No activities recorded yet.');
+  await fireEvent.press(view.getByRole('button', { name: 'Add activity' }));
+  await fireEvent.changeText(view.getByLabelText('Distance (metres, optional)'), '5000');
+  await fireEvent.press(view.getByRole('button', { name: 'Save activity' })); await view.findByText('Activity feedback');
+  await fireEvent.changeText(view.getByLabelText('Average heart rate (bpm)'), '151');
+  const reads = jest.mocked(api.listActivities).mock.calls.filter(call => !call[1]).length;
+  for (const destination of ['Week', 'Calendar', 'Activities']) {
+    await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: destination }));
+    expect(activityFlow.feedbackActivity?.id).toBe(pendingActivity.id);
+  }
+  expect(view.getByLabelText('Average heart rate (bpm)').props.value).toBe('151');
+  await fireEvent.press(view.getByRole('button', { name: 'Back to Activities' }));
+  expect(view.getByRole('button', { name: 'Add activity' })).toBeDisabled();
+  await fireEvent.press(view.getByRole('tab', { name: 'Week' }));
+  const reminder = '1 workout waiting for RPE · open Training & RPE';
+  expect(view.getAllByText(reminder)).toHaveLength(1); await fireEvent.press(view.getByText(reminder)); await view.findByText('Activity feedback');
+  expect(activityFlow.feedbackActivity?.id).toBe(pendingActivity.id);
+  expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(reads);
+  await fireEvent.press(view.getByRole('radio', { name: 'Save RPE · Focus nodig, praten in zinnen. (RPE 4)' })); await view.findByTestId('v2-activities');
+  expect(view.queryByText(reminder)).toBeNull(); expect(api.createActivity).toHaveBeenCalledTimes(1); expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
+  expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledWith('token-a', pendingActivity, 4, 151);
+  expect(activityFlow.ensureActivitiesLoaded).toBe(activityOwner); expect(flow.setWeekStart).toBe(planningOwner); expect(calendar.loadCalendarRange).toBe(calendarOwner);
+});
+
+test('Slice 5B V1 V2 navigator replacement from Activities retains task draft and pending HR without history reread', async () => {
+  jest.mocked(api.listActivities).mockResolvedValue([pendingActivity]);
+  const view = await renderRouter(routes, { initialUrl: '/activities' }); await view.findByTestId('activity-pending');
+  const owner = activityFlow.ensureActivitiesLoaded;
+  await fireEvent.press(view.getByRole('button', { name: 'Complete feedback' })); await fireEvent.changeText(view.getByLabelText('Average heart rate (bpm)'), '149');
+  await act(() => activityFlow.setDistance('6789'));
+  const reads = jest.mocked(api.listActivities).mock.calls.filter(call => !call[1]).length;
+  await fireEvent.press(view.getByRole('button', { name: 'UI V1' })); await view.findByText('Existing V1 Activities');
+  expect(view.getByTestId('path').props.children).toBe('/activities'); expect(activityFlow.ensureActivitiesLoaded).toBe(owner);
+  await fireEvent.press(view.getByRole('button', { name: 'UI V2' })); await view.findByText('Activity feedback');
+  expect(view.getByLabelText('Average heart rate (bpm)').props.value).toBe('149'); expect(activityFlow.distance).toBe('6789');
+  expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(reads);
+  expect(api.createActivity).not.toHaveBeenCalled(); expect(api.submitActivityRpeWithRefresh).not.toHaveBeenCalled();
+});
+
+test('Slice 5B create in flight locks roots and version, settles without losing ambiguous attempt identity', async () => {
+  let reject!: (error: Error) => void;
+  jest.mocked(api.createActivity).mockImplementation(() => new Promise((_resolve, no) => { reject = no; }));
+  const view = await renderRouter(routes, { initialUrl: '/activities' }); await view.findByText('No activities recorded yet.');
+  await fireEvent.press(view.getByRole('button', { name: 'Add activity' }));
+  const save = view.getByRole('button', { name: 'Save activity' }); await fireEvent.press(save); await fireEvent.press(save);
+  expect(view.queryByTestId('training-root-navigation')).toBeNull(); expect(view.getByRole('button', { name: 'UI V1' })).toBeDisabled();
+  expect(view.getByRole('button', { name: 'Back to Activities' })).toBeDisabled(); expect(api.createActivity).toHaveBeenCalledTimes(1);
+  const key = jest.mocked(api.createActivity).mock.calls[0][1];
+  await act(() => reject(new Error('Safe uncertain outcome')));
+  expect(view.getByTestId('training-root-navigation')).toBeTruthy();
+  for (const destination of ['Week', 'Calendar', 'Activities']) await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: destination }));
+  expect(view.getByRole('alert')).toHaveTextContent('Safe uncertain outcome');
+  jest.mocked(api.createActivity).mockRejectedValueOnce(new Error('Safe explicit retry failure'));
+  await fireEvent.press(view.getByRole('button', { name: 'Save activity' })); expect(jest.mocked(api.createActivity).mock.calls[1][1]).toBe(key);
+});
+
+test('Slice 5B sign out then athlete B has no A history, feedback view, RPE or HR draft', async () => {
+  jest.mocked(api.listActivities).mockResolvedValue([pendingActivity]);
+  const view = await renderRouter(routes, { initialUrl: '/activities' }); await view.findByTestId('activity-pending');
+  await fireEvent.press(view.getByRole('button', { name: 'Complete feedback' })); await fireEvent.changeText(view.getByLabelText('Average heart rate (bpm)'), '199');
+  await fireEvent.press(view.getByRole('button', { name: 'Back to Activities' })); await fireEvent.press(view.getByRole('button', { name: 'Profile' }));
+  await fireEvent.press(view.getByRole('button', { name: 'Sign out fixture' })); await view.findByText('Auth destination');
+  jest.mocked(api.listActivities).mockResolvedValue([]);
+  await act(() => { mockAuth.session = { access_token: 'token-b', user: { id: 'athlete-b' } }; mockAuthListeners.forEach(listener => listener()); router.replace('/activities'); });
+  await view.findByText('No activities recorded yet.'); expect(navigation.activityView).toBe('history'); expect(navigation.activityCorrectionId).toBeNull();
+  expect(activityFlow.pendingRpe).toEqual([]); expect(activityFlow.heartRateByActivity).toEqual({}); expect(activityFlow.activities).toEqual([]);
+  expect(view.queryByRole('radio')).toBeNull();
+});
+
+test('Slice 5B unresolved feedback save locks roots/reminder/version and never writes twice', async () => {
+  jest.mocked(api.listActivities).mockResolvedValue([pendingActivity]);
+  let finish!: (activity: typeof pendingActivity) => void;
+  jest.mocked(api.submitActivityRpeWithRefresh).mockImplementation(() => new Promise(resolve => { finish = resolve; }));
+  const view = await renderRouter(routes, { initialUrl: '/activities' }); await view.findByTestId('activity-pending');
+  await fireEvent.press(view.getByRole('button', { name: 'Complete feedback' }));
+  const choice = view.getByRole('radio', { name: 'Save RPE · Focus nodig, praten in zinnen. (RPE 4)' });
+  await fireEvent.press(choice); await fireEvent.press(choice);
+  expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
+  expect(view.queryByTestId('training-root-navigation')).toBeNull(); expect(view.getByRole('button', { name: 'UI V1' })).toBeDisabled();
+  expect(view.getByRole('button', { name: 'Back to Activities' })).toBeDisabled();
+  expect(view.getByRole('button', { name: '1 workout waiting for RPE · open Training & RPE' })).toBeDisabled();
+  const updated = { ...pendingActivity, rpe: 4, processing_state: 'complete' as const };
+  jest.mocked(api.listActivities).mockImplementation(async (_token, pending) => pending ? [] : [updated]);
+  await act(() => finish(updated)); await view.findByTestId('v2-activities');
+  expect(view.getByTestId('training-root-navigation')).toBeTruthy(); expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
+});
 
 test('Slice 5A one Activity owner survives Week Activities Calendar Activities and presentation preference changes', async () => {
   jest.mocked(api.getOnboarding).mockResolvedValue(activityOnboarding);
@@ -182,7 +279,7 @@ test('real JS tabs keep one owner, one restore and loaded Calendar context acros
   await act(() => navigation.calendarNavigation.selectDate('2026-10-07'));
   const anchor = navigation.calendarNavigation.anchor;
   await fireEvent.press(view.getByRole('tab', { name: 'Activities' }));
-  await view.findByText('Existing V1 Activities');
+  await view.findByTestId('v2-activities');
   await fireEvent.press(view.getByRole('tab', { name: 'Week' }));
   await view.findByText('Approved');
   await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
@@ -190,8 +287,8 @@ test('real JS tabs keep one owner, one restore and loaded Calendar context acros
   expect(navigation.calendarNavigation.selectedDate).toBe('2026-10-07');
   expect(navigation.calendarNavigation.anchor).toBe(anchor);
   expect(flow.setWeekStart).toBe(owner); expect(calendar.loadCalendarRange).toBe(reader);
-  expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1); expect(api.getCalendar).toHaveBeenCalledTimes(2);
-  expect(api.getOnboarding).toHaveBeenCalledTimes(1);
+  expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1); expect(api.getCalendar).toHaveBeenCalledTimes(3);
+  expect(api.getOnboarding).toHaveBeenCalledTimes(2);
   expect(api.createSwipeWeekDraft).not.toHaveBeenCalled(); expect(api.transitionSwipeWeekDraft).not.toHaveBeenCalled();
 });
 
@@ -342,7 +439,7 @@ test('approved roots replace tab and stack navigators after all destinations hav
   await waitFor(() => expect(api.getCalendar).toHaveBeenCalledTimes(2));
   await act(() => navigation.calendarNavigation.selectDate('2026-10-07'));
   await fireEvent.press(view.getByRole('tab', { name: 'Activities' }));
-  await view.findByText('Existing V1 Activities');
+  await view.findByTestId('v2-activities');
   await fireEvent.press(view.getByRole('tab', { name: 'Week' }));
   for (let attempt = 0; attempt < 2; attempt++) {
     await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
@@ -360,7 +457,7 @@ test('approved roots replace tab and stack navigators after all destinations hav
   expect(calendar.loadCalendarRange).toBe(calendarOwner);
   expect(flow.plan).toBe(activePlan);
   expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
-  expect(api.getCalendar).toHaveBeenCalledTimes(2);
+  expect(api.getCalendar).toHaveBeenCalledTimes(3);
   expect(api.approvePlanProposal).not.toHaveBeenCalled();
 });
 
@@ -403,11 +500,11 @@ test.each(['/tests', '/calibration'])('legacy direct %s remains a task with safe
   await view.findByText('Approved');
 });
 
-test('direct Activities lazily mounts existing V1 content and root Back settles Week', async () => {
+test('direct Activities lazily mounts V2 history and root Back settles Week', async () => {
   const view = await renderRouter(routes, { initialUrl: '/activities' });
-  await view.findByText('Existing V1 Activities');
-  expect(api.getCalendar).not.toHaveBeenCalled();
-  await fireEvent.press(view.getByRole('button', { name: 'Activity Back' }));
+  await view.findByTestId('v2-activities');
+  expect(api.getCalendar).toHaveBeenCalledTimes(1); // Existing Activity owner's calendar-context read.
+  await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
   await view.findByText('Approved');
   await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
   await fireEvent.press(view.getByRole('tab', { name: 'Activities' }));
@@ -442,13 +539,14 @@ test('requested V1 keeps the original internal Week/Calendar navigation with no 
 });
 
 test('pending RPE has one global reminder and action across root destinations', async () => {
-  jest.mocked(api.listActivities).mockResolvedValue([{}] as Awaited<ReturnType<typeof api.listActivities>>);
+  jest.mocked(api.listActivities).mockResolvedValue([pendingActivity]);
   const view = await renderRouter(routes, { initialUrl: '/planning' });
   await view.findByText('Approved');
   const label = '1 workout waiting for RPE · open Training & RPE';
   expect(view.getAllByText(label)).toHaveLength(1);
   await fireEvent.press(view.getByText(label));
-  await view.findByText('Existing V1 Activities');
+  await view.findByText('Activity feedback');
+  expect(activityFlow.feedbackActivity?.id).toBe(pendingActivity.id);
   expect(view.getAllByText(label)).toHaveLength(1);
 });
 
@@ -466,7 +564,7 @@ test('language switching localizes the same three root destinations', async () =
 });
 
 test.each(['planning write', 'pending move', 'move chooser', 'activity write', 'sheet dismissal'])('%s prevents root navigation and global RPE navigation', async (reason) => {
-  jest.mocked(api.listActivities).mockResolvedValue([{}] as Awaited<ReturnType<typeof api.listActivities>>);
+  jest.mocked(api.listActivities).mockResolvedValue([pendingActivity]);
   const view = await renderRouter(routes, { initialUrl: '/planning' });
   await view.findByText('Approved');
   if (reason === 'planning write') jest.mocked(api.createSwipeWeekDraft).mockImplementation(() => new Promise(() => undefined));
