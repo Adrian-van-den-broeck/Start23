@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-07T20:56:15.087362+00:00",
+  "serial": "emulator-5554",
+  "provenance": "Actual TalkBack enabled public fixture screenshot; focused node established by visual inspection",
+  "hardwareCoordinates": [
+    16384,
+    18000
+  ],
+  "enabledServices": "com.google.android.marvin.talkback/.TalkBackService",
+  "requestedTouchLabel": "Choice 1 \u00b7 RUN-013 \u00b7 Wisselduur \u00b7 Monday 5 October 2026",
+  "requestedTouchBounds": [
+    88,
+    1184,
+    992,
+    1321
+  ],
+  "observedFocusLabel": "Choose dates manually",
+  "observedFocusFullyVisible": true,
+  "dateTouchFocusVerified": false,
+  "review": "PASS for actual mode row focus. Date label, checked state and occurrence identity are separately verified in native XML and callback evidence."
+}

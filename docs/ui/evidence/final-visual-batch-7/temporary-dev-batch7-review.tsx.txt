@@ -1,0 +1,57 @@
+import { Redirect, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { useLanguage } from '../src/i18n/LanguageProvider';
+import { PlacementScreen } from '../src/ui-v2/screens/PlanningCreationScreens';
+import { ProposalReviewScreen, ProposalAlternativesScreen } from '../src/ui-v2/screens/ProposalReviewScreens';
+import { planningCreationViewModel } from '../src/ui-v2/utils/planningCreationViewModel';
+import { proposalReviewViewModel, proposalAlternativesViewModel } from '../src/ui-v2/utils/proposalReviewViewModel';
+import { draft, occurrence, pendingPlan, workout, proposal } from '../src/features/planning/planning.test-fixtures';
+import { colors } from '../src/ui-v2/tokens';
+
+function Review({ state }: { state: string }) {
+  const [action, setAction] = useState('none');
+  const [mode, setMode] = useState<'automatic' | 'manual'>(state === 'automatic' ? 'automatic' : 'manual');
+  const [placements, setPlacements] = useState(state === 'incomplete' ? [{ occurrence_id: occurrence.occurrence_id, scheduled_date: '2026-10-05' }]
+    : ['manual', 'sameDay'].includes(state) ? [occurrence.occurrence_id, 'repeat'].map((id, i) => ({ occurrence_id: id, scheduled_date: state === 'sameDay' || i === 0 ? '2026-10-05' : '2026-10-07' })) : []);
+  const [selectedId, setSelectedId] = useState<string | null>(state === 'selected' ? 'alternative-2' : null);
+  const placement = ['automatic', 'manual', 'incomplete', 'multiple', 'sameDay', 'placementBusy', 'placementStale'].includes(state);
+  const alternatives = ['alternatives', 'selected', 'remove', 'noRemove', 'loading', 'retry', 'emptyAlternatives', 'staleAlternatives', 'distance', 'sparse', 'long'].includes(state);
+  const busy = ['placementBusy', 'reviewBusy', 'loading'].includes(state);
+  const error = ['placementStale', 'stale', 'staleAlternatives', 'retry'].includes(state) ? 'Refresh required: the supplied revision has changed.' : null;
+  const name = state === 'long' ? 'Long exact public source workout name '.repeat(4) : 'RUN-013 · Wisselduur';
+  const description = state === 'long' ? 'Supplied public description with all original instructions. '.repeat(5) : 'START23-catalogustraining voor Halve.';
+  const accepted = [{ ...occurrence, name, description, duration_minutes: '90' }, { ...occurrence, name, description, occurrence_id: 'repeat', duration_minutes: '150' }];
+  const creation = planningCreationViewModel({ ...draft, state: 'placement', current_candidate: null, accepted_workouts: accepted, placements });
+  const plan = { ...pendingPlan, active_revision: ['activePending', 'stale'].includes(state) ? 2 : null,
+    workouts: state === 'emptyReview' ? [] : [{ ...workout, name: state === 'replacement' ? 'RUN-019 · Progressie' : name, description, duration_minutes: state === 'replacement' ? '60' : '90' },
+      { ...workout, id: 'proposed-repeat', name: 'RUN-010 · Duur', description, duration_minutes: '150', scheduled_date: '2026-10-10' }],
+    revision_state: state === 'stale' ? 'expired' as const : 'pending_approval' as const,
+    proposal: { ...proposal, state: state === 'stale' ? 'expired' as const : 'pending' as const } };
+  const model = proposalReviewViewModel(plan);
+  if (state === 'staleAlternatives') model.pending = false;
+  const options = proposalAlternativesViewModel({ plan_id: plan.id, revision: 3, proposal_id: proposal.id, workout_id: workout.id,
+    can_remove: state !== 'noRemove', alternatives: state === 'emptyAlternatives' ? [] : [1, 2, 3].map(i => ({ ...occurrence,
+      id: `alternative-${i}`, name: state === 'long' ? name : `RUN-0${18+i} · ${i === 1 ? 'Progressie' : 'Duur'}`,
+      description: state === 'sparse' ? '' : description, discipline: state === 'distance' ? 'swim' as const : 'run' as const,
+      duration_minutes: ['distance','sparse'].includes(state) ? null : String(45 + i * 15), distance_meters: state === 'distance' ? 2500 : null })) });
+  const task = { busy, error, controls: null, onBack: () => setAction('back') };
+  return <View testID={`batch-7-fixture-${state}`} collapsable={false} style={{ flex: 1, backgroundColor: colors.background }}>
+    <View testID={`batch-7-action-${action}`} collapsable={false} style={{ position: 'absolute', width: 1, height: 1 }} />
+    {placement ? <PlacementScreen {...task} model={creation} mode={mode} onMode={value => { setMode(value); setAction(`mode-${value}`); }}
+      onPlace={(id, date) => { setPlacements([...placements.filter(p => p.occurrence_id !== id), { occurrence_id: id, scheduled_date: date }]); setAction(`place-${id}-${date}`); }}
+      onSubmit={value => setAction(`submit-${value}`)} onSelection={() => setAction('selection')} />
+      : alternatives ? <ProposalAlternativesScreen {...task} model={model} workout={model.workouts[0]}
+        options={['loading','retry'].includes(state) ? null : options} loading={state === 'loading'} selectedId={selectedId}
+        onSelect={id => { setSelectedId(id); setAction(`select-${id}`); }} onReplace={() => setAction(`replace-${selectedId}`)}
+        onRemove={() => setAction('remove')} onRetry={() => setAction('retry')} />
+        : <ProposalReviewScreen {...task} model={model} onEdit={id => setAction(`edit-${id}`)} onApprove={() => setAction('approve')} onReject={() => setAction('reject')} />}
+  </View>;
+}
+export default function DevBatch7Review() {
+  const { state = 'manual', language, review } = useLocalSearchParams<{ state?: string; language?: string; review?: string }>();
+  const { setPreference } = useLanguage();
+  useEffect(() => { void setPreference(language === 'en' ? 'en' : 'nl'); }, [language, setPreference]);
+  if (!__DEV__) return <Redirect href="/" />;
+  return <Review key={review} state={state} />;
+}

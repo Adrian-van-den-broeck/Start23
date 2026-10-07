@@ -1,0 +1,106 @@
+{
+  "publicInertCallbacksOnly": true,
+  "backendWrites": false,
+  "results": [
+    {
+      "case": "interaction-automatic-submit",
+      "exactCallback": "submit-automatic",
+      "pass": true
+    },
+    {
+      "case": "interaction-manual-submit",
+      "exactCallback": "submit-manual",
+      "pass": true
+    },
+    {
+      "case": "interaction-occurrence-date",
+      "exactCallback": "place-repeat-2026-10-05",
+      "pass": true
+    },
+    {
+      "case": "interaction-same-date-submit",
+      "exactCallback": "submit-manual",
+      "pass": true
+    },
+    {
+      "case": "interaction-incomplete-locked",
+      "exactCallback": "none",
+      "pass": true
+    },
+    {
+      "case": "interaction-mode",
+      "exactCallback": "mode-manual",
+      "pass": true
+    },
+    {
+      "case": "interaction-selection-return",
+      "exactCallback": "selection",
+      "pass": true
+    },
+    {
+      "case": "interaction-edit-exact-occurrence",
+      "exactCallback": "edit-proposed-repeat",
+      "pass": true
+    },
+    {
+      "case": "interaction-approve",
+      "exactCallback": "approve",
+      "pass": true
+    },
+    {
+      "case": "interaction-reject",
+      "exactCallback": "reject",
+      "pass": true
+    },
+    {
+      "case": "interaction-select",
+      "exactCallback": "select-alternative-2",
+      "pass": true
+    },
+    {
+      "case": "interaction-replace",
+      "exactCallback": "replace-alternative-2",
+      "pass": true
+    },
+    {
+      "case": "interaction-remove-confirmation",
+      "exactCallback": "none",
+      "pass": true
+    },
+    {
+      "case": "interaction-keep",
+      "exactCallback": "none",
+      "pass": true
+    },
+    {
+      "case": "interaction-explicit-remove",
+      "exactCallback": "remove",
+      "pass": true
+    },
+    {
+      "case": "confirmation-320-font-2-en",
+      "exactCallback": "none",
+      "pass": true
+    },
+    {
+      "case": "interaction-busy-locked",
+      "exactCallback": "none",
+      "pass": true
+    },
+    {
+      "case": "interaction-stale-locked",
+      "exactCallback": "none",
+      "pass": true
+    },
+    {
+      "case": "interaction-retry",
+      "exactCallback": "retry",
+      "pass": true
+    },
+    {
+      "case": "interaction-back",
+      "exactCallback": "back",
+      "pass": true
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+
+> mobile@1.0.0 test
+> jest --runInBand --watch=false --json --outputFile=F:\Projecten Business\Start23\Code\docs\ui\evidence\final-visual-batch-7\full-mobile-tests.json
+
+PASS src/navigation/TrainingNavigation.test.tsx (29.062 s)
+PASS src/screens/PlanningProposalBoundary.test.tsx
+  ● Console
+
+    console.error
+      You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+
+      at popActScope (node_modules/react/cjs/react.development.js:556:17)
+      at node_modules/react/cjs/react.development.js:844:17
+
+    console.error
+      You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+
+      at popActScope (node_modules/react/cjs/react.development.js:556:17)
+      at node_modules/react/cjs/react.development.js:844:17
+
+    console.error
+      You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+
+      at popActScope (node_modules/react/cjs/react.development.js:556:17)
+      at node_modules/react/cjs/react.development.js:844:17
+
+    console.error
+      You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+
+      at popActScope (node_modules/react/cjs/react.development.js:556:17)
+      at node_modules/react/cjs/react.development.js:844:17
+
+    console.error
+      You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+
+      at popActScope (node_modules/react/cjs/react.development.js:556:17)
+      at node_modules/react/cjs/react.development.js:844:17
+
+    console.error
+      You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+
+      at popActScope (node_modules/react/cjs/react.development.js:556:17)
+      at node_modules/react/cjs/react.development.js:844:17
+
+PASS src/screens/PlanningWeekBoundary.test.tsx (5.021 s)
+PASS src/screens/PlanningWorkoutMoveBoundary.test.tsx (5.063 s)
+PASS src/ui-v2/screens/ProposalReviewScreens.test.tsx
+PASS src/screens/PlanningCreationBoundary.test.tsx
+PASS src/ui/ActivityBoundary.test.tsx
+PASS src/ui-v2/screens/WeekScreen.refinement.test.tsx
+PASS src/ui-v2/screens/CalendarScreen.test.tsx
+PASS src/ui-v2/screens/PlanningCreationScreens.test.tsx
+PASS src/screens/OnboardingScreen.test.tsx
+PASS src/screens/PlanningControllerBoundary.test.tsx
+PASS src/ui-v2/screens/ActivitiesScreens.test.tsx
+PASS src/screens/PlanningDetailBoundary.test.tsx
+PASS src/screens/CalibrationScreen.test.tsx
+PASS src/ui-v2/screens/WeekScreen.test.tsx
+PASS src/ui-v2/screens/WorkoutDetailScreen.test.tsx
+PASS src/screens/ActivityScreen.regression.test.tsx
+PASS src/features/planning/PlanningFlowProvider.test.tsx
+PASS src/screens/OnboardingScreen.resume.test.tsx
+PASS src/ui/WorkoutDetailBoundary.test.tsx
+PASS src/ui-v2/screens/WorkoutMoveScreen.test.tsx
+PASS src/ui-v2/components/WorkoutVisuals.test.tsx
+PASS src/ui-v2/components/Shell.test.tsx
+PASS src/ui-v2/primitives/FinalPrimitives.test.tsx
+PASS src/ui-v2/assets/AssetFoundation.test.tsx
+PASS src/components/TrainingCalendar.test.tsx
+PASS src/screens/ZoneSetupStep.test.tsx
+PASS src/components/DurationPicker.test.tsx
+PASS src/screens/ZoneProfileScreen.regression.test.tsx
+PASS src/ui-v2/components/AttentionRow.test.tsx
+PASS src/navigation/AuthenticatedLayout.test.tsx
+PASS src/ui-v2/components/WeekCompositions.test.tsx
+PASS src/features/activities/ActivityFlowProvider.test.tsx
+PASS src/screens/ActivityScreen.test.tsx
+PASS src/components/WeekSchedule.test.tsx
+PASS src/ui-v2/primitives/Button.test.tsx
+PASS src/screens/ProfileScreen.test.tsx
+PASS src/components/WorkoutDetail.test.tsx
+PASS src/ui-v2/components/WeekContext.test.tsx
+PASS src/screens/PioneerAccessScreen.test.tsx
+PASS src/features/calendar/useCalendarController.test.tsx
+PASS src/api/client.test.ts
+PASS src/navigation/RootLayout.test.tsx
+PASS src/screens/PlanningWarnings.test.tsx
+PASS src/components/RpeChoiceList.test.tsx
+PASS src/privacy.test.ts
+PASS src/ui-v2/motion/useMotionPolicy.test.tsx
+PASS src/ui-v2/utils/planningCreationViewModel.test.ts
+PASS src/ui-v2/utils/proposalReviewViewModel.test.ts
+PASS src/ui-v2/tokens/tokens.test.ts
+PASS src/ui-v2/utils/calendarViewModel.test.ts
+PASS src/ui-v2/utils/activityViewModel.test.ts
+PASS src/lib/rpe.test.ts
+PASS src/ui/uiVersion.test.ts
+PASS src/ui-v2/utils/workoutDetailViewModel.test.ts
+PASS src/ui-v2/utils/weekHomeViewModel.test.ts
+PASS src/lib/navigation.test.ts
+PASS src/lib/onboardingForms.test.ts
+PASS src/features/calendar/calendarDates.test.ts
+PASS src/ui-v2/utils/workoutSummaryViewModel.test.ts
+PASS src/lib/runPace.test.ts
+
+Test Suites: 62 passed, 62 total
+Tests:       558 passed, 558 total
+Snapshots:   0 total
+Time:        76.525 s, estimated 79 s
+Ran all test suites.
+Test results written to: ..\..\..\docs\ui\evidence\final-visual-batch-7\full-mobile-tests.json

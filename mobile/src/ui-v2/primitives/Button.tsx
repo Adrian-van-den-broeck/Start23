@@ -9,7 +9,7 @@ type Props = {
   accessibilityLabel?: string;
   accessibilityRole?: AccessibilityRole;
   onPress: () => void | Promise<void>;
-  variant?: 'primary' | 'secondary' | 'outline' | 'tertiary';
+  variant?: 'primary' | 'secondary' | 'outline' | 'tertiary' | 'destructive';
   trailingIcon?: IconName;
   busy?: boolean;
   disabled?: boolean;
@@ -36,7 +36,8 @@ export function Button({ label, accessibilityLabel = label, accessibilityRole = 
       setPending(false);
     }
   }
-  const color = blocked ? colors.text : variant === 'primary' ? colors.textInverse : colors.primary;
+  const solid = variant === 'primary' || variant === 'destructive';
+  const color = blocked ? colors.text : solid ? colors.textInverse : colors.primary;
   return (
     <View>
       <Pressable accessibilityRole={accessibilityRole} accessibilityLabel={accessibilityLabel}
@@ -45,15 +46,15 @@ export function Button({ label, accessibilityLabel = label, accessibilityRole = 
         disabled={blocked} onPress={() => { void press(); }}
         onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)}
         onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
-        style={[styles.button, variant === 'primary' ? styles.primary : variant === 'secondary' ? styles.secondary : variant === 'outline' ? styles.outline : styles.tertiary,
-        pressed && (variant === 'primary' ? states.pressed : states.selected),
+        style={[styles.button, variant === 'primary' ? styles.primary : variant === 'destructive' ? styles.destructive : variant === 'secondary' ? styles.secondary : variant === 'outline' ? styles.outline : styles.tertiary,
+        pressed && (variant === 'destructive' ? { borderColor: colors.textInverse } : variant === 'primary' ? states.pressed : states.selected),
         (accessibilityState?.checked === true || accessibilityState?.selected === true) && { borderColor: colors.focus },
         blocked && styles.disabled]}>
         {isBusy ? <ActivityIndicator accessible={false} color={color} /> : null}
         {(accessibilityState?.checked === true || accessibilityState?.selected === true) ? <Icon name="check" size={20} color={color} /> : null}
         <Text variant="button" accessible={false} importantForAccessibility="no" style={{ color, flexShrink: 1 }}>{label}</Text>
         {trailingIcon ? <Icon name={trailingIcon} color={color} /> : null}
-        {focused ? <View pointerEvents="none" accessible={false} importantForAccessibility="no-hide-descendants" style={[styles.focusRing, { borderColor: variant === 'primary' && !blocked ? colors.textInverse : colors.focus }]} /> : null}
+        {focused ? <View pointerEvents="none" accessible={false} importantForAccessibility="no-hide-descendants" style={[styles.focusRing, { borderColor: solid && !blocked ? colors.textInverse : colors.focus }]} /> : null}
       </Pressable>
       {disabledReason ? <Text variant="supporting">{disabledReason}</Text> : null}
     </View>
@@ -67,6 +68,7 @@ const styles = StyleSheet.create({
     paddingVertical: space[16], flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: space[8]
   },
   primary: { minHeight: layout.primaryButton, backgroundColor: colors.primary },
+  destructive: { minHeight: layout.primaryButton, backgroundColor: colors.destructive },
   secondary: { minHeight: layout.secondaryButton, backgroundColor: colors.secondary },
   outline: { minHeight: layout.secondaryButton, backgroundColor: colors.surface, borderColor: colors.borderControl },
   focusRing: { ...StyleSheet.absoluteFill, margin: layout.focusOutline, borderWidth: layout.focusOutline, borderRadius: radius.button, borderColor: colors.focus },

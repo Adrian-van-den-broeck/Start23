@@ -1,0 +1,11 @@
+{
+  "baselineFiles": 208,
+  "changed": [
+    "mobile\\src\\ui-v2\\primitives\\Button.tsx",
+    "mobile\\src\\ui-v2\\screens\\PlanningCreationScreens.test.tsx",
+    "mobile\\src\\ui-v2\\screens\\PlanningCreationScreens.tsx",
+    "mobile\\src\\ui-v2\\screens\\ProposalReviewScreens.test.tsx",
+    "mobile\\src\\ui-v2\\screens\\ProposalReviewScreens.tsx"
+  ],
+  "protectedUnchanged": 203
+}
