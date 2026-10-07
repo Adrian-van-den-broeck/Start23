@@ -35,13 +35,13 @@ test('synchronous lock suppresses rapid calls until an async handler completes',
   expect(view.getByRole('button').props.accessibilityState.busy).toBe(false);
 });
 
-test('disabled reason, selected/expanded semantics, 52dp primary and unclamped scalable typography', async () => {
+test('disabled reason, selected/expanded semantics, FINAL 56dp primary and unclamped scalable typography', async () => {
   const view = await render(<><Button label="Compare" disabled disabledReason="Reason" onPress={jest.fn()}
     accessibilityState={{ selected: true, expanded: false }} /><Text accessibilityRole="header">Heading</Text></>);
   const button = view.getByRole('button');
   expect(button.props.accessibilityHint).toBe('Reason');
   expect(button.props.accessibilityState).toMatchObject({ selected: true, disabled: true, expanded: false });
-  expect(StyleSheet.flatten(button.props.style).minHeight).toBe(52);
+  expect(StyleSheet.flatten(button.props.style).minHeight).toBe(56);
   const heading = view.getByText('Heading');
   expect(heading.props.allowFontScaling).toBe(true);
   expect(heading.props.maxFontSizeMultiplier).toBeUndefined();

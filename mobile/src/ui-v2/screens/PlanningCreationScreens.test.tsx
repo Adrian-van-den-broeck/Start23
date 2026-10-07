@@ -146,3 +146,36 @@ test('busy placement locks date, mode, submit and navigation actions while keepi
   for (const radio of view.getAllByRole('radio')) expect(radio).toBeDisabled();
   for (const button of view.getAllByRole('button')) expect(button).toBeDisabled();
 });
+
+// Final Batch 6 preserves mechanical inputs and source occurrence data.
+test('one selected day creates once without a locally inferred frequency', async () => {
+  const view = await render(host(<AvailabilityScreen {...availability} selectedDays={new Set([2])} />));
+  await view.findByText('When can you train?');
+  await fireEvent.press(view.getByRole('button', { name: 'Start choosing workouts' }));
+  expect(availability.onCreate).toHaveBeenCalledTimes(1);
+});
+test('distance-only candidate omits invented time and default RPE description', async () => {
+  const view = await render(host(<SelectionScreen {...task} model={planningCreationViewModel({ ...draft,
+    current_candidate: { ...occurrence, duration_minutes: null, distance_meters: 2500, description: 'RPE 2-3' }
+  })} onTransition={jest.fn()} onContinue={jest.fn()} />));
+  await view.findByText('Choose your workouts');
+  const candidate = within(view.getByTestId('selection-candidate'));
+  expect(candidate.getByText('2500 m')).toBeTruthy();
+  expect(candidate.queryByText(/ min$/)).toBeNull();
+  expect(candidate.queryByText('RPE 2-3')).toBeNull();
+});
+test('loading with no candidate keeps source unavailability and all busy locks', async () => {
+  const view = await render(host(<SelectionScreen {...task} busy model={planningCreationViewModel({ ...draft, current_candidate: null })}
+    onTransition={jest.fn()} onContinue={jest.fn()} />));
+  await view.findByText('Saving action\u2026');
+  expect(view.getByTestId('selection-empty')).toBeTruthy();
+  expect(view.queryByTestId('selection-candidate')).toBeNull();
+  for (const button of view.getAllByRole('button')) expect(button).toBeDisabled();
+});
+test('placement-ready selection continues only through the existing callback', async () => {
+  const onContinue = jest.fn();
+  const view = await render(host(<SelectionScreen {...task} model={planningCreationViewModel(placed)} onTransition={jest.fn()} onContinue={onContinue} />));
+  await view.findByText('Choose your workouts');
+  await fireEvent.press(view.getByRole('button', { name: 'Continue to placement' }));
+  expect(onContinue).toHaveBeenCalledTimes(1);
+});

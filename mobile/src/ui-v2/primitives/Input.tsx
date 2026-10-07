@@ -1,25 +1,55 @@
-import { useId } from 'react';
-import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
-import { colors, layout, radius, space } from '../tokens';
+import { useState } from 'react';
+import { StyleSheet, TextInput, useWindowDimensions, View, type TextInputProps } from 'react-native';
+import { colors, layout, radius, space, typography } from '../tokens';
+import { FormField, type FieldDetails } from './FormField';
+import { type IconName } from './Icon';
+import { IconTile } from './IconTile';
 import { Text } from './Text';
 
-export function Input({ label, hint, disabled = false, ...props }: TextInputProps & {
-  label: string; hint?: string; disabled?: boolean;
-}) {
-  const id = useId();
-  return <View style={styles.field}>
-    <Text nativeID={id} variant="label">{label}</Text>
-    <TextInput {...props} accessibilityLabel={label} accessibilityLabelledBy={id}
-      accessibilityHint={hint} accessibilityState={{ disabled }} editable={!disabled}
-      allowFontScaling multiline style={[styles.input, props.style]} />
-    {hint ? <Text variant="supporting" tone="textMuted">{hint}</Text> : null}
-  </View>;
+export type InputProps = TextInputProps & FieldDetails & {
+  disabled?: boolean; readOnly?: boolean; unit?: string; icon?: IconName;
+};
+
+export function Input({ label, hint, error, optionalLabel, disabledReason, disabled = false,
+  readOnly = false, unit, icon, multiline = false, style, onFocus, onBlur, editable = true,
+  accessibilityLabel, accessibilityHint, accessibilityState, ...props }: InputProps) {
+  const [focused, setFocused] = useState(false);
+  const { width, fontScale } = useWindowDimensions();
+  const compact = width < 360 || fontScale >= 1.5;
+  const locked = disabled || readOnly || !editable;
+  const fullLabel = [accessibilityLabel ?? label, optionalLabel, unit].filter(Boolean).join(', ');
+  return <FormField label={compact && unit ? `${label} (${unit})` : label} hint={hint} error={error}
+    optionalLabel={optionalLabel} disabledReason={disabledReason}>
+    {(labelId) => <View style={{ gap: space[8] }}>
+      {icon && compact ? <IconTile name={icon} size="field" /> : null}
+      <View style={[styles.control, locked && styles.locked, error && { borderColor: colors.destructive }]}>
+        {icon && !compact ? <View style={{ paddingLeft: space[12] }}><IconTile name={icon} size="field" /></View> : null}
+        {readOnly ? <Text accessibilityLabel={`${fullLabel}: ${props.value ?? ''}`} style={styles.readOnly}>{props.value}</Text> :
+          <TextInput {...props} style={[styles.input, multiline && styles.multiline, style]}
+            accessibilityLabel={fullLabel} accessibilityLabelledBy={compact && unit ? labelId : undefined}
+            accessibilityHint={[accessibilityHint ?? hint, error, disabledReason].filter(Boolean).join('. ') || undefined}
+            accessibilityState={{ ...accessibilityState, disabled: locked }} editable={!locked}
+            placeholderTextColor={colors.textMuted} allowFontScaling multiline={multiline}
+            onFocus={(event) => { setFocused(true); onFocus?.(event); }}
+            onBlur={(event) => { setFocused(false); onBlur?.(event); }} />}
+        {unit && !compact ? <View style={styles.unit}><Text tone="textMuted">{unit}</Text></View> : null}
+        {focused || error ? <View pointerEvents="none" accessible={false} importantForAccessibility="no-hide-descendants"
+          style={[styles.ring, { borderColor: error ? colors.destructive : colors.focus }]} /> : null}
+      </View>
+    </View>}
+  </FormField>;
 }
 const styles = StyleSheet.create({
-  field: { gap: space[8] },
-  input: {
-    minHeight: layout.primaryButton, color: colors.text, backgroundColor: colors.surface,
-    borderColor: colors.borderControl, borderWidth: layout.focusOutline, borderRadius: radius.control,
-    padding: space[12], fontSize: 16, textAlignVertical: 'top',
-  },
+  control: { minHeight: layout.fieldHeight, flexDirection: 'row', alignItems: 'center',
+    backgroundColor: colors.surface, borderColor: colors.borderControl, borderWidth: layout.controlEdge,
+    borderRadius: radius.control },
+  locked: { backgroundColor: colors.surfaceSubtle },
+  input: { ...typography.body, minHeight: layout.fieldHeight, minWidth: 0, flex: 1,
+    color: colors.text, padding: space[12] },
+  multiline: { minHeight: layout.multilineFieldHeight, textAlignVertical: 'top' },
+  readOnly: { flex: 1, padding: space[12] },
+  unit: { alignSelf: 'stretch', justifyContent: 'center', paddingHorizontal: space[12],
+    borderLeftWidth: layout.controlEdge, borderColor: colors.borderControl, backgroundColor: colors.surfaceSubtle,
+    borderTopRightRadius: radius.control, borderBottomRightRadius: radius.control },
+  ring: { ...StyleSheet.absoluteFill, top: -layout.controlEdge, right: -layout.controlEdge, bottom: -layout.controlEdge, left: -layout.controlEdge, borderRadius: radius.control, borderWidth: layout.focusOutline },
 });

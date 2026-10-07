@@ -1,14 +1,17 @@
 import { Stack, Tabs, usePathname, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { ScreenState } from '../components/ScreenState';
-import { colors } from '../theme/tokens';
+import { BottomNavigation, NavigationFooter } from '../ui-v2/components/BottomNavigation';
+import { ShellInsets } from '../ui-v2/components/ShellInsets';
+import { layout } from '../ui-v2/tokens';
 import { useOptionalPlanningPresentation } from './PlanningPresentationProvider';
 import { TrainingReadiness } from './TrainingFlowHost';
 
 export function TrainingLayout() {
+  const insets = useSafeAreaInsets();
   const presentation = useOptionalPlanningPresentation();
   const { t } = useLanguage();
   const rootVersion = presentation?.rootVersion;
@@ -21,7 +24,7 @@ export function TrainingLayout() {
   // Calendar's accepted V1 fallback still uses Planning's internal Calendar view.
   if (navigatorVersion === rootVersion) activityOrigin.current = pathname === '/activities';
   else if (pathname === '/activities') comparisonDestination.current = 'activities';
-  const [destinationHeight, setDestinationHeight] = useState(56);
+  const [destinationHeight, setDestinationHeight] = useState<number>(layout.bottomNav.minHeight);
   useEffect(() => { setNavigatorVersion(rootVersion); }, [rootVersion]);
   useEffect(() => {
     if (navigatorVersion !== rootVersion) return;
@@ -39,44 +42,30 @@ export function TrainingLayout() {
   // Flow and presentation owners remain above this presentation-only gap.
   if (navigatorVersion !== rootVersion) return <ScreenState loading title={t('shell.readinessLoading')} />;
   if (rootVersion === 'v1') return <Stack key="v1-training" initialRouteName={activityOrigin.current ? 'activities' : 'planning'} screenOptions={{ headerShown: false }} />;
-  return <Tabs key="v2-training" initialRouteName="planning" backBehavior="initialRoute" screenOptions={{
+  return <ShellInsets bottom={!navigationLocked || !!presentation.detailWorkout}><Tabs key="v2-training" initialRouteName="planning" backBehavior="initialRoute" screenOptions={{
     headerShown: false, lazy: true,
   }} screenListeners={{ tabPress: (event) => { if (navigationLocked) event.preventDefault(); } }}
     tabBar={({ state, descriptors, navigation }) => navigationLocked ? (
-      presentation.detailWorkout ? <SafeAreaView testID="training-detail-footprint" edges={['bottom']} style={styles.bar} pointerEvents="none"
-        accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-        <View style={{ height: destinationHeight }} />
-      </SafeAreaView> : null
-    ) : (
-      <SafeAreaView edges={['bottom']} style={styles.bar}>
-        <View testID="training-root-navigation" accessibilityRole="tablist" style={styles.destinations}
-          onLayout={(event) => setDestinationHeight(event.nativeEvent.layout.height)}>
-          {state.routes.map((route, index) => {
-            const selected = state.index === index;
-            const label = descriptors[route.key].options.title ?? route.name;
-            return <Pressable key={route.key} accessible accessibilityRole="tab"
-              accessibilityState={{ selected }} accessibilityLabel={label}
-              style={[styles.destination, selected && styles.selected]}
-              onPress={() => {
-                const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
-                if (!selected && !event.defaultPrevented) navigation.navigate(route.name);
-              }}>
-              <Text accessible={false} style={[styles.label, selected && styles.selectedLabel]}>{label}</Text>
-            </Pressable>;
-          })}
+      presentation.detailWorkout ? <NavigationFooter bottomInset={insets.bottom}>
+        <View testID="training-detail-footprint" pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+          <View style={{ height: destinationHeight }} />
         </View>
-      </SafeAreaView>
+      </NavigationFooter> : null
+    ) : (
+      <NavigationFooter bottomInset={insets.bottom}>
+        <BottomNavigation destinations={state.routes.map((route) => ({ key: route.key,
+          label: descriptors[route.key].options.title ?? route.name,
+          icon: route.name === 'planning' ? 'week' : route.name === 'calendar' ? 'calendar' : 'activities',
+        }))} selectedKey={state.routes[state.index].key} onHeight={setDestinationHeight} onSelect={(key) => {
+          const route = state.routes.find((destination) => destination.key === key);
+          if (!route) return;
+          const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
+          if (state.routes[state.index].key !== key && !event.defaultPrevented) navigation.navigate(route.name);
+        }} />
+      </NavigationFooter>
     )}>
     <Tabs.Screen name="planning" options={{ title: t('shell.week') }} />
     <Tabs.Screen name="calendar" options={{ title: t('shell.calendar') }} />
     <Tabs.Screen name="activities" options={{ title: t('shell.activities') }} />
-  </Tabs>;
+  </Tabs></ShellInsets>;
 }
-const styles = StyleSheet.create({
-  bar: { backgroundColor: colors.canvas, borderTopWidth: 1, borderTopColor: colors.brand },
-  destinations: { flexDirection: 'row' },
-  destination: { flex: 1, minHeight: 56, minWidth: 48, padding: 8, justifyContent: 'center', alignItems: 'center' },
-  selected: { backgroundColor: colors.brand },
-  label: { fontSize: 16, color: colors.ink, textAlign: 'center' },
-  selectedLabel: { color: colors.white, fontWeight: '700' },
-});

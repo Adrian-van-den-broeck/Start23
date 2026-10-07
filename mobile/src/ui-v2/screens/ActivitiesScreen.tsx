@@ -1,7 +1,8 @@
 import { FlashList } from '@shopify/flash-list';
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ShellSafeArea } from '../components/ShellInsets';
+import { AppHeader } from '../components/AppHeader';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { ActivitySummary } from '../components/ActivitySummary';
 import { Button } from '../primitives/Button';
@@ -29,15 +30,12 @@ export function ActivitiesScreen({ rows, pending, busy, error, controls, onBack,
   onFeedback: () => void; onCorrect: (id: string) => void; onMatch: (id: string, workoutId: string) => Promise<void>;
 }) {
   const { t } = useLanguage();
-  return <SafeAreaView edges={['top', 'bottom']} style={styles.frame} testID="v2-activities">
-    <View style={styles.header}>
-      <Text variant="screenTitle" accessibilityRole="header">{t('shell.activities')}</Text>
-      <Button label={t('planning.profile')} variant="tertiary" disabled={busy} onPress={onProfile} />
-    </View>
+  return <ShellSafeArea style={styles.frame} testID="v2-activities">
     <FlashList data={rows} keyExtractor={row => row.activity.id} keyboardShouldPersistTaps="handled"
       contentContainerStyle={styles.content} extraData={busy}
       ItemSeparatorComponent={() => <View style={{ height: space[16] }} />}
       ListHeaderComponent={<View style={styles.stack}>
+        <AppHeader titleVariant="display" title={t('shell.activities')} onProfile={onProfile} profileLabel={t('planning.profile')} profileDisabled={busy} landscape="treesRiver" />
         {controls}
         <ActivityStatus busy={busy} error={error} />
         {pending ? <Card style={styles.stack} testID="activity-pending">
@@ -64,11 +62,10 @@ export function ActivitiesScreen({ rows, pending, busy, error, controls, onBack,
           onPress={() => onCorrect(row.activity.id)} /> : null}
       </Card>}
       ListFooterComponent={<Button label={t('week.return')} variant="tertiary" disabled={busy} onPress={onBack} />} />
-  </SafeAreaView>;
+  </ShellSafeArea>;
 }
 const styles = StyleSheet.create({
   frame: { flex: 1, backgroundColor: colors.background },
-  header: { padding: layout.phoneGutter, gap: space[8] },
   content: { padding: layout.phoneGutter, paddingBottom: space[32] },
   stack: { gap: space[12], paddingBottom: space[16] },
 });

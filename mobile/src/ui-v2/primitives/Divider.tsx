@@ -1,6 +1,7 @@
 import { View } from 'react-native';
-import { colors } from '../tokens';
+import { colors, layout } from '../tokens';
 
 export function Divider() {
-  return <View accessible={false} importantForAccessibility="no" style={{ height: 1, backgroundColor: colors.border }} />;
+  return <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
+    style={{ height: layout.decorativeLine, backgroundColor: colors.border }} />;
 }

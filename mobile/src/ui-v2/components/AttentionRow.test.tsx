@@ -23,7 +23,7 @@ test.each([{ width: 320, fontScale: 1 }, { width: 412, fontScale: 2 }])('attenti
 test('ordinary pending remains neutral and respects the supplied lock', async () => {
   const action = jest.fn();
   const view = await render(<LanguageProvider><AttentionRow item={{ kind: 'proposal', action: 'review' }} disabled onAction={action} /></LanguageProvider>);
-  expect(Native.StyleSheet.flatten(view.getByTestId('week-attention-proposal').props.style).backgroundColor).toBeUndefined();
+  expect(Native.StyleSheet.flatten(view.getByTestId('week-attention-proposal').props.style).backgroundColor).toBe(colors.primarySoft);
   await fireEvent.press(view.getByRole('button', { name: 'Review proposal' }));
   expect(action).not.toHaveBeenCalled();
 });

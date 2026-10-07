@@ -4,7 +4,7 @@ import { colors, typography } from '../tokens';
 
 type Props = TextProps & {
   variant?: keyof typeof typography;
-  tone?: 'text' | 'textMuted' | 'textInverse' | 'primary' | 'warning';
+  tone?: 'text' | 'textMuted' | 'textInverse' | 'primary' | 'warning' | 'destructive' | 'success';
 };
 
 export function Text({ variant = 'body', tone = 'text', style, ...props }: Props) {

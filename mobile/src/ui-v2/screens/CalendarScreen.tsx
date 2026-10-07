@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
-import { ScrollView, StyleSheet, View, type ScrollViewProps } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, View, useWindowDimensions, type ScrollViewProps } from 'react-native';
+import { ShellSafeArea } from '../components/ShellInsets';
+import { HeaderAction, ProfileAction } from '../components/AppHeader';
+import { HeaderLandscape } from '../assets/HeaderLandscape';
+import { CalendarRangeNavigation } from '../components/CalendarRangeNavigation';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { parseCalendarDate, type CalendarMode } from '../../features/calendar/calendarDates';
 import { addDays, isoDate } from '../../features/planning/planningDates';
@@ -9,6 +12,8 @@ import { MonthGrid } from '../components/MonthGrid';
 import { CalendarDayList, WeekAgenda } from '../components/WeekAgenda';
 import { Button } from '../primitives/Button';
 import { Divider } from '../primitives/Divider';
+import { Card } from '../primitives/Card';
+import { SegmentedControl } from '../primitives/SegmentedControl';
 import { Text } from '../primitives/Text';
 import { colors, layout, space } from '../tokens';
 import type { CalendarViewModel } from '../utils/calendarViewModel';
@@ -23,32 +28,37 @@ export function CalendarScreen({ model, mode, anchor, loading, error, onModeChan
 }) {
   const { locale, t } = useLanguage();
   const fullDate = (date: string) => parseCalendarDate(date).toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  const period = mode === 'month' ? parseCalendarDate(anchor).toLocaleDateString(locale, { month: 'long', year: 'numeric' })
-    : `${fullDate(model.days[0].date)} – ${fullDate(model.days[6].date)}`;
-  return <SafeAreaView edges={['top', 'bottom']} style={styles.frame}>
+  const { width, fontScale } = useWindowDimensions();
+  const stacked = width < 393 || fontScale >= 1.5;
+  return <ShellSafeArea style={styles.frame}>
     <ScrollView testID="calendar-scroll" {...scrollProps} style={styles.scroll} contentContainerStyle={styles.content}>
-      {onProfile ? <Button variant="tertiary" label={t('planning.profile')} onPress={onProfile} /> : null}
-      <Button variant="tertiary" label={t('week.return')} onPress={onBack} />
-      <Text variant="screenTitle" accessibilityRole="header">{t('calendar.title')}</Text>
-      <Text variant="supporting">{t('calendar.approvedOnly')}</Text>
-      <View accessibilityRole="tablist" style={styles.toolbar}>
-        {(['week', 'month'] as const).map((value) => <Button key={value} accessibilityRole="tab" accessibilityState={{ selected: mode === value }}
-          label={t(`calendar.${value}`)} variant={mode === value ? 'primary' : 'secondary'} onPress={() => onModeChange(value)} />)}
+      <View style={styles.header}>
+        <View style={[styles.utility, stacked && styles.stackedUtility]}>
+          <HeaderAction label={t('week.return')} onPress={onBack} />
+          {onProfile ? <ProfileAction label={t('planning.profile')} onPress={onProfile} /> : null}
+        </View>
+        <View style={styles.titleRegion}>
+          <View pointerEvents="none" style={styles.art}><HeaderLandscape variant={mode === 'week' ? 'ridges' : 'treesRiver'} behindText textStart={space[48] + space[16]} /></View>
+          <View style={styles.titleCopy}>
+            <Text variant="screenTitle" accessibilityRole="header">{t('calendar.title')}</Text>
+            <Text variant="supporting" tone="textMuted">{t('calendar.approvedOnly')}</Text>
+          </View>
+        </View>
       </View>
-      <Text variant="cardTitle" accessibilityRole="header">{period}</Text>
-      <View style={styles.toolbar}>
-        <Button variant="tertiary" label={t('common.previous')} accessibilityLabel={t(mode === 'week' ? 'calendar.previousWeek' : 'calendar.previousMonth')} onPress={() => onMove(-1)} />
-        <Button variant="tertiary" label={t('common.today')} onPress={onToday} />
-        <Button variant="tertiary" label={t('common.next')} accessibilityLabel={t(mode === 'week' ? 'calendar.nextWeek' : 'calendar.nextMonth')} onPress={() => onMove(1)} />
-      </View>
+      <SegmentedControl options={(['week', 'month'] as const).map(value => ({ value, label: t(`calendar.${value}`) }))}
+        role="tab" value={mode} onChange={onModeChange} accessibilityLabel={t('calendar.title')} />
+      <CalendarRangeNavigation model={model} mode={mode} anchor={anchor} onMove={onMove} onToday={onToday} />
       {loading ? <Text accessibilityLiveRegion="polite">{t('common.loading')}</Text> : null}
-      {error ? <View style={styles.notice}><Text accessibilityLiveRegion="polite" style={{ color: colors.destructive }}>{t('calendar.loadFailed')}</Text><Text>{error}</Text><Button label={t('calendar.retry')} onPress={onRetry} /></View> : null}
+      {error ? <Card style={styles.notice}><Text accessibilityLiveRegion="polite" style={{ color: colors.destructive }}>{t('calendar.loadFailed')}</Text><Text>{error}</Text><Button label={t('calendar.retry')} onPress={onRetry} /></Card> : null}
       {mode === 'week' ? <WeekAgenda days={model.days} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : <>
         <MonthGrid days={model.days} known={model.rangeKnown} onSelectDate={onSelectDate} />
         <View testID="calendar-selected-day" style={styles.notice}>
-          <DayHeader day={model.selectedDay} known={model.rangeKnown} />
-          <Button variant="secondary" label={t('calendar.selectedWeek')} onPress={() => onModeChange('week')} />
-          <CalendarDayList day={model.selectedDay} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} />
+          <Card elevated style={styles.notice}>
+            <DayHeader day={model.selectedDay} known={model.rangeKnown} />
+            <Button variant="secondary" label={t('calendar.selectedWeek')} onPress={() => onModeChange('week')} />
+            {!model.selectedDay.workouts.length ? <CalendarDayList day={model.selectedDay} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : null}
+          </Card>
+          {model.selectedDay.workouts.length ? <CalendarDayList day={model.selectedDay} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : null}
         </View>
       </>}
       {!model.rangeKnown && model.loadedRange ? <View testID="calendar-retained-range" style={styles.notice}>
@@ -57,10 +67,13 @@ export function CalendarScreen({ model, mode, anchor, loading, error, onModeChan
       </View> : null}
       {__DEV__ && controls ? <View style={styles.notice}><Divider />{controls}</View> : null}
     </ScrollView>
-  </SafeAreaView>;
+  </ShellSafeArea>;
 }
 const styles = StyleSheet.create({
-  frame: { flex: 1, backgroundColor: colors.background }, scroll: { flex: 1, overflow: 'hidden' },
-  content: { padding: layout.phoneGutter, paddingBottom: space[32], width: '100%', maxWidth: layout.readingWidth, alignSelf: 'center', gap: space[16] },
-  toolbar: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8] }, notice: { gap: space[12] },
+  frame: { flex: 1, backgroundColor: colors.background }, scroll: { flex: 1 },
+  content: { padding: layout.phoneGutter, paddingBottom: space[32], width: '100%', maxWidth: layout.readingWidth, alignSelf: 'center', gap: space[24] },
+  header: { gap: space[8] }, utility: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: space[8] },
+  stackedUtility: { flexDirection: 'column', alignItems: 'stretch' },
+  titleRegion: { minHeight: layout.artwork.compact }, art: { position: 'absolute', top: 0, left: -layout.phoneGutter, right: -layout.phoneGutter },
+  titleCopy: { paddingTop: space[48] + space[16], gap: space[8] }, notice: { gap: space[16] },
 });
