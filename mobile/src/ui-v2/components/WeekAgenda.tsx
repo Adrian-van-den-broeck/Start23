@@ -18,7 +18,7 @@ export function CalendarDayList({ day, known, onOpenWorkout, onMoveWorkout }: { 
         <WorkoutSummary summary={summary} footer={<View style={styles.actions}>
           <Button label={t('week.viewWorkoutLabel')} accessibilityLabel={t('week.viewWorkout', { name: summary.name })}
             trailingIcon="forward" onPress={() => onOpenWorkout(id)} />
-          {move ? <Button variant="secondary" label={t('move.entry')} accessibilityLabel={t('move.entryLabel', { name: summary.name })} onPress={move} /> : null}
+          {move ? <Button variant="secondary" trailingIcon="calendar" label={t('move.entry')} accessibilityLabel={t('move.entryLabel', { name: summary.name })} onPress={move} /> : null}
         </View>} />
       </View>;
     })}

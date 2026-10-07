@@ -1,0 +1,500 @@
+[
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "before"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "chooser"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "warning"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "after"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "state": "before"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "state": "chooser"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "state": "after"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "state": "warning"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "before"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "chooser"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "warning"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "after"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "before"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "chooser"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "warning"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "after"
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "before"
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "chooser"
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "warning"
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "after"
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "en",
+    "state": "before"
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "en",
+    "state": "chooser"
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "en",
+    "state": "warning"
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "en",
+    "state": "after"
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "before"
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "chooser"
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "warning"
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "after"
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "en",
+    "state": "before"
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "en",
+    "state": "chooser"
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "en",
+    "state": "warning"
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "en",
+    "state": "after"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "before"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "chooser"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "warning"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "after"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "before"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "chooser"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "warning"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "after"
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "before"
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "chooser"
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "warning"
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "after"
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "en",
+    "state": "before"
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "en",
+    "state": "chooser"
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "en",
+    "state": "warning"
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "en",
+    "state": "after"
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "before"
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "chooser"
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "warning"
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "after"
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "en",
+    "state": "before"
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "en",
+    "state": "chooser"
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "en",
+    "state": "warning"
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "en",
+    "state": "after"
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "before"
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "chooser"
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "warning"
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "after"
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "en",
+    "state": "before"
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "en",
+    "state": "chooser"
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "en",
+    "state": "warning"
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "en",
+    "state": "after"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "selected"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "validation"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "confirmBusy"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "rejected"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "ambiguous"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "stale"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "staleChooser"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "cancel"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "laterCalendar"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "multiple"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "distance"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "sparse"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "longChooser"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "longWarning"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "selected"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "stale"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "longChooser"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "longWarning"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "multiple"
+  }
+]

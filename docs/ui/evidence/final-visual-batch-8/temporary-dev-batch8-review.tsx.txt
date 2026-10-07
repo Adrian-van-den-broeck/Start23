@@ -1,0 +1,97 @@
+// Temporary public, inert visual fixture. Removed from app routes after review.
+import { Redirect, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Modal, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useLanguage } from '../src/i18n/LanguageProvider';
+import { workout, warning } from '../src/features/planning/planning.test-fixtures';
+import { warningPresentation } from '../src/components/MoveWarningPanel';
+import { visibleCalendarDates, calendarRangeFor } from '../src/features/calendar/calendarDates';
+import { WorkoutMoveScreen } from '../src/ui-v2/screens/WorkoutMoveScreen';
+import { CalendarScreen } from '../src/ui-v2/screens/CalendarScreen';
+import { calendarViewModel } from '../src/ui-v2/utils/calendarViewModel';
+import { workoutSummaryViewModel } from '../src/ui-v2/utils/workoutSummaryViewModel';
+import { BottomNavigation, NavigationFooter } from '../src/ui-v2/components/BottomNavigation';
+import { ShellInsets } from '../src/ui-v2/components/ShellInsets';
+import { colors } from '../src/ui-v2/tokens';
+
+function Review({ state }: { state: string }) {
+  const { t } = useLanguage();
+  const insets = useSafeAreaInsets();
+  const calendarStates = ['before', 'after', 'cancel', 'laterCalendar', 'multiple'];
+  const warningStates = ['warning', 'confirmBusy', 'rejected', 'ambiguous', 'stale', 'longWarning'];
+  const [open, setOpen] = useState(!calendarStates.includes(state));
+  const [reviewed, setReviewed] = useState(warningStates.includes(state));
+  const [checking, setChecking] = useState(false);
+  const [action, setAction] = useState('none');
+  const [identity, setIdentity] = useState(workout.id);
+  const [targetDate, setTargetDate] = useState('2026-10-08');
+  const [resultDates, setResultDates] = useState<Record<string, string>>({
+    [workout.id]: state === 'after' ? '2026-10-08' : '2026-10-07',
+    'repeat-occurrence': '2026-10-07', 'completed-occurrence': '2026-10-07',
+  });
+  const resultDate = resultDates[workout.id];
+  const originDate = state === 'laterCalendar' ? '2026-10-08' : '2026-10-07';
+  const long = ['longChooser', 'longWarning'].includes(state);
+  const name = long ? 'Long exact public source workout name '.repeat(4) : 'RUN-013 · Wisselduur';
+  const source = { ...workout, id: identity, name, scheduled_date: resultDates[identity] ?? originDate,
+    description: long ? 'Supplied public source description with all original instructions. '.repeat(5) : 'START23-catalogustraining voor Halve.',
+    discipline: state === 'distance' ? 'swim' as const : 'run' as const,
+    duration_minutes: ['distance', 'sparse'].includes(state) ? null : '90',
+    distance_meters: state === 'distance' ? 2500 : null };
+  const suppliedWarnings = [warningPresentation(warning), warningPresentation({ ...warning,
+    id: 'second-public-warning', code: 'exact-public-copy', message: 'Exact second supplied public warning. Review this move before proceeding.' })];
+  const busy = checking || state === 'confirmBusy';
+  const available = !['stale', 'staleChooser'].includes(state);
+  const error = state === 'rejected' ? 'Supplied rejected move: the active workout remains on its original date.'
+    : state === 'ambiguous' ? 'Supplied ambiguous response: the active workout has not been replaced locally.'
+      : ['stale', 'staleChooser'].includes(state) ? 'Supplied stale revision: refresh is required before applying a move.' : null;
+  const rows = [{ ...source, id: workout.id, scheduled_date: resultDate },
+    ...(state === 'multiple' ? [{ ...source, id: 'repeat-occurrence', scheduled_date: resultDates['repeat-occurrence'] },
+      { ...source, id: 'completed-occurrence', scheduled_date: resultDates['completed-occurrence'], status: 'completed' as const }] : [])];
+  const dates = visibleCalendarDates('2026-10-07', 'week');
+  const model = calendarViewModel({ dates, anchor: '2026-10-07', selectedDate: resultDate, today: '2026-10-05',
+    workouts: rows, restDays: dates.filter(date => !rows.some(row => row.scheduled_date === date)).map(date => ({ date, reason: 'planned_rest' as const })),
+    loadedRange: calendarRangeFor(dates) });
+  const cancel = () => { if (busy) return; setAction(`cancel-${identity}`); setReviewed(false); setOpen(false); };
+  const marker = <View testID={`batch-8-action-${action}`} collapsable={false} style={{ position: 'absolute', width: 1, height: 1 }} />;
+  return <View testID={`batch-8-fixture-${state}`} collapsable={false} style={{ flex: 1, backgroundColor: colors.background }}>
+    {marker}
+    <ShellInsets bottom>
+      <CalendarScreen model={model} mode="week" anchor="2026-10-07" loading={false} error={null}
+        onModeChange={value => setAction(`mode-${value}`)} onMove={direction => setAction(`range-${direction}`)}
+        onToday={() => setAction('today')} onSelectDate={date => setAction(`date-${date}`)} onRetry={() => setAction('retry')}
+        onOpenWorkout={id => setAction(`detail-${id}`)} onBack={() => setAction('back')}
+        onMoveWorkout={id => id === 'completed-occurrence' ? undefined : () => {
+          setIdentity(id); setReviewed(false); setChecking(false); setAction(`entry-${id}`); setOpen(true);
+        }} />
+      <NavigationFooter bottomInset={insets.bottom}>
+        <BottomNavigation destinations={[{ key: 'week', label: t('shell.week'), icon: 'week' },
+          { key: 'calendar', label: t('shell.calendar'), icon: 'calendar' },
+          { key: 'activities', label: t('shell.activities'), icon: 'activities' }]}
+          selectedKey="calendar" onSelect={key => setAction(`tab-${key}`)} />
+      </NavigationFooter>
+    </ShellInsets>
+    <Modal visible={open} animationType="none" onRequestClose={cancel}>
+      <View testID={`batch-8-fixture-${state}`} collapsable={false} style={{ flex: 1, backgroundColor: colors.background }}>
+        {marker}
+        <ShellInsets top={false} bottom={false}>
+          <WorkoutMoveScreen summary={workoutSummaryViewModel(source)} currentDate={source.scheduled_date} weekStart="2026-10-05"
+            targetDate={reviewed ? targetDate : null} warnings={reviewed ? suppliedWarnings : null}
+            busy={busy} error={error} available={available} controls={null} onCancel={cancel}
+            onReview={date => { setTargetDate(date); setAction(`review-${identity}-${date}`);
+              if (state === 'validation') setChecking(true); else setReviewed(true); }}
+            onConfirm={() => { setAction(`confirm-${identity}-${targetDate}`); setResultDates(previous => ({ ...previous, [identity]: targetDate })); setReviewed(false); setOpen(false); }} />
+        </ShellInsets>
+      </View>
+    </Modal>
+  </View>;
+}
+
+export default function DevBatch8Review() {
+  const { state = 'chooser', language, review } = useLocalSearchParams<{ state?: string; language?: string; review?: string }>();
+  const { setPreference } = useLanguage();
+  useEffect(() => { void setPreference(language === 'en' ? 'en' : 'nl'); }, [language, setPreference]);
+  if (!__DEV__) return <Redirect href="/" />;
+  return <Review key={review} state={state} />;
+}

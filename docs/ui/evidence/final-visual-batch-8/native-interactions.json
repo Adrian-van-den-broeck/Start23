@@ -1,0 +1,156 @@
+{
+  "publicInertCallbacksOnly": true,
+  "backendWrites": false,
+  "results": [
+    {
+      "case": "interaction-calendar-entry",
+      "exactCallback": "entry-workout-a",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-origin-noop-lock",
+      "exactCallback": "none",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-date-local-only",
+      "exactCallback": "none",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-explicit-review",
+      "exactCallback": "review-workout-a-2026-10-08",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-explicit-proceed",
+      "exactCallback": "confirm-workout-a-2026-10-08",
+      "modalReturned": true,
+      "pass": true
+    },
+    {
+      "case": "interaction-return-to-origin-lock",
+      "exactCallback": "none",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-chooser-cancel",
+      "exactCallback": "cancel-workout-a",
+      "modalReturned": true,
+      "pass": true
+    },
+    {
+      "case": "interaction-chooser-system-back",
+      "exactCallback": "cancel-workout-a",
+      "modalReturned": true,
+      "pass": true
+    },
+    {
+      "case": "interaction-warning-proceed",
+      "exactCallback": "confirm-workout-a-2026-10-08",
+      "modalReturned": true,
+      "pass": true
+    },
+    {
+      "case": "interaction-warning-cancel",
+      "exactCallback": "cancel-workout-a",
+      "modalReturned": true,
+      "pass": true
+    },
+    {
+      "case": "interaction-warning-system-back",
+      "exactCallback": "cancel-workout-a",
+      "modalReturned": true,
+      "pass": true
+    },
+    {
+      "case": "interaction-validation-locked",
+      "exactCallback": "review-workout-a-2026-10-08",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-validation-dismissal-locked",
+      "exactCallback": "review-workout-a-2026-10-08",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-busy-proceed-locked",
+      "exactCallback": "none",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-busy-dismissal-locked",
+      "exactCallback": "none",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-stale-proceed-locked",
+      "exactCallback": "none",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-stale-cancel",
+      "exactCallback": "cancel-workout-a",
+      "modalReturned": true,
+      "pass": true
+    },
+    {
+      "case": "interaction-stale-date-locked",
+      "exactCallback": "none",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-rejected-cancel",
+      "exactCallback": "cancel-workout-a",
+      "modalReturned": true,
+      "pass": true
+    },
+    {
+      "case": "interaction-ambiguous-cancel",
+      "exactCallback": "cancel-workout-a",
+      "modalReturned": true,
+      "pass": true
+    },
+    {
+      "case": "interaction-exact-repeat-entry",
+      "exactCallback": "entry-repeat-occurrence",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-exact-repeat-review",
+      "exactCallback": "review-repeat-occurrence-2026-10-08",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-exact-repeat-proceed",
+      "exactCallback": "confirm-repeat-occurrence-2026-10-08",
+      "modalReturned": true,
+      "pass": true
+    },
+    {
+      "case": "interaction-large-type-review",
+      "exactCallback": "review-workout-a-2026-10-08",
+      "modalReturned": false,
+      "pass": true
+    },
+    {
+      "case": "interaction-large-type-cancel",
+      "exactCallback": "cancel-workout-a",
+      "modalReturned": true,
+      "pass": true
+    }
+  ]
+}

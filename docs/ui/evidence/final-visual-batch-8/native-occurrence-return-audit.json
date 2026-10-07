@@ -1,0 +1,10 @@
+{
+  "pass": true,
+  "locations": {
+    "workout-a": "2026-10-07",
+    "completed-occurrence": "2026-10-07",
+    "repeat-occurrence": "2026-10-08"
+  },
+  "completedOccurrenceHasMove": false,
+  "identityEvidence": "Exact native occurrence/day test IDs and their visible bounds; Android accessibility siblings"
+}

@@ -1,0 +1,11 @@
+{
+  "utc": "2026-10-07T22:23:59.133551+00:00",
+  "serial": "emulator-5554",
+  "provenance": "Actual TalkBack-enabled public fixture; no accessibility dump during focus screenshot",
+  "expectedFocus": "Move workout",
+  "nativeKeyboardFocusBeforeCapture": null,
+  "enabledServices": "com.google.android.marvin.talkback/.TalkBackService",
+  "visualFocusValidation": "Inspect actual focus rectangle; expected target alone is not evidence of accessibility focus",
+  "result": "REJECTED_FOR_EXPECTED_FOCUS",
+  "observed": "Calendar remained visible with green TalkBack focus on Easy; no modal heading focus"
+}

@@ -1,0 +1,3 @@
+
+> mobile@1.0.0 check:unused
+> tsc --noEmit --noUnusedLocals --noUnusedParameters

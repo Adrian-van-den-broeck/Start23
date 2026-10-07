@@ -1,0 +1,7 @@
+{
+  "pass": true,
+  "tabEnterDatePath": true,
+  "dateSelectionLocal": true,
+  "backReturnsExactMoveFocus": true,
+  "screenReaderEnabled": false
+}

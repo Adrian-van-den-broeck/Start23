@@ -1,0 +1,73 @@
+{
+  "result": "PASS",
+  "validatedNativeGates": {
+    "keyboardMoveDateBackAndExactFocus": true,
+    "sevenRadioLabelsAndStates": true,
+    "reducedMotionAllThreeScalesZero": true
+  },
+  "keyboardImagesInspected": [
+    "keyboard-entry-focus.png",
+    "keyboard-modal-open.png",
+    "keyboard-date-focus.png",
+    "keyboard-date-selected.png",
+    "keyboard-return-focus.png"
+  ],
+  "talkbackObservedFocus": [
+    "Cancel",
+    "literal source description"
+  ],
+  "talkbackIntendedMoveDateFocusNotClaimed": true,
+  "talkbackNavigationEquivalentImageGroups": [
+    [
+      "talkback-action-next-01.png"
+    ],
+    [
+      "talkback-action-next-02.png"
+    ],
+    [
+      "talkback-action-next-03.png",
+      "talkback-action-next-04.png",
+      "talkback-action-next-05.png",
+      "talkback-action-next-06.png",
+      "talkback-action-next-07.png",
+      "talkback-action-next-08.png",
+      "talkback-action-next-09.png",
+      "talkback-action-next-10.png",
+      "talkback-action-next-11.png",
+      "talkback-action-next-12.png",
+      "talkback-action-next-13.png",
+      "talkback-action-next-14.png",
+      "talkback-action-next-15.png",
+      "talkback-action-next-16.png"
+    ],
+    [
+      "talkback-next-01.png",
+      "talkback-next-02.png",
+      "talkback-next-03.png",
+      "talkback-next-04.png",
+      "talkback-next-05.png",
+      "talkback-next-06.png",
+      "talkback-next-07.png",
+      "talkback-next-08.png",
+      "talkback-next-09.png",
+      "talkback-next-10.png",
+      "talkback-next-11.png",
+      "talkback-next-12.png",
+      "talkback-next-13.png"
+    ],
+    [
+      "talkback-next-14.png",
+      "talkback-next-15.png",
+      "talkback-next-16.png"
+    ]
+  ],
+  "talkbackRepresentativesInspected": [
+    "talkback-action-next-01.png",
+    "talkback-action-next-02.png",
+    "talkback-action-next-03.png",
+    "talkback-next-01.png",
+    "talkback-next-14.png"
+  ],
+  "limitation": "Emulator pointer/virtual modifier injection did not establish intended TalkBack Move/date focus. Full physical-device TalkBack navigation is a whole-app release verification limit; native keyboard/date controls and exact return focus passed.",
+  "settingsRestored": true
+}

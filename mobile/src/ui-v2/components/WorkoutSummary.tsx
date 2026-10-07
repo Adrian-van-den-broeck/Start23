@@ -10,8 +10,8 @@ import type { WorkoutSummaryViewModel } from '../utils/workoutSummaryViewModel';
 import { SportIndicator } from './SportIndicator';
 import { WorkoutFacts } from './WorkoutFacts';
 
-export function WorkoutSummary({ summary, showDescription = true, variant = 'scheduled', footer, context }: {
-  summary: WorkoutSummaryViewModel; showDescription?: boolean; variant?: 'scheduled' | 'focus'; footer?: ReactNode; context?: ReactNode;
+export function WorkoutSummary({ summary, showDescription = true, variant = 'scheduled', footer, context, dateLabel }: {
+  summary: WorkoutSummaryViewModel; showDescription?: boolean; variant?: 'scheduled' | 'focus'; footer?: ReactNode; context?: ReactNode; dateLabel?: string;
 }) {
   const { t, locale } = useLanguage();
   const date = summary.date ? new Date(`${summary.date}T12:00:00`) : null;
@@ -21,7 +21,7 @@ export function WorkoutSummary({ summary, showDescription = true, variant = 'sch
       <Text variant="cardTitle" accessibilityRole="header" testID="workout-detail-heading">{summary.name}</Text>
     </SportIndicator>
     <View style={styles.meta}>
-      {date ? <Text variant="supporting" tone="textMuted">{date.toLocaleDateString(locale, {
+      {date ? <Text variant="supporting" tone="textMuted">{dateLabel ?? date.toLocaleDateString(locale, {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
       })}</Text> : null}
       <View style={[styles.status, summary.status === 'cancelled' && styles.cancelled]}>
