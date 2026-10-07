@@ -8,6 +8,7 @@ import { WorkoutFacts } from '../components/WorkoutFacts';
 import { ChoiceRow } from '../primitives/ChoiceRow';
 import { Input } from '../primitives/Input';
 import { Icon } from '../primitives/Icon';
+import { Notice } from '../primitives/Notice';
 import { SportIndicator } from '../components/SportIndicator';
 import { Button } from '../primitives/Button';
 import { Card } from '../primitives/Card';
@@ -18,14 +19,6 @@ import { colors, layout, radius, space } from '../tokens';
 import type { PlanningCreationModel, SelectionWorkout } from '../utils/planningCreationViewModel';
 
 type TaskProps = { busy: boolean; error: string | null; onBack: () => void; controls: ReactNode };
-
-function TaskStatus({ busy, error }: Pick<TaskProps, 'busy' | 'error'>) {
-  const { t } = useLanguage();
-  return <>
-    {busy ? <Text accessibilityLiveRegion="polite" accessibilityState={{ busy: true }}>{t('creation.saving')}</Text> : null}
-    {error ? <Text style={{ color: colors.destructive }} accessibilityRole="alert" accessibilityLiveRegion="polite">{error}</Text> : null}
-  </>;
-}
 
 export function AvailabilityScreen(props: TaskProps & {
   weekStart: string; selectedDays: ReadonlySet<number>; reusePreviousWeek: boolean;
@@ -85,36 +78,22 @@ export function AvailabilityScreen(props: TaskProps & {
   </KeyboardAvoidingView>;
 }
 
-function OccurrenceSummary({ workout }: { workout: SelectionWorkout }) {
-  const { t } = useLanguage();
-  return <View style={styles.stack} testID={`selection-occurrence-${workout.occurrenceId}`}>
-    <SportIndicator discipline={workout.discipline} />
-    <Text variant="sectionTitle" accessibilityRole="header">{workout.name}</Text>
-    {workout.durationMinutes !== null ? <Text accessibilityLabel={t('detail.minutesSpoken', { value: workout.durationMinutes })}>
-      {t('common.durationMinutes', { minutes: workout.durationMinutes })}</Text> : null}
-    {workout.distanceMeters !== null ? <Text accessibilityLabel={t('detail.metersSpoken', { value: workout.distanceMeters })}>
-      {t('detail.meters', { value: workout.distanceMeters })}</Text> : null}
-    <Text>{t(`detail.intensity.${workout.intensity}`)}</Text>
-    {workout.description ? <Text variant="supporting">{workout.description}</Text> : null}
-  </View>;
-}
-
 function AcceptedList({ accepted }: { accepted: readonly SelectionWorkout[] }) {
   const { t } = useLanguage();
-  return <View style={styles.stack} testID="accepted-occurrences">
+  return <View style={styles.summary} testID="accepted-occurrences">
     <Text variant="sectionTitle" accessibilityRole="header">{t('creation.accepted')}</Text>
-    {accepted.length === 0 ? <Text>{t('creation.acceptedEmpty')}</Text> : null}
-    {accepted.map((workout, index) => <Card key={workout.occurrenceId} style={styles.stack}>
-      <Text variant="label">{t('creation.choiceNumber', { number: index + 1 })}</Text>
-      <OccurrenceSummary workout={workout} />
+    {accepted.length === 0 ? <Text tone="textMuted">{t('creation.acceptedEmpty')}</Text> : null}
+    {accepted.map((workout, index) => <Card key={workout.occurrenceId} elevated style={styles.summary}>
+      <Text variant="label" tone="textMuted">{t('creation.choiceNumber', { number: index + 1 })}</Text>
+      <SelectionSummary workout={workout} />
     </Card>)}
   </View>;
 }
 
 function DraftWarnings({ model }: { model: PlanningCreationModel }) {
-  return <>{model.warnings.map((warning, index) => <Card key={index}>
-    <Text variant="label">{warning.title}</Text><Text>{warning.message}</Text>
-  </Card>)}</>;
+  return <>{model.warnings.map((warning, index) => <Notice key={index} tone="warning" title={warning.title}>
+    {warning.message}
+  </Notice>)}</>;
 }
 
 function CreationStatus({ busy, error }: Pick<TaskProps, 'busy' | 'error'>) {
@@ -208,39 +187,44 @@ export function PlacementScreen({ model, mode, onMode, onPlace, onSubmit, onSele
   // Same mechanical completion requirement as V1; server validates the layout.
   const manualComplete = model.placements.length === model.accepted.length;
   const placements = new Map(model.placements.map((placement) => [placement.occurrenceId, placement.date]));
-  return <Screen title={t('creation.placement')} onBack={task.onBack} backLabel={t('week.return')} backDisabled={task.busy}>
-    {task.controls}
-    <TaskStatus busy={task.busy} error={task.error} />
+  return <Screen title={t('creation.placement')} landscape="ridges" titleVariant="display"
+    onBack={task.onBack} backLabel={t('week.return')} backDisabled={task.busy}>
+    {task.busy ? <Text tone="textMuted" accessibilityLiveRegion="polite" accessibilityState={{ busy: true }}>{t('creation.saving')}</Text> : null}
+    {task.error ? <View accessible accessibilityRole="alert" accessibilityLabel={task.error} accessibilityLiveRegion="polite">
+      <Notice tone="error" title={t('creation.placement')}>{task.error}</Notice>
+    </View> : null}
     <DraftWarnings model={model} />
-    <Text>{t('creation.pendingHint')}</Text>
-    <Button variant="secondary" label={t('creation.automatic')} accessibilityRole="radio"
-      accessibilityState={{ checked: mode === 'automatic' }} busy={task.busy} onPress={() => onMode('automatic')} />
-    <Button variant="secondary" label={t('creation.manual')} accessibilityRole="radio"
-      accessibilityState={{ checked: mode === 'manual' }} busy={task.busy} onPress={() => onMode('manual')} />
+    <Card padding="form" elevated style={styles.summary}>
+      <Text tone="textMuted">{t('creation.pendingHint')}</Text>
+      <ChoiceRow label={t('creation.automatic')} selected={mode === 'automatic'} disabled={task.busy} onPress={() => onMode('automatic')} />
+      <ChoiceRow label={t('creation.manual')} selected={mode === 'manual'} disabled={task.busy} onPress={() => onMode('manual')} />
+    </Card>
     {mode === 'automatic' ? <>
-      <Text>{t('creation.automaticHint')}</Text>
+      <Text tone="textMuted">{t('creation.automaticHint')}</Text>
       <AcceptedList accepted={model.accepted} />
-    </> : <View style={styles.stack}>
-      <Text>{t('creation.manualHint')}</Text>
-      {model.accepted.map((workout, index) => <Card key={workout.occurrenceId} style={styles.stack}>
-        <Text variant="label">{t('creation.choiceNumber', { number: index + 1 })}</Text>
-        <OccurrenceSummary workout={workout} />
+    </> : <View style={styles.summary}>
+      <Text tone="textMuted">{t('creation.manualHint')}</Text>
+      {model.accepted.map((workout, index) => <Card key={workout.occurrenceId} elevated style={styles.summary}>
+        <Text variant="label" tone="textMuted">{t('creation.choiceNumber', { number: index + 1 })}</Text>
+        <SelectionSummary workout={workout} />
+        <Divider />
         {model.availableDates.map((date) => {
           const label = new Date(`${date}T12:00:00`).toLocaleDateString(locale, {
             weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
           });
-          return <Button key={date} variant="secondary" label={label}
-            accessibilityLabel={`${t('creation.choiceNumber', { number: index + 1 })} · ${workout.name} · ${label}`} accessibilityRole="radio"
-            accessibilityState={{ checked: placements.get(workout.occurrenceId) === date }} busy={task.busy}
+          return <ChoiceRow key={date} label={label}
+            accessibilityLabel={`${t('creation.choiceNumber', { number: index + 1 })} · ${workout.name} · ${label}`}
+            selected={placements.get(workout.occurrenceId) === date} disabled={task.busy}
             onPress={() => onPlace(workout.occurrenceId, date)} />;
         })}
       </Card>)}
     </View>}
     <Button label={t(mode === 'automatic' ? 'creation.submitAutomatic' : 'creation.submitManual')}
-      busy={task.busy} disabled={model.state !== 'placement' || (mode === 'manual' && !manualComplete)}
+      trailingIcon="forward" busy={task.busy} disabled={model.state !== 'placement' || (mode === 'manual' && !manualComplete)}
       disabledReason={mode === 'manual' && !manualComplete ? t('creation.incomplete') : undefined}
       onPress={() => onSubmit(mode)} />
     <Button label={t('creation.backSelection')} variant="tertiary" busy={task.busy} onPress={onSelection} />
+    {task.controls}
   </Screen>;
 }
 

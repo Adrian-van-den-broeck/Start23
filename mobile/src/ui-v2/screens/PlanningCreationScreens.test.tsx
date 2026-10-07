@@ -147,6 +147,26 @@ test('busy placement locks date, mode, submit and navigation actions while keepi
   for (const button of view.getAllByRole('button')) expect(button).toBeDisabled();
 });
 
+test('placement mode changes and return to selection are explicit callbacks with no submit', async () => {
+  const view = await render(host(<PlacementScreen {...task} {...placementActions}
+    model={planningCreationViewModel(placed)} mode="manual" />));
+  await fireEvent.press(view.getByRole('radio', { name: 'Automatic placement' }));
+  expect(placementActions.onMode).toHaveBeenCalledWith('automatic');
+  await fireEvent.press(view.getByRole('button', { name: 'Inspect workout choices' }));
+  expect(placementActions.onSelection).toHaveBeenCalledTimes(1);
+  expect(placementActions.onSubmit).not.toHaveBeenCalled();
+});
+
+test('incomplete placement retains the exact chosen occurrence and readable submit reason', async () => {
+  const view = await render(host(<PlacementScreen {...task} {...placementActions} mode="manual"
+    model={planningCreationViewModel({ ...placed, placements: [{ occurrence_id: occurrence.occurrence_id, scheduled_date: '2026-10-05' }] })} />));
+  expect(view.getByRole('radio', { name: `Choice 1 · ${occurrence.name} · Monday, 5 October 2026` })).toBeChecked();
+  expect(view.getByRole('radio', { name: `Choice 2 · ${occurrence.name} · Monday, 5 October 2026` })).not.toBeChecked();
+  expect(view.getByText('Choose a date for every workout.')).toBeTruthy();
+  await fireEvent.press(view.getByRole('button', { name: 'Submit manual placement as proposal' }));
+  expect(placementActions.onSubmit).not.toHaveBeenCalled();
+});
+
 // Final Batch 6 preserves mechanical inputs and source occurrence data.
 test('one selected day creates once without a locally inferred frequency', async () => {
   const view = await render(host(<AvailabilityScreen {...availability} selectedDays={new Set([2])} />));
