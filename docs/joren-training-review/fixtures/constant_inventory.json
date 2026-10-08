@@ -1,0 +1,1227 @@
+[
+  {
+    "path": "backend/app/modules/physiology/activity.py",
+    "line": 17,
+    "expression": "PERFECT_MATCH = 'perfect_match'"
+  },
+  {
+    "path": "backend/app/modules/physiology/activity.py",
+    "line": 18,
+    "expression": "OVERSHOOT = 'overshoot'"
+  },
+  {
+    "path": "backend/app/modules/physiology/activity.py",
+    "line": 19,
+    "expression": "HIDDEN_FATIGUE = 'hidden_fatigue'"
+  },
+  {
+    "path": "backend/app/modules/physiology/activity.py",
+    "line": 20,
+    "expression": "DEVIATION = 'deviation'"
+  },
+  {
+    "path": "backend/app/modules/physiology/activity.py",
+    "line": 21,
+    "expression": "UNPLANNED = 'unplanned'"
+  },
+  {
+    "path": "backend/app/modules/physiology/activity.py",
+    "line": 27,
+    "expression": "VOLUME_OVERSHOOT = 'volume_overshoot'"
+  },
+  {
+    "path": "backend/app/modules/physiology/activity.py",
+    "line": 28,
+    "expression": "HIDDEN_FATIGUE = 'hidden_fatigue'"
+  },
+  {
+    "path": "backend/app/modules/physiology/activity.py",
+    "line": 29,
+    "expression": "UNPLANNED_LOAD = 'unplanned_load'"
+  },
+  {
+    "path": "backend/app/modules/physiology/anti_stack.py",
+    "line": 17,
+    "expression": "_REQUIRED_HOURS = {Discipline.RUN: 72, Discipline.BIKE: 48, Discipline.SWIM: 48}"
+  },
+  {
+    "path": "backend/app/modules/physiology/debt.py",
+    "line": 18,
+    "expression": "_TEN_PERCENT_GROWTH = Decimal('1.10')"
+  },
+  {
+    "path": "backend/app/modules/physiology/debt.py",
+    "line": 19,
+    "expression": "_NORMAL_HIGH_INTENSITY_FLOOR = Decimal('0.05')"
+  },
+  {
+    "path": "backend/app/modules/physiology/debt.py",
+    "line": 20,
+    "expression": "_MINIMUM_RELIABLE_INTENSITY_COVERAGE = Decimal('0.60')"
+  },
+  {
+    "path": "backend/app/modules/physiology/injury.py",
+    "line": 21,
+    "expression": "_REDISTRIBUTION_COEFFICIENT = Decimal('0.80')"
+  },
+  {
+    "path": "backend/app/modules/physiology/injury.py",
+    "line": 22,
+    "expression": "MVP_AUTOMATIC_INJURY_REDISTRIBUTION = False"
+  },
+  {
+    "path": "backend/app/modules/physiology/injury.py",
+    "line": 28,
+    "expression": "NONE = 'none'"
+  },
+  {
+    "path": "backend/app/modules/physiology/injury.py",
+    "line": 29,
+    "expression": "SELF_REPORTED_LIMITED = 'self_reported_limited'"
+  },
+  {
+    "path": "backend/app/modules/physiology/injury.py",
+    "line": 30,
+    "expression": "SELF_REPORTED_BLOCKED = 'self_reported_blocked'"
+  },
+  {
+    "path": "backend/app/modules/physiology/injury.py",
+    "line": 31,
+    "expression": "PROFESSIONAL_RESTRICTED = 'professional_restricted'"
+  },
+  {
+    "path": "backend/app/modules/physiology/injury.py",
+    "line": 32,
+    "expression": "CLEARANCE_REQUIRED = 'clearance_required'"
+  },
+  {
+    "path": "backend/app/modules/physiology/injury.py",
+    "line": 33,
+    "expression": "EXPIRED = 'expired'"
+  },
+  {
+    "path": "backend/app/modules/physiology/injury.py",
+    "line": 39,
+    "expression": "NONE = 'none'"
+  },
+  {
+    "path": "backend/app/modules/physiology/injury.py",
+    "line": 40,
+    "expression": "LOW_ONLY = 'low_only'"
+  },
+  {
+    "path": "backend/app/modules/physiology/injury.py",
+    "line": 41,
+    "expression": "UNRESTRICTED = 'unrestricted'"
+  },
+  {
+    "path": "backend/app/modules/physiology/intensity.py",
+    "line": 19,
+    "expression": "_WARNING_MULTIPLIER = Decimal('1.30')"
+  },
+  {
+    "path": "backend/app/modules/physiology/intensity.py",
+    "line": 87,
+    "expression": "STANDARD_RACE_INTENSITY_TARGET = IntensityTarget(low_fraction=Fraction(Decimal('0.80')), high_fraction=Fraction(Decimal('0.20')))"
+  },
+  {
+    "path": "backend/app/modules/physiology/joren.py",
+    "line": 12,
+    "expression": "VERSION: Final = RulesetVersion('phase-13-joren-ruleset-1')"
+  },
+  {
+    "path": "backend/app/modules/physiology/joren.py",
+    "line": 13,
+    "expression": "SRPE_FALLBACK_ENABLED: Final = False"
+  },
+  {
+    "path": "backend/app/modules/physiology/joren.py",
+    "line": 14,
+    "expression": "HR_ANCHORS: Final = tuple(map(Decimal, ('0.70', '0.78', '0.84', '0.88', '0.91', '0.94', '0.97', '1.00', '1.03', '1.06')))"
+  },
+  {
+    "path": "backend/app/modules/physiology/joren.py",
+    "line": 31,
+    "expression": "SWIM_ANCHORS: Final = tuple(map(Decimal, ('1.25', '1.18', '1.12', '1.08', '1.06', '1.04', '1.01', '1.00', '0.96', '0.92')))"
+  },
+  {
+    "path": "backend/app/modules/physiology/joren.py",
+    "line": 48,
+    "expression": "SRPE_FACTORS: Final = tuple(map(Decimal, ('0.45', '0.55', '0.65', '0.75', '0.82', '0.88', '0.94', '1.00', '1.05', '1.15')))"
+  },
+  {
+    "path": "backend/app/modules/physiology/joren.py",
+    "line": 65,
+    "expression": "SPORT_MULTIPLIERS: Final = MappingProxyType({Discipline.SWIM: Decimal('0.90'), Discipline.BIKE: Decimal('1.00'), Discipline.RUN: Decimal('1.15')})"
+  },
+  {
+    "path": "backend/app/modules/physiology/joren.py",
+    "line": 72,
+    "expression": "ZONE_COEFFICIENTS: Final = MappingProxyType({Discipline.SWIM: tuple(map(Decimal, ('0.45', '0.72', '1.08', '1.44', '1.80'))), Discipline.BIKE: tuple(map(Decimal, ('0.50', '0.80', '1.20', '1.60', '2.00'))), Discipline.RUN: tuple(map(Decimal, ('0.58', '0.92', '1.38', '1.84', '2.30')))})"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 13,
+    "expression": "FULL_AUTONOMY = 'BR-001'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 14,
+    "expression": "SOFT_BOUNDARIES = 'BR-002'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 15,
+    "expression": "TIME_INTENSITY = 'BR-003'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 16,
+    "expression": "PROGRESSIVE_LOAD = 'BR-004'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 17,
+    "expression": "HIDDEN_LOAD = 'BR-005'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 18,
+    "expression": "ANTI_STACK = 'BR-006'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 19,
+    "expression": "RECOVERY_CYCLE = 'BR-007'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 20,
+    "expression": "TAPER = 'BR-008'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 21,
+    "expression": "DISCIPLINE_ZONES = 'BR-009'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 22,
+    "expression": "INJURY_REDISTRIBUTION = 'BR-010'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 28,
+    "expression": "IDENTITY_OWNERSHIP_VALIDITY_INJURY = 10"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 29,
+    "expression": "RACE_TAPER = 20"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 30,
+    "expression": "RECOVERY_WEEK = 30"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 31,
+    "expression": "PHYSIOLOGICAL_DEBT = 40"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 32,
+    "expression": "PROGRESSIVE_LOAD = 50"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 33,
+    "expression": "INTENSITY_AND_PLACEMENT = 60"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 34,
+    "expression": "AVAILABILITY_AND_PREFERENCES = 70"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 40,
+    "expression": "SATISFIED = 'satisfied'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 41,
+    "expression": "WARNING = 'warning'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 42,
+    "expression": "CONFLICT = 'conflict'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 43,
+    "expression": "NOT_EVALUATED = 'not_evaluated'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 49,
+    "expression": "SWIM = 'swim'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 50,
+    "expression": "BIKE = 'bike'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 51,
+    "expression": "RUN = 'run'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 57,
+    "expression": "LOW = 'low'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 58,
+    "expression": "HIGH = 'high'"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 64,
+    "expression": "ZONE_1 = 1"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 65,
+    "expression": "ZONE_2 = 2"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 66,
+    "expression": "ZONE_3 = 3"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 67,
+    "expression": "ZONE_4 = 4"
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "line": 68,
+    "expression": "ZONE_5 = 5"
+  },
+  {
+    "path": "backend/app/modules/physiology/progression.py",
+    "line": 19,
+    "expression": "_HISTORY_DAYS = 42"
+  },
+  {
+    "path": "backend/app/modules/physiology/progression.py",
+    "line": 20,
+    "expression": "_REGULAR_THRESHOLD = Decimal('0.80')"
+  },
+  {
+    "path": "backend/app/modules/physiology/progression.py",
+    "line": 21,
+    "expression": "_GROWTH_FACTOR = Decimal('1.10')"
+  },
+  {
+    "path": "backend/app/modules/physiology/progression.py",
+    "line": 27,
+    "expression": "REGULAR = 'regular'"
+  },
+  {
+    "path": "backend/app/modules/physiology/progression.py",
+    "line": 28,
+    "expression": "BASELINE = 'baseline'"
+  },
+  {
+    "path": "backend/app/modules/physiology/recovery.py",
+    "line": 13,
+    "expression": "_MESOCYCLE_WEEKS = 5"
+  },
+  {
+    "path": "backend/app/modules/physiology/recovery.py",
+    "line": 14,
+    "expression": "_RECOVERY_FACTOR = Decimal('0.60')"
+  },
+  {
+    "path": "backend/app/modules/physiology/recovery.py",
+    "line": 15,
+    "expression": "_MINIMUM_RECOVERY_FACTOR = Decimal('0.40')"
+  },
+  {
+    "path": "backend/app/modules/physiology/recovery.py",
+    "line": 21,
+    "expression": "BUILD = 'build'"
+  },
+  {
+    "path": "backend/app/modules/physiology/recovery.py",
+    "line": 22,
+    "expression": "RECOVERY = 'recovery'"
+  },
+  {
+    "path": "backend/app/modules/physiology/recovery.py",
+    "line": 23,
+    "expression": "TAPER = 'taper'"
+  },
+  {
+    "path": "backend/app/modules/physiology/rpe_zones.py",
+    "line": 31,
+    "expression": "_RPE_RANGES = {TrainingZone.ZONE_1: (2, 3), TrainingZone.ZONE_2: (4, 4), TrainingZone.ZONE_3: (5, 6), TrainingZone.ZONE_4: (7, 8), TrainingZone.ZONE_5: (9, 10)}"
+  },
+  {
+    "path": "backend/app/modules/physiology/rpe_zones.py",
+    "line": 39,
+    "expression": "_SPORT_GUIDANCE = {Discipline.RUN: {TrainingZone.ZONE_1: ('Herstel', 'Heel ontspannen; moeiteloos praten en zingen.'), TrainingZone.ZONE_2: ('Duur', 'Comfortabel tempo; vlot babbelen in hele zinnen.'), TrainingZone.ZONE_3: ('Tempo', 'Pittig; praten lukt enkel in korte zinnen.'), TrainingZone.ZONE_4: ('Drempel', 'Zwaar; praten is onmogelijk, enkel ja/nee.'), TrainingZone.ZONE_5: ('Sprint', 'Maximaal; korte all-out, maximaal hijgen.')}, Discipline.BIKE: {TrainingZone.ZONE_1: ('Losrijden', 'Zeer lichte weerstand; volkomen rustig.'), TrainingZone.ZONE_2: ('Basisduur', 'Constante lichte druk; makkelijk praten.'), TrainingZone.ZONE_3: ('Moderato', 'Pittige pedaaldruk; praten in korte zinnen.'), TrainingZone.ZONE_4: ('Klimtempo', 'Zware inspanning (klimgevoel); niet meer praten.'), TrainingZone.ZONE_5: ('Sprint', 'Volle kracht; brandende benen, totaal leeg.')}, Discipline.SWIM: {TrainingZone.ZONE_1: ('Inzwemmen', 'Zeer rustig; niet buiten adem.'), TrainingZone.ZONE_2: ('Duurzwemmen', 'Gelijkmatig en beheerst ritme; goed vol te houden.'), TrainingZone.ZONE_3: ('Drempel', 'Stevig tempo; intensievere ademhaling en keerpunten.'), TrainingZone.ZONE_4: ('Zwaar', 'Hard zwemmen; verzurende armen en diepe ademhaling.'), TrainingZone.ZONE_5: ('Sprint', 'Maximale slagfrequentie; volledig buiten adem aan de kant.')}}"
+  },
+  {
+    "path": "backend/app/modules/physiology/rpe_zones.py",
+    "line": 126,
+    "expression": "RPE_DESCRIPTIONS_V13 = {Discipline.SWIM: ('Gevoelloos door het water glijden.', 'Ontspannen slag, rustige ademhaling.', 'Vlotte, ritmische slag.', 'Doorzwemmen, gecontroleerde ademhaling.', 'Doelgericht tempo.', 'Hard werken, snakken naar adem op keerpunt.', 'Verzuring begint, moeite met techniek.', 'Net onder sprintniveau.', 'Snelle verzuring, techniek brokkelt af.', 'All-out sprint.'), Discipline.BIKE: ('Geen druk op de pedalen.', 'Zeer licht trappen, uren vol te houden.', 'Comfortabel duurtempo.', 'Druk op de pedalen, zweet breekt uit.', 'Ademhaling aanwezig, korte zinnen.', 'Branderig gevoel bouwt op.', 'Benen lopen vol, weinig praten.', 'Op de limiet, net niet volledig verzuren.', 'Extreem zwaar, korte intervallen.', 'Volle sprint, maximale kracht.'), Discipline.RUN: ('Wandelen of extreem traag joggen.', 'Zeer ontspannen, eindeloos kletsen.', 'Vlot duurlooptempo, neusademhaling.', 'Focus nodig, praten in zinnen.', \"'Sweet spot', comfortabel oncomfortabel.\", 'Zwaar, net niet in het rood.', 'Diepe ademhaling (10k wedstrijdtempo).', 'Tegen verzuring aan (5k tempo).', 'Naar adem happen, zware benen.', 'Volle sprint, snel moeten stoppen.')}"
+  },
+  {
+    "path": "backend/app/modules/physiology/specification.py",
+    "line": 84,
+    "expression": "PHASE_3_DRAFT_SPECIFICATION = PhysiologySpecification(version=RulesetVersion('phase-3-draft-2026-07-24'), status=SpecificationStatus.DRAFT, approved_rules=frozenset())"
+  },
+  {
+    "path": "backend/app/modules/physiology/specification.py",
+    "line": 90,
+    "expression": "PHASE_3_RULESET_V1 = PhysiologySpecification(version=RulesetVersion('phase-3-ruleset-1'), status=SpecificationStatus.APPROVED, approved_rules=frozenset({RuleId.SOFT_BOUNDARIES, RuleId.TIME_INTENSITY, RuleId.PROGRESSIVE_LOAD, RuleId.ANTI_STACK, RuleId.RECOVERY_CYCLE, RuleId.TAPER, RuleId.INJURY_REDISTRIBUTION}))"
+  },
+  {
+    "path": "backend/app/modules/physiology/specification.py",
+    "line": 106,
+    "expression": "PHASE_3_RULESET_V2 = PhysiologySpecification(version=RulesetVersion('phase-3-ruleset-2'), status=SpecificationStatus.APPROVED, approved_rules=PHASE_3_RULESET_V1.approved_rules | frozenset({RuleId.DISCIPLINE_ZONES}))"
+  },
+  {
+    "path": "backend/app/modules/physiology/specification.py",
+    "line": 113,
+    "expression": "PHASE_3_RULESET_V3 = PhysiologySpecification(version=RulesetVersion('phase-3-ruleset-3'), status=SpecificationStatus.APPROVED, approved_rules=PHASE_3_RULESET_V2.approved_rules, evidence_references=('docs/requirements/physiology-formula-specification.md', 'docs/requirements/phase-0-7-decision-register.md'), applicability='Local MVP development for race-oriented adult triathletes.', contraindications=('No diagnosis or medical clearance.', 'No automatic injury-load redistribution.'), test_references=('backend/tests/physiology', 'backend/tests/test_planning_domain.py'), production_review=None)"
+  },
+  {
+    "path": "backend/app/modules/physiology/specification.py",
+    "line": 140,
+    "expression": "PHASE_10_RULESET_V1 = PhysiologySpecification(version=RulesetVersion('phase-10-ruleset-1'), status=SpecificationStatus.APPROVED, approved_rules=PHASE_3_RULESET_V3.approved_rules, evidence_references=('docs/implementation/mvp-roadmap.md#phase-10-athlete-controlled-weekly-planning-and-constrained-llm-coach', 'docs/requirements/physiology-formula-specification.md'), applicability='Local MVP development for race-oriented adult triathletes.', contraindications=PHASE_3_RULESET_V3.contraindications, test_references=('backend/tests/physiology/test_anti_stack.py', 'backend/tests/test_planning_domain.py'), production_review=None)"
+  },
+  {
+    "path": "backend/app/modules/physiology/specification.py",
+    "line": 158,
+    "expression": "PHASE_13_RULESET_V1 = PhysiologySpecification(version=RulesetVersion('phase-13-joren-ruleset-1'), status=SpecificationStatus.APPROVED, approved_rules=PHASE_10_RULESET_V1.approved_rules, evidence_references=('docs/requirements/phase-13-joren-ruleset-1.md', 'docs/requirements/Triathlon_Onboarding_StartTSS.pdf', 'docs/requirements/Triathlon_Zone_Calibratie_Voorbeelden.pdf', 'docs/requirements/Hoe TSS berekenen zones gekend (z) en zones onbekend (rpe).pdf'), applicability=PHASE_10_RULESET_V1.applicability, contraindications=PHASE_10_RULESET_V1.contraindications, test_references=('backend/tests/physiology/test_joren.py',), production_review=None)"
+  },
+  {
+    "path": "backend/app/modules/physiology/specification.py",
+    "line": 179,
+    "expression": "JOREN_PLANNING_RULESET_V2 = PhysiologySpecification(version=RulesetVersion('joren-planning-ruleset-2'), status=SpecificationStatus.APPROVED, approved_rules=PHASE_13_RULESET_V1.approved_rules, evidence_references=('docs/requirements/joren-workout-selection-phase-2026-09-28.md',), applicability=PHASE_13_RULESET_V1.applicability, contraindications=('No diagnosis or medical clearance.',), test_references=('backend/tests/test_planning_domain.py', 'backend/tests/physiology/test_anti_stack.py', 'backend/tests/physiology/test_injury.py'), production_review=None)"
+  },
+  {
+    "path": "backend/app/modules/physiology/specification.py",
+    "line": 13,
+    "expression": "DRAFT = 'draft'"
+  },
+  {
+    "path": "backend/app/modules/physiology/specification.py",
+    "line": 14,
+    "expression": "APPROVED = 'approved'"
+  },
+  {
+    "path": "backend/app/modules/physiology/taper.py",
+    "line": 33,
+    "expression": "_TAPER_FACTORS = {TaperPeriod.A_T_MINUS_2: Decimal('0.60'), TaperPeriod.A_T_MINUS_1: Decimal('0.35'), TaperPeriod.B_TAPER_WEEK: Decimal('0.50')}"
+  },
+  {
+    "path": "backend/app/modules/physiology/taper.py",
+    "line": 38,
+    "expression": "_PRIORITY_ORDER = {RacePriority.A: 0, RacePriority.B: 1, RacePriority.C: 2}"
+  },
+  {
+    "path": "backend/app/modules/physiology/taper.py",
+    "line": 20,
+    "expression": "A = 'A'"
+  },
+  {
+    "path": "backend/app/modules/physiology/taper.py",
+    "line": 21,
+    "expression": "B = 'B'"
+  },
+  {
+    "path": "backend/app/modules/physiology/taper.py",
+    "line": 22,
+    "expression": "C = 'C'"
+  },
+  {
+    "path": "backend/app/modules/physiology/taper.py",
+    "line": 28,
+    "expression": "A_T_MINUS_2 = 'a_t_minus_2'"
+  },
+  {
+    "path": "backend/app/modules/physiology/taper.py",
+    "line": 29,
+    "expression": "A_T_MINUS_1 = 'a_t_minus_1'"
+  },
+  {
+    "path": "backend/app/modules/physiology/taper.py",
+    "line": 30,
+    "expression": "B_TAPER_WEEK = 'b_taper_week'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 95,
+    "expression": "_METRIC_DISCIPLINE = {ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M: Discipline.SWIM, ZoneMetricKind.BIKE_FTP_WATTS: Discipline.BIKE, ZoneMetricKind.BIKE_THRESHOLD_HEART_RATE_BPM: Discipline.BIKE, ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM: Discipline.RUN, ZoneMetricKind.RUN_LTHR_BPM: Discipline.RUN}"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 102,
+    "expression": "_METRIC_DIRECTION = {ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M: ZoneScaleDirection.DESCENDING, ZoneMetricKind.BIKE_FTP_WATTS: ZoneScaleDirection.ASCENDING, ZoneMetricKind.BIKE_THRESHOLD_HEART_RATE_BPM: ZoneScaleDirection.ASCENDING, ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM: ZoneScaleDirection.DESCENDING, ZoneMetricKind.RUN_LTHR_BPM: ZoneScaleDirection.ASCENDING}"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 109,
+    "expression": "_PACE_METRICS = {ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M, ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM}"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 113,
+    "expression": "ZONE_MODEL_VERSION = RulesetVersion('start23-zone-model-1.0')"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 114,
+    "expression": "ZONE_MODEL_EVIDENCE_VERSION = 'voorstel-start23-zone-1-5-rekenmodel-v1.0'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 115,
+    "expression": "_ZONE_MODEL_RATIOS = {ZoneMetricKind.BIKE_FTP_WATTS: (Decimal('0.56'), Decimal('0.76'), Decimal('0.91'), Decimal('1.06')), ZoneMetricKind.BIKE_THRESHOLD_HEART_RATE_BPM: (Decimal('0.85'), Decimal('0.90'), Decimal('0.95'), Decimal('1.03')), ZoneMetricKind.RUN_LTHR_BPM: (Decimal('0.85'), Decimal('0.90'), Decimal('0.95'), Decimal('1.03')), ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM: (Decimal('0.78'), Decimal('0.88'), Decimal('0.95'), Decimal('1.02')), ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M: (Decimal('0.78'), Decimal('0.88'), Decimal('0.95'), Decimal('1.02'))}"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 147,
+    "expression": "_PRIMARY_METRIC_ORDER = {Discipline.SWIM: (ZoneMetricKind.SWIM_CSS_SECONDS_PER_100M,), Discipline.BIKE: (ZoneMetricKind.BIKE_FTP_WATTS, ZoneMetricKind.BIKE_THRESHOLD_HEART_RATE_BPM), Discipline.RUN: (ZoneMetricKind.RUN_THRESHOLD_PACE_SECONDS_PER_KM, ZoneMetricKind.RUN_LTHR_BPM)}"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 158,
+    "expression": "_TANAKA_BASE = Decimal('208')"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 159,
+    "expression": "_TANAKA_AGE_FACTOR = Decimal('0.7')"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 160,
+    "expression": "_AGE_220_BASE = Decimal('220')"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 161,
+    "expression": "_KARVONEN_BANDS = ((TrainingZone.ZONE_1, Decimal('0.50'), Decimal('0.60')), (TrainingZone.ZONE_2, Decimal('0.60'), Decimal('0.70')), (TrainingZone.ZONE_3, Decimal('0.70'), Decimal('0.80')), (TrainingZone.ZONE_4, Decimal('0.80'), Decimal('0.90')), (TrainingZone.ZONE_5, Decimal('0.90'), Decimal('1.00')))"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 27,
+    "expression": "SWIM_CSS_SECONDS_PER_100M = 'swim_css_seconds_per_100m'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 28,
+    "expression": "BIKE_FTP_WATTS = 'bike_ftp_watts'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 29,
+    "expression": "BIKE_THRESHOLD_HEART_RATE_BPM = 'bike_threshold_heart_rate_bpm'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 30,
+    "expression": "RUN_THRESHOLD_PACE_SECONDS_PER_KM = 'run_threshold_pace_seconds_per_km'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 31,
+    "expression": "RUN_LTHR_BPM = 'run_lthr_bpm'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 37,
+    "expression": "ASCENDING = 'ascending'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 38,
+    "expression": "DESCENDING = 'descending'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 44,
+    "expression": "WITHIN_SOFT_RANGE = 'within_soft_range'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 45,
+    "expression": "OUTSIDE_SOFT_RANGE = 'outside_soft_range'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 46,
+    "expression": "SOFT_RANGE_NOT_CONFIGURED = 'soft_range_not_configured'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 52,
+    "expression": "ATHLETE_ENTERED = 'athlete_entered'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 53,
+    "expression": "FIELD_TEST = 'field_test'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 54,
+    "expression": "WEARABLE_IMPORT = 'wearable_import'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 55,
+    "expression": "ESTIMATED = 'estimated'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 61,
+    "expression": "UNREVIEWED = 'unreviewed'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 62,
+    "expression": "CONFIRMED_BY_ATHLETE = 'confirmed_by_athlete'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 63,
+    "expression": "PROTOCOL_VALIDATED = 'protocol_validated'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 69,
+    "expression": "MEASURED_LAB = 'measured_lab'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 70,
+    "expression": "REVIEWED_FIELD_THRESHOLD = 'reviewed_field_threshold'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 71,
+    "expression": "SUBMAXIMAL_CALIBRATION_ESTIMATE = 'submaximal_calibration_estimate'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 72,
+    "expression": "ATHLETE_ENTERED = 'athlete_entered'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 73,
+    "expression": "ESTIMATED = 'estimated'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 74,
+    "expression": "UNKNOWN = 'unknown'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 80,
+    "expression": "WITHIN_TOLERANCE = 'within_tolerance'"
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "line": 81,
+    "expression": "OUTSIDE_TOLERANCE = 'outside_tolerance'"
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "line": 76,
+    "expression": "INITIAL_CATALOG_BASELINE = 'initial_catalog_baseline'"
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "line": 77,
+    "expression": "PRIOR_PLANNED_HOLD = 'prior_planned_hold'"
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "line": 78,
+    "expression": "REALIZED_PROGRESSION = 'realized_progression'"
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "line": 79,
+    "expression": "REALIZED_BASELINE = 'realized_baseline'"
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "line": 80,
+    "expression": "INACTIVE_RESTART = 'inactive_restart'"
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "line": 81,
+    "expression": "MAINTENANCE_HOLD = 'maintenance_hold'"
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "line": 82,
+    "expression": "PHYSIOLOGICAL_DEBT = 'physiological_debt'"
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "line": 83,
+    "expression": "MANUAL_REVIEW_RECOVERY = 'manual_review_recovery'"
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "line": 84,
+    "expression": "ACTIVITY_CORRECTION = 'activity_correction'"
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "line": 85,
+    "expression": "RECOVERY_FACTOR = 'recovery_factor'"
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "line": 86,
+    "expression": "TAPER_FACTOR = 'taper_factor'"
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "line": 87,
+    "expression": "INJURY_REST_ONLY = 'injury_rest_only'"
+  },
+  {
+    "path": "backend/app/modules/planning/service.py",
+    "line": 135,
+    "expression": "_ZONE_REQUIREMENT_BY_METRIC = {'swim_css_seconds_per_100m': ZoneRequirement.PACE, 'bike_ftp_watts': ZoneRequirement.POWER, 'bike_threshold_heart_rate_bpm': ZoneRequirement.HEART_RATE, 'run_threshold_pace_seconds_per_km': ZoneRequirement.PACE, 'run_lthr_bpm': ZoneRequirement.HEART_RATE}"
+  },
+  {
+    "path": "backend/app/modules/planning/service.py",
+    "line": 142,
+    "expression": "_RPE_GUIDANCE_PROTOCOL_BY_DISCIPLINE = {Discipline.SWIM: 'start23_week1_swim_calibration_v1', Discipline.BIKE: 'start23_week1_bike_calibration_v1', Discipline.RUN: 'start23_week1_run_calibration_v1'}"
+  },
+  {
+    "path": "backend/app/modules/planning/swipe.py",
+    "line": 15,
+    "expression": "ACCEPT = 'accept'"
+  },
+  {
+    "path": "backend/app/modules/planning/swipe.py",
+    "line": 16,
+    "expression": "PASS = 'pass'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 25,
+    "expression": "CALIBRATION_RULESET_VERSION: Final = 'start23-calibration-ruleset-v2'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 329,
+    "expression": "PROTOCOLS: Final[dict[str, CalibrationProtocol]] = {'start23_run_threshold_30min_v1': CalibrationProtocol(protocol_id='start23_run_threshold_30min_v1', discipline=Discipline.RUN, protocol_type=ProtocolType.FIELD_TEST, version=1, review_status=ProtocolReviewStatus.APPROVED_ACTIVE, lifecycle=ProtocolLifecycle.HISTORICAL_READ_ONLY, result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED, guidance_modes=('heart_rate', 'pace', 'combined'), segments=(_segment(1, 'warmup', 'prepare', 900, None, 2, 3), _segment(2, 'strides', 'prepare', 300, None, 5, 6), _segment(3, 'test_30min', 'valid_test_segment', 1800, None, 7, 8), _segment(4, 'cooldown', 'recovery', 600, None, 2, 3))), 'start23_bike_ftp_30min_v1': CalibrationProtocol(protocol_id='start23_bike_ftp_30min_v1', discipline=Discipline.BIKE, protocol_type=ProtocolType.FIELD_TEST, version=1, review_status=ProtocolReviewStatus.APPROVED_ACTIVE, lifecycle=ProtocolLifecycle.HISTORICAL_READ_ONLY, result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED, guidance_modes=('power', 'combined'), segments=(_segment(1, 'warmup', 'prepare', 1200, None, 2, 3), _segment(2, 'test_30min', 'valid_test_segment', 1800, None, 7, 8), _segment(3, 'cooldown', 'recovery', 600, None, 2, 3))), 'start23_bike_fthr_20min_v1': CalibrationProtocol(protocol_id='start23_bike_fthr_20min_v1', discipline=Discipline.BIKE, protocol_type=ProtocolType.FIELD_TEST, version=1, review_status=ProtocolReviewStatus.APPROVED_ACTIVE, lifecycle=ProtocolLifecycle.HISTORICAL_READ_ONLY, result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED, guidance_modes=('heart_rate',), segments=(_segment(1, 'warmup', 'prepare', 1200, None, 2, 3), _segment(2, 'test_20min', 'valid_test_segment', 1200, None, 7, 8), _segment(3, 'cooldown', 'recovery', 600, None, 2, 3))), 'start23_swim_css_400_200_v1': CalibrationProtocol(protocol_id='start23_swim_css_400_200_v1', discipline=Discipline.SWIM, protocol_type=ProtocolType.FIELD_TEST, version=1, review_status=ProtocolReviewStatus.APPROVED_ACTIVE, lifecycle=ProtocolLifecycle.CURRENT_SELECTABLE, result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED, guidance_modes=('pace',), segments=(_segment(1, 'warmup', 'prepare', None, 600, 2, 3), _segment(2, 'tt_400m', 'valid_test_segment', None, 400, 9, 10), _segment(3, 'active_recovery', 'recovery_between_tests', 420, None, 2, 3), _segment(4, 'tt_200m', 'valid_test_segment', None, 200, 9, 10), _segment(5, 'cooldown', 'recovery', None, 200, 2, 3))), 'start23_week1_run_calibration_v1': CalibrationProtocol(protocol_id='start23_week1_run_calibration_v1', discipline=Discipline.RUN, protocol_type=ProtocolType.SUBMAXIMAL_CALIBRATION, version=1, review_status=ProtocolReviewStatus.APPROVED_ACTIVE, lifecycle=ProtocolLifecycle.CURRENT_SELECTABLE, result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED, guidance_modes=('heart_rate',), segments=(_segment(1, 'warmup', 'prepare', 600, None, 2, 3), _segment(2, 'comfortable_20min', 'calibration_observation', 1200, None, 4, 4), _segment(3, 'steady_8min_optional', 'optional_calibration_observation', 480, None, 5, 6, optional=True), _segment(4, 'cooldown', 'recovery', 600, None, 2, 3))), 'start23_week1_bike_calibration_v1': CalibrationProtocol(protocol_id='start23_week1_bike_calibration_v1', discipline=Discipline.BIKE, protocol_type=ProtocolType.SUBMAXIMAL_CALIBRATION, version=1, review_status=ProtocolReviewStatus.APPROVED_ACTIVE, lifecycle=ProtocolLifecycle.CURRENT_SELECTABLE, result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED, guidance_modes=('heart_rate', 'combined'), segments=(_segment(1, 'warmup', 'prepare', 900, None, 2, 3), _segment(2, 'comfortable_20min', 'calibration_observation', 1200, None, 4, 4), _segment(3, 'steady_10min_optional', 'optional_calibration_observation', 600, None, 5, 6, optional=True), _segment(4, 'cooldown', 'recovery', 600, None, 2, 3))), 'start23_week1_swim_calibration_v1': CalibrationProtocol(protocol_id='start23_week1_swim_calibration_v1', discipline=Discipline.SWIM, protocol_type=ProtocolType.SUBMAXIMAL_CALIBRATION, version=1, review_status=ProtocolReviewStatus.APPROVED_ACTIVE, lifecycle=ProtocolLifecycle.CURRENT_SELECTABLE, result_status_on_success=EvaluationStatus.THRESHOLD_ESTIMATED, guidance_modes=('pace',), segments=(_segment(1, 'warmup', 'prepare', None, 300, 2, 3), _segment(2, '4x200_comfortable', 'calibration_observation', None, 800, 4, 4), _segment(3, '4x100_steady', 'calibration_observation', None, 400, 5, 6), _segment(4, 'cooldown', 'recovery', None, 200, 2, 3)))}"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 31,
+    "expression": "KNOWN_VALUES = 'known_values'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 32,
+    "expression": "FIELD_TEST = 'field_test'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 33,
+    "expression": "CALIBRATION_WEEK = 'calibration_week'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 34,
+    "expression": "RPE_ONLY = 'rpe_only'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 40,
+    "expression": "POWER = 'power'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 41,
+    "expression": "HEART_RATE = 'heart_rate'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 42,
+    "expression": "COMBINED = 'combined'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 43,
+    "expression": "PACE = 'pace'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 44,
+    "expression": "RPE_ONLY = 'rpe_only'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 50,
+    "expression": "FIELD_TEST = 'field_test'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 51,
+    "expression": "SUBMAXIMAL_CALIBRATION = 'submaximal_calibration'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 57,
+    "expression": "STANDALONE = 'standalone'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 58,
+    "expression": "WEEKLY_PLAN = 'weekly_plan'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 64,
+    "expression": "VISIBLE = 'visible'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 65,
+    "expression": "RPE_GUIDED = 'rpe_guided'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 66,
+    "expression": "WEEK_2_EVALUATION_PENDING = 'week_2_evaluation_pending'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 67,
+    "expression": "PROPOSAL_CONFIRMATION_PENDING = 'proposal_confirmation_pending'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 73,
+    "expression": "APPROVED_ACTIVE = 'approved_active'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 79,
+    "expression": "CURRENT_SELECTABLE = 'current_selectable'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 80,
+    "expression": "HISTORICAL_READ_ONLY = 'historical_read_only'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 86,
+    "expression": "INSUFFICIENT_DATA = 'insufficient_data'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 87,
+    "expression": "RPE_ONLY = 'rpe_only'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 88,
+    "expression": "PROVISIONALLY_CALIBRATED = 'provisionally_calibrated'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 89,
+    "expression": "THRESHOLD_ESTIMATED = 'threshold_estimated'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 90,
+    "expression": "INSUFFICIENT_PROTOCOL = 'insufficient_protocol'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 96,
+    "expression": "UNKNOWN = 'unknown'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 97,
+    "expression": "ESTIMATED = 'threshold_estimated'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 103,
+    "expression": "UNKNOWN = 'unknown'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 104,
+    "expression": "PROVISIONAL = 'provisionally_calibrated'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 105,
+    "expression": "PENDING_ATHLETE_CONFIRMATION = 'pending_athlete_confirmation'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 107,
+    "expression": "PENDING_PROTOCOL = 'pending_protocol'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 113,
+    "expression": "NOT_ASSESSED = 'not_assessed'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 114,
+    "expression": "LOW = 'low'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 115,
+    "expression": "MEDIUM = 'medium'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 121,
+    "expression": "MISSING = 'missing'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 122,
+    "expression": "INSUFFICIENT = 'insufficient'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 123,
+    "expression": "SUFFICIENT = 'sufficient'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 129,
+    "expression": "YES = 'yes'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 130,
+    "expression": "MOSTLY = 'mostly'"
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "line": 131,
+    "expression": "NO = 'no'"
+  },
+  {
+    "path": "backend/app/modules/calibration/service.py",
+    "line": 67,
+    "expression": "_GUIDANCE_BY_DISCIPLINE = {Discipline.SWIM: {GuidanceMode.PACE}, Discipline.BIKE: {GuidanceMode.POWER, GuidanceMode.HEART_RATE, GuidanceMode.COMBINED}, Discipline.RUN: {GuidanceMode.HEART_RATE, GuidanceMode.PACE, GuidanceMode.COMBINED}}"
+  },
+  {
+    "path": "backend/app/modules/calibration/service.py",
+    "line": 80,
+    "expression": "_CALIBRATION_PROTOCOL_BY_DISCIPLINE = {Discipline.SWIM: 'start23_week1_swim_calibration_v1', Discipline.BIKE: 'start23_week1_bike_calibration_v1', Discipline.RUN: 'start23_week1_run_calibration_v1'}"
+  },
+  {
+    "path": "backend/app/modules/checkins/domain.py",
+    "line": 27,
+    "expression": "_STATUS_INTENSITY = {RestrictionStatus.NONE: AllowedIntensity.UNRESTRICTED, RestrictionStatus.SELF_REPORTED_LIMITED: AllowedIntensity.LOW_ONLY, RestrictionStatus.SELF_REPORTED_BLOCKED: AllowedIntensity.NONE, RestrictionStatus.PROFESSIONAL_RESTRICTED: AllowedIntensity.NONE, RestrictionStatus.CLEARANCE_REQUIRED: AllowedIntensity.NONE, RestrictionStatus.EXPIRED: AllowedIntensity.NONE}"
+  },
+  {
+    "path": "backend/app/modules/checkins/domain.py",
+    "line": 36,
+    "expression": "_STATUS_CHOICE = {RestrictionStatus.NONE: AthletePlanChoice.RESUME_UNRESTRICTED, RestrictionStatus.SELF_REPORTED_LIMITED: AthletePlanChoice.TRAIN_LOW_ONLY, RestrictionStatus.SELF_REPORTED_BLOCKED: AthletePlanChoice.KEEP_BLOCKED, RestrictionStatus.PROFESSIONAL_RESTRICTED: AthletePlanChoice.KEEP_BLOCKED, RestrictionStatus.CLEARANCE_REQUIRED: AthletePlanChoice.KEEP_BLOCKED, RestrictionStatus.EXPIRED: AthletePlanChoice.KEEP_BLOCKED}"
+  },
+  {
+    "path": "backend/app/modules/checkins/domain.py",
+    "line": 22,
+    "expression": "KEEP_BLOCKED = 'keep_blocked'"
+  },
+  {
+    "path": "backend/app/modules/checkins/domain.py",
+    "line": 23,
+    "expression": "TRAIN_LOW_ONLY = 'train_low_only'"
+  },
+  {
+    "path": "backend/app/modules/checkins/domain.py",
+    "line": 24,
+    "expression": "RESUME_UNRESTRICTED = 'resume_unrestricted'"
+  },
+  {
+    "path": "backend/app/modules/checkins/schemas.py",
+    "line": 23,
+    "expression": "NONE = 'none'"
+  },
+  {
+    "path": "backend/app/modules/checkins/schemas.py",
+    "line": 24,
+    "expression": "LOW = 'low'"
+  },
+  {
+    "path": "backend/app/modules/checkins/schemas.py",
+    "line": 25,
+    "expression": "MODERATE = 'moderate'"
+  },
+  {
+    "path": "backend/app/modules/checkins/schemas.py",
+    "line": 26,
+    "expression": "HIGH = 'high'"
+  },
+  {
+    "path": "backend/app/modules/checkins/schemas.py",
+    "line": 30,
+    "expression": "TIME_CONSTRAINT = 'time_constraint'"
+  },
+  {
+    "path": "backend/app/modules/checkins/schemas.py",
+    "line": 31,
+    "expression": "FATIGUE = 'fatigue'"
+  },
+  {
+    "path": "backend/app/modules/checkins/schemas.py",
+    "line": 32,
+    "expression": "INJURY = 'injury'"
+  },
+  {
+    "path": "backend/app/modules/checkins/schemas.py",
+    "line": 33,
+    "expression": "ILLNESS = 'illness'"
+  },
+  {
+    "path": "backend/app/modules/checkins/schemas.py",
+    "line": 34,
+    "expression": "MOTIVATION = 'motivation'"
+  },
+  {
+    "path": "backend/app/modules/checkins/schemas.py",
+    "line": 35,
+    "expression": "WEATHER = 'weather'"
+  },
+  {
+    "path": "backend/app/modules/checkins/schemas.py",
+    "line": 36,
+    "expression": "OTHER = 'other'"
+  },
+  {
+    "path": "backend/app/modules/onboarding/eligibility.py",
+    "line": 9,
+    "expression": "RACE_REQUIRED_DISCIPLINES: dict[str, tuple[Discipline, ...]] = {'run': (Discipline.RUN,), 'bike': (Discipline.BIKE,), 'swim': (Discipline.SWIM,), 'duathlon': (Discipline.BIKE, Discipline.RUN), 'triathlon': (Discipline.SWIM, Discipline.BIKE, Discipline.RUN)}"
+  },
+  {
+    "path": "backend/app/modules/onboarding/versioning.py",
+    "line": 30,
+    "expression": "CURRENT_ONBOARDING_VERSION: Final = 'phase-14-onboarding-v2'"
+  },
+  {
+    "path": "backend/app/modules/onboarding/versioning.py",
+    "line": 31,
+    "expression": "CURRENT_RULESET_VERSION: Final = JOREN_RULESET_VERSION.value"
+  },
+  {
+    "path": "backend/app/modules/onboarding/versioning.py",
+    "line": 32,
+    "expression": "LEGACY_UNVERSIONED_ONBOARDING: Final = 'legacy-unversioned'"
+  },
+  {
+    "path": "backend/app/modules/onboarding/versioning.py",
+    "line": 33,
+    "expression": "CURRENT_REQUIRED_STEPS: tuple[OnboardingStep, ...] = ('profile', 'heart_rate_monitor', 'timezone', 'history', 'goal', 'zones')"
+  },
+  {
+    "path": "backend/app/modules/onboarding/versioning.py",
+    "line": 41,
+    "expression": "CURRENT_COMPLETION_STEPS: tuple[OnboardingStep, ...] = (*CURRENT_REQUIRED_STEPS, 'review')"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 56,
+    "expression": "EXPLICIT_FIELD_TEST_PROTOCOL_IDS = frozenset((protocol.protocol_id for protocol in PROTOCOLS.values() if protocol.protocol_type is ProtocolType.FIELD_TEST))"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 534,
+    "expression": "REVIEWED_CATALOG: tuple[WorkoutTemplate, ...] = (_template(id='51000000-0000-0000-0000-000000000001', key='50000000-0000-0000-0000-000000000001', version=1, discipline=Discipline.SWIM, name='Technique foundation', description='Relaxed technique work with an aerobic finish.', phases=(TrainingPhase.BASE, TrainingPhase.RECOVERY), requirements=(ZoneRequirement.PACE,), fallback=FallbackCompatibility.INCOMPATIBLE, segments=(_segment(1, 'Easy warm-up', '10', 1, 2, technique=True, distance=400), _segment(2, 'Technique drills', '20', 2, 3, technique=True, distance=800), _segment(3, 'Aerobic finish', '10', 2, 3, distance=400)), distance_meters=1600), _template(id='51000000-0000-0000-0000-000000000002', key='50000000-0000-0000-0000-000000000002', version=1, discipline=Discipline.SWIM, name='Threshold repeats', description='Controlled threshold blocks with easy swimming around them.', phases=(TrainingPhase.BUILD,), requirements=(ZoneRequirement.PACE,), fallback=FallbackCompatibility.INCOMPATIBLE, segments=(_segment(1, 'Warm-up', '10', 2, 3, distance=400), _segment(2, 'Threshold repeats', '30', 4, 8, distance=1200), _segment(3, 'Cool-down', '10', 1, 2, distance=400)), distance_meters=2000), _template(id='51000000-0000-0000-0000-000000000003', key='50000000-0000-0000-0000-000000000003', version=1, discipline=Discipline.BIKE, name='Aerobic endurance', description='Steady low-intensity endurance ride.', phases=(TrainingPhase.BASE, TrainingPhase.BUILD, TrainingPhase.RECOVERY), requirements=(ZoneRequirement.HEART_RATE,), fallback=FallbackCompatibility.COMPATIBLE, segments=(_segment(1, 'Easy roll-out', '10', 1, 2), _segment(2, 'Endurance riding', '40', 2, 4), _segment(3, 'Easy finish', '10', 1, 2))), _template(id='51000000-0000-0000-0000-000000000004', key='50000000-0000-0000-0000-000000000004', version=1, discipline=Discipline.BIKE, name='Power intervals', description='High-intensity bike intervals guided by power.', phases=(TrainingPhase.BUILD,), requirements=(ZoneRequirement.POWER,), fallback=FallbackCompatibility.INCOMPATIBLE, segments=(_segment(1, 'Warm-up', '10', 2, 3), _segment(2, 'Power intervals', '30', 4, 8), _segment(3, 'Cool-down', '10', 1, 2))), _template(id='51000000-0000-0000-0000-000000000005', key='50000000-0000-0000-0000-000000000005', version=1, discipline=Discipline.RUN, name='Easy aerobic run', description='Comfortable aerobic running with a relaxed finish.', phases=(TrainingPhase.BASE, TrainingPhase.RECOVERY, TrainingPhase.TAPER), requirements=(ZoneRequirement.HEART_RATE,), fallback=FallbackCompatibility.COMPATIBLE, segments=(_segment(1, 'Easy start', '10', 1, 2), _segment(2, 'Aerobic running', '25', 2, 4), _segment(3, 'Relaxed finish', '5', 1, 2))), _template(id='51000000-0000-0000-0000-000000000006', key='50000000-0000-0000-0000-000000000006', version=1, discipline=Discipline.RUN, name='Tempo intervals', description='Structured high-intensity running with easy bookends.', phases=(TrainingPhase.BUILD,), requirements=(ZoneRequirement.PACE,), fallback=FallbackCompatibility.INCOMPATIBLE, segments=(_segment(1, 'Warm-up', '10', 2, 3), _segment(2, 'Tempo intervals', '25', 4, 8), _segment(3, 'Cool-down', '10', 1, 2))), _template(id='52000000-0000-0000-0000-000000000005', key='50000000-0000-0000-0000-000000000005', version=2, discipline=Discipline.RUN, name='Easy aerobic run', description='Comfortable aerobic running with a longer steady middle.', phases=(TrainingPhase.BASE, TrainingPhase.RECOVERY, TrainingPhase.TAPER), requirements=(ZoneRequirement.HEART_RATE,), fallback=FallbackCompatibility.COMPATIBLE, segments=(_segment(1, 'Easy start', '10', 1, 2), _segment(2, 'Aerobic running', '30', 2, 4), _segment(3, 'Relaxed finish', '5', 1, 2))))"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 651,
+    "expression": "PHASE_6_CATALOG_ADDITIONS: tuple[WorkoutTemplate, ...] = (_template(id='53000000-0000-0000-0000-000000000007', key='50000000-0000-0000-0000-000000000007', version=1, discipline=Discipline.BIKE, name='Power-guided aerobic endurance', description='Steady low-intensity endurance riding guided by power zones.', phases=(TrainingPhase.BASE, TrainingPhase.BUILD, TrainingPhase.RECOVERY), requirements=(ZoneRequirement.POWER,), fallback=FallbackCompatibility.INCOMPATIBLE, segments=(_segment(1, 'Easy roll-out', '10', 1, 2), _segment(2, 'Power-zone endurance', '40', 2, 4), _segment(3, 'Easy finish', '10', 1, 2))),)"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 670,
+    "expression": "PHASE_8_5_PROTOCOL_ADDITIONS: tuple[WorkoutTemplate, ...] = (_template(id='54000000-0000-0000-0000-000000000008', key='50000000-0000-0000-0000-000000000008', version=1, discipline=Discipline.BIKE, name='Week-1 fietskalibratie', description='Submaximale fietskalibratie op protocol en RPE, zonder verzonnen zones.', phases=(TrainingPhase.BASE,), requirements=(), fallback=FallbackCompatibility.INCOMPATIBLE, segments=(_protocol_segment(1, 'Warming-up', '15', 2, 3, IntensityBucket.LOW, protocol_id='start23_week1_bike_calibration_v1', segment_id='warmup', purpose='Rustig opwarmen volgens het kalibratieprotocol.'), _protocol_segment(2, 'Comfortabel blok', '20', 3, 4, IntensityBucket.LOW, protocol_id='start23_week1_bike_calibration_v1', segment_id='comfortable_20min', purpose='Rijd comfortabel en gelijkmatig; registreer de observaties.'), _protocol_segment(3, 'Gestaag blok (optioneel)', '10', 5, 6, IntensityBucket.HIGH, protocol_id='start23_week1_bike_calibration_v1', segment_id='steady_10min_optional', purpose='Voer alleen uit als het comfortabele blok goed voelde.', optional=True), _protocol_segment(4, 'Cooling-down', '10', 1, 2, IntensityBucket.LOW, protocol_id='start23_week1_bike_calibration_v1', segment_id='cooldown', purpose='Rustig uitrijden en daarna sessie-RPE registreren.'))),)"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 733,
+    "expression": "PHASE_11_FIELD_TEST_ADDITIONS: tuple[WorkoutTemplate, ...] = (_template(id='55000000-0000-0000-0000-000000000009', key='50000000-0000-0000-0000-000000000009', version=1, discipline=Discipline.RUN, name='Loopdrempel 30-minuten veldtest', description='Beoordeelde veldtest op protocol en RPE; alleen na dagkeuze.', phases=(TrainingPhase.BASE, TrainingPhase.BUILD), requirements=(), fallback=FallbackCompatibility.INCOMPATIBLE, explicit_scheduling_only=True, segments=(_protocol_segment(1, 'Rustige opwarming', '15', 2, 3, IntensityBucket.LOW, protocol_id='start23_run_threshold_30min_v1', segment_id='warmup', purpose='Rustig lopen; volledige zinnen mogelijk.'), _protocol_segment(2, 'Korte versnellingen', '5', 5, 7, IntensityBucket.HIGH, protocol_id='start23_run_threshold_30min_v1', segment_id='strides', purpose='Korte gecontroleerde versnellingen; niet maximaal.'), _protocol_segment(3, '30-minuten tijdrit', '30', 8, 9, IntensityBucket.HIGH, protocol_id='start23_run_threshold_30min_v1', segment_id='test_30min', purpose='Zo hard mogelijk maar gelijkmatig; geen sprintstart.'), _protocol_segment(4, 'Uitlopen', '10', 1, 2, IntensityBucket.LOW, protocol_id='start23_run_threshold_30min_v1', segment_id='cooldown', purpose='Zeer rustig uitlopen en sessie-RPE registreren.'))), _template(id='55000000-0000-0000-0000-000000000010', key='50000000-0000-0000-0000-000000000010', version=1, discipline=Discipline.BIKE, name='Fiets FTP 30-minuten veldtest', description='Beoordeelde vermogensveldtest; alleen na dagkeuze.', phases=(TrainingPhase.BASE, TrainingPhase.BUILD), requirements=(), fallback=FallbackCompatibility.INCOMPATIBLE, explicit_scheduling_only=True, segments=(_protocol_segment(1, 'Opwarming', '20', 2, 4, IntensityBucket.LOW, protocol_id='start23_bike_ftp_30min_v1', segment_id='warmup', purpose='Rustig opbouwen met korte gecontroleerde versnellingen.'), _protocol_segment(2, '30-minuten vermogenstest', '30', 8, 9, IntensityBucket.HIGH, protocol_id='start23_bike_ftp_30min_v1', segment_id='test_30min', purpose='Zo hard mogelijk maar gelijkmatig; vermijd pieken en vrijloop.'), _protocol_segment(3, 'Cooling-down', '10', 1, 2, IntensityBucket.LOW, protocol_id='start23_bike_ftp_30min_v1', segment_id='cooldown', purpose='Zeer rustig uitfietsen en sessie-RPE registreren.'))), _template(id='55000000-0000-0000-0000-000000000011', key='50000000-0000-0000-0000-000000000011', version=1, discipline=Discipline.BIKE, name='Fiets drempelhartslag veldtest', description='Beoordeelde hartslagveldtest; alleen na dagkeuze.', phases=(TrainingPhase.BASE, TrainingPhase.BUILD), requirements=(), fallback=FallbackCompatibility.INCOMPATIBLE, explicit_scheduling_only=True, segments=(_protocol_segment(1, 'Opwarming', '20', 2, 4, IntensityBucket.LOW, protocol_id='start23_bike_fthr_20min_v1', segment_id='warmup', purpose='Rustig opbouwen met korte versnellingen.'), _protocol_segment(2, '20-minuten tijdrit', '20', 8, 9, IntensityBucket.HIGH, protocol_id='start23_bike_fthr_20min_v1', segment_id='test_20min', purpose='Gelijkmatige zware solo-inspanning; geen sprintstart.'), _protocol_segment(3, 'Cooling-down', '10', 1, 2, IntensityBucket.LOW, protocol_id='start23_bike_fthr_20min_v1', segment_id='cooldown', purpose='Zeer rustig uitfietsen en sessie-RPE registreren.'))))"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 940,
+    "expression": "MVP_CATALOG_ADDITIONS: tuple[WorkoutTemplate, ...] = (_template(id='52000000-0000-0000-0000-000000000001', key='50000000-0000-0000-0000-000000000001', version=2, discipline=Discipline.SWIM, name='Aerobic swim', description='Relaxed continuous swimming for aerobic endurance.', phases=(TrainingPhase.BASE, TrainingPhase.RECOVERY), requirements=(ZoneRequirement.PACE,), fallback=FallbackCompatibility.INCOMPATIBLE, segments=(_segment(1, 'Easy warm-up', '10', 1, 2, distance=400), _segment(2, 'Aerobic swimming', '20', 2, 4, distance=800), _segment(3, 'Easy finish', '10', 1, 2, distance=400)), distance_meters=1600), _canonical_protocol_version(PHASE_8_5_PROTOCOL_ADDITIONS[0], id='56000000-0000-0000-0000-000000000008'), _canonical_protocol_version(PHASE_11_FIELD_TEST_ADDITIONS[0], id='56000000-0000-0000-0000-000000000009'), _canonical_protocol_version(PHASE_11_FIELD_TEST_ADDITIONS[1], id='56000000-0000-0000-0000-000000000010'), _canonical_protocol_version(PHASE_11_FIELD_TEST_ADDITIONS[2], id='56000000-0000-0000-0000-000000000011'))"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 976,
+    "expression": "CURRENT_CATALOG = REVIEWED_CATALOG + MVP_CATALOG_ADDITIONS + PHASE_6_CATALOG_ADDITIONS + PHASE_8_5_PROTOCOL_ADDITIONS + PHASE_11_FIELD_TEST_ADDITIONS"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 35,
+    "expression": "BASE = 'base'"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 36,
+    "expression": "BUILD = 'build'"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 37,
+    "expression": "RECOVERY = 'recovery'"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 38,
+    "expression": "TAPER = 'taper'"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 44,
+    "expression": "HEART_RATE = 'heart_rate'"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 45,
+    "expression": "PACE = 'pace'"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 46,
+    "expression": "POWER = 'power'"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 52,
+    "expression": "COMPATIBLE = 'compatible'"
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "line": 53,
+    "expression": "INCOMPATIBLE = 'incompatible'"
+  },
+  {
+    "path": "backend/app/modules/workouts/source_catalog_audit.py",
+    "line": 11,
+    "expression": "_SPORT_PREFIXES = {'Fietsen': 'BIK-', 'Lopen': 'RUN-', 'Zwemmen': 'SWI-'}"
+  },
+  {
+    "path": "backend/app/modules/workouts/source_catalog_audit.py",
+    "line": 12,
+    "expression": "_BUCKETS = {'80%', '20%'}"
+  },
+  {
+    "path": "backend/app/modules/workouts/source_catalog_audit.py",
+    "line": 13,
+    "expression": "_MINUTE_PATTERN = re.compile(\"^(\\\\d+)'$\")"
+  },
+  {
+    "path": "backend/app/modules/workouts/source_catalog_audit.py",
+    "line": 14,
+    "expression": "_DISTANCE_PATTERN = re.compile('^(\\\\d+)m$')"
+  },
+  {
+    "path": "backend/app/modules/workouts/source_catalog_audit.py",
+    "line": 15,
+    "expression": "_RPE_ZONE_PATTERN = re.compile('^Zone ([1-5]) · RPE (2-3|4|5-6|7-8|9-10)$')"
+  },
+  {
+    "path": "backend/app/modules/workouts/source_catalog_audit.py",
+    "line": 16,
+    "expression": "_RPE_LABELS = {1: '2-3', 2: '4', 3: '5-6', 4: '7-8', 5: '9-10'}"
+  },
+  {
+    "path": "backend/app/modules/integrations/domain.py",
+    "line": 18,
+    "expression": "_DURATION = re.compile('^P(?:\\\\d+D)?T(?:(?P<hours>\\\\d+)H)?(?:(?P<minutes>\\\\d+)M)?(?:(?P<seconds>\\\\d+(?:\\\\.\\\\d+)?)S)?$')"
+  },
+  {
+    "path": "backend/app/modules/integrations/domain.py",
+    "line": 22,
+    "expression": "_ENTITY_ID = re.compile('^[A-Za-z0-9_-]{1,200}$')"
+  },
+  {
+    "path": "backend/app/modules/integrations/domain.py",
+    "line": 23,
+    "expression": "_MAX_WEBHOOK_SKEW = timedelta(minutes=10)"
+  },
+  {
+    "path": "backend/app/modules/integrations/domain.py",
+    "line": 24,
+    "expression": "_MAX_WEBHOOK_BYTES = 16 * 1024"
+  },
+  {
+    "path": "backend/app/modules/integrations/polar.py",
+    "line": 45,
+    "expression": "_AUTH_URL = 'https://flow.polar.com/oauth2/authorization'"
+  },
+  {
+    "path": "backend/app/modules/integrations/polar.py",
+    "line": 46,
+    "expression": "_TOKEN_URL = 'https://polarremote.com/v2/oauth2/token'"
+  },
+  {
+    "path": "backend/app/modules/integrations/polar.py",
+    "line": 47,
+    "expression": "_API_URL = 'https://www.polaraccesslink.com/v3'"
+  },
+  {
+    "path": "backend/app/modules/integrations/repository.py",
+    "line": 90,
+    "expression": "_BUCKET = 'activity-files'"
+  },
+  {
+    "path": "backend/app/modules/integrations/service.py",
+    "line": 28,
+    "expression": "_IMPORT_NAMESPACE = UUID('f957ef4d-3b54-44d7-9d62-cbe4992a07d1')"
+  },
+  {
+    "path": "backend/app/modules/integrations/service.py",
+    "line": 29,
+    "expression": "_RETRY_BASE_DELAY = timedelta(minutes=5)"
+  },
+  {
+    "path": "backend/app/modules/integrations/service.py",
+    "line": 30,
+    "expression": "_RETRY_MAX_DELAY = timedelta(hours=6)"
+  }
+]

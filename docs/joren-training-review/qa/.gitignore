@@ -1,0 +1,8 @@
+*.png
+pdf/
+pdf-final/
+*-copy.xlsx
+artifact-errors.json
+artifact-inspection.json
+backend-tests-sandbox-partial.txt
+workbook-build.txt

@@ -1,0 +1,922 @@
+[
+  {
+    "path": "backend/app/modules/physiology/__init__.py",
+    "sha256": "53dd6bff2f69c310b73e76e57a5d2f13b8269468ea130a280d5eda7a47ac7746",
+    "lines": 59
+  },
+  {
+    "path": "backend/app/modules/physiology/activity.py",
+    "sha256": "7ae12be6e548560177c434e433108a633e949b32438e5b971971e01ddd493378",
+    "lines": 183
+  },
+  {
+    "path": "backend/app/modules/physiology/anti_stack.py",
+    "sha256": "b6fe11a7cd879fe7b4200bf0f6b3d551afffc2618050c367b5259c1ba9b831ce",
+    "lines": 90
+  },
+  {
+    "path": "backend/app/modules/physiology/debt.py",
+    "sha256": "4a5efa116f2d895b4227aa45d52fe4748acac384ffddc4a04bd3a3c33ff7c8ab",
+    "lines": 154
+  },
+  {
+    "path": "backend/app/modules/physiology/injury.py",
+    "sha256": "48bbb0abe6e7a55f87894b696c94735c2ab5aa29b46f561bac619852b2e4d59c",
+    "lines": 351
+  },
+  {
+    "path": "backend/app/modules/physiology/intensity.py",
+    "sha256": "9b6a616cb18db94598649d9adee84e1304a10023f673bc4e3f85056cca8945ff",
+    "lines": 213
+  },
+  {
+    "path": "backend/app/modules/physiology/joren.py",
+    "sha256": "86b1f0dda8f50055808a38810c17d68a65c6221504fd393c9b825b22927455cd",
+    "lines": 322
+  },
+  {
+    "path": "backend/app/modules/physiology/models.py",
+    "sha256": "19b648ed710f14b8d412a08ba7e63f4da2a85454ec3ae3ee1c61ad6026fcaeca",
+    "lines": 135
+  },
+  {
+    "path": "backend/app/modules/physiology/precedence.py",
+    "sha256": "0af2bcdcdc33265dd290fccd099536242a53c9dc55f4bf532e50711ccced62fe",
+    "lines": 50
+  },
+  {
+    "path": "backend/app/modules/physiology/progression.py",
+    "sha256": "734406197eb180c8f3923ed60804d7be0bbcee6ee5c3cc1295c599ac9163b836",
+    "lines": 125
+  },
+  {
+    "path": "backend/app/modules/physiology/recovery.py",
+    "sha256": "f2734e6157ca0eded5108f14c8f515963d4d94a37b064f9ce91e3618a6febdec",
+    "lines": 95
+  },
+  {
+    "path": "backend/app/modules/physiology/rpe_zones.py",
+    "sha256": "fa3c81cdfde37f6f42ccc0df815fd02b31bef455c9bde66228cd023464965848",
+    "lines": 170
+  },
+  {
+    "path": "backend/app/modules/physiology/specification.py",
+    "sha256": "19e372cba4b8071db5c199658f47564a22b7a8e758e95ad54c67ef5e7fd8a6a4",
+    "lines": 194
+  },
+  {
+    "path": "backend/app/modules/physiology/taper.py",
+    "sha256": "cb47bc43c73da0faa721d9821c980c1f76753a828db732f5bf06b6549ca94743",
+    "lines": 147
+  },
+  {
+    "path": "backend/app/modules/physiology/zones.py",
+    "sha256": "0b35f67f8af49d93087f5f3a925e1034212a7aec563b8bf4f81e1c775be0cd47",
+    "lines": 797
+  },
+  {
+    "path": "backend/app/modules/planning/__init__.py",
+    "sha256": "06175e4e355401e2556f28aa90ec35683d579c7555016900fa5b0bb325a14b49",
+    "lines": 1
+  },
+  {
+    "path": "backend/app/modules/planning/domain.py",
+    "sha256": "5c622d23e87da5f25152040983e3f15fe3e7008a27611aaadd80993e2e467483",
+    "lines": 1816
+  },
+  {
+    "path": "backend/app/modules/planning/repository.py",
+    "sha256": "6262376f29b538aed045f86f01316f46c3b07ef113005c3ca3790e382a9af047",
+    "lines": 753
+  },
+  {
+    "path": "backend/app/modules/planning/router.py",
+    "sha256": "9649af688904f3329ebb3a3326b7e3cd7b176b0205c5fab96b87b373bf62a3eb",
+    "lines": 532
+  },
+  {
+    "path": "backend/app/modules/planning/schemas.py",
+    "sha256": "649c4412619df8bc9cf77c5a46442b5d168907308fad61f472e3eb1e754bdf4b",
+    "lines": 549
+  },
+  {
+    "path": "backend/app/modules/planning/service.py",
+    "sha256": "421ccdf5e8b5cf0def3df811a91e8edf4377aeb24028010ef6960cc4e4611be4",
+    "lines": 2751
+  },
+  {
+    "path": "backend/app/modules/planning/swipe.py",
+    "sha256": "4df104e6292a4f1e7036a036f7da98181d00261267e41de99183990f0d17d2cb",
+    "lines": 167
+  },
+  {
+    "path": "backend/app/modules/calibration/__init__.py",
+    "sha256": "c2708b4df3815454163cf2257bbff7560ea361e7217c4306538faddc5ac6bb94",
+    "lines": 1
+  },
+  {
+    "path": "backend/app/modules/calibration/domain.py",
+    "sha256": "a40d097dd693a2ba4344840329c0f1415efee3713c6ad9b69743fc2fa3aec2c4",
+    "lines": 1020
+  },
+  {
+    "path": "backend/app/modules/calibration/repository.py",
+    "sha256": "c267b88e85471e6d8a049757376e26b6c443c615d6bcb570cb86cdbd6f384169",
+    "lines": 610
+  },
+  {
+    "path": "backend/app/modules/calibration/router.py",
+    "sha256": "85ef2b05cfd5ff45d7f9eb3842c9d91c582e7a4783e8edbe557eed312f13f17c",
+    "lines": 360
+  },
+  {
+    "path": "backend/app/modules/calibration/schemas.py",
+    "sha256": "dc20b36ca3e86849a9dea0d79dc915f23f66c5a608d058c9c947a773cffff230",
+    "lines": 445
+  },
+  {
+    "path": "backend/app/modules/calibration/service.py",
+    "sha256": "4b931a124bdfa68d4b0e2af6e93d2530b11f9880de82e879d02c0f465541e5d2",
+    "lines": 1111
+  },
+  {
+    "path": "backend/app/modules/activities/__init__.py",
+    "sha256": "49cad20f6b54c25d8f2d2079aab0871841797efecd3418dbc6fc514f7b864169",
+    "lines": 1
+  },
+  {
+    "path": "backend/app/modules/activities/repository.py",
+    "sha256": "a4fcb954ce148a257fef9d0a3c5d046b7ceefa8f52cbd220f5599fc9a21286c1",
+    "lines": 353
+  },
+  {
+    "path": "backend/app/modules/activities/router.py",
+    "sha256": "b1b5ec2f58ac932d920e108570b8bd30b21d53b1cfebe7a49fe7a97483b572e4",
+    "lines": 218
+  },
+  {
+    "path": "backend/app/modules/activities/schemas.py",
+    "sha256": "922306299315a314a913f84a91182283050bdfb85819f8da9b7450d7dae900b9",
+    "lines": 195
+  },
+  {
+    "path": "backend/app/modules/activities/service.py",
+    "sha256": "9bc4c83c811cc28d2226a1d0801b0517f891aa25a77d837d9689e7c9e0d76fa0",
+    "lines": 407
+  },
+  {
+    "path": "backend/app/modules/checkins/__init__.py",
+    "sha256": "a9d33d466ee07560df96d065c5d2d06d9c4eb109d597f227b9cb14ecf4dfbdbe",
+    "lines": 1
+  },
+  {
+    "path": "backend/app/modules/checkins/domain.py",
+    "sha256": "e29f43d95df6041db240477eb700818a00e701290011b997ae95ad691dd094dc",
+    "lines": 127
+  },
+  {
+    "path": "backend/app/modules/checkins/repository.py",
+    "sha256": "0fe02ebac960a12ba9461089c97da9bf147d8791eba5ee7ef393ddb520aafb87",
+    "lines": 371
+  },
+  {
+    "path": "backend/app/modules/checkins/router.py",
+    "sha256": "5d076902c3cd031fe3318414a9ffa33528b5684a7001361de1c6973623a96a7c",
+    "lines": 276
+  },
+  {
+    "path": "backend/app/modules/checkins/schemas.py",
+    "sha256": "229a9fcf9410c91085b20dc7bfa25988a814c97db143c456f866d785f91a06e6",
+    "lines": 189
+  },
+  {
+    "path": "backend/app/modules/checkins/service.py",
+    "sha256": "63276ac881f8063f9d62cfecf7ecef0318f5876c9688909e992e30bf808deb0b",
+    "lines": 325
+  },
+  {
+    "path": "backend/app/modules/onboarding/__init__.py",
+    "sha256": "75bdacbe2f4df9ae1cd00b1bf330f9dcd168e6234788ac1fdfdbb6bf79a6f612",
+    "lines": 1
+  },
+  {
+    "path": "backend/app/modules/onboarding/eligibility.py",
+    "sha256": "47c1cf09c3e20bb528916a0d7e7bd614e229893ed9eed8affa9179974d1c3f3c",
+    "lines": 99
+  },
+  {
+    "path": "backend/app/modules/onboarding/repository.py",
+    "sha256": "d7e8af2cca823471cd6cbdbd867e84dd309b10c1d2db944c1b819ed2b464ff86",
+    "lines": 693
+  },
+  {
+    "path": "backend/app/modules/onboarding/router.py",
+    "sha256": "94c13ea1e55ba4eae9fa28dae23a2c2b8f29de35fd34bddb1f36f95e313baa03",
+    "lines": 453
+  },
+  {
+    "path": "backend/app/modules/onboarding/schemas.py",
+    "sha256": "7eb240e864b994187b41a6dcff9132c6265e0821dc44f1f2e4b76ab769b9c7ae",
+    "lines": 491
+  },
+  {
+    "path": "backend/app/modules/onboarding/service.py",
+    "sha256": "b0076bf335fef26c36697c9bcf8f66c84f5ecaf42d42fe278cc9324e46de0fc6",
+    "lines": 757
+  },
+  {
+    "path": "backend/app/modules/onboarding/versioning.py",
+    "sha256": "e83eb48715b444d149ea5db06491b33cae49ec235b509c2613cd73467800c9be",
+    "lines": 109
+  },
+  {
+    "path": "backend/app/modules/workouts/__init__.py",
+    "sha256": "7d87804bfc4c656c01a49e5d4ad3baab710fa062182d436065b52bd909ba237c",
+    "lines": 1
+  },
+  {
+    "path": "backend/app/modules/workouts/catalog.py",
+    "sha256": "62370af32609f73a30203924536269f18a5d35d1bdbdf45b2eeb9048ca23bac6",
+    "lines": 1052
+  },
+  {
+    "path": "backend/app/modules/workouts/repository.py",
+    "sha256": "e28c7765768cd47fe32953291843710f5f8a99813852b81243b7250248bae175",
+    "lines": 205
+  },
+  {
+    "path": "backend/app/modules/workouts/router.py",
+    "sha256": "9011619032e20b366297ef562f967bc2602d7e54fbd4f4f3db686411a6cacdc7",
+    "lines": 30
+  },
+  {
+    "path": "backend/app/modules/workouts/schemas.py",
+    "sha256": "a7ecda9f8ef10780b408faac786f8a384c2786f8db3d5b489f585cb79e2ea6ea",
+    "lines": 175
+  },
+  {
+    "path": "backend/app/modules/workouts/source_catalog_audit.py",
+    "sha256": "bb421fdcf1e53dbb974072cb2a410eec21d8e524d423075f436caa3a5dcb9058",
+    "lines": 135
+  },
+  {
+    "path": "backend/app/modules/integrations/__init__.py",
+    "sha256": "265588db7156c88407fb08f11c66195e63cc5f240fd64f50e09d0075f7a0468a",
+    "lines": 1
+  },
+  {
+    "path": "backend/app/modules/integrations/domain.py",
+    "sha256": "4b6798f4ab87ffbf0022cb1cd212efd0ff43a8062b8b541d1395c5e8f2fd0174",
+    "lines": 171
+  },
+  {
+    "path": "backend/app/modules/integrations/polar.py",
+    "sha256": "4bf6d0b054371270d75f3535cb7d41d40ba61a8b24661715fff994222984d3c4",
+    "lines": 209
+  },
+  {
+    "path": "backend/app/modules/integrations/repository.py",
+    "sha256": "2fa58cff7b4e7134347938453b58f8f3ed02905b9fe6c2ee634f439d9108fa41",
+    "lines": 441
+  },
+  {
+    "path": "backend/app/modules/integrations/router.py",
+    "sha256": "5bf0f246b6d0bc011bc2b7e6ba10415ef0c54628b9c8e752a1eb30591564297a",
+    "lines": 243
+  },
+  {
+    "path": "backend/app/modules/integrations/schemas.py",
+    "sha256": "03e536b8a0c2fa5dd1187d88413381e1406275c21176f8804f0e017350750055",
+    "lines": 63
+  },
+  {
+    "path": "backend/app/modules/integrations/service.py",
+    "sha256": "eb7bcbd113c311ae1e7e00aa3561c2682b3f148a7c7c07d05d953b167840469e",
+    "lines": 372
+  },
+  {
+    "path": "supabase/migrations/20260724140227_create_athlete_profiles.sql",
+    "sha256": "c076334accd00b99d08e0b2485c45fd7e69c28a163366e5c8a105cba9acba3f1",
+    "lines": 105
+  },
+  {
+    "path": "supabase/migrations/20260724142004_restrict_rls_auto_enable_execution.sql",
+    "sha256": "4c7ba24a261d83dbe588f31ea5d91d70c81d7eb02614b726e188eade9d1fa8e8",
+    "lines": 3
+  },
+  {
+    "path": "supabase/migrations/20260727132531_phase_4_onboarding_goals_zones.sql",
+    "sha256": "957cc073c61dbf4c02072da9d515430376c423ee1c996a7ce7ef8c7e9f66c05e",
+    "lines": 1764
+  },
+  {
+    "path": "supabase/migrations/20260727170000_phase_5_workout_catalog.sql",
+    "sha256": "10ff914077d8d4670fb9a0a6ab7c8765c4e096fcf67f92e26493023e39ad4cb6",
+    "lines": 410
+  },
+  {
+    "path": "supabase/migrations/20260728133728_phase_4_5_review_hardening.sql",
+    "sha256": "e9034fb8b43a59b9b7e851b290eb9e1d2f927bc00ada3c5e60ba3266e8c56c08",
+    "lines": 421
+  },
+  {
+    "path": "supabase/migrations/20260729140000_phase_6_weekly_planning.sql",
+    "sha256": "dd38dea5b1d27eaa56ad623c3dfdb7c24fa70bcdd797df042244b6c25ee345d7",
+    "lines": 1805
+  },
+  {
+    "path": "supabase/migrations/20260809225626_phase_6_advisor_indexes.sql",
+    "sha256": "0a9a2088c96898b60175c93e5bc125a4c16d168e174b9aa55279fc452d74a537",
+    "lines": 30
+  },
+  {
+    "path": "supabase/migrations/20260811103726_phase_7_activity_rpe_feedback.sql",
+    "sha256": "281ad0cd74501b60a375d54c3da165f3d305f8eea166b0b98808a1a616879a2a",
+    "lines": 932
+  },
+  {
+    "path": "supabase/migrations/20260813105401_phase_8_structured_weekly_checkin.sql",
+    "sha256": "ad5acace89dd07d19173a5c2c75ef55dc7c2988cb9e4e8d8b3a223bc951c59d1",
+    "lines": 1580
+  },
+  {
+    "path": "supabase/migrations/20260813170000_phase_8_5_zone_calibration.sql",
+    "sha256": "19268ed64e9408cfedbb8cf2f3f87acb64f7f1951e50b4a3ff96d6ced3076824",
+    "lines": 933
+  },
+  {
+    "path": "supabase/migrations/20260817105304_phase_9_polar_integration.sql",
+    "sha256": "d5604780b30b6f72be3d4245b2525b6fbc5cace5668cf409f3fc87858e83a7be",
+    "lines": 938
+  },
+  {
+    "path": "supabase/migrations/20260824144801_phase_8_5_zone_model_v1.sql",
+    "sha256": "623299a21e652dc0ffc717855d397e9af8890378c781033b12ecc5025e932be0",
+    "lines": 1140
+  },
+  {
+    "path": "supabase/migrations/20260824174747_phase_10_ai_weekly_plan_explanation.sql",
+    "sha256": "9eda77f9dd6f82c6b19ce048875362000bdc528575905d563f4d226afb2bac8b",
+    "lines": 60
+  },
+  {
+    "path": "supabase/migrations/20260825225207_phase_8_5_9_business_decisions.sql",
+    "sha256": "3351437dd2f944e6097e2d10649a8e83e30d566cd6776d984efa3b1a9fe8ccb1",
+    "lines": 607
+  },
+  {
+    "path": "supabase/migrations/20260826085242_phase_10_date_only_planning.sql",
+    "sha256": "3292b95d8d74d26cc4ca68419ac1c1c2e87901d6ce5a9820ed2c28ceb4d1f525",
+    "lines": 726
+  },
+  {
+    "path": "supabase/migrations/20260826144239_phase_11_discipline_zone_profiles.sql",
+    "sha256": "b2853dd3143710d62be405f53e37300e7a4c9cf501f6b901c3edbdb29d43b024",
+    "lines": 1000
+  },
+  {
+    "path": "supabase/migrations/20260901054333_phase_10_1_swipe_week_drafts.sql",
+    "sha256": "7be2ba0b07f3962aa33f020b03ed25f73d955e49b6e5b502cf4ade740e3a475c",
+    "lines": 409
+  },
+  {
+    "path": "supabase/migrations/20260902083241_fix_swipe_draft_service_role_permissions.sql",
+    "sha256": "784a1ae53cb8ae2b90200f8592d73669f098a9abbb549d33af33b67e9c1b7ce5",
+    "lines": 85
+  },
+  {
+    "path": "supabase/migrations/20260902084055_fix_swipe_draft_placement_validation.sql",
+    "sha256": "d204582e0336822c7342d37f160dcf201546aa478a27c164a5a0b81eefd029da",
+    "lines": 98
+  },
+  {
+    "path": "supabase/migrations/20260902120000_mvp_rpe_zones_and_swim_catalog.sql",
+    "sha256": "f63b61ac571dae11e90bf59b5c44b0387e5495c92d6edcf10eed7fdbe0107f5b",
+    "lines": 222
+  },
+  {
+    "path": "supabase/migrations/20260903074359_add_source_catalog_training_options.sql",
+    "sha256": "0888b5997b72d30070978ad162c346ccc1838e249fd655024c7bdd4a94317a72",
+    "lines": 357
+  },
+  {
+    "path": "supabase/migrations/20260910120000_phase_14_history_and_retired_inputs.sql",
+    "sha256": "076732bc0f1ce388190a79c62af6f1860361229d39e8dd2cbce5cca002faa3a1",
+    "lines": 651
+  },
+  {
+    "path": "supabase/migrations/20260910215947_phase_13_joren_ruleset.sql",
+    "sha256": "a3a79fbaa6b76d87c2d492c9ad647451c33b5d3ea3d592c6e5dd33daeb33bf92",
+    "lines": 2188
+  },
+  {
+    "path": "supabase/migrations/20260911180631_phase_r1_onboarding_versioning.sql",
+    "sha256": "12ff2e9b0e313fd12b68cbcecd56778c28b3477570fd6c2bce2a6299437c3d83",
+    "lines": 322
+  },
+  {
+    "path": "supabase/migrations/20260912070000_r6_allow_opaque_owner_backfill_for_immutable_calibration.sql",
+    "sha256": "3c81cd85e3bc030039f78a99bc8111aa6f1a1d34304cde1694610e05b5879452",
+    "lines": 39
+  },
+  {
+    "path": "supabase/migrations/20260912072232_phase_r2_r3_identity_onboarding_calibration.sql",
+    "sha256": "e68d10f538037cfa09d0f84a33d959259e2fff57e1071f206cab1c7b13936ea4",
+    "lines": 1447
+  },
+  {
+    "path": "supabase/migrations/20260912180000_phase_r4_r5_onboarding_race_activity.sql",
+    "sha256": "e5f888e93d03e823ca87b8634c9d937b081806d9e02605cc416f4459b03ae2e0",
+    "lines": 683
+  },
+  {
+    "path": "supabase/migrations/20260913130000_phase_13_14_r6_entry_audit_remediation.sql",
+    "sha256": "3f029396de239a2b679c17e7d9fb0a0e65d64b06e7eb79185d9862e502e0dc10",
+    "lines": 778
+  },
+  {
+    "path": "supabase/migrations/20260914080000_close_historical_calibration_writes.sql",
+    "sha256": "56edb5b6fd08c4988094f2ac28d78a2b5d8e454931f49e9493e2cb36a844c281",
+    "lines": 337
+  },
+  {
+    "path": "supabase/migrations/20260914090000_block_historical_zone_profile_activation.sql",
+    "sha256": "91953b75ac68ecf0d5ac30106149abe6a38efdd1d4a2f29d3c92ddd613fea363",
+    "lines": 189
+  },
+  {
+    "path": "supabase/migrations/20260914162430_r6_preserve_critical_context_for_submaximal_zone_provenance.sql",
+    "sha256": "516914f95b5163aab7dcab1f7c00d9c2bf1fb351d4fded6357c49a8ed6fad504",
+    "lines": 122
+  },
+  {
+    "path": "supabase/migrations/20260914162711_r6_order_plan_revision_owner_before_eligibility.sql",
+    "sha256": "077e40eb9c2381883356a515a67f2b6df4e2fd001f3a8580358549665a30cca9",
+    "lines": 11
+  },
+  {
+    "path": "supabase/migrations/20260914163325_r6_restore_activity_idempotency_preflight.sql",
+    "sha256": "2c9144cd622f01728f01718982c2b454e78e74401912b7e98eea862dabd6989d",
+    "lines": 58
+  },
+  {
+    "path": "supabase/migrations/20260914170134_r6_increment_structured_race_goal_revision.sql",
+    "sha256": "3a534c7fc184d0e0d7102a185cc8f1ee438b317935a41dca5dcc252cf6dea956",
+    "lines": 98
+  },
+  {
+    "path": "supabase/migrations/20260914172000_r6_refresh_planning_snapshot_after_input_change.sql",
+    "sha256": "e7cbb092cd914c9d4054481f518c5396c557abd277cb6642eeefffe5fb888316",
+    "lines": 12
+  },
+  {
+    "path": "supabase/migrations/20260914172500_r6_refresh_extended_planning_snapshot_after_input_change.sql",
+    "sha256": "ab8bc925fb3baaf5253fd9f29b798af7cef3ebdfd238119788f4896ad8bf7813",
+    "lines": 8
+  },
+  {
+    "path": "supabase/migrations/20260914173000_r6_refresh_planning_snapshot_after_goal_rpc.sql",
+    "sha256": "d37fc30c6911f9ef9628c8faadabab99d59faa9956a68d175c0765a759967f22",
+    "lines": 131
+  },
+  {
+    "path": "supabase/migrations/20260914173500_r6_force_distinct_post_rpc_snapshot_refresh.sql",
+    "sha256": "3d98a3801ef8a0f81cf5c519817cff3d0076e0f8913d1f2529680167dca1ed2d",
+    "lines": 32
+  },
+  {
+    "path": "supabase/migrations/20260914174000_r6_disambiguate_activity_processing_load_source.sql",
+    "sha256": "2238c7757b24f6579c4e9665b9616001fe30c3810120b59286a3b9271cd59636",
+    "lines": 111
+  },
+  {
+    "path": "supabase/migrations/20260914175000_r6_cover_foreign_key_access_paths.sql",
+    "sha256": "bc8335c45921818094d4bccdfa35ad4b0422b6f6a3002dad084c13fa53e26793",
+    "lines": 51
+  },
+  {
+    "path": "supabase/migrations/20260914180000_r6_preserve_account_deletion_cascades.sql",
+    "sha256": "18b42a6c0ef318e73c4a38c92dab102c3a55a3d3d5f1c49a6f31e4b60341a8fa",
+    "lines": 144
+  },
+  {
+    "path": "supabase/migrations/20260915081055_r6_mvp_nonretryable_business_conflicts.sql",
+    "sha256": "9198c3a25bac912de73015746ec26901b0a3985190f13122c523712b00c97f6a",
+    "lines": 53
+  },
+  {
+    "path": "supabase/migrations/20260915082320_r6_onboarding_completion_step_vocabulary.sql",
+    "sha256": "ad91d96a386cdbc9c9b0c3ea76aecf2a25295c142eb4fe7f731eef7a720de941",
+    "lines": 10
+  },
+  {
+    "path": "supabase/migrations/20260915205627_r6_checkin_context_and_account_deletion.sql",
+    "sha256": "5c6846107c10f0c96a071997eb4930d46ca9e9c25f066f276868ae170eac96d8",
+    "lines": 109
+  },
+  {
+    "path": "supabase/migrations/20260923063453_phase_16_pioneer_access.sql",
+    "sha256": "ae314371927f45f05bf1d06747579a51eab024cc152b8ead43abaa419eb859cb",
+    "lines": 255
+  },
+  {
+    "path": "supabase/migrations/20260929210000_joren_planning_ruleset_v2.sql",
+    "sha256": "def8e89f459a6e0eabf9a770a00b6dbdb5d00037ecd0a4d2279e586c036fe74d",
+    "lines": 388
+  },
+  {
+    "path": "supabase/migrations/20261004212750_first_plan_approved_provenance.sql",
+    "sha256": "6c102779574a757ea7985efc04b00eb713c24f2b18a306f2c2eb0b09f5c52665",
+    "lines": 46
+  },
+  {
+    "path": "backend/tests/calibration/test_domain.py",
+    "sha256": "9631a03a1226aecb76b7a4dbdd57e15cf9fd4a9e0e47fff98a476584e0bf02e9",
+    "lines": 482
+  },
+  {
+    "path": "backend/tests/physiology/test_activity.py",
+    "sha256": "954255ccdaf9d85449a60ecb8fff9028f62f0f22dae30a74e4b35ff3360e3d78",
+    "lines": 119
+  },
+  {
+    "path": "backend/tests/physiology/test_anti_stack.py",
+    "sha256": "32ef79d545142a1506861768c568dd68bf027a304021abbdaca3e1350536dd86",
+    "lines": 217
+  },
+  {
+    "path": "backend/tests/physiology/test_debt_and_intensity.py",
+    "sha256": "a8a3ab8fef7aed04ec700d1d6ae0421bb06c0da16bb297555701631915b1a29f",
+    "lines": 300
+  },
+  {
+    "path": "backend/tests/physiology/test_injury.py",
+    "sha256": "568c6d5f2989c685adaf0f131461bb7f7e9f963828535ebbab8393e012bf8b39",
+    "lines": 203
+  },
+  {
+    "path": "backend/tests/physiology/test_joren.py",
+    "sha256": "b4a15db2a24542dc890d86f9deb84f5b64ac40eeab38cf6c36fdf0b2a6fca8ee",
+    "lines": 277
+  },
+  {
+    "path": "backend/tests/physiology/test_models.py",
+    "sha256": "cb0b2d90f27d2480ae560e7c431841d02e9b41b8dc737fc5ca3f097882f6637b",
+    "lines": 57
+  },
+  {
+    "path": "backend/tests/physiology/test_module_boundaries.py",
+    "sha256": "c026422c949b559a8047b18daa3c16fa81eef1ddab87ce32627bf75749674303",
+    "lines": 36
+  },
+  {
+    "path": "backend/tests/physiology/test_precedence.py",
+    "sha256": "31171118294adfa669ee8f0134e030095508c4186d0bcc7022273afe4bea9a9d",
+    "lines": 149
+  },
+  {
+    "path": "backend/tests/physiology/test_progression.py",
+    "sha256": "2ace706562434fd4182e9116d6186c1eb77b77dc9db0fd4ae5f2ef45559be517",
+    "lines": 136
+  },
+  {
+    "path": "backend/tests/physiology/test_recovery_and_taper.py",
+    "sha256": "0fdb8fe2e27d7a1bc89191eaa9250f9e89888bb23d2ed91fe622ca74b9a84cdc",
+    "lines": 235
+  },
+  {
+    "path": "backend/tests/physiology/test_rpe_zones.py",
+    "sha256": "112d70d61818476aa8e1f0a66cf983c9880b074cff292f7b314c2da10e5326c8",
+    "lines": 37
+  },
+  {
+    "path": "backend/tests/physiology/test_zones.py",
+    "sha256": "acef365d55204c4abdcd1c7ffb466518dca8bf2fa4951ad014068ada0f5335bf",
+    "lines": 810
+  },
+  {
+    "path": "backend/tests/test_activities.py",
+    "sha256": "c80c68fe03b7684d336e48cc3a1b747f2d8d23958ecbb6f47dc06962d4f2bf33",
+    "lines": 819
+  },
+  {
+    "path": "backend/tests/test_activity_repository.py",
+    "sha256": "484be6af5fbbddb55a9f469a62c67faf858a278a44a29077db80de951ca273ac",
+    "lines": 141
+  },
+  {
+    "path": "backend/tests/test_authentication.py",
+    "sha256": "867dc3c56b6183ccaa9dbaeb35222530d11d858811abe35f4709f5fab4b9b52e",
+    "lines": 242
+  },
+  {
+    "path": "backend/tests/test_calibration.py",
+    "sha256": "e8bb81a81ae64ec4c1f4ca6759ed66ae8fba225e83ae3c0044d193e4450d2ccc",
+    "lines": 1266
+  },
+  {
+    "path": "backend/tests/test_calibration_protocol_fixtures.py",
+    "sha256": "eea24df86b285471a8fd56a4fe85e36408e66e67490a5974f745bb9c72b8c379",
+    "lines": 64
+  },
+  {
+    "path": "backend/tests/test_calibration_repository.py",
+    "sha256": "decc7aa2efdeaa0fb033e1ae5ec242fef9258ed643ca1e61d5a85373e79b553f",
+    "lines": 237
+  },
+  {
+    "path": "backend/tests/test_checkin_domain.py",
+    "sha256": "1fc6084de28ee500a680ba48583b913b73f6ff146e866d7a5f884b70343f63f4",
+    "lines": 82
+  },
+  {
+    "path": "backend/tests/test_checkins.py",
+    "sha256": "e32128b1e7df55b21b66874535434b41773c7a7b0762ab760038326f5fd24479",
+    "lines": 345
+  },
+  {
+    "path": "backend/tests/test_config.py",
+    "sha256": "3e313d7406815bd37c4dd220713b05a253acfc1ceb35d8938a28253929c46ea9",
+    "lines": 123
+  },
+  {
+    "path": "backend/tests/test_context_coach.py",
+    "sha256": "83d8876ef9de711d977b21a251772c4828f5b638eca5d3e835cf2dde0314bf24",
+    "lines": 100
+  },
+  {
+    "path": "backend/tests/test_contracts.py",
+    "sha256": "f9a34664a1e9485a2fc57065fe38e74a39ee7bff92217ae0753b02a9d2dc6402",
+    "lines": 206
+  },
+  {
+    "path": "backend/tests/test_health.py",
+    "sha256": "160102a6fa87d7d2f4f4a10d0caa0c4ed5a3014883ef38999a94429a45ab3afa",
+    "lines": 46
+  },
+  {
+    "path": "backend/tests/test_identity_repository.py",
+    "sha256": "f27386ab8e342c98111986d5dd7133da8de462d40b452539c0056bfc2ea38cca",
+    "lines": 63
+  },
+  {
+    "path": "backend/tests/test_integration_domain.py",
+    "sha256": "9e4e066a080dd86962dac3207c7196182c5e8a8e04074ad87ca8e588f37647f9",
+    "lines": 108
+  },
+  {
+    "path": "backend/tests/test_integration_repository.py",
+    "sha256": "3855d73902853562edb3df22e85e43fbee95e4c26c6418b0a444731e672f81f7",
+    "lines": 92
+  },
+  {
+    "path": "backend/tests/test_integrations.py",
+    "sha256": "fcebe4bad86cf4ff93589f5430dfb41468b588524c13c192028f2a0d7668bc6d",
+    "lines": 444
+  },
+  {
+    "path": "backend/tests/test_mvp_catalog_coverage.py",
+    "sha256": "17340e1d88acb1261125c2f6c65955237eeb2572dcb5dc2337436261b3a7ce59",
+    "lines": 454
+  },
+  {
+    "path": "backend/tests/test_onboarding.py",
+    "sha256": "3ce47444d0e29fcda43c5c020649b74a03f059b9e98f30849ce4dc80f8fb47ed",
+    "lines": 1892
+  },
+  {
+    "path": "backend/tests/test_onboarding_eligibility.py",
+    "sha256": "b3b11c519f5936c571c4239f0056234fd6d020d11863abe145e6ce7a4d4ea093",
+    "lines": 111
+  },
+  {
+    "path": "backend/tests/test_onboarding_repository.py",
+    "sha256": "eda0a1bf59a0fb56c58aa5f0a8a4de8fa9a3c5562872c7805ce106925c9ba86b",
+    "lines": 239
+  },
+  {
+    "path": "backend/tests/test_onboarding_versioning.py",
+    "sha256": "5cadea3ff9d69979e5c6fee193f61015e49a07ac3d0613cc947d9b8901f32442",
+    "lines": 112
+  },
+  {
+    "path": "backend/tests/test_phase_13_14_audit_remediation_contract.py",
+    "sha256": "d8c881dd859c35999c42055da070cb73629c1159cabac8b75d3bb52c071bb5de",
+    "lines": 154
+  },
+  {
+    "path": "backend/tests/test_pioneer_access.py",
+    "sha256": "c7500d614d4dbb085100dcc40ebfaf6d5d104c65c0ff65bc8c8077f8c5edbb4a",
+    "lines": 305
+  },
+  {
+    "path": "backend/tests/test_planning.py",
+    "sha256": "af2992927f0e89af68b17cb057ed14efc1ec8196e8a4b2f7e51ef055ac6d5bfb",
+    "lines": 2391
+  },
+  {
+    "path": "backend/tests/test_planning_domain.py",
+    "sha256": "2f866a4626c26ceeb7200840d48f36b719d0e2acdb74e03d4b2ba4930380ed34",
+    "lines": 1505
+  },
+  {
+    "path": "backend/tests/test_planning_repository.py",
+    "sha256": "baab20535da7537c9959c6fa826b2dba00ded24fc0f6434c704031513c3672e2",
+    "lines": 339
+  },
+  {
+    "path": "backend/tests/test_polar_provider.py",
+    "sha256": "ae3ffa0e667335da82b09f4400a8855babd42ccee6c4c460a56cedb4aa941508",
+    "lines": 77
+  },
+  {
+    "path": "backend/tests/test_r2_r3_migration_contract.py",
+    "sha256": "63cb0f9de3c659584c14a11d9d77f6496bc3ea6f3e7bcb664ee2714cecb4953f",
+    "lines": 103
+  },
+  {
+    "path": "backend/tests/test_r4_r5_migration_contract.py",
+    "sha256": "210adb177663a1f34802ae71bcadf34ee2de13cc7f3eb6ec7ba8bb78ad9c6a75",
+    "lines": 115
+  },
+  {
+    "path": "backend/tests/test_r6_entry_remaining_defects_contract.py",
+    "sha256": "87aa1dfc1dd8bec59890abb35f03a7d06285691f32991bcedee4c7c41d80a4fc",
+    "lines": 242
+  },
+  {
+    "path": "backend/tests/test_source_catalog_import_migration.py",
+    "sha256": "72e8b9b853056080e20d904a439aec551f3a9dd45dfd063f7dbe26bda864f645",
+    "lines": 222
+  },
+  {
+    "path": "backend/tests/test_swipe_draft.py",
+    "sha256": "60e468a54b579b0d68cbcd48595407569b949016d85e6108e8489fe9449b9c4c",
+    "lines": 83
+  },
+  {
+    "path": "backend/tests/test_training_source_catalog_audit.py",
+    "sha256": "903929a0d60a355ea4fc7856b9743c6fe2063e64b4636fd39d571005f918e8e8",
+    "lines": 21
+  },
+  {
+    "path": "backend/tests/test_weekly_plan_coach.py",
+    "sha256": "ab81e495b1abb1fe3f833d2a103ee03acfa58ea74bb15a6df70ac6ea40fefe57",
+    "lines": 143
+  },
+  {
+    "path": "backend/tests/test_workout_catalog.py",
+    "sha256": "3963659a7b2ffb0c5019430740f4b3cf3ae5aaa07e021af738122619be4e4f02",
+    "lines": 217
+  },
+  {
+    "path": "backend/tests/test_workout_catalog_repository.py",
+    "sha256": "24f5b036ce073b422216d7f567916ce83a0095ea03cc62abba4d9a60ed7c1cb7",
+    "lines": 76
+  },
+  {
+    "path": "backend/tests/test_workout_catalog_seed_parity.py",
+    "sha256": "4d7c5385ba3e0cc8b3f16e45bbd1e5bd96e99e8e996fc87525657570d19df6b0",
+    "lines": 232
+  },
+  {
+    "path": "supabase/tests/athlete_profiles_rls_test.sql",
+    "sha256": "41eebea591615e893bc9d2ee5d773ef9667e759fc9d78f7f29f6808019e5f949",
+    "lines": 395
+  },
+  {
+    "path": "supabase/tests/first_plan_approved_provenance_test.sql",
+    "sha256": "9e1cfb8c19a1f473f0a7b7efd7bb57a012f093477fb8b23aa5d924a506d4965a",
+    "lines": 78
+  },
+  {
+    "path": "supabase/tests/joren_planning_ruleset_v2_test.sql",
+    "sha256": "42b70370552394a84d4fb879b2fa3ed5a0a3c4236ec4a5f7a239af20a10d4d28",
+    "lines": 104
+  },
+  {
+    "path": "supabase/tests/phase_10_1_swipe_week_drafts_test.sql",
+    "sha256": "716b134993ba44bfd78574bf2f269e016444ab44f8b9b39b702e6570a9b51599",
+    "lines": 315
+  },
+  {
+    "path": "supabase/tests/phase_10_ai_weekly_plan_explanation_test.sql",
+    "sha256": "599b3d443f095c5477933f902a39d394f06b2ceccfb07c86a2731ab0e382150f",
+    "lines": 69
+  },
+  {
+    "path": "supabase/tests/phase_10_date_only_planning_test.sql",
+    "sha256": "ab935894fa31ac65bbbf119b6484947422618fd693c4f4d3a2e545c9dd38a45c",
+    "lines": 116
+  },
+  {
+    "path": "supabase/tests/phase_11_discipline_zone_profiles_test.sql",
+    "sha256": "3de544968e68b655ef73155c8c487351271bb8157c7c3677a94adf72834b7c03",
+    "lines": 171
+  },
+  {
+    "path": "supabase/tests/phase_12_source_catalog_training_options_test.sql",
+    "sha256": "b7725af66b7f7c3624a359731f50f401f9ac0fa3d35cd25088da14a77d888482",
+    "lines": 120
+  },
+  {
+    "path": "supabase/tests/phase_13_14_r6_entry_audit_remediation_test.sql",
+    "sha256": "a98180ab940684aeece9942b07b749c2794d102f8b5c9c4d7ac187e8f6006aab",
+    "lines": 388
+  },
+  {
+    "path": "supabase/tests/phase_13_calibration_lifecycle_test.sql",
+    "sha256": "2361377379db125604f95c72586d13381145e89dfa0ff612e2684d4525693f22",
+    "lines": 424
+  },
+  {
+    "path": "supabase/tests/phase_13_historical_activation_guard_test.sql",
+    "sha256": "b286778093c3b122139a18f365dc1ff3c146a2fe4abd2cc5efd45f68a273fdf8",
+    "lines": 538
+  },
+  {
+    "path": "supabase/tests/phase_13_joren_ruleset_test.sql",
+    "sha256": "4f5896b690da17864924168b490ca9b77c7fd6fe060dfa4b634341118fa70969",
+    "lines": 50
+  },
+  {
+    "path": "supabase/tests/phase_14_onboarding_inputs_test.sql",
+    "sha256": "db9313742a7e98013b487e56fad10e2826d3eacece21845b412e976a08815bc4",
+    "lines": 219
+  },
+  {
+    "path": "supabase/tests/phase_16_pioneer_access_test.sql",
+    "sha256": "d2d046aeca35c936c52cf1ed912888ef4cebbbcbdf0f9db317d2690913b783d6",
+    "lines": 235
+  },
+  {
+    "path": "supabase/tests/phase_4_onboarding_rls_test.sql",
+    "sha256": "1a29363002c30d718af4b827840f7d7c09fe4a81a0f1efa10257119817dcdb5f",
+    "lines": 499
+  },
+  {
+    "path": "supabase/tests/phase_5_workout_catalog_test.sql",
+    "sha256": "d0acf4b13ac9b86a94859766facbe73d4e8d04c40c07b02db2e2a97d47d6e6df",
+    "lines": 188
+  },
+  {
+    "path": "supabase/tests/phase_6_weekly_planning_test.sql",
+    "sha256": "5178b1595f3076bd410a6bb1b1e6c6636e8e9352146854ff625895bfaac7f25d",
+    "lines": 670
+  },
+  {
+    "path": "supabase/tests/phase_7_activity_feedback_test.sql",
+    "sha256": "6306e3ec8595f2a8515417367e9609286478c6ef12533f3d23c6faf35a6db798",
+    "lines": 480
+  },
+  {
+    "path": "supabase/tests/phase_8_5_9_business_decisions_test.sql",
+    "sha256": "a8cc6febc96a3f2d038ed21a9e45db57ccf5ea13ed803674ce4219206beec221",
+    "lines": 105
+  },
+  {
+    "path": "supabase/tests/phase_8_5_zone_calibration_test.sql",
+    "sha256": "8c2ab34d64a53d7e9924f316fad44e231ba4ad6ba0f090b483ade51f27d37077",
+    "lines": 402
+  },
+  {
+    "path": "supabase/tests/phase_8_5_zone_model_v1_test.sql",
+    "sha256": "9ff74ec2764fc9a64fd57abc108a974df04c0e6af0138b27d70f29366ef15a25",
+    "lines": 445
+  },
+  {
+    "path": "supabase/tests/phase_8_structured_weekly_checkin_test.sql",
+    "sha256": "5341b8de3ccd6658a0f31b73a6a764b16ffe4e18a580d2d43a7ba877654f0f69",
+    "lines": 486
+  },
+  {
+    "path": "supabase/tests/phase_9_polar_integration_test.sql",
+    "sha256": "029649689ef026b83d23c7b16859399950b5b2d1e8a46ef1e4d1ed5bdd53919c",
+    "lines": 271
+  },
+  {
+    "path": "supabase/tests/phase_r1_onboarding_versioning_test.sql",
+    "sha256": "982c872c8182d1567414cae1b8cda4306b5cbe8a48f0a4063c5eced9f02e1b00",
+    "lines": 88
+  },
+  {
+    "path": "supabase/tests/phase_r2_r3_identity_onboarding_calibration_test.sql",
+    "sha256": "41d0ddb4509837bde9c706b3d3c00a21afb53bbf04d2894ac438a64807c6c166",
+    "lines": 241
+  },
+  {
+    "path": "supabase/tests/phase_r4_r5_onboarding_race_activity_test.sql",
+    "sha256": "219b6cf1a4250ebee79c8f22e56fe872ea3501e9b88ef470651ac6f913287320",
+    "lines": 154
+  },
+  {
+    "path": "supabase/tests/r6_mvp_business_conflicts_test.sql",
+    "sha256": "5de8ba1d340562795620cb4829ec757672949af1334d39a17664be472b859111",
+    "lines": 40
+  },
+  {
+    "path": "mobile/AGENTS.md",
+    "sha256": "d13a3c0ac2a86c1af81a05f519b4f18b260b37fca245b9e705ac24a9743cbda4",
+    "lines": 53
+  }
+]

@@ -1,0 +1,8001 @@
+[
+  {
+    "id": "BASE-00",
+    "rule": "INIT-01/02",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B8",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F8",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 45.0
+      }
+    ]
+  },
+  {
+    "id": "BASE-01",
+    "rule": "INIT-01/02",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B6",
+        "value": 1.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B8",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F6",
+        "value": 50.625
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F8",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 50.6
+      }
+    ]
+  },
+  {
+    "id": "BASE-02",
+    "rule": "INIT-01/02",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B7",
+        "value": 1.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B8",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F7",
+        "value": 56.25
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F8",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 56.3
+      }
+    ]
+  },
+  {
+    "id": "BASE-03",
+    "rule": "INIT-01/02",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B8",
+        "value": 1.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F8",
+        "value": 64.6875
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 64.7
+      }
+    ]
+  },
+  {
+    "id": "BASE-04",
+    "rule": "INIT-01/02",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B6",
+        "value": 1.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B7",
+        "value": 2.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B8",
+        "value": 3.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F6",
+        "value": 50.625
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F7",
+        "value": 112.5
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F8",
+        "value": 194.0625
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 357.2
+      }
+    ]
+  },
+  {
+    "id": "BASE-05",
+    "rule": "INIT-01/02",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B8",
+        "value": 3.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F8",
+        "value": 194.0625
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 194.1
+      }
+    ]
+  },
+  {
+    "id": "BASE-06",
+    "rule": "INIT-01/02",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B8",
+        "value": 8.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F8",
+        "value": 517.5
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 517.5
+      }
+    ]
+  },
+  {
+    "id": "BASE-07",
+    "rule": "INIT-01/02",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B8",
+        "value": 15.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F8",
+        "value": 970.3125
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 970.3
+      }
+    ]
+  },
+  {
+    "id": "BASE-08",
+    "rule": "INIT-01/02",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B6",
+        "value": 0.1
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B7",
+        "value": 0.2
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B8",
+        "value": 0.3
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F6",
+        "value": 5.0625
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F7",
+        "value": 11.25
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F8",
+        "value": 19.40625
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 35.7
+      }
+    ]
+  },
+  {
+    "id": "BASE-09",
+    "rule": "INIT-01/02",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B8",
+        "value": 168.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F8",
+        "value": 10867.5
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 10867.5
+      }
+    ]
+  },
+  {
+    "id": "BASE-10",
+    "rule": "INIT-01/02",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B8",
+        "value": 0.008
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F8",
+        "value": 0.5175
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 0.5
+      }
+    ]
+  },
+  {
+    "id": "BASE-11",
+    "rule": "INIT-01/02",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B8",
+        "value": 0.016
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F7",
+        "value": 0.0
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F8",
+        "value": 1.035
+      },
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 1.0
+      }
+    ]
+  },
+  {
+    "id": "CAL-swim-1",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B6",
+        "value": 120.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C6",
+        "value": 1
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E6",
+        "value": 96
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C6",
+        "value": 111
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D6",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C7",
+        "value": 104
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D7",
+        "value": 110
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C8",
+        "value": 99
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D8",
+        "value": 103
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C9",
+        "value": 94
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D9",
+        "value": 98
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C10",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D10",
+        "value": 93
+      }
+    ]
+  },
+  {
+    "id": "CAL-swim-2",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B6",
+        "value": 120.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C6",
+        "value": 2
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E6",
+        "value": 102
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C6",
+        "value": 118
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D6",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C7",
+        "value": 110
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D7",
+        "value": 117
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C8",
+        "value": 105
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D8",
+        "value": 109
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C9",
+        "value": 100
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D9",
+        "value": 104
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C10",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D10",
+        "value": 99
+      }
+    ]
+  },
+  {
+    "id": "CAL-swim-3",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B6",
+        "value": 120.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C6",
+        "value": 3
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E6",
+        "value": 107
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C6",
+        "value": 124
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D6",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C7",
+        "value": 115
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D7",
+        "value": 123
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C8",
+        "value": 110
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D8",
+        "value": 114
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C9",
+        "value": 105
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D9",
+        "value": 109
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C10",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D10",
+        "value": 104
+      }
+    ]
+  },
+  {
+    "id": "CAL-swim-4",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B6",
+        "value": 120.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C6",
+        "value": 4
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E6",
+        "value": 111
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C6",
+        "value": 129
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D6",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C7",
+        "value": 120
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D7",
+        "value": 128
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C8",
+        "value": 114
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D8",
+        "value": 119
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C9",
+        "value": 109
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D9",
+        "value": 113
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C10",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D10",
+        "value": 108
+      }
+    ]
+  },
+  {
+    "id": "CAL-swim-5",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B6",
+        "value": 120.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C6",
+        "value": 5
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E6",
+        "value": 113
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C6",
+        "value": 131
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D6",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C7",
+        "value": 122
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D7",
+        "value": 130
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C8",
+        "value": 116
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D8",
+        "value": 121
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C9",
+        "value": 111
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D9",
+        "value": 115
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C10",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D10",
+        "value": 110
+      }
+    ]
+  },
+  {
+    "id": "CAL-swim-6",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B6",
+        "value": 120.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C6",
+        "value": 6
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E6",
+        "value": 115
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C6",
+        "value": 133
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D6",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C7",
+        "value": 124
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D7",
+        "value": 132
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C8",
+        "value": 118
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D8",
+        "value": 123
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C9",
+        "value": 113
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D9",
+        "value": 117
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C10",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D10",
+        "value": 112
+      }
+    ]
+  },
+  {
+    "id": "CAL-swim-7",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B6",
+        "value": 120.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C6",
+        "value": 7
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E6",
+        "value": 119
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C6",
+        "value": 138
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D6",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C7",
+        "value": 128
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D7",
+        "value": 137
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C8",
+        "value": 122
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D8",
+        "value": 127
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C9",
+        "value": 117
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D9",
+        "value": 121
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C10",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D10",
+        "value": 116
+      }
+    ]
+  },
+  {
+    "id": "CAL-swim-8",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B6",
+        "value": 120.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C6",
+        "value": 8
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E6",
+        "value": 120
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C6",
+        "value": 139
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D6",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C7",
+        "value": 129
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D7",
+        "value": 138
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C8",
+        "value": 123
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D8",
+        "value": 128
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C9",
+        "value": 118
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D9",
+        "value": 122
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C10",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D10",
+        "value": 117
+      }
+    ]
+  },
+  {
+    "id": "CAL-swim-9",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B6",
+        "value": 120.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C6",
+        "value": 9
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E6",
+        "value": 125
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C6",
+        "value": 145
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D6",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C7",
+        "value": 135
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D7",
+        "value": 144
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C8",
+        "value": 129
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D8",
+        "value": 134
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C9",
+        "value": 123
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D9",
+        "value": 128
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C10",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D10",
+        "value": 122
+      }
+    ]
+  },
+  {
+    "id": "CAL-swim-10",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B6",
+        "value": 120.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C6",
+        "value": 10
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E6",
+        "value": 130
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C6",
+        "value": 151
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D6",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C7",
+        "value": 140
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D7",
+        "value": 150
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C8",
+        "value": 134
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D8",
+        "value": 139
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C9",
+        "value": 127
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D9",
+        "value": 133
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C10",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D10",
+        "value": 126
+      }
+    ]
+  },
+  {
+    "id": "CAL-bike-1",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B7",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C7",
+        "value": 1
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E7",
+        "value": 214
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C11",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D11",
+        "value": 174
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C12",
+        "value": 175
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D12",
+        "value": 190
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C13",
+        "value": 191
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D13",
+        "value": 203
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C14",
+        "value": 204
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D14",
+        "value": 214
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C15",
+        "value": 215
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D15",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-bike-2",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B7",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C7",
+        "value": 2
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E7",
+        "value": 192
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C11",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D11",
+        "value": 156
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C12",
+        "value": 157
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D12",
+        "value": 171
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C13",
+        "value": 172
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D13",
+        "value": 182
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C14",
+        "value": 183
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D14",
+        "value": 192
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C15",
+        "value": 193
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D15",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-bike-3",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B7",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C7",
+        "value": 3
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E7",
+        "value": 179
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C11",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D11",
+        "value": 146
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C12",
+        "value": 147
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D12",
+        "value": 159
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C13",
+        "value": 160
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D13",
+        "value": 170
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C14",
+        "value": 171
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D14",
+        "value": 179
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C15",
+        "value": 180
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D15",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-bike-4",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B7",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C7",
+        "value": 4
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E7",
+        "value": 170
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C11",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D11",
+        "value": 138
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C12",
+        "value": 139
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D12",
+        "value": 151
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C13",
+        "value": 152
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D13",
+        "value": 162
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C14",
+        "value": 163
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D14",
+        "value": 170
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C15",
+        "value": 171
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D15",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-bike-5",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B7",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C7",
+        "value": 5
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E7",
+        "value": 165
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C11",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D11",
+        "value": 134
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C12",
+        "value": 135
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D12",
+        "value": 147
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C13",
+        "value": 148
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D13",
+        "value": 157
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C14",
+        "value": 158
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D14",
+        "value": 165
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C15",
+        "value": 166
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D15",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-bike-6",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B7",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C7",
+        "value": 6
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E7",
+        "value": 160
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C11",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D11",
+        "value": 130
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C12",
+        "value": 131
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D12",
+        "value": 142
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C13",
+        "value": 143
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D13",
+        "value": 152
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C14",
+        "value": 153
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D14",
+        "value": 160
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C15",
+        "value": 161
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D15",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-bike-7",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B7",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C7",
+        "value": 7
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E7",
+        "value": 155
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C11",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D11",
+        "value": 126
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C12",
+        "value": 127
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D12",
+        "value": 138
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C13",
+        "value": 139
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D13",
+        "value": 147
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C14",
+        "value": 148
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D14",
+        "value": 155
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C15",
+        "value": 156
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D15",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-bike-8",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B7",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C7",
+        "value": 8
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E7",
+        "value": 150
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C11",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D11",
+        "value": 122
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C12",
+        "value": 123
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D12",
+        "value": 134
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C13",
+        "value": 135
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D13",
+        "value": 143
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C14",
+        "value": 144
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D14",
+        "value": 150
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C15",
+        "value": 151
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D15",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-bike-9",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B7",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C7",
+        "value": 9
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E7",
+        "value": 146
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C11",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D11",
+        "value": 119
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C12",
+        "value": 120
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D12",
+        "value": 130
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C13",
+        "value": 131
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D13",
+        "value": 139
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C14",
+        "value": 140
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D14",
+        "value": 146
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C15",
+        "value": 147
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D15",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-bike-10",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B7",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C7",
+        "value": 10
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E7",
+        "value": 142
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C11",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D11",
+        "value": 115
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C12",
+        "value": 116
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D12",
+        "value": 126
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C13",
+        "value": 127
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D13",
+        "value": 135
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C14",
+        "value": 136
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D14",
+        "value": 142
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C15",
+        "value": 143
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D15",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-run-1",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B8",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C8",
+        "value": 1
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E8",
+        "value": 214
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C16",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D16",
+        "value": 174
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C17",
+        "value": 175
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D17",
+        "value": 190
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C18",
+        "value": 191
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D18",
+        "value": 203
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C19",
+        "value": 204
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D19",
+        "value": 214
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C20",
+        "value": 215
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D20",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-run-2",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B8",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C8",
+        "value": 2
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E8",
+        "value": 192
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C16",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D16",
+        "value": 156
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C17",
+        "value": 157
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D17",
+        "value": 171
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C18",
+        "value": 172
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D18",
+        "value": 182
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C19",
+        "value": 183
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D19",
+        "value": 192
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C20",
+        "value": 193
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D20",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-run-3",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B8",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C8",
+        "value": 3
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E8",
+        "value": 179
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C16",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D16",
+        "value": 146
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C17",
+        "value": 147
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D17",
+        "value": 159
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C18",
+        "value": 160
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D18",
+        "value": 170
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C19",
+        "value": 171
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D19",
+        "value": 179
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C20",
+        "value": 180
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D20",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-run-4",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B8",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C8",
+        "value": 4
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E8",
+        "value": 170
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C16",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D16",
+        "value": 138
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C17",
+        "value": 139
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D17",
+        "value": 151
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C18",
+        "value": 152
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D18",
+        "value": 162
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C19",
+        "value": 163
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D19",
+        "value": 170
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C20",
+        "value": 171
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D20",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-run-5",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B8",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C8",
+        "value": 5
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E8",
+        "value": 165
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C16",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D16",
+        "value": 134
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C17",
+        "value": 135
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D17",
+        "value": 147
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C18",
+        "value": 148
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D18",
+        "value": 157
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C19",
+        "value": 158
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D19",
+        "value": 165
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C20",
+        "value": 166
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D20",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-run-6",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B8",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C8",
+        "value": 6
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E8",
+        "value": 160
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C16",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D16",
+        "value": 130
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C17",
+        "value": 131
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D17",
+        "value": 142
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C18",
+        "value": 143
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D18",
+        "value": 152
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C19",
+        "value": 153
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D19",
+        "value": 160
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C20",
+        "value": 161
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D20",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-run-7",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B8",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C8",
+        "value": 7
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E8",
+        "value": 155
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C16",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D16",
+        "value": 126
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C17",
+        "value": 127
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D17",
+        "value": 138
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C18",
+        "value": 139
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D18",
+        "value": 147
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C19",
+        "value": 148
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D19",
+        "value": 155
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C20",
+        "value": 156
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D20",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-run-8",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B8",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C8",
+        "value": 8
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E8",
+        "value": 150
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C16",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D16",
+        "value": 122
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C17",
+        "value": 123
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D17",
+        "value": 134
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C18",
+        "value": 135
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D18",
+        "value": 143
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C19",
+        "value": 144
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D19",
+        "value": 150
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C20",
+        "value": 151
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D20",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-run-9",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B8",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C8",
+        "value": 9
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E8",
+        "value": 146
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C16",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D16",
+        "value": 119
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C17",
+        "value": 120
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D17",
+        "value": 130
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C18",
+        "value": 131
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D18",
+        "value": 139
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C19",
+        "value": 140
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D19",
+        "value": 146
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C20",
+        "value": 147
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D20",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "CAL-run-10",
+    "rule": "CAL-01/02;ZONE-01/02",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "B8",
+        "value": 150.0
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "C8",
+        "value": 10
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "E8",
+        "value": 142
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C16",
+        "value": "OPEN"
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D16",
+        "value": 115
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C17",
+        "value": 116
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D17",
+        "value": 126
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C18",
+        "value": 127
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D18",
+        "value": 135
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C19",
+        "value": 136
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D19",
+        "value": 142
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "C20",
+        "value": 143
+      },
+      {
+        "sheet": "04_ZONES",
+        "cell": "D20",
+        "value": "OPEN"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-swim-1-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "swim"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 60.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 27.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-swim-1-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "swim"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 30.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 13.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-swim-2-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "swim"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 60.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 43.2
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-swim-2-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "swim"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 30.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 21.6
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-swim-3-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "swim"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 60.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 64.8
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-swim-3-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "swim"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 30.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 32.4
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-swim-4-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "swim"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 60.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 86.4
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-swim-4-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "swim"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 30.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 43.2
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-swim-5-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "swim"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 60.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 108.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-swim-5-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "swim"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 30.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 54.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-bike-1-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 60.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 30.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-bike-1-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 30.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 15.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-bike-2-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 60.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 48.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-bike-2-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 30.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 24.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-bike-3-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 60.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 72.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-bike-3-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 30.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 36.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-bike-4-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 60.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 96.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-bike-4-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 30.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 48.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-bike-5-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 60.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 120.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-bike-5-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 30.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 60.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-run-1-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 60.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 34.8
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-run-1-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 30.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 17.4
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-run-2-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 60.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 55.2
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-run-2-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 30.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 27.6
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-run-3-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 60.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 82.8
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-run-3-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 30.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 41.4
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-run-4-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 60.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 110.4
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-run-4-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 30.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 55.2
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-run-5-1",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 60.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 138.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 1.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "id": "ZONELOAD-run-5-0.5",
+    "rule": "LOAD-01/02",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 30.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 69.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "F6",
+        "value": 0.5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "partial_observed"
+      }
+    ]
+  },
+  {
+    "id": "MEAN-run-1",
+    "rule": "LOAD-03",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I8",
+        "value": true
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "NO"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 138
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "G6",
+        "value": 1
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 34.8
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "estimated_from_average_hr"
+      }
+    ]
+  },
+  {
+    "id": "MEAN-run-2",
+    "rule": "LOAD-03",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I8",
+        "value": true
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "NO"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 139
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "G6",
+        "value": 2
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 55.2
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "estimated_from_average_hr"
+      }
+    ]
+  },
+  {
+    "id": "MEAN-run-3",
+    "rule": "LOAD-03",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I8",
+        "value": true
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "NO"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 152
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "G6",
+        "value": 3
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 82.8
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "estimated_from_average_hr"
+      }
+    ]
+  },
+  {
+    "id": "MEAN-run-4",
+    "rule": "LOAD-03",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I8",
+        "value": true
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "NO"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 163
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "G6",
+        "value": 4
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 110.4
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "estimated_from_average_hr"
+      }
+    ]
+  },
+  {
+    "id": "MEAN-run-5",
+    "rule": "LOAD-03",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I8",
+        "value": true
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "NO"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 171
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "G6",
+        "value": 5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 138.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "estimated_from_average_hr"
+      }
+    ]
+  },
+  {
+    "id": "MEAN-bike-1",
+    "rule": "LOAD-03",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I7",
+        "value": true
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "NO"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 138
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "G6",
+        "value": 1
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 30.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "estimated_from_average_hr"
+      }
+    ]
+  },
+  {
+    "id": "MEAN-bike-2",
+    "rule": "LOAD-03",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I7",
+        "value": true
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "NO"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 139
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "G6",
+        "value": 2
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 48.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "estimated_from_average_hr"
+      }
+    ]
+  },
+  {
+    "id": "MEAN-bike-3",
+    "rule": "LOAD-03",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I7",
+        "value": true
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "NO"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 152
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "G6",
+        "value": 3
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 72.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "estimated_from_average_hr"
+      }
+    ]
+  },
+  {
+    "id": "MEAN-bike-4",
+    "rule": "LOAD-03",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I7",
+        "value": true
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "NO"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 163
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "G6",
+        "value": 4
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 96.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "estimated_from_average_hr"
+      }
+    ]
+  },
+  {
+    "id": "MEAN-bike-5",
+    "rule": "LOAD-03",
+    "inputs": [
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I7",
+        "value": true
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "bike"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "NO"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 171
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "G6",
+        "value": 5
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 120.0
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "J6",
+        "value": "estimated_from_average_hr"
+      }
+    ]
+  },
+  {
+    "id": "MATCH-.899-4",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 97.71739130434783
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 4
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 97.71739130434783
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "deviation"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "MATCH-.899-7",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 97.71739130434783
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 7
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 97.71739130434783
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "hidden_fatigue"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": "hidden_fatigue"
+      }
+    ]
+  },
+  {
+    "id": "MATCH-.9-4",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 97.82608695652173
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 4
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 97.82608695652173
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "perfect_match"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "MATCH-.9-7",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 97.82608695652173
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 7
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 97.82608695652173
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "hidden_fatigue"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": "hidden_fatigue"
+      }
+    ]
+  },
+  {
+    "id": "MATCH-1-4",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 108.69565217391305
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 4
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 108.69565217391305
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "perfect_match"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "MATCH-1-7",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 108.69565217391305
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 7
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 108.69565217391305
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "hidden_fatigue"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": "hidden_fatigue"
+      }
+    ]
+  },
+  {
+    "id": "MATCH-1.1-4",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 119.56521739130434
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 4
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 119.56521739130434
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "perfect_match"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "MATCH-1.1-7",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 119.56521739130434
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 7
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 119.56521739130434
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "hidden_fatigue"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": "hidden_fatigue"
+      }
+    ]
+  },
+  {
+    "id": "MATCH-1.1001-4",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 119.57608695652173
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 4
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 119.57608695652173
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "deviation"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "MATCH-1.1001-7",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 119.57608695652173
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 7
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 119.57608695652173
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "hidden_fatigue"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": "hidden_fatigue"
+      }
+    ]
+  },
+  {
+    "id": "MATCH-1.15-4",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 125.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 4
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 125.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "deviation"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "MATCH-1.15-7",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 125.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 7
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 125.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "hidden_fatigue"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": "hidden_fatigue"
+      }
+    ]
+  },
+  {
+    "id": "MATCH-1.1501-4",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 125.01086956521739
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 4
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 125.01086956521739
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "overshoot"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": "volume_overshoot"
+      }
+    ]
+  },
+  {
+    "id": "MATCH-1.1501-7",
+    "rule": "ACT-01",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 125.01086956521739
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "L6",
+        "value": 7
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "M6",
+        "value": 100
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "N6",
+        "value": "low"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "O6",
+        "value": 3
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "P6",
+        "value": 5
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 125.01086956521739
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0.0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0.0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "E6",
+        "value": "hidden_fatigue"
+      },
+      {
+        "sheet": "16_RPE_AND_OBSERVATIONS",
+        "cell": "F6",
+        "value": "hidden_fatigue"
+      }
+    ]
+  },
+  {
+    "id": "TARGET-00",
+    "rule": "PLAN-07/08/09/10",
+    "inputs": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 100
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": null
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "G6",
+        "value": false
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": null
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "J6",
+        "value": "build"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "K6",
+        "value": "prior_planned_hold"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": 100.0
+      }
+    ]
+  },
+  {
+    "id": "TARGET-01",
+    "rule": "PLAN-07/08/09/10",
+    "inputs": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 100
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 80
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "G6",
+        "value": false
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": 80
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "J6",
+        "value": "build"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "K6",
+        "value": "realized_progression"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": 110.0
+      }
+    ]
+  },
+  {
+    "id": "TARGET-02",
+    "rule": "PLAN-07/08/09/10",
+    "inputs": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 100
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 79
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "G6",
+        "value": false
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": 79
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "J6",
+        "value": "build"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "K6",
+        "value": "realized_baseline"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": 79.0
+      }
+    ]
+  },
+  {
+    "id": "TARGET-03",
+    "rule": "PLAN-07/08/09/10",
+    "inputs": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 100
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 110
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "G6",
+        "value": false
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": 110
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "J6",
+        "value": "build"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "K6",
+        "value": "realized_progression"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": 110.0
+      }
+    ]
+  },
+  {
+    "id": "TARGET-04",
+    "rule": "PLAN-07/08/09/10",
+    "inputs": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 100
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 120
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "G6",
+        "value": false
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": 120
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "J6",
+        "value": "build"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "K6",
+        "value": "physiological_debt"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": 90.0
+      }
+    ]
+  },
+  {
+    "id": "TARGET-05",
+    "rule": "PLAN-07/08/09/10",
+    "inputs": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 100
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 50
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "G6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": 50
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "J6",
+        "value": "build"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "K6",
+        "value": "realized_progression"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": 55.0
+      }
+    ]
+  },
+  {
+    "id": "TARGET-06",
+    "rule": "PLAN-07/08/09/10",
+    "inputs": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 100
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 0
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 0
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "G6",
+        "value": false
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": 0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "J6",
+        "value": "build"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "K6",
+        "value": "realized_progression"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": 0.0
+      }
+    ]
+  },
+  {
+    "id": "FRESH-False",
+    "rule": "PLAN-01",
+    "inputs": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": false
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": null
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": null
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "J6",
+        "value": "base"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": 194.1
+      }
+    ]
+  },
+  {
+    "id": "FRESH-True",
+    "rule": "PLAN-01",
+    "inputs": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": false
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 100
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 100
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "J6",
+        "value": "base"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": 194.1
+      }
+    ]
+  },
+  {
+    "id": "MISSING-00",
+    "rule": "LOAD-02/03",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 150
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I8",
+        "value": false
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": "UNAVAILABLE"
+      }
+    ]
+  },
+  {
+    "id": "MISSING-01",
+    "rule": "LOAD-02/03",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "YES"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 150
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I8",
+        "value": false
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 30
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 27.6
+      }
+    ]
+  },
+  {
+    "id": "MISSING-02",
+    "rule": "LOAD-02/03",
+    "inputs": [
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "NO"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 150
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I8",
+        "value": false
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "E6",
+        "value": 0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "F6",
+        "value": 0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "G6",
+        "value": 0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "H6",
+        "value": 0
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "I6",
+        "value": 0
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": "UNAVAILABLE"
+      }
+    ]
+  },
+  {
+    "id": "PHASE-RECOVERY",
+    "rule": "PLAN-01/02/03/05/06",
+    "inputs": [
+      {
+        "sheet": "02_GOAL",
+        "cell": "B11",
+        "value": 46384
+      },
+      {
+        "sheet": "02_GOAL",
+        "cell": "B7",
+        "value": 46419
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 200
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 200
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": 200
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "J6",
+        "value": "recovery"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "K6",
+        "value": "recovery_factor"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": 120.0
+      }
+    ]
+  },
+  {
+    "id": "PHASE-FULL-TAPER",
+    "rule": "PLAN-01/02/03/05/06",
+    "inputs": [
+      {
+        "sheet": "02_GOAL",
+        "cell": "B11",
+        "value": 46412
+      },
+      {
+        "sheet": "02_GOAL",
+        "cell": "B7",
+        "value": 46419
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 200
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 200
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": 200
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "J6",
+        "value": "taper"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "K6",
+        "value": "taper_factor"
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": 70.0
+      }
+    ]
+  },
+  {
+    "id": "PHASE-PARTIAL-TAPER",
+    "rule": "PLAN-01/02/03/05/06",
+    "inputs": [
+      {
+        "sheet": "02_GOAL",
+        "cell": "B11",
+        "value": 46412
+      },
+      {
+        "sheet": "02_GOAL",
+        "cell": "B7",
+        "value": 46418
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 200
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 200
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": 200
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": "partial_week_taper_rule_required"
+      }
+    ]
+  },
+  {
+    "id": "PHASE-TAPER-MISSING",
+    "rule": "PLAN-01/02/03/05/06",
+    "inputs": [
+      {
+        "sheet": "02_GOAL",
+        "cell": "B11",
+        "value": 46412
+      },
+      {
+        "sheet": "02_GOAL",
+        "cell": "B7",
+        "value": 46419
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": false
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": null
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": null
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": null
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": "taper_baseline_unavailable"
+      }
+    ]
+  },
+  {
+    "id": "PHASE-PAST-RACE",
+    "rule": "PLAN-01/02/03/05/06",
+    "inputs": [
+      {
+        "sheet": "02_GOAL",
+        "cell": "B11",
+        "value": 46307
+      },
+      {
+        "sheet": "02_GOAL",
+        "cell": "B7",
+        "value": 46306
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 200
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 200
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": 200
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": "race_date_before_week"
+      }
+    ]
+  },
+  {
+    "id": "PHASE-INVALID-MONDAY",
+    "rule": "PLAN-01/02/03/05/06",
+    "inputs": [
+      {
+        "sheet": "02_GOAL",
+        "cell": "B11",
+        "value": 46308
+      },
+      {
+        "sheet": "02_GOAL",
+        "cell": "B7",
+        "value": 46419
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 200
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 200
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": 200
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": "INVALID_MONDAY"
+      }
+    ]
+  },
+  {
+    "id": "PHASE-APPROVED-MISSING",
+    "rule": "PLAN-01/02/03/05/06",
+    "inputs": [
+      {
+        "sheet": "02_GOAL",
+        "cell": "B11",
+        "value": 46307
+      },
+      {
+        "sheet": "02_GOAL",
+        "cell": "B7",
+        "value": 46419
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": null
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": null
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": null
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": "approved_plan_baseline_unavailable"
+      }
+    ]
+  },
+  {
+    "id": "PHASE-PRIORITY-MISSING-TAPER",
+    "rule": "PLAN-01/02/03/05/06",
+    "inputs": [
+      {
+        "sheet": "02_GOAL",
+        "cell": "B11",
+        "value": 46412
+      },
+      {
+        "sheet": "02_GOAL",
+        "cell": "B7",
+        "value": 46418
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": null
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": null
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "I6",
+        "value": null
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": "approved_plan_baseline_unavailable"
+      }
+    ]
+  },
+  {
+    "id": "PROPERTY-EXPERIMENTAL-GROWTH",
+    "rule": "PROPERTY: original constant/output isolation",
+    "inputs": [
+      {
+        "sheet": "00_START_HERE",
+        "cell": "B21",
+        "value": "JOREN EXPERIMENTAL RULES"
+      },
+      {
+        "sheet": "06_PARAMETERS",
+        "cell": "C11",
+        "value": 1.2
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "C6",
+        "value": true
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "D6",
+        "value": 100
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "E6",
+        "value": 100
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "F6",
+        "value": 1
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "06_PARAMETERS",
+        "cell": "B11",
+        "value": 1.1
+      },
+      {
+        "sheet": "06_PARAMETERS",
+        "cell": "D11",
+        "value": 1.2
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "L6",
+        "value": 110
+      },
+      {
+        "sheet": "19_NEXT_WEEK",
+        "cell": "M6",
+        "value": 120
+      }
+    ]
+  },
+  {
+    "id": "PROPERTY-RESTHR-UNUSED",
+    "rule": "PROPERTY: resting HR not in baseline",
+    "inputs": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "B12",
+        "value": 40
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "01_ATHLETE_INPUTS",
+        "cell": "F9",
+        "value": 194.1
+      }
+    ]
+  },
+  {
+    "id": "PROPERTY-DEFAULT-CALENDAR-DATES",
+    "rule": "PROPERTY: exported calendar dates have no time component",
+    "inputs": [],
+    "expected": [
+      {
+        "sheet": "02_GOAL",
+        "cell": "B7",
+        "value": 46419
+      },
+      {
+        "sheet": "02_GOAL",
+        "cell": "B11",
+        "value": 46307
+      }
+    ]
+  },
+  {
+    "id": "PROPERTY-EXPERIMENTAL-HR-ZONE",
+    "rule": "PROPERTY: experimental HR threshold drives its own zone",
+    "inputs": [
+      {
+        "sheet": "06_PARAMETERS",
+        "cell": "C40",
+        "value": 0.75
+      },
+      {
+        "sheet": "03_CALIBRATION",
+        "cell": "I8",
+        "value": true
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "A6",
+        "value": 1
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "B6",
+        "value": "synthetic"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "C6",
+        "value": "run"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "D6",
+        "value": 60
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "J6",
+        "value": "NO"
+      },
+      {
+        "sheet": "15_COMPLETED_ACTIVITIES",
+        "cell": "K6",
+        "value": 150
+      }
+    ],
+    "expected": [
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "G6",
+        "value": 2
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "L6",
+        "value": 1
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "H6",
+        "value": 55.2
+      },
+      {
+        "sheet": "18_ACTUAL_LOAD",
+        "cell": "I6",
+        "value": 34.8
+      }
+    ]
+  }
+]

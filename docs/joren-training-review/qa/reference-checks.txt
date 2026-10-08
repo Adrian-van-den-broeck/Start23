@@ -1,0 +1,9 @@
+Pinned source: 6b1189b70a6505726fef70c4616a2f3d6dd4c94a
+Backend: 778 passed, 1 Starlette/httpx deprecation warning, 179.23s
+Ruff app/tests: all checks passed
+Ruff format app/tests: 139 files already formatted
+Strict mypy app/tests: success, 139 source files
+New generators: Ruff passed; five Python generator/QA files formatted
+OpenAPI and recursive private-load leak checks are included in backend pytest.
+No production/staging access; pgTAP/RLS checks not executed in a database.
+No engine, mobile or database implementation changes.

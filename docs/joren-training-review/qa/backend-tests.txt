@@ -1,0 +1,4 @@
+Pinned baseline 6b1189b70a6505726fef70c4616a2f3d6dd4c94a
+Offline pytest -q, isolated worktree/backend
+778 passed, 1 warning in 179.23s
+Warning: Starlette httpx TestClient deprecation; no engine failures.
