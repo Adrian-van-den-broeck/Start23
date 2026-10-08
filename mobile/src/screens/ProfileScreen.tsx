@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { getOnboarding, saveProfile } from '../api/client';
 import type { AthleteProfile } from '../api/types';
-import { MotionPressable as Pressable } from '../components/MotionPressable';
-import { colors, radius, spacing } from '../theme/tokens';
-import { ProfileStep } from './OnboardingScreen';
+import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
+import { ProfileForm } from '../ui-v2/components/ProfileForm';
+import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
+import { Divider } from '../ui-v2/primitives/Divider';
+import { Card } from '../ui-v2/primitives/Card';
+import { Notice } from '../ui-v2/primitives/Notice';
+import { Text } from '../ui-v2/primitives/Text';
+import { colors, layout, space } from '../ui-v2/tokens';
 
 type Props = {
   accessToken: string;
@@ -60,32 +58,14 @@ export function ProfileScreen({
     };
   }, [accessToken]);
 
-  return (
-    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <View style={styles.header}>
-        <Pressable accessibilityRole="button" onPress={onBack} style={styles.headerButton}>
-          <Text style={styles.headerButtonText}>{'<'} Week</Text>
-        </Pressable>
-        <View>
-          <Text style={styles.logo}>WOMBO</Text>
-          <Text style={styles.caption}>Mijn profiel</Text>
-        </View>
-        <Pressable
-          accessibilityLabel="Afmelden"
-          accessibilityRole="button"
-          onPress={() => void onSignOut()}
-          style={styles.headerButton}
-        >
-          <Text style={styles.headerButtonText}>Uit</Text>
-        </Pressable>
-      </View>
-      <ScrollView contentContainerStyle={styles.content}>
-        {loading ? <ActivityIndicator color={colors.brand} /> : null}
-        {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
-        {!loading && profile ? (
-          <ProfileStep
-            profile={profile}
-            saving={saving}
+  return <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag" automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}>
+        <BrandedFormHeader caption="Mijn profiel" onBack={onBack} onSignOut={onSignOut} />
+        {loading ? <ActivityIndicator color={colors.primary} /> : null}
+        {error ? <Notice tone="error">{error}</Notice> : null}
+        {!loading && profile ? <ProfileForm profile={profile} saving={saving}
             onSave={async (input) => {
               setSaving(true);
               setError(null);
@@ -101,52 +81,17 @@ export function ProfileScreen({
               } finally {
                 setSaving(false);
               }
-            }}
-          />
-        ) : null}
-        <View style={styles.links}>
-          <Pressable accessibilityRole="button" onPress={onOpenTests} style={styles.link}>
-            <Text style={styles.linkTitle}>Testen en kalibratie</Text>
-            <Text style={styles.linkText}>Open de huidige, uitvoerbare protocollen.</Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={onOpenPioneerAccess}
-            style={styles.link}
-          >
-            <Text style={styles.linkTitle}>Pioneer toegang</Text>
-            <Text style={styles.linkText}>Wissel je persoonlijke beta-code in.</Text>
-          </Pressable>
-        </View>
+            }} /> : null}
+        <Card elevated style={{ gap: space[16] }}>
+          <View style={{ gap: space[4] }}><QuickActionRow label="Testen en kalibratie" onAction={onOpenTests} icon="document" /><Text variant="supporting" tone="textMuted">Open de huidige, uitvoerbare protocollen.</Text></View>
+          <Divider />
+          <View style={{ gap: space[4] }}><QuickActionRow label="Pioneer toegang" onAction={onOpenPioneerAccess} icon="profile" /><Text variant="supporting" tone="textMuted">Wissel je persoonlijke beta-code in.</Text></View>
+        </Card>
       </ScrollView>
-    </SafeAreaView>
-  );
+    </KeyboardAvoidingView>
+  </SafeAreaView>;
 }
-
 const styles = StyleSheet.create({
-  safeArea: { backgroundColor: colors.canvas, flex: 1 },
-  header: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-  },
-  headerButton: { minWidth: 58, paddingVertical: spacing.sm },
-  headerButtonText: { color: colors.brand, fontWeight: '800' },
-  logo: { color: colors.brand, fontSize: 18, fontWeight: '900', textAlign: 'center' },
-  caption: { color: colors.inkMuted, fontSize: 12, textAlign: 'center' },
-  content: { gap: spacing.lg, padding: spacing.lg, paddingBottom: spacing.xxl },
-  error: { color: colors.danger, lineHeight: 20 },
-  links: { gap: spacing.md },
-  link: {
-    backgroundColor: colors.surface,
-    borderColor: colors.line,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    gap: spacing.xs,
-    padding: spacing.lg,
-  },
-  linkTitle: { color: colors.ink, fontSize: 17, fontWeight: '800' },
-  linkText: { color: colors.inkMuted, lineHeight: 20 },
+  safeArea: { backgroundColor: colors.background, flex: 1 },
+  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },
 });

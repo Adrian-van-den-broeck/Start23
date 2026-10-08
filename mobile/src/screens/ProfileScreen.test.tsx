@@ -45,6 +45,7 @@ describe('ProfileScreen navigation regression', () => {
     expect(await screen.findByDisplayValue('Ada')).toBeTruthy();
     expect(screen.getByRole('button', { name: /Testen en kalibratie/ })).toBeTruthy();
     expect(screen.getByRole('button', { name: /Pioneer toegang/ })).toBeTruthy();
+    expect(screen.queryByText(/Stap \d van/)).toBeNull();
     expect(saveProfile).not.toHaveBeenCalled();
   });
 });

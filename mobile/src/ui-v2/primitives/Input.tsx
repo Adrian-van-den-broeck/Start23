@@ -17,7 +17,7 @@ export function Input({ label, hint, error, optionalLabel, disabledReason, disab
   const { width, fontScale } = useWindowDimensions();
   const compact = width < 360 || fontScale >= 1.5;
   const locked = disabled || readOnly || !editable;
-  const fullLabel = [accessibilityLabel ?? label, optionalLabel, unit].filter(Boolean).join(', ');
+  const fullLabel = accessibilityLabel ?? [label, optionalLabel, unit].filter(Boolean).join(', ');
   return <FormField label={compact && unit ? `${label} (${unit})` : label} hint={hint} error={error}
     optionalLabel={optionalLabel} disabledReason={disabledReason}>
     {(labelId) => <View style={{ gap: space[8] }}>
