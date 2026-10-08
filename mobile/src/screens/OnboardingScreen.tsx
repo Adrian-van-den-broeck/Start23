@@ -36,14 +36,27 @@ import type {
   RaceType,
 } from '../api/types';
 import { DurationPicker } from '../components/DurationPicker';
-import { FadeInView } from '../components/FadeInView';
 import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import {
   formatIsoDateInput,
-  isPastIsoDateInput,
 } from '../lib/dateInput';
-import { colors, radius, shadows, spacing } from '../theme/tokens';
+import { colors as finalColors, layout, radius as finalRadius, shadows, space, typography } from '../ui-v2/tokens';
+import { BrandedFormHeader, FormComposition } from '../ui-v2/components/FormComposition';
+import { ProfileForm } from '../ui-v2/components/ProfileForm';
+import { StepProgress } from '../ui-v2/components/StepProgress';
+import { Button } from '../ui-v2/primitives/Button';
+import { Input } from '../ui-v2/primitives/Input';
+import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
+import { Notice } from '../ui-v2/primitives/Notice';
+const colors = { canvas: finalColors.background, brand: finalColors.primary, white: finalColors.textInverse,
+  ink: finalColors.text, inkMuted: finalColors.textMuted, inkFaint: finalColors.textMuted, danger: finalColors.destructive,
+  dangerSoft: finalColors.destructiveSoft, surface: finalColors.surface, surfaceRaised: finalColors.surface,
+  surfaceMuted: finalColors.surfaceSubtle, line: finalColors.border, lineStrong: finalColors.borderControl,
+  accent: finalColors.primary, brandSoft: finalColors.primarySoft, accentSoft: finalColors.warningSoft,
+  success: finalColors.primary };
+const spacing = { xs: space[4], sm: space[8], md: space[16], lg: space[24], xl: space[32], xxl: space[48] };
+const radius = { sm: finalRadius.inset, md: finalRadius.control, lg: finalRadius.card, pill: finalRadius.pill };
 import { parseRunPace } from '../lib/runPace';
 import {
   parsePositiveInteger,
@@ -70,153 +83,15 @@ type OnboardingScreenProps = {
   onSignOut: () => Promise<void>;
 };
 
-type StepFrameProps = {
-  eyebrow: string;
-  title: string;
-  description: string;
-  children: React.ReactNode;
-};
+type StepFrameProps = { title: string; description: string; children: React.ReactNode };
+function StepFrame(props: StepFrameProps) { return <FormComposition {...props} />; }
 
-function StepFrame({
-  eyebrow,
-  title,
-  description,
-  children,
-}: StepFrameProps) {
-  return (
-    <FadeInView style={styles.step}>
-      <View style={styles.stepHero}>
-        <View style={styles.eyebrowRow}>
-          <View style={styles.eyebrowMark} />
-          <Text style={styles.eyebrow}>{eyebrow}</Text>
-        </View>
-        <Text style={styles.stepTitle}>{title}</Text>
-        <Text style={styles.description}>{description}</Text>
-      </View>
-      <View style={styles.stepCard}>{children}</View>
-    </FadeInView>
-  );
+type ActionButtonProps = { label: string; loading?: boolean; disabled?: boolean; secondary?: boolean; onPress: () => void };
+function ActionButton({ label, loading = false, disabled = false, secondary = false, onPress }: ActionButtonProps) {
+  return <Button label={label} busy={loading} disabled={disabled} variant={secondary ? 'secondary' : 'primary'} trailingIcon={secondary ? undefined : 'forward'} onPress={onPress} />;
 }
 
-type ActionButtonProps = {
-  label: string;
-  loading?: boolean;
-  disabled?: boolean;
-  secondary?: boolean;
-  onPress: () => void;
-};
-
-function ActionButton({
-  label,
-  loading = false,
-  disabled = false,
-  secondary = false,
-  onPress,
-}: ActionButtonProps) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      disabled={disabled || loading}
-      haptic={secondary ? undefined : 'light'}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.action,
-        secondary && styles.actionSecondary,
-        (disabled || loading) && styles.actionDisabled,
-        pressed && styles.actionPressed,
-      ]}
-    >
-      {loading ? (
-        <ActivityIndicator color={secondary ? colors.brand : colors.white} />
-      ) : (
-        <Text
-          style={[
-            styles.actionText,
-            secondary && styles.actionTextSecondary,
-          ]}
-        >
-          {label}
-        </Text>
-      )}
-    </Pressable>
-  );
-}
-
-type ProfileStepProps = {
-  profile: AthleteProfile | null;
-  saving: boolean;
-  onSave: (input: {
-    first_name?: string;
-    last_name?: string;
-    date_of_birth: string;
-    resting_heart_rate_bpm: number;
-  }) => Promise<void>;
-};
-
-export function ProfileStep({ profile, saving, onSave }: ProfileStepProps) {
-  const [firstName, setFirstName] = useState(profile?.first_name ?? '');
-  const [lastName, setLastName] = useState(profile?.last_name ?? '');
-  const [dateOfBirth, setDateOfBirth] = useState(profile?.date_of_birth ?? '');
-  const [restingHeartRate, setRestingHeartRate] = useState(
-    profile?.resting_heart_rate_bpm?.toString() ?? '',
-  );
-  const valid =
-    isPastIsoDateInput(dateOfBirth) &&
-    Number(restingHeartRate) > 0;
-
-  return (
-    <StepFrame
-      description="Deze gegevens ondersteunen alleen goedgekeurde, deterministische berekeningen. Er worden geen medische grenzen afgedwongen."
-      eyebrow="Stap 1 van 7"
-      title="Jouw basis"
-    >
-      <View style={styles.form}>
-        <FormField
-          label="Voornaam (optioneel)"
-          onChangeText={setFirstName}
-          placeholder="Voornaam"
-          value={firstName}
-        />
-        <FormField
-          label="Achternaam (optioneel)"
-          onChangeText={setLastName}
-          placeholder="Achternaam"
-          value={lastName}
-        />
-        <FormField
-          hint="Gebruik JJJJ-MM-DD. De streepjes verschijnen automatisch."
-          inputMode="numeric"
-          label="Geboortedatum"
-          maxLength={10}
-          onChangeText={(value) => setDateOfBirth(formatIsoDateInput(value))}
-          placeholder="1990-05-20"
-          value={dateOfBirth}
-        />
-        <FormField
-          inputMode="numeric"
-          label="Rusthartslag"
-          onChangeText={setRestingHeartRate}
-          placeholder="52"
-          suffix={<Text style={styles.unit}>bpm</Text>}
-          value={restingHeartRate}
-        />
-      </View>
-      <ActionButton
-        disabled={!valid}
-        label="Profiel opslaan"
-        loading={saving}
-        onPress={() =>
-          void onSave({
-            ...(firstName.trim() ? { first_name: firstName.trim() } : {}),
-            ...(lastName.trim() ? { last_name: lastName.trim() } : {}),
-            date_of_birth: dateOfBirth,
-            resting_heart_rate_bpm: Number(restingHeartRate),
-          })
-        }
-      />
-    </StepFrame>
-  );
-}
+export function ProfileStep(props: Parameters<typeof ProfileForm>[0]) { return <ProfileForm {...props} />; }
 
 type ConfirmationStepProps = {
   saving: boolean;
@@ -227,7 +102,6 @@ export function HeartRateMonitorStep({ saving, onSave }: ConfirmationStepProps) 
   return (
     <StepFrame
       description="Voor het huidige MVP moet je gemiddelde hartslag kunnen meten. Dat mag met iedere hartslagmeter en je kunt de waarde handmatig invoeren; een specifieke wearable is niet nodig."
-      eyebrow="Stap 2 van 7"
       title="Heb je toegang tot een hartslagmeter?"
     >
       <View style={styles.approvalNotice}>
@@ -275,21 +149,10 @@ export function TimezoneStep({ profile, saving, onSave }: TimezoneStepProps) {
   return (
     <StepFrame
       description="Je tijdzone bepaalt lokale trainingsweken en datums. Controleer de gedetecteerde waarde of kies expliciet een IANA-tijdzone. We slaan nooit stilzwijgend een gok op."
-      eyebrow="Stap 3 van 7"
       title="Bevestig je tijdzone"
     >
       {detected ? (
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => {
-            setTimezone(detected);
-            setSource('device');
-          }}
-          style={styles.goalModeCard}
-        >
-          <Text style={styles.goalModeTitle}>Gedetecteerd op dit apparaat</Text>
-          <Text style={styles.goalModeDescription}>{detected}</Text>
-        </Pressable>
+        <Button label={"Gedetecteerd op dit apparaat: " + detected} variant="secondary" onPress={() => { setTimezone(detected); setSource('device'); }} />
       ) : (
         <Text style={styles.fieldError}>
           Automatische detectie is niet beschikbaar. Kies hieronder een tijdzone.
@@ -297,26 +160,13 @@ export function TimezoneStep({ profile, saving, onSave }: TimezoneStepProps) {
       )}
       <View style={styles.goalModeList}>
         {fallbackTimezones.map((value) => (
-          <Pressable
-            accessibilityRole="radio"
-            accessibilityState={{ selected: timezone === value }}
-            key={value}
-            onPress={() => {
-              setTimezone(value);
-              setSource('manual');
-            }}
-            style={[
-              styles.goalModeCard,
-              timezone === value && styles.goalModeCardSelected,
-            ]}
-          >
-            <Text style={styles.goalModeTitle}>{value}</Text>
-          </Pressable>
+          <ChoiceRow key={value} label={value} selected={timezone === value} onPress={() => { setTimezone(value); setSource('manual'); }} />
         ))}
       </View>
-      <FormField
+      <Input
         autoCapitalize="none"
         hint="Gebruik een geldige IANA-naam als je tijdzone niet in de lijst staat."
+        icon="location"
         label="Andere IANA-tijdzone"
         onChangeText={(value) => {
           setTimezone(value);
@@ -358,7 +208,6 @@ export function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
   return (
     <StepFrame
       description="Hoeveel uur per week trainde je gemiddeld de afgelopen maand? Vul ook nul in als je een discipline niet deed."
-      eyebrow="Stap 4 van 7"
       title="Waar sta je nu?"
     >
       <View style={styles.form}>
@@ -367,12 +216,13 @@ export function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
             <Text style={styles.cardTitle}>
               {discipline === 'swim' ? 'Zwemmen' : discipline === 'bike' ? 'Fietsen' : 'Hardlopen'}
             </Text>
-            <FormField
+            <Input
               inputMode="decimal"
               label="Gemiddelde uren per week"
               onChangeText={(value) => setValues((current) => ({ ...current, [discipline]: value }))}
               placeholder="0"
-              suffix={<Text style={styles.unit}>uur/week</Text>}
+              unit="uur/week"
+              accessibilityLabel="Gemiddelde uren per week"
               value={values[discipline]}
             />
           </View>
@@ -551,7 +401,6 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
   return (
     <StepFrame
       description="Een wedstrijdplan rekent terug vanaf een racedatum. Een persoonlijk doel krijgt een eigen cyclus vanaf week 1 en gebruikt nooit stilzwijgend wedstrijdregels."
-      eyebrow="Stap 5 van 7"
       title="Kies je trainingsdoel"
     >
       <View style={styles.goalModeList}>
@@ -859,7 +708,6 @@ export function ReviewStep({
   return (
     <StepFrame
       description="Afronden maakt geen trainingsplan actief. Het zet alleen een planningsverzoek klaar voor de volgende fase."
-      eyebrow="Stap 7 van 7"
       title="Klaar voor je eerste voorstel"
     >
       <View style={styles.reviewCard}>
@@ -1126,89 +974,14 @@ export function OnboardingScreen({
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboard}
       >
-        <View style={styles.header}>
-          <View style={styles.brandLockup}>
-            <View style={styles.logoMark}>
-              <Text style={styles.logoMarkText}>23</Text>
-            </View>
-            <View>
-              <Text style={styles.logo}>Wombo</Text>
-              <Text style={styles.headerCaption}>Jouw profiel</Text>
-            </View>
-          </View>
-          <View style={styles.headerActions}>
-            {state.discipline_setups.some((setup) => setup.protocol_id) ? (
-              <Pressable
-                accessibilityRole="button"
-                onPress={onOpenCalibration}
-                style={styles.signOut}
-              >
-                <Text style={styles.signOutText}>Testen</Text>
-              </Pressable>
-            ) : null}
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => void onSignOut()}
-              style={styles.signOut}
-            >
-              <Text style={styles.signOutText}>Afmelden</Text>
-            </Pressable>
-          </View>
-        </View>
-
-        {state.upgrade_required ? (
-          <View accessibilityRole="alert" style={styles.upgradeBanner}>
-            <Text style={styles.upgradeBannerTitle}>Werk je onboarding bij</Text>
-            <Text style={styles.upgradeBannerText}>
-              Je eerdere afronding blijft bewaard. Alleen deze onderdelen zijn nog
-              nodig voor {state.current_onboarding_version}:{' '}
-              {state.missing_upgrade_steps.length
-                ? state.missing_upgrade_steps
-                    .map(
-                      (missing) =>
-                        stepLabels.find((item) => item.step === missing)?.label ??
-                        missing,
-                    )
-                    .join(', ')
-                : 'controle en bevestiging'}.
-            </Text>
-          </View>
-        ) : null}
-
-        {step !== 'completed' ? (
-          <FadeInView delay={80} distance={8} style={styles.progress}>
-            {stepLabels.map((item) => (
-              <View key={item.step} style={styles.progressItem}>
-                <View
-                  style={[
-                    styles.progressDot,
-                    (completed.has(item.step) || step === item.step) &&
-                      styles.progressDotActive,
-                  ]}
-                />
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    styles.progressLabel,
-                    step === item.step && styles.progressLabelActive,
-                  ]}
-                >
-                  {item.label}
-                </Text>
-              </View>
-            ))}
-          </FadeInView>
-        ) : null}
-
-        <ScrollView
-          automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
-          contentContainerStyle={styles.scrollContent}
-          keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-          style={styles.scroll}
-        >
-          {error ? <Text style={styles.errorBanner}>{error}</Text> : null}
+        <ScrollView automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'} contentContainerStyle={styles.scrollContent}
+          keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} style={styles.scroll}>
+          <BrandedFormHeader caption="Jouw profiel" onSignOut={onSignOut}>
+            {state.discipline_setups.some((setup) => setup.protocol_id) ? <Button label="Testen" variant="secondary" onPress={onOpenCalibration} /> : null}
+          </BrandedFormHeader>
+          {state.upgrade_required ? <Notice title="Werk je onboarding bij">{'Je eerdere afronding blijft bewaard. Alleen deze onderdelen zijn nog nodig voor ' + state.current_onboarding_version + ': ' + (state.missing_upgrade_steps.length ? state.missing_upgrade_steps.map((missing) => stepLabels.find((item) => item.step === missing)?.label ?? missing).join(', ') : 'controle en bevestiging') + '.'}</Notice> : null}
+          <StepProgress current={step} steps={stepLabels} completed={completed} />
+          {error ? <Notice tone="error">{error}</Notice> : null}
 
           {step === 'profile' ? (
             <ProfileStep
@@ -1479,7 +1252,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     gap: spacing.xs,
-    maxWidth: 720,
+    maxWidth: layout.readingWidth,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
     width: '100%',
@@ -1506,17 +1279,17 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     alignSelf: 'center',
-    maxWidth: 720,
-    padding: spacing.lg,
-    paddingBottom: 80,
+    maxWidth: layout.readingWidth,
+    padding: layout.phoneGutter,
+    gap: space[24],
+    paddingBottom: space[48],
     width: '100%',
   },
   errorBanner: {
     backgroundColor: colors.dangerSoft,
     borderRadius: radius.sm,
     color: colors.danger,
-    fontSize: 13,
-    lineHeight: 19,
+    ...typography.body,
     marginBottom: spacing.md,
     padding: spacing.md,
   },
@@ -1541,8 +1314,7 @@ const styles = StyleSheet.create({
   },
   fieldError: {
     color: colors.danger,
-    fontSize: 12,
-    lineHeight: 17,
+    ...typography.supporting,
   },
   step: {
     gap: spacing.lg,
@@ -1592,7 +1364,7 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   form: {
-    gap: spacing.md,
+    gap: layout.fieldGroupGap,
   },
   twoColumns: {
     flexDirection: 'row',
@@ -1650,8 +1422,7 @@ const styles = StyleSheet.create({
   },
   goalModeDescription: {
     color: colors.inkMuted,
-    fontSize: 13,
-    lineHeight: 19,
+    ...typography.body,
   },
   availableBadge: {
     backgroundColor: colors.brandSoft,
@@ -1686,8 +1457,7 @@ const styles = StyleSheet.create({
   },
   personalGoalsText: {
     color: colors.inkMuted,
-    fontSize: 13,
-    lineHeight: 19,
+    ...typography.body,
   },
   personalGoalList: {
     gap: spacing.xs,
@@ -1735,16 +1505,10 @@ const styles = StyleSheet.create({
   actionTextSecondary: {
     color: colors.brand,
   },
-  disciplineCard: {
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.md,
-    gap: spacing.md,
-    padding: spacing.md,
-  },
+  disciplineCard: { gap: space[16] },
   cardTitle: {
     color: colors.ink,
-    fontSize: 17,
-    fontWeight: '800',
+    ...typography.cardTitle,
   },
   zoneProgress: {
     flexDirection: 'row',
@@ -1779,8 +1543,7 @@ const styles = StyleSheet.create({
   },
   zoneRouteDescription: {
     color: colors.inkMuted,
-    fontSize: 13,
-    lineHeight: 19,
+    ...typography.body,
   },
   zoneRouteRadio: {
     borderColor: colors.lineStrong,
@@ -1807,8 +1570,7 @@ const styles = StyleSheet.create({
   },
   routeExplanationText: {
     color: colors.inkMuted,
-    fontSize: 13,
-    lineHeight: 19,
+    ...typography.body,
   },
   routeUnavailableCard: {
     backgroundColor: colors.accentSoft,
@@ -1818,8 +1580,7 @@ const styles = StyleSheet.create({
   },
   routeUnavailableText: {
     color: colors.ink,
-    fontSize: 13,
-    lineHeight: 19,
+    ...typography.body,
   },
   boundaryHeader: {
     alignItems: 'flex-end',
@@ -1866,8 +1627,7 @@ const styles = StyleSheet.create({
   },
   fallbackText: {
     color: colors.ink,
-    fontSize: 13,
-    lineHeight: 19,
+    ...typography.body,
   },
   reviewCard: {
     backgroundColor: colors.surface,
@@ -1885,14 +1645,14 @@ const styles = StyleSheet.create({
   },
   reviewLabel: {
     color: colors.inkMuted,
-    fontSize: 12,
-    fontWeight: '700',
+    ...typography.label,
+    flexShrink: 1,
   },
   reviewValue: {
     color: colors.ink,
     flex: 1,
-    fontSize: 13,
-    fontWeight: '800',
+    ...typography.body,
+    fontWeight: '600',
     textAlign: 'right',
   },
   approvalNotice: {
@@ -1903,12 +1663,10 @@ const styles = StyleSheet.create({
   },
   approvalTitle: {
     color: colors.brand,
-    fontSize: 15,
-    fontWeight: '900',
+    ...typography.label,
   },
   approvalText: {
     color: colors.brand,
-    fontSize: 13,
-    lineHeight: 19,
+    ...typography.body,
   },
 });
