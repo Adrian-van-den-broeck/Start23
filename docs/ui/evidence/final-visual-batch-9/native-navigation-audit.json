@@ -1,0 +1,2052 @@
+{
+  "result": "PASS",
+  "cases": 101,
+  "capturesWithVisibleSelectedNavigation": 409,
+  "results": [
+    {
+      "capture": "393-font-1-nl-history-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-history-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "360-font-1-nl-history-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 51129
+    },
+    {
+      "capture": "360-font-1-nl-history-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 51129
+    },
+    {
+      "capture": "360-font-1-nl-history-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 51129
+    },
+    {
+      "capture": "320-font-1-nl-history-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-history-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-history-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "412-font-1-nl-history-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 41103
+    },
+    {
+      "capture": "412-font-1-nl-history-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 41103
+    },
+    {
+      "capture": "320-font-1-nl-rpe-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-rpe-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-rpe-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-rpe-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-rpe-page-4.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-rpe-page-5.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-empty-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-empty-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-entry-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-entry-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-entry-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-nl-entry-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 55232
+    },
+    {
+      "capture": "320-font-1-en-empty-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-history-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-history-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-history-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-entry-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-entry-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-entry-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-entry-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-rpe-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-rpe-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-rpe-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-rpe-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-rpe-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-1-en-rpe-page-5.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 55964
+    },
+    {
+      "capture": "320-font-2-nl-empty-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-empty-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-history-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-history-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-history-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-history-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-history-page-4.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-history-page-5.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-entry-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-entry-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-entry-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-entry-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-entry-page-4.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-entry-page-5.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-entry-page-6.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-rpe-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-rpe-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-rpe-page-10.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-rpe-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-rpe-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-rpe-page-4.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-rpe-page-5.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-rpe-page-6.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-rpe-page-7.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-rpe-page-8.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-rpe-page-9.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-en-empty-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-empty-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-history-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-history-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-history-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-history-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-history-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-entry-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-entry-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-entry-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-entry-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-entry-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-entry-page-5.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-rpe-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-rpe-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-rpe-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-rpe-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-rpe-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-rpe-page-5.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-rpe-page-6.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-rpe-page-7.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-rpe-page-8.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-rpe-page-9.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "360-font-1-nl-empty-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 51129
+    },
+    {
+      "capture": "360-font-1-nl-entry-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 51129
+    },
+    {
+      "capture": "360-font-1-nl-entry-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 51129
+    },
+    {
+      "capture": "360-font-1-nl-entry-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 51129
+    },
+    {
+      "capture": "360-font-1-nl-rpe-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 51129
+    },
+    {
+      "capture": "360-font-1-nl-rpe-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 51129
+    },
+    {
+      "capture": "360-font-1-nl-rpe-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 51129
+    },
+    {
+      "capture": "360-font-1-nl-rpe-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 51129
+    },
+    {
+      "capture": "360-font-1-en-empty-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 51666
+    },
+    {
+      "capture": "360-font-1-en-history-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 51666
+    },
+    {
+      "capture": "360-font-1-en-history-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 51666
+    },
+    {
+      "capture": "360-font-1-en-history-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 51666
+    },
+    {
+      "capture": "360-font-1-en-entry-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 51666
+    },
+    {
+      "capture": "360-font-1-en-entry-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 51666
+    },
+    {
+      "capture": "360-font-1-en-entry-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 51666
+    },
+    {
+      "capture": "360-font-1-en-rpe-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 51666
+    },
+    {
+      "capture": "360-font-1-en-rpe-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 51666
+    },
+    {
+      "capture": "360-font-1-en-rpe-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 51666
+    },
+    {
+      "capture": "360-font-1-en-rpe-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 51666
+    },
+    {
+      "capture": "360-font-2-nl-empty-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-empty-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-history-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-history-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-history-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-history-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-entry-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-entry-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-entry-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-entry-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-entry-page-4.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-rpe-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-rpe-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-rpe-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-rpe-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-rpe-page-4.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-rpe-page-5.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-rpe-page-6.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-nl-rpe-page-7.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 76265
+    },
+    {
+      "capture": "360-font-2-en-empty-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-empty-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-history-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-history-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-history-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-history-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-entry-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-entry-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-entry-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-entry-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-entry-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-rpe-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-rpe-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-rpe-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-rpe-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-rpe-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-rpe-page-5.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-rpe-page-6.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "360-font-2-en-rpe-page-7.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 78104
+    },
+    {
+      "capture": "393-font-1-nl-empty-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-entry-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-entry-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-entry-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpe-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpe-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpe-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpe-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-en-empty-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 42952
+    },
+    {
+      "capture": "393-font-1-en-history-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 42952
+    },
+    {
+      "capture": "393-font-1-en-history-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 42952
+    },
+    {
+      "capture": "393-font-1-en-entry-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 42952
+    },
+    {
+      "capture": "393-font-1-en-entry-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 42952
+    },
+    {
+      "capture": "393-font-1-en-entry-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 42952
+    },
+    {
+      "capture": "393-font-1-en-rpe-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 42952
+    },
+    {
+      "capture": "393-font-1-en-rpe-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 42952
+    },
+    {
+      "capture": "393-font-1-en-rpe-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 42952
+    },
+    {
+      "capture": "393-font-1-en-rpe-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 42952
+    },
+    {
+      "capture": "393-font-2-nl-empty-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-empty-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-history-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-history-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-history-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-history-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-entry-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-entry-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-entry-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-entry-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-rpe-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-rpe-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-rpe-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-rpe-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-rpe-page-4.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-nl-rpe-page-5.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 72499
+    },
+    {
+      "capture": "393-font-2-en-empty-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-history-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-history-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-history-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-entry-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-entry-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-entry-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-entry-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-rpe-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-rpe-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-rpe-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-rpe-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-rpe-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "393-font-2-en-rpe-page-5.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 74073
+    },
+    {
+      "capture": "412-font-1-nl-empty-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 41103
+    },
+    {
+      "capture": "412-font-1-nl-entry-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 41103
+    },
+    {
+      "capture": "412-font-1-nl-entry-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 41103
+    },
+    {
+      "capture": "412-font-1-nl-entry-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 41103
+    },
+    {
+      "capture": "412-font-1-nl-rpe-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 41103
+    },
+    {
+      "capture": "412-font-1-nl-rpe-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 41103
+    },
+    {
+      "capture": "412-font-1-nl-rpe-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 41103
+    },
+    {
+      "capture": "412-font-1-nl-rpe-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 41103
+    },
+    {
+      "capture": "412-font-1-en-empty-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 41539
+    },
+    {
+      "capture": "412-font-1-en-history-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 41539
+    },
+    {
+      "capture": "412-font-1-en-history-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 41539
+    },
+    {
+      "capture": "412-font-1-en-entry-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 41539
+    },
+    {
+      "capture": "412-font-1-en-entry-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 41539
+    },
+    {
+      "capture": "412-font-1-en-entry-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 41539
+    },
+    {
+      "capture": "412-font-1-en-rpe-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 41539
+    },
+    {
+      "capture": "412-font-1-en-rpe-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 41539
+    },
+    {
+      "capture": "412-font-1-en-rpe-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 41539
+    },
+    {
+      "capture": "412-font-1-en-rpe-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 41539
+    },
+    {
+      "capture": "412-font-2-nl-empty-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-history-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-history-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-history-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-entry-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-entry-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-entry-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-entry-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-rpe-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-rpe-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-rpe-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-rpe-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-rpe-page-4.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-nl-rpe-page-5.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 70879
+    },
+    {
+      "capture": "412-font-2-en-empty-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 52167
+    },
+    {
+      "capture": "412-font-2-en-history-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 52167
+    },
+    {
+      "capture": "412-font-2-en-history-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 52167
+    },
+    {
+      "capture": "412-font-2-en-history-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 52167
+    },
+    {
+      "capture": "412-font-2-en-entry-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 52167
+    },
+    {
+      "capture": "412-font-2-en-entry-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 52167
+    },
+    {
+      "capture": "412-font-2-en-entry-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 52167
+    },
+    {
+      "capture": "412-font-2-en-rpe-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 52167
+    },
+    {
+      "capture": "412-font-2-en-rpe-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 52167
+    },
+    {
+      "capture": "412-font-2-en-rpe-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 52167
+    },
+    {
+      "capture": "412-font-2-en-rpe-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 52167
+    },
+    {
+      "capture": "412-font-2-en-rpe-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 52167
+    },
+    {
+      "capture": "393-font-1-nl-noHR-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-noHR-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-pending-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-pending-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-pending-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-pending-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-pending-page-4.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-blocked-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-blocked-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-blocked-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-blocked-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-selected-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-selected-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-selected-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-selected-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-after-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-after-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-reminderWeek-page-0.png",
+      "nativeSelectedLabel": "Week",
+      "actualForestPixels": 48457
+    },
+    {
+      "capture": "393-font-1-nl-reminderWeek-page-1.png",
+      "nativeSelectedLabel": "Week",
+      "actualForestPixels": 48457
+    },
+    {
+      "capture": "393-font-1-nl-reminderDestination-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-reminderDestination-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-reminderDestination-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-reminderDestination-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-reminderFeedback-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-reminderFeedback-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-reminderFeedback-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-reminderFeedback-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-entryEmpty-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-entryEmpty-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-entryEmpty-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-context-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-context-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-context-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-planned-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-planned-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-external-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-external-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-swimEntry-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-swimEntry-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-swimEntry-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-bikeRpe-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-bikeRpe-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-bikeRpe-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-bikeRpe-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-swimRpe-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-swimRpe-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-swimRpe-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-swimRpe-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-entryError-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-entryError-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-entryError-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpeError-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpeError-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpeError-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpeError-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-timezoneMissing-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-timezoneMissing-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-timezoneMissing-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-distanceOnly-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-distanceOnly-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-partialCoverage-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-partialCoverage-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-partialCoverage-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-match-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-match-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-match-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-match-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-multiple-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-multiple-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-multiple-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-multiple-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-multiple-page-4.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-longHistory-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-longHistory-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-longHistory-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-longContext-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-longContext-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-longContext-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-longContext-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpeHR-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpeHR-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpeHR-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpeHR-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpeNoHR-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpeNoHR-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpeNoHR-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "393-font-1-nl-rpeNoHR-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 48199
+    },
+    {
+      "capture": "320-font-2-en-selected-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-selected-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-selected-page-10.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-selected-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-selected-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-selected-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-selected-page-5.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-selected-page-6.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-selected-page-7.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-selected-page-8.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-selected-page-9.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-pending-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-10.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-11.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-12.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-13.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-14.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-15.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-5.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-6.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-7.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-8.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-pending-page-9.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 88676
+    },
+    {
+      "capture": "320-font-2-en-multiple-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-multiple-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-multiple-page-10.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-multiple-page-11.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-multiple-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-multiple-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-multiple-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-multiple-page-5.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-multiple-page-6.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-multiple-page-7.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-multiple-page-8.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-multiple-page-9.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longHistory-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longHistory-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longHistory-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longHistory-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longHistory-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longContext-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longContext-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longContext-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longContext-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longContext-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longContext-page-5.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longContext-page-6.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longContext-page-7.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longContext-page-8.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-longContext-page-9.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimEntry-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimEntry-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimEntry-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimEntry-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimEntry-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimEntry-page-5.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimRpe-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimRpe-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimRpe-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimRpe-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimRpe-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimRpe-page-5.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimRpe-page-6.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimRpe-page-7.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimRpe-page-8.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-swimRpe-page-9.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-bikeRpe-page-0.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-bikeRpe-page-1.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-bikeRpe-page-2.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-bikeRpe-page-3.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-bikeRpe-page-4.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-bikeRpe-page-5.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-bikeRpe-page-6.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-bikeRpe-page-7.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-bikeRpe-page-8.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-en-bikeRpe-page-9.png",
+      "nativeSelectedLabel": "Activities",
+      "actualForestPixels": 89000
+    },
+    {
+      "capture": "320-font-2-nl-longHistory-page-0.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-longHistory-page-1.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-longHistory-page-2.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-longHistory-page-3.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-longHistory-page-4.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-longHistory-page-5.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-longHistory-page-7.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    },
+    {
+      "capture": "320-font-2-nl-longHistory-page-8.png",
+      "nativeSelectedLabel": "Activiteiten",
+      "actualForestPixels": 86697
+    }
+  ]
+}

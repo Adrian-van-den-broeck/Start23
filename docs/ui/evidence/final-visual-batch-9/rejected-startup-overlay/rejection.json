@@ -1,0 +1,5 @@
+{
+  "accepted": false,
+  "reason": "Expo development-client startup duplicate-linking toast. Capture gate refused it. Visible Close control inspected and tapped at native bounds [1020,2020][1046,2047]. No production log suppression or navigation changes.",
+  "normalNavigationReleaseVerification": "existing development transport limitation"
+}

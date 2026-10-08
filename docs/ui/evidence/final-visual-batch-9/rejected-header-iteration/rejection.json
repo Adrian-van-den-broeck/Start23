@@ -1,0 +1,5 @@
+{
+  "accepted": false,
+  "reason": "Header decorative layer overlapped the utility row; fixed with opaque foreground utility layering. Non-CI preview also emitted a dev-client duplicate-linking overlay. Final captures require final-2 marker and a cold-start stable CI preview.",
+  "filesMoved": 50
+}

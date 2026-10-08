@@ -1,0 +1,51 @@
+{
+  "provenance": "Focused regression subset from the final full mobile Jest run; assertions unchanged",
+  "suites": 8,
+  "tests": 92,
+  "passed": true,
+  "files": [
+    {
+      "name": "\\src\\ui\\ActivityBoundary.test.tsx",
+      "tests": 15,
+      "status": "passed"
+    },
+    {
+      "name": "\\src\\ui-v2\\screens\\ActivitiesScreens.test.tsx",
+      "tests": 23,
+      "status": "passed"
+    },
+    {
+      "name": "\\src\\screens\\ActivityScreen.regression.test.tsx",
+      "tests": 3,
+      "status": "passed"
+    },
+    {
+      "name": "\\src\\ui-v2\\primitives\\FinalPrimitives.test.tsx",
+      "tests": 7,
+      "status": "passed"
+    },
+    {
+      "name": "\\src\\ui-v2\\assets\\AssetFoundation.test.tsx",
+      "tests": 5,
+      "status": "passed"
+    },
+    {
+      "name": "\\src\\screens\\ActivityScreen.test.tsx",
+      "tests": 2,
+      "status": "passed"
+    },
+    {
+      "name": "\\src\\features\\activities\\ActivityFlowProvider.test.tsx",
+      "tests": 36,
+      "status": "passed"
+    },
+    {
+      "name": "\\src\\components\\RpeChoiceList.test.tsx",
+      "tests": 1,
+      "status": "passed"
+    }
+  ],
+  "finalFullRunTests": 562,
+  "finalFullRunSuites": 62,
+  "finalFullRunSuccess": true
+}

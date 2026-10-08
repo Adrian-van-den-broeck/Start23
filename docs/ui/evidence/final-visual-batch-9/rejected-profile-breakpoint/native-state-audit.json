@@ -1,0 +1,35 @@
+{
+  "result": "PASS",
+  "cases": 18,
+  "checks": [
+    {
+      "case": "320-font-1-nl-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "320-font-1-en-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "320-font-2-nl-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "320-font-2-en-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    }
+  ],
+  "rpeDataSource": "unchanged src/lib/rpe.ts"
+}

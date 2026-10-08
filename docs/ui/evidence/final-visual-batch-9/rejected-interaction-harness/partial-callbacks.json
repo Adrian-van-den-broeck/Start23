@@ -1,0 +1,50 @@
+{
+  "backendWrites": false,
+  "results": [
+    {
+      "name": "Add opens existing entry",
+      "exactMarker": "add",
+      "pass": true
+    },
+    {
+      "name": "Context expansion does not create",
+      "exactMarker": "add",
+      "pass": true
+    },
+    {
+      "name": "Choose exact repeated occurrence",
+      "exactMarker": "context-occurrence-b",
+      "pass": true
+    },
+    {
+      "name": "Reset to deliberate extra",
+      "exactMarker": "context-unplanned",
+      "pass": true
+    },
+    {
+      "name": "Sport choice stays local",
+      "exactMarker": "sport-bike",
+      "pass": true
+    },
+    {
+      "name": "Return to Run stays local",
+      "exactMarker": "sport-run",
+      "pass": true
+    },
+    {
+      "name": "Explicit create enters same pending feedback",
+      "exactMarker": "create-run-45-5000",
+      "pass": true
+    },
+    {
+      "name": "RPE tap directly saves and returns; no Save step",
+      "exactMarker": "rpe-activity-a-4-hr-",
+      "pass": true
+    },
+    {
+      "name": "External exact identity",
+      "exactMarker": "context-external-a",
+      "pass": true
+    }
+  ]
+}

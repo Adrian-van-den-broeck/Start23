@@ -1,0 +1,14 @@
+{
+  "baselineFiles": 208,
+  "changed": [
+    "mobile\\src\\ui-v2\\components\\ActivitySummary.tsx",
+    "mobile\\src\\ui-v2\\components\\RpeChoices.tsx",
+    "mobile\\src\\ui-v2\\primitives\\ChoiceRow.tsx",
+    "mobile\\src\\ui-v2\\primitives\\Notice.tsx",
+    "mobile\\src\\ui-v2\\screens\\ActivitiesScreen.tsx",
+    "mobile\\src\\ui-v2\\screens\\ActivitiesScreens.test.tsx",
+    "mobile\\src\\ui-v2\\screens\\ActivityEntryScreen.tsx",
+    "mobile\\src\\ui-v2\\screens\\ActivityFeedbackScreen.tsx"
+  ],
+  "protectedUnchanged": 200
+}

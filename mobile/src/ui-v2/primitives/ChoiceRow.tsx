@@ -1,21 +1,21 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import { colors, layout, radius, space } from '../tokens';
 import { Icon } from './Icon';
 import { Text } from './Text';
 
-export function ChoiceRow({ label, hint, selected, onPress, disabled = false, disabledReason, mode = 'radio', accessibilityLabel = label }: {
+export function ChoiceRow({ label, hint, selected, onPress, disabled = false, busy = false, disabledReason, mode = 'radio', accessibilityLabel = label }: {
   label: string; accessibilityLabel?: string; hint?: string; selected: boolean; onPress: () => void;
-  disabled?: boolean; disabledReason?: string; mode?: 'radio' | 'checkbox';
+  disabled?: boolean; busy?: boolean; disabledReason?: string; mode?: 'radio' | 'checkbox';
 }) {
   const [focused, setFocused] = useState(false);
   return <View style={{ gap: space[4] }}>
     <Pressable accessibilityRole={mode} accessibilityLabel={accessibilityLabel} accessibilityHint={disabledReason ?? hint}
-      accessibilityState={{ checked: selected, disabled }} disabled={disabled}
+      accessibilityState={{ checked: selected, disabled: disabled || busy, busy }} disabled={disabled || busy}
       onPress={onPress} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
-      style={[styles.row, selected && styles.selected, disabled && styles.disabled]}>
+      style={[styles.row, selected && styles.selected, (disabled || busy) && styles.disabled]}>
       <View accessible={false} importantForAccessibility="no-hide-descendants" style={[styles.indicator, mode === 'checkbox' && { borderRadius: radius.inset }]}>
-        {selected ? <Icon name="check" size={20} /> : null}
+        {busy ? <ActivityIndicator accessible={false} color={colors.primary} /> : selected ? <Icon name="check" size={20} /> : null}
       </View>
       <View style={{ flex: 1, gap: space[4] }}>
         <Text variant="label" accessible={false}>{label}</Text>
