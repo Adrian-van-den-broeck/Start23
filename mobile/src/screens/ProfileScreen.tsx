@@ -5,7 +5,8 @@ import { getOnboarding, saveProfile } from '../api/client';
 import type { AthleteProfile } from '../api/types';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { ProfileForm } from '../ui-v2/components/ProfileForm';
-import { Button } from '../ui-v2/primitives/Button';
+import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
+import { Divider } from '../ui-v2/primitives/Divider';
 import { Card } from '../ui-v2/primitives/Card';
 import { Notice } from '../ui-v2/primitives/Notice';
 import { Text } from '../ui-v2/primitives/Text';
@@ -82,9 +83,9 @@ export function ProfileScreen({
               }
             }} /> : null}
         <Card elevated style={{ gap: space[16] }}>
-          <Text variant="sectionTitle" accessibilityRole="header">Mijn profiel</Text>
-          <View style={{ gap: space[4] }}><Button label="Testen en kalibratie" onPress={onOpenTests} variant="secondary" trailingIcon="document" /><Text variant="supporting" tone="textMuted">Open de huidige, uitvoerbare protocollen.</Text></View>
-          <View style={{ gap: space[4] }}><Button label="Pioneer toegang" onPress={onOpenPioneerAccess} variant="secondary" trailingIcon="chevron" /><Text variant="supporting" tone="textMuted">Wissel je persoonlijke beta-code in.</Text></View>
+          <View style={{ gap: space[4] }}><QuickActionRow label="Testen en kalibratie" onAction={onOpenTests} icon="document" /><Text variant="supporting" tone="textMuted">Open de huidige, uitvoerbare protocollen.</Text></View>
+          <Divider />
+          <View style={{ gap: space[4] }}><QuickActionRow label="Pioneer toegang" onAction={onOpenPioneerAccess} icon="profile" /><Text variant="supporting" tone="textMuted">Wissel je persoonlijke beta-code in.</Text></View>
         </Card>
       </ScrollView>
     </KeyboardAvoidingView>

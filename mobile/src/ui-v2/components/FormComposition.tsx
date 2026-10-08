@@ -37,5 +37,5 @@ const styles = StyleSheet.create({
   utility: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: space[8] },
   brand: { alignItems: 'center', flexShrink: 1 },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8], flexShrink: 1 },
-  art: { marginHorizontal: -layout.phoneGutter },
+  art: { marginHorizontal: -layout.phoneGutter, marginBottom: -space[48] },
 });
