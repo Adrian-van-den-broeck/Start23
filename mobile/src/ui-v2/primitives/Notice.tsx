@@ -12,7 +12,7 @@ const tones = {
 } satisfies Record<string, { fill: string; ink: string; icon: IconName }>;
 
 export function Notice({ tone = 'info', title, children, action }: {
-  tone?: keyof typeof tones; title: string; children: string;
+  tone?: keyof typeof tones; title?: string; children: string;
   action?: { label: string; onPress: () => void | Promise<void>; busy?: boolean; disabled?: boolean };
 }) {
   const palette = tones[tone];
@@ -20,7 +20,7 @@ export function Notice({ tone = 'info', title, children, action }: {
     <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: space[12] }}>
       <Icon name={palette.icon} color={palette.ink} />
       <View style={{ flex: 1, gap: space[4] }}>
-        <Text variant="label" style={{ color: palette.ink }}>{title}</Text>
+        {title ? <Text variant="label" style={{ color: palette.ink }}>{title}</Text> : null}
         <Text style={{ color: palette.ink }}>{children}</Text>
       </View>
     </View>
