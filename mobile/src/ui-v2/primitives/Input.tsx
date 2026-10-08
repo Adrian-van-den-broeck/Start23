@@ -26,7 +26,7 @@ export function Input({ label, hint, error, optionalLabel, disabledReason, disab
         {icon && !compact ? <View style={{ paddingLeft: space[12] }}><IconTile name={icon} size="field" /></View> : null}
         {readOnly ? <Text accessibilityLabel={`${fullLabel}: ${props.value ?? ''}`} style={styles.readOnly}>{props.value}</Text> :
           <TextInput {...props} style={[styles.input, multiline && styles.multiline, style]}
-            accessibilityLabel={fullLabel} accessibilityLabelledBy={compact && unit ? labelId : undefined}
+            accessibilityLabel={fullLabel} accessibilityLabelledBy={!accessibilityLabel && compact && unit ? labelId : undefined}
             accessibilityHint={[accessibilityHint ?? hint, error, disabledReason].filter(Boolean).join('. ') || undefined}
             accessibilityState={{ ...accessibilityState, disabled: locked }} editable={!locked}
             placeholderTextColor={colors.textMuted} allowFontScaling multiline={multiline}

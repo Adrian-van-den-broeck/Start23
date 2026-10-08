@@ -103,6 +103,7 @@ describe('OnboardingScreen resume behavior', () => {
     expect(await screen.findByText('Werk je onboarding bij')).toBeTruthy();
     expect(screen.getByText(/Tijdzone, Doel/)).toBeTruthy();
     expect(screen.getByText('Bevestig je tijdzone')).toBeTruthy();
+    expect(screen.getByLabelText(/Stap 3 van 7\. Tijdzone/)).toBeTruthy();
     expect(screen.queryByText('Waar sta je nu?')).toBeNull();
   });
 
@@ -185,6 +186,7 @@ describe('OnboardingScreen resume behavior', () => {
 
     expect(await screen.findByText('Heb je toegang tot een hartslagmeter?')).toBeTruthy();
     expect(screen.queryByText('Jouw basis')).toBeNull();
+    expect(screen.getByLabelText(/Stap 2 van 7\. Hartslag/)).toBeTruthy();
   });
 
   test.each([
