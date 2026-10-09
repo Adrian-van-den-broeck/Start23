@@ -1,0 +1,53 @@
+{
+  "source": "Canonical user-provided workspace design references",
+  "files": [
+    {
+      "file": "docs/ui/reference-screenshots/zones-calibration/01-overview-current-v1.png",
+      "unchanged": true
+    },
+    {
+      "file": "docs/ui/reference-screenshots/zones-calibration/02-run-current-v1-01-active.png",
+      "unchanged": true
+    },
+    {
+      "file": "docs/ui/reference-screenshots/zones-calibration/03-bike-rpe-current-v1.png",
+      "unchanged": true
+    },
+    {
+      "file": "docs/ui/reference-screenshots/zones-calibration/05-route-current-v1-01-top.png",
+      "unchanged": true
+    },
+    {
+      "file": "docs/ui/reference-screenshots/zones-calibration/06-known-values-current-v1.png",
+      "unchanged": true
+    },
+    {
+      "file": "docs/ui/reference-screenshots/zones-calibration/07-pending-approval-current-v1-02-numeric.png",
+      "unchanged": true
+    },
+    {
+      "file": "docs/ui/reference-screenshots/zones-calibration/07-pending-approval-current-v1.png",
+      "unchanged": true
+    },
+    {
+      "file": "docs/ui/reference-screenshots/zones-calibration/09-history-current-v1.png",
+      "unchanged": true
+    },
+    {
+      "file": "docs/ui/reference-screenshots/zones-calibration/calibration-choice-current-v1.png",
+      "unchanged": true
+    },
+    {
+      "file": "docs/ui/reference-screenshots/zones-calibration/tests-current-v1-no-protocol.png",
+      "unchanged": true
+    },
+    {
+      "file": "docs/ui/mockups-final/03-zones.png",
+      "unchanged": true
+    },
+    {
+      "file": "docs/ui/mockups-final/04-profile-onboarding.png",
+      "unchanged": true
+    }
+  ]
+}

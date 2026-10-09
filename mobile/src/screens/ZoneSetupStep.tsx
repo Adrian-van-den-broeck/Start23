@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 
@@ -21,11 +21,13 @@ import type {
   ZoneMetricKind,
   ZoneSetupOption,
 } from '../api/types';
-import { FormField } from '../components/FormField';
-import { MotionPressable as Pressable } from '../components/MotionPressable';
-import { StatusPill } from '../components/StatusPill';
+import { ZoneField as FormField } from '../ui-v2/components/ZoneField';
+import { ZoneStatusChip } from '../ui-v2/components/ZoneVisuals';
 import { parseRunPace } from '../lib/runPace';
-import { colors, radius, spacing } from '../theme/tokens';
+import { colors, layout, radius, shadows, space } from '../ui-v2/tokens';
+import { Text } from '../ui-v2/primitives/Text';
+import { Button } from '../ui-v2/primitives/Button';
+import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
 
 type MetricOption = {
   kind: ZoneMetricKind;
@@ -141,22 +143,7 @@ function Chip({
   selected: boolean;
   onPress: () => void;
 }) {
-  return (
-    <Pressable
-      accessibilityRole="radio"
-      accessibilityState={{ checked: selected }}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.chip,
-        selected && styles.chipSelected,
-        pressed && styles.pressed,
-      ]}
-    >
-      <Text style={[styles.chipText, selected && styles.chipTextSelected]}>
-        {label}
-      </Text>
-    </Pressable>
-  );
+  return <ChoiceRow label={label} selected={selected} onPress={onPress} />;
 }
 
 function SaveButton({
@@ -170,24 +157,7 @@ function SaveButton({
   label: string;
   onPress: () => void;
 }) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      disabled={disabled || saving}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.saveButton,
-        (disabled || saving) && styles.disabled,
-        pressed && styles.pressed,
-      ]}
-    >
-      {saving ? (
-        <ActivityIndicator color={colors.white} />
-      ) : (
-        <Text style={styles.saveButtonText}>{label}</Text>
-      )}
-    </Pressable>
-  );
+  return <Button disabled={disabled} busy={saving} label={label} onPress={onPress} trailingIcon="forward" />;
 }
 
 type Props = {
@@ -210,6 +180,8 @@ export function ZoneSetupStep({
   saving,
   onSave,
 }: Props) {
+  const { width, fontScale } = useWindowDimensions();
+  const compact = width < 393 || fontScale > 1;
   const configured = useMemo(
     () =>
       new Set<Discipline>(
@@ -431,45 +403,23 @@ export function ZoneSetupStep({
 
       <View style={styles.progressRow}>
         {requiredDisciplines.map((item) => (
-          <StatusPill
+          <ZoneStatusChip
             key={item}
             label={`${configured.has(item) ? '✓ ' : ''}${disciplineLabels[item]}`}
-            tone={configured.has(item) ? 'brand' : 'neutral'}
+
           />
         ))}
       </View>
 
       {loadingChoices ? (
-        <ActivityIndicator color={colors.brand} />
+        <ActivityIndicator color={colors.primary} />
       ) : choiceError ? (
         <Text style={styles.error}>{choiceError}</Text>
       ) : (
         <View accessibilityRole="radiogroup" style={styles.routeList}>
           {options.map((option) => (
-            <Pressable
-              accessibilityRole="radio"
-              accessibilityState={{ checked: route === option.setup_route }}
-              key={option.setup_route}
-              onPress={() => selectRoute(option.setup_route)}
-              style={({ pressed }) => [
-                styles.routeCard,
-                route === option.setup_route && styles.routeCardSelected,
-                pressed && styles.pressed,
-              ]}
-            >
-              <View style={styles.routeHeading}>
-                <Text style={styles.routeTitle}>{option.label}</Text>
-                <View
-                  style={[
-                    styles.radio,
-                    route === option.setup_route && styles.radioSelected,
-                  ]}
-                />
-              </View>
-              <Text style={styles.routeDescription}>
-                {routeDescriptions[option.setup_route]}
-              </Text>
-            </Pressable>
+            <ChoiceRow key={option.setup_route} label={option.label} hint={routeDescriptions[option.setup_route]}
+              selected={route === option.setup_route} onPress={() => selectRoute(option.setup_route)} />
           ))}
         </View>
       )}
@@ -572,17 +522,8 @@ export function ZoneSetupStep({
             </Text>
           ) : null}
 
-          <Pressable
-            accessibilityRole="checkbox"
-            accessibilityState={{ checked: includeBoundaries }}
-            onPress={() => setIncludeBoundaries((current) => !current)}
-            style={styles.checkboxRow}
-          >
-            <View
-              style={[styles.checkbox, includeBoundaries && styles.checkboxSelected]}
-            />
-            <Text style={styles.checkboxText}>Ik ken ook vijf zonegrenzen</Text>
-          </Pressable>
+          <ChoiceRow mode="checkbox" label="Ik ken ook vijf zonegrenzen" selected={includeBoundaries}
+            onPress={() => setIncludeBoundaries((current) => !current)} />
 
           {includeBoundaries ? (
             <View style={styles.boundaryPanel}>
@@ -604,9 +545,9 @@ export function ZoneSetupStep({
                   : 'Iedere bovengrens sluit aan op de volgende ondergrens.'}
               </Text>
               {boundaries.map((boundary, index) => (
-                <View key={boundary.zone_number} style={styles.boundaryRow}>
+                <View key={boundary.zone_number} style={[styles.boundaryRow, compact && styles.stacked]}>
                   <Text style={styles.zoneLabel}>Z{boundary.zone_number}</Text>
-                  <View style={styles.boundaryInput}>
+                  <View style={[styles.boundaryInput, compact && styles.fullWidth]}>
                     <FormField
                       inputMode={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? 'text' : 'decimal'}
                       label="Onder"
@@ -623,7 +564,7 @@ export function ZoneSetupStep({
                       value={boundary.lower_value}
                     />
                   </View>
-                  <View style={styles.boundaryInput}>
+                  <View style={[styles.boundaryInput, compact && styles.fullWidth]}>
                     <FormField
                       inputMode={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? 'text' : 'decimal'}
                       label="Boven"
@@ -662,7 +603,7 @@ export function ZoneSetupStep({
 
       {route === 'field_test' ? (
         <View style={styles.panel}>
-          <StatusPill label="Maximale veldtest" tone="accent" />
+          <ZoneStatusChip label="Maximale veldtest" pending />
           <Text style={styles.panelText}>
             Kies alleen een test die je veilig kunt uitvoeren en waarvoor de
             genoemde meetbron beschikbaar is.
@@ -722,7 +663,7 @@ export function ZoneSetupStep({
 
       {route === 'calibration_week' ? (
         <View style={styles.panel}>
-          <StatusPill label="Submaximaal" tone="brand" />
+          <ZoneStatusChip label="Submaximaal"  />
           <Text style={styles.panelText}>
             Deze rustige kalibratie bewaart de gemeten observatie uit hetzelfde
             blok en berekent deterministisch een drempel en vijf zones. Die
@@ -766,109 +707,15 @@ export function ZoneSetupStep({
 }
 
 const styles = StyleSheet.create({
-  step: { gap: spacing.xl },
-  eyebrow: {
-    color: colors.brand,
-    fontSize: 12,
-    fontWeight: '900',
-    letterSpacing: 1.2,
-    textTransform: 'uppercase',
-  },
-  title: {
-    color: colors.ink,
-    fontSize: 28,
-    fontWeight: '900',
-    letterSpacing: -0.7,
-    marginTop: spacing.xs,
-  },
-  description: {
-    color: colors.inkMuted,
-    fontSize: 15,
-    lineHeight: 23,
-    marginTop: spacing.sm,
-  },
-  progressRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  routeList: { gap: spacing.sm },
-  routeCard: {
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.lineStrong,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    gap: spacing.sm,
-    padding: spacing.lg,
-  },
-  routeCardSelected: { borderColor: colors.brand, borderWidth: 2 },
-  routeHeading: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-    justifyContent: 'space-between',
-  },
-  routeTitle: { color: colors.ink, flex: 1, fontSize: 16, fontWeight: '900' },
-  routeDescription: { color: colors.inkMuted, lineHeight: 20 },
-  radio: {
-    borderColor: colors.inkFaint,
-    borderRadius: 8,
-    borderWidth: 2,
-    height: 16,
-    width: 16,
-  },
-  radioSelected: { backgroundColor: colors.brand, borderColor: colors.brand },
-  panel: {
-    backgroundColor: colors.surface,
-    borderColor: colors.line,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    gap: spacing.md,
-    padding: spacing.lg,
-  },
-  panelTitle: { color: colors.ink, fontSize: 18, fontWeight: '900' },
-  panelText: { color: colors.inkMuted, lineHeight: 21 },
-  safetyText: {
-    backgroundColor: colors.accentSoft,
-    borderRadius: radius.md,
-    color: colors.ink,
-    fontWeight: '700',
-    lineHeight: 20,
-    padding: spacing.md,
-  },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  chip: {
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.lineStrong,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  chipSelected: { backgroundColor: colors.brandSoft, borderColor: colors.brand },
-  chipText: { color: colors.inkMuted, fontSize: 13, fontWeight: '800' },
-  chipTextSelected: { color: colors.brand },
-  checkboxRow: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
-  checkbox: {
-    borderColor: colors.inkFaint,
-    borderRadius: 4,
-    borderWidth: 2,
-    height: 20,
-    width: 20,
-  },
-  checkboxSelected: { backgroundColor: colors.brand, borderColor: colors.brand },
-  checkboxText: { color: colors.ink, flex: 1, fontWeight: '800' },
-  boundaryPanel: { gap: spacing.md },
-  boundaryRow: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
-  zoneLabel: { color: colors.brand, fontWeight: '900', width: 26 },
-  boundaryInput: { flex: 1 },
-  unit: { color: colors.inkMuted, fontSize: 13, fontWeight: '800' },
-  error: { color: colors.danger, fontWeight: '700', lineHeight: 20 },
-  saveButton: {
-    alignItems: 'center',
-    backgroundColor: colors.brand,
-    borderRadius: radius.md,
-    justifyContent: 'center',
-    minHeight: 50,
-    paddingHorizontal: spacing.lg,
-  },
-  saveButtonText: { color: colors.white, fontSize: 15, fontWeight: '900' },
-  disabled: { opacity: 0.45 },
-  pressed: { opacity: 0.78 },
+  step: { gap: space[24] }, eyebrow: { color: colors.primary, fontSize: 12, fontWeight: '600', letterSpacing: 1.2, textTransform: 'uppercase' },
+  title: { color: colors.text, fontSize: 28, fontWeight: '600', letterSpacing: -0.5, lineHeight: 34, marginTop: space[8] },
+  description: { color: colors.textMuted, fontSize: 16, lineHeight: 24, marginTop: space[8] },
+  progressRow: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8] }, routeList: { gap: space[16] },
+  panel: { ...shadows.card, backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.card, borderWidth: 1, gap: layout.fieldGroupGap, padding: space[16] },
+  panelTitle: { color: colors.text, fontSize: 22, fontWeight: '600', lineHeight: 28 }, panelText: { color: colors.textMuted, fontSize: 16, lineHeight: 24 },
+  safetyText: { backgroundColor: colors.primarySoft, borderRadius: radius.control, color: colors.text, fontSize: 16, lineHeight: 24, padding: space[16] },
+  chips: { gap: space[12] }, boundaryPanel: { gap: space[24] }, boundaryRow: { alignItems: 'center', flexDirection: 'row', gap: space[12] },
+  stacked: { flexDirection: 'column', alignItems: 'flex-start' }, fullWidth: { flex: 0, width: '100%' },
+  zoneLabel: { color: colors.primary, fontSize: 18, fontWeight: '600' }, boundaryInput: { flex: 1 }, unit: { color: colors.textMuted, fontSize: 14, lineHeight: 20 },
+  error: { color: colors.destructive, fontSize: 14, lineHeight: 20 },
 });

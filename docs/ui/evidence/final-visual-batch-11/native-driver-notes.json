@@ -1,0 +1,52 @@
+{
+  "productionSourceChanged": false,
+  "rejectedRuns": [
+    {
+      "stage": "Known pace input",
+      "reason": "Android gave an inverted rectangle for an off-screen EditText; the initial driver accepted it and tapped a source radio instead.",
+      "fix": "Require positive height and fully enclosed viewport bounds, then assert entered text and focus before dispatch."
+    },
+    {
+      "stage": "Isolated ZoneSetupStep keyboard",
+      "reason": "The isolated form gallery has no production keyboard-avoiding parent; dispatch scrolling must dismiss its IME.",
+      "fix": "Dismiss IME for the isolated callback check. Verify IME-visible Save separately in the actual nested ZoneProfileScreen editor."
+    },
+    {
+      "stage": "Development client restart",
+      "reason": "An extra Android Back after an already dismissed IME closed the gallery client; foregrounding it raised a multiple-linking development warning.",
+      "fix": "Remove redundant Back; cold-start only once, allow boot to settle, verify no development overlay, then resume. Immediate duplicate launch during boot was also rejected. No warning suppression or production navigation change."
+    },
+    {
+      "stage": "Keyboard geometry transition",
+      "reason": "A development linking overlay reappeared during an Android density/font transition in the keyboard run; the run was rejected and settings restored.",
+      "fix": "Cold-stop before geometry changes and launch one settled root per case. Existing overlay-free matrix remains accepted; keyboard checks are rerun."
+    },
+    {
+      "stage": "Nested numeric IME",
+      "reason": "Android input text, Back and screencap stalled until the development client was force-stopped; ADB shell/boot remained responsive.",
+      "fix": "Record the stalled frame as rejected, reboot the owned emulator, require numeric IME visible before entering text, and rerun."
+    },
+    {
+      "stage": "TalkBack activity inspection",
+      "reason": "Android did not provide topResumedActivity during service activation; the driver raised StopIteration after both reduced-motion captures. Settings and notification permission were restored.",
+      "fix": "Accept either Android resumed-activity field and allow service recovery after the hierarchy dump. Retain completed reduced-motion evidence and resume TalkBack review."
+    },
+    {
+      "stage": "TalkBack threshold target",
+      "reason": "The tutorial Back heuristic left the client on the launcher; the missing target was a rejected driver run. All service, animation and permission settings were restored.",
+      "fix": "Activate TalkBack before launching one gallery root; remove the heuristic Back. Retain reviewed source-choice selection and reduced-motion captures; resume the threshold touch capture."
+    },
+    {
+      "stage": "TalkBack scrolling",
+      "reason": "One-finger synthetic swipes did not scroll the active TalkBack form; no prior result action was reached.",
+      "fix": "Position the existing result with TalkBack off, then activate it without a Back heuristic. Capture actual UI; explicitly leave target focus retention and spoken behavior unverified."
+    }
+  ],
+  "retainedPasses": [
+    "Zone approval original base profile precondition",
+    "Zone rejection original proposal",
+    "Empty known value validation"
+  ],
+  "acceptedRerun": "native-interactions.json",
+  "realKeyboardCheck": "keyboard-review.json"
+}

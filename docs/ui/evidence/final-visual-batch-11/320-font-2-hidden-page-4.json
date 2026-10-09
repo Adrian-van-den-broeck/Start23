@@ -1,0 +1,15 @@
+{
+  "timestampUTC": "2026-10-09T08:14:25.239722+00:00",
+  "fixture": {
+    "state": "hidden",
+    "width": 320,
+    "fontScale": 2,
+    "build": "final-5",
+    "language": "source Dutch",
+    "inertActions": true
+  },
+  "size": "Physical size: 1080x2280",
+  "density": "Physical density: 440\nOverride density: 540",
+  "fontScale": "2",
+  "provenance": "Production ZoneProfileScreen/ZoneSetupStep/CalibrationScreen; typed inert DTOs; blocked live transport; callback markers prove UI dispatch only"
+}

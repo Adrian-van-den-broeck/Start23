@@ -1,0 +1,308 @@
+[
+  {
+    "state": "overview",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 10
+  },
+  {
+    "state": "overview",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 4
+  },
+  {
+    "state": "pending",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 5
+  },
+  {
+    "state": "pending",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 13
+  },
+  {
+    "state": "history",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 4
+  },
+  {
+    "state": "history",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 13
+  },
+  {
+    "state": "hidden",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 4
+  },
+  {
+    "state": "hidden",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 12
+  },
+  {
+    "state": "result",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "result",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 5
+  },
+  {
+    "state": "incomplete",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "onboarding",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "onboarding",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 6
+  },
+  {
+    "state": "known",
+    "width": 320,
+    "fontScale": 1,
+    "pages": 4
+  },
+  {
+    "state": "known",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 6
+  },
+  {
+    "state": "known",
+    "width": 360,
+    "fontScale": 1,
+    "pages": 4
+  },
+  {
+    "state": "known",
+    "width": 360,
+    "fontScale": 2,
+    "pages": 7
+  },
+  {
+    "state": "known",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 4
+  },
+  {
+    "state": "feedback",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 11
+  },
+  {
+    "state": "feedback",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 29
+  },
+  {
+    "state": "known",
+    "width": 393,
+    "fontScale": 2,
+    "pages": 7
+  },
+  {
+    "state": "known",
+    "width": 412,
+    "fontScale": 1,
+    "pages": 4
+  },
+  {
+    "state": "known",
+    "width": 412,
+    "fontScale": 2,
+    "pages": 6
+  },
+  {
+    "state": "choice",
+    "width": 320,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "choice",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 6
+  },
+  {
+    "state": "choice",
+    "width": 360,
+    "fontScale": 1,
+    "pages": 3
+  },
+  {
+    "state": "choice",
+    "width": 360,
+    "fontScale": 2,
+    "pages": 5
+  },
+  {
+    "state": "choice",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 3
+  },
+  {
+    "state": "choice",
+    "width": 393,
+    "fontScale": 2,
+    "pages": 5
+  },
+  {
+    "state": "choice",
+    "width": 412,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "choice",
+    "width": 412,
+    "fontScale": 2,
+    "pages": 4
+  },
+  {
+    "state": "empty",
+    "width": 320,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "empty",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 3
+  },
+  {
+    "state": "empty",
+    "width": 360,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "empty",
+    "width": 360,
+    "fontScale": 2,
+    "pages": 2
+  },
+  {
+    "state": "empty",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 1
+  },
+  {
+    "state": "empty",
+    "width": 393,
+    "fontScale": 2,
+    "pages": 2
+  },
+  {
+    "state": "empty",
+    "width": 412,
+    "fontScale": 1,
+    "pages": 1
+  },
+  {
+    "state": "empty",
+    "width": 412,
+    "fontScale": 2,
+    "pages": 2
+  },
+  {
+    "state": "overview",
+    "width": 360,
+    "fontScale": 1,
+    "pages": 8
+  },
+  {
+    "state": "overview",
+    "width": 412,
+    "fontScale": 1,
+    "pages": 5
+  },
+  {
+    "state": "incomplete",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 4
+  },
+  {
+    "state": "boundaries",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 12
+  },
+  {
+    "state": "protocol-run",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 10
+  },
+  {
+    "state": "protocol-bike",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 9
+  },
+  {
+    "state": "protocol-swim",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 15
+  },
+  {
+    "state": "protocol-swim",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 44
+  },
+  {
+    "state": "overview",
+    "width": 320,
+    "fontScale": 1,
+    "pages": 10
+  },
+  {
+    "state": "overview",
+    "width": 360,
+    "fontScale": 2,
+    "pages": 12
+  },
+  {
+    "state": "overview",
+    "width": 393,
+    "fontScale": 2,
+    "pages": 10
+  },
+  {
+    "state": "overview",
+    "width": 412,
+    "fontScale": 2,
+    "pages": 9
+  }
+]

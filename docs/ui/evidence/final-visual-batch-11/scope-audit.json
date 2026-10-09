@@ -1,0 +1,50 @@
+[
+  {
+    "area": "mobile/src/api",
+    "unchanged": true,
+    "files": 3,
+    "hash": "659eed5ba32cc79e63215b386ab2d3e7c002c8a105365f56060e7244160f1e14"
+  },
+  {
+    "area": "mobile/src/features",
+    "unchanged": true,
+    "files": 18,
+    "hash": "dd0a29c0bc10a21f5ac39067700bc09bab92cade3d18f896ae4f25862b027dce"
+  },
+  {
+    "area": "mobile/src/navigation",
+    "unchanged": true,
+    "files": 6,
+    "hash": "eff002d2feb9bead9badcbee06ee4e930bcbf8d13548e39f37b243e53d203d97"
+  },
+  {
+    "area": "mobile/src/ui",
+    "unchanged": true,
+    "files": 8,
+    "hash": "b84a7c3a4c60024f35524901634ffa2384539a4aea96e1533af20b1e6f8c048e"
+  },
+  {
+    "area": "backend",
+    "unchanged": true,
+    "files": 148,
+    "hash": "de141a33d1f5cb8daa6548559c5ff40ef0a9b7c85535cc252ba69cd90b91f9af"
+  },
+  {
+    "area": "supabase",
+    "unchanged": true,
+    "files": 77,
+    "hash": "67192698942d5c49299529e7fe13f28aae0cf104c38154c1bd881e61dbaba39d"
+  },
+  {
+    "area": "mobile/package.json",
+    "unchanged": true
+  },
+  {
+    "area": "mobile/package-lock.json",
+    "unchanged": true
+  },
+  {
+    "area": "mobile/app.json",
+    "unchanged": true
+  }
+]

@@ -1,0 +1,1877 @@
+[
+  {
+    "file": "inspection/320-font-2-overview-1.jpg",
+    "case": {
+      "state": "overview",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 10
+    },
+    "pages": [
+      "320-font-2-overview-page-0.png",
+      "320-font-2-overview-page-1.png",
+      "320-font-2-overview-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-overview-2.jpg",
+    "case": {
+      "state": "overview",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 10
+    },
+    "pages": [
+      "320-font-2-overview-page-3.png",
+      "320-font-2-overview-page-4.png",
+      "320-font-2-overview-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-overview-3.jpg",
+    "case": {
+      "state": "overview",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 10
+    },
+    "pages": [
+      "320-font-2-overview-page-6.png",
+      "320-font-2-overview-page-7.png",
+      "320-font-2-overview-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-overview-4.jpg",
+    "case": {
+      "state": "overview",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 10
+    },
+    "pages": [
+      "320-font-2-overview-page-9.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-overview-1.jpg",
+    "case": {
+      "state": "overview",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "393-font-1-overview-page-0.png",
+      "393-font-1-overview-page-1.png",
+      "393-font-1-overview-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-overview-2.jpg",
+    "case": {
+      "state": "overview",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "393-font-1-overview-page-3.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-pending-1.jpg",
+    "case": {
+      "state": "pending",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 5
+    },
+    "pages": [
+      "393-font-1-pending-page-0.png",
+      "393-font-1-pending-page-1.png",
+      "393-font-1-pending-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-pending-2.jpg",
+    "case": {
+      "state": "pending",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 5
+    },
+    "pages": [
+      "393-font-1-pending-page-3.png",
+      "393-font-1-pending-page-4.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-pending-1.jpg",
+    "case": {
+      "state": "pending",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 13
+    },
+    "pages": [
+      "320-font-2-pending-page-0.png",
+      "320-font-2-pending-page-1.png",
+      "320-font-2-pending-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-pending-2.jpg",
+    "case": {
+      "state": "pending",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 13
+    },
+    "pages": [
+      "320-font-2-pending-page-3.png",
+      "320-font-2-pending-page-4.png",
+      "320-font-2-pending-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-pending-3.jpg",
+    "case": {
+      "state": "pending",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 13
+    },
+    "pages": [
+      "320-font-2-pending-page-6.png",
+      "320-font-2-pending-page-7.png",
+      "320-font-2-pending-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-pending-4.jpg",
+    "case": {
+      "state": "pending",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 13
+    },
+    "pages": [
+      "320-font-2-pending-page-9.png",
+      "320-font-2-pending-page-10.png",
+      "320-font-2-pending-page-11.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-pending-5.jpg",
+    "case": {
+      "state": "pending",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 13
+    },
+    "pages": [
+      "320-font-2-pending-page-12.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-history-1.jpg",
+    "case": {
+      "state": "history",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "393-font-1-history-page-0.png",
+      "393-font-1-history-page-1.png",
+      "393-font-1-history-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-history-2.jpg",
+    "case": {
+      "state": "history",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "393-font-1-history-page-3.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-history-1.jpg",
+    "case": {
+      "state": "history",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 13
+    },
+    "pages": [
+      "320-font-2-history-page-0.png",
+      "320-font-2-history-page-1.png",
+      "320-font-2-history-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-history-2.jpg",
+    "case": {
+      "state": "history",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 13
+    },
+    "pages": [
+      "320-font-2-history-page-3.png",
+      "320-font-2-history-page-4.png",
+      "320-font-2-history-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-history-3.jpg",
+    "case": {
+      "state": "history",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 13
+    },
+    "pages": [
+      "320-font-2-history-page-6.png",
+      "320-font-2-history-page-7.png",
+      "320-font-2-history-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-history-4.jpg",
+    "case": {
+      "state": "history",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 13
+    },
+    "pages": [
+      "320-font-2-history-page-9.png",
+      "320-font-2-history-page-10.png",
+      "320-font-2-history-page-11.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-history-5.jpg",
+    "case": {
+      "state": "history",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 13
+    },
+    "pages": [
+      "320-font-2-history-page-12.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-hidden-1.jpg",
+    "case": {
+      "state": "hidden",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "393-font-1-hidden-page-0.png",
+      "393-font-1-hidden-page-1.png",
+      "393-font-1-hidden-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-hidden-2.jpg",
+    "case": {
+      "state": "hidden",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "393-font-1-hidden-page-3.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-hidden-1.jpg",
+    "case": {
+      "state": "hidden",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 12
+    },
+    "pages": [
+      "320-font-2-hidden-page-0.png",
+      "320-font-2-hidden-page-1.png",
+      "320-font-2-hidden-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-hidden-2.jpg",
+    "case": {
+      "state": "hidden",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 12
+    },
+    "pages": [
+      "320-font-2-hidden-page-3.png",
+      "320-font-2-hidden-page-4.png",
+      "320-font-2-hidden-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-hidden-3.jpg",
+    "case": {
+      "state": "hidden",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 12
+    },
+    "pages": [
+      "320-font-2-hidden-page-6.png",
+      "320-font-2-hidden-page-7.png",
+      "320-font-2-hidden-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-hidden-4.jpg",
+    "case": {
+      "state": "hidden",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 12
+    },
+    "pages": [
+      "320-font-2-hidden-page-9.png",
+      "320-font-2-hidden-page-10.png",
+      "320-font-2-hidden-page-11.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-result-1.jpg",
+    "case": {
+      "state": "result",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 2
+    },
+    "pages": [
+      "393-font-1-result-page-0.png",
+      "393-font-1-result-page-1.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-result-1.jpg",
+    "case": {
+      "state": "result",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 5
+    },
+    "pages": [
+      "320-font-2-result-page-0.png",
+      "320-font-2-result-page-1.png",
+      "320-font-2-result-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-result-2.jpg",
+    "case": {
+      "state": "result",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 5
+    },
+    "pages": [
+      "320-font-2-result-page-3.png",
+      "320-font-2-result-page-4.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-incomplete-1.jpg",
+    "case": {
+      "state": "incomplete",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 2
+    },
+    "pages": [
+      "393-font-1-incomplete-page-0.png",
+      "393-font-1-incomplete-page-1.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-onboarding-1.jpg",
+    "case": {
+      "state": "onboarding",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 2
+    },
+    "pages": [
+      "393-font-1-onboarding-page-0.png",
+      "393-font-1-onboarding-page-1.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-onboarding-1.jpg",
+    "case": {
+      "state": "onboarding",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 6
+    },
+    "pages": [
+      "320-font-2-onboarding-page-0.png",
+      "320-font-2-onboarding-page-1.png",
+      "320-font-2-onboarding-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-onboarding-2.jpg",
+    "case": {
+      "state": "onboarding",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 6
+    },
+    "pages": [
+      "320-font-2-onboarding-page-3.png",
+      "320-font-2-onboarding-page-4.png",
+      "320-font-2-onboarding-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-1-known-1.jpg",
+    "case": {
+      "state": "known",
+      "width": 320,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "320-font-1-known-page-0.png",
+      "320-font-1-known-page-1.png",
+      "320-font-1-known-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-1-known-2.jpg",
+    "case": {
+      "state": "known",
+      "width": 320,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "320-font-1-known-page-3.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-known-1.jpg",
+    "case": {
+      "state": "known",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 6
+    },
+    "pages": [
+      "320-font-2-known-page-0.png",
+      "320-font-2-known-page-1.png",
+      "320-font-2-known-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-known-2.jpg",
+    "case": {
+      "state": "known",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 6
+    },
+    "pages": [
+      "320-font-2-known-page-3.png",
+      "320-font-2-known-page-4.png",
+      "320-font-2-known-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-1-known-1.jpg",
+    "case": {
+      "state": "known",
+      "width": 360,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "360-font-1-known-page-0.png",
+      "360-font-1-known-page-1.png",
+      "360-font-1-known-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-1-known-2.jpg",
+    "case": {
+      "state": "known",
+      "width": 360,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "360-font-1-known-page-3.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-2-known-1.jpg",
+    "case": {
+      "state": "known",
+      "width": 360,
+      "fontScale": 2,
+      "pages": 7
+    },
+    "pages": [
+      "360-font-2-known-page-0.png",
+      "360-font-2-known-page-1.png",
+      "360-font-2-known-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-2-known-2.jpg",
+    "case": {
+      "state": "known",
+      "width": 360,
+      "fontScale": 2,
+      "pages": 7
+    },
+    "pages": [
+      "360-font-2-known-page-3.png",
+      "360-font-2-known-page-4.png",
+      "360-font-2-known-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-2-known-3.jpg",
+    "case": {
+      "state": "known",
+      "width": 360,
+      "fontScale": 2,
+      "pages": 7
+    },
+    "pages": [
+      "360-font-2-known-page-6.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-known-1.jpg",
+    "case": {
+      "state": "known",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "393-font-1-known-page-0.png",
+      "393-font-1-known-page-1.png",
+      "393-font-1-known-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-known-2.jpg",
+    "case": {
+      "state": "known",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "393-font-1-known-page-3.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-feedback-1.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 11
+    },
+    "pages": [
+      "393-font-1-feedback-page-0.png",
+      "393-font-1-feedback-page-1.png",
+      "393-font-1-feedback-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-feedback-2.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 11
+    },
+    "pages": [
+      "393-font-1-feedback-page-3.png",
+      "393-font-1-feedback-page-4.png",
+      "393-font-1-feedback-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-feedback-3.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 11
+    },
+    "pages": [
+      "393-font-1-feedback-page-6.png",
+      "393-font-1-feedback-page-7.png",
+      "393-font-1-feedback-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-feedback-4.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 11
+    },
+    "pages": [
+      "393-font-1-feedback-page-9.png",
+      "393-font-1-feedback-page-10.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-feedback-1.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 29
+    },
+    "pages": [
+      "320-font-2-feedback-page-0.png",
+      "320-font-2-feedback-page-1.png",
+      "320-font-2-feedback-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-feedback-2.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 29
+    },
+    "pages": [
+      "320-font-2-feedback-page-3.png",
+      "320-font-2-feedback-page-4.png",
+      "320-font-2-feedback-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-feedback-3.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 29
+    },
+    "pages": [
+      "320-font-2-feedback-page-6.png",
+      "320-font-2-feedback-page-7.png",
+      "320-font-2-feedback-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-feedback-4.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 29
+    },
+    "pages": [
+      "320-font-2-feedback-page-9.png",
+      "320-font-2-feedback-page-10.png",
+      "320-font-2-feedback-page-11.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-feedback-5.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 29
+    },
+    "pages": [
+      "320-font-2-feedback-page-12.png",
+      "320-font-2-feedback-page-13.png",
+      "320-font-2-feedback-page-14.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-feedback-6.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 29
+    },
+    "pages": [
+      "320-font-2-feedback-page-15.png",
+      "320-font-2-feedback-page-16.png",
+      "320-font-2-feedback-page-17.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-feedback-7.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 29
+    },
+    "pages": [
+      "320-font-2-feedback-page-18.png",
+      "320-font-2-feedback-page-19.png",
+      "320-font-2-feedback-page-20.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-feedback-8.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 29
+    },
+    "pages": [
+      "320-font-2-feedback-page-21.png",
+      "320-font-2-feedback-page-22.png",
+      "320-font-2-feedback-page-23.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-feedback-9.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 29
+    },
+    "pages": [
+      "320-font-2-feedback-page-24.png",
+      "320-font-2-feedback-page-25.png",
+      "320-font-2-feedback-page-26.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-feedback-10.jpg",
+    "case": {
+      "state": "feedback",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 29
+    },
+    "pages": [
+      "320-font-2-feedback-page-27.png",
+      "320-font-2-feedback-page-28.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-2-known-1.jpg",
+    "case": {
+      "state": "known",
+      "width": 393,
+      "fontScale": 2,
+      "pages": 7
+    },
+    "pages": [
+      "393-font-2-known-page-0.png",
+      "393-font-2-known-page-1.png",
+      "393-font-2-known-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-2-known-2.jpg",
+    "case": {
+      "state": "known",
+      "width": 393,
+      "fontScale": 2,
+      "pages": 7
+    },
+    "pages": [
+      "393-font-2-known-page-3.png",
+      "393-font-2-known-page-4.png",
+      "393-font-2-known-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-2-known-3.jpg",
+    "case": {
+      "state": "known",
+      "width": 393,
+      "fontScale": 2,
+      "pages": 7
+    },
+    "pages": [
+      "393-font-2-known-page-6.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-1-known-1.jpg",
+    "case": {
+      "state": "known",
+      "width": 412,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "412-font-1-known-page-0.png",
+      "412-font-1-known-page-1.png",
+      "412-font-1-known-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-1-known-2.jpg",
+    "case": {
+      "state": "known",
+      "width": 412,
+      "fontScale": 1,
+      "pages": 4
+    },
+    "pages": [
+      "412-font-1-known-page-3.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-2-known-1.jpg",
+    "case": {
+      "state": "known",
+      "width": 412,
+      "fontScale": 2,
+      "pages": 6
+    },
+    "pages": [
+      "412-font-2-known-page-0.png",
+      "412-font-2-known-page-1.png",
+      "412-font-2-known-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-2-known-2.jpg",
+    "case": {
+      "state": "known",
+      "width": 412,
+      "fontScale": 2,
+      "pages": 6
+    },
+    "pages": [
+      "412-font-2-known-page-3.png",
+      "412-font-2-known-page-4.png",
+      "412-font-2-known-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-1-choice-1.jpg",
+    "case": {
+      "state": "choice",
+      "width": 320,
+      "fontScale": 1,
+      "pages": 2
+    },
+    "pages": [
+      "320-font-1-choice-page-0.png",
+      "320-font-1-choice-page-1.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-choice-1.jpg",
+    "case": {
+      "state": "choice",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 6
+    },
+    "pages": [
+      "320-font-2-choice-page-0.png",
+      "320-font-2-choice-page-1.png",
+      "320-font-2-choice-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-choice-2.jpg",
+    "case": {
+      "state": "choice",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 6
+    },
+    "pages": [
+      "320-font-2-choice-page-3.png",
+      "320-font-2-choice-page-4.png",
+      "320-font-2-choice-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-1-choice-1.jpg",
+    "case": {
+      "state": "choice",
+      "width": 360,
+      "fontScale": 1,
+      "pages": 3
+    },
+    "pages": [
+      "360-font-1-choice-page-0.png",
+      "360-font-1-choice-page-1.png",
+      "360-font-1-choice-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-2-choice-1.jpg",
+    "case": {
+      "state": "choice",
+      "width": 360,
+      "fontScale": 2,
+      "pages": 5
+    },
+    "pages": [
+      "360-font-2-choice-page-0.png",
+      "360-font-2-choice-page-1.png",
+      "360-font-2-choice-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-2-choice-2.jpg",
+    "case": {
+      "state": "choice",
+      "width": 360,
+      "fontScale": 2,
+      "pages": 5
+    },
+    "pages": [
+      "360-font-2-choice-page-3.png",
+      "360-font-2-choice-page-4.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-choice-1.jpg",
+    "case": {
+      "state": "choice",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 3
+    },
+    "pages": [
+      "393-font-1-choice-page-0.png",
+      "393-font-1-choice-page-1.png",
+      "393-font-1-choice-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-2-choice-1.jpg",
+    "case": {
+      "state": "choice",
+      "width": 393,
+      "fontScale": 2,
+      "pages": 5
+    },
+    "pages": [
+      "393-font-2-choice-page-0.png",
+      "393-font-2-choice-page-1.png",
+      "393-font-2-choice-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-2-choice-2.jpg",
+    "case": {
+      "state": "choice",
+      "width": 393,
+      "fontScale": 2,
+      "pages": 5
+    },
+    "pages": [
+      "393-font-2-choice-page-3.png",
+      "393-font-2-choice-page-4.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-1-choice-1.jpg",
+    "case": {
+      "state": "choice",
+      "width": 412,
+      "fontScale": 1,
+      "pages": 2
+    },
+    "pages": [
+      "412-font-1-choice-page-0.png",
+      "412-font-1-choice-page-1.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-2-choice-1.jpg",
+    "case": {
+      "state": "choice",
+      "width": 412,
+      "fontScale": 2,
+      "pages": 4
+    },
+    "pages": [
+      "412-font-2-choice-page-0.png",
+      "412-font-2-choice-page-1.png",
+      "412-font-2-choice-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-2-choice-2.jpg",
+    "case": {
+      "state": "choice",
+      "width": 412,
+      "fontScale": 2,
+      "pages": 4
+    },
+    "pages": [
+      "412-font-2-choice-page-3.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-1-empty-1.jpg",
+    "case": {
+      "state": "empty",
+      "width": 320,
+      "fontScale": 1,
+      "pages": 2
+    },
+    "pages": [
+      "320-font-1-empty-page-0.png",
+      "320-font-1-empty-page-1.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-empty-1.jpg",
+    "case": {
+      "state": "empty",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 3
+    },
+    "pages": [
+      "320-font-2-empty-page-0.png",
+      "320-font-2-empty-page-1.png",
+      "320-font-2-empty-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-1-empty-1.jpg",
+    "case": {
+      "state": "empty",
+      "width": 360,
+      "fontScale": 1,
+      "pages": 2
+    },
+    "pages": [
+      "360-font-1-empty-page-0.png",
+      "360-font-1-empty-page-1.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-2-empty-1.jpg",
+    "case": {
+      "state": "empty",
+      "width": 360,
+      "fontScale": 2,
+      "pages": 2
+    },
+    "pages": [
+      "360-font-2-empty-page-0.png",
+      "360-font-2-empty-page-1.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-empty-1.jpg",
+    "case": {
+      "state": "empty",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 1
+    },
+    "pages": [
+      "393-font-1-empty-page-0.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-2-empty-1.jpg",
+    "case": {
+      "state": "empty",
+      "width": 393,
+      "fontScale": 2,
+      "pages": 2
+    },
+    "pages": [
+      "393-font-2-empty-page-0.png",
+      "393-font-2-empty-page-1.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-1-empty-1.jpg",
+    "case": {
+      "state": "empty",
+      "width": 412,
+      "fontScale": 1,
+      "pages": 1
+    },
+    "pages": [
+      "412-font-1-empty-page-0.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-2-empty-1.jpg",
+    "case": {
+      "state": "empty",
+      "width": 412,
+      "fontScale": 2,
+      "pages": 2
+    },
+    "pages": [
+      "412-font-2-empty-page-0.png",
+      "412-font-2-empty-page-1.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-1-overview-1.jpg",
+    "case": {
+      "state": "overview",
+      "width": 360,
+      "fontScale": 1,
+      "pages": 8
+    },
+    "pages": [
+      "360-font-1-overview-page-0.png",
+      "360-font-1-overview-page-1.png",
+      "360-font-1-overview-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-1-overview-2.jpg",
+    "case": {
+      "state": "overview",
+      "width": 360,
+      "fontScale": 1,
+      "pages": 8
+    },
+    "pages": [
+      "360-font-1-overview-page-3.png",
+      "360-font-1-overview-page-4.png",
+      "360-font-1-overview-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-1-overview-3.jpg",
+    "case": {
+      "state": "overview",
+      "width": 360,
+      "fontScale": 1,
+      "pages": 8
+    },
+    "pages": [
+      "360-font-1-overview-page-6.png",
+      "360-font-1-overview-page-7.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-1-overview-1.jpg",
+    "case": {
+      "state": "overview",
+      "width": 412,
+      "fontScale": 1,
+      "pages": 5
+    },
+    "pages": [
+      "412-font-1-overview-page-0.png",
+      "412-font-1-overview-page-1.png",
+      "412-font-1-overview-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-1-overview-2.jpg",
+    "case": {
+      "state": "overview",
+      "width": 412,
+      "fontScale": 1,
+      "pages": 5
+    },
+    "pages": [
+      "412-font-1-overview-page-3.png",
+      "412-font-1-overview-page-4.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-incomplete-1.jpg",
+    "case": {
+      "state": "incomplete",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 4
+    },
+    "pages": [
+      "320-font-2-incomplete-page-0.png",
+      "320-font-2-incomplete-page-1.png",
+      "320-font-2-incomplete-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-incomplete-2.jpg",
+    "case": {
+      "state": "incomplete",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 4
+    },
+    "pages": [
+      "320-font-2-incomplete-page-3.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-boundaries-1.jpg",
+    "case": {
+      "state": "boundaries",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 12
+    },
+    "pages": [
+      "320-font-2-boundaries-page-0.png",
+      "320-font-2-boundaries-page-1.png",
+      "320-font-2-boundaries-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-boundaries-2.jpg",
+    "case": {
+      "state": "boundaries",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 12
+    },
+    "pages": [
+      "320-font-2-boundaries-page-3.png",
+      "320-font-2-boundaries-page-4.png",
+      "320-font-2-boundaries-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-boundaries-3.jpg",
+    "case": {
+      "state": "boundaries",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 12
+    },
+    "pages": [
+      "320-font-2-boundaries-page-6.png",
+      "320-font-2-boundaries-page-7.png",
+      "320-font-2-boundaries-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-boundaries-4.jpg",
+    "case": {
+      "state": "boundaries",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 12
+    },
+    "pages": [
+      "320-font-2-boundaries-page-9.png",
+      "320-font-2-boundaries-page-10.png",
+      "320-font-2-boundaries-page-11.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-protocol-run-1.jpg",
+    "case": {
+      "state": "protocol-run",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 10
+    },
+    "pages": [
+      "393-font-1-protocol-run-page-0.png",
+      "393-font-1-protocol-run-page-1.png",
+      "393-font-1-protocol-run-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-protocol-run-2.jpg",
+    "case": {
+      "state": "protocol-run",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 10
+    },
+    "pages": [
+      "393-font-1-protocol-run-page-3.png",
+      "393-font-1-protocol-run-page-4.png",
+      "393-font-1-protocol-run-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-protocol-run-3.jpg",
+    "case": {
+      "state": "protocol-run",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 10
+    },
+    "pages": [
+      "393-font-1-protocol-run-page-6.png",
+      "393-font-1-protocol-run-page-7.png",
+      "393-font-1-protocol-run-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-protocol-run-4.jpg",
+    "case": {
+      "state": "protocol-run",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 10
+    },
+    "pages": [
+      "393-font-1-protocol-run-page-9.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-protocol-bike-1.jpg",
+    "case": {
+      "state": "protocol-bike",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 9
+    },
+    "pages": [
+      "393-font-1-protocol-bike-page-0.png",
+      "393-font-1-protocol-bike-page-1.png",
+      "393-font-1-protocol-bike-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-protocol-bike-2.jpg",
+    "case": {
+      "state": "protocol-bike",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 9
+    },
+    "pages": [
+      "393-font-1-protocol-bike-page-3.png",
+      "393-font-1-protocol-bike-page-4.png",
+      "393-font-1-protocol-bike-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-protocol-bike-3.jpg",
+    "case": {
+      "state": "protocol-bike",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 9
+    },
+    "pages": [
+      "393-font-1-protocol-bike-page-6.png",
+      "393-font-1-protocol-bike-page-7.png",
+      "393-font-1-protocol-bike-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-protocol-swim-1.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 15
+    },
+    "pages": [
+      "393-font-1-protocol-swim-page-0.png",
+      "393-font-1-protocol-swim-page-1.png",
+      "393-font-1-protocol-swim-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-protocol-swim-2.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 15
+    },
+    "pages": [
+      "393-font-1-protocol-swim-page-3.png",
+      "393-font-1-protocol-swim-page-4.png",
+      "393-font-1-protocol-swim-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-protocol-swim-3.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 15
+    },
+    "pages": [
+      "393-font-1-protocol-swim-page-6.png",
+      "393-font-1-protocol-swim-page-7.png",
+      "393-font-1-protocol-swim-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-protocol-swim-4.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 15
+    },
+    "pages": [
+      "393-font-1-protocol-swim-page-9.png",
+      "393-font-1-protocol-swim-page-10.png",
+      "393-font-1-protocol-swim-page-11.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-1-protocol-swim-5.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 393,
+      "fontScale": 1,
+      "pages": 15
+    },
+    "pages": [
+      "393-font-1-protocol-swim-page-12.png",
+      "393-font-1-protocol-swim-page-13.png",
+      "393-font-1-protocol-swim-page-14.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-1.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-0.png",
+      "320-font-2-protocol-swim-page-1.png",
+      "320-font-2-protocol-swim-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-2.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-3.png",
+      "320-font-2-protocol-swim-page-4.png",
+      "320-font-2-protocol-swim-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-3.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-6.png",
+      "320-font-2-protocol-swim-page-7.png",
+      "320-font-2-protocol-swim-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-4.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-9.png",
+      "320-font-2-protocol-swim-page-10.png",
+      "320-font-2-protocol-swim-page-11.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-5.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-12.png",
+      "320-font-2-protocol-swim-page-13.png",
+      "320-font-2-protocol-swim-page-14.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-6.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-15.png",
+      "320-font-2-protocol-swim-page-16.png",
+      "320-font-2-protocol-swim-page-17.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-7.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-18.png",
+      "320-font-2-protocol-swim-page-19.png",
+      "320-font-2-protocol-swim-page-20.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-8.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-21.png",
+      "320-font-2-protocol-swim-page-22.png",
+      "320-font-2-protocol-swim-page-23.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-9.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-24.png",
+      "320-font-2-protocol-swim-page-25.png",
+      "320-font-2-protocol-swim-page-26.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-10.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-27.png",
+      "320-font-2-protocol-swim-page-28.png",
+      "320-font-2-protocol-swim-page-29.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-11.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-30.png",
+      "320-font-2-protocol-swim-page-31.png",
+      "320-font-2-protocol-swim-page-32.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-12.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-33.png",
+      "320-font-2-protocol-swim-page-34.png",
+      "320-font-2-protocol-swim-page-35.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-13.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-36.png",
+      "320-font-2-protocol-swim-page-37.png",
+      "320-font-2-protocol-swim-page-38.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-14.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-39.png",
+      "320-font-2-protocol-swim-page-40.png",
+      "320-font-2-protocol-swim-page-41.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-2-protocol-swim-15.jpg",
+    "case": {
+      "state": "protocol-swim",
+      "width": 320,
+      "fontScale": 2,
+      "pages": 44
+    },
+    "pages": [
+      "320-font-2-protocol-swim-page-42.png",
+      "320-font-2-protocol-swim-page-43.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-1-overview-1.jpg",
+    "case": {
+      "state": "overview",
+      "width": 320,
+      "fontScale": 1,
+      "pages": 10
+    },
+    "pages": [
+      "320-font-1-overview-page-0.png",
+      "320-font-1-overview-page-1.png",
+      "320-font-1-overview-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-1-overview-2.jpg",
+    "case": {
+      "state": "overview",
+      "width": 320,
+      "fontScale": 1,
+      "pages": 10
+    },
+    "pages": [
+      "320-font-1-overview-page-3.png",
+      "320-font-1-overview-page-4.png",
+      "320-font-1-overview-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-1-overview-3.jpg",
+    "case": {
+      "state": "overview",
+      "width": 320,
+      "fontScale": 1,
+      "pages": 10
+    },
+    "pages": [
+      "320-font-1-overview-page-6.png",
+      "320-font-1-overview-page-7.png",
+      "320-font-1-overview-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/320-font-1-overview-4.jpg",
+    "case": {
+      "state": "overview",
+      "width": 320,
+      "fontScale": 1,
+      "pages": 10
+    },
+    "pages": [
+      "320-font-1-overview-page-9.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-2-overview-1.jpg",
+    "case": {
+      "state": "overview",
+      "width": 360,
+      "fontScale": 2,
+      "pages": 12
+    },
+    "pages": [
+      "360-font-2-overview-page-0.png",
+      "360-font-2-overview-page-1.png",
+      "360-font-2-overview-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-2-overview-2.jpg",
+    "case": {
+      "state": "overview",
+      "width": 360,
+      "fontScale": 2,
+      "pages": 12
+    },
+    "pages": [
+      "360-font-2-overview-page-3.png",
+      "360-font-2-overview-page-4.png",
+      "360-font-2-overview-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-2-overview-3.jpg",
+    "case": {
+      "state": "overview",
+      "width": 360,
+      "fontScale": 2,
+      "pages": 12
+    },
+    "pages": [
+      "360-font-2-overview-page-6.png",
+      "360-font-2-overview-page-7.png",
+      "360-font-2-overview-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/360-font-2-overview-4.jpg",
+    "case": {
+      "state": "overview",
+      "width": 360,
+      "fontScale": 2,
+      "pages": 12
+    },
+    "pages": [
+      "360-font-2-overview-page-9.png",
+      "360-font-2-overview-page-10.png",
+      "360-font-2-overview-page-11.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-2-overview-1.jpg",
+    "case": {
+      "state": "overview",
+      "width": 393,
+      "fontScale": 2,
+      "pages": 10
+    },
+    "pages": [
+      "393-font-2-overview-page-0.png",
+      "393-font-2-overview-page-1.png",
+      "393-font-2-overview-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-2-overview-2.jpg",
+    "case": {
+      "state": "overview",
+      "width": 393,
+      "fontScale": 2,
+      "pages": 10
+    },
+    "pages": [
+      "393-font-2-overview-page-3.png",
+      "393-font-2-overview-page-4.png",
+      "393-font-2-overview-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-2-overview-3.jpg",
+    "case": {
+      "state": "overview",
+      "width": 393,
+      "fontScale": 2,
+      "pages": 10
+    },
+    "pages": [
+      "393-font-2-overview-page-6.png",
+      "393-font-2-overview-page-7.png",
+      "393-font-2-overview-page-8.png"
+    ]
+  },
+  {
+    "file": "inspection/393-font-2-overview-4.jpg",
+    "case": {
+      "state": "overview",
+      "width": 393,
+      "fontScale": 2,
+      "pages": 10
+    },
+    "pages": [
+      "393-font-2-overview-page-9.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-2-overview-1.jpg",
+    "case": {
+      "state": "overview",
+      "width": 412,
+      "fontScale": 2,
+      "pages": 9
+    },
+    "pages": [
+      "412-font-2-overview-page-0.png",
+      "412-font-2-overview-page-1.png",
+      "412-font-2-overview-page-2.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-2-overview-2.jpg",
+    "case": {
+      "state": "overview",
+      "width": 412,
+      "fontScale": 2,
+      "pages": 9
+    },
+    "pages": [
+      "412-font-2-overview-page-3.png",
+      "412-font-2-overview-page-4.png",
+      "412-font-2-overview-page-5.png"
+    ]
+  },
+  {
+    "file": "inspection/412-font-2-overview-3.jpg",
+    "case": {
+      "state": "overview",
+      "width": 412,
+      "fontScale": 2,
+      "pages": 9
+    },
+    "pages": [
+      "412-font-2-overview-page-6.png",
+      "412-font-2-overview-page-7.png",
+      "412-font-2-overview-page-8.png"
+    ]
+  }
+]

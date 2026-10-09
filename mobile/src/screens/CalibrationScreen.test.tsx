@@ -8,6 +8,7 @@ import {
   getCalibrationStatus,
   getOnboarding,
   listCalibrationProtocols,
+  rejectCalibrationThreshold,
   saveCalibrationObservation,
   submitActivityRpe,
 } from '../api/client';
@@ -384,5 +385,97 @@ describe('CalibrationScreen Phase 15 flow', () => {
     const runChoice = await second.findByRole('radio', { name: 'Hardlopen' });
 
     expect(runChoice.props.accessibilityState.checked).toBe(true);
+  });
+});
+
+
+describe('Batch 11 calibration lifecycle separation', () => {
+  beforeEach(() => { jest.clearAllMocks(); arrange(); });
+  const props = { accessToken: 'athlete-token', onBack: jest.fn(), onSignOut: jest.fn(async () => undefined) };
+  test('unavailable executable protocols stay empty, with no invented observation or completion', async () => {
+    jest.mocked(listCalibrationProtocols).mockResolvedValue([]);
+    const screen = await render(<CalibrationScreen {...props} />);
+    expect(await screen.findByText('Geen protocol gekozen')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Opslaan en deterministisch evalueren' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Zones bevestigen' })).toBeNull();
+    expect(createActivity).not.toHaveBeenCalled();
+    expect(evaluateCalibration).not.toHaveBeenCalled();
+  });
+  test('historical incomplete observation keeps its reason and cannot confirm a threshold', async () => {
+    jest.mocked(getCalibrationStatus).mockResolvedValue({ setups: [setup], evaluations: [{
+      ...evaluation, status: 'insufficient_data', threshold_status: 'unknown', zone_status: 'pending_protocol',
+      requires_athlete_confirmation: false, thresholds: [], reason_codes: ['interrupted'],
+    }], threshold_decisions: [] });
+    const screen = await render(<CalibrationScreen {...props} />);
+    await fireEvent.press(await screen.findByRole('button', { name: /Bekijk/ }));
+    expect(screen.getByText('Meer of betere gegevens nodig')).toBeTruthy();
+    expect(screen.getByText(/Een verplicht blok is onderbroken/)).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Drempel bevestigen' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Zones bevestigen' })).toBeNull();
+    expect(approveZoneProposal).not.toHaveBeenCalled();
+  });
+  test('threshold rejection is its own request and never activates zones', async () => {
+    jest.mocked(getCalibrationStatus).mockResolvedValue({ setups: [setup], evaluations: [evaluation], threshold_decisions: [] });
+    jest.mocked(rejectCalibrationThreshold).mockResolvedValue({ evaluation_id: evaluation.id, state: 'rejected',
+      zone_profile_id: null, zone_proposal_id: null, base_zone_profile_id: null,
+      decided_at: '2026-09-21T10:40:00Z', zone_proposal_state: null });
+    const screen = await render(<CalibrationScreen {...props} />);
+    await fireEvent.press(await screen.findByRole('button', { name: /Bekijk/ }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Drempel afwijzen' }));
+    await waitFor(() => expect(rejectCalibrationThreshold).toHaveBeenCalledWith('athlete-token', evaluation.id));
+    expect(screen.getByText(/Je hebt de drempel afgewezen/)).toBeTruthy();
+    expect(confirmCalibrationThreshold).not.toHaveBeenCalled();
+    expect(approveZoneProposal).not.toHaveBeenCalled();
+  });
+  test('zone activation requires a separate explicit request with the original base profile', async () => {
+    jest.mocked(getCalibrationStatus).mockResolvedValue({ setups: [setup], evaluations: [evaluation], threshold_decisions: [] });
+    jest.mocked(confirmCalibrationThreshold).mockResolvedValue({ evaluation_id: evaluation.id, state: 'accepted',
+      zone_profile_id: 'pending-zone-id', zone_proposal_id: 'zone-proposal-id', base_zone_profile_id: 'active-zone-id',
+      decided_at: '2026-09-21T10:40:00Z', zone_proposal_state: 'pending' });
+    jest.mocked(approveZoneProposal).mockResolvedValue({} as never);
+    const screen = await render(<CalibrationScreen {...props} />);
+    await fireEvent.press(await screen.findByRole('button', { name: /Bekijk/ }));
+    expect(screen.queryByRole('button', { name: 'Zones bevestigen' })).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Drempel bevestigen' }));
+    await screen.findByRole('button', { name: 'Zones bevestigen' });
+    expect(approveZoneProposal).not.toHaveBeenCalled();
+    await fireEvent.press(screen.getByRole('button', { name: 'Zones bevestigen' }));
+    await waitFor(() => expect(approveZoneProposal).toHaveBeenCalledWith('athlete-token', 'zone-proposal-id', 'active-zone-id'));
+  });
+});
+
+// Read-only CalibrationService.protocols projections, retained with Batch 11 provenance.
+const currentProtocols = require('../../../docs/ui/evidence/final-visual-batch-11/current-protocol-projections.json') as Record<'run' | 'bike' | 'swim', CalibrationProtocol[]>;
+describe('Batch 11 current source-backed protocol forms', () => {
+  beforeEach(() => { jest.clearAllMocks(); arrange(); });
+  test.each(['run', 'bike'] as const)('%s keeps its approved optional observation excluded until explicitly included', async (discipline) => {
+    const current = currentProtocols[discipline].find(item => item.protocol_type === 'submaximal_calibration')!;
+    jest.mocked(getCalibrationStatus).mockResolvedValue({ setups: [{ ...setup, discipline, protocol_id: current.protocol_id }], evaluations: [], threshold_decisions: [] });
+    jest.mocked(listCalibrationProtocols).mockResolvedValue([current]);
+    const screen = await render(<CalibrationScreen accessToken="athlete-token" onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} />);
+    const optional = await screen.findByRole('checkbox', { name: 'Optioneel blok uitgevoerd' });
+    expect(optional.props.accessibilityState.checked).toBe(false);
+    expect(screen.getAllByLabelText('Gemiddelde hartslag')).toHaveLength(1);
+    await fireEvent.press(optional);
+    expect(optional.props.accessibilityState.checked).toBe(true);
+    expect(screen.getAllByLabelText('Gemiddelde hartslag')).toHaveLength(2);
+    expect(screen.getAllByLabelText('Hoe voelde dit blok?')).toHaveLength(2);
+    expect(createActivity).not.toHaveBeenCalled();
+    expect(evaluateCalibration).not.toHaveBeenCalled();
+  });
+  test('current swim calibration retains both measured repetition blocks and the pool confirmation', async () => {
+    const current = currentProtocols.swim.find(item => item.protocol_type === 'submaximal_calibration')!;
+    jest.mocked(getCalibrationStatus).mockResolvedValue({ setups: [{ ...setup, discipline: 'swim', protocol_id: current.protocol_id, guidance_mode: 'pace', pool_length_meters: 25 }], evaluations: [], threshold_decisions: [] });
+    jest.mocked(listCalibrationProtocols).mockResolvedValue([current]);
+    const screen = await render(<CalibrationScreen accessToken="athlete-token" onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} />);
+    const pool = await screen.findByRole('checkbox', { name: '25 m-bad, vrije slag en zonder paddles/vliezen/pull buoy' });
+    expect(pool.props.accessibilityState.checked).toBe(false);
+    expect(screen.getAllByLabelText('Gemeten totale tijd van dit blok')).toHaveLength(2);
+    expect(screen.getAllByLabelText('Vier herhalingstijden')).toHaveLength(2);
+    expect(screen.getAllByLabelText('Vier rusttijden')).toHaveLength(2);
+    expect(screen.getByText('Beoordeeld v' + current.version)).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Drempel bevestigen' })).toBeNull();
+    expect(createActivity).not.toHaveBeenCalled();
+    expect(evaluateCalibration).not.toHaveBeenCalled();
   });
 });

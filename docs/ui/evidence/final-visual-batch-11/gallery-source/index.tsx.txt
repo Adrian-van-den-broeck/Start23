@@ -1,0 +1,51 @@
+import { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
+import { CalibrationScreen } from '../src/screens/CalibrationScreen';
+import { ZoneProfileScreen } from '../src/screens/ZoneProfileScreen';
+import { ZoneSetupStep } from '../src/screens/ZoneSetupStep';
+import { OnboardingScreen } from '../src/screens/OnboardingScreen';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView } from 'react-native';
+import { BrandedFormHeader } from '../src/ui-v2/components/FormComposition';
+import { setup, protocol, onboarding, evaluation, zones, active } from '../src/ui-v2/dev/Batch11Fixtures';
+let fixture='overview';let callback='';let callbackUpdate=(s:string)=>{callback=s;};
+const originalFetch=globalThis.fetch;
+globalThis.fetch=async(input,init)=>{
+ const url=String(input);
+ if(url.includes('batch11-fixture.json'))return originalFetch(input,init);
+ if(!url.startsWith('http://127.0.0.1:9/'))throw new Error('Review transport blocked');
+ const endpoint=url.slice('http://127.0.0.1:9'.length);let value:unknown;
+ if(init?.method&&init.method!=='GET')callbackUpdate(endpoint+' '+(init.body??''));
+ if(endpoint==='/api/v1/onboarding')value=fixture==='onboarding'?{...onboarding,zones:[{...active,id:'pending-onboarding',status:'pending',proposal_id:'pending-proposal',base_zone_profile_id:active.id}]}:onboarding;
+ else if(endpoint==='/api/v1/me/physiology-profile')value={};
+ else if(endpoint==='/api/v1/onboarding/goal-options')value=[];
+ else if(endpoint==='/api/v1/me/zone-profile'){
+  const valueZones=JSON.parse(JSON.stringify(zones));
+  if(fixture==='pending'||fixture==='hidden')valueZones.disciplines[2].pending_profile={...active,id:'pending-v2',version:2,status:'pending',proposal_id:'zone-proposal',base_zone_profile_id:active.id};
+  if(fixture==='history')valueZones.disciplines[2].prior_profiles=[{...active,id:'history-v0',version:0,status:'superseded'}];
+  if(fixture==='hidden')for(const d of valueZones.disciplines){if(d.active_profile)d.active_profile.values_hidden=true;if(d.pending_profile)d.pending_profile.values_hidden=true;d.numeric_zone_visibility='week_2_evaluation_pending';}
+  value=valueZones;
+ }
+ else if(endpoint.startsWith('/api/v1/onboarding/zone-options/'))value=[{setup_route:'known_values',label:'Ik ken mijn waarden'},{setup_route:'calibration_week',label:'Ik wil rustig beginnen en laten kalibreren'}];
+ else if(endpoint.startsWith('/api/v1/calibration/protocols/'))value=fixture==='empty'?[]:[protocol];
+ else if(endpoint==='/api/v1/calibration/status')value={setups:fixture==='empty'?[]:[setup],evaluations:fixture==='result'||fixture==='incomplete'?[fixture==='incomplete'?{...evaluation,status:'insufficient_data',requires_athlete_confirmation:false,thresholds:[],reason_codes:['interrupted'],zone_status:'pending_protocol'}:evaluation]:[],threshold_decisions:[]};
+ else if(endpoint.includes('/threshold/confirm'))value={evaluation_id:evaluation.id,state:'accepted',zone_profile_id:'pending-zone',zone_proposal_id:'zone-proposal',base_zone_profile_id:active.id,decided_at:'2026-09-21T10:40:00Z',zone_proposal_state:'pending'};
+ else if(endpoint.includes('/threshold/reject'))value={evaluation_id:evaluation.id,state:'rejected',zone_profile_id:null,zone_proposal_id:null,base_zone_profile_id:active.id,decided_at:'2026-09-21T10:40:00Z',zone_proposal_state:null};
+ else if(endpoint==='/api/v1/calibration/evaluate')value=evaluation;
+ else if(endpoint==='/api/v1/activities')value={id:'activity-id'};
+ else if(endpoint==='/api/v1/calibration/observations')value={...JSON.parse(String(init?.body)),id:'observation-id'};
+ else if(init?.method&&init.method!=='GET')value={};
+ else throw new Error('Unmapped fixture '+endpoint);
+ return new Response(JSON.stringify(value),{status:200,headers:{'Content-Type':'application/json'}});
+};
+export default function Review(){
+ const [config,setConfig]=useState('overview');const [nonce,setNonce]=useState('');const [cb,setCb]=useState('');
+ callbackUpdate=(s)=>{callback=s;setCb(s);};
+ useEffect(()=>{let seenNonce='';const timer=setInterval(()=>{void originalFetch('http://127.0.0.1:8084/batch11-fixture.json?t='+Date.now()).then(r=>r.json()).then(c=>{if(c.nonce!==seenNonce){seenNonce=c.nonce;fixture=c.state;setConfig(c.state);setNonce(c.nonce);setCb('');callback='';}});},700);return()=>clearInterval(timer);},[]);
+ const back=()=>callbackUpdate('back');const signout=async()=>callbackUpdate('signout');
+ const key=config+nonce;
+ return <View style={{flex:1,backgroundColor:'#FAFAF6'}}>
+ {config==='known'||config==='choice'?<SafeAreaView style={{flex:1}}><ScrollView contentContainerStyle={{padding:16,gap:24}}><BrandedFormHeader caption="Mijn zones" onBack={back} onSignOut={signout}/><ZoneSetupStep key={key} accessToken="inert-review-token" state={onboarding} saving={false} profileMode onSave={async(d,v)=>callbackUpdate(d+' '+JSON.stringify(v))}/></ScrollView></SafeAreaView>:config==='onboarding'?<OnboardingScreen key={key} accessToken="inert-review-token" onOpenPlanning={back} onOpenCalibration={back} onSignOut={signout}/>:config==='empty'||config==='feedback'||config==='result'||config==='incomplete'?<CalibrationScreen key={key} accessToken="inert-review-token" onBack={back} onSignOut={signout}/>:<ZoneProfileScreen key={key} accessToken="inert-review-token" onBack={back} onSignOut={signout} planContext={config==='pending'?{planId:'inert-plan',revision:9}:null}/>}
+ <View><Text testID={'batch-11-fixture-'+config}>Review · {config}</Text><Text testID="batch-11-build-final-5">Inert fixture only</Text><Text testID="batch-11-callback">{cb||callback}</Text></View>
+ </View>;
+}

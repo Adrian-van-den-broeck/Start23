@@ -1,0 +1,92 @@
+{
+  "backendWrites": false,
+  "fixtureTransportOnly": true,
+  "results": [
+    {
+      "name": "Zone Zones goedkeuren retains original proposal/base precondition",
+      "pass": true,
+      "request": {
+        "path": "/api/v1/change-proposals/zone-proposal/approve",
+        "body": {
+          "expected_base_zone_profile_id": "source-run-v1"
+        }
+      }
+    },
+    {
+      "name": "Zone Afwijzen retains original proposal/base precondition",
+      "pass": true,
+      "request": {
+        "path": "/api/v1/change-proposals/zone-proposal/reject",
+        "body": {}
+      }
+    },
+    {
+      "name": "Known value empty validation prevents saving",
+      "pass": true,
+      "noWrites": true
+    },
+    {
+      "name": "Known pace saves existing canonical seconds payload",
+      "pass": true,
+      "discipline": "run",
+      "body": {
+        "setup_route": "known_values",
+        "guidance_mode": "pace",
+        "source_quality": "athlete_entered",
+        "thresholds": [
+          {
+            "metric_kind": "run_threshold_pace_seconds_per_km",
+            "value": "300"
+          }
+        ],
+        "zone_profiles": []
+      }
+    },
+    {
+      "name": "Calibration route saves only current supported setup",
+      "pass": true,
+      "body": {
+        "setup_route": "calibration_week",
+        "guidance_mode": "heart_rate"
+      }
+    },
+    {
+      "name": "Threshold rejection remains distinct from zones",
+      "pass": true,
+      "request": {
+        "path": "/api/v1/calibration/evaluations/evaluation-id/threshold/reject",
+        "body": {}
+      }
+    },
+    {
+      "name": "Threshold confirmation exposes a separately pending zone action",
+      "pass": true,
+      "request": {
+        "path": "/api/v1/calibration/evaluations/evaluation-id/threshold/confirm",
+        "body": {
+          "confirmed": true
+        }
+      }
+    },
+    {
+      "name": "Explicit zone approval retains original base profile",
+      "pass": true,
+      "request": {
+        "path": "/api/v1/change-proposals/zone-proposal/approve",
+        "body": {
+          "expected_base_zone_profile_id": "source-run-v1"
+        }
+      }
+    },
+    {
+      "name": "Incomplete observation cannot submit or manufacture success",
+      "pass": true,
+      "noWrites": true
+    },
+    {
+      "name": "Unavailable protocol uses existing back callback",
+      "pass": true,
+      "callback": "back"
+    }
+  ]
+}

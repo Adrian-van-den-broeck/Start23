@@ -1,0 +1,11 @@
+PASS src/screens/CalibrationScreen.test.tsx (6.774 s)
+PASS src/screens/ZoneProfileScreen.regression.test.tsx
+PASS src/screens/ZoneSetupStep.test.tsx
+PASS src/ui-v2/components/ZoneVisuals.test.tsx
+PASS src/privacy.test.ts
+
+Test Suites: 5 passed, 5 total
+Tests:       35 passed, 35 total
+Snapshots:   0 total
+Time:        9.643 s
+Ran all test suites matching /src\\screens\\ZoneProfileScreen.regression.test.tsx|src\\screens\\ZoneSetupStep.test.tsx|src\\screens\\CalibrationScreen.test.tsx|src\\ui-v2\\components\\ZoneVisuals.test.tsx|src\\privacy.test.ts/i.

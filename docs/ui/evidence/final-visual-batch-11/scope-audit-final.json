@@ -1,0 +1,52 @@
+{
+  "baseline": "f25379d",
+  "areas": [
+    "mobile/src/api",
+    "mobile/src/features",
+    "mobile/src/navigation",
+    "mobile/src/ui",
+    "backend",
+    "supabase",
+    "mobile/package.json",
+    "mobile/package-lock.json",
+    "mobile/app.json",
+    "mobile/app"
+  ],
+  "gitDiffEmpty": true,
+  "productionRoots": [
+    {
+      "file": "mobile/app/_layout.tsx",
+      "restoredExactly": true
+    },
+    {
+      "file": "mobile/app/index.tsx",
+      "restoredExactly": true
+    }
+  ],
+  "productionFilesUnchangedSinceNativeCapture": [
+    {
+      "file": "mobile/src/screens/ZoneProfileScreen.tsx",
+      "match": true
+    },
+    {
+      "file": "mobile/src/screens/ZoneSetupStep.tsx",
+      "match": true
+    },
+    {
+      "file": "mobile/src/screens/CalibrationScreen.tsx",
+      "match": true
+    },
+    {
+      "file": "mobile/src/ui-v2/components/ZoneVisuals.tsx",
+      "match": true
+    },
+    {
+      "file": "mobile/src/ui-v2/components/ZoneField.tsx",
+      "match": true
+    },
+    {
+      "file": "mobile/src/ui-v2/components/FormComposition.tsx",
+      "match": true
+    }
+  ]
+}

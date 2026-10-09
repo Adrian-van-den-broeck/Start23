@@ -5,7 +5,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -34,12 +34,17 @@ import type {
   ThresholdDecision,
   ZoneMetricKind,
 } from '../api/types';
-import { FormField } from '../components/FormField';
-import { MotionPressable as Pressable } from '../components/MotionPressable';
-import { RpeChoiceList } from '../components/RpeChoiceList';
-import { StatusPill } from '../components/StatusPill';
-import { formatRunPace, parseRunPace } from '../lib/runPace';
-import { colors, radius, spacing } from '../theme/tokens';
+import { ZoneField as FormField } from '../ui-v2/components/ZoneField';
+import { rpeChoices, type CanonicalRpe } from '../lib/rpe';
+import { ZoneStatusChip, ZoneTable, zoneValue, ZoneInfoRow } from '../ui-v2/components/ZoneVisuals';
+import { parseRunPace } from '../lib/runPace';
+import { colors, layout, radius, shadows, space } from '../ui-v2/tokens';
+import { Text } from '../ui-v2/primitives/Text';
+import { Button } from '../ui-v2/primitives/Button';
+import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
+import { IconTile } from '../ui-v2/primitives/IconTile';
+import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
+import { Notice } from '../ui-v2/primitives/Notice';
 
 type Props = {
   accessToken: string;
@@ -243,17 +248,20 @@ function Toggle({
   label: string;
   onPress: () => void;
 }) {
-  return (
-    <Pressable
-      accessibilityRole="checkbox"
-      accessibilityState={{ checked }}
-      onPress={onPress}
-      style={styles.toggleRow}
-    >
-      <View style={[styles.toggleBox, checked && styles.toggleBoxChecked]} />
-      <Text style={styles.toggleLabel}>{label}</Text>
-    </Pressable>
-  );
+  return <ChoiceRow mode="checkbox" label={label} selected={checked} onPress={onPress} />;
+}
+
+// Calibration choices edit the observation draft; only explicit submission saves it.
+function RpeChoiceList({ disabled = false, discipline, label, onSelect, selectedValue = null }: {
+  disabled?: boolean; discipline: Discipline; label: string; onSelect: (value: CanonicalRpe) => void; selectedValue?: number | null;
+}) {
+  return <View style={{ gap: space[12] }}><Text variant="label">{label}</Text>
+    <View accessibilityRole="radiogroup" accessibilityLabel={label} style={{ gap: space[12] }}>
+      {rpeChoices(discipline).map(choice => <ChoiceRow key={choice.value} label={choice.value + ' · ' + choice.description}
+        accessibilityLabel={choice.description + ' (RPE ' + choice.value + ')'} selected={selectedValue === choice.value}
+        disabled={disabled} onPress={() => onSelect(choice.value)} />)}
+    </View>
+  </View>;
 }
 
 function ActionButton({
@@ -269,33 +277,8 @@ function ActionButton({
   secondary?: boolean;
   loading?: boolean;
 }) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      disabled={disabled || loading}
-      haptic={secondary ? undefined : 'light'}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.action,
-        secondary && styles.actionSecondary,
-        (disabled || loading) && styles.disabled,
-        pressed && styles.pressed,
-      ]}
-    >
-      {loading ? (
-        <ActivityIndicator color={secondary ? colors.brand : colors.white} />
-      ) : (
-        <Text
-          style={[
-            styles.actionText,
-            secondary && styles.actionTextSecondary,
-          ]}
-        >
-          {label}
-        </Text>
-      )}
-    </Pressable>
-  );
+  return <Button label={label} onPress={onPress} disabled={disabled} busy={loading}
+    variant={secondary ? 'outline' : 'primary'} trailingIcon={secondary ? undefined : 'forward'} />;
 }
 
 function isMainSegment(segment: CalibrationProtocolSegment): boolean {
@@ -321,6 +304,8 @@ function objectiveMetricsPresent(draft: SegmentDraft): boolean {
 }
 
 export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
+  const { width, fontScale } = useWindowDimensions();
+  const compact = width < 480 || fontScale > 1;
   const [setups, setSetups] = useState<DisciplineSetup[]>([]);
   const [protocols, setProtocols] = useState<Record<string, CalibrationProtocol>>(
     {},
@@ -782,7 +767,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
   if (loading) {
     return (
       <SafeAreaView style={styles.centered}>
-        <ActivityIndicator color={colors.brand} size="large" />
+        <ActivityIndicator color={colors.primary} size="large" />
         <Text style={styles.muted}>Protocolstatus laden…</Text>
       </SafeAreaView>
     );
@@ -794,23 +779,6 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboard}
       >
-        <View style={styles.header}>
-          <Pressable accessibilityRole="button" onPress={onBack} style={styles.link}>
-            <Text style={styles.linkText}>← Terug</Text>
-          </Pressable>
-          <View style={styles.headerTitleBlock}>
-            <Text style={styles.logo}>Wombo</Text>
-            <Text style={styles.headerTitle}>Test & kalibratie</Text>
-          </View>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => void onSignOut()}
-            style={styles.link}
-          >
-            <Text style={styles.linkText}>Afmelden</Text>
-          </Pressable>
-        </View>
-
         <ScrollView
           automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
           contentContainerStyle={styles.content}
@@ -819,10 +787,12 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
           showsVerticalScrollIndicator={false}
           style={styles.scroll}
         >
-          {error ? <Text style={styles.errorBanner}>{error}</Text> : null}
+          <BrandedFormHeader caption="Test & kalibratie" backLabel="Terug" onBack={onBack} onSignOut={onSignOut} />
+          {error ? <Notice tone="error">{error}</Notice> : null}
 
           {setups.length === 0 ? (
             <View style={styles.card}>
+              <IconTile name="document" size="focus" />
               <Text style={styles.cardTitle}>Geen protocol gekozen</Text>
               <Text style={styles.muted}>
                 Kies tijdens de intake eerst een veldtest of Week-1-kalibratie.
@@ -832,26 +802,10 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
             </View>
           ) : (
             <>
-              <View style={styles.selectorRow}>
+              <View accessibilityRole="radiogroup" style={styles.selectorRow}>
                 {setups.map((setup) => (
-                  <Pressable
-                    accessibilityRole="radio"
-                    accessibilityState={{
-                      checked: selectedProtocolId === setup.protocol_id,
-                    }}
-                    key={`${setup.discipline}:${setup.protocol_id}`}
-                    onPress={() => setSelectedProtocolId(setup.protocol_id)}
-                    style={({ pressed }) => [
-                      styles.selector,
-                      selectedProtocolId === setup.protocol_id &&
-                        styles.selectorSelected,
-                      pressed && styles.pressed,
-                    ]}
-                  >
-                    <Text style={styles.selectorText}>
-                      {disciplineLabels[setup.discipline]}
-                    </Text>
-                  </Pressable>
+                  <ChoiceRow key={setup.discipline + ':' + setup.protocol_id} label={disciplineLabels[setup.discipline]}
+                    selected={selectedProtocolId === setup.protocol_id} onPress={() => setSelectedProtocolId(setup.protocol_id)} />
                 ))}
               </View>
 
@@ -866,19 +820,14 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                     <Text style={styles.painWarningText}>Stop if you feel pain</Text>
                   </View>
                   <View style={styles.badges}>
-                    <StatusPill
+                    <ZoneStatusChip
                       label={
                         selectedProtocol.protocol_type === 'field_test'
                           ? 'Veldtest'
                           : 'Submaximaal'
                       }
-                      tone={
-                        selectedProtocol.protocol_type === 'field_test'
-                          ? 'accent'
-                          : 'brand'
-                      }
                     />
-                    <StatusPill label="Beoordeeld v1" tone="neutral" />
+                    <ZoneStatusChip label={'Beoordeeld v' + selectedProtocol.version} />
                   </View>
                   <Text style={styles.pageTitle}>
                     {protocolLabels[selectedProtocol.protocol_id] ??
@@ -912,7 +861,8 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                       </View>
                     ))}
                   </View>
-                  <Text style={styles.eyebrow}>Feedback</Text>
+                  <ZoneInfoRow icon="document"><Text variant="supporting" tone="textMuted">Protocol: {selectedProtocol.protocol_id} · v{selectedProtocol.version} · {selectedProtocol.review_status}</Text></ZoneInfoRow>
+                  <Text style={styles.eyebrow}>Observatie</Text>
                   <Text style={styles.pageTitle}>Objectief + jouw gevoel</Text>
                   <Text style={styles.muted}>
                     Ontbrekende sensordata blokkeert de activiteit niet. Laat
@@ -992,8 +942,8 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                         ) : null}
                         {draft.included ? (
                           <>
-                            <View style={styles.twoColumns}>
-                              <View style={styles.column}>
+                            <View style={[styles.twoColumns, compact && styles.stacked]}>
+                              <View style={[styles.column, compact && styles.fullWidth]}>
                                 <Toggle
                                   checked={draft.completed}
                                   label="Voltooid"
@@ -1004,7 +954,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                                   }
                                 />
                               </View>
-                              <View style={styles.column}>
+                              <View style={[styles.column, compact && styles.fullWidth]}>
                                 <Toggle
                                   checked={draft.interrupted}
                                   label="Onderbroken"
@@ -1233,8 +1183,8 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                   <Text style={styles.eyebrow}>Resultaat</Text>
                   <Text style={styles.pageTitle}>{resultLabels[result.status]}</Text>
                   <View style={styles.badges}>
-                    <StatusPill label={`Vertrouwen: ${result.confidence}`} tone="neutral" />
-                    <StatusPill label={`Zones: ${result.zone_status}`} tone="accent" />
+                    <ZoneStatusChip label={`Vertrouwen: ${result.confidence}`} />
+                    <ZoneStatusChip label={`Zones: ${result.zone_status}`} pending />
                   </View>
                   {result.thresholds.map((threshold) => (
                     <View key={threshold.metric_kind} style={styles.resultMetric}>
@@ -1242,8 +1192,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                         {metricLabels[threshold.metric_kind]}
                       </Text>
                       <Text style={styles.resultMetricValue}>
-                        {threshold.metric_kind === 'run_threshold_pace_seconds_per_km'
-                          ? formatRunPace(threshold.value) : threshold.value}
+                        {zoneValue(threshold.metric_kind, threshold.value)}
                       </Text>
                     </View>
                   ))}
@@ -1253,17 +1202,11 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                         {metricLabels[profile.metric_kind]}
                         {profile.is_primary ? ' · primair' : ' · secundair'}
                       </Text>
-                      {profile.boundaries.map((boundary) => (
-                        <Text key={boundary.zone_number} style={styles.reason}>
-                          Z{boundary.zone_number}: {profile.metric_kind === 'run_threshold_pace_seconds_per_km'
-                            ? formatRunPace(boundary.lower_value) : boundary.lower_value ?? 'open'}
-                          {' – '}
-                          {profile.metric_kind === 'run_threshold_pace_seconds_per_km'
-                            ? formatRunPace(boundary.upper_value) : boundary.upper_value ?? 'open'}
-                        </Text>
-                      ))}
+                      <ZoneTable boundaries={profile.boundaries} metricKind={profile.metric_kind} />
+                      <Text variant="supporting" tone="textMuted">{profile.boundary_source} · {profile.zone_model_version}</Text>
                     </View>
                   ))}
+                  <ZoneInfoRow icon="document"><Text variant="supporting" tone="textMuted">Regels: {result.ruleset_version}{result.zone_model_version ? ' · Model: ' + result.zone_model_version : ''}</Text></ZoneInfoRow>
                   {result.reason_codes.map((reason) => (
                     <Text key={reason} style={styles.reason}>
                       • {reasonLabels[reason] ?? reason.replaceAll('_', ' ')}
@@ -1339,164 +1282,27 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { backgroundColor: colors.canvas, flex: 1 },
-  keyboard: { flex: 1 },
-  scroll: { flex: 1 },
-  centered: {
-    alignItems: 'center',
-    backgroundColor: colors.canvas,
-    flex: 1,
-    gap: spacing.md,
-    justifyContent: 'center',
-  },
-  header: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-  },
-  headerTitleBlock: { alignItems: 'center' },
-  logo: {
-    color: colors.accent,
-    fontSize: 11,
-    fontWeight: '900',
-    letterSpacing: 1.2,
-    textTransform: 'uppercase',
-  },
-  headerTitle: { color: colors.ink, fontSize: 13, fontWeight: '900' },
-  link: { padding: spacing.sm },
-  linkText: { color: colors.inkMuted, fontSize: 12, fontWeight: '800' },
-  content: { gap: spacing.lg, padding: spacing.lg, paddingBottom: 56 },
-  errorBanner: {
-    backgroundColor: colors.dangerSoft,
-    borderRadius: radius.md,
-    color: colors.danger,
-    fontWeight: '800',
-    lineHeight: 20,
-    padding: spacing.md,
-  },
-  selectorRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  selector: {
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.lineStrong,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  selectorSelected: { backgroundColor: colors.brandSoft, borderColor: colors.brand },
-  selectorText: { color: colors.ink, fontSize: 13, fontWeight: '900' },
-  card: {
-    backgroundColor: colors.surface,
-    borderColor: colors.line,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    gap: spacing.lg,
-    padding: spacing.lg,
-  },
-  cardTitle: { color: colors.ink, fontSize: 20, fontWeight: '900' },
-  eyebrow: {
-    color: colors.brand,
-    fontSize: 12,
-    fontWeight: '900',
-    letterSpacing: 1.1,
-    textTransform: 'uppercase',
-  },
-  pageTitle: {
-    color: colors.ink,
-    fontSize: 26,
-    fontWeight: '900',
-    letterSpacing: -0.5,
-  },
-  muted: { color: colors.inkMuted, lineHeight: 21 },
-  badges: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  segmentList: { gap: spacing.sm },
-  segmentSummary: {
-    alignItems: 'center',
-    backgroundColor: colors.canvas,
-    borderRadius: radius.md,
-    flexDirection: 'row',
-    gap: spacing.md,
-    padding: spacing.md,
-  },
-  segmentNumber: {
-    alignItems: 'center',
-    backgroundColor: colors.brand,
-    borderRadius: 18,
-    height: 36,
-    justifyContent: 'center',
-    width: 36,
-  },
-  segmentNumberText: { color: colors.white, fontWeight: '900' },
-  segmentBody: { flex: 1, gap: 2 },
-  segmentTitle: { color: colors.ink, fontSize: 15, fontWeight: '900' },
-  safety: {
-    backgroundColor: colors.accentSoft,
-    borderRadius: radius.md,
-    color: colors.ink,
-    fontWeight: '700',
-    lineHeight: 20,
-    padding: spacing.md,
-  },
-  painWarning: {
-    backgroundColor: colors.dangerSoft,
-    borderColor: colors.danger,
-    borderRadius: radius.md,
-    borderWidth: 2,
-    padding: spacing.lg,
-  },
-  painWarningText: {
-    color: colors.danger,
-    fontSize: 20,
-    fontWeight: '900',
-    textAlign: 'center',
-  },
-  historyText: { color: colors.inkFaint, fontSize: 12, textAlign: 'center' },
-  twoColumns: { flexDirection: 'row', gap: spacing.sm },
-  column: { flex: 1 },
-  segmentCard: {
-    borderColor: colors.line,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    gap: spacing.md,
-    padding: spacing.md,
-  },
-  toggleRow: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
-  toggleBox: {
-    borderColor: colors.inkFaint,
-    borderRadius: 5,
-    borderWidth: 2,
-    height: 20,
-    width: 20,
-  },
-  toggleBoxChecked: { backgroundColor: colors.brand, borderColor: colors.brand },
-  toggleLabel: { color: colors.ink, flex: 1, fontWeight: '700', lineHeight: 19 },
-  unit: { color: colors.inkMuted, fontWeight: '800' },
-  action: {
-    alignItems: 'center',
-    backgroundColor: colors.brand,
-    borderRadius: radius.md,
-    justifyContent: 'center',
-    minHeight: 50,
-    paddingHorizontal: spacing.lg,
-  },
-  actionSecondary: {
-    backgroundColor: colors.surface,
-    borderColor: colors.brand,
-    borderWidth: 1,
-  },
-  actionText: { color: colors.white, fontSize: 15, fontWeight: '900' },
-  actionTextSecondary: { color: colors.brand },
-  disabled: { opacity: 0.45 },
-  pressed: { opacity: 0.78 },
-  resultMetric: {
-    backgroundColor: colors.brandSoft,
-    borderRadius: radius.md,
-    gap: spacing.xs,
-    padding: spacing.lg,
-  },
-  resultMetricLabel: { color: colors.inkMuted, fontSize: 13, fontWeight: '800' },
-  resultMetricValue: { color: colors.brand, fontSize: 28, fontWeight: '900' },
-  reason: { color: colors.inkMuted, lineHeight: 21 },
+  safeArea: { backgroundColor: colors.background, flex: 1 }, keyboard: { flex: 1 }, scroll: { flex: 1 },
+  centered: { alignItems: 'center', backgroundColor: colors.background, flex: 1, gap: space[16], justifyContent: 'center' },
+  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },
+  selectorRow: { gap: space[12] },
+  card: { ...shadows.card, backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.card, borderWidth: 1, gap: space[24], padding: space[16] },
+  cardTitle: { color: colors.text, fontSize: 22, fontWeight: '600', lineHeight: 28 },
+  eyebrow: { color: colors.primary, fontSize: 12, fontWeight: '600', letterSpacing: 1.2, textTransform: 'uppercase' },
+  pageTitle: { color: colors.text, fontSize: 24, fontWeight: '600', letterSpacing: -0.5, lineHeight: 30 },
+  muted: { color: colors.textMuted, fontSize: 16, lineHeight: 24 }, badges: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8] },
+  segmentList: { gap: space[16] }, segmentSummary: { alignItems: 'flex-start', backgroundColor: colors.primarySoft, borderRadius: radius.control, flexDirection: 'row', gap: space[12], padding: space[12] },
+  segmentNumber: { alignItems: 'center', backgroundColor: colors.primary, borderRadius: radius.pill, height: 40, justifyContent: 'center', width: 40 },
+  segmentNumberText: { color: colors.textInverse, fontWeight: '600' }, segmentBody: { flex: 1, minWidth: 0, gap: space[4] },
+  segmentTitle: { color: colors.text, fontSize: 18, lineHeight: 26, fontWeight: '600' },
+  safety: { backgroundColor: colors.primarySoft, borderRadius: radius.control, color: colors.text, fontSize: 16, lineHeight: 24, padding: space[16] },
+  painWarning: { backgroundColor: colors.destructiveSoft, borderColor: colors.destructive, borderRadius: radius.control, borderWidth: 1, padding: space[16] },
+  painWarningText: { color: colors.destructive, fontSize: 20, lineHeight: 28, fontWeight: '600' },
+  historyText: { color: colors.textMuted, fontSize: 14, lineHeight: 20 }, twoColumns: { flexDirection: 'row', gap: space[12] }, column: { flex: 1 },
+  stacked: { flexDirection: 'column' }, fullWidth: { flex: 0, width: '100%' },
+  segmentCard: { borderColor: colors.border, borderRadius: radius.control, borderWidth: 1, gap: space[24], padding: space[16] },
+  unit: { color: colors.textMuted, fontSize: 14, lineHeight: 20 },
+  resultMetric: { backgroundColor: colors.primarySoft, borderRadius: radius.control, gap: space[8], padding: space[16] },
+  resultMetricLabel: { color: colors.textMuted, fontSize: 14, lineHeight: 20 }, resultMetricValue: { color: colors.primary, fontSize: 24, lineHeight: 30, fontWeight: '600' },
+  reason: { color: colors.textMuted, fontSize: 16, lineHeight: 24 },
 });

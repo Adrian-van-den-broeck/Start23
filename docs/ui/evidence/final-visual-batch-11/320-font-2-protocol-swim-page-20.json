@@ -1,0 +1,15 @@
+{
+  "timestampUTC": "2026-10-09T09:01:42.743072+00:00",
+  "fixture": {
+    "state": "protocol-swim",
+    "width": 320,
+    "fontScale": 2,
+    "build": "final-6",
+    "language": "source Dutch",
+    "inertActions": true
+  },
+  "size": "Physical size: 1080x2280",
+  "density": "Physical density: 440\nOverride density: 540",
+  "fontScale": "2.0",
+  "provenance": "Production ZoneProfileScreen/ZoneSetupStep/CalibrationScreen; typed inert DTOs; blocked live transport; callback markers prove UI dispatch only"
+}

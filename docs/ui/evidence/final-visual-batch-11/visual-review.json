@@ -1,0 +1,574 @@
+{
+  "pass": true,
+  "reference": "docs/ui/mockups-final/03-zones.png",
+  "supportingLanguage": "M4 current forms",
+  "cases": 51,
+  "viewports": 357,
+  "contactSheets": 138,
+  "allContactSheetsInspected": true,
+  "reviewed": [
+    {
+      "file": "inspection/320-font-2-overview-1.jpg",
+      "sha256": "b3d92ae191cd03b5c5c1ef1ef45202ec94faf4a17dc70e634cb6321a44164a66"
+    },
+    {
+      "file": "inspection/320-font-2-overview-2.jpg",
+      "sha256": "25472bbd363b7a54580ea8aa81a5afbbfb9d343f553ab2b2e2ec71e217dfc191"
+    },
+    {
+      "file": "inspection/320-font-2-overview-3.jpg",
+      "sha256": "fc3c7eb9ef5c925fd574d27445c49ffe4f367a45a411f176599e0d5e86ab09e5"
+    },
+    {
+      "file": "inspection/320-font-2-overview-4.jpg",
+      "sha256": "48df2fe74832cd28b1505c1206fd8ce813f9f90ac8494ed970fd284c95a37de6"
+    },
+    {
+      "file": "inspection/393-font-1-overview-1.jpg",
+      "sha256": "24d45bb83ebf0c5d1c039374a7b58643fd6b38bff9c91b0a384b562e2298745e"
+    },
+    {
+      "file": "inspection/393-font-1-overview-2.jpg",
+      "sha256": "37841ed84fb388da65d6b5ff2733955fd99c9d02b9c2b6a684bdaf1a193a76aa"
+    },
+    {
+      "file": "inspection/393-font-1-pending-1.jpg",
+      "sha256": "97298519a299aea108c69b32898e90246fd64c926b948886237895565c7733fc"
+    },
+    {
+      "file": "inspection/393-font-1-pending-2.jpg",
+      "sha256": "d2a083eec3e7389d5beee5497e22a6363146874c6c6995a637877cea17825b0e"
+    },
+    {
+      "file": "inspection/320-font-2-pending-1.jpg",
+      "sha256": "4fc7243fd1b5bf8d25378012946fe4bed796922a5fa3ed6463737ea580afe578"
+    },
+    {
+      "file": "inspection/320-font-2-pending-2.jpg",
+      "sha256": "a7ab7a61506b3fd3b8db38269b2034cf941b1c9873339717a2a8e1b12ecd47eb"
+    },
+    {
+      "file": "inspection/320-font-2-pending-3.jpg",
+      "sha256": "010f77730a20a286a474b61d090275d0edadf6133d31404f04404de83cd09a48"
+    },
+    {
+      "file": "inspection/320-font-2-pending-4.jpg",
+      "sha256": "6592d56e6feed7eea0ec2c2222662237736d2dce6856ff0e186f560726036902"
+    },
+    {
+      "file": "inspection/320-font-2-pending-5.jpg",
+      "sha256": "09ce754b973411e01c3a61fc5620f79af661827c1e4fe984a23892fd69e51d10"
+    },
+    {
+      "file": "inspection/393-font-1-history-1.jpg",
+      "sha256": "5869085f957195276cb700220f8cd7f54c9edd07fa72cb6301544488eff6dc60"
+    },
+    {
+      "file": "inspection/393-font-1-history-2.jpg",
+      "sha256": "283440bec539be330d74d9c0f7ce8301f06c1098c42de96bd8d8a67230c1cc4e"
+    },
+    {
+      "file": "inspection/320-font-2-history-1.jpg",
+      "sha256": "9d1bba8a6375ca56534648834c8ee7675d1cdbda99a7ddb60c8837bd64a5cfa8"
+    },
+    {
+      "file": "inspection/320-font-2-history-2.jpg",
+      "sha256": "db1834e1e6cdb056b45471ce8e6abb4af1e2f440b70481c7f3869f4a9b8af2e0"
+    },
+    {
+      "file": "inspection/320-font-2-history-3.jpg",
+      "sha256": "cf4d0a1965658114ee89a1aa1e09815a21ff6c50516976894bff3144dac163bc"
+    },
+    {
+      "file": "inspection/320-font-2-history-4.jpg",
+      "sha256": "e0f22bda3cf55eab4b33cd70427d75ed3b9b483050d8224df6b4d848061e0b20"
+    },
+    {
+      "file": "inspection/320-font-2-history-5.jpg",
+      "sha256": "74449b97adbc9ffa26a7799ec15396a4e062f7cac8bf4770c66af8caf6854ad4"
+    },
+    {
+      "file": "inspection/393-font-1-hidden-1.jpg",
+      "sha256": "be401c7d44f70045fae99b876ce052787a8bf5e62836e5a0718213b07a954ea7"
+    },
+    {
+      "file": "inspection/393-font-1-hidden-2.jpg",
+      "sha256": "48526edda51cd672525ce4563874d0633611140acdb9ce3a2d4e29a00f83baf7"
+    },
+    {
+      "file": "inspection/320-font-2-hidden-1.jpg",
+      "sha256": "33fd02060f8cfcd6cb607b201322a14262090598d14bf05ca58579c0f6a34a1f"
+    },
+    {
+      "file": "inspection/320-font-2-hidden-2.jpg",
+      "sha256": "29061f76a13530e84fe4d294dbf76d09b0177390f36148f4c331c1e12fbee1af"
+    },
+    {
+      "file": "inspection/320-font-2-hidden-3.jpg",
+      "sha256": "ace4ffbeb105e68b5cb461ef01b110364543d69a6c5ba71da1d440ca2ee92872"
+    },
+    {
+      "file": "inspection/320-font-2-hidden-4.jpg",
+      "sha256": "ce8d7212d3338d076fe1bc2e6f917dbe13de299e73c483ec59e0de7502d0b269"
+    },
+    {
+      "file": "inspection/393-font-1-result-1.jpg",
+      "sha256": "ce6232f193ce43a807704122759aeef8ffbbaf9223bb16a247f75e98a39fe9fc"
+    },
+    {
+      "file": "inspection/320-font-2-result-1.jpg",
+      "sha256": "0b2e9c5c9cd373b0642a4caff611ea5a6efbe47aab5ef50e49d66be376862fca"
+    },
+    {
+      "file": "inspection/320-font-2-result-2.jpg",
+      "sha256": "7895e1e6d467e2712c057110212f1ef30625a1dd8595987ff7a20c3d4de97261"
+    },
+    {
+      "file": "inspection/393-font-1-incomplete-1.jpg",
+      "sha256": "843a7e21e9b99406f26131bfb088b81e729ce5e5d39fce4bbc3cb00d750245b0"
+    },
+    {
+      "file": "inspection/393-font-1-onboarding-1.jpg",
+      "sha256": "f020436e87f9e11bce41cb27b84860298fd5eb8332f466aec95e2abf63fbfcbe"
+    },
+    {
+      "file": "inspection/320-font-2-onboarding-1.jpg",
+      "sha256": "307f593eafb391536f4488b2a2725e3a85f22ede4b1163f31286a2f959416df6"
+    },
+    {
+      "file": "inspection/320-font-2-onboarding-2.jpg",
+      "sha256": "0e3d32bf00002c450f491791b42f3efcc46262c45b90318596a36885dd7dbc72"
+    },
+    {
+      "file": "inspection/320-font-1-known-1.jpg",
+      "sha256": "4dc1c695b4f17c1dc64e29743603fc1e03cd052221b6c1a6a7f88a7b07be87c1"
+    },
+    {
+      "file": "inspection/320-font-1-known-2.jpg",
+      "sha256": "8b3a0098e4fd97034e030dcaeea7c559b6f0c8e16e3eb19c3643859b3f22c47f"
+    },
+    {
+      "file": "inspection/320-font-2-known-1.jpg",
+      "sha256": "2864e7ed24d82a0464a796e563b0335d903fb5d754686c994cfb3bfc8dba373c"
+    },
+    {
+      "file": "inspection/320-font-2-known-2.jpg",
+      "sha256": "f6c0590b0b37575878f2235a96c3d6d989008d3256c0e382c6d106eb2030de12"
+    },
+    {
+      "file": "inspection/360-font-1-known-1.jpg",
+      "sha256": "f2a9cac2a37fc872ab564447361fe766ec21ea29490397014e9dd7d37357ec73"
+    },
+    {
+      "file": "inspection/360-font-1-known-2.jpg",
+      "sha256": "faeb2b0a7c911fbe913e849060ccb787a9ac1d7dce010531374d2b567b4fa2de"
+    },
+    {
+      "file": "inspection/360-font-2-known-1.jpg",
+      "sha256": "bee62040dc966d1eb1f509c8f393294cada46da7ef4e299a2367574485ff36c1"
+    },
+    {
+      "file": "inspection/360-font-2-known-2.jpg",
+      "sha256": "9307699fc859d11327e641ee4dbf897b9e6761eb1fbeadb0dd2db4f9913ee8cd"
+    },
+    {
+      "file": "inspection/360-font-2-known-3.jpg",
+      "sha256": "2e56ab39916fea38140c67974a0f6c7d92d521e79afd9b65a769be66b7af7616"
+    },
+    {
+      "file": "inspection/393-font-1-known-1.jpg",
+      "sha256": "13b05d570c849835168b65e3d1a3070b0f68d3276e7f0c16ad04115104ee2044"
+    },
+    {
+      "file": "inspection/393-font-1-known-2.jpg",
+      "sha256": "537533ffab24fb59bd7e43df39d730a9f0c5ab43e5b5c8f319df25cf3f98f4ca"
+    },
+    {
+      "file": "inspection/393-font-1-feedback-1.jpg",
+      "sha256": "0b7f97f31138ccccc846404b79e348abebd191a50aa5c58610529cdb0c3e7f71"
+    },
+    {
+      "file": "inspection/393-font-1-feedback-2.jpg",
+      "sha256": "e676c0198888329c3baee8b0a871a11bd8025a7bad901c2b09a840fd3f486524"
+    },
+    {
+      "file": "inspection/393-font-1-feedback-3.jpg",
+      "sha256": "504f2898a074918f6c3519c403e6ee23a3dc228ad5ddd0c6d00c555d170691ca"
+    },
+    {
+      "file": "inspection/393-font-1-feedback-4.jpg",
+      "sha256": "2d54cafe9ae20fad8d002b36784398dc750a3bd2bedf9d117b0575910bc9dbb8"
+    },
+    {
+      "file": "inspection/320-font-2-feedback-1.jpg",
+      "sha256": "e4ba0f0b39137cb0744d293ce05188d409aba03cad4228c9c74a0c9901c060a9"
+    },
+    {
+      "file": "inspection/320-font-2-feedback-2.jpg",
+      "sha256": "71c4b860edab193ab6b434cd3c84ef9bc4fccdb7149ef71c11bf3d7cc1b7075b"
+    },
+    {
+      "file": "inspection/320-font-2-feedback-3.jpg",
+      "sha256": "25307b409b5338e94368a04fcf8aab3c9a95666dab24ba6d6a84db83b868abab"
+    },
+    {
+      "file": "inspection/320-font-2-feedback-4.jpg",
+      "sha256": "fcc4471022852089a06cfeb6e60a28c65455ce08d72d8b89e02ecb655c1fd611"
+    },
+    {
+      "file": "inspection/320-font-2-feedback-5.jpg",
+      "sha256": "b0ad6ab7ec4b519734f23c4e93369974e17f95c34984b199e67354ac700b5aff"
+    },
+    {
+      "file": "inspection/320-font-2-feedback-6.jpg",
+      "sha256": "e81893313a9b7096010b39ee97b477becdbfabbcf5c40cc677cf1b7ac55ac5f7"
+    },
+    {
+      "file": "inspection/320-font-2-feedback-7.jpg",
+      "sha256": "0171a562c3af0de759d60c28d244b77b864652e59e806da7a9fb400689414206"
+    },
+    {
+      "file": "inspection/320-font-2-feedback-8.jpg",
+      "sha256": "c0b567572fdc2436e7903efe5042d8f0cbc409f89279b164eaa0e21292b46b8c"
+    },
+    {
+      "file": "inspection/320-font-2-feedback-9.jpg",
+      "sha256": "2ed45706ffc401c627a2211242b72d4b2af8234de04e4eb5fae620c2132a7135"
+    },
+    {
+      "file": "inspection/320-font-2-feedback-10.jpg",
+      "sha256": "66cca5395b51fe971838a609264f44fb6cf357847556d6c2dfaeb3cf017313a5"
+    },
+    {
+      "file": "inspection/393-font-2-known-1.jpg",
+      "sha256": "50685fd4cd1b76bc7635262926775c8c69a3af181f90448c67998734cb7deb9f"
+    },
+    {
+      "file": "inspection/393-font-2-known-2.jpg",
+      "sha256": "e0660ef6a561afd70ea583bf7b15417e753011abff35336a388ec8ff85a6a8e2"
+    },
+    {
+      "file": "inspection/393-font-2-known-3.jpg",
+      "sha256": "6bdaf3005eabbe38b24f511478eeff940f630d0d34d37a1a3c82a10c40be9a31"
+    },
+    {
+      "file": "inspection/412-font-1-known-1.jpg",
+      "sha256": "5b4df8a27ac39952f09ba136d1d90b1ca99b7874503d657cd017f3aa40d80371"
+    },
+    {
+      "file": "inspection/412-font-1-known-2.jpg",
+      "sha256": "dc8f8e599446a9a40e15771b0e8eccd2866aabdbae0ff25637227c14be341b8e"
+    },
+    {
+      "file": "inspection/412-font-2-known-1.jpg",
+      "sha256": "bf100568bdbc1cf5de1aaf39176516ed5b2df151a033778b5fab9546986f2cb1"
+    },
+    {
+      "file": "inspection/412-font-2-known-2.jpg",
+      "sha256": "ef7a14510ad9a4d1326f8ff94b2612f1156ce4cdba1c17fc1504f27e0c9d388d"
+    },
+    {
+      "file": "inspection/320-font-1-choice-1.jpg",
+      "sha256": "e9589fd4af8ca6170b0d34497cc22eda71cd75fbee788673a925cbea5911795e"
+    },
+    {
+      "file": "inspection/320-font-2-choice-1.jpg",
+      "sha256": "1cc53fdae2dae7a07db3ef7ec5be10500fbb34e78f38d11c20e7601afd82c5cb"
+    },
+    {
+      "file": "inspection/320-font-2-choice-2.jpg",
+      "sha256": "b6d4ef6d6184c6915107071325a2acaadaddb1fd38a130a3bfecd92a5d658e51"
+    },
+    {
+      "file": "inspection/360-font-1-choice-1.jpg",
+      "sha256": "68549ec1e43f692900e971078e9fe1bc3a9cc0a5f4ec163e1c06901415308203"
+    },
+    {
+      "file": "inspection/360-font-2-choice-1.jpg",
+      "sha256": "97b3fbaad24ada25893b9d3d29facedda3620a3d8267084000f52cbac72a20f4"
+    },
+    {
+      "file": "inspection/360-font-2-choice-2.jpg",
+      "sha256": "fedf78eff4a702b122142693efa7aa815b1fac892ec877d99a5c6c8a5529906f"
+    },
+    {
+      "file": "inspection/393-font-1-choice-1.jpg",
+      "sha256": "dd4985979cf00bed5ebf649f9ffbea6b86232d5b61fdbe8ae6dfd3b5e9cdf532"
+    },
+    {
+      "file": "inspection/393-font-2-choice-1.jpg",
+      "sha256": "d0cd96b4eb837997ded4dca6646534ae4141fcad3849a64546481475d8f64d8d"
+    },
+    {
+      "file": "inspection/393-font-2-choice-2.jpg",
+      "sha256": "f10d7be5fc84ae3fc68625218c81d40439aefa26975fcf05e7b5ebafb066293c"
+    },
+    {
+      "file": "inspection/412-font-1-choice-1.jpg",
+      "sha256": "f9184f6b1a4e4f4f3e8749860634cfa5b5126bf949870c3803d190fbe62bfa73"
+    },
+    {
+      "file": "inspection/412-font-2-choice-1.jpg",
+      "sha256": "74c77e629edd543393c0631ba0cb5f0dd29ac9dd2e0ae3b338330b7a34a0d2c9"
+    },
+    {
+      "file": "inspection/412-font-2-choice-2.jpg",
+      "sha256": "ece65faedf1d08194bb266e74a02f69a9bc982ad341722bf1d1b593cfbe83222"
+    },
+    {
+      "file": "inspection/320-font-1-empty-1.jpg",
+      "sha256": "a8af5d78532d59761f39eb513186c1d67a667600afa982b01956cf5d39ecb4e3"
+    },
+    {
+      "file": "inspection/320-font-2-empty-1.jpg",
+      "sha256": "d9b951735fa1cd8d42600668553ca59b1330f3047b7dd46a0171d658ea2b01cf"
+    },
+    {
+      "file": "inspection/360-font-1-empty-1.jpg",
+      "sha256": "f7551e50d1b861560f47da4e1544e40b3de135838de9904a9c6d262f59f7984d"
+    },
+    {
+      "file": "inspection/360-font-2-empty-1.jpg",
+      "sha256": "1094f4be44ff69d07ebcda799f60e20691193fd15eda037ad35f4f35d2b8ca44"
+    },
+    {
+      "file": "inspection/393-font-1-empty-1.jpg",
+      "sha256": "5a70b2b2a47a9cb9070237fea29ba72fecc84e59682a72e023956b94231d146f"
+    },
+    {
+      "file": "inspection/393-font-2-empty-1.jpg",
+      "sha256": "b196eb56afa3b7eeb0aa2a3104d7b80a8efcbcaac6bae5d6a92f1b9b2e03ac14"
+    },
+    {
+      "file": "inspection/412-font-1-empty-1.jpg",
+      "sha256": "afc6829f6309cf341d4d1374d7c6dfc1511dd18d73b51707ec242f55b7087f23"
+    },
+    {
+      "file": "inspection/412-font-2-empty-1.jpg",
+      "sha256": "0d50afb84f2fe59e345ceb33f5a99a5966d47d906f336c08f9c5b4e9fffe2bda"
+    },
+    {
+      "file": "inspection/360-font-1-overview-1.jpg",
+      "sha256": "08186a6e65b38a8c6b685aa0a7b17152948966591bca84632752f512916cfbbe"
+    },
+    {
+      "file": "inspection/360-font-1-overview-2.jpg",
+      "sha256": "643fac3cd24071af0cf6045f77806ab8ed2204abc40dc5e506d6860d3aee284d"
+    },
+    {
+      "file": "inspection/360-font-1-overview-3.jpg",
+      "sha256": "8cf4dcc587e99cec9bdf007acae7b65f0e593d4cd3c5de2ce212072038bd9b43"
+    },
+    {
+      "file": "inspection/412-font-1-overview-1.jpg",
+      "sha256": "bd9ae4d95e7ef142228820dfcbe133952d0cddd923f7cc1ad84261a6eed4d142"
+    },
+    {
+      "file": "inspection/412-font-1-overview-2.jpg",
+      "sha256": "c5859b2cc191118d1193dbbb27e37072a1bd6d8cc3e776eedf144db7c8ef3562"
+    },
+    {
+      "file": "inspection/320-font-2-incomplete-1.jpg",
+      "sha256": "d6a4f2d045776ca3178dabaf95d280f14d90165da55a1e2b39fd5f4135d7ce35"
+    },
+    {
+      "file": "inspection/320-font-2-incomplete-2.jpg",
+      "sha256": "60d790942bbeb52780a1a779287dedf63d0e3c392b033f145142c0fa03cba488"
+    },
+    {
+      "file": "inspection/320-font-2-boundaries-1.jpg",
+      "sha256": "053d1b74f844a1e0363ae1487ce134e301fe3d740f33cd86a59f64f59b1d0561"
+    },
+    {
+      "file": "inspection/320-font-2-boundaries-2.jpg",
+      "sha256": "bdf7a2156163eeb6d0305e3ff805097cf3ee8eb9fab0db2db9a18c20dd6fde0b"
+    },
+    {
+      "file": "inspection/320-font-2-boundaries-3.jpg",
+      "sha256": "7649f3fef10db40217b544da748bbcd39480dc90fe9556516719d4c893ba1939"
+    },
+    {
+      "file": "inspection/320-font-2-boundaries-4.jpg",
+      "sha256": "07fd232c645f29f7ca14df173ce22c41f9cf3ddc11aa8b52e6bdae4339c52722"
+    },
+    {
+      "file": "inspection/393-font-1-protocol-run-1.jpg",
+      "sha256": "04ec79cfe3326614c38b4faa68e94b7a1d857379de0f6db9afd729e90ad3d2b4"
+    },
+    {
+      "file": "inspection/393-font-1-protocol-run-2.jpg",
+      "sha256": "bd1a8b70870ab0fd9d93350567af2998b75dcbc1b97ff22795b50478ed43e8c1"
+    },
+    {
+      "file": "inspection/393-font-1-protocol-run-3.jpg",
+      "sha256": "17b2f9caab78fb8c1ee12d60c7fe6f22086741fc3ef6457a66ec683cd88cb59b"
+    },
+    {
+      "file": "inspection/393-font-1-protocol-run-4.jpg",
+      "sha256": "7c7266164d9613e121bcb4840dbd2b2b597f8e2c4ae881d78d91cfc299fccd39"
+    },
+    {
+      "file": "inspection/393-font-1-protocol-bike-1.jpg",
+      "sha256": "9dd69865848c089fc0cfcb401019b877cf79c72eed6b08994cb11193b07cb77b"
+    },
+    {
+      "file": "inspection/393-font-1-protocol-bike-2.jpg",
+      "sha256": "93ccbb1d690eb0b396e83d707cc0caa66e65036fa633de528a9d5bdd12ae5955"
+    },
+    {
+      "file": "inspection/393-font-1-protocol-bike-3.jpg",
+      "sha256": "524b016fab5a337b97f50fc00b1546fb31ee6ee7cdf44958ee2df11f2b5f87ac"
+    },
+    {
+      "file": "inspection/393-font-1-protocol-swim-1.jpg",
+      "sha256": "6e5a9911b21d8224d5b534ead8894c262fddfdf093f36037f8c23581e1ef896e"
+    },
+    {
+      "file": "inspection/393-font-1-protocol-swim-2.jpg",
+      "sha256": "e8eb9013a863aa94ee8b16aafa5f19366891f04dd289c4e1f41de6cb139fbc3e"
+    },
+    {
+      "file": "inspection/393-font-1-protocol-swim-3.jpg",
+      "sha256": "5a255f365ba73a539fdf582914864ffce2db66c9d73fef2951fddd8f82b5e9d6"
+    },
+    {
+      "file": "inspection/393-font-1-protocol-swim-4.jpg",
+      "sha256": "f755ae15f57a2935f90435b26d2398556f2e20fda6b67605c71f77e6d5ddd5ef"
+    },
+    {
+      "file": "inspection/393-font-1-protocol-swim-5.jpg",
+      "sha256": "b05859504f632ead4ddabe378166754636b31939c1ee36f0266ed0ce622295fc"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-1.jpg",
+      "sha256": "81b212ff29dff425090f7b4ec3fe616b718b11e83124569c6909142249b0bca7"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-2.jpg",
+      "sha256": "b45a88d268162cbc2cf9315a3cdde3b5112e201878d974a2e76d79a2ca719539"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-3.jpg",
+      "sha256": "853dc6d1e6a01d692ce7e2b9a3d061592614c82dc4b1b5e05e113f871d330801"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-4.jpg",
+      "sha256": "c67bc726868432ae16ec2ff57d31db152190e52281873edc429e5a5d2373c8d0"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-5.jpg",
+      "sha256": "c9880407fb91231c88e7b61ab580cc2b9382d32406d35f2dd27fff159e667868"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-6.jpg",
+      "sha256": "68d420c3f0d92995adc37ee967991b83fc0ae991e240d2df105607748a3fc3e9"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-7.jpg",
+      "sha256": "bd588d96af481dd49a84a2f5b707df1df2ace9a70518d219cf6efd7c64151033"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-8.jpg",
+      "sha256": "e427bca2896d10605456aa04d02802416a6b44f3e7afd0e1cede39fd5dc19fe9"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-9.jpg",
+      "sha256": "a28cad147c9b4edb8afaa8687070e4c5aa59807be3ced8d7b77a22d6c3d458b3"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-10.jpg",
+      "sha256": "b8b8380c5f072942f6da6b5f1e75237077464b400eb0798ba74a77550615b8a8"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-11.jpg",
+      "sha256": "41a4c1790ed4c98514114f444c093a1d771a245065a100ed541f4cd8a66a6bc2"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-12.jpg",
+      "sha256": "12fad7193b77f14aa431111c194b7feb1ce81b9d80473de9fb5c0cd0f5337bed"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-13.jpg",
+      "sha256": "249bc2c850f6476c4386bd952aeac494908297d5ddfea47f40f3eb6820554a20"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-14.jpg",
+      "sha256": "f6145ecf201d6586dda53c47e44584fa810127b0c8212f3d92e889500d24a7c0"
+    },
+    {
+      "file": "inspection/320-font-2-protocol-swim-15.jpg",
+      "sha256": "bb295bb9d05566c907fa48a9a6a62c7acb3d545986e131d341c408ccb2b951ad"
+    },
+    {
+      "file": "inspection/320-font-1-overview-1.jpg",
+      "sha256": "35f94f9f806eb31d61a605781e5a478fe9ae1834fa0289ae24ad03c9c7604fc0"
+    },
+    {
+      "file": "inspection/320-font-1-overview-2.jpg",
+      "sha256": "16cb3b25bce4840de209b6bdfaba4d387f7b7c868d0d3499a9020923ce4573e0"
+    },
+    {
+      "file": "inspection/320-font-1-overview-3.jpg",
+      "sha256": "d18c9850bdbe87a53a591294fddcbd403be6374e422800900e505b4f35d28f2e"
+    },
+    {
+      "file": "inspection/320-font-1-overview-4.jpg",
+      "sha256": "6193c11b9d6228a6c1c3ca1fb97bd0371ef00b98a5bc6fe941f45604c2693ce2"
+    },
+    {
+      "file": "inspection/360-font-2-overview-1.jpg",
+      "sha256": "0b874d0189f8c778fbaee0692c188fdffb7bfdd81b13172dc3fdebe346c0354f"
+    },
+    {
+      "file": "inspection/360-font-2-overview-2.jpg",
+      "sha256": "bdeb98ca1db3b50aa319e15a455efa5ab1e0bcec75c029ea4aa3e702f1f95826"
+    },
+    {
+      "file": "inspection/360-font-2-overview-3.jpg",
+      "sha256": "2b5145051906c9dcd424ca77b8fdb92d9a35b98e20853754006fbe2fb941eb19"
+    },
+    {
+      "file": "inspection/360-font-2-overview-4.jpg",
+      "sha256": "fdf1dea40c8f3de3fa800d7a52e8d61a898c2d1373a368a7a8517b010173f1eb"
+    },
+    {
+      "file": "inspection/393-font-2-overview-1.jpg",
+      "sha256": "315cf237104362618f98641035253a139e57b07ea9322e2ea57153159f1da39d"
+    },
+    {
+      "file": "inspection/393-font-2-overview-2.jpg",
+      "sha256": "2d13c44fc1af56403d7c8a3d7d1b130de80d2170589dfd060adbac61c14c7587"
+    },
+    {
+      "file": "inspection/393-font-2-overview-3.jpg",
+      "sha256": "31dd394eecbbbe267cc8f3abcb8deb9cdd0be09375fdd6d22dc3eb10e0258e0f"
+    },
+    {
+      "file": "inspection/393-font-2-overview-4.jpg",
+      "sha256": "30b68c39706c0347fed07b3be8dddc444f46d4ce6658baa8b301c1eac5887227"
+    },
+    {
+      "file": "inspection/412-font-2-overview-1.jpg",
+      "sha256": "c185a1d2044b16cc3fe29153c179714a6361861991c0a2fd51998d834230c6d9"
+    },
+    {
+      "file": "inspection/412-font-2-overview-2.jpg",
+      "sha256": "47b537d661cbe54fc83b3da599a8470f1ea6cd8480bf83e375d434e487c44bbb"
+    },
+    {
+      "file": "inspection/412-font-2-overview-3.jpg",
+      "sha256": "e89f705f9be31e7aa706a34418eb9381d75e569696d184bcf832d29e0b13b472"
+    }
+  ],
+  "findings": [
+    "Branded landscape, context hero, discipline icons/statuses, forest actions and supplied zone tables reviewed against M3.",
+    "All present state variants retain distinction and provenance; hidden values absent.",
+    "Phone checkbox rows and optional boundary columns corrected; superseded captures rejected.",
+    "At 320 dp / 200% long source words wrap naturally, with full copy available through scrolling.",
+    "Source-backed run/bike/swim current forms, no-protocol, incomplete and independent result decisions reviewed."
+  ],
+  "limits": [
+    "Inert public DTOs, no backend persistence or protocol execution claimed.",
+    "Physical iOS/device and spoken screen reader release gates remain open."
+  ]
+}

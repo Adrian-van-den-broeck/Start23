@@ -7,8 +7,8 @@ import { Card } from '../primitives/Card';
 import { Text } from '../primitives/Text';
 import { layout, space } from '../tokens';
 
-export function BrandedFormHeader({ caption, onBack, onSignOut, children }: {
-  caption: string; onBack?: () => void; onSignOut: () => Promise<void>; children?: ReactNode;
+export function BrandedFormHeader({ caption, onBack, onSignOut, children, backLabel = 'Week' }: {
+  caption: string; backLabel?: string; onBack?: () => void; onSignOut: () => Promise<void>; children?: ReactNode;
 }) {
   const { width, fontScale } = useWindowDimensions();
   const stacked = width < 393 || fontScale > 1;
@@ -16,7 +16,7 @@ export function BrandedFormHeader({ caption, onBack, onSignOut, children }: {
   return <View style={{ gap: space[8] }}>
     {stacked ? brand : null}
     <View style={styles.utility}>
-      {stacked ? (onBack ? <HeaderAction label="Week" onPress={onBack} /> : null) : <View style={styles.column}>{onBack ? <HeaderAction label="Week" onPress={onBack} /> : null}</View>}
+      {stacked ? (onBack ? <HeaderAction label={backLabel} onPress={onBack} /> : null) : <View style={styles.column}>{onBack ? <HeaderAction label={backLabel} onPress={onBack} /> : null}</View>}
       {!stacked ? <View style={styles.column}>{brand}</View> : null}
       <View style={[styles.actions, !stacked && styles.column, styles.trailing]}>{children}<Button label="Uit" accessibilityLabel="Afmelden" onPress={onSignOut} variant="secondary" trailingIcon="logout" /></View>
     </View>

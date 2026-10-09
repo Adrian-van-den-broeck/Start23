@@ -1,0 +1,31 @@
+[
+  {
+    "source": "backend/app/modules/calibration/domain.py",
+    "hash": "a40d097dd693a2ba4344840329c0f1415efee3713c6ad9b69743fc2fa3aec2c4",
+    "rootExportSourceMatchesAcceptedWorktree": true,
+    "comparison": "Source text normalized to LF; original worktree SHA256 retained"
+  },
+  {
+    "source": "backend/app/modules/calibration/service.py",
+    "hash": "4b931a124bdfa68d4b0e2af6e93d2530b11f9880de82e879d02c0f465541e5d2",
+    "rootExportSourceMatchesAcceptedWorktree": true,
+    "comparison": "Source text normalized to LF; original worktree SHA256 retained"
+  },
+  {
+    "source": "backend/app/modules/calibration/schemas.py",
+    "hash": "dc20b36ca3e86849a9dea0d79dc915f23f66c5a608d058c9c947a773cffff230",
+    "rootExportSourceMatchesAcceptedWorktree": true,
+    "comparison": "Source text normalized to LF; original worktree SHA256 retained"
+  },
+  {
+    "source": "backend/app/modules/physiology/rpe_zones.py",
+    "hash": "fa3c81cdfde37f6f42ccc0df815fd02b31bef455c9bde66228cd023464965848",
+    "rootExportSourceMatchesAcceptedWorktree": true,
+    "comparison": "Source text normalized to LF; original worktree SHA256 retained"
+  },
+  {
+    "source": "current-protocol-projections.json",
+    "hash": "b2e3ecca29c36ddd357e4dfae8166cc4286677bdc9ddb264f6ea3b7eb5e6277f",
+    "method": "Read-only CalibrationService.protocols(Discipline), model_dump(mode=json). No DB or athlete session."
+  }
+]
