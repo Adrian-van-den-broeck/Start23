@@ -1,0 +1,48 @@
+import { useEffect, useRef, useState } from 'react';
+import { Text, View } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
+import { CheckInScreen } from '../src/screens/CheckInScreen';
+import { ScreenState } from '../src/components/ScreenState';
+import { AuthScreen } from '../src/screens/AuthScreen';
+import { IntegrationsScreen } from '../src/screens/IntegrationsScreen';
+import { PioneerAccessScreen } from '../src/screens/PioneerAccessScreen';
+import { PlanningScreen } from '../src/screens/PlanningScreen';
+import { ProfileScreen } from '../src/screens/ProfileScreen';
+import { onboarding, activePlan } from '../src/features/planning/planning.test-fixtures';
+import fixtures from '../../docs/ui/evidence/final-visual-batch-12/public-fixtures.json';
+import { useLanguage } from '../src/i18n/LanguageProvider';
+let fixture='entry';let record=(value:string)=>{};
+const originalFetch=globalThis.fetch;
+const baselineLanguage=SecureStore.getItemAsync('start23.language-preference');
+globalThis.fetch=async(input,init)=>{
+ const url=String(input);
+ if(url.startsWith('http://127.0.0.1:8085/batch12-fixture.json'))return originalFetch(input,init);
+ if(!url.startsWith('http://127.0.0.1:9/'))throw new Error('Review transport blocked');
+ const endpoint=url.slice('http://127.0.0.1:9'.length);const method=init?.method??'GET';let value:unknown;
+ if(method!=='GET')record(endpoint.startsWith('/auth/')?'Auth request (credentials excluded)':endpoint+' '+String(init?.body??''));
+ if(endpoint.startsWith('/auth/'))return new Response(JSON.stringify({error_code:'invalid_credentials',msg:'Invalid login credentials'}),{status:400});
+ if(endpoint==='/api/v1/checkins')value=fixture==='saved'?fixtures.saved:fixture==='confirmed'||fixture==='error'?fixtures.confirmed:fixtures.open;
+ else if(endpoint.endsWith('/context-candidates'))value=fixtures.candidate;
+ else if(endpoint.endsWith('/context-confirmation'))value=fixtures.confirmed;
+ else if(endpoint.endsWith('/context'))value=fixtures.saved;
+ else if(endpoint.endsWith('/plan-proposals'))return new Response(JSON.stringify({error:{code:'validation_failed',message:'Complete the current onboarding upgrade before planning.'}}),{status:422});
+ else if(endpoint==='/api/v1/integrations/polar'){if(fixture==='unlinked')return new Response(JSON.stringify({error:{code:'not_found'}}),{status:404});value=fixture==='reconnect'?{...fixtures.connection,status:'reconnect_required'}:fixtures.connection;}
+ else if(endpoint==='/api/v1/integrations/polar/imports')value=fixture==='history'?fixtures.imports:[];
+ else if(endpoint.includes('/integrations/polar/oauth/start'))return new Response(JSON.stringify({error:{code:'provider_unavailable'}}),{status:503});
+ else if(endpoint==='/api/v1/pioneer-access/redemption')value=null;
+ else if(endpoint==='/api/v1/pioneer-access/redemptions')return new Response(JSON.stringify({error:{code:'pioneer_code_expired'}}),{status:422});
+ else if(endpoint==='/api/v1/onboarding')value=onboarding;
+ else if(endpoint.includes('/weekly-plans/'))value=activePlan;
+ else if(endpoint.includes('/calibration/status'))value={setups:[],evaluations:[],threshold_decisions:[]};
+ else if(endpoint.includes('/calendar'))value={from_date:'2026-10-05',to_date:'2026-10-18',workouts:[],rest_days:[]};
+ else if(method!=='GET')value={};
+ else throw new Error('Unmapped fixture '+endpoint);
+ return new Response(JSON.stringify(value),{status:200,headers:{'Content-Type':'application/json'}});
+};
+export default function Review(){
+ const [config,setConfig]=useState('entry');const [nonce,setNonce]=useState('');const [callback,setCallback]=useState('');const {setPreference}=useLanguage();const languageSetter=useRef(setPreference);languageSetter.current=setPreference;record=setCallback;
+ useEffect(()=>{let seen='';const timer=setInterval(()=>{void originalFetch('http://127.0.0.1:8085/batch12-fixture.json?t='+Date.now()).then(r=>r.json()).then(async c=>{if(c.nonce!==seen){seen=c.nonce;fixture=c.state;setConfig(c.state);setNonce(c.nonce);setCallback('');if(c.state==='restore-language'){const prior=await baselineLanguage;if(prior===null)await SecureStore.deleteItemAsync('start23.language-preference');else await SecureStore.setItemAsync('start23.language-preference',prior);record('language baseline restored');}else await languageSetter.current(c.language??'nl');}});},700);return()=>clearInterval(timer);},[]);
+ const back=()=>record('back');const signOut=async()=>{record('signout');};const key=config+nonce;
+ const body=config==='configuration'?<ScreenState title="Configuratie ontbreekt" message="Configureer EXPO_PUBLIC_SUPABASE_URL en de publishable key."/>:config==='session-loading'?<ScreenState loading title="Wombo wordt klaargezet"/>:config.startsWith('auth')?<AuthScreen key={key}/>:['unlinked','connected','history','reconnect'].includes(config)?<IntegrationsScreen key={key} accessToken="inert-review-token" onBack={back} onOpenActivities={()=>record('activities')} onSignOut={signOut}/>:config.startsWith('pioneer')?<PioneerAccessScreen key={key} accessToken="inert-review-token" onBack={back}/>:config==='sheet'?<PlanningScreen key={key} accessToken="inert-review-token" onSignOut={signOut} onBackToOnboarding={back} onOpenActivities={back} onOpenCheckIn={back} onOpenIntegrations={()=>record('integrations')} onOpenProfile={()=>record('profile')} onOpenZoneProfile={back}/>:config==='profile'?<ProfileScreen key={key} accessToken="inert-review-token" onBack={back} onOpenPioneerAccess={()=>record('pioneer')} onOpenTests={()=>record('tests')} onSignOut={signOut}/>:<CheckInScreen key={key} accessToken="inert-review-token" onBack={back} onSignOut={signOut}/>;
+ return <View style={{flex:1,backgroundColor:'#FAFAF6'}}>{body}<View><Text testID={'batch-12-fixture-'+config}>Review · {config}</Text><Text testID="batch-12-build-final-4">Inert review only</Text><Text testID="batch-12-callback">{callback}</Text></View></View>;
+}

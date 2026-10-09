@@ -1,0 +1,1205 @@
+{
+  "checks": [
+    {
+      "name": "auth-error 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "auth-error 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "auth-error 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "auth-error 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "auth-error 320/2 real auth mode/fields",
+      "pass": true
+    },
+    {
+      "name": "auth-error 320/2 secure password fields",
+      "pass": true
+    },
+    {
+      "name": "auth-error 320/2 actual local validation",
+      "pass": true
+    },
+    {
+      "name": "entry 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "entry 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "entry 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "entry 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "entry 393/1 exact entry fields/action",
+      "pass": true
+    },
+    {
+      "name": "entry 360/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "entry 360/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "entry 360/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "entry 360/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "entry 360/1 exact entry fields/action",
+      "pass": true
+    },
+    {
+      "name": "confirmed 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "confirmed 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "confirmed 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "confirmed 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "confirmed 393/1 confirmed context only",
+      "pass": true
+    },
+    {
+      "name": "reconnect 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "reconnect 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "reconnect 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "reconnect 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "reconnect 320/2 imports/privacy/destination",
+      "pass": true
+    },
+    {
+      "name": "reconnect 320/2 fresh consent required",
+      "pass": true
+    },
+    {
+      "name": "auth 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "auth 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "auth 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "auth 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "auth 320/2 real auth mode/fields",
+      "pass": true
+    },
+    {
+      "name": "auth 320/2 secure password fields",
+      "pass": true
+    },
+    {
+      "name": "questions 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "questions 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "questions 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "questions 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "questions 320/2 all restriction/sport/source fields survive",
+      "pass": true
+    },
+    {
+      "name": "questions 320/2 no confirmed/completed presentation",
+      "pass": true
+    },
+    {
+      "name": "pioneer-error 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "pioneer-error 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "pioneer-error 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "pioneer-error 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "pioneer-error 320/2 code/destination survives",
+      "pass": true
+    },
+    {
+      "name": "pioneer-error 320/2 public rejected-code error",
+      "pass": true
+    },
+    {
+      "name": "selected 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "selected 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "selected 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "selected 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "selected 320/2 all restriction/sport/source fields survive",
+      "pass": true
+    },
+    {
+      "name": "selected 320/2 no confirmed/completed presentation",
+      "pass": true
+    },
+    {
+      "name": "selected 320/2 selected drafts",
+      "pass": true
+    },
+    {
+      "name": "entry 320/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "entry 320/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "entry 320/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "entry 320/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "entry 320/1 exact entry fields/action",
+      "pass": true
+    },
+    {
+      "name": "pioneer 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "pioneer 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "pioneer 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "pioneer 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "pioneer 320/2 code/destination survives",
+      "pass": true
+    },
+    {
+      "name": "questions 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "questions 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "questions 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "questions 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "questions 393/1 all restriction/sport/source fields survive",
+      "pass": true
+    },
+    {
+      "name": "questions 393/1 no confirmed/completed presentation",
+      "pass": true
+    },
+    {
+      "name": "auth-register 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "auth-register 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "auth-register 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "auth-register 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "auth-register 320/2 real auth mode/fields",
+      "pass": true
+    },
+    {
+      "name": "auth-register 320/2 secure password fields",
+      "pass": true
+    },
+    {
+      "name": "auth-register 320/2 register confirmation field",
+      "pass": true
+    },
+    {
+      "name": "reconnect 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "reconnect 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "reconnect 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "reconnect 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "reconnect 393/1 imports/privacy/destination",
+      "pass": true
+    },
+    {
+      "name": "reconnect 393/1 fresh consent required",
+      "pass": true
+    },
+    {
+      "name": "selected 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "selected 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "selected 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "selected 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "selected 393/1 all restriction/sport/source fields survive",
+      "pass": true
+    },
+    {
+      "name": "selected 393/1 no confirmed/completed presentation",
+      "pass": true
+    },
+    {
+      "name": "selected 393/1 selected drafts",
+      "pass": true
+    },
+    {
+      "name": "candidate 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "candidate 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "candidate 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "candidate 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "candidate 320/2 all restriction/sport/source fields survive",
+      "pass": true
+    },
+    {
+      "name": "candidate 320/2 no confirmed/completed presentation",
+      "pass": true
+    },
+    {
+      "name": "candidate 320/2 temporary review actions",
+      "pass": true
+    },
+    {
+      "name": "error 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "error 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "error 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "error 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "error 320/2 confirmed context only",
+      "pass": true
+    },
+    {
+      "name": "error 320/2 documented rejection displayed",
+      "pass": true
+    },
+    {
+      "name": "auth 360/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "auth 360/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "auth 360/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "auth 360/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "auth 360/1 real auth mode/fields",
+      "pass": true
+    },
+    {
+      "name": "auth 360/1 secure password fields",
+      "pass": true
+    },
+    {
+      "name": "auth 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "auth 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "auth 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "auth 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "auth 393/1 real auth mode/fields",
+      "pass": true
+    },
+    {
+      "name": "auth 393/1 secure password fields",
+      "pass": true
+    },
+    {
+      "name": "profile 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "profile 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "profile 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "profile 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "profile 393/1 existing profile destinations",
+      "pass": true
+    },
+    {
+      "name": "profile 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "profile 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "profile 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "profile 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "profile 320/2 existing profile destinations",
+      "pass": true
+    },
+    {
+      "name": "pioneer 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "pioneer 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "pioneer 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "pioneer 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "pioneer 393/1 code/destination survives",
+      "pass": true
+    },
+    {
+      "name": "auth 320/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "auth 320/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "auth 320/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "auth 320/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "auth 320/1 real auth mode/fields",
+      "pass": true
+    },
+    {
+      "name": "auth 320/1 secure password fields",
+      "pass": true
+    },
+    {
+      "name": "error 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "error 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "error 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "error 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "error 393/1 confirmed context only",
+      "pass": true
+    },
+    {
+      "name": "error 393/1 documented rejection displayed",
+      "pass": true
+    },
+    {
+      "name": "saved 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "saved 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "saved 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "saved 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "saved 320/2 all restriction/sport/source fields survive",
+      "pass": true
+    },
+    {
+      "name": "saved 320/2 no confirmed/completed presentation",
+      "pass": true
+    },
+    {
+      "name": "saved 320/2 source/expiry and separate confirm",
+      "pass": true
+    },
+    {
+      "name": "entry 412/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "entry 412/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "entry 412/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "entry 412/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "entry 412/1 exact entry fields/action",
+      "pass": true
+    },
+    {
+      "name": "connected 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "connected 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "connected 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "connected 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "connected 320/2 imports/privacy/destination",
+      "pass": true
+    },
+    {
+      "name": "connected 320/2 supported import selection",
+      "pass": true
+    },
+    {
+      "name": "pioneer-error 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "pioneer-error 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "pioneer-error 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "pioneer-error 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "pioneer-error 393/1 code/destination survives",
+      "pass": true
+    },
+    {
+      "name": "pioneer-error 393/1 public rejected-code error",
+      "pass": true
+    },
+    {
+      "name": "auth-register 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "auth-register 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "auth-register 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "auth-register 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "auth-register 393/1 real auth mode/fields",
+      "pass": true
+    },
+    {
+      "name": "auth-register 393/1 secure password fields",
+      "pass": true
+    },
+    {
+      "name": "auth-register 393/1 register confirmation field",
+      "pass": true
+    },
+    {
+      "name": "configuration 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "configuration 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "configuration 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "configuration 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "configuration 320/2 missing configuration remains explicit",
+      "pass": true
+    },
+    {
+      "name": "history 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "history 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "history 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "history 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "history 320/2 imports/privacy/destination",
+      "pass": true
+    },
+    {
+      "name": "history 320/2 supported import selection",
+      "pass": true
+    },
+    {
+      "name": "history 320/2 source-backed bounded retry",
+      "pass": true
+    },
+    {
+      "name": "candidate 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "candidate 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "candidate 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "candidate 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "candidate 393/1 all restriction/sport/source fields survive",
+      "pass": true
+    },
+    {
+      "name": "candidate 393/1 no confirmed/completed presentation",
+      "pass": true
+    },
+    {
+      "name": "candidate 393/1 temporary review actions",
+      "pass": true
+    },
+    {
+      "name": "saved 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "saved 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "saved 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "saved 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "saved 393/1 all restriction/sport/source fields survive",
+      "pass": true
+    },
+    {
+      "name": "saved 393/1 no confirmed/completed presentation",
+      "pass": true
+    },
+    {
+      "name": "saved 393/1 source/expiry and separate confirm",
+      "pass": true
+    },
+    {
+      "name": "sheet 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "sheet 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "sheet 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "sheet 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "sheet 320/2 existing sheet destinations/language/signout",
+      "pass": true
+    },
+    {
+      "name": "connected 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "connected 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "connected 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "connected 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "connected 393/1 imports/privacy/destination",
+      "pass": true
+    },
+    {
+      "name": "connected 393/1 supported import selection",
+      "pass": true
+    },
+    {
+      "name": "unlinked 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "unlinked 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "unlinked 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "unlinked 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "unlinked 320/2 imports/privacy/destination",
+      "pass": true
+    },
+    {
+      "name": "unlinked 320/2 unlinked empty",
+      "pass": true
+    },
+    {
+      "name": "sheet 360/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "sheet 360/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "sheet 360/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "sheet 360/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "sheet 360/1 existing sheet destinations/language/signout",
+      "pass": true
+    },
+    {
+      "name": "sheet 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "sheet 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "sheet 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "sheet 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "sheet 393/1 existing sheet destinations/language/signout",
+      "pass": true
+    },
+    {
+      "name": "auth 412/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "auth 412/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "auth 412/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "auth 412/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "auth 412/1 real auth mode/fields",
+      "pass": true
+    },
+    {
+      "name": "auth 412/1 secure password fields",
+      "pass": true
+    },
+    {
+      "name": "advice 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "advice 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "advice 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "advice 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "advice 320/2 all restriction/sport/source fields survive",
+      "pass": true
+    },
+    {
+      "name": "advice 320/2 no confirmed/completed presentation",
+      "pass": true
+    },
+    {
+      "name": "advice 320/2 real professional advice field",
+      "pass": true
+    },
+    {
+      "name": "confirmed 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "confirmed 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "confirmed 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "confirmed 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "confirmed 320/2 confirmed context only",
+      "pass": true
+    },
+    {
+      "name": "history 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "history 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "history 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "history 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "history 393/1 imports/privacy/destination",
+      "pass": true
+    },
+    {
+      "name": "history 393/1 supported import selection",
+      "pass": true
+    },
+    {
+      "name": "history 393/1 source-backed bounded retry",
+      "pass": true
+    },
+    {
+      "name": "configuration 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "configuration 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "configuration 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "configuration 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "configuration 393/1 missing configuration remains explicit",
+      "pass": true
+    },
+    {
+      "name": "sheet 320/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "sheet 320/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "sheet 320/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "sheet 320/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "sheet 320/1 existing sheet destinations/language/signout",
+      "pass": true
+    },
+    {
+      "name": "unlinked 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "unlinked 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "unlinked 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "unlinked 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "unlinked 393/1 imports/privacy/destination",
+      "pass": true
+    },
+    {
+      "name": "unlinked 393/1 unlinked empty",
+      "pass": true
+    },
+    {
+      "name": "session-loading 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "session-loading 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "session-loading 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "session-loading 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "session-loading 320/2 original loading destination",
+      "pass": true
+    },
+    {
+      "name": "advice 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "advice 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "advice 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "advice 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "advice 393/1 all restriction/sport/source fields survive",
+      "pass": true
+    },
+    {
+      "name": "advice 393/1 no confirmed/completed presentation",
+      "pass": true
+    },
+    {
+      "name": "advice 393/1 real professional advice field",
+      "pass": true
+    },
+    {
+      "name": "entry 320/2 build marker",
+      "pass": true
+    },
+    {
+      "name": "entry 320/2 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "entry 320/2 private load absent",
+      "pass": true
+    },
+    {
+      "name": "entry 320/2 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "entry 320/2 exact entry fields/action",
+      "pass": true
+    },
+    {
+      "name": "auth-error 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "auth-error 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "auth-error 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "auth-error 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "auth-error 393/1 real auth mode/fields",
+      "pass": true
+    },
+    {
+      "name": "auth-error 393/1 secure password fields",
+      "pass": true
+    },
+    {
+      "name": "auth-error 393/1 actual local validation",
+      "pass": true
+    },
+    {
+      "name": "sheet 412/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "sheet 412/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "sheet 412/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "sheet 412/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "sheet 412/1 existing sheet destinations/language/signout",
+      "pass": true
+    },
+    {
+      "name": "session-loading 393/1 build marker",
+      "pass": true
+    },
+    {
+      "name": "session-loading 393/1 no development overlay",
+      "pass": true
+    },
+    {
+      "name": "session-loading 393/1 private load absent",
+      "pass": true
+    },
+    {
+      "name": "session-loading 393/1 no fabricated Check-in/Pioneer success",
+      "pass": true
+    },
+    {
+      "name": "session-loading 393/1 original loading destination",
+      "pass": true
+    }
+  ],
+  "caseCount": 51
+}

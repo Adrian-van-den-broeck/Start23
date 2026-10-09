@@ -1,0 +1,32 @@
+﻿{
+    "addedMobileFiles":  [
+                             "mobile/src/screens/AuthScreen.test.tsx",
+                             "mobile/src/screens/CheckInScreen.test.tsx",
+                             "mobile/src/screens/IntegrationsScreen.test.tsx",
+                             "mobile/src/screens/PlanningSupportingSheet.test.tsx",
+                             "mobile/src/ui-v2/components/SupportingProfileMenu.test.tsx",
+                             "mobile/src/ui-v2/components/SupportingProfileMenu.tsx"
+                         ],
+    "productionFileCount":  9,
+    "testFilesAdded":  5,
+    "baseline":  "75fa891",
+    "modifiedFiles":  [
+                          "mobile/src/components/LanguageSelector.tsx",
+                          "mobile/src/components/ScreenState.tsx",
+                          "mobile/src/navigation/TrainingNavigation.test.tsx",
+                          "mobile/src/screens/AuthScreen.tsx",
+                          "mobile/src/screens/CheckInScreen.tsx",
+                          "mobile/src/screens/IntegrationsScreen.tsx",
+                          "mobile/src/screens/PioneerAccessScreen.tsx",
+                          "mobile/src/screens/PlanningControllerBoundary.test.tsx",
+                          "mobile/src/screens/PlanningCreationBoundary.test.tsx",
+                          "mobile/src/screens/PlanningDetailBoundary.test.tsx",
+                          "mobile/src/screens/PlanningProposalBoundary.test.tsx",
+                          "mobile/src/screens/PlanningScreen.tsx",
+                          "mobile/src/screens/PlanningWeekBoundary.test.tsx",
+                          "mobile/src/screens/PlanningWorkoutMoveBoundary.test.tsx",
+                          "mobile/src/ui-v2/components/FormComposition.tsx"
+                      ],
+    "existingMocksExtended":  7,
+    "protectedOwnersUnchanged":  true
+}

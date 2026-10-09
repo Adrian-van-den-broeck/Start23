@@ -2,7 +2,7 @@ import { PlanningWorkoutMoveTask } from './PlanningWorkoutMoveTask';
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
-  BottomSheetView,
+  BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 import * as Haptics from 'expo-haptics';
 import {
@@ -24,6 +24,7 @@ import {
   Platform,
   ScrollView,
   type ScrollViewProps,
+  StatusBar,
   StyleSheet,
   Text,
   useWindowDimensions,
@@ -47,7 +48,8 @@ import type {
 } from '../api/types';
 import { FadeInView } from '../components/FadeInView';
 import { FormField } from '../components/FormField';
-import { LanguageSelector } from '../components/LanguageSelector';
+import { SupportingProfileMenu } from '../ui-v2/components/SupportingProfileMenu';
+import { colors as finalColors, layout as finalLayout, radius as finalRadius, space as finalSpace } from '../ui-v2/tokens';
 import {
   MoveWarningPanel,
   warningPresentation,
@@ -1079,6 +1081,7 @@ function PlanningPresentation({
 
       <BottomSheetModal
         backdropComponent={renderProfileBackdrop}
+        topInset={Math.max(safeAreaInsets.top, StatusBar.currentHeight ?? 0)}
         backgroundStyle={styles.profileSheetBackground}
         bottomInset={safeAreaInsets.bottom}
         enableDynamicSizing
@@ -1090,59 +1093,13 @@ function PlanningPresentation({
         }}
         ref={profileSheetRef}
       >
-        <BottomSheetView style={styles.profileSheet}>
-          <View style={styles.profileMenuHeading}>
-            <View>
-              <Text style={styles.profileMenuEyebrow}>{t('planning.profilePersonal')}</Text>
-              <Text style={styles.profileMenuTitle}>{t('planning.profileSetup')}</Text>
-            </View>
-            <View style={styles.profileStatus}>
-              <View style={styles.profileStatusDot} />
-              <Text style={styles.profileStatusText}>{t('common.active')}</Text>
-            </View>
-          </View>
-          <View style={styles.profileMenuGrid}>
-            <Pressable
-              accessibilityRole="button"
-              haptic="selection"
-              onPress={() => closeProfileSheetThen(onOpenProfile)}
-              style={({ pressed }) => [
-                styles.profileMenuItem,
-                pressed && styles.pressed,
-              ]}
-            >
-              <Text style={styles.profileMenuItemCode}>P</Text>
-              <Text style={styles.profileMenuItemTitle}>Intakeprofiel</Text>
-              <Text style={styles.profileMenuItemMeta}>{t('planning.profileData')}</Text>
-            </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              haptic="selection"
-              onPress={() => closeProfileSheetThen(onOpenIntegrations)}
-              style={({ pressed }) => [
-                styles.profileMenuItem,
-                pressed && styles.pressed,
-              ]}
-            >
-              <Text style={styles.profileMenuItemCode}>I</Text>
-              <Text style={styles.profileMenuItemTitle}>Integraties</Text>
-              <Text style={styles.profileMenuItemMeta}>{t('planning.profileIntegrations')}</Text>
-            </Pressable>
-          </View>
-          <LanguageSelector />
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => {
-              closeProfileSheetThen(() => void onSignOut());
-            }}
-            style={({ pressed }) => [
-              styles.signOutButton,
-              pressed && styles.pressed,
-            ]}
-          >
-            <Text style={styles.signOutText}>{t('planning.safeSignOut')}</Text>
-          </Pressable>
-        </BottomSheetView>
+        <BottomSheetScrollView contentContainerStyle={styles.profileSheet}>
+          <SupportingProfileMenu
+            onOpenProfile={() => closeProfileSheetThen(onOpenProfile)}
+            onOpenIntegrations={() => closeProfileSheetThen(onOpenIntegrations)}
+            onSignOut={() => closeProfileSheetThen(() => void onSignOut())}
+          />
+        </BottomSheetScrollView>
       </BottomSheetModal>
 
       <View style={styles.quickActions}>
@@ -1659,72 +1616,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
     padding: spacing.lg,
   },
-  profileSheetBackground: { backgroundColor: colors.brandDeep },
-  profileSheetHandle: { backgroundColor: colors.brandSoft, width: 42 },
-  profileSheet: {
-    backgroundColor: colors.brandDeep,
-    gap: spacing.md,
-    padding: spacing.lg,
-    paddingBottom: spacing.xl,
-  },
-  profileMenuHeading: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  profileMenuEyebrow: {
-    color: colors.highlight,
-    fontSize: 9,
-    fontWeight: '900',
-    letterSpacing: 1.1,
-    textTransform: 'uppercase',
-  },
-  profileMenuTitle: {
-    color: colors.white,
-    fontSize: 19,
-    fontWeight: '900',
-    marginTop: 3,
-  },
-  profileStatus: {
-    alignItems: 'center',
-    backgroundColor: colors.brandMid,
-    borderRadius: radius.pill,
-    flexDirection: 'row',
-    gap: spacing.xs,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  profileStatusDot: {
-    backgroundColor: colors.highlight,
-    borderRadius: radius.pill,
-    height: 6,
-    width: 6,
-  },
-  profileStatusText: { color: colors.white, fontSize: 9, fontWeight: '800' },
-  profileMenuGrid: { flexDirection: 'row', gap: spacing.sm },
-  profileMenuItem: {
-    backgroundColor: colors.brandMid,
-    borderRadius: radius.md,
-    flex: 1,
-    gap: 2,
-    padding: spacing.md,
-  },
-  profileMenuItemCode: {
-    color: colors.highlight,
-    fontSize: 11,
-    fontWeight: '900',
-    marginBottom: spacing.xs,
-  },
-  profileMenuItemTitle: { color: colors.white, fontSize: 13, fontWeight: '900' },
-  profileMenuItemMeta: { color: colors.brandSoft, fontSize: 10, marginTop: 2 },
-  signOutButton: {
-    alignItems: 'center',
-    borderColor: colors.brandMid,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    paddingVertical: spacing.sm,
-  },
-  signOutText: { color: colors.brandSoft, fontSize: 11, fontWeight: '800' },
+  profileSheetBackground: { backgroundColor: finalColors.surface, borderRadius: finalRadius.sheet },
+  profileSheetHandle: { backgroundColor: finalColors.borderControl, width: 42 },
+  profileSheet: { padding: finalLayout.phoneGutter, paddingBottom: finalSpace[48] },
   quickActions: {
     flexDirection: 'row',
     gap: spacing.sm,

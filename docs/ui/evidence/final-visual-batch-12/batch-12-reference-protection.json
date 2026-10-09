@@ -1,0 +1,65 @@
+{
+  "originalReferences": [
+    {
+      "file": "reference-screenshots/check-in/01-entry-current-v1.png",
+      "sha256": "3a566835d735ed2de55b50a623edb8e482a197c33117bbece360e6a267f2fa44"
+    },
+    {
+      "file": "reference-screenshots/check-in/02-questions-current-v1-01-top.png",
+      "sha256": "1992479fff52085653cdef5288bd469e7c9797ebe61522668b48ef1b9f4d33d0"
+    },
+    {
+      "file": "reference-screenshots/check-in/02-questions-current-v1-02-advice.png",
+      "sha256": "2969433b6ecefcc5c0e1750ed0f60f38a05a85dca8fb32e754ee822882dd6126"
+    },
+    {
+      "file": "reference-screenshots/check-in/02-questions-current-v1-03-external-sport.png",
+      "sha256": "e2d9076b4af003eb8dac4752c0e22f66465373cc868d9152767f82fae3aa41e4"
+    },
+    {
+      "file": "reference-screenshots/check-in/03-selected-current-v1.png",
+      "sha256": "8bd13f3370c9910750d425a9797a6454c3191ce2c1c3f3a7eab40ce881c0c9de"
+    },
+    {
+      "file": "reference-screenshots/check-in/04-confirmed-current-v1.png",
+      "sha256": "38aeae3df36c8bf07ee8c4ef9308d4450045c3dfc8c27a2fef0c33b83a24bf50"
+    },
+    {
+      "file": "reference-screenshots/check-in/04-review-current-v1.png",
+      "sha256": "3d0669b891b401d97303633fe9c4978d567728181510d49223cd66b01e3bf43c"
+    },
+    {
+      "file": "reference-screenshots/check-in/04-submit-current-v1.png",
+      "sha256": "f185f6925ac6f7cfb66eecd86074d7deff74d6a9b6e2f024cbccea50c5d3541f"
+    },
+    {
+      "file": "reference-screenshots/check-in/06-result-or-error-current-v1.png",
+      "sha256": "5c6ffce2a0092e75047341ebff772b99838536f96803665a0380c0297a160738"
+    },
+    {
+      "file": "reference-screenshots/profile-supporting/integrations-current-v1.png",
+      "sha256": "a281ae0a140fa9cae53082c8f99151a42215b0023930b5501b4a55fadd477a57"
+    },
+    {
+      "file": "reference-screenshots/profile-supporting/language-signout-current-v1.png",
+      "sha256": "79e0727dd11a920a52c1345c5494fbcf5394549157914193d3acb82550f7e1d4"
+    },
+    {
+      "file": "reference-screenshots/profile-supporting/pioneer-current-v1.png",
+      "sha256": "13539349e4d56ef0caee39f6146be4f1fdd82a5ee812d8d36419881f20435b3e"
+    },
+    {
+      "file": "reference-screenshots/profile-supporting/profile-current-v1-02-destinations.png",
+      "sha256": "e6b3e2368fe5a05fa0bc1c98c0aba0d0aaea43bd1cde7862db03ecb5ec483311"
+    },
+    {
+      "file": "reference-screenshots/profile-supporting/profile-current-v1.png",
+      "sha256": "a22e505102490872d4789f68d0435b9a85920ec616ed7f458f2ce51a52301911"
+    },
+    {
+      "file": "reference-screenshots/profile-supporting/signed-out-current-v1.png",
+      "sha256": "aedbf0278d43b2d65a8a6b58e0795c2cbad7ef1170de00de3c1c00de0e4d98de"
+    }
+  ],
+  "realErrorCopyMatches": true
+}

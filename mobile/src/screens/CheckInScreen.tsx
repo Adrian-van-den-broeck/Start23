@@ -5,7 +5,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -28,10 +27,16 @@ import type {
   WeeklyCheckIn,
   WeeklyPlan,
 } from '../api/types';
-import { FormField } from '../components/FormField';
-import { MotionPressable as Pressable } from '../components/MotionPressable';
-import { StatusPill } from '../components/StatusPill';
-import { colors, radius, spacing } from '../theme/tokens';
+import { Input as FormField } from '../ui-v2/primitives/Input';
+import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
+import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
+import { Button } from '../ui-v2/primitives/Button';
+import { Card } from '../ui-v2/primitives/Card';
+import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
+import { Notice } from '../ui-v2/primitives/Notice';
+import { Text } from '../ui-v2/primitives/Text';
+
+import { colors, layout, radius, space, typography } from '../ui-v2/tokens';
 
 type Props = {
   accessToken: string;
@@ -160,23 +165,7 @@ function ActionButton({
   onPress: () => void;
   secondary?: boolean;
 }) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      disabled={disabled}
-      haptic={secondary ? undefined : 'light'}
-      onPress={onPress}
-      style={[
-        styles.action,
-        secondary && styles.actionSecondary,
-        disabled && styles.disabled,
-      ]}
-    >
-      <Text style={[styles.actionText, secondary && styles.actionSecondaryText]}>
-        {label}
-      </Text>
-    </Pressable>
-  );
+  return <Button label={label} disabled={disabled} onPress={onPress} variant={secondary ? 'outline' : 'primary'} />;
 }
 
 export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
@@ -373,18 +362,6 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <View style={styles.header}>
-        <Pressable accessibilityRole="button" onPress={onBack}>
-          <Text style={styles.link}>Weekplanning</Text>
-        </Pressable>
-        <View>
-          <Text style={styles.logo}>Wombo</Text>
-          <Text style={styles.caption}>Wekelijkse check-in</Text>
-        </View>
-        <Pressable accessibilityRole="button" onPress={() => void onSignOut()}>
-          <Text style={styles.link}>Afmelden</Text>
-        </Pressable>
-      </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboard}
@@ -397,12 +374,13 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
         showsVerticalScrollIndicator={false}
         style={styles.scroll}
       >
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-        {busy ? <ActivityIndicator color={colors.brand} /> : null}
+        <BrandedFormHeader caption="Wekelijkse check-in" backLabel="Weekplanning" onBack={onBack} onSignOut={onSignOut} />
+        {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error}><Notice tone="error">{error}</Notice></View> : null}
+        {busy ? <ActivityIndicator color={colors.primary} /> : null}
 
         {!checkIn ? (
-          <View style={styles.panel}>
-            <StatusPill label="Zonder AI" tone="brand" />
+          <Card elevated padding="form" style={styles.panel}>
+            <View style={[styles.chip]}><Text variant="supporting" tone="primary">Zonder AI</Text></View>
             <Text style={styles.title}>Bereid je volgende week voor</Text>
             <Text style={styles.body}>
               Je antwoorden worden gestructureerd opgeslagen. Pas na jouw aparte
@@ -415,13 +393,13 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
               value={weekStart}
             />
             <ActionButton disabled={busy} label="Start check-in" onPress={() => void begin()} />
-          </View>
+          </Card>
         ) : null}
 
         {checkIn && !isConfirmed && !isCompleted ? (
           <>
-            <View style={styles.panel}>
-              <StatusPill label="Gestructureerde bron" tone="brand" />
+            <Card elevated padding="form" style={styles.panel}>
+              <View style={[styles.chip]}><Text variant="supporting" tone="primary">Gestructureerde bron</Text></View>
               <Text style={styles.title}>Week van {checkIn.week_start}</Text>
               <FormField
                 label="Vertel kort wat er deze week speelt (optioneel)"
@@ -457,16 +435,10 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                     <Text key={line} style={styles.body}>• {line}</Text>
                   ))}
                   {contextCandidate.candidate.possible_injury_disciplines.length > 0 ? (
-                    <Text style={styles.warning}>
-                      Mogelijke blessure genoemd voor:{' '}
-                      {contextCandidate.candidate.possible_injury_disciplines
-                        .map((discipline) => disciplineLabels[discipline])
-                        .join(', ')}. Kies de beperking hieronder zelf; die wordt
-                      niet automatisch aangepast.
-                    </Text>
+                    <Notice tone="warning">{`Mogelijke blessure genoemd voor: ${contextCandidate.candidate.possible_injury_disciplines.map((discipline) => disciplineLabels[discipline]).join(', ')}. Kies de beperking hieronder zelf; die wordt niet automatisch aangepast.`}</Notice>
                   ) : null}
                   {contextCandidate.candidate.clarifying_questions.map((question) => (
-                    <Text key={question} style={styles.warning}>Vraag: {question}</Text>
+                    <Notice key={question} tone="warning">{`Vraag: ${question}`}</Notice>
                   ))}
                   <ActionButton
                     label="Neem datums, vermoeidheid en redenen over"
@@ -482,64 +454,38 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
               <Text style={styles.body}>Welke dagen zijn volledig geblokkeerd?</Text>
               <View style={styles.rowWrap}>
                 {dayLabels.map((label, offset) => (
-                  <Pressable
-                    accessibilityRole="checkbox"
-                    accessibilityState={{ checked: blockedDays.has(offset) }}
-                    key={label}
-                    onPress={() =>
+                  <ChoiceRow key={label} label={label}  selected={blockedDays.has(offset)} mode="checkbox" onPress={() =>
                       setBlockedDays((current) => {
                         const next = new Set(current);
                         if (next.has(offset)) next.delete(offset);
                         else next.add(offset);
                         return next;
                       })
-                    }
-                    style={[styles.choice, blockedDays.has(offset) && styles.active]}
-                  >
-                    <Text style={blockedDays.has(offset) ? styles.activeText : styles.choiceText}>
-                      {label}
-                    </Text>
-                  </Pressable>
+                    } />
                 ))}
               </View>
               <Text style={styles.label}>Vermoeidheid</Text>
               <View style={styles.rowWrap}>
                 {(Object.keys(fatigueLabels) as FatigueLevel[]).map((value) => (
-                  <Pressable
-                    key={value}
-                    onPress={() => setFatigue(value)}
-                    style={[styles.pill, fatigue === value && styles.active]}
-                  >
-                    <Text style={fatigue === value ? styles.activeText : styles.choiceText}>
-                      {fatigueLabels[value]}
-                    </Text>
-                  </Pressable>
+                  <ChoiceRow key={value} label={fatigueLabels[value]}  selected={fatigue === value} mode="radio" onPress={() => setFatigue(value)} />
                 ))}
               </View>
               <Text style={styles.label}>Redenen voor gemiste trainingen</Text>
               <View style={styles.rowWrap}>
                 {missedReasons.map(([value, label]) => (
-                  <Pressable
-                    key={value}
-                    onPress={() =>
+                  <ChoiceRow key={value} label={label}  selected={reasons.has(value)} mode="checkbox" onPress={() =>
                       setReasons((current) => {
                         const next = new Set(current);
                         if (next.has(value)) next.delete(value);
                         else next.add(value);
                         return next;
                       })
-                    }
-                    style={[styles.pill, reasons.has(value) && styles.active]}
-                  >
-                    <Text style={reasons.has(value) ? styles.activeText : styles.choiceText}>
-                      {label}
-                    </Text>
-                  </Pressable>
+                    } />
                 ))}
               </View>
-            </View>
+            </Card>
 
-            <View style={styles.panel}>
+            <Card elevated padding="form" style={styles.panel}>
               <Text style={styles.title}>Blessures en advies</Text>
               <Text style={styles.body}>
                 Beoordeel elke discipline opnieuw. Een beperking wordt nooit
@@ -557,29 +503,12 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                         ['professional', 'Professioneel advies'],
                       ] as const
                     ).map(([value, label]) => (
-                      <Pressable
-                        key={value}
-                        onPress={() =>
+                      <ChoiceRow key={value} label={label} accessibilityLabel={`${disciplineLabels[discipline]}: ${label}`} selected={restrictions[discipline].choice === value} mode="radio" onPress={() =>
                           setRestrictions((current) => ({
                             ...current,
                             [discipline]: { ...current[discipline], choice: value },
                           }))
-                        }
-                        style={[
-                          styles.pill,
-                          restrictions[discipline].choice === value && styles.active,
-                        ]}
-                      >
-                        <Text
-                          style={
-                            restrictions[discipline].choice === value
-                              ? styles.activeText
-                              : styles.choiceText
-                          }
-                        >
-                          {label}
-                        </Text>
-                      </Pressable>
+                        } />
                     ))}
                   </View>
                   {restrictions[discipline].choice === 'professional' ? (
@@ -596,32 +525,12 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                   ) : null}
                 </View>
               ))}
-              <Pressable
-                accessibilityRole="checkbox"
-                accessibilityState={{ checked: alarmAcknowledged }}
-                onPress={() => setAlarmAcknowledged((value) => !value)}
-                style={[styles.notice, alarmAcknowledged && styles.noticeChecked]}
-              >
-                <Text style={styles.body}>
-                  Ik begrijp dat alarmsymptomen medische beoordeling vragen en
-                  niet door dit plan worden beoordeeld.
-                </Text>
-              </Pressable>
-            </View>
+              <ChoiceRow  label="Ik begrijp dat alarmsymptomen medische beoordeling vragen en niet door dit plan worden beoordeeld."  selected={alarmAcknowledged} mode="checkbox" onPress={() => setAlarmAcknowledged((value) => !value)} />
+            </Card>
 
-            <View style={styles.panel}>
+            <Card elevated padding="form" style={styles.panel}>
               <Text style={styles.title}>Sport buiten Wombo</Text>
-              <Pressable
-                accessibilityRole="checkbox"
-                accessibilityState={{ checked: recurringConfirmed }}
-                onPress={() => setRecurringConfirmed((value) => !value)}
-                style={[styles.notice, recurringConfirmed && styles.noticeChecked]}
-              >
-                <Text style={styles.body}>
-                  Ik heb mijn terugkerende sportactiviteiten voor deze week
-                  gecontroleerd.
-                </Text>
-              </Pressable>
+              <ChoiceRow  label="Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd."  selected={recurringConfirmed} mode="checkbox" onPress={() => setRecurringConfirmed((value) => !value)} />
               {externalActivities.map((activity, index) => (
                 <View key={`${activity.scheduled_at}-${index}`} style={styles.activityRow}>
                   <Text style={styles.label}>{activity.name}</Text>
@@ -630,29 +539,17 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                     {activity.strenuous ? ' · inspannend' : ''}
                     {activity.recurring ? ' · terugkerend' : ''}
                   </Text>
-                  <Pressable
-                    onPress={() =>
+                  <QuickActionRow label="Verwijderen" icon="close" onAction={() =>
                       setExternalActivities((current) =>
                         current.filter((_, currentIndex) => currentIndex !== index),
                       )
-                    }
-                  >
-                    <Text style={styles.link}>Verwijderen</Text>
-                  </Pressable>
+                    } />
                 </View>
               ))}
               <FormField label="Naam extra activiteit" onChangeText={setExternalName} value={externalName} />
               <View style={styles.rowWrap}>
                 {disciplines.map((discipline) => (
-                  <Pressable
-                    key={discipline}
-                    onPress={() => setExternalDiscipline(discipline)}
-                    style={[styles.pill, externalDiscipline === discipline && styles.active]}
-                  >
-                    <Text style={externalDiscipline === discipline ? styles.activeText : styles.choiceText}>
-                      {disciplineLabels[discipline]}
-                    </Text>
-                  </Pressable>
+                  <ChoiceRow key={discipline} label={disciplineLabels[discipline]}  selected={externalDiscipline === discipline} mode="radio" onPress={() => setExternalDiscipline(discipline)} />
                 ))}
               </View>
               <FormField
@@ -668,23 +565,13 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                 value={externalDuration}
               />
               <View style={styles.rowWrap}>
-                <Pressable
-                  onPress={() => setExternalStrenuous((value) => !value)}
-                  style={[styles.pill, externalStrenuous && styles.active]}
-                >
-                  <Text style={externalStrenuous ? styles.activeText : styles.choiceText}>Inspannend</Text>
-                </Pressable>
-                <Pressable
-                  onPress={() => setExternalRecurring((value) => !value)}
-                  style={[styles.pill, externalRecurring && styles.active]}
-                >
-                  <Text style={externalRecurring ? styles.activeText : styles.choiceText}>Terugkerend</Text>
-                </Pressable>
+                <ChoiceRow  label="Inspannend"  selected={externalStrenuous} mode="checkbox" onPress={() => setExternalStrenuous((value) => !value)} />
+                <ChoiceRow  label="Terugkerend"  selected={externalRecurring} mode="checkbox" onPress={() => setExternalRecurring((value) => !value)} />
                 <ActionButton label="Toevoegen" onPress={addExternalActivity} secondary />
               </View>
-            </View>
+            </Card>
 
-            <View style={styles.panel}>
+            <Card elevated padding="form" style={styles.panel}>
               <ActionButton disabled={busy || !recurringConfirmed} label="Context opslaan" onPress={save} />
               {checkIn.context ? (
                 <>
@@ -694,36 +581,34 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                   <ActionButton disabled={busy} label="Deze context bevestigen" onPress={confirm} />
                 </>
               ) : null}
-            </View>
+            </Card>
           </>
         ) : null}
 
         {checkIn && isConfirmed && !isCompleted ? (
-          <View style={styles.panel}>
-            <StatusPill label="Context bevestigd" tone="brand" />
+          <Card elevated padding="form" style={styles.panel}>
+            <View style={[styles.chip]}><Text variant="supporting" tone="primary">Context bevestigd</Text></View>
             <Text style={styles.title}>Klaar voor het voorstel</Text>
             <Text style={styles.body}>
               Alleen een nieuwe, nog goed te keuren planrevisie wordt gemaakt.
             </Text>
             <ActionButton disabled={busy} label="Maak planvoorstel" onPress={makeProposal} />
-          </View>
+          </Card>
         ) : null}
 
         {proposalPlan ? (
-          <View style={styles.panel}>
-            <StatusPill label="Wacht op jouw goedkeuring" tone="accent" />
+          <Card elevated padding="form" style={styles.panel}>
+            <View style={[styles.chip, styles.pendingChip]}><Text variant="supporting" tone="warning">Wacht op jouw goedkeuring</Text></View>
             <Text style={styles.title}>Voorstel voor {proposalPlan.week_start}</Text>
             <Text style={styles.body}>
               {proposalPlan.workouts.length} trainingen · {proposalPlan.rest_days.length} rustdagen
             </Text>
             {proposalPlan.warnings.map((warning) => (
-              <Text key={warning.id ?? warning.code} style={styles.warning}>
-                {warning.message}
-              </Text>
+              <Notice key={warning.id ?? warning.code} tone="warning">{warning.message}</Notice>
             ))}
             <ActionButton disabled={busy} label="Voorstel goedkeuren" onPress={approve} />
             <ActionButton label="Later beslissen" onPress={onBack} secondary />
-          </View>
+          </Card>
         ) : null}
       </ScrollView>
       </KeyboardAvoidingView>
@@ -732,60 +617,16 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { backgroundColor: colors.canvas, flex: 1 },
-  keyboard: { flex: 1 },
-  scroll: { flex: 1 },
-  header: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-  },
-  logo: { color: colors.brand, fontSize: 20, fontWeight: '900', textAlign: 'center' },
-  caption: { color: colors.inkMuted, fontSize: 11, textAlign: 'center' },
-  link: { color: colors.brand, fontSize: 12, fontWeight: '800' },
-  content: { gap: spacing.md, padding: spacing.lg, paddingBottom: 80 },
-  panel: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    gap: spacing.md,
-    padding: spacing.lg,
-  },
-  subsection: { borderTopColor: colors.line, borderTopWidth: 1, gap: spacing.sm, paddingTop: spacing.md },
-  contextInput: { minHeight: 96, textAlignVertical: 'top' },
-  candidatePanel: {
-    backgroundColor: colors.brandSoft,
-    borderRadius: radius.sm,
-    gap: spacing.sm,
-    padding: spacing.md,
-  },
-  title: { color: colors.ink, fontSize: 22, fontWeight: '900' },
-  body: { color: colors.inkMuted, fontSize: 13, lineHeight: 19 },
-  label: { color: colors.ink, fontSize: 13, fontWeight: '800' },
-  rowWrap: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  choice: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.lineStrong,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    height: 38,
-    justifyContent: 'center',
-    width: 38,
-  },
-  pill: { backgroundColor: colors.surfaceMuted, borderColor: colors.lineStrong, borderRadius: radius.pill, borderWidth: 1, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
-  active: { backgroundColor: colors.brand, borderColor: colors.brand },
-  choiceText: { color: colors.ink, fontSize: 12, fontWeight: '700' },
-  activeText: { color: colors.white, fontSize: 12, fontWeight: '800' },
-  notice: { backgroundColor: colors.surfaceMuted, borderRadius: radius.sm, padding: spacing.md },
-  noticeChecked: { backgroundColor: colors.brandSoft },
-  activityRow: { borderTopColor: colors.line, borderTopWidth: 1, gap: spacing.xs, paddingTop: spacing.sm },
-  action: { alignItems: 'center', backgroundColor: colors.brand, borderRadius: radius.pill, padding: 14 },
-  actionSecondary: { backgroundColor: colors.surfaceRaised, borderColor: colors.lineStrong, borderWidth: 1 },
-  actionText: { color: colors.white, fontSize: 14, fontWeight: '900' },
-  actionSecondaryText: { color: colors.brand },
-  disabled: { opacity: 0.45 },
-  warning: { backgroundColor: colors.accentSoft, borderRadius: radius.sm, color: colors.ink, lineHeight: 19, padding: spacing.md },
-  error: { backgroundColor: colors.dangerSoft, borderRadius: radius.sm, color: colors.danger, padding: spacing.md },
+  safeArea: { backgroundColor: colors.background, flex: 1 },
+  keyboard: { flex: 1 }, scroll: { flex: 1 },
+  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },
+  panel: { gap: layout.fieldGroupGap },
+  subsection: { borderTopColor: colors.border, borderTopWidth: layout.decorativeLine, gap: space[12], paddingTop: space[16] },
+  contextInput: { minHeight: layout.multilineFieldHeight, textAlignVertical: 'top' },
+  candidatePanel: { backgroundColor: colors.primarySoft, borderRadius: radius.inset, gap: space[16], padding: space[16] },
+  title: { ...typography.sectionTitle }, body: { color: colors.textMuted }, label: { ...typography.label },
+  rowWrap: { gap: space[12] },
+  activityRow: { borderTopColor: colors.border, borderTopWidth: layout.decorativeLine, gap: space[8], paddingTop: space[16] },
+  chip: { alignSelf: 'flex-start', backgroundColor: colors.primarySoft, borderRadius: radius.pill, paddingHorizontal: space[12], paddingVertical: space[4] },
+  pendingChip: { backgroundColor: colors.warningSoft },
 });

@@ -11,7 +11,7 @@ export function BrandedFormHeader({ caption, onBack, onSignOut, children, backLa
   caption: string; backLabel?: string; onBack?: () => void; onSignOut: () => Promise<void>; children?: ReactNode;
 }) {
   const { width, fontScale } = useWindowDimensions();
-  const stacked = width < 393 || fontScale > 1;
+  const stacked = width < 393 || fontScale > 1 || backLabel.length > 8;
   const brand = <View style={styles.brand}><Text variant="screenTitle" tone="primary">WOMBO</Text><Text tone="textMuted">{caption}</Text></View>;
   return <View style={{ gap: space[8] }}>
     {stacked ? brand : null}

@@ -1,0 +1,30 @@
+[
+  {
+    "file": "interaction-inspection-1.jpg",
+    "sources": [
+      "interaction-auth-keyboard.png",
+      "interaction-context-confirmation.png"
+    ]
+  },
+  {
+    "file": "interaction-inspection-2.jpg",
+    "sources": [
+      "interaction-disconnect-confirmation.png",
+      "interaction-language-dutch.png"
+    ]
+  },
+  {
+    "file": "interaction-inspection-3.jpg",
+    "sources": [
+      "interaction-language-english.png",
+      "interaction-profile-dispatch.png"
+    ]
+  },
+  {
+    "file": "interaction-inspection-4.jpg",
+    "sources": [
+      "interaction-proposal-rejection.png",
+      "interaction-signout-dispatch.png"
+    ]
+  }
+]

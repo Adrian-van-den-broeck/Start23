@@ -1,0 +1,82 @@
+{
+  "baseline": "75fa891",
+  "productionEntriesRestored": [
+    {
+      "file": "mobile/app/_layout.tsx",
+      "byteIdentical": true
+    },
+    {
+      "file": "mobile/app/index.tsx",
+      "byteIdentical": true
+    }
+  ],
+  "commands": [
+    {
+      "name": "Strict TypeScript with unused checks",
+      "cwd": "mobile",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --noUnusedLocals --noUnusedParameters",
+      "exitCode": 0,
+      "log": "strict-types-production.log"
+    },
+    {
+      "name": "Full mobile tests",
+      "cwd": "mobile",
+      "args": [
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--setupFilesAfterEnv",
+        "./jest.setup.ts",
+        "../docs/ui/evidence/final-visual-batch-12/deterministic-proposal-fixture-date.cjs",
+        "--json",
+        "--outputFile",
+        "../docs/ui/evidence/final-visual-batch-12/full-mobile-tests.json"
+      ],
+      "exitCode": 0,
+      "suites": 68,
+      "tests": 602,
+      "log": "full-mobile-production.log",
+      "machineResult": "full-mobile-tests.json"
+    },
+    {
+      "name": "Focused mobile tests",
+      "exitCode": 0,
+      "suites": 7,
+      "tests": 22,
+      "log": "focused-final.log"
+    },
+    {
+      "name": "Native matrix/audits",
+      "cases": 51,
+      "viewports": 227,
+      "stateChecks": 300,
+      "visibleControlChecks": 618,
+      "pass": true
+    },
+    {
+      "name": "Native interaction dispatch/secure keyboard",
+      "checks": 10,
+      "pass": true,
+      "result": "native-interactions.json"
+    },
+    {
+      "name": "Final staged scope and whitespace",
+      "pass": true,
+      "productionFiles": 9,
+      "totalMobileFiles": 21,
+      "existingTestAssertionsUnchanged": true,
+      "protectedOwnerDiffExitCode": 0,
+      "whitespaceCheckExitCode": 0
+    }
+  ],
+  "completedCheckInAccepted": false,
+  "notApplicable": [
+    "Backend tests/Ruff/mypy/OpenAPI: backend/contracts unchanged",
+    "Database/pgTAP/RLS: database/auth ownership unchanged"
+  ],
+  "openGates": [
+    "Completed Check-in real authoritative evidence",
+    "Physical devices/iOS and spoken screen-reader/focus behavior",
+    "Live provider/Auth/redemption and persistence",
+    "Standalone Settings and goal-achievement product decisions"
+  ]
+}

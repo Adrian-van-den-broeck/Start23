@@ -1,0 +1,14 @@
+[
+  {
+    "file": "focused-tests.log",
+    "change": "Trailing whitespace removed only; original retained in ignored scratch archive",
+    "originalSha256": "b750db05bfe1506be4dd55c03df87a285e420eb1ee2873ceb1cd6667cd27498c",
+    "acceptedSha256": "d896d2fba18f9724f3c3a9a6be2fd59f5322e1d5234cd879f98514e171cda035"
+  },
+  {
+    "file": "full-mobile-final.log",
+    "change": "Trailing whitespace removed only; original retained in ignored scratch archive",
+    "originalSha256": "b232fee30d155d198938fa30f4182b5913c7f510decfc4a2b8e46ebe5f8881b2",
+    "acceptedSha256": "46a1f089075dcc996a4846e5835fe19453c4058912b1d2ae68dd5a72f32f4164"
+  }
+]

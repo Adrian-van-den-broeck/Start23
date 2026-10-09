@@ -1,0 +1,45 @@
+{
+  "baseline": "75fa891",
+  "branch": "feat/wombo-ui-v2-final-batch-12",
+  "files": [
+    {
+      "file": "mobile/src/screens/CheckInScreen.tsx",
+      "sha256": "12f6d7820a42c8e1bbcc6bb85a35b8b2797caf88be5bcc9427dcd9fb36d204fe"
+    },
+    {
+      "file": "mobile/src/screens/AuthScreen.tsx",
+      "sha256": "9e9a8016bf9f64a2313006c733690b61a79618604d7dfb03cc82a6efb164aa0c"
+    },
+    {
+      "file": "mobile/src/screens/IntegrationsScreen.tsx",
+      "sha256": "9719395ab336ccb55d3b46d7db17ee6abf3ba1d9729f0a15e087144e9b27ed84"
+    },
+    {
+      "file": "mobile/src/screens/PioneerAccessScreen.tsx",
+      "sha256": "0f4757438dd0abe0a3d10e20b9ce05e60664004074ff6bee18b6646e23b46c43"
+    },
+    {
+      "file": "mobile/src/components/LanguageSelector.tsx",
+      "sha256": "b96091740ea13d39de2d862c32aa9b641a5ced8129eeccd61fb207982f349d19"
+    },
+    {
+      "file": "mobile/src/screens/PlanningScreen.tsx",
+      "sha256": "77d1873eeb49af552256bf8b490591c5020d79ad3231abac334bc234dc397758"
+    },
+    {
+      "file": "mobile/src/components/ScreenState.tsx",
+      "sha256": "2d7117b2ea08aa69e6f0956aeda4944ba11e5df90b88f12e195d9d4ded3aadde"
+    },
+    {
+      "file": "mobile/src/ui-v2/components/FormComposition.tsx",
+      "sha256": "a2b117e755f19793281e75b6a796d0bec47d4157ff7acf6c656d518ac1744beb"
+    },
+    {
+      "file": "mobile/src/ui-v2/components/SupportingProfileMenu.tsx",
+      "sha256": "69e4bcf6d8a2da27e80e818e8837ba1b83950d3d64a4ac88fda669f99d7e080a"
+    }
+  ],
+  "blockedLiveTransport": true,
+  "completedCheckInFixture": false,
+  "modalSafeArea": "Existing safe-area inset with native StatusBar.currentHeight fallback, passed to the same modal"
+}

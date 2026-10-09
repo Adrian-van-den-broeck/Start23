@@ -1,19 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { getPioneerRedemption, redeemPioneerAccess } from '../api/client';
 import type { PioneerRedemption } from '../api/types';
-import { FormField } from '../components/FormField';
-import { MotionPressable as Pressable } from '../components/MotionPressable';
-import { colors, radius, spacing } from '../theme/tokens';
+import { AppHeader } from '../ui-v2/components/AppHeader';
+import { Button } from '../ui-v2/primitives/Button';
+import { Card } from '../ui-v2/primitives/Card';
+import { Input } from '../ui-v2/primitives/Input';
+import { Notice } from '../ui-v2/primitives/Notice';
+import { Text } from '../ui-v2/primitives/Text';
+import { colors, layout, space } from '../ui-v2/tokens';
 
 type Props = {
   accessToken: string;
@@ -86,103 +82,30 @@ export function PioneerAccessScreen({ accessToken, onBack }: Props) {
     }
   };
 
-  return (
-    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <View style={styles.header}>
-        <Pressable accessibilityRole="button" onPress={onBack} style={styles.back}>
-          <Text style={styles.backText}>{'<'} Profiel</Text>
-        </Pressable>
-        <Text style={styles.logo}>WOMBO</Text>
-        <View style={styles.headerSpacer} />
-      </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.content}
-      >
-        <View style={styles.card}>
-          <Text style={styles.eyebrow}>PIONEER BETA</Text>
-          <Text style={styles.title}>Toegang met jouw code</Text>
-          <Text style={styles.body}>
-            De server controleert geldigheid, vervaldatum, intrekking en eenmalig
-            gebruik. Je code wordt niet in de app bewaard.
-          </Text>
-          {loading ? <ActivityIndicator color={colors.brand} /> : null}
-          {redemption ? (
-            <View accessibilityRole="summary" style={styles.success}>
-              <Text style={styles.successTitle}>Pioneer toegang actief</Text>
-              <Text style={styles.body}>
-                Ingewisseld op {new Date(redemption.redeemed_at).toLocaleString()}.
-              </Text>
-            </View>
-          ) : (
-            <>
-              <FormField
-                autoCapitalize="characters"
-                label="Pioneer access-code"
-                maxLength={32}
-                onChangeText={(value) => setCode(value.toUpperCase())}
-                placeholder="PIONEER-XXXX"
-                value={code}
-              />
-              <Pressable
-                accessibilityRole="button"
-                disabled={submitting || code.trim().length < 8}
-                onPress={() => void redeem()}
-                style={[
-                  styles.action,
-                  (submitting || code.trim().length < 8) && styles.disabled,
-                ]}
-              >
-                {submitting ? (
-                  <ActivityIndicator color={colors.white} />
-                ) : (
-                  <Text style={styles.actionText}>Code inwisselen</Text>
-                )}
-              </Pressable>
-            </>
-          )}
-          {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
+  return <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag" automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}>
+        <AppHeader title="WOMBO" onBack={onBack} backLabel="Profiel" landscape="ridges" />
+        <Card elevated padding="form" style={{ gap: layout.fieldGroupGap }}>
+          <Text variant="supporting" tone="primary">PIONEER BETA</Text>
+          <Text variant="sectionTitle" accessibilityRole="header">Toegang met jouw code</Text>
+          <Text tone="textMuted">De server controleert geldigheid, vervaldatum, intrekking en eenmalig gebruik. Je code wordt niet in de app bewaard.</Text>
+          {loading ? <ActivityIndicator color={colors.primary} /> : null}
+          {redemption ? <View accessibilityRole="summary"><Notice tone="success" title="Pioneer toegang actief">
+            {`Ingewisseld op ${new Date(redemption.redeemed_at).toLocaleString()}.`}
+          </Notice></View> : <>
+            <Input autoCapitalize="characters" label="Pioneer access-code" maxLength={32}
+              onChangeText={(value) => setCode(value.toUpperCase())} placeholder="PIONEER-XXXX" value={code} icon="document" />
+            <Button label="Code inwisselen" busy={submitting} disabled={submitting || code.trim().length < 8} onPress={() => void redeem()} />
+          </>}
+          {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error}><Notice tone="error">{error}</Notice></View> : null}
+        </Card>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  </SafeAreaView>;
 }
-
 const styles = StyleSheet.create({
-  safeArea: { backgroundColor: colors.canvas, flex: 1 },
-  header: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: spacing.lg,
-  },
-  back: { minWidth: 76, paddingVertical: spacing.sm },
-  backText: { color: colors.brand, fontWeight: '800' },
-  logo: { color: colors.brand, fontSize: 18, fontWeight: '900' },
-  headerSpacer: { width: 76 },
-  content: { flex: 1, justifyContent: 'center', padding: spacing.lg },
-  card: {
-    backgroundColor: colors.surface,
-    borderColor: colors.line,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    gap: spacing.md,
-    padding: spacing.lg,
-  },
-  eyebrow: { color: colors.accent, fontSize: 12, fontWeight: '900', letterSpacing: 1.2 },
-  title: { color: colors.ink, fontSize: 28, fontWeight: '900' },
-  body: { color: colors.inkMuted, lineHeight: 21 },
-  action: {
-    alignItems: 'center',
-    backgroundColor: colors.brand,
-    borderRadius: radius.pill,
-    minHeight: 50,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
-  },
-  actionText: { color: colors.white, fontWeight: '900' },
-  disabled: { opacity: 0.45 },
-  error: { color: colors.danger, lineHeight: 20 },
-  success: { backgroundColor: colors.brandSoft, borderRadius: radius.md, gap: spacing.xs, padding: spacing.lg },
-  successTitle: { color: colors.success, fontSize: 18, fontWeight: '900' },
+  safeArea: { backgroundColor: colors.background, flex: 1 },
+  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },
 });

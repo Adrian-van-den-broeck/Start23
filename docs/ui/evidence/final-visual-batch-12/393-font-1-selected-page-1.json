@@ -1,0 +1,15 @@
+{
+  "timestampUTC": "2026-10-09T10:28:37.226032+00:00",
+  "fixture": {
+    "state": "selected",
+    "width": 393,
+    "fontScale": 1,
+    "build": "final-2",
+    "language": "source Dutch",
+    "inertActions": true
+  },
+  "size": "Physical size: 1080x2280",
+  "density": "Physical density: 440\nOverride density: 439",
+  "fontScale": "1.0",
+  "provenance": "Production CheckIn/Auth/Integrations/Pioneer/Profile and existing Planning modal; typed inert public DTOs; transport blocked; no completed Check-in fixture; callbacks prove UI dispatch only"
+}

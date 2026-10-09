@@ -1,71 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native';
-
-import {
-  type LanguagePreference,
-  useLanguage,
-} from '../i18n/LanguageProvider';
-import { colors, radius, spacing } from '../theme/tokens';
-import { MotionPressable as Pressable } from './MotionPressable';
-
+import { View } from 'react-native';
+import { type LanguagePreference, useLanguage } from '../i18n/LanguageProvider';
+import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
+import { Text } from '../ui-v2/primitives/Text';
+import { space } from '../ui-v2/tokens';
 const preferences: LanguagePreference[] = ['system', 'nl', 'en'];
-
 export function LanguageSelector() {
   const { preference, setPreference, t } = useLanguage();
   const labels: Record<LanguagePreference, string> = {
-    system: t('language.auto'),
-    nl: t('language.nederlands'),
-    en: t('language.english'),
+    system: t('language.auto'), nl: t('language.nederlands'), en: t('language.english'),
   };
-
-  return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.label}>{t('language.label')}</Text>
-        <Text style={styles.hint}>{t('language.autoHint')}</Text>
-      </View>
-      <View accessibilityRole="radiogroup" style={styles.options}>
-        {preferences.map((value) => {
-          const selected = preference === value;
-          return (
-            <Pressable
-              accessibilityRole="radio"
-              accessibilityState={{ checked: selected }}
-              haptic="selection"
-              key={value}
-              onPress={() => void setPreference(value)}
-              style={[styles.option, selected && styles.optionSelected]}
-            >
-              <Text style={[styles.optionText, selected && styles.optionTextSelected]}>
-                {labels[value]}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
+  return <View style={{ gap: space[12] }}>
+    <View style={{ gap: space[4] }}><Text variant="label">{t('language.label')}</Text><Text variant="supporting" tone="textMuted">{t('language.autoHint')}</Text></View>
+    <View accessibilityRole="radiogroup" accessibilityLabel={t('language.label')} style={{ gap: space[12] }}>
+      {preferences.map(value => <ChoiceRow key={value} label={labels[value]} selected={preference === value} onPress={() => void setPreference(value)} />)}
     </View>
-  );
+  </View>;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.brandMid,
-    borderRadius: radius.md,
-    gap: spacing.sm,
-    padding: spacing.md,
-  },
-  label: { color: colors.white, fontSize: 13, fontWeight: '900' },
-  hint: { color: colors.brandSoft, fontSize: 10, marginTop: 2 },
-  options: { flexDirection: 'row', gap: spacing.xs },
-  option: {
-    alignItems: 'center',
-    borderColor: colors.brandSoft,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    flex: 1,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: spacing.sm,
-  },
-  optionSelected: { backgroundColor: colors.highlight, borderColor: colors.highlight },
-  optionText: { color: colors.white, fontSize: 10, fontWeight: '800' },
-  optionTextSelected: { color: colors.brandDeep },
-});

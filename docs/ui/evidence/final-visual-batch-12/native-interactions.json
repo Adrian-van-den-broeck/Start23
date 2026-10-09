@@ -1,0 +1,56 @@
+{
+  "completedCheckIn": false,
+  "liveTransport": false,
+  "checks": [
+    {
+      "check": "Saved context confirmation dispatch retains revision/fingerprint",
+      "pass": true,
+      "scope": "Native dispatch against inert transport, not backend persistence"
+    },
+    {
+      "check": "Proposal rejection retains confirmed context and has no approval/completion",
+      "pass": true,
+      "scope": "Native dispatch against inert transport, not backend persistence"
+    },
+    {
+      "check": "Disconnect requires explicit native confirmation",
+      "pass": true,
+      "scope": "Native dispatch against inert transport, not backend persistence"
+    },
+    {
+      "check": "Cancel disconnect does not issue DELETE",
+      "pass": true,
+      "scope": "Native dispatch against inert transport, not backend persistence"
+    },
+    {
+      "check": "Existing language control updates current translations",
+      "pass": true,
+      "scope": "Native dispatch against inert transport, not backend persistence"
+    },
+    {
+      "check": "Dutch preference restores current translations",
+      "pass": true,
+      "scope": "Native dispatch against inert transport, not backend persistence"
+    },
+    {
+      "check": "Sign-out callback dispatched after existing sheet dismissal",
+      "pass": true,
+      "scope": "Native dispatch against inert transport, not backend persistence"
+    },
+    {
+      "check": "Profile destination callback dispatched after sheet dismissal",
+      "pass": true,
+      "scope": "Native dispatch against inert transport, not backend persistence"
+    },
+    {
+      "check": "Native secure password input retains password semantics",
+      "pass": true,
+      "scope": "Native dispatch against inert transport, not backend persistence"
+    },
+    {
+      "check": "Android IME is visible for secure input",
+      "pass": true,
+      "scope": "Native dispatch against inert transport, not backend persistence"
+    }
+  ]
+}

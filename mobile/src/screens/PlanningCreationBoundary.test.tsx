@@ -25,6 +25,7 @@ jest.mock('@gorhom/bottom-sheet', () => {
   return {
     BottomSheetBackdrop: () => null,
     BottomSheetView: ({ children }: PropsWithChildren) => <RN.View>{children}</RN.View>,
+    BottomSheetScrollView: ({ children }: PropsWithChildren) => <RN.ScrollView>{children}</RN.ScrollView>,
     BottomSheetModal: React.forwardRef((_props: PropsWithChildren, ref) => {
       React.useImperativeHandle(ref, () => ({ present: jest.fn(), dismiss: jest.fn() }));
       return null;

@@ -1,0 +1,18 @@
+{
+  "baseline": "75fa891",
+  "screens": "Actual production components; temporary root/gallery snapshots retained as text only",
+  "transport": "All live network operations blocked; only localhost fixture loading and inert public DTO responses",
+  "completedCheckIn": false,
+  "headerCorrection": "Initial cramped long back-label captures rejected; accepted production header stacks long labels",
+  "driverCorrections": [
+    "Cold launch after density/font changes",
+    "IPv4 localhost Metro binding",
+    "Exact plural /plan-proposals error replay endpoint before error captures",
+    "Fixed existing V1 profile header is outside the body scroll viewport; select its real native bounds",
+    "Do not reverse-swipe a newly opened sheet at its upper boundary; scroll inside its real content",
+    "Reject closed-modal captures and isolate modal controls from the unrelated V1 week behind it",
+    "Cold Metro rebuild after status-bar layout correction; prior inset captures rejected"
+  ],
+  "errorEvidence": "Replay of the documented staging rejection; not a new staging transaction",
+  "footer": "Visible inert-review/dispatch footer belongs only to the temporary gallery and reduces available viewport. It is not product UI."
+}

@@ -5,7 +5,6 @@ import {
   Linking,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -19,9 +18,16 @@ import {
   startPolarOAuth,
 } from '../api/client';
 import type { PolarConnection, PolarImportRun } from '../api/types';
-import { StatusPill } from '../components/StatusPill';
-import { MotionPressable as Pressable } from '../components/MotionPressable';
-import { colors, radius, spacing } from '../theme/tokens';
+import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
+import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
+import { Button } from '../ui-v2/primitives/Button';
+import { Card } from '../ui-v2/primitives/Card';
+import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
+import { IconTile } from '../ui-v2/primitives/IconTile';
+import { Notice } from '../ui-v2/primitives/Notice';
+import { Text } from '../ui-v2/primitives/Text';
+
+import { colors, layout, radius, space } from '../ui-v2/tokens';
 
 type IntegrationsScreenProps = {
   accessToken: string;
@@ -119,160 +125,49 @@ export function IntegrationsScreen({
     );
   };
 
-  return (
-    <SafeAreaView edges={['top']} style={styles.safeArea}>
-      <View style={styles.header}>
-        <Pressable accessibilityRole="button" onPress={onBack}>
-          <Text style={styles.link}>Weekplanning</Text>
-        </Pressable>
-        <View>
-          <Text style={styles.logo}>Wombo</Text>
-          <Text style={styles.caption}>Integraties</Text>
-        </View>
-        <Pressable accessibilityRole="button" onPress={() => void onSignOut()}>
-          <Text style={styles.link}>Afmelden</Text>
-        </Pressable>
-      </View>
-
-      <ScrollView contentContainerStyle={styles.content}>
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-        {busy ? <ActivityIndicator color={colors.brand} /> : null}
-
-        <View style={styles.panel}>
-          <View style={styles.row}>
-            <Text style={styles.title}>Polar</Text>
-            <StatusPill
-              label={statusLabel(connection)}
-              tone={connection?.status === 'connected' ? 'brand' : 'neutral'}
-            />
+  return <SafeAreaView edges={['top']} style={styles.safeArea}>
+    <ScrollView contentContainerStyle={styles.content}>
+      <BrandedFormHeader caption="Integraties" backLabel="Weekplanning" onBack={onBack} onSignOut={onSignOut} />
+      {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error}><Notice tone="error">{error}</Notice></View> : null}
+      {busy ? <ActivityIndicator color={colors.primary} /> : null}
+      <Card elevated padding="form" style={styles.panel}>
+        <View style={styles.identity}><IconTile name="activities" /><Text variant="sectionTitle" accessibilityRole="header">Polar</Text></View>
+        <View style={styles.chip}><Text variant="supporting" tone="primary">{statusLabel(connection)}</Text></View>
+        <Notice>Polar is de eerste provider. Productie blijft uit totdat juridische, privacy- en providervoorwaarden zijn goedgekeurd.</Notice>
+        {connection?.status === 'connected' ? <>
+          <Text variant="label">Historie importeren</Text>
+          <View accessibilityRole="radiogroup" accessibilityLabel="Historie importeren" style={{ gap: space[12] }}>
+            {([7, 14, 30] as const).map(value => <ChoiceRow key={value} label={`${value} dagen`} selected={days === value} onPress={() => setDays(value)} />)}
           </View>
-          <Text style={styles.body}>
-            Polar is de eerste provider. Productie blijft uit totdat juridische,
-            privacy- en providervoorwaarden zijn goedgekeurd.
-          </Text>
-          {connection?.status === 'connected' ? (
-            <>
-              <Text style={styles.label}>Historie importeren</Text>
-              <View style={styles.choiceRow}>
-                {([7, 14, 30] as const).map((value) => (
-                  <Pressable
-                    accessibilityRole="radio"
-                    accessibilityState={{ checked: days === value }}
-                    key={value}
-                    onPress={() => setDays(value)}
-                    style={[styles.choice, days === value && styles.choiceActive]}
-                  >
-                    <Text style={styles.choiceText}>{value} dagen</Text>
-                  </Pressable>
-                ))}
-              </View>
-              <Text style={styles.hint}>
-                Standaard 14 dagen. Meer dan 30 dagen is via deze koppeling niet
-                beschikbaar.
-              </Text>
-              <Pressable
-                disabled={busy}
-                onPress={() =>
-                  void run(() =>
-                    importPolarHistory(accessToken, newIdempotencyKey(), days),
-                  )
-                }
-                style={[styles.action, busy && styles.disabled]}
-              >
-                <Text style={styles.actionText}>Import starten</Text>
-              </Pressable>
-              <Pressable onPress={disconnect} style={styles.secondaryAction}>
-                <Text style={styles.secondaryText}>Ontkoppelen</Text>
-              </Pressable>
-            </>
-          ) : (
-            <Pressable
-              disabled={busy}
-              onPress={() => void connect()}
-              style={[styles.action, busy && styles.disabled]}
-            >
-              <Text style={styles.actionText}>
-                {connection?.status === 'reconnect_required'
-                  ? 'Opnieuw toestemming geven'
-                  : 'Polar koppelen'}
-              </Text>
-            </Pressable>
-          )}
-          <Pressable disabled={busy} onPress={() => void run(load)}>
-            <Text style={styles.link}>Status vernieuwen</Text>
-          </Pressable>
-        </View>
-
-        <View style={styles.panel}>
-          <Text style={styles.title}>Imports</Text>
-          {imports.length === 0 ? (
-            <Text style={styles.body}>Nog geen imports.</Text>
-          ) : null}
-          {imports.map((item) => (
-            <View key={item.id} style={styles.importRow}>
-              <View style={styles.row}>
-                <Text style={styles.label}>
-                  {item.range_start ?? 'Webhook'} – {item.range_end ?? 'activiteit'}
-                </Text>
-                <StatusPill label={item.status} tone="neutral" />
-              </View>
-              <Text style={styles.hint}>
-                {item.imported_count} geïmporteerd · {item.skipped_count} overgeslagen
-              </Text>
-              {item.status === 'failed' &&
-              item.failure_code !== 'reconnect_required' &&
-              item.retry_count < item.max_attempts - 1 ? (
-                <Pressable
-                  disabled={busy}
-                  onPress={() => void run(() => retryPolarImport(accessToken, item.id))}
-                >
-                  <Text style={styles.link}>Nu opnieuw proberen</Text>
-                </Pressable>
-              ) : null}
-            </View>
-          ))}
-          <Pressable onPress={onOpenActivities}>
-            <Text style={styles.link}>Geïmporteerde activiteiten bekijken</Text>
-          </Pressable>
-        </View>
-
-        <View style={styles.panel}>
-          <Text style={styles.title}>Privacy</Text>
-          <Text style={styles.body}>
-            Ontkoppelen stopt nieuwe toegang en verwijdert de credentials. Het is
-            geen verwijderverzoek: bestaande activiteiten blijven behouden. Ruwe
-            FIT-bestanden blijven backend-only; Wombo toont geen filemanager of
-            downloadscherm in de MVP. Bewaartermijnen en verwijder-/exportprocessen
-            moeten vóór productie formeel zijn vastgelegd.
-          </Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+          <Text variant="supporting" tone="textMuted">Standaard 14 dagen. Meer dan 30 dagen is via deze koppeling niet beschikbaar.</Text>
+          <Button label="Import starten" disabled={busy} onPress={() => void run(() => importPolarHistory(accessToken, newIdempotencyKey(), days))} />
+          <Button label="Ontkoppelen" variant="outline" onPress={disconnect} />
+        </> : <Button label={connection?.status === 'reconnect_required' ? 'Opnieuw toestemming geven' : 'Polar koppelen'} disabled={busy} onPress={() => void connect()} />}
+        <QuickActionRow label="Status vernieuwen" icon="refresh" disabled={busy} onAction={() => void run(load)} />
+      </Card>
+      <Card elevated style={styles.panel}>
+        <Text variant="sectionTitle" accessibilityRole="header">Imports</Text>
+        {imports.length === 0 ? <Text tone="textMuted">Nog geen imports.</Text> : null}
+        {imports.map(item => <View key={item.id} style={styles.importRow}>
+          <Text variant="label">{item.range_start ?? 'Webhook'} – {item.range_end ?? 'activiteit'}</Text>
+          <View style={styles.chip}><Text variant="supporting">{item.status}</Text></View>
+          <Text variant="supporting" tone="textMuted">{item.imported_count} geïmporteerd · {item.skipped_count} overgeslagen</Text>
+          {item.status === 'failed' && item.failure_code !== 'reconnect_required' && item.retry_count < item.max_attempts - 1 ?
+            <QuickActionRow label="Nu opnieuw proberen" icon="refresh" disabled={busy} onAction={() => void run(() => retryPolarImport(accessToken, item.id))} /> : null}
+        </View>)}
+        <QuickActionRow label="Geïmporteerde activiteiten bekijken" icon="activities" onAction={onOpenActivities} />
+      </Card>
+      <Card elevated style={styles.panel}>
+        <Text variant="sectionTitle" accessibilityRole="header">Privacy</Text>
+        <Text tone="textMuted">Ontkoppelen stopt nieuwe toegang en verwijdert de credentials. Het is geen verwijderverzoek: bestaande activiteiten blijven behouden. Ruwe FIT-bestanden blijven backend-only; Wombo toont geen filemanager of downloadscherm in de MVP. Bewaartermijnen en verwijder-/exportprocessen moeten vóór productie formeel zijn vastgelegd.</Text>
+      </Card>
+    </ScrollView>
+  </SafeAreaView>;
 }
-
 const styles = StyleSheet.create({
-  safeArea: { backgroundColor: colors.canvas, flex: 1 },
-  header: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', padding: spacing.lg },
-  logo: { color: colors.brand, fontSize: 20, fontWeight: '900', textAlign: 'center' },
-  caption: { color: colors.inkMuted, fontSize: 11, textAlign: 'center' },
-  link: { color: colors.brand, fontSize: 12, fontWeight: '800' },
-  content: { gap: spacing.md, padding: spacing.lg, paddingBottom: 80 },
-  panel: { backgroundColor: colors.surface, borderRadius: radius.md, gap: spacing.md, padding: spacing.lg },
-  row: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
-  title: { color: colors.ink, fontSize: 22, fontWeight: '900' },
-  label: { color: colors.ink, fontSize: 14, fontWeight: '800' },
-  body: { color: colors.inkMuted, fontSize: 13, lineHeight: 19 },
-  hint: { color: colors.inkMuted, fontSize: 12, lineHeight: 18 },
-  choiceRow: { flexDirection: 'row', gap: spacing.sm },
-  choice: { backgroundColor: colors.surfaceRaised, borderColor: colors.lineStrong, borderRadius: radius.pill, borderWidth: 1, flex: 1, padding: spacing.sm },
-  choiceActive: { backgroundColor: colors.brandSoft, borderColor: colors.brand },
-  choiceText: { color: colors.ink, fontSize: 12, fontWeight: '700', textAlign: 'center' },
-  action: { alignItems: 'center', backgroundColor: colors.brand, borderRadius: radius.pill, padding: 14 },
-  actionText: { color: colors.white, fontSize: 14, fontWeight: '900' },
-  secondaryAction: { alignItems: 'center', backgroundColor: colors.surfaceRaised, borderColor: colors.lineStrong, borderRadius: radius.pill, borderWidth: 1, padding: 14 },
-  secondaryText: { color: colors.brand, fontSize: 14, fontWeight: '900' },
-  importRow: { borderTopColor: colors.line, borderTopWidth: 1, gap: spacing.xs, paddingTop: spacing.md },
-  disabled: { opacity: 0.45 },
-  error: { backgroundColor: colors.dangerSoft, borderRadius: radius.sm, color: colors.danger, padding: spacing.md },
+  safeArea: { backgroundColor: colors.background, flex: 1 },
+  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },
+  panel: { gap: space[16] }, identity: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space[12] },
+  chip: { alignSelf: 'flex-start', backgroundColor: colors.primarySoft, borderRadius: radius.pill, paddingHorizontal: space[12], paddingVertical: space[4] },
+  importRow: { borderTopColor: colors.border, borderTopWidth: layout.decorativeLine, gap: space[8], paddingTop: space[16] },
 });

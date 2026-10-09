@@ -1,0 +1,95 @@
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import * as api from '../api/client';
+import type { CheckInContextCandidateResponse, WeeklyCheckIn } from '../api/types';
+import fixtures from '../../../docs/ui/evidence/final-visual-batch-12/public-fixtures.json';
+import { CheckInScreen } from './CheckInScreen';
+jest.mock('../api/client', () => ({ approvePlanProposal: jest.fn(), confirmWeeklyCheckInContext: jest.fn(), createCheckInPlanProposal: jest.fn(), extractWeeklyCheckInContextCandidate: jest.fn(), saveWeeklyCheckInContext: jest.fn(), startWeeklyCheckIn: jest.fn() }));
+const open = fixtures.open as WeeklyCheckIn;
+const saved = fixtures.saved as WeeklyCheckIn;
+const confirmed = fixtures.confirmed as WeeklyCheckIn;
+beforeEach(() => { jest.clearAllMocks(); jest.mocked(api.startWeeklyCheckIn).mockResolvedValue(open); jest.mocked(api.saveWeeklyCheckInContext).mockResolvedValue(saved); jest.mocked(api.confirmWeeklyCheckInContext).mockResolvedValue(confirmed); });
+async function surface(state = open) {
+  jest.mocked(api.startWeeklyCheckIn).mockResolvedValue(state);
+  const back = jest.fn(); const signOut = jest.fn(async () => undefined);
+  const view = await render(<CheckInScreen accessToken="athlete-token" onBack={back} onSignOut={signOut} />);
+  await fireEvent.changeText(view.getByLabelText('Week start op maandag'), open.week_start);
+  await fireEvent.press(view.getByRole('button', { name: 'Start check-in' }));
+  await view.findByText(state.context?.state === 'confirmed' ? 'Klaar voor het voorstel' : 'Week van ' + open.week_start);
+  return { view, back, signOut };
+}
+test('entry starts the exact week and keeps back/sign-out callbacks', async () => {
+  const { view, back, signOut } = await surface();
+  expect(api.startWeeklyCheckIn).toHaveBeenCalledWith('athlete-token', open.week_start);
+  expect(view.getByRole('button', { name: 'Context opslaan' })).toBeDisabled();
+  await fireEvent.press(view.getByRole('button', { name: 'Weekplanning' }));
+  await fireEvent.press(view.getByRole('button', { name: 'Afmelden' }));
+  expect(back).toHaveBeenCalledTimes(1); expect(signOut).toHaveBeenCalledTimes(1);
+  expect(api.saveWeeklyCheckInContext).not.toHaveBeenCalled();
+});
+test('choices stay drafts; exact structured revision payload precedes separate confirmation', async () => {
+  const { view } = await surface();
+  await fireEvent.press(view.getByRole('checkbox', { name: 'Wo' }));
+  await fireEvent.press(view.getByRole('radio', { name: 'Hoog' }));
+  await fireEvent.press(view.getByRole('checkbox', { name: 'Vermoeidheid' }));
+  await fireEvent.press(view.getByRole('radio', { name: 'Lopen: Professioneel advies' }));
+  await fireEvent.changeText(view.getByLabelText('Advies en herleidbare bron'), 'Fysiotherapeut: alleen rustig');
+  await fireEvent.press(view.getByRole('checkbox', { name: 'Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd.' }));
+  expect(api.saveWeeklyCheckInContext).not.toHaveBeenCalled();
+  await fireEvent.press(view.getByRole('button', { name: 'Context opslaan' }));
+  await waitFor(() => expect(api.saveWeeklyCheckInContext).toHaveBeenCalledTimes(1));
+  expect(api.saveWeeklyCheckInContext).toHaveBeenCalledWith('athlete-token', open.id, expect.objectContaining({ expected_revision: 0, blocked_dates: ['2026-10-14'], fatigue_level: 'high', missed_workout_reasons: ['fatigue'], recurring_activities_confirmed: true, restrictions: expect.arrayContaining([expect.objectContaining({ discipline: 'run', status: 'professional_restricted', source: 'physiotherapist', athlete_plan_choice: 'keep_blocked', professional_advice: 'Fysiotherapeut: alleen rustig', professional_advice_at: expect.any(String) })]) }));
+  await view.findByRole('button', { name: 'Deze context bevestigen' });
+  expect(api.confirmWeeklyCheckInContext).not.toHaveBeenCalled(); expect(api.createCheckInPlanProposal).not.toHaveBeenCalled();
+  await fireEvent.press(view.getByRole('button', { name: 'Deze context bevestigen' }));
+  await view.findByText('Context bevestigd');
+  expect(api.confirmWeeklyCheckInContext).toHaveBeenCalledWith('athlete-token', open.id, saved.context!.revision, saved.context!.fingerprint);
+  expect(api.createCheckInPlanProposal).not.toHaveBeenCalled(); expect(api.approvePlanProposal).not.toHaveBeenCalled();
+});
+test('saved answers hydrate selection and provenance while confirmation remains explicit', async () => {
+  const { view } = await surface(saved);
+  expect(view.getByRole('checkbox', { name: 'Wo' })).toBeChecked();
+  expect(view.getByRole('radio', { name: 'Matig' })).toBeChecked();
+  expect(view.getByRole('checkbox', { name: 'Tijd' })).toBeChecked();
+  expect(view.getByText(/Bron: gestructureerd formulier/)).toBeTruthy();
+  expect(view.getByText('Clubtraining')).toBeTruthy();
+  expect(view.queryByText('Context bevestigd')).toBeNull();
+});
+test('temporary extraction only copies candidate drafts and never chooses an injury restriction', async () => {
+  jest.mocked(api.extractWeeklyCheckInContextCandidate).mockResolvedValue(fixtures.candidate as CheckInContextCandidateResponse);
+  const { view } = await surface();
+  await fireEvent.changeText(view.getByLabelText('Vertel kort wat er deze week speelt (optioneel)'), ' Woensdag niet beschikbaar ');
+  await fireEvent.press(view.getByRole('button', { name: 'Maak invulvoorstel' }));
+  await view.findByText('Controleer het invulvoorstel');
+  expect(api.extractWeeklyCheckInContextCandidate).toHaveBeenCalledWith('athlete-token', open.id, 'Woensdag niet beschikbaar');
+  await fireEvent.press(view.getByRole('button', { name: 'Neem datums, vermoeidheid en redenen over' }));
+  expect(view.getByRole('checkbox', { name: 'Wo' })).toBeChecked();
+  expect(view.getByRole('radio', { name: 'Hoog' })).toBeChecked();
+  expect(view.getByRole('radio', { name: 'Lopen: Vrij' })).toBeChecked();
+  expect(api.saveWeeklyCheckInContext).not.toHaveBeenCalled(); expect(api.confirmWeeklyCheckInContext).not.toHaveBeenCalled();
+});
+test('external sport retains time/duration/flags and explicit add/remove', async () => {
+  const { view } = await surface();
+  await fireEvent.press(view.getByRole('button', { name: 'Toevoegen' }));
+  await view.findByRole('alert', { name: 'Vul voor de extra activiteit een naam en geldige duur in.' });
+  await fireEvent.changeText(view.getByLabelText('Naam extra activiteit'), 'Clubtraining');
+  await fireEvent.changeText(view.getByLabelText('Tijdstip (ISO inclusief tijdzone)'), '2026-10-15T18:00:00+02:00');
+  await fireEvent.changeText(view.getByLabelText('Geplande duur (minuten)'), '75');
+  await fireEvent.press(view.getByRole('checkbox', { name: 'Terugkerend' }));
+  await fireEvent.press(view.getByRole('button', { name: 'Toevoegen' }));
+  await view.findByText('Clubtraining');
+  expect(view.getByText('Lopen · 75 min · inspannend · terugkerend')).toBeTruthy();
+  await fireEvent.press(view.getByRole('button', { name: 'Verwijderen' }));
+  expect(view.queryByText('Clubtraining')).toBeNull(); expect(api.saveWeeklyCheckInContext).not.toHaveBeenCalled();
+});
+test('real documented proposal failure retains confirmed context and never shows completion/approval', async () => {
+  const message = 'De wijziging kon niet veilig worden opgeslagen. Probeer opnieuw.';
+  jest.mocked(api.createCheckInPlanProposal).mockRejectedValue(new Error(message));
+  const { view } = await surface(confirmed);
+  await fireEvent.press(view.getByRole('button', { name: 'Maak planvoorstel' }));
+  await view.findByRole('alert', { name: message });
+  expect(view.getByText('Context bevestigd')).toBeTruthy();
+  expect(view.getByRole('button', { name: 'Maak planvoorstel' })).toBeEnabled();
+  expect(view.queryByRole('button', { name: 'Voorstel goedkeuren' })).toBeNull();
+  expect(api.createCheckInPlanProposal).toHaveBeenCalledWith('athlete-token', open.id);
+  expect(api.approvePlanProposal).not.toHaveBeenCalled();
+});
