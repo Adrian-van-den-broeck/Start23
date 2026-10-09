@@ -1,0 +1,15 @@
+{
+  "timestampUTC": "2026-10-08T23:21:31.537482+00:00",
+  "fixture": {
+    "state": "goal-run-english",
+    "width": 393,
+    "fontScale": 1,
+    "build": "final-7",
+    "language": "source Dutch",
+    "inertActions": true
+  },
+  "size": "Physical size: 1080x2280",
+  "density": "Physical density: 440\nOverride density: 439",
+  "fontScale": "1.0",
+  "provenance": "Production ProfileScreen/OnboardingScreen and GoalStep; typed inert DTOs; blocked live transport; callback markers prove UI dispatch only"
+}

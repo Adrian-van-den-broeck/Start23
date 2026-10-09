@@ -1,0 +1,4 @@
+{
+  "upgrade200Heading": "At 320 dp/200% the unchanged upgrade Notice pushes the task heading below the first viewport. Initial capture lookup failed without recording that case. It now verifies the expected heading through the existing scroll and returns to the top before capturing; no production change.",
+  "durationStyle": "Initial wrapper/callback styles rendered undersized controls. Rejected runs kept separately. Accepted final-7 uses direct Pressables and native style arrays with explicit pressed/focus state."
+}

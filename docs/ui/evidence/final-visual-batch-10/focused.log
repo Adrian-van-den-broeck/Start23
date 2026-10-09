@@ -1,0 +1,12 @@
+PASS src/screens/OnboardingScreen.test.tsx (6.821 s)
+PASS src/screens/OnboardingScreen.resume.test.tsx
+PASS src/components/DurationPicker.test.tsx
+PASS src/ui-v2/primitives/FinalPrimitives.test.tsx
+PASS src/screens/ProfileScreen.test.tsx
+
+Test Suites: 5 passed, 5 total
+Tests:       34 passed, 34 total
+Snapshots:   0 total
+Time:        9.035 s
+Ran all test suites matching /src\\screens\\ProfileScreen.test.tsx|src\\screens\\OnboardingScreen.test.tsx|src\\screens\\OnboardingScreen.resume.test.tsx|src\\components\\DurationPicker.test.tsx|src\\ui-v2\\primitives\\FinalPrimitives.test.tsx/i.
+Test results written to: ..\docs\ui\evidence\final-visual-batch-10\focused-tests.json

@@ -1,0 +1,33 @@
+{
+  "reviewDate": "2026-10-09",
+  "keyboard": {
+    "pass": true,
+    "profileBackTabEnter": true,
+    "durationOpenCloseTabEnter": true,
+    "modalReturnFocus": "Kies uren voor Totale richttijd",
+    "visibleDurationFocusRing": true,
+    "completeProfileAndGoalSaveAt320Dp200PercentWithIME": true
+  },
+  "talkBack": {
+    "enabled": true,
+    "profileHeartRateFocusVisuallyObserved": true,
+    "goalPaceActivatedAndChecked": true,
+    "goalPostActivationFocusObserved": "Lopen heading; target-mode focus retention is not claimed by this synthetic-touch capture",
+    "spokenAnnouncementsVerified": false,
+    "physicalDeviceVerified": false
+  },
+  "reducedMotion": {
+    "systemAnimationScalesZero": true,
+    "modalOpenAndAndroidBackClose": true
+  },
+  "imagesReviewed": [
+    "keyboard-profile-save-reachable.png",
+    "keyboard-goal-save-reachable.png",
+    "keyboard-duration-hours-focus.png",
+    "keyboard-modal-close-focus.png",
+    "keyboard-duration-modal-return.png",
+    "keyboard-first-invalid-goal.png",
+    "talkback-profile-heart-rate.png",
+    "talkback-goal-target-mode.png"
+  ]
+}

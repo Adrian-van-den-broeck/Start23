@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type RefObject } from 'react';
 import {
   Modal,
   Pressable,
@@ -8,8 +8,10 @@ import {
   View,
 } from 'react-native';
 
+import { Icon } from '../ui-v2/primitives/Icon';
 import { formatClockDuration } from '../lib/onboardingForms';
 import { colors, radius, spacing } from '../theme/tokens';
+import { colors as finalColors, layout, radius as finalRadius, space, typography } from '../ui-v2/tokens';
 
 type DurationUnit = 'hours' | 'minutes' | 'seconds';
 
@@ -21,6 +23,8 @@ type DurationPickerProps = {
   hint?: string;
   required?: boolean;
   maxHours?: number;
+  appearance?: 'default' | 'final';
+  focusRef?: RefObject<View | null>;
 };
 
 const unitCopy: Record<
@@ -49,7 +53,17 @@ export function DurationPicker({
   hint,
   required = false,
   maxHours = 168,
+  appearance = 'default',
+  focusRef,
 }: DurationPickerProps) {
+  const [focusedControl, setFocusedControl] = useState<string | null>(null);
+  const [pressedControl, setPressedControl] = useState<string | null>(null);
+  const controlProps = (key: string) => ({ onPressIn: () => setPressedControl(key), onPressOut: () => setPressedControl(null), ...(appearance === 'final' ? {
+    onFocus: () => setFocusedControl(key), onBlur: () => setFocusedControl(null),
+  } : {}) });
+  const focusRing = (key: string) => appearance === 'final' && focusedControl === key ?
+    <View pointerEvents="none" accessible={false} importantForAccessibility="no-hide-descendants" style={finalStyles.focus} /> : null;
+  const styles = appearance === 'final' ? finalStyles : legacyStyles;
   const [openUnit, setOpenUnit] = useState<DurationUnit | null>(null);
   const value = parts(valueSeconds);
   const atMaximumDuration = (valueSeconds ?? 0) >= maxHours * 3600;
@@ -85,12 +99,13 @@ export function DurationPicker({
         </Text>
         {!required && valueSeconds !== null ? (
           <Pressable
+            {...controlProps('clear')}
             accessibilityLabel={`${label} wissen`}
             accessibilityRole="button"
             onPress={() => onChange(null)}
             style={styles.clearButton}
           >
-            <Text style={styles.clearText}>Wissen</Text>
+            <Text style={styles.clearText}>Wissen</Text>{focusRing('clear')}
           </Pressable>
         ) : null}
       </View>
@@ -114,32 +129,36 @@ export function DurationPicker({
             <Text style={styles.unitLabel}>{unitCopy[unit].label}</Text>
             <View style={styles.stepper}>
               <Pressable
+                {...controlProps(unit + '-decrease')}
                 accessibilityLabel={`Verlaag ${unitCopy[unit].label} voor ${label}`}
                 accessibilityRole="button"
                 disabled={value[unit] === 0}
                 onPress={() => adjust(unit, -1)}
-                style={({ pressed }) => [
+                style={[
                   styles.stepButton,
                   value[unit] === 0 && styles.disabled,
-                  pressed && styles.pressed,
+                  pressedControl === (unit + '-decrease') && styles.pressed,
                 ]}
               >
-                <Text style={styles.stepButtonText}>-</Text>
+                {appearance === 'final' ? <Icon name="minus" /> : <Text style={styles.stepButtonText}>-</Text>}{focusRing(unit + '-decrease')}
               </Pressable>
               <Pressable
+                ref={unit === 'hours' ? focusRef : undefined}
+                {...controlProps(unit + '-choose')}
                 accessibilityLabel={`Kies ${unitCopy[unit].label} voor ${label}`}
                 accessibilityRole="button"
                 onPress={() => setOpenUnit(unit)}
-                style={({ pressed }) => [
+                style={[
                   styles.valueButton,
-                  pressed && styles.pressed,
+                  pressedControl === (unit + '-choose') && styles.pressed,
                 ]}
               >
                 <Text style={styles.valueText}>
                   {String(value[unit]).padStart(2, '0')}
-                </Text>
+                </Text>{focusRing(unit + '-choose')}
               </Pressable>
               <Pressable
+                {...controlProps(unit + '-increase')}
                 accessibilityLabel={`Verhoog ${unitCopy[unit].label} voor ${label}`}
                 accessibilityRole="button"
                 disabled={
@@ -147,15 +166,15 @@ export function DurationPicker({
                   value[unit] === (unit === 'hours' ? maxHours : 59)
                 }
                 onPress={() => adjust(unit, 1)}
-                style={({ pressed }) => [
+                style={[
                   styles.stepButton,
                   (atMaximumDuration ||
                     value[unit] === (unit === 'hours' ? maxHours : 59)) &&
                     styles.disabled,
-                  pressed && styles.pressed,
+                  pressedControl === (unit + '-increase') && styles.pressed,
                 ]}
               >
-                <Text style={styles.stepButtonText}>+</Text>
+                {appearance === 'final' ? <Icon name="add" /> : <Text style={styles.stepButtonText}>+</Text>}{focusRing(unit + '-increase')}
               </Pressable>
             </View>
           </View>
@@ -182,12 +201,13 @@ export function DurationPicker({
                 Kies {openUnit ? unitCopy[openUnit].label : ''}
               </Text>
               <Pressable
+                {...controlProps('close')}
                 accessibilityLabel="Duurkeuze sluiten"
                 accessibilityRole="button"
                 onPress={() => setOpenUnit(null)}
                 style={styles.closeButton}
               >
-                <Text style={styles.closeText}>Sluiten</Text>
+                <Text style={styles.closeText}>Sluiten</Text>{focusRing('close')}
               </Pressable>
             </View>
             <ScrollView contentContainerStyle={styles.optionGrid}>
@@ -201,6 +221,7 @@ export function DurationPicker({
                     }`;
                     return (
                       <Pressable
+                        {...controlProps('option-' + option)}
                         accessibilityRole="radio"
                         accessibilityState={{ selected }}
                         key={option}
@@ -208,10 +229,10 @@ export function DurationPicker({
                           setPart(openUnit, option);
                           setOpenUnit(null);
                         }}
-                        style={({ pressed }) => [
+                        style={[
                           styles.option,
                           selected && styles.optionSelected,
-                          pressed && styles.pressed,
+                          pressedControl === ('option-' + option) && styles.pressed,
                         ]}
                       >
                         <Text
@@ -221,7 +242,7 @@ export function DurationPicker({
                           ]}
                         >
                           {copy}
-                        </Text>
+                        </Text>{focusRing('option-' + option)}
                       </Pressable>
                     );
                   })
@@ -234,7 +255,7 @@ export function DurationPicker({
   );
 }
 
-const styles = StyleSheet.create({
+const legacyStyles = StyleSheet.create({
   group: { gap: spacing.xs },
   labelRow: {
     alignItems: 'center',
@@ -345,4 +366,38 @@ const styles = StyleSheet.create({
   optionSelected: { backgroundColor: colors.brand },
   optionText: { color: colors.ink, fontSize: 14, fontWeight: '700' },
   optionTextSelected: { color: colors.white },
+});
+
+const finalStyles = StyleSheet.create({
+  focus: { ...StyleSheet.absoluteFill, borderColor: finalColors.focus, borderWidth: layout.focusOutline, borderRadius: finalRadius.control },
+  ...legacyStyles,
+  group: { gap: space[8] },
+  labelRow: { gap: space[8] },
+  label: { ...typography.label, color: finalColors.text },
+  clearButton: { minWidth: layout.touch, minHeight: layout.touch, justifyContent: 'center', padding: space[8], borderRadius: finalRadius.control },
+  clearText: { ...typography.label, color: finalColors.primary },
+  result: { ...typography.body, fontWeight: '600', fontVariant: ['tabular-nums'], color: finalColors.primary, backgroundColor: finalColors.primarySoft, borderColor: finalColors.borderControl, borderWidth: layout.controlEdge, borderRadius: finalRadius.control, padding: space[12] },
+  resultError: { borderColor: finalColors.destructive, borderWidth: layout.focusOutline },
+  units: { gap: space[16] },
+  unitCard: { gap: space[8] },
+  unitLabel: { ...typography.label, color: finalColors.textMuted },
+  stepper: { flexDirection: 'row', alignItems: 'center', gap: space[8] },
+  stepButton: { minWidth: layout.touch, minHeight: layout.touch, alignItems: 'center', justifyContent: 'center', backgroundColor: finalColors.primarySoft, borderRadius: finalRadius.control, padding: space[8] },
+  stepButtonText: { ...typography.button, color: finalColors.primary },
+  valueButton: { flex: 1, minWidth: layout.touch, minHeight: layout.touch, alignItems: 'center', justifyContent: 'center', padding: space[8], backgroundColor: finalColors.surface, borderColor: finalColors.borderControl, borderWidth: layout.controlEdge, borderRadius: finalRadius.control },
+  valueText: { ...typography.numericCompact, fontVariant: ['tabular-nums'], color: finalColors.text },
+  disabled: { backgroundColor: finalColors.surfaceSubtle },
+  error: { ...typography.supporting, color: finalColors.destructive },
+  hint: { ...typography.supporting, color: finalColors.textMuted },
+  modalBackdrop: { backgroundColor: finalColors.scrim, flex: 1, justifyContent: 'flex-end' },
+  modalCard: { backgroundColor: finalColors.surface, borderTopLeftRadius: finalRadius.sheet, borderTopRightRadius: finalRadius.sheet, maxHeight: '80%', padding: space[16] },
+  modalHeader: { gap: space[8], marginBottom: space[16] },
+  modalTitle: { ...typography.sectionTitle, color: finalColors.text },
+  closeButton: { minWidth: layout.touch, minHeight: layout.touch, justifyContent: 'center', padding: space[12], backgroundColor: finalColors.primarySoft, borderRadius: finalRadius.button },
+  closeText: { ...typography.button, color: finalColors.primary },
+  optionGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8], paddingBottom: space[32] },
+  option: { minWidth: layout.touch, minHeight: layout.touch, padding: space[12], justifyContent: 'center', alignItems: 'center', backgroundColor: finalColors.primarySoft, borderRadius: finalRadius.control },
+  optionSelected: { backgroundColor: finalColors.primary },
+  optionText: { ...typography.label, color: finalColors.text },
+  optionTextSelected: { color: finalColors.textInverse },
 });

@@ -1,0 +1,102 @@
+import { useCallback, useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { ProfileScreen } from '@/screens/ProfileScreen';
+import { OnboardingScreen } from '@/screens/OnboardingScreen';
+import type { OnboardingState, PrimaryRaceGoal, RaceType, GoalPlanningOption, ZoneProfile } from '@/api/types';
+import { Text } from '@/ui-v2/primitives/Text';
+import { colors } from '@/ui-v2/tokens';
+
+const reviewFetch = globalThis.fetch.bind(globalThis);
+const stamp = '2026-09-01T00:00:00Z';
+const token = 'batch10-inert-public-fixture';
+const profile = { athlete_id: 'opaque-fixture-athlete', first_name: 'Ada', last_name: 'Lovelace', date_of_birth: '1990-05-20', resting_heart_rate_bpm: 52, timezone: 'Europe/Amsterdam', timezone_source: 'device' as const, timezone_confirmed_at: stamp, heart_rate_monitor_confirmed_at: stamp, onboarding_status: 'completed' as const, revision: 4, identifying_revision: 2, physiology_revision: 2, created_at: stamp, updated_at: stamp };
+const options: GoalPlanningOption[] = [{goal_kind:'race_event',goal_family:'race_event',label:'Wedstrijd of evenement',availability:'available',requires_target_date:true,cycle_anchor:'race_date',unavailable_reason:null}, {goal_kind:'personal_goal',goal_family:'general_fitness',label:'Een persoonlijk doel met een bijzonder lange bronnaam om volledige labels te controleren',availability:'coming_later',requires_target_date:false,cycle_anchor:'cycle_week_1',unavailable_reason:'deterministic_rules_not_approved'}];
+// Existing 172 bpm public fixture from OnboardingScreen.test.tsx; never calculated or displayed by this review form.
+const runZone = (pending: boolean): ZoneProfile => ({
+  id:'fixture-run-zone',discipline:'run',version:1,setup_method:'manual',status:pending?'pending':'active',source:'athlete_entered',validation_status:pending?'pending_athlete_confirmation':'confirmed_by_athlete',fallback_active:false,needs_testing:false,requires_review:pending,review_reason:'athlete_confirmation_required',ruleset_version:'phase-13-joren-ruleset-1',zone_model_version:'phase-13-joren-ruleset-1',source_method:null,source_quality:null,calculated_at:null,review_status:null,reviewer_id:null,reviewed_at:null,evidence_version:null,effective_from:null,created_at:stamp,metric:{metric_kind:'run_lthr_bpm',value:'172'},boundaries:[],metric_profiles:[],proposal_id:pending?'fixture-run-proposal':null,base_zone_profile_id:null,
+});
+const labels = ['profile','heart_rate_monitor','timezone','history','goal','zones','review'] as const;
+const goal = (race: RaceType, long: boolean): PrimaryRaceGoal => ({
+  id: 'fixture-goal', priority:'A',goal_type:'race',status:'active',race_type: race, race_name: long ? 'Een wedstrijdnaam met een bijzonder lange beschrijving die volledig leesbaar moet blijven bij tweehonderd procent tekst' : 'Fixture race',
+  race_date:'2099-06-15', swim_distance_meters:1500,bike_distance_meters:40000,run_distance_meters:10000,
+  total_target_time_seconds:13530, swim_target_time_seconds:1803,bike_target_time_seconds:7207,run_target_time_seconds:3601,
+  specific_focus:long ? 'Optionele focus met een lange toelichting. Alle bestaande tekst en velden blijven leesbaar en de uiteindelijke opslagactie blijft bereikbaar.' : null,
+  revision:1,created_at:stamp,updated_at:stamp,
+});
+
+export default function Review() {
+  const [config,setConfig]=useState({state:'profile-editor',nonce:'initial'});
+  const name = config.state;
+  const [ready,setReady]=useState('');
+  useEffect(() => {
+    let active=true;
+    const poll=async () => {
+      try {
+        const result=await reviewFetch('http://127.0.0.1:8084/batch10-fixture.json?cache='+Date.now());
+        const next=await result.json() as {state:string;nonce:string};
+        if(active) setConfig(previous => previous.nonce===next.nonce ? previous : next);
+      } catch { /* Only owned loopback fixture configuration is polled. */ }
+    };
+    void poll(); const timer=setInterval(() => { void poll(); },500);
+    return () => {active=false;clearInterval(timer);};
+  }, []);
+  const [event,setEvent]=useState('none');
+  const [requests,setRequests]=useState<{method:string;path:string;body:string|null}[]>([]);
+  useEffect(() => {
+    setEvent('none');setRequests([]);
+    const savedFetch = globalThis.fetch;
+    const choice = name.startsWith('review') ? 'run' : name.split('-')[1];
+    const race: RaceType = ['run','bike','swim','triathlon','duathlon'].includes(choice) ? choice as RaceType : 'triathlon';
+    const step = name.startsWith('goal') ? 'goal' : name.startsWith('profile') ? 'profile' : name === 'upgrade' ? 'timezone' : name.startsWith('review') ? 'review' : name === 'monitor' || name === 'resume' ? 'heart_rate_monitor' : name as typeof labels[number];
+    const index=labels.indexOf(step);
+    const dto: OnboardingState = {
+      status: name==='upgrade' ? 'upgrade_required' : name.startsWith('profile-editor') ? 'completed' : 'in_progress',
+      current_step: name.startsWith('profile-editor') ? 'completed' : name==='resume' ? 'profile' : step,
+      completed_steps:labels.slice(0,index),current_onboarding_version:'phase-14-onboarding-v2',current_ruleset_version:'phase-13-joren-ruleset-1',
+      completed_onboarding_version:name==='upgrade'?'phase-13-onboarding-v1':null,completed_ruleset_version:null,
+      upgrade_required:name==='upgrade',missing_upgrade_steps:name==='upgrade'?['timezone','goal']:[],
+      profile: name==='profile-blank'?null:{...profile,first_name:name.includes('long')?'Een bijzonder lange voornaam voor de vormgeving':profile.first_name},
+      training_history: (['swim','bike','run'] as const).map(discipline=>({discipline,average_weekly_distance:null,distance_unit:null,average_sessions_per_week:null,history_window_months:null,previous_month_weekly_minutes:discipline==='run'?'120':'0',baseline_model_version:null,confirmed_at:stamp,updated_at:stamp})),
+      primary_goal: name==='goal-choice'||name==='goal-error' ? null : goal(race,name.includes('long')),
+      required_disciplines:race==='duathlon'?['bike','run']:race==='triathlon'?['swim','bike','run']:[race as 'run'|'bike'|'swim'],
+      zones:name.startsWith('review') && name!=='review-blocked' ? [runZone(name==='review-pending')] : [],discipline_setups:[],can_complete:name.startsWith('review') && name!=='review-blocked' && name!=='review-pending',initial_plan_request_id:null,onboarding_revision:9,
+    };
+    globalThis.fetch = async (input,init) => {
+      const auth=(init?.headers as Record<string,string>|undefined)?.Authorization;
+      if (auth !== 'Bearer '+token) throw new Error('Non-fixture transport is blocked in review');
+      const path=String(input).split('http://127.0.0.1:9')[1] ?? String(input);
+      if (init?.method && init.method!=='GET') {
+        setRequests(previous => [...previous,{method:init.method!,path,body:typeof init.body==='string' ? init.body : null}]);
+        setEvent((init.method ?? '')+' '+path+' '+(init.body ?? ''));
+        if(name.includes('server-error')) return new Response(JSON.stringify({error:{code:'validation_failed',details:{violations:[{location:['body','date_of_birth'],type:'invalid'}]}}}),{status:422});
+        if(name.includes('busy')) return new Promise<Response>(() => undefined);
+        return new Response(JSON.stringify(path.endsWith('/complete') ? {onboarding:{...dto,current_step:'completed'},initial_plan_request_id:'fixture-pending',initial_plan_request_status:'pending'} : {}),{status:200});
+      }
+      if (path==='/api/v1/onboarding') return new Response(JSON.stringify(dto),{status:200});
+      if (path==='/api/v1/onboarding/goal-options') return new Response(JSON.stringify(name.includes('english') ? options.map(option=>({...option,label:option.goal_kind==='race_event'?'Race or event':'An optional personal goal with a very long supplied English label, still unavailable'})) : options),{status:200});
+      if (path==='/api/v1/me/physiology-profile') return name==='resume' ? new Response(JSON.stringify({athlete_id:profile.athlete_id,date_of_birth:profile.date_of_birth,resting_heart_rate_bpm:52,revision:1,created_at:stamp,updated_at:stamp}),{status:200}) : new Response('{}',{status:404});
+      return new Response('[]',{status:200});
+    };
+    setReady(name+config.nonce);
+    return () => {globalThis.fetch=savedFetch;};
+  },[name,config.nonce]);
+  const onBack=useCallback(() => setEvent('back'),[]);
+  const onTests=useCallback(() => setEvent('tests'),[]);
+  const onPioneer=useCallback(() => setEvent('pioneer'),[]);
+  const onSignOut=useCallback(async () => setEvent('signout'),[]);
+  const onCalibration=useCallback(() => setEvent('calibration'),[]);
+  const onPlanning=useCallback(() => setEvent('planning'),[]);
+  if (ready!==name+config.nonce) return <View />;
+  return <View style={{flex:1,backgroundColor:colors.background}}>
+
+
+    <View style={{flex:1}}>
+      {name.startsWith('profile-editor') ? <ProfileScreen key={name+config.nonce} accessToken={token} onBack={onBack} onOpenTests={onTests} onOpenPioneerAccess={onPioneer} onSignOut={onSignOut} /> :
+      <OnboardingScreen key={name+config.nonce} accessToken={token} onOpenCalibration={onCalibration} onOpenPlanning={onPlanning} onSignOut={async()=>setEvent('signout')} />}
+    </View>
+    <Text variant="caption" testID={'batch-10-fixture-'+name}>{'Batch 10 fixture: '+name}</Text>
+    <Text variant="caption" testID="batch-10-build-final-7">Build final-7</Text>
+    <Text variant="caption" testID="batch-10-requests" accessibilityLabel={JSON.stringify(requests)}>{'Inert requests: '+requests.length}</Text>
+    <Text variant="caption" testID="batch-10-event" accessibilityLabel={'Fixture callback '+event}>{event === 'none' ? 'No fixture callback' : 'Fixture callback recorded'}</Text>
+  </View>;
+}

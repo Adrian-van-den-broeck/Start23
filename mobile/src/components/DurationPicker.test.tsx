@@ -3,10 +3,11 @@ import { fireEvent, render } from '@testing-library/react-native';
 
 import { DurationPicker } from './DurationPicker';
 
-function ControlledDuration({ initial }: { initial: number | null }) {
+function ControlledDuration({ initial, appearance }: { initial: number | null; appearance: 'default' | 'final' }) {
   const [value, setValue] = useState(initial);
   return (
     <DurationPicker
+      appearance={appearance}
       label="Totale richttijd"
       onChange={setValue}
       valueSeconds={value}
@@ -14,9 +15,9 @@ function ControlledDuration({ initial }: { initial: number | null }) {
   );
 }
 
-describe('DurationPicker', () => {
+describe.each(['default', 'final'] as const)('DurationPicker (%s)', (appearance) => {
   test('loads and displays an exact saved duration without a keyboard', async () => {
-    const screen = await render(<ControlledDuration initial={13_530} />);
+    const screen = await render(<ControlledDuration initial={13_530} appearance={appearance} />);
 
     expect(screen.getByLabelText('Totale richttijd: 03:45:30')).toBeTruthy();
     expect(screen.queryByRole('textbox')).toBeNull();
@@ -32,7 +33,7 @@ describe('DurationPicker', () => {
   });
 
   test('an optional duration can be cleared and restored with touch controls', async () => {
-    const screen = await render(<ControlledDuration initial={3600} />);
+    const screen = await render(<ControlledDuration initial={3600} appearance={appearance} />);
 
     await fireEvent.press(
       screen.getByRole('button', { name: 'Totale richttijd wissen' }),

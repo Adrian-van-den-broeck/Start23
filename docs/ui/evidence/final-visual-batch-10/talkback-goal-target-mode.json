@@ -1,0 +1,7 @@
+{
+  "utc": "2026-10-09T07:15:03.414887+00:00",
+  "provenance": "Actual TalkBack-enabled inert production fixture; no hierarchy dump during focus screenshot",
+  "expectedFocus": "Richttempo (min/km)",
+  "method": "Native touch exploration using geometry re-read after TalkBack activation; expected target is not proof of observed focus or announcement",
+  "services": "com.google.android.marvin.talkback/.TalkBackService"
+}

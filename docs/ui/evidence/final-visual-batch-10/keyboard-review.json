@@ -1,0 +1,26 @@
+{
+  "pass": true,
+  "backendWrites": false,
+  "screenReaderEnabled": false,
+  "results": [
+    {
+      "tabEnterProfileBack": true,
+      "callback": "back"
+    },
+    {
+      "profileIMEVisible": true,
+      "saveFullyVisibleAt320and200": true
+    },
+    {
+      "tabEnterDurationOpens": true,
+      "tabEnterModalClose": true,
+      "observedReturnFocus": [
+        "Kies uren voor Totale richttijd"
+      ]
+    },
+    {
+      "tabEnterTargetMode": true,
+      "paceInputAvailable": true
+    }
+  ]
+}

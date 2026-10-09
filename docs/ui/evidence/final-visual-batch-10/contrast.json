@@ -1,0 +1,89 @@
+{
+  "source": "mobile/src/ui-v2/tokens/colors.ts",
+  "pairs": [
+    {
+      "foreground": "text",
+      "background": "background",
+      "ratio": 6.860826783395268,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 7.113570252299936,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textMuted",
+      "background": "surface",
+      "ratio": 5.794670367766425,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textMuted",
+      "background": "background",
+      "ratio": 5.588787099876458,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "primary",
+      "background": "primarySoft",
+      "ratio": 8.259677625906914,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textInverse",
+      "background": "primary",
+      "ratio": 9.59689960234215,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "destructive",
+      "background": "surface",
+      "ratio": 6.512433141578861,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "warning",
+      "background": "warningSoft",
+      "ratio": 6.011441606154814,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "destructive",
+      "background": "destructiveSoft",
+      "ratio": 5.437716725659554,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "borderControl",
+      "background": "surface",
+      "ratio": 3.9775862361849925,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "foreground": "focus",
+      "background": "surface",
+      "ratio": 9.59689960234215,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "foreground": "text",
+      "background": "surfaceSubtle",
+      "ratio": 6.105333806724277,
+      "minimum": 4.5,
+      "pass": true
+    }
+  ]
+}
