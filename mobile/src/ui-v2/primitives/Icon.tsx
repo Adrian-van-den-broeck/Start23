@@ -14,6 +14,7 @@ import Info from 'lucide-react-native/icons/info';
 import List from 'lucide-react-native/icons/list';
 import LogOut from 'lucide-react-native/icons/log-out';
 import MapPin from 'lucide-react-native/icons/map-pin';
+import Minus from 'lucide-react-native/icons/minus';
 import Plus from 'lucide-react-native/icons/plus';
 import RefreshCw from 'lucide-react-native/icons/refresh-cw';
 import TriangleAlert from 'lucide-react-native/icons/triangle-alert';
@@ -49,6 +50,7 @@ const glyphs = {
   undo: Undo2,
   list: List,
   add: Plus,
+  minus: Minus,
   logout: LogOut,
   goal: Flag,
   check: Check,

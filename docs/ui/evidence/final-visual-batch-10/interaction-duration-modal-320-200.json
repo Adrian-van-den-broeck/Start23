@@ -1,0 +1,12 @@
+{
+  "fixture": {
+    "state": "goal-run",
+    "width": 320,
+    "fontScale": 2,
+    "build": "final-7",
+    "language": "source Dutch",
+    "inertActions": true
+  },
+  "modal": true,
+  "provenance": "Actual DurationPicker modal from immediately validated production fixture; underlying native hierarchy hidden by modal"
+}

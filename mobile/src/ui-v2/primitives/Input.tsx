@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type RefObject } from 'react';
 import { StyleSheet, TextInput, useWindowDimensions, View, type TextInputProps } from 'react-native';
 import { colors, layout, radius, space, typography } from '../tokens';
 import { FormField, type FieldDetails } from './FormField';
@@ -7,17 +7,17 @@ import { IconTile } from './IconTile';
 import { Text } from './Text';
 
 export type InputProps = TextInputProps & FieldDetails & {
-  disabled?: boolean; readOnly?: boolean; unit?: string; icon?: IconName;
+  disabled?: boolean; readOnly?: boolean; unit?: string; icon?: IconName; inputRef?: RefObject<TextInput | null>;
 };
 
 export function Input({ label, hint, error, optionalLabel, disabledReason, disabled = false,
   readOnly = false, unit, icon, multiline = false, style, onFocus, onBlur, editable = true,
-  accessibilityLabel, accessibilityHint, accessibilityState, ...props }: InputProps) {
+  accessibilityLabel, accessibilityHint, accessibilityState, inputRef, ...props }: InputProps) {
   const [focused, setFocused] = useState(false);
   const { width, fontScale } = useWindowDimensions();
   const compact = width < 360 || fontScale >= 1.5;
   const locked = disabled || readOnly || !editable;
-  const fullLabel = accessibilityLabel ?? [label, optionalLabel, unit].filter(Boolean).join(', ');
+  const fullLabel = [accessibilityLabel ?? label, accessibilityLabel ? undefined : optionalLabel, unit].filter(Boolean).join(', ');
   return <FormField label={compact && unit ? `${label} (${unit})` : label} hint={hint} error={error}
     optionalLabel={optionalLabel} disabledReason={disabledReason}>
     {(labelId) => <View style={{ gap: space[8] }}>
@@ -25,11 +25,11 @@ export function Input({ label, hint, error, optionalLabel, disabledReason, disab
       <View style={[styles.control, locked && styles.locked, error && { borderColor: colors.destructive }]}>
         {icon && !compact ? <View style={{ paddingLeft: space[12] }}><IconTile name={icon} size="field" /></View> : null}
         {readOnly ? <Text accessibilityLabel={`${fullLabel}: ${props.value ?? ''}`} style={styles.readOnly}>{props.value}</Text> :
-          <TextInput {...props} style={[styles.input, multiline && styles.multiline, style]}
+          <TextInput {...props} ref={inputRef} style={[styles.input, multiline && styles.multiline, style]}
             accessibilityLabel={fullLabel} accessibilityLabelledBy={!accessibilityLabel && compact && unit ? labelId : undefined}
             accessibilityHint={[accessibilityHint ?? hint, error, disabledReason].filter(Boolean).join('. ') || undefined}
             accessibilityState={{ ...accessibilityState, disabled: locked }} editable={!locked}
-            placeholderTextColor={colors.textMuted} allowFontScaling multiline={multiline}
+            placeholderTextColor={colors.textMuted} allowFontScaling multiline={multiline} aria-invalid={Boolean(error)}
             onFocus={(event) => { setFocused(true); onFocus?.(event); }}
             onBlur={(event) => { setFocused(false); onBlur?.(event); }} />}
         {unit && !compact ? <View style={styles.unit}><Text tone="textMuted">{unit}</Text></View> : null}

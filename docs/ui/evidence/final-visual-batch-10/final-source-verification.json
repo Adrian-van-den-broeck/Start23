@@ -1,0 +1,10 @@
+{
+  "mobileGitTree": "ed181b334be621fa77a7e480dee952c9957bab1b",
+  "sourceTreeMatchesPreSquashBackup": true,
+  "fullMobileSuites": 62,
+  "fullMobileTests": 564,
+  "focusedTests": 34,
+  "strictTypecheck": true,
+  "sourceChangedAfterSuccessfulTests": false,
+  "finalTemporaryApplicationPathsAbsent": true
+}

@@ -1,0 +1,2 @@
+import { Redirect } from 'expo-router';
+export default function FixtureEntry() { return <Redirect href="/dev-batch10-review?state=profile-editor" />; }

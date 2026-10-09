@@ -1,0 +1,12 @@
+/preview.pid
+/preview.stdout.log
+/preview.stderr.log
+/fixture-config.json
+/__pycache__/
+
+/emulator.pid
+/emulator.stdout.log
+/emulator.stderr.log
+
+/rejected-*/
+/review-commits.json

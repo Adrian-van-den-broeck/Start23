@@ -1,0 +1,290 @@
+[
+  {
+    "state": "profile-editor",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "goal-run",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 4
+  },
+  {
+    "state": "profile-editor",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 6
+  },
+  {
+    "state": "profile-blank",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "profile-blank",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 4
+  },
+  {
+    "state": "monitor",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "monitor",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 4
+  },
+  {
+    "state": "timezone",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "timezone",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 6
+  },
+  {
+    "state": "history",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "history",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 4
+  },
+  {
+    "state": "goal-triathlon",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 6
+  },
+  {
+    "state": "goal-triathlon",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 15
+  },
+  {
+    "state": "zones",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 1
+  },
+  {
+    "state": "zones",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 3
+  },
+  {
+    "state": "review",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "review",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 5
+  },
+  {
+    "state": "goal-bike",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 4
+  },
+  {
+    "state": "goal-swim",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 4
+  },
+  {
+    "state": "goal-duathlon",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 5
+  },
+  {
+    "state": "upgrade",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 3
+  },
+  {
+    "state": "profile-filled",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "profile-filled",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 4
+  },
+  {
+    "state": "upgrade",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 6
+  },
+  {
+    "state": "resume",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "resume",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 4
+  },
+  {
+    "state": "review-blocked",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "review-blocked",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 5
+  },
+  {
+    "state": "profile-editor-long",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 6
+  },
+  {
+    "state": "goal-triathlon-long",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 15
+  },
+  {
+    "state": "review-long",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 5
+  },
+  {
+    "state": "profile-editor",
+    "width": 320,
+    "fontScale": 1,
+    "pages": 3
+  },
+  {
+    "state": "goal-run",
+    "width": 320,
+    "fontScale": 1,
+    "pages": 6
+  },
+  {
+    "state": "profile-editor",
+    "width": 360,
+    "fontScale": 1,
+    "pages": 3
+  },
+  {
+    "state": "goal-run",
+    "width": 360,
+    "fontScale": 1,
+    "pages": 5
+  },
+  {
+    "state": "profile-editor",
+    "width": 412,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "goal-run",
+    "width": 412,
+    "fontScale": 1,
+    "pages": 4
+  },
+  {
+    "state": "profile-editor",
+    "width": 360,
+    "fontScale": 2,
+    "pages": 4
+  },
+  {
+    "state": "goal-run",
+    "width": 360,
+    "fontScale": 2,
+    "pages": 7
+  },
+  {
+    "state": "profile-editor",
+    "width": 393,
+    "fontScale": 2,
+    "pages": 4
+  },
+  {
+    "state": "goal-run",
+    "width": 393,
+    "fontScale": 2,
+    "pages": 6
+  },
+  {
+    "state": "profile-editor",
+    "width": 412,
+    "fontScale": 2,
+    "pages": 3
+  },
+  {
+    "state": "goal-run",
+    "width": 412,
+    "fontScale": 2,
+    "pages": 6
+  },
+  {
+    "state": "goal-choice",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "review-pending",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "review-pending",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 6
+  },
+  {
+    "state": "goal-run-english",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 4
+  },
+  {
+    "state": "goal-run-english",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 10
+  }
+]

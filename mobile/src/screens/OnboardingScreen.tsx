@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -32,16 +33,10 @@ import type {
   GoalPlanningOption,
   OnboardingState,
   OnboardingStep,
-  PrimaryRaceGoal,
-  RaceType,
 } from '../api/types';
-import { DurationPicker } from '../components/DurationPicker';
-import { FormField } from '../components/FormField';
-import { MotionPressable as Pressable } from '../components/MotionPressable';
-import {
-  formatIsoDateInput,
-} from '../lib/dateInput';
-import { colors as finalColors, layout, radius as finalRadius, shadows, space, typography } from '../ui-v2/tokens';
+import { GoalStep } from '../ui-v2/screens/GoalForm';
+export { GoalStep } from '../ui-v2/screens/GoalForm';
+import { colors, layout, radius, space, typography } from '../ui-v2/tokens';
 import { BrandedFormHeader, FormComposition } from '../ui-v2/components/FormComposition';
 import { ProfileForm } from '../ui-v2/components/ProfileForm';
 import { StepProgress } from '../ui-v2/components/StepProgress';
@@ -49,18 +44,7 @@ import { Button } from '../ui-v2/primitives/Button';
 import { Input } from '../ui-v2/primitives/Input';
 import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
 import { Notice } from '../ui-v2/primitives/Notice';
-const colors = { canvas: finalColors.background, brand: finalColors.primary, white: finalColors.textInverse,
-  ink: finalColors.text, inkMuted: finalColors.textMuted, inkFaint: finalColors.textMuted, danger: finalColors.destructive,
-  dangerSoft: finalColors.destructiveSoft, surface: finalColors.surface, surfaceRaised: finalColors.surface,
-  surfaceMuted: finalColors.surfaceSubtle, line: finalColors.border, lineStrong: finalColors.borderControl,
-  accent: finalColors.primary, brandSoft: finalColors.primarySoft, accentSoft: finalColors.warningSoft,
-  success: finalColors.primary };
-const spacing = { xs: space[4], sm: space[8], md: space[16], lg: space[24], xl: space[32], xxl: space[48] };
-const radius = { sm: finalRadius.inset, md: finalRadius.control, lg: finalRadius.card, pill: finalRadius.pill };
-import { parseRunPace } from '../lib/runPace';
 import {
-  parsePositiveInteger,
-  raceDisciplines,
   resolveDeviceTimezone,
 } from '../lib/onboardingForms';
 import { ZoneSetupStep } from './ZoneSetupStep';
@@ -234,453 +218,6 @@ export function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
   );
 }
 
-type GoalStepProps = {
-  goal: PrimaryRaceGoal | null;
-  options: GoalPlanningOption[];
-  saving: boolean;
-  onSave: (input: {
-    race_type: RaceType;
-    race_name: string;
-    race_date: string;
-    swim_distance_meters?: number;
-    bike_distance_meters?: number;
-    run_distance_meters?: number;
-    total_target_time_seconds: number;
-    swim_target_time_seconds?: number;
-    bike_target_time_seconds?: number;
-    run_target_time_seconds?: number;
-    specific_focus?: string;
-  }) => Promise<void>;
-};
-
-function normalizeRaceDate(value: string): string | null {
-  const match = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(value.trim());
-  if (!match) return null;
-  const year = Number(match[1]);
-  const month = Number(match[2]);
-  const day = Number(match[3]);
-  const candidate = new Date(Date.UTC(year, month - 1, day));
-  if (
-    candidate.getUTCFullYear() !== year ||
-    candidate.getUTCMonth() !== month - 1 ||
-    candidate.getUTCDate() !== day
-  ) {
-    return null;
-  }
-  const normalized = `${String(year).padStart(4, '0')}-${String(month).padStart(
-    2,
-    '0',
-  )}-${String(day).padStart(2, '0')}`;
-  const today = new Date();
-  const localToday = `${today.getFullYear()}-${String(
-    today.getMonth() + 1,
-  ).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  return normalized > localToday ? normalized : null;
-}
-
-export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
-  const [validationAttempted, setValidationAttempted] = useState(false);
-  const [selectedKind, setSelectedKind] = useState<
-    GoalPlanningOption['goal_kind'] | null
-  >(goal ? 'race_event' : null);
-  const [raceType, setRaceType] = useState<RaceType>(
-    goal?.race_type ?? 'triathlon',
-  );
-  const [raceName, setRaceName] = useState(goal?.race_name ?? '');
-  const [specificFocus, setSpecificFocus] = useState(goal?.specific_focus ?? '');
-  const [targetDate, setTargetDate] = useState(goal?.race_date ?? '');
-  const [totalTimeSeconds, setTotalTimeSeconds] = useState<number | null>(
-    goal?.total_target_time_seconds ?? null,
-  );
-  const [runGoalInput, setRunGoalInput] = useState<'time' | 'pace'>('time');
-  const [runGoalPace, setRunGoalPace] = useState('');
-  const [distances, setDistances] = useState<Record<Discipline, string>>({
-    swim: goal?.swim_distance_meters?.toString() ?? '',
-    bike: goal?.bike_distance_meters?.toString() ?? '',
-    run: goal?.run_distance_meters?.toString() ?? '',
-  });
-  const [disciplineTimeSeconds, setDisciplineTimeSeconds] = useState<
-    Record<Discipline, number | null>
-  >({
-    swim: goal?.swim_target_time_seconds ?? null,
-    bike: goal?.bike_target_time_seconds ?? null,
-    run: goal?.run_target_time_seconds ?? null,
-  });
-  const normalizedTargetDate = normalizeRaceDate(targetDate);
-  const disciplines = raceDisciplines[raceType];
-  const parsedDistances = Object.fromEntries(
-    disciplines.map((discipline) => [
-      discipline,
-      parsePositiveInteger(distances[discipline]),
-    ]),
-  ) as Partial<Record<Discipline, number | null>>;
-  const paceSeconds = parseRunPace(runGoalPace);
-  const effectiveTotalTimeSeconds = raceType === 'run' && runGoalInput === 'pace'
-    ? paceSeconds !== null && parsedDistances.run
-      ? Math.round(paceSeconds * parsedDistances.run / 1000)
-      : null
-    : totalTimeSeconds;
-  const individualTotal = disciplines.reduce<number>(
-    (sum, discipline) => sum + (disciplineTimeSeconds[discipline] ?? 0),
-    0,
-  );
-  const valid = Boolean(
-    raceName.trim() &&
-      normalizedTargetDate &&
-      effectiveTotalTimeSeconds !== null &&
-      effectiveTotalTimeSeconds > 0 &&
-      disciplines.every((discipline) => parsedDistances[discipline]) &&
-      disciplines.every(
-        (discipline) =>
-          disciplineTimeSeconds[discipline] === null ||
-          disciplineTimeSeconds[discipline] > 0,
-      ) &&
-      individualTotal <= effectiveTotalTimeSeconds,
-  );
-  const distanceErrors = Object.fromEntries(
-    disciplines.map((discipline) => {
-      const value = distances[discipline].trim();
-      return [
-        discipline,
-        !value
-          ? 'Afstand is verplicht.'
-          : parsedDistances[discipline] === null
-            ? 'Vul een positief aantal meters in.'
-            : null,
-      ];
-    }),
-  ) as Record<Discipline, string | null>;
-  const disciplineTimeErrors = Object.fromEntries(
-    disciplines.map((discipline) => [
-      discipline,
-      disciplineTimeSeconds[discipline] !== null &&
-      disciplineTimeSeconds[discipline] <= 0
-        ? 'Kies een tijd langer dan 00:00:00 of wis deze optionele tijd.'
-        : null,
-    ]),
-  ) as Record<Discipline, string | null>;
-  const goalValidationMessages = [
-    !raceName.trim() ? 'naam van de race' : null,
-    !targetDate.trim()
-      ? 'racedatum'
-      : !normalizedTargetDate
-        ? 'geldige toekomstige racedatum'
-        : null,
-    ...disciplines.map((discipline) =>
-      distanceErrors[discipline]
-        ? `afstand ${
-            discipline === 'swim'
-              ? 'zwemmen'
-              : discipline === 'bike'
-                ? 'fietsen'
-                : 'lopen'
-          }`
-        : null,
-    ),
-    effectiveTotalTimeSeconds === null
-      ? raceType === 'run' && runGoalInput === 'pace' ? 'geldig richttempo' : 'totale richttijd'
-      : effectiveTotalTimeSeconds <= 0
-        ? 'geldige totale richttijd'
-        : null,
-    ...disciplines.map((discipline) =>
-      disciplineTimeErrors[discipline]
-        ? `geldige richttijd ${discipline}`
-        : null,
-    ),
-    effectiveTotalTimeSeconds !== null && individualTotal > effectiveTotalTimeSeconds
-      ? 'een totale richttijd die niet korter is dan de onderdeeltijden'
-      : null,
-  ].filter((message): message is string => message !== null);
-  const raceOption = options.find(
-    (option) => option.goal_family === 'race_event',
-  );
-  const personalOptions = options.filter(
-    (option) => option.goal_kind === 'personal_goal',
-  );
-
-  return (
-    <StepFrame
-      description="Een wedstrijdplan rekent terug vanaf een racedatum. Een persoonlijk doel krijgt een eigen cyclus vanaf week 1 en gebruikt nooit stilzwijgend wedstrijdregels."
-      title="Kies je trainingsdoel"
-    >
-      <View style={styles.goalModeList}>
-        <Pressable
-          accessibilityRole="radio"
-          accessibilityState={{ selected: selectedKind === 'race_event' }}
-          disabled={raceOption?.availability !== 'available'}
-          onPress={() => setSelectedKind('race_event')}
-          style={({ pressed }) => [
-            styles.goalModeCard,
-            selectedKind === 'race_event' && styles.goalModeCardSelected,
-            pressed && styles.actionPressed,
-          ]}
-        >
-          <View style={styles.goalModeHeading}>
-            <View
-              style={[
-                styles.goalModeRadio,
-                selectedKind === 'race_event' && styles.goalModeRadioSelected,
-              ]}
-            />
-            <Text style={styles.goalModeTitle}>
-              {raceOption?.label ?? 'Wedstrijd of evenement'}
-            </Text>
-            <Text style={styles.availableBadge}>Beschikbaar</Text>
-          </View>
-          <Text style={styles.goalModeDescription}>
-            Verplichte racedatum; de trainingscyclus wordt vanaf die datum
-            teruggerekend.
-          </Text>
-        </Pressable>
-        <Pressable
-          accessibilityHint="Toont persoonlijke doelen die nog niet beschikbaar zijn"
-          accessibilityRole="radio"
-          accessibilityState={{ selected: selectedKind === 'personal_goal' }}
-          onPress={() => setSelectedKind('personal_goal')}
-          style={({ pressed }) => [
-            styles.goalModeCard,
-            selectedKind === 'personal_goal' && styles.goalModeCardSelected,
-            pressed && styles.actionPressed,
-          ]}
-        >
-          <View style={styles.goalModeHeading}>
-            <View
-              style={[
-                styles.goalModeRadio,
-                selectedKind === 'personal_goal' &&
-                  styles.goalModeRadioSelected,
-              ]}
-            />
-            <Text style={styles.goalModeTitle}>Persoonlijk doel</Text>
-            <Text style={styles.comingLaterBadge}>Komt later</Text>
-          </View>
-          <Text style={styles.goalModeDescription}>
-            Begint bij cyclusweek 1 en krijgt eigen doelregels zodra die zijn
-            beoordeeld.
-          </Text>
-        </Pressable>
-      </View>
-      {selectedKind === 'race_event' ? (
-        <>
-          <View style={styles.form}>
-            <Text style={styles.cardTitle}>Type wedstrijd</Text>
-            <View style={styles.goalModeList}>
-              {(
-                [
-                  ['run', 'Lopen'],
-                  ['bike', 'Fietsen'],
-                  ['swim', 'Zwemmen'],
-                  ['triathlon', 'Triatlon'],
-                  ['duathlon', 'Duatlon'],
-                ] as const
-              ).map(([value, label]) => (
-                <Pressable
-                  accessibilityRole="radio"
-                  accessibilityState={{ selected: raceType === value }}
-                  key={value}
-                  onPress={() => setRaceType(value)}
-                  style={[
-                    styles.goalModeCard,
-                    raceType === value && styles.goalModeCardSelected,
-                  ]}
-                >
-                  <Text style={styles.goalModeTitle}>{label}</Text>
-                </Pressable>
-              ))}
-            </View>
-            <FormField
-              error={
-                validationAttempted && !raceName.trim()
-                  ? 'Naam van de race is verplicht.'
-                  : undefined
-              }
-              label="Naam van de race"
-              onChangeText={setRaceName}
-              placeholder="Amsterdam Olympic Triathlon"
-              value={raceName}
-              required
-            />
-            <FormField
-              autoCapitalize="none"
-              error={
-                validationAttempted
-                  ? !targetDate.trim()
-                    ? 'Racedatum is verplicht.'
-                    : !normalizedTargetDate
-                      ? 'Gebruik een geldige toekomstige datum.'
-                      : undefined
-                  : undefined
-              }
-              hint="JJJJ-MM-DD"
-              inputMode="numeric"
-              label="Racedatum"
-              maxLength={10}
-              onChangeText={(value) =>
-                setTargetDate(formatIsoDateInput(value))
-              }
-              placeholder="2027-06-15"
-              value={targetDate}
-              required
-            />
-            {disciplines.map((discipline) => (
-              <View key={discipline} style={styles.disciplineCard}>
-                <Text style={styles.cardTitle}>
-                  {discipline === 'swim'
-                    ? 'Zwemmen'
-                    : discipline === 'bike'
-                      ? 'Fietsen'
-                      : 'Lopen'}
-                </Text>
-                <FormField
-                  error={
-                    validationAttempted
-                      ? distanceErrors[discipline] ?? undefined
-                      : undefined
-                  }
-                  inputMode="numeric"
-                  label="Afstand"
-                  onChangeText={(value) =>
-                    setDistances((current) => ({
-                      ...current,
-                      [discipline]: value,
-                    }))
-                  }
-                  placeholder={discipline === 'swim' ? '1500' : '10000'}
-                  suffix={<Text style={styles.unit}>meter</Text>}
-                  value={distances[discipline]}
-                  required
-                />
-                {raceType !== 'run' ? <DurationPicker
-                  error={
-                    validationAttempted
-                      ? disciplineTimeErrors[discipline] ?? undefined
-                      : undefined
-                  }
-                  hint="Optioneel. Kies uren, minuten en seconden zonder toetsenbord."
-                  label="Richttijd onderdeel"
-                  onChange={(value) =>
-                    setDisciplineTimeSeconds((current) => ({
-                      ...current,
-                      [discipline]: value,
-                    }))
-                  }
-                  valueSeconds={disciplineTimeSeconds[discipline]}
-                /> : null}
-              </View>
-            ))}
-            {raceType === 'run' ? (
-              <View accessibilityRole="radiogroup" style={styles.goalModeList}>
-                <Pressable accessibilityRole="radio" accessibilityState={{ checked: runGoalInput === 'time' }}
-                  onPress={() => setRunGoalInput('time')} style={styles.goalModeCard}>
-                  <Text style={styles.goalModeTitle}>Richttijd</Text>
-                </Pressable>
-                <Pressable accessibilityRole="radio" accessibilityState={{ checked: runGoalInput === 'pace' }}
-                  onPress={() => {
-                    setRunGoalInput('pace');
-                    setDisciplineTimeSeconds((current) => ({ ...current, run: null }));
-                  }} style={styles.goalModeCard}>
-                  <Text style={styles.goalModeTitle}>Richttempo (min/km)</Text>
-                </Pressable>
-              </View>
-            ) : null}
-            {raceType === 'run' && runGoalInput === 'pace' ? (
-              <FormField label="Richttempo" inputMode="text" placeholder="5:00"
-                hint="min:sec per km" value={runGoalPace} onChangeText={setRunGoalPace}
-                error={validationAttempted && paceSeconds === null ? 'Gebruik min:sec per km, bijvoorbeeld 5:00.' : undefined}
-                required />
-            ) : <DurationPicker
-              error={
-                validationAttempted
-                  ? effectiveTotalTimeSeconds === null
-                    ? 'Totale richttijd is verplicht.'
-                    : effectiveTotalTimeSeconds <= 0
-                      ? 'Kies een tijd langer dan 00:00:00.'
-                      : individualTotal > effectiveTotalTimeSeconds
-                        ? 'De totale richttijd mag niet korter zijn dan de onderdeeltijden samen.'
-                        : undefined
-                  : undefined
-              }
-              hint="Verplicht. Kies uren, minuten en seconden zonder toetsenbord."
-              label="Totale richttijd"
-              onChange={setTotalTimeSeconds}
-              valueSeconds={totalTimeSeconds}
-              required
-            />}
-            <FormField
-              label="Specifieke focus (optioneel)"
-              multiline
-              onChangeText={setSpecificFocus}
-              placeholder="Bijvoorbeeld: extra aandacht voor het zwemonderdeel."
-              style={styles.multiline}
-              value={specificFocus}
-            />
-          </View>
-          {validationAttempted && goalValidationMessages.length > 0 ? (
-            <Text accessibilityRole="alert" style={styles.errorBanner}>
-              Vul de gemarkeerde verplichte velden in: {' '}
-              {goalValidationMessages.join(', ')}.
-            </Text>
-          ) : null}
-          <ActionButton
-            label="A-doel opslaan"
-            loading={saving}
-            onPress={() => {
-              setValidationAttempted(true);
-              if (!valid) return;
-              void onSave({
-                race_type: raceType,
-                race_name: raceName.trim(),
-                race_date: normalizedTargetDate!,
-                ...Object.fromEntries(
-                  disciplines.map((discipline) => [
-                    `${discipline}_distance_meters`,
-                    parsedDistances[discipline],
-                  ]),
-                ),
-                total_target_time_seconds: effectiveTotalTimeSeconds!,
-                ...Object.fromEntries(
-                  disciplines
-                    .filter(
-                      (discipline) =>
-                        disciplineTimeSeconds[discipline] !== null,
-                    )
-                    .map((discipline) => [
-                      `${discipline}_target_time_seconds`,
-                      disciplineTimeSeconds[discipline],
-                    ]),
-                ),
-                ...(specificFocus.trim()
-                  ? { specific_focus: specificFocus.trim() }
-                  : {}),
-              });
-            }}
-          />
-        </>
-      ) : null}
-      {selectedKind === 'personal_goal' ? (
-        <View style={styles.personalGoalsPanel}>
-          <Text style={styles.personalGoalsTitle}>
-            Persoonlijke planningsmodi komen later
-          </Text>
-          <Text style={styles.personalGoalsText}>
-            De deterministische macrocycli, intensiteitsdoelen en herstelregels
-            zijn nog niet beoordeeld. Daarom kan Wombo deze doelen nog niet
-            opslaan of als wedstrijdplan behandelen.
-          </Text>
-          <View style={styles.personalGoalList}>
-            {personalOptions.map((option) => (
-              <View key={option.goal_family} style={styles.personalGoalRow}>
-                <Text style={styles.personalGoalLabel}>{option.label}</Text>
-                <Text style={styles.comingLaterBadge}>Komt later</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      ) : null}
-    </StepFrame>
-  );
-}
-
 type ReviewStepProps = {
   state: OnboardingState;
   saving: boolean;
@@ -786,10 +323,12 @@ export function ReviewStep({
 }
 
 function ReviewRow({ label, value }: { label: string; value: string }) {
+  const { width, fontScale } = useWindowDimensions();
+  const compact = width < 393 || fontScale > 1;
   return (
-    <View style={styles.reviewRow}>
+    <View style={[styles.reviewRow, compact && { flexDirection: 'column', alignItems: 'stretch' }]}>
       <Text style={styles.reviewLabel}>{label}</Text>
-      <Text style={styles.reviewValue}>{value}</Text>
+      <Text style={[styles.reviewValue, compact && { textAlign: 'left' }]}>{value}</Text>
     </View>
   );
 }
@@ -936,7 +475,7 @@ export function OnboardingScreen({
   if (loading) {
     return (
       <SafeAreaView style={styles.centered}>
-        <ActivityIndicator color={colors.brand} size="large" />
+        <ActivityIndicator color={colors.primary} size="large" />
         <Text style={styles.loadingText}>Je intake wordt hervat…</Text>
       </SafeAreaView>
     );
@@ -1160,9 +699,10 @@ export function OnboardingScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create(
+{
   safeArea: {
-    backgroundColor: colors.canvas,
+    backgroundColor: colors.background,
     flex: 1,
   },
   keyboard: {
@@ -1173,109 +713,26 @@ const styles = StyleSheet.create({
   },
   centered: {
     alignItems: 'center',
-    backgroundColor: colors.canvas,
+    backgroundColor: colors.background,
     flex: 1,
-    gap: spacing.md,
+    gap: space[16],
     justifyContent: 'center',
-    padding: spacing.lg,
+    padding: space[24],
   },
   loadingText: {
-    color: colors.inkMuted,
+    color: colors.textMuted,
     fontSize: 14,
   },
   errorTitle: {
-    color: colors.ink,
+    color: colors.text,
     fontSize: 20,
     fontWeight: '800',
     textAlign: 'center',
   },
   centeredError: {
-    color: colors.danger,
+    color: colors.destructive,
     lineHeight: 20,
     textAlign: 'center',
-  },
-  header: {
-    alignItems: 'center',
-    backgroundColor: colors.canvas,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.sm,
-    paddingTop: spacing.sm,
-  },
-  brandLockup: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  logoMark: {
-    alignItems: 'center',
-    backgroundColor: colors.brand,
-    borderRadius: radius.sm,
-    height: 38,
-    justifyContent: 'center',
-    transform: [{ rotate: '-4deg' }],
-    width: 38,
-  },
-  logoMarkText: {
-    color: colors.white,
-    fontSize: 12,
-    fontWeight: '900',
-  },
-  logo: {
-    color: colors.brand,
-    fontSize: 14,
-    fontWeight: '900',
-    letterSpacing: 1.4,
-    textTransform: 'uppercase',
-  },
-  headerCaption: {
-    color: colors.inkMuted,
-    fontSize: 11,
-    fontWeight: '700',
-    marginTop: 2,
-  },
-  headerActions: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  signOut: {
-    borderRadius: radius.pill,
-    padding: spacing.sm,
-  },
-  signOutText: {
-    color: colors.inkMuted,
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  progress: {
-    alignSelf: 'center',
-    flexDirection: 'row',
-    gap: spacing.xs,
-    maxWidth: layout.readingWidth,
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
-    width: '100%',
-  },
-  progressItem: {
-    flex: 1,
-    gap: spacing.xs,
-  },
-  progressDot: {
-    backgroundColor: colors.line,
-    borderRadius: radius.pill,
-    height: 5,
-  },
-  progressDotActive: {
-    backgroundColor: colors.accent,
-  },
-  progressLabel: {
-    color: colors.inkFaint,
-    fontSize: 9,
-    fontWeight: '700',
-  },
-  progressLabelActive: {
-    color: colors.ink,
   },
   scrollContent: {
     alignSelf: 'center',
@@ -1285,388 +742,59 @@ const styles = StyleSheet.create({
     paddingBottom: space[48],
     width: '100%',
   },
-  errorBanner: {
-    backgroundColor: colors.dangerSoft,
-    borderRadius: radius.sm,
-    color: colors.danger,
-    ...typography.body,
-    marginBottom: spacing.md,
-    padding: spacing.md,
-  },
-  upgradeBanner: {
-    backgroundColor: colors.surface,
-    borderColor: colors.brand,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.sm,
-    padding: spacing.md,
-  },
-  upgradeBannerTitle: {
-    color: colors.ink,
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  upgradeBannerText: {
-    color: colors.inkMuted,
-    lineHeight: 20,
-    marginTop: spacing.xs,
-  },
   fieldError: {
-    color: colors.danger,
+    color: colors.destructive,
     ...typography.supporting,
-  },
-  step: {
-    gap: spacing.lg,
-  },
-  stepHero: {
-    paddingHorizontal: spacing.xs,
-  },
-  eyebrowRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  eyebrowMark: {
-    backgroundColor: colors.accent,
-    borderRadius: radius.pill,
-    height: 7,
-    width: 7,
-  },
-  eyebrow: {
-    color: colors.accent,
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 1.2,
-    textTransform: 'uppercase',
-  },
-  stepTitle: {
-    color: colors.ink,
-    fontSize: 30,
-    fontWeight: '900',
-    letterSpacing: -1,
-    marginTop: spacing.xs,
-  },
-  description: {
-    color: colors.inkMuted,
-    fontSize: 14,
-    lineHeight: 21,
-    marginTop: spacing.sm,
-    maxWidth: 580,
-  },
-  stepCard: {
-    ...shadows.card,
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.white,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    gap: spacing.lg,
-    padding: spacing.lg,
   },
   form: {
     gap: layout.fieldGroupGap,
   },
-  twoColumns: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  column: {
-    flex: 1,
-  },
-  unit: {
-    color: colors.inkMuted,
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  multiline: {
-    minHeight: 92,
-    textAlignVertical: 'top',
-  },
   goalModeList: {
-    gap: spacing.sm,
-  },
-  goalModeCard: {
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.lineStrong,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    gap: spacing.sm,
-    padding: spacing.md,
-  },
-  goalModeCardSelected: {
-    backgroundColor: colors.brandSoft,
-    borderColor: colors.brand,
-  },
-  goalModeHeading: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  goalModeRadio: {
-    borderColor: colors.lineStrong,
-    borderRadius: radius.pill,
-    borderWidth: 2,
-    height: 20,
-    width: 20,
-  },
-  goalModeRadioSelected: {
-    backgroundColor: colors.brand,
-    borderColor: colors.brand,
-    borderWidth: 5,
-  },
-  goalModeTitle: {
-    color: colors.ink,
-    flex: 1,
-    fontSize: 15,
-    fontWeight: '800',
-  },
-  goalModeDescription: {
-    color: colors.inkMuted,
-    ...typography.body,
-  },
-  availableBadge: {
-    backgroundColor: colors.brandSoft,
-    borderRadius: radius.pill,
-    color: colors.success,
-    fontSize: 10,
-    fontWeight: '800',
-    overflow: 'hidden',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  comingLaterBadge: {
-    backgroundColor: colors.accentSoft,
-    borderRadius: radius.pill,
-    color: colors.danger,
-    fontSize: 10,
-    fontWeight: '800',
-    overflow: 'hidden',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  personalGoalsPanel: {
-    backgroundColor: colors.accentSoft,
-    borderRadius: radius.md,
-    gap: spacing.sm,
-    padding: spacing.md,
-  },
-  personalGoalsTitle: {
-    color: colors.ink,
-    fontSize: 15,
-    fontWeight: '800',
-  },
-  personalGoalsText: {
-    color: colors.inkMuted,
-    ...typography.body,
-  },
-  personalGoalList: {
-    gap: spacing.xs,
-  },
-  personalGoalRow: {
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: radius.sm,
-    flexDirection: 'row',
-    gap: spacing.sm,
-    justifyContent: 'space-between',
-    padding: spacing.sm,
-  },
-  personalGoalLabel: {
-    color: colors.ink,
-    flex: 1,
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  action: {
-    alignItems: 'center',
-    backgroundColor: colors.brand,
-    borderColor: colors.brand,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    justifyContent: 'center',
-    minHeight: 52,
-    paddingHorizontal: spacing.lg,
-    ...shadows.card,
-  },
-  actionSecondary: {
-    backgroundColor: colors.surface,
-  },
-  actionDisabled: {
-    opacity: 0.4,
-  },
-  actionPressed: {
-    opacity: 0.8,
-  },
-  actionText: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: '800',
-  },
-  actionTextSecondary: {
-    color: colors.brand,
+    gap: space[8],
   },
   disciplineCard: { gap: space[16] },
   cardTitle: {
-    color: colors.ink,
+    color: colors.text,
     ...typography.cardTitle,
-  },
-  zoneProgress: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-  },
-  zoneRouteList: {
-    gap: spacing.sm,
-  },
-  zoneRouteCard: {
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.lineStrong,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    gap: spacing.sm,
-    padding: spacing.md,
-  },
-  zoneRouteCardSelected: {
-    backgroundColor: colors.brandSoft,
-    borderColor: colors.brand,
-  },
-  zoneRouteHeading: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  zoneRouteTitle: {
-    color: colors.ink,
-    flex: 1,
-    fontSize: 15,
-    fontWeight: '800',
-  },
-  zoneRouteDescription: {
-    color: colors.inkMuted,
-    ...typography.body,
-  },
-  zoneRouteRadio: {
-    borderColor: colors.lineStrong,
-    borderRadius: radius.pill,
-    borderWidth: 2,
-    height: 20,
-    width: 20,
-  },
-  zoneRouteRadioSelected: {
-    backgroundColor: colors.brand,
-    borderColor: colors.brand,
-    borderWidth: 5,
-  },
-  routeExplanation: {
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.md,
-    gap: spacing.xs,
-    padding: spacing.md,
-  },
-  routeExplanationTitle: {
-    color: colors.ink,
-    fontSize: 15,
-    fontWeight: '800',
-  },
-  routeExplanationText: {
-    color: colors.inkMuted,
-    ...typography.body,
-  },
-  routeUnavailableCard: {
-    backgroundColor: colors.accentSoft,
-    borderRadius: radius.md,
-    gap: spacing.md,
-    padding: spacing.md,
-  },
-  routeUnavailableText: {
-    color: colors.ink,
-    ...typography.body,
-  },
-  boundaryHeader: {
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: spacing.xs,
-  },
-  boundaryTitle: {
-    color: colors.ink,
-    fontSize: 16,
-    fontWeight: '800',
-  },
-  boundaryHint: {
-    color: colors.inkMuted,
-    fontSize: 10,
-  },
-  boundaryRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  zoneNumber: {
-    alignItems: 'center',
-    backgroundColor: colors.brandSoft,
-    borderRadius: radius.sm,
-    height: 42,
-    justifyContent: 'center',
-    marginTop: 20,
-    width: 42,
-  },
-  zoneNumberText: {
-    color: colors.brand,
-    fontSize: 13,
-    fontWeight: '900',
-  },
-  boundaryInput: {
-    flex: 1,
-  },
-  fallbackCard: {
-    backgroundColor: colors.accentSoft,
-    borderRadius: radius.md,
-    gap: spacing.md,
-    padding: spacing.md,
-  },
-  fallbackText: {
-    color: colors.ink,
-    ...typography.body,
   },
   reviewCard: {
     backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    padding: spacing.md,
+    borderRadius: radius.control,
+    padding: space[16],
   },
   reviewRow: {
     alignItems: 'center',
-    borderBottomColor: colors.line,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
-    gap: spacing.md,
+    gap: space[16],
     justifyContent: 'space-between',
-    paddingVertical: spacing.md,
+    paddingVertical: space[16],
   },
   reviewLabel: {
-    color: colors.inkMuted,
+    color: colors.textMuted,
     ...typography.label,
     flexShrink: 1,
   },
   reviewValue: {
-    color: colors.ink,
+    color: colors.text,
     flex: 1,
     ...typography.body,
     fontWeight: '600',
     textAlign: 'right',
   },
   approvalNotice: {
-    backgroundColor: colors.brandSoft,
-    borderRadius: radius.md,
-    gap: spacing.xs,
-    padding: spacing.md,
+    backgroundColor: colors.primarySoft,
+    borderRadius: radius.control,
+    gap: space[4],
+    padding: space[16],
   },
   approvalTitle: {
-    color: colors.brand,
+    color: colors.primary,
     ...typography.label,
   },
   approvalText: {
-    color: colors.brand,
+    color: colors.primary,
     ...typography.body,
-  },
+  }
 });

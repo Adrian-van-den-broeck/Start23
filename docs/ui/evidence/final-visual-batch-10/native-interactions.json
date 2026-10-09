@@ -1,0 +1,234 @@
+{
+  "backendWrites": false,
+  "fixtureTransportOnly": true,
+  "results": [
+    {
+      "name": "Profile back",
+      "pass": true,
+      "callback": "back"
+    },
+    {
+      "name": "Profile signout",
+      "pass": true,
+      "callback": "signout"
+    },
+    {
+      "name": "Profile tests",
+      "pass": true,
+      "callback": "tests"
+    },
+    {
+      "name": "Profile pioneer",
+      "pass": true,
+      "callback": "pioneer"
+    },
+    {
+      "name": "Profile exact split payload",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/api/v1/me/physiology-profile",
+          "body": "{\"date_of_birth\":\"1990-05-20\",\"resting_heart_rate_bpm\":52}"
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/v1/me/identifying-profile",
+          "body": "{\"first_name\":\"Ada\",\"last_name\":\"Lovelace\"}"
+        }
+      ]
+    },
+    {
+      "name": "Profile busy disables repeat save",
+      "pass": true,
+      "requests": 2
+    },
+    {
+      "name": "Profile server validation error remains visible at 320 dp / 200%",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/api/v1/me/physiology-profile",
+          "body": "{\"date_of_birth\":\"1990-05-20\",\"resting_heart_rate_bpm\":52}"
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/v1/me/identifying-profile",
+          "body": "{\"first_name\":\"Ada\",\"last_name\":\"Lovelace\"}"
+        }
+      ]
+    },
+    {
+      "name": "Monitor prerequisite confirmation unchanged",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/api/v1/me/operational-profile",
+          "body": "{\"heart_rate_monitor_confirmed\":true}"
+        }
+      ]
+    },
+    {
+      "name": "Manual timezone confirmation unchanged",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/api/v1/me/operational-profile",
+          "body": "{\"timezone\":\"Europe/Brussels\",\"timezone_source\":\"manual\",\"timezone_confirmed\":true}"
+        }
+      ]
+    },
+    {
+      "name": "Three independent history baselines unchanged",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/api/v1/me/training-history",
+          "body": "{\"entries\":[{\"discipline\":\"swim\",\"average_hours_per_week\":\"0\"},{\"discipline\":\"bike\",\"average_hours_per_week\":\"0\"},{\"discipline\":\"run\",\"average_hours_per_week\":\"2\"}]}"
+        }
+      ]
+    },
+    {
+      "name": "Exact run payload retains applicable distances and seconds",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/api/v1/me/goals/fixture-goal",
+          "body": "{\"race_type\":\"run\",\"race_name\":\"Fixture race\",\"race_date\":\"2099-06-15\",\"run_distance_meters\":10000,\"total_target_time_seconds\":13530,\"run_target_time_seconds\":3601}"
+        }
+      ]
+    },
+    {
+      "name": "Exact bike payload retains applicable distances and seconds",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/api/v1/me/goals/fixture-goal",
+          "body": "{\"race_type\":\"bike\",\"race_name\":\"Fixture race\",\"race_date\":\"2099-06-15\",\"bike_distance_meters\":40000,\"total_target_time_seconds\":13530,\"bike_target_time_seconds\":7207}"
+        }
+      ]
+    },
+    {
+      "name": "Exact swim payload retains applicable distances and seconds",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/api/v1/me/goals/fixture-goal",
+          "body": "{\"race_type\":\"swim\",\"race_name\":\"Fixture race\",\"race_date\":\"2099-06-15\",\"swim_distance_meters\":1500,\"total_target_time_seconds\":13530,\"swim_target_time_seconds\":1803}"
+        }
+      ]
+    },
+    {
+      "name": "Exact duathlon payload retains applicable distances and seconds",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/api/v1/me/goals/fixture-goal",
+          "body": "{\"race_type\":\"duathlon\",\"race_name\":\"Fixture race\",\"race_date\":\"2099-06-15\",\"bike_distance_meters\":40000,\"run_distance_meters\":10000,\"total_target_time_seconds\":13530,\"bike_target_time_seconds\":7207,\"run_target_time_seconds\":3601}"
+        }
+      ]
+    },
+    {
+      "name": "Exact triathlon payload retains applicable distances and seconds",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/api/v1/me/goals/fixture-goal",
+          "body": "{\"race_type\":\"triathlon\",\"race_name\":\"Fixture race\",\"race_date\":\"2099-06-15\",\"swim_distance_meters\":1500,\"bike_distance_meters\":40000,\"run_distance_meters\":10000,\"total_target_time_seconds\":13530,\"swim_target_time_seconds\":1803,\"bike_target_time_seconds\":7207,\"run_target_time_seconds\":3601}"
+        }
+      ]
+    },
+    {
+      "name": "Goal busy disables repeat submission at 320 dp / 200%",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/api/v1/me/goals/fixture-goal",
+          "body": "{\"race_type\":\"run\",\"race_name\":\"Fixture race\",\"race_date\":\"2099-06-15\",\"run_distance_meters\":10000,\"total_target_time_seconds\":13530,\"run_target_time_seconds\":3601}"
+        }
+      ]
+    },
+    {
+      "name": "Run pace keyboard save retains existing total-time contract",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/api/v1/me/goals/fixture-goal",
+          "body": "{\"race_type\":\"run\",\"race_name\":\"Fixture race\",\"race_date\":\"2099-06-15\",\"run_distance_meters\":10000,\"total_target_time_seconds\":3000}"
+        }
+      ]
+    },
+    {
+      "name": "Goal errors preserve validation and focus first invalid field",
+      "pass": true,
+      "firstInvalid": "Naam van de race",
+      "noWrites": true
+    },
+    {
+      "name": "Long supplied English personal label remains complete and unavailable",
+      "pass": true,
+      "noSave": true
+    },
+    {
+      "name": "Duration modal preserves hours minutes and seconds at 320 dp / 200%",
+      "pass": true,
+      "totalSeconds": 3663,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/api/v1/me/goals/fixture-goal",
+          "body": "{\"race_type\":\"run\",\"race_name\":\"Fixture race\",\"race_date\":\"2099-06-15\",\"run_distance_meters\":10000,\"total_target_time_seconds\":3663,\"run_target_time_seconds\":3601}"
+        }
+      ]
+    },
+    {
+      "name": "Review prerequisite keeps completion disabled",
+      "pass": true
+    },
+    {
+      "name": "Review completion uses exact revision and opens planning",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/api/v1/onboarding/complete",
+          "body": "{\"expected_onboarding_revision\":9}"
+        }
+      ],
+      "pendingPlanOnly": true
+    },
+    {
+      "name": "Separate zone approval retains base precondition",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/api/v1/change-proposals/fixture-run-proposal/approve",
+          "body": "{\"expected_base_zone_profile_id\":null}"
+        }
+      ]
+    },
+    {
+      "name": "Separate zone rejection remains explicit",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/api/v1/change-proposals/fixture-run-proposal/reject",
+          "body": null
+        }
+      ]
+    }
+  ]
+}

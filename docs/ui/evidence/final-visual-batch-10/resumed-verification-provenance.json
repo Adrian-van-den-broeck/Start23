@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-09",
+  "serial": "emulator-5556",
+  "avd": "Pixel_4_API_35_2",
+  "baseline": "5891858",
+  "sourceHashes": {
+    "mobile/src/ui-v2/screens/GoalForm.tsx": "f30da19a9ee1f20210b2732ef4d80ef4fadae890083ee7542e6f48bef5b6caf8",
+    "mobile/src/components/DurationPicker.tsx": "427ee562605140b584ad77e7fe772b3431b5f46064a9e4ea6bff1abfe544a74b",
+    "mobile/src/ui-v2/primitives/Input.tsx": "0d26f22ec04e65ce4bb8f48186a7b4bf23094e3276d87510776c8359059fbe9f",
+    "mobile/src/screens/OnboardingScreen.tsx": "0fc4e85114ffa3be4cf525f0be451c02a83abc655f885d982a8d7e787f7f2a0c",
+    "mobile/src/screens/ProfileScreen.tsx": "5f7350493d9483a6a16a4eb8277ba539863791db36762b89e6698a3bd09a47e4"
+  },
+  "layoutChange": "Only missing chooser and modal-option focus overlays added after retained final-7 layout matrix; dimensions, labels and state unchanged.",
+  "blockedLiveTransport": true,
+  "apiBase": "http://127.0.0.1:9"
+}

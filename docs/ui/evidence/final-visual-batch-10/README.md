@@ -1,0 +1,15 @@
+# Batch 10 evidence
+
+Baseline: accepted Batch 9 commit 5891858. Production changes are limited to Profile, existing onboarding presentation and Goal. The report is ../../WOMBO_UI_V2_FINAL_VISUAL_BATCH_10_REPORT.md.
+
+The case ledger and inspection index identify 48 native layout cases and 54 visually reviewed contact sheets. Original PNG/XML/JSON viewports remain alongside them. Counts exclude rejected-* directories. Native interactions use actual production components and the existing API client with typed public fixture responses and blocked live transport. No backend writes occur.
+
+Reproduce native checks only with the retained fixture snapshots installed temporarily in mobile/app and the fixture config served from mobile/public, using the existing development client on emulator-5554 and owned localhost Metro port 8084. The inert API URL, dummy token and fixture callback/footer markers belong only to that temporary harness. Set EXPO_PUBLIC_API_BASE_URL=http://127.0.0.1:9. Use BATCH10_ANDROID_SERIAL to select an already running test emulator (default emulator-5554; resumed checks used emulator-5556 / Pixel_4_API_35_2). Run native-review.py connect, run-matrix.py, native-audit.py, native-interactions.py, native-keyboard.py, keyboard-save-audit.py and native-accessibility.py sequentially; multiple emulator drivers must not run concurrently. Restore the real app root/index, remove the fixture route/config, stop owned preview, and restore device settings before regression tests. Preview logs/PID/config and Python caches are ignored.
+
+Run check-focused.py, then check-mobile.py on the restored app. Full-suite verification includes the external deterministic-proposal-fixture-date.cjs setup scoped to two unchanged Batch 7 tests with October 7 Wednesday fixtures. It does not change assertions, the production clock, Jest config or other timers. This is not a claim that the date-dependent fixture passes under every wall-clock date.
+
+Run freeze-audit.py for exact normalized behavior/payload comparisons, protected source/manifests and 17 original reference hashes; contrast.py for source-token contrast. visual-review.json records actual image inspection. Native keyboard and TalkBack results have separate evidence and limits. Rejected preliminary captures/tests are archived and excluded from accepted counts.
+
+The resumed-verification-provenance.json records production source hashes and the focus-overlay refinement. keyboard-save-audit.json supersedes the clipped preliminary save captures: native Tab focus exposes the full button above the IME without triggering the existing on-drag keyboard dismissal. TalkBack captures are visually inspected separately; expected target names alone do not prove focus or spoken announcements.
+
+Rejected-* archives are retained locally and ignored by Git. Accepted viewports, scripts, results and contact sheets are versioned; rejected captures are not acceptance evidence. The final review-commits.json ledger is local so recording the final commit hash does not rewrite that same commit.

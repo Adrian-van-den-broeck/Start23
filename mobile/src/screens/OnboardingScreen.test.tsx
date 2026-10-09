@@ -73,7 +73,7 @@ describe('onboarding components', () => {
       'Lovelace',
     );
     await fireEvent.changeText(screen.getByLabelText('Geboortedatum'), '19900520');
-    await fireEvent.changeText(screen.getByLabelText('Rusthartslag'), '52');
+    await fireEvent.changeText(screen.getByLabelText('Rusthartslag, bpm'), '52');
     await fireEvent.press(screen.getByRole('button', { name: 'Profiel opslaan' }));
 
     await waitFor(() =>
@@ -157,7 +157,7 @@ describe('onboarding components', () => {
     const screen = await render(
       <HistoryStep onSave={onSave} saving={false} state={state()} />,
     );
-    const inputs = screen.getAllByLabelText('Gemiddelde uren per week');
+    const inputs = screen.getAllByLabelText('Gemiddelde uren per week, uur/week');
     await fireEvent.changeText(inputs[0], '2');
     await fireEvent.changeText(inputs[1], '4');
     await fireEvent.changeText(inputs[2], '3');
@@ -184,7 +184,7 @@ describe('onboarding components', () => {
     await fireEvent.press(screen.getByRole('radio', { name: 'Lopen' }));
     await fireEvent.changeText(screen.getByLabelText('Naam van de race'), '10K');
     await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
-    await fireEvent.changeText(screen.getByLabelText('Afstand'), '10000');
+    await fireEvent.changeText(screen.getByLabelText('Afstand, meter'), '10000');
     await fireEvent.press(
       screen.getByRole('button', {
         name: 'Kies uren voor Totale richttijd',
@@ -211,7 +211,7 @@ describe('onboarding components', () => {
     await fireEvent.press(screen.getByRole('radio', { name: 'Lopen' }));
     await fireEvent.changeText(screen.getByLabelText('Naam van de race'), '10K');
     await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
-    await fireEvent.changeText(screen.getByLabelText('Afstand'), '10000');
+    await fireEvent.changeText(screen.getByLabelText('Afstand, meter'), '10000');
     await fireEvent.press(screen.getByRole('radio', { name: 'Richttempo (min/km)' }));
     await fireEvent.changeText(screen.getByLabelText('Richttempo'), '5:00');
     await fireEvent.press(screen.getByRole('button', { name: 'A-doel opslaan' }));
@@ -320,7 +320,7 @@ describe('onboarding components', () => {
         }),
       );
       await fireEvent.press(screen.getByRole('radio', { name: '3 uur' }));
-      const distanceFields = screen.getAllByLabelText('Afstand');
+      const distanceFields = screen.getAllByLabelText('Afstand, meter');
       for (const field of distanceFields) {
         await fireEvent.changeText(field, '1000');
       }

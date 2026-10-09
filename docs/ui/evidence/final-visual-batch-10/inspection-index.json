@@ -1,0 +1,486 @@
+[
+  {
+    "sheet": "320-font-2-profile-editor-long-1.jpg",
+    "sourceViewports": [
+      "320-font-2-profile-editor-long-page-0.png",
+      "320-font-2-profile-editor-long-page-1.png",
+      "320-font-2-profile-editor-long-page-2.png",
+      "320-font-2-profile-editor-long-page-3.png",
+      "320-font-2-profile-editor-long-page-4.png",
+      "320-font-2-profile-editor-long-page-5.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-goal-triathlon-long-1.jpg",
+    "sourceViewports": [
+      "320-font-2-goal-triathlon-long-page-0.png",
+      "320-font-2-goal-triathlon-long-page-1.png",
+      "320-font-2-goal-triathlon-long-page-2.png",
+      "320-font-2-goal-triathlon-long-page-3.png",
+      "320-font-2-goal-triathlon-long-page-4.png",
+      "320-font-2-goal-triathlon-long-page-5.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-goal-triathlon-long-2.jpg",
+    "sourceViewports": [
+      "320-font-2-goal-triathlon-long-page-6.png",
+      "320-font-2-goal-triathlon-long-page-7.png",
+      "320-font-2-goal-triathlon-long-page-8.png",
+      "320-font-2-goal-triathlon-long-page-9.png",
+      "320-font-2-goal-triathlon-long-page-10.png",
+      "320-font-2-goal-triathlon-long-page-11.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-goal-triathlon-long-3.jpg",
+    "sourceViewports": [
+      "320-font-2-goal-triathlon-long-page-12.png",
+      "320-font-2-goal-triathlon-long-page-13.png",
+      "320-font-2-goal-triathlon-long-page-14.png"
+    ]
+  },
+  {
+    "sheet": "320-font-1-profile-editor-1.jpg",
+    "sourceViewports": [
+      "320-font-1-profile-editor-page-0.png",
+      "320-font-1-profile-editor-page-1.png",
+      "320-font-1-profile-editor-page-2.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-goal-duathlon-1.jpg",
+    "sourceViewports": [
+      "393-font-1-goal-duathlon-page-0.png",
+      "393-font-1-goal-duathlon-page-1.png",
+      "393-font-1-goal-duathlon-page-2.png",
+      "393-font-1-goal-duathlon-page-3.png",
+      "393-font-1-goal-duathlon-page-4.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-goal-swim-1.jpg",
+    "sourceViewports": [
+      "393-font-1-goal-swim-page-0.png",
+      "393-font-1-goal-swim-page-1.png",
+      "393-font-1-goal-swim-page-2.png",
+      "393-font-1-goal-swim-page-3.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-profile-filled-1.jpg",
+    "sourceViewports": [
+      "393-font-1-profile-filled-page-0.png",
+      "393-font-1-profile-filled-page-1.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-goal-bike-1.jpg",
+    "sourceViewports": [
+      "393-font-1-goal-bike-page-0.png",
+      "393-font-1-goal-bike-page-1.png",
+      "393-font-1-goal-bike-page-2.png",
+      "393-font-1-goal-bike-page-3.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-review-pending-1.jpg",
+    "sourceViewports": [
+      "320-font-2-review-pending-page-0.png",
+      "320-font-2-review-pending-page-1.png",
+      "320-font-2-review-pending-page-2.png",
+      "320-font-2-review-pending-page-3.png",
+      "320-font-2-review-pending-page-4.png",
+      "320-font-2-review-pending-page-5.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-monitor-1.jpg",
+    "sourceViewports": [
+      "393-font-1-monitor-page-0.png",
+      "393-font-1-monitor-page-1.png"
+    ]
+  },
+  {
+    "sheet": "412-font-1-profile-editor-1.jpg",
+    "sourceViewports": [
+      "412-font-1-profile-editor-page-0.png",
+      "412-font-1-profile-editor-page-1.png"
+    ]
+  },
+  {
+    "sheet": "360-font-2-goal-run-1.jpg",
+    "sourceViewports": [
+      "360-font-2-goal-run-page-0.png",
+      "360-font-2-goal-run-page-1.png",
+      "360-font-2-goal-run-page-2.png",
+      "360-font-2-goal-run-page-3.png",
+      "360-font-2-goal-run-page-4.png",
+      "360-font-2-goal-run-page-5.png"
+    ]
+  },
+  {
+    "sheet": "360-font-2-goal-run-2.jpg",
+    "sourceViewports": [
+      "360-font-2-goal-run-page-6.png"
+    ]
+  },
+  {
+    "sheet": "393-font-2-goal-run-1.jpg",
+    "sourceViewports": [
+      "393-font-2-goal-run-page-0.png",
+      "393-font-2-goal-run-page-1.png",
+      "393-font-2-goal-run-page-2.png",
+      "393-font-2-goal-run-page-3.png",
+      "393-font-2-goal-run-page-4.png",
+      "393-font-2-goal-run-page-5.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-zones-1.jpg",
+    "sourceViewports": [
+      "320-font-2-zones-page-0.png",
+      "320-font-2-zones-page-1.png",
+      "320-font-2-zones-page-2.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-review-pending-1.jpg",
+    "sourceViewports": [
+      "393-font-1-review-pending-page-0.png",
+      "393-font-1-review-pending-page-1.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-timezone-1.jpg",
+    "sourceViewports": [
+      "393-font-1-timezone-page-0.png",
+      "393-font-1-timezone-page-1.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-upgrade-1.jpg",
+    "sourceViewports": [
+      "393-font-1-upgrade-page-0.png",
+      "393-font-1-upgrade-page-1.png",
+      "393-font-1-upgrade-page-2.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-profile-blank-1.jpg",
+    "sourceViewports": [
+      "320-font-2-profile-blank-page-0.png",
+      "320-font-2-profile-blank-page-1.png",
+      "320-font-2-profile-blank-page-2.png",
+      "320-font-2-profile-blank-page-3.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-timezone-1.jpg",
+    "sourceViewports": [
+      "320-font-2-timezone-page-0.png",
+      "320-font-2-timezone-page-1.png",
+      "320-font-2-timezone-page-2.png",
+      "320-font-2-timezone-page-3.png",
+      "320-font-2-timezone-page-4.png",
+      "320-font-2-timezone-page-5.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-upgrade-1.jpg",
+    "sourceViewports": [
+      "320-font-2-upgrade-page-0.png",
+      "320-font-2-upgrade-page-1.png",
+      "320-font-2-upgrade-page-2.png",
+      "320-font-2-upgrade-page-3.png",
+      "320-font-2-upgrade-page-4.png",
+      "320-font-2-upgrade-page-5.png"
+    ]
+  },
+  {
+    "sheet": "360-font-2-profile-editor-1.jpg",
+    "sourceViewports": [
+      "360-font-2-profile-editor-page-0.png",
+      "360-font-2-profile-editor-page-1.png",
+      "360-font-2-profile-editor-page-2.png",
+      "360-font-2-profile-editor-page-3.png"
+    ]
+  },
+  {
+    "sheet": "393-font-2-profile-editor-1.jpg",
+    "sourceViewports": [
+      "393-font-2-profile-editor-page-0.png",
+      "393-font-2-profile-editor-page-1.png",
+      "393-font-2-profile-editor-page-2.png",
+      "393-font-2-profile-editor-page-3.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-profile-blank-1.jpg",
+    "sourceViewports": [
+      "393-font-1-profile-blank-page-0.png",
+      "393-font-1-profile-blank-page-1.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-zones-1.jpg",
+    "sourceViewports": [
+      "393-font-1-zones-page-0.png"
+    ]
+  },
+  {
+    "sheet": "360-font-1-goal-run-1.jpg",
+    "sourceViewports": [
+      "360-font-1-goal-run-page-0.png",
+      "360-font-1-goal-run-page-1.png",
+      "360-font-1-goal-run-page-2.png",
+      "360-font-1-goal-run-page-3.png",
+      "360-font-1-goal-run-page-4.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-goal-run-1.jpg",
+    "sourceViewports": [
+      "393-font-1-goal-run-page-0.png",
+      "393-font-1-goal-run-page-1.png",
+      "393-font-1-goal-run-page-2.png",
+      "393-font-1-goal-run-page-3.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-goal-triathlon-1.jpg",
+    "sourceViewports": [
+      "320-font-2-goal-triathlon-page-0.png",
+      "320-font-2-goal-triathlon-page-1.png",
+      "320-font-2-goal-triathlon-page-2.png",
+      "320-font-2-goal-triathlon-page-3.png",
+      "320-font-2-goal-triathlon-page-4.png",
+      "320-font-2-goal-triathlon-page-5.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-goal-triathlon-2.jpg",
+    "sourceViewports": [
+      "320-font-2-goal-triathlon-page-6.png",
+      "320-font-2-goal-triathlon-page-7.png",
+      "320-font-2-goal-triathlon-page-8.png",
+      "320-font-2-goal-triathlon-page-9.png",
+      "320-font-2-goal-triathlon-page-10.png",
+      "320-font-2-goal-triathlon-page-11.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-goal-triathlon-3.jpg",
+    "sourceViewports": [
+      "320-font-2-goal-triathlon-page-12.png",
+      "320-font-2-goal-triathlon-page-13.png",
+      "320-font-2-goal-triathlon-page-14.png"
+    ]
+  },
+  {
+    "sheet": "412-font-2-goal-run-1.jpg",
+    "sourceViewports": [
+      "412-font-2-goal-run-page-0.png",
+      "412-font-2-goal-run-page-1.png",
+      "412-font-2-goal-run-page-2.png",
+      "412-font-2-goal-run-page-3.png",
+      "412-font-2-goal-run-page-4.png",
+      "412-font-2-goal-run-page-5.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-goal-choice-1.jpg",
+    "sourceViewports": [
+      "393-font-1-goal-choice-page-0.png",
+      "393-font-1-goal-choice-page-1.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-goal-run-english-1.jpg",
+    "sourceViewports": [
+      "320-font-2-goal-run-english-page-0.png",
+      "320-font-2-goal-run-english-page-1.png",
+      "320-font-2-goal-run-english-page-2.png",
+      "320-font-2-goal-run-english-page-3.png",
+      "320-font-2-goal-run-english-page-4.png",
+      "320-font-2-goal-run-english-page-5.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-goal-run-english-2.jpg",
+    "sourceViewports": [
+      "320-font-2-goal-run-english-page-6.png",
+      "320-font-2-goal-run-english-page-7.png",
+      "320-font-2-goal-run-english-page-8.png",
+      "320-font-2-goal-run-english-page-9.png"
+    ]
+  },
+  {
+    "sheet": "320-font-1-goal-run-1.jpg",
+    "sourceViewports": [
+      "320-font-1-goal-run-page-0.png",
+      "320-font-1-goal-run-page-1.png",
+      "320-font-1-goal-run-page-2.png",
+      "320-font-1-goal-run-page-3.png",
+      "320-font-1-goal-run-page-4.png",
+      "320-font-1-goal-run-page-5.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-history-1.jpg",
+    "sourceViewports": [
+      "320-font-2-history-page-0.png",
+      "320-font-2-history-page-1.png",
+      "320-font-2-history-page-2.png",
+      "320-font-2-history-page-3.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-resume-1.jpg",
+    "sourceViewports": [
+      "320-font-2-resume-page-0.png",
+      "320-font-2-resume-page-1.png",
+      "320-font-2-resume-page-2.png",
+      "320-font-2-resume-page-3.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-profile-editor-1.jpg",
+    "sourceViewports": [
+      "320-font-2-profile-editor-page-0.png",
+      "320-font-2-profile-editor-page-1.png",
+      "320-font-2-profile-editor-page-2.png",
+      "320-font-2-profile-editor-page-3.png",
+      "320-font-2-profile-editor-page-4.png",
+      "320-font-2-profile-editor-page-5.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-history-1.jpg",
+    "sourceViewports": [
+      "393-font-1-history-page-0.png",
+      "393-font-1-history-page-1.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-review-1.jpg",
+    "sourceViewports": [
+      "320-font-2-review-page-0.png",
+      "320-font-2-review-page-1.png",
+      "320-font-2-review-page-2.png",
+      "320-font-2-review-page-3.png",
+      "320-font-2-review-page-4.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-resume-1.jpg",
+    "sourceViewports": [
+      "393-font-1-resume-page-0.png",
+      "393-font-1-resume-page-1.png"
+    ]
+  },
+  {
+    "sheet": "360-font-1-profile-editor-1.jpg",
+    "sourceViewports": [
+      "360-font-1-profile-editor-page-0.png",
+      "360-font-1-profile-editor-page-1.png",
+      "360-font-1-profile-editor-page-2.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-profile-editor-1.jpg",
+    "sourceViewports": [
+      "393-font-1-profile-editor-page-0.png",
+      "393-font-1-profile-editor-page-1.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-goal-triathlon-1.jpg",
+    "sourceViewports": [
+      "393-font-1-goal-triathlon-page-0.png",
+      "393-font-1-goal-triathlon-page-1.png",
+      "393-font-1-goal-triathlon-page-2.png",
+      "393-font-1-goal-triathlon-page-3.png",
+      "393-font-1-goal-triathlon-page-4.png",
+      "393-font-1-goal-triathlon-page-5.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-review-blocked-1.jpg",
+    "sourceViewports": [
+      "393-font-1-review-blocked-page-0.png",
+      "393-font-1-review-blocked-page-1.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-review-blocked-1.jpg",
+    "sourceViewports": [
+      "320-font-2-review-blocked-page-0.png",
+      "320-font-2-review-blocked-page-1.png",
+      "320-font-2-review-blocked-page-2.png",
+      "320-font-2-review-blocked-page-3.png",
+      "320-font-2-review-blocked-page-4.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-review-1.jpg",
+    "sourceViewports": [
+      "393-font-1-review-page-0.png",
+      "393-font-1-review-page-1.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-profile-filled-1.jpg",
+    "sourceViewports": [
+      "320-font-2-profile-filled-page-0.png",
+      "320-font-2-profile-filled-page-1.png",
+      "320-font-2-profile-filled-page-2.png",
+      "320-font-2-profile-filled-page-3.png"
+    ]
+  },
+  {
+    "sheet": "412-font-1-goal-run-1.jpg",
+    "sourceViewports": [
+      "412-font-1-goal-run-page-0.png",
+      "412-font-1-goal-run-page-1.png",
+      "412-font-1-goal-run-page-2.png",
+      "412-font-1-goal-run-page-3.png"
+    ]
+  },
+  {
+    "sheet": "412-font-2-profile-editor-1.jpg",
+    "sourceViewports": [
+      "412-font-2-profile-editor-page-0.png",
+      "412-font-2-profile-editor-page-1.png",
+      "412-font-2-profile-editor-page-2.png"
+    ]
+  },
+  {
+    "sheet": "393-font-1-goal-run-english-1.jpg",
+    "sourceViewports": [
+      "393-font-1-goal-run-english-page-0.png",
+      "393-font-1-goal-run-english-page-1.png",
+      "393-font-1-goal-run-english-page-2.png",
+      "393-font-1-goal-run-english-page-3.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-review-long-1.jpg",
+    "sourceViewports": [
+      "320-font-2-review-long-page-0.png",
+      "320-font-2-review-long-page-1.png",
+      "320-font-2-review-long-page-2.png",
+      "320-font-2-review-long-page-3.png",
+      "320-font-2-review-long-page-4.png"
+    ]
+  },
+  {
+    "sheet": "320-font-2-monitor-1.jpg",
+    "sourceViewports": [
+      "320-font-2-monitor-page-0.png",
+      "320-font-2-monitor-page-1.png",
+      "320-font-2-monitor-page-2.png",
+      "320-font-2-monitor-page-3.png"
+    ]
+  }
+]

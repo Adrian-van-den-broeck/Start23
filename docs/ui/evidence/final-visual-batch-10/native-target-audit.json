@@ -1,0 +1,3711 @@
+{
+  "scope": "Changed Batch 10 controls; unchanged ZoneSetupStep inner controls belong to Batch 11 and are excluded",
+  "minimumDp": 48,
+  "nativePixelToleranceDp": 0.5,
+  "fullyVisibleControls": 617,
+  "failures": [],
+  "targets": [
+    {
+      "file": "320-font-2-history-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-history-page-3.xml",
+      "label": "Trainingshistorie opslaan",
+      "widthDp": 256.0,
+      "heightDp": 142.22222222222223
+    },
+    {
+      "file": "393-font-2-goal-run-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 103.87243735763099,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "file": "393-font-2-goal-run-page-1.xml",
+      "label": "Wedstrijd of evenement",
+      "widthDp": 329.4760820045558,
+      "heightDp": 272.9840546697039
+    },
+    {
+      "file": "393-font-2-goal-run-page-2.xml",
+      "label": "Lopen",
+      "widthDp": 329.4760820045558,
+      "heightDp": 61.594533029612755
+    },
+    {
+      "file": "393-font-2-goal-run-page-2.xml",
+      "label": "Fietsen",
+      "widthDp": 329.4760820045558,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "file": "393-font-2-goal-run-page-2.xml",
+      "label": "Zwemmen",
+      "widthDp": 329.4760820045558,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "file": "393-font-2-goal-run-page-2.xml",
+      "label": "Triatlon",
+      "widthDp": 329.4760820045558,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "file": "393-font-2-goal-run-page-2.xml",
+      "label": "Duatlon",
+      "widthDp": 329.4760820045558,
+      "heightDp": 61.594533029612755
+    },
+    {
+      "file": "393-font-2-goal-run-page-3.xml",
+      "label": "Richttijd",
+      "widthDp": 329.4760820045558,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "file": "393-font-2-goal-run-page-3.xml",
+      "label": "Richttempo (min/km)",
+      "widthDp": 329.4760820045558,
+      "heightDp": 96.94760820045559
+    },
+    {
+      "file": "393-font-2-goal-run-page-4.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 48.109339407744876,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-2-goal-run-page-4.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 217.94988610478362,
+      "heightDp": 54.66970387243736
+    },
+    {
+      "file": "393-font-2-goal-run-page-4.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-2-goal-run-page-4.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 48.109339407744876,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-2-goal-run-page-4.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 217.94988610478362,
+      "heightDp": 54.66970387243736
+    },
+    {
+      "file": "393-font-2-goal-run-page-4.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-2-goal-run-page-4.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.109339407744876,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-2-goal-run-page-4.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 217.94988610478362,
+      "heightDp": 54.66970387243736
+    },
+    {
+      "file": "393-font-2-goal-run-page-4.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-2-goal-run-page-5.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.109339407744876,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-2-goal-run-page-5.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 217.94988610478362,
+      "heightDp": 54.66970387243736
+    },
+    {
+      "file": "393-font-2-goal-run-page-5.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-2-goal-run-page-5.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "320-font-2-profile-editor-long-page-0.xml",
+      "label": "Week",
+      "widthDp": 133.62962962962962,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-profile-editor-long-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-profile-editor-long-page-3.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-profile-editor-long-page-4.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 256.0,
+      "heightDp": 98.66666666666667
+    },
+    {
+      "file": "320-font-2-profile-editor-long-page-4.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 256.0,
+      "heightDp": 98.37037037037037
+    },
+    {
+      "file": "320-font-2-profile-editor-long-page-5.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 256.0,
+      "heightDp": 98.66666666666667
+    },
+    {
+      "file": "320-font-2-profile-editor-long-page-5.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 256.0,
+      "heightDp": 98.37037037037037
+    },
+    {
+      "file": "320-font-2-monitor-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-monitor-page-3.xml",
+      "label": "Ja, ik kan gemiddelde hartslag meten",
+      "widthDp": 256.0,
+      "heightDp": 178.66666666666666
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-10.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 256.0,
+      "heightDp": 51.25925925925926
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-11.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-11.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-11.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-11.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-11.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-11.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-11.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-11.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.51851851851852
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-11.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-12.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-12.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-12.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-12.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-12.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-12.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-12.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-12.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 54.51851851851852
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-12.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-14.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-4.xml",
+      "label": "Lopen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-4.xml",
+      "label": "Fietsen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-4.xml",
+      "label": "Zwemmen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-4.xml",
+      "label": "Triatlon",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-4.xml",
+      "label": "Duatlon",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-6.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 256.0,
+      "heightDp": 51.25925925925926
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-6.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-6.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.51851851851852
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-6.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-7.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-7.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.51851851851852
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-7.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-7.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-7.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-7.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-7.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-7.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-7.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-8.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 256.0,
+      "heightDp": 51.25925925925926
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-9.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-9.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-9.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-9.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-9.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-9.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-9.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-9.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-page-9.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 103.66666666666667,
+      "heightDp": 70.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-1.xml",
+      "label": "Wedstrijd of evenement",
+      "widthDp": 296.0,
+      "heightDp": 339.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-2.xml",
+      "label": "Persoonlijk doel",
+      "widthDp": 296.0,
+      "heightDp": 372.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-2.xml",
+      "label": "Lopen",
+      "widthDp": 296.0,
+      "heightDp": 61.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-3.xml",
+      "label": "Zwemmen",
+      "widthDp": 296.0,
+      "heightDp": 61.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-3.xml",
+      "label": "Triatlon",
+      "widthDp": 296.0,
+      "heightDp": 61.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-3.xml",
+      "label": "Duatlon",
+      "widthDp": 296.0,
+      "heightDp": 61.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-4.xml",
+      "label": "Richttijd",
+      "widthDp": 296.0,
+      "heightDp": 61.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-4.xml",
+      "label": "Richttempo (min/km)",
+      "widthDp": 296.0,
+      "heightDp": 96.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-5.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-5.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 184.0,
+      "heightDp": 54.666666666666664
+    },
+    {
+      "file": "360-font-2-goal-run-page-5.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-5.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-5.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 184.0,
+      "heightDp": 54.666666666666664
+    },
+    {
+      "file": "360-font-2-goal-run-page-5.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-5.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-5.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 184.0,
+      "heightDp": 54.666666666666664
+    },
+    {
+      "file": "360-font-2-goal-run-page-5.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-6.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-6.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 184.0,
+      "heightDp": 54.666666666666664
+    },
+    {
+      "file": "360-font-2-goal-run-page-6.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-2-goal-run-page-6.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 296.0,
+      "heightDp": 70.0
+    },
+    {
+      "file": "412-font-1-profile-editor-page-0.xml",
+      "label": "Week",
+      "widthDp": 121.43198090692124,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-profile-editor-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 89.35560859188544,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-profile-editor-page-1.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 332.21957040572795,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-profile-editor-page-1.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 348.25775656324583,
+      "heightDp": 75.99045346062053
+    },
+    {
+      "file": "412-font-1-profile-editor-page-1.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 348.25775656324583,
+      "heightDp": 75.99045346062053
+    },
+    {
+      "file": "320-font-2-zones-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-0.xml",
+      "label": "Wedstrijd of evenement",
+      "widthDp": 313.4396355353075,
+      "heightDp": 134.85193621867882
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-1.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-1.xml",
+      "label": "Fietsen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-1.xml",
+      "label": "Zwemmen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-1.xml",
+      "label": "Triatlon",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-1.xml",
+      "label": "Duatlon",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-2.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-2.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-2.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-2.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-2.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-2.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-2.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-2.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-2.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-2.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-3.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-3.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-3.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-3.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-3.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-3.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-3.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-3.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-3.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-3.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-4.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-5.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-5.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-5.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-5.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-5.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-5.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-5.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-5.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-5.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-triathlon-page-5.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "320-font-2-timezone-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-timezone-page-2.xml",
+      "label": "Europe/Amsterdam",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-timezone-page-2.xml",
+      "label": "Europe/Brussels",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-timezone-page-2.xml",
+      "label": "Europe/London",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-timezone-page-2.xml",
+      "label": "Europe/Paris",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-timezone-page-3.xml",
+      "label": "America/New_York",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-timezone-page-3.xml",
+      "label": "America/Los_Angeles",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-timezone-page-3.xml",
+      "label": "Asia/Tokyo",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-timezone-page-3.xml",
+      "label": "Australia/Sydney",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-timezone-page-4.xml",
+      "label": "Tijdzone expliciet bevestigen",
+      "widthDp": 256.0,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "320-font-2-timezone-page-5.xml",
+      "label": "Tijdzone expliciet bevestigen",
+      "widthDp": 256.0,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "320-font-2-upgrade-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-upgrade-page-3.xml",
+      "label": "Europe/Amsterdam",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-upgrade-page-3.xml",
+      "label": "Europe/Brussels",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-upgrade-page-3.xml",
+      "label": "Europe/London",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-upgrade-page-3.xml",
+      "label": "Europe/Paris",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-upgrade-page-4.xml",
+      "label": "America/Los_Angeles",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-upgrade-page-4.xml",
+      "label": "Asia/Tokyo",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-upgrade-page-4.xml",
+      "label": "Australia/Sydney",
+      "widthDp": 256.0,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-upgrade-page-5.xml",
+      "label": "Tijdzone expliciet bevestigen",
+      "widthDp": 256.0,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-4.xml",
+      "label": "Lopen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-4.xml",
+      "label": "Fietsen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-4.xml",
+      "label": "Zwemmen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-4.xml",
+      "label": "Triatlon",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-4.xml",
+      "label": "Duatlon",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-6.xml",
+      "label": "Richttijd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-6.xml",
+      "label": "Richttempo (min/km)",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-7.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-7.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 54.51851851851852
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-7.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-7.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-7.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-7.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-7.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-7.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-7.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-8.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 256.0,
+      "heightDp": 106.07407407407408
+    },
+    {
+      "file": "320-font-2-goal-run-english-page-9.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 256.0,
+      "heightDp": 106.07407407407408
+    },
+    {
+      "file": "393-font-1-zones-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-history-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-history-page-1.xml",
+      "label": "Trainingshistorie opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-monitor-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-monitor-page-1.xml",
+      "label": "Ja, ik kan gemiddelde hartslag meten",
+      "widthDp": 313.4396355353075,
+      "heightDp": 82.00455580865604
+    },
+    {
+      "file": "393-font-1-goal-swim-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-goal-swim-page-0.xml",
+      "label": "Wedstrijd of evenement",
+      "widthDp": 313.4396355353075,
+      "heightDp": 134.85193621867882
+    },
+    {
+      "file": "393-font-1-goal-swim-page-1.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-swim-page-1.xml",
+      "label": "Fietsen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-swim-page-1.xml",
+      "label": "Zwemmen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-swim-page-1.xml",
+      "label": "Triatlon",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-swim-page-1.xml",
+      "label": "Duatlon",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-swim-page-2.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-swim-page-2.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-swim-page-2.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-swim-page-2.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-swim-page-2.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-swim-page-2.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-swim-page-2.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-swim-page-2.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-swim-page-2.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-swim-page-2.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-swim-page-3.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-swim-page-3.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-swim-page-3.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-swim-page-3.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-swim-page-3.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-swim-page-3.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-swim-page-3.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-swim-page-3.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-swim-page-3.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-swim-page-3.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-goal-run-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-goal-run-page-0.xml",
+      "label": "Wedstrijd of evenement",
+      "widthDp": 313.4396355353075,
+      "heightDp": 134.85193621867882
+    },
+    {
+      "file": "393-font-1-goal-run-page-1.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-page-1.xml",
+      "label": "Fietsen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-page-1.xml",
+      "label": "Zwemmen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-page-1.xml",
+      "label": "Triatlon",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-page-1.xml",
+      "label": "Duatlon",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-page-2.xml",
+      "label": "Richttijd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-page-2.xml",
+      "label": "Richttempo (min/km)",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-page-2.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-page-2.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-page-2.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-page-2.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-run-page-2.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-run-page-2.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-run-page-2.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-page-2.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-page-2.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-page-3.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-page-3.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-page-3.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-page-3.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-run-page-3.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-run-page-3.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-run-page-3.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-page-3.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-page-3.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-page-3.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "320-font-2-review-long-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-review-long-page-4.xml",
+      "label": "Onboarding afronden",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "360-font-2-profile-editor-page-0.xml",
+      "label": "Week",
+      "widthDp": 133.33333333333334,
+      "heightDp": 70.0
+    },
+    {
+      "file": "360-font-2-profile-editor-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 103.66666666666667,
+      "heightDp": 70.0
+    },
+    {
+      "file": "360-font-2-profile-editor-page-2.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 296.0,
+      "heightDp": 70.0
+    },
+    {
+      "file": "360-font-2-profile-editor-page-2.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 296.0,
+      "heightDp": 98.0
+    },
+    {
+      "file": "360-font-2-profile-editor-page-3.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 296.0,
+      "heightDp": 70.0
+    },
+    {
+      "file": "360-font-2-profile-editor-page-3.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 296.0,
+      "heightDp": 98.0
+    },
+    {
+      "file": "360-font-2-profile-editor-page-3.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 296.0,
+      "heightDp": 98.0
+    },
+    {
+      "file": "393-font-2-profile-editor-page-0.xml",
+      "label": "Week",
+      "widthDp": 133.39407744874717,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "file": "393-font-2-profile-editor-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 103.87243735763099,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "file": "393-font-2-profile-editor-page-2.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "file": "393-font-2-profile-editor-page-2.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 329.4760820045558,
+      "heightDp": 98.76993166287016
+    },
+    {
+      "file": "393-font-2-profile-editor-page-2.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 329.4760820045558,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "393-font-2-profile-editor-page-3.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "file": "393-font-2-profile-editor-page-3.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 329.4760820045558,
+      "heightDp": 98.76993166287016
+    },
+    {
+      "file": "393-font-2-profile-editor-page-3.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 329.4760820045558,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "320-font-2-review-pending-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-review-pending-page-3.xml",
+      "label": "Zones bevestigen",
+      "widthDp": 224.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-review-pending-page-4.xml",
+      "label": "Zonevoorstel afwijzen",
+      "widthDp": 224.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-review-pending-page-5.xml",
+      "label": "Onboarding afronden",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-0.xml",
+      "label": "Wedstrijd of evenement",
+      "widthDp": 313.4396355353075,
+      "heightDp": 134.85193621867882
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-1.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-1.xml",
+      "label": "Fietsen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-1.xml",
+      "label": "Zwemmen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-1.xml",
+      "label": "Triatlon",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-1.xml",
+      "label": "Duatlon",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-2.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-2.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-2.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-2.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-2.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-2.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-2.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-2.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-2.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-2.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-3.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-4.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-4.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-4.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-4.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-4.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-4.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-4.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-4.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-4.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-duathlon-page-4.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "360-font-1-goal-run-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.66666666666667,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-1.xml",
+      "label": "Persoonlijk doel",
+      "widthDp": 296.0,
+      "heightDp": 132.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-1.xml",
+      "label": "Lopen",
+      "widthDp": 296.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-1.xml",
+      "label": "Fietsen",
+      "widthDp": 296.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-1.xml",
+      "label": "Zwemmen",
+      "widthDp": 296.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-1.xml",
+      "label": "Triatlon",
+      "widthDp": 296.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-1.xml",
+      "label": "Duatlon",
+      "widthDp": 296.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-2.xml",
+      "label": "Richttijd",
+      "widthDp": 296.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-2.xml",
+      "label": "Richttempo (min/km)",
+      "widthDp": 296.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-3.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-3.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 184.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-3.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-3.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-3.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 184.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-3.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-3.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-3.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 184.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-3.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-3.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 296.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-4.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-4.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 184.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-4.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-4.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-4.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 184.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-4.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-4.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-4.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 184.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-4.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-goal-run-page-4.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 296.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "393-font-1-goal-bike-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-goal-bike-page-0.xml",
+      "label": "Wedstrijd of evenement",
+      "widthDp": 313.4396355353075,
+      "heightDp": 134.85193621867882
+    },
+    {
+      "file": "393-font-1-goal-bike-page-1.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-bike-page-1.xml",
+      "label": "Fietsen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-bike-page-1.xml",
+      "label": "Zwemmen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-bike-page-1.xml",
+      "label": "Triatlon",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-bike-page-1.xml",
+      "label": "Duatlon",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-bike-page-2.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-bike-page-2.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-bike-page-2.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-bike-page-2.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-bike-page-2.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-bike-page-2.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-bike-page-2.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-bike-page-2.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-bike-page-2.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-bike-page-2.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-bike-page-3.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-bike-page-3.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-bike-page-3.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-bike-page-3.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-bike-page-3.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-bike-page-3.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-bike-page-3.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-bike-page-3.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-bike-page-3.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-bike-page-3.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "412-font-2-goal-run-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 103.86634844868736,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "412-font-2-goal-run-page-1.xml",
+      "label": "Wedstrijd of evenement",
+      "widthDp": 348.25775656324583,
+      "heightDp": 272.6491646778043
+    },
+    {
+      "file": "412-font-2-goal-run-page-1.xml",
+      "label": "Persoonlijk doel",
+      "widthDp": 348.25775656324583,
+      "heightDp": 340.6205250596659
+    },
+    {
+      "file": "412-font-2-goal-run-page-2.xml",
+      "label": "Lopen",
+      "widthDp": 348.25775656324583,
+      "heightDp": 61.09785202863962
+    },
+    {
+      "file": "412-font-2-goal-run-page-2.xml",
+      "label": "Fietsen",
+      "widthDp": 348.25775656324583,
+      "heightDp": 61.09785202863962
+    },
+    {
+      "file": "412-font-2-goal-run-page-2.xml",
+      "label": "Zwemmen",
+      "widthDp": 348.25775656324583,
+      "heightDp": 61.09785202863962
+    },
+    {
+      "file": "412-font-2-goal-run-page-2.xml",
+      "label": "Triatlon",
+      "widthDp": 348.25775656324583,
+      "heightDp": 61.09785202863962
+    },
+    {
+      "file": "412-font-2-goal-run-page-2.xml",
+      "label": "Duatlon",
+      "widthDp": 348.25775656324583,
+      "heightDp": 61.09785202863962
+    },
+    {
+      "file": "412-font-2-goal-run-page-3.xml",
+      "label": "Richttijd",
+      "widthDp": 348.25775656324583,
+      "heightDp": 61.09785202863962
+    },
+    {
+      "file": "412-font-2-goal-run-page-3.xml",
+      "label": "Richttempo (min/km)",
+      "widthDp": 348.25775656324583,
+      "heightDp": 61.09785202863962
+    },
+    {
+      "file": "412-font-2-goal-run-page-4.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 48.1145584725537,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-2-goal-run-page-4.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 236.75417661097853,
+      "heightDp": 54.98806682577566
+    },
+    {
+      "file": "412-font-2-goal-run-page-4.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-2-goal-run-page-4.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.1145584725537,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-2-goal-run-page-4.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 236.75417661097853,
+      "heightDp": 54.98806682577566
+    },
+    {
+      "file": "412-font-2-goal-run-page-4.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-2-goal-run-page-4.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 348.25775656324583,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "412-font-2-goal-run-page-5.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 48.1145584725537,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-2-goal-run-page-5.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 236.75417661097853,
+      "heightDp": 54.98806682577566
+    },
+    {
+      "file": "412-font-2-goal-run-page-5.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-2-goal-run-page-5.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.1145584725537,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-2-goal-run-page-5.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 236.75417661097853,
+      "heightDp": 54.98806682577566
+    },
+    {
+      "file": "412-font-2-goal-run-page-5.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-2-goal-run-page-5.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 348.25775656324583,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "393-font-1-upgrade-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-upgrade-page-1.xml",
+      "label": "Europe/Amsterdam",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-1.xml",
+      "label": "Europe/Brussels",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-upgrade-page-1.xml",
+      "label": "Europe/London",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-1.xml",
+      "label": "Europe/Paris",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-1.xml",
+      "label": "America/New_York",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-1.xml",
+      "label": "America/Los_Angeles",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-1.xml",
+      "label": "Asia/Tokyo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-1.xml",
+      "label": "Australia/Sydney",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-2.xml",
+      "label": "Europe/Brussels",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-upgrade-page-2.xml",
+      "label": "Europe/London",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-2.xml",
+      "label": "Europe/Paris",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-2.xml",
+      "label": "America/New_York",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-2.xml",
+      "label": "America/Los_Angeles",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-2.xml",
+      "label": "Asia/Tokyo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-2.xml",
+      "label": "Australia/Sydney",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-upgrade-page-2.xml",
+      "label": "Tijdzone expliciet bevestigen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-profile-blank-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-profile-blank-page-3.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 256.0,
+      "heightDp": 106.07407407407408
+    },
+    {
+      "file": "393-font-1-timezone-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-timezone-page-0.xml",
+      "label": "Gedetecteerd op dit apparaat: GMT",
+      "widthDp": 313.4396355353075,
+      "heightDp": 82.36902050113895
+    },
+    {
+      "file": "393-font-1-timezone-page-0.xml",
+      "label": "Europe/Amsterdam",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-timezone-page-0.xml",
+      "label": "Europe/Brussels",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-timezone-page-1.xml",
+      "label": "Europe/Brussels",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-timezone-page-1.xml",
+      "label": "Europe/London",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-timezone-page-1.xml",
+      "label": "Europe/Paris",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-timezone-page-1.xml",
+      "label": "America/New_York",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-timezone-page-1.xml",
+      "label": "America/Los_Angeles",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-timezone-page-1.xml",
+      "label": "Asia/Tokyo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-timezone-page-1.xml",
+      "label": "Australia/Sydney",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-timezone-page-1.xml",
+      "label": "Tijdzone expliciet bevestigen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-profile-editor-page-0.xml",
+      "label": "Week",
+      "widthDp": 133.62962962962962,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-profile-editor-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-profile-editor-page-3.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-profile-editor-page-4.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 256.0,
+      "heightDp": 98.66666666666667
+    },
+    {
+      "file": "320-font-2-profile-editor-page-4.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 256.0,
+      "heightDp": 98.37037037037037
+    },
+    {
+      "file": "320-font-2-profile-editor-page-5.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 256.0,
+      "heightDp": 98.66666666666667
+    },
+    {
+      "file": "320-font-2-profile-editor-page-5.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 256.0,
+      "heightDp": 98.37037037037037
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-0.xml",
+      "label": "Race or event",
+      "widthDp": 313.4396355353075,
+      "heightDp": 112.61958997722095
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-1.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-1.xml",
+      "label": "Fietsen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-1.xml",
+      "label": "Zwemmen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-1.xml",
+      "label": "Triatlon",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-1.xml",
+      "label": "Duatlon",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-2.xml",
+      "label": "Richttijd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-2.xml",
+      "label": "Richttempo (min/km)",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-2.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-2.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-2.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-2.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-2.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-2.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-2.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-2.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-2.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-3.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-3.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-3.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-3.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-3.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-3.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-3.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-3.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 201.91343963553533,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-3.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.74487471526196,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-goal-run-english-page-3.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-review-pending-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-review-pending-page-1.xml",
+      "label": "Zones bevestigen",
+      "widthDp": 281.3667425968109,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-review-pending-page-1.xml",
+      "label": "Zonevoorstel afwijzen",
+      "widthDp": 281.3667425968109,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-review-pending-page-1.xml",
+      "label": "Onboarding afronden",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-profile-blank-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-profile-blank-page-1.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-profile-filled-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-profile-filled-page-3.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 256.0,
+      "heightDp": 106.07407407407408
+    },
+    {
+      "file": "393-font-1-review-blocked-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-review-blocked-page-1.xml",
+      "label": "Onboarding afronden",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-review-blocked-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-review-blocked-page-4.xml",
+      "label": "Onboarding afronden",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-10.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 256.0,
+      "heightDp": 51.25925925925926
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-11.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-11.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-11.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-11.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-11.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-11.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-11.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-11.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.51851851851852
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-11.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-12.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-12.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-12.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-12.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-12.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-12.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-13.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-13.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 54.51851851851852
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-13.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-14.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-4.xml",
+      "label": "Lopen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-4.xml",
+      "label": "Fietsen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-4.xml",
+      "label": "Zwemmen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-4.xml",
+      "label": "Triatlon",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-4.xml",
+      "label": "Duatlon",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-6.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 256.0,
+      "heightDp": 51.25925925925926
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-7.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-7.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.51851851851852
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-7.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-7.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-7.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-7.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-7.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-7.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-7.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-8.xml",
+      "label": "Richttijd onderdeel wissen",
+      "widthDp": 256.0,
+      "heightDp": 51.25925925925926
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-9.xml",
+      "label": "Verlaag uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-9.xml",
+      "label": "Kies uren voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-9.xml",
+      "label": "Verhoog uren voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-9.xml",
+      "label": "Verlaag minuten voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-9.xml",
+      "label": "Kies minuten voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-9.xml",
+      "label": "Verhoog minuten voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-9.xml",
+      "label": "Verlaag seconden voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-9.xml",
+      "label": "Kies seconden voor Richttijd onderdeel",
+      "widthDp": 144.0,
+      "heightDp": 54.81481481481482
+    },
+    {
+      "file": "320-font-2-goal-triathlon-long-page-9.xml",
+      "label": "Verhoog seconden voor Richttijd onderdeel",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-profile-editor-page-0.xml",
+      "label": "Week",
+      "widthDp": 103.66666666666667,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-profile-editor-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.66666666666667,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-profile-editor-page-2.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 296.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-profile-editor-page-2.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 296.0,
+      "heightDp": 76.0
+    },
+    {
+      "file": "360-font-1-profile-editor-page-2.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 296.0,
+      "heightDp": 76.0
+    },
+    {
+      "file": "393-font-1-profile-editor-page-0.xml",
+      "label": "Week",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-profile-editor-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-profile-editor-page-1.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-profile-editor-page-1.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 329.4760820045558,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "393-font-1-profile-editor-page-1.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 329.4760820045558,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "320-font-1-goal-run-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.88888888888889,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-goal-run-page-1.xml",
+      "label": "Wedstrijd of evenement",
+      "widthDp": 256.0,
+      "heightDp": 134.8148148148148
+    },
+    {
+      "file": "320-font-1-goal-run-page-1.xml",
+      "label": "Persoonlijk doel",
+      "widthDp": 256.0,
+      "heightDp": 175.11111111111111
+    },
+    {
+      "file": "320-font-1-goal-run-page-1.xml",
+      "label": "Lopen",
+      "widthDp": 256.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "file": "320-font-1-goal-run-page-1.xml",
+      "label": "Fietsen",
+      "widthDp": 256.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "file": "320-font-1-goal-run-page-2.xml",
+      "label": "Zwemmen",
+      "widthDp": 256.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "file": "320-font-1-goal-run-page-2.xml",
+      "label": "Triatlon",
+      "widthDp": 256.0,
+      "heightDp": 49.77777777777778
+    },
+    {
+      "file": "320-font-1-goal-run-page-2.xml",
+      "label": "Duatlon",
+      "widthDp": 256.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "file": "320-font-1-goal-run-page-3.xml",
+      "label": "Richttijd",
+      "widthDp": 256.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "file": "320-font-1-goal-run-page-3.xml",
+      "label": "Richttempo (min/km)",
+      "widthDp": 256.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "file": "320-font-1-goal-run-page-3.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-3.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-3.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-4.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-4.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-4.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-4.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-4.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-4.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-4.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-4.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-4.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-4.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-goal-run-page-5.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-5.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-5.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-5.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-5.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 144.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-5.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 48.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-goal-run-page-5.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-2-review-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-review-page-3.xml",
+      "label": "Onboarding afronden",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-review-page-4.xml",
+      "label": "Onboarding afronden",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "412-font-1-goal-run-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 89.35560859188544,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-goal-run-page-0.xml",
+      "label": "Wedstrijd of evenement",
+      "widthDp": 332.21957040572795,
+      "heightDp": 114.94033412887829
+    },
+    {
+      "file": "412-font-1-goal-run-page-0.xml",
+      "label": "Persoonlijk doel",
+      "widthDp": 332.21957040572795,
+      "heightDp": 133.26968973747017
+    },
+    {
+      "file": "412-font-1-goal-run-page-1.xml",
+      "label": "Fietsen",
+      "widthDp": 332.21957040572795,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-goal-run-page-1.xml",
+      "label": "Zwemmen",
+      "widthDp": 332.21957040572795,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-goal-run-page-1.xml",
+      "label": "Triatlon",
+      "widthDp": 332.21957040572795,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-goal-run-page-1.xml",
+      "label": "Duatlon",
+      "widthDp": 332.21957040572795,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-goal-run-page-2.xml",
+      "label": "Richttempo (min/km)",
+      "widthDp": 332.21957040572795,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-goal-run-page-2.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-goal-run-page-2.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 220.71599045346062,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-goal-run-page-2.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-goal-run-page-2.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-1-goal-run-page-2.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 220.71599045346062,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-1-goal-run-page-2.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-1-goal-run-page-2.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-goal-run-page-2.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 220.71599045346062,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-goal-run-page-2.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-goal-run-page-2.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 332.21957040572795,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-goal-run-page-3.xml",
+      "label": "Verlaag uren voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-goal-run-page-3.xml",
+      "label": "Kies uren voor Totale richttijd",
+      "widthDp": 220.71599045346062,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-goal-run-page-3.xml",
+      "label": "Verhoog uren voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-goal-run-page-3.xml",
+      "label": "Verlaag minuten voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-1-goal-run-page-3.xml",
+      "label": "Kies minuten voor Totale richttijd",
+      "widthDp": 220.71599045346062,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-1-goal-run-page-3.xml",
+      "label": "Verhoog minuten voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 47.7326968973747
+    },
+    {
+      "file": "412-font-1-goal-run-page-3.xml",
+      "label": "Verlaag seconden voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-goal-run-page-3.xml",
+      "label": "Kies seconden voor Totale richttijd",
+      "widthDp": 220.71599045346062,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-goal-run-page-3.xml",
+      "label": "Verhoog seconden voor Totale richttijd",
+      "widthDp": 47.7326968973747,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-goal-run-page-3.xml",
+      "label": "A-doel opslaan",
+      "widthDp": 332.21957040572795,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-2-profile-editor-page-0.xml",
+      "label": "Week",
+      "widthDp": 134.03341288782818,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "412-font-2-profile-editor-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 103.86634844868736,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "412-font-2-profile-editor-page-2.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 348.25775656324583,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "412-font-2-profile-editor-page-2.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 348.25775656324583,
+      "heightDp": 98.13842482100239
+    },
+    {
+      "file": "412-font-2-profile-editor-page-2.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 348.25775656324583,
+      "heightDp": 75.99045346062053
+    },
+    {
+      "file": "393-font-1-review-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-review-page-1.xml",
+      "label": "Onboarding afronden",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-resume-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-resume-page-1.xml",
+      "label": "Ja, ik kan gemiddelde hartslag meten",
+      "widthDp": 313.4396355353075,
+      "heightDp": 82.00455580865604
+    },
+    {
+      "file": "393-font-1-profile-filled-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-profile-filled-page-1.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-resume-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-resume-page-3.xml",
+      "label": "Ja, ik kan gemiddelde hartslag meten",
+      "widthDp": 256.0,
+      "heightDp": 178.66666666666666
+    },
+    {
+      "file": "320-font-1-profile-editor-page-0.xml",
+      "label": "Week",
+      "widthDp": 103.70370370370371,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-profile-editor-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.88888888888889,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-profile-editor-page-2.xml",
+      "label": "Profiel opslaan",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-profile-editor-page-2.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 256.0,
+      "heightDp": 76.14814814814815
+    },
+    {
+      "file": "320-font-1-profile-editor-page-2.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 256.0,
+      "heightDp": 75.85185185185185
+    },
+    {
+      "file": "393-font-1-goal-choice-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-goal-choice-page-0.xml",
+      "label": "Wedstrijd of evenement",
+      "widthDp": 313.4396355353075,
+      "heightDp": 134.85193621867882
+    },
+    {
+      "file": "393-font-1-goal-choice-page-1.xml",
+      "label": "Wedstrijd of evenement",
+      "widthDp": 313.4396355353075,
+      "heightDp": 134.85193621867882
+    },
+    {
+      "file": "393-font-1-goal-choice-page-1.xml",
+      "label": "Persoonlijk doel",
+      "widthDp": 313.4396355353075,
+      "heightDp": 132.30068337129842
+    }
+  ]
+}

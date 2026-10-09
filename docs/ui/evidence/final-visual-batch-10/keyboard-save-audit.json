@@ -1,0 +1,35 @@
+{
+  "pass": true,
+  "method": "Tab to save without a dismissing drag; require the native label to remain inside button padding; visually inspect complete labels",
+  "backendWrites": false,
+  "results": [
+    {
+      "state": "profile-editor",
+      "widthDp": 320,
+      "fontScale": 2,
+      "IMEVisible": true,
+      "fullControlInsideKeyboardAdjustedViewport": true,
+      "nativeBounds": [
+        108,
+        885,
+        972,
+        1244
+      ],
+      "label": "Profiel opslaan"
+    },
+    {
+      "state": "goal-run",
+      "widthDp": 320,
+      "fontScale": 2,
+      "IMEVisible": true,
+      "fullControlInsideKeyboardAdjustedViewport": true,
+      "nativeBounds": [
+        108,
+        886,
+        972,
+        1244
+      ],
+      "label": "A-doel opslaan"
+    }
+  ]
+}
