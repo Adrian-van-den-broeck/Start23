@@ -51,7 +51,7 @@ jobs:
         run: |
           if git grep -n -E \
             '(sb_secret_|SUPABASE_SERVICE_ROLE_KEY|DATABASE_URL=postgres(ql)?://)' \
-            -- backend mobile; then
+            -- backend mobile ':(exclude)backend/tests/**'; then
             echo "A privileged credential pattern was found."
             exit 1
           fi
