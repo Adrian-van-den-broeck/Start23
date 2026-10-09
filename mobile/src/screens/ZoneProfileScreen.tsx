@@ -5,7 +5,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -30,16 +30,19 @@ import type {
   OnboardingState,
   TestAssignment,
   TestSchedulingMode,
-  ZoneProfileSnapshot,
   ZoneProfileState,
 } from '../api/types';
 import { FadeInView } from '../components/FadeInView';
-import { FormField } from '../components/FormField';
-import { MotionPressable as Pressable } from '../components/MotionPressable';
-import { StatusPill } from '../components/StatusPill';
+import { ZoneField as FormField } from '../ui-v2/components/ZoneField';
+import { ZoneStatusChip as StatusPill, ZoneInfoRow, ZoneProfileValues as ProfileValues } from '../ui-v2/components/ZoneVisuals';
 import { formatIsoDateInput } from '../lib/dateInput';
-import { formatRunPace } from '../lib/runPace';
-import { colors, radius, shadows, spacing } from '../theme/tokens';
+import { colors, layout, radius, shadows, space } from '../ui-v2/tokens';
+import { Text } from '../ui-v2/primitives/Text';
+import { Button } from '../ui-v2/primitives/Button';
+import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
+import { IconTile } from '../ui-v2/primitives/IconTile';
+import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
+import { Notice } from '../ui-v2/primitives/Notice';
 import { ZoneSetupStep } from './ZoneSetupStep';
 
 type Props = {
@@ -49,16 +52,10 @@ type Props = {
   planContext: { planId: string; revision: number } | null;
 };
 
-const disciplines: readonly Discipline[] = ['swim', 'bike', 'run'];
 const disciplineLabels: Record<Discipline, string> = {
   swim: 'Zwemmen',
   bike: 'Fietsen',
   run: 'Lopen',
-};
-const disciplineCodes: Record<Discipline, string> = {
-  swim: 'Z',
-  bike: 'F',
-  run: 'L',
 };
 const visibilityLabels: Record<
   DisciplineZoneProfile['numeric_zone_visibility'],
@@ -81,108 +78,8 @@ function ActionButton({
   onPress: () => void;
   secondary?: boolean;
 }) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      disabled={disabled}
-      haptic={secondary ? undefined : 'light'}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.action,
-        secondary && styles.actionSecondary,
-        disabled && styles.disabled,
-        pressed && styles.pressed,
-      ]}
-    >
-      <Text
-        style={[
-          styles.actionText,
-          secondary && styles.actionSecondaryText,
-        ]}
-      >
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
-
-function BoundaryList({
-  boundaries,
-  runPace,
-}: {
-  boundaries: ZoneProfileSnapshot['boundaries'];
-  runPace: boolean;
-}) {
-  return (
-    <View style={styles.boundaryList}>
-      {boundaries.map((boundary) => (
-        <View key={boundary.zone_number} style={styles.boundaryChip}>
-          <Text style={styles.boundaryZone}>Z{boundary.zone_number}</Text>
-          <Text style={styles.boundaryValue}>
-            {runPace ? formatRunPace(boundary.lower_value) : boundary.lower_value ?? 'open'}
-            {' - '}
-            {runPace ? formatRunPace(boundary.upper_value) : boundary.upper_value ?? 'open'}
-          </Text>
-        </View>
-      ))}
-    </View>
-  );
-}
-
-function ProfileValues({ profile }: { profile: ZoneProfileSnapshot }) {
-  if (profile.values_hidden) {
-    return (
-      <View style={styles.hiddenState}>
-        <View style={styles.hiddenStateIcon}>
-          <Text style={styles.hiddenStateIconText}>RPE</Text>
-        </View>
-        <Text style={styles.body}>
-          Numerieke waarden blijven verborgen. Je trainingen gebruiken voorlopig
-          alleen RPE en observaties.
-        </Text>
-      </View>
-    );
-  }
-  const metricProfiles = profile.metric_profiles;
-  return (
-    <View style={styles.valueList}>
-      {profile.metric ? (
-        <View style={styles.primaryMetric}>
-          <Text style={styles.primaryMetricLabel}>
-            {profile.metric.metric_kind}
-          </Text>
-          <Text style={styles.primaryMetricValue}>
-            {profile.metric.metric_kind === 'run_threshold_pace_seconds_per_km'
-              ? formatRunPace(profile.metric.value) : profile.metric.value}
-          </Text>
-        </View>
-      ) : null}
-      {metricProfiles.map((metric) => (
-        <View key={metric.metric_kind} style={styles.valueBlock}>
-          <View style={styles.metricHeader}>
-            <Text style={styles.metricLabel}>{metric.metric_kind}</Text>
-            <Text style={styles.metricValue}>
-              {metric.metric_kind === 'run_threshold_pace_seconds_per_km'
-                ? formatRunPace(metric.source_value) : metric.source_value}
-            </Text>
-          </View>
-          <BoundaryList boundaries={metric.boundaries}
-            runPace={metric.metric_kind === 'run_threshold_pace_seconds_per_km'} />
-        </View>
-      ))}
-      {metricProfiles.length === 0 && profile.boundaries.length > 0 ? (
-        <BoundaryList boundaries={profile.boundaries}
-          runPace={profile.metric?.metric_kind === 'run_threshold_pace_seconds_per_km'} />
-      ) : null}
-      <View style={styles.sourceRow}>
-        <Text style={styles.sourceLabel}>Bron</Text>
-        <Text style={styles.sourceValue}>
-          {profile.source_method} · {profile.source_quality} ·{' '}
-          {profile.review_status}
-        </Text>
-      </View>
-    </View>
-  );
+  return <Button disabled={disabled} label={label} onPress={onPress}
+    variant={secondary ? 'outline' : 'primary'} trailingIcon={secondary ? undefined : 'forward'} />;
 }
 
 function AssignmentCard({
@@ -237,6 +134,8 @@ export function ZoneProfileScreen({
   onSignOut,
   planContext,
 }: Props) {
+  const { width, fontScale } = useWindowDimensions();
+  const compact = width < 393 || fontScale > 1;
   const [profile, setProfile] = useState<ZoneProfileState | null>(null);
   const [onboarding, setOnboarding] = useState<OnboardingState | null>(null);
   const [editingDiscipline, setEditingDiscipline] =
@@ -367,34 +266,6 @@ export function ZoneProfileScreen({
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <View style={styles.header}>
-        <Pressable
-          accessibilityRole="button"
-          onPress={onBack}
-          style={({ pressed }) => [
-            styles.headerButton,
-            pressed && styles.pressed,
-          ]}
-        >
-          <Text style={styles.headerButtonSymbol}>{'<'}</Text>
-          <Text style={styles.headerButtonText}>Week</Text>
-        </Pressable>
-        <View style={styles.headerBrand}>
-          <Text style={styles.logo}>WOMBO</Text>
-          <Text style={styles.caption}>Mijn zones</Text>
-        </View>
-        <Pressable
-          accessibilityLabel="Afmelden"
-          accessibilityRole="button"
-          onPress={() => void onSignOut()}
-          style={({ pressed }) => [
-            styles.signOutButton,
-            pressed && styles.pressed,
-          ]}
-        >
-          <Text style={styles.signOutButtonText}>Uit</Text>
-        </Pressable>
-      </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboard}
@@ -407,30 +278,24 @@ export function ZoneProfileScreen({
         showsVerticalScrollIndicator={false}
         style={styles.scroll}
       >
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-        {busy ? <ActivityIndicator color={colors.brand} /> : null}
+        <BrandedFormHeader caption="Mijn zones" onBack={onBack} onSignOut={onSignOut} />
+        {error ? <Notice tone="error">{error}</Notice> : null}
+        {busy ? <ActivityIndicator color={colors.primary} /> : null}
         <FadeInView style={styles.intro}>
-          <View style={styles.introOrb} />
-          <Text style={styles.introEyebrow}>Persoonlijk profiel</Text>
-          <Text style={styles.title}>Jouw zones, helder in beeld.</Text>
-          <Text style={styles.introBody}>
-            Bekijk actieve en eerdere versies, wijzig bekende waarden of kies een
-            nieuwe test. Geen wijziging wordt actief zonder jouw bevestiging.
-          </Text>
-          <View style={styles.summaryRow}>
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryValue}>
-                {profile?.disciplines.length ?? disciplines.length}
-              </Text>
-              <Text style={styles.summaryLabel}>Disciplines</Text>
-            </View>
-            <View style={styles.summaryDivider} />
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryValue}>{planContext ? 'Ja' : 'Los'}</Text>
-              <Text style={styles.summaryLabel}>Plan gekoppeld</Text>
+          <View style={[styles.heroHeading, compact && styles.stacked]}>
+            <IconTile name="profile" size="focus" />
+            <View style={[styles.heroCopy, compact && { flex: 0, width: '100%' }]}>
+              <Text variant="supporting" tone="primary" style={{ fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1 }}>Persoonlijk profiel</Text>
+              <Text variant="sectionTitle" style={styles.heroTitle}>Jouw zones, helder in beeld.</Text>
+              <Text tone="textMuted">Bekijk actieve en eerdere versies, wijzig bekende waarden of kies een nieuwe test. Geen wijziging wordt actief zonder jouw bevestiging.</Text>
             </View>
           </View>
+          <View style={[styles.summaryRow, compact && styles.stacked]}>
+            {profile ? <View style={[styles.summaryItem, compact && styles.summaryItemCompact]}><IconTile name="intensity" /><View style={styles.heroCopy}><Text variant="sectionTitle">{profile.disciplines.length}</Text><Text tone="textMuted">Disciplines</Text></View></View> : null}
+            <View style={[styles.summaryItem, compact && styles.summaryItemCompact]}><IconTile name="document" /><View style={styles.heroCopy}><Text variant="sectionTitle">{planContext ? 'Ja' : 'Los'}</Text><Text tone="textMuted">Plan gekoppeld</Text></View></View>
+          </View>
         </FadeInView>
+        <View style={styles.section}><Text variant="sectionTitle" accessibilityRole="header">Mijn disciplines</Text><Text tone="textMuted">Stel per discipline je zones, routes en profielen in.</Text></View>
 
         {profile?.disciplines.map((state, index) => {
           const pending = state.pending_profile;
@@ -443,27 +308,14 @@ export function ZoneProfileScreen({
               key={state.discipline}
               style={styles.panel}
             >
-              <View style={styles.panelHeader}>
-                <View style={styles.panelIdentity}>
-                  <View style={styles.disciplineIcon}>
-                    <Text style={styles.disciplineIconText}>
-                      {disciplineCodes[state.discipline]}
-                    </Text>
-                  </View>
-                  <View style={styles.panelIdentityCopy}>
-                    <Text style={styles.panelTitle}>
-                      {disciplineLabels[state.discipline]}
-                    </Text>
-                    <Text style={styles.hint}>
-                      Route: {state.setup?.setup_route ?? 'nog niet ingesteld'}
-                    </Text>
-                  </View>
+              <View style={[styles.panelIdentity, compact && styles.stacked]}>
+                <IconTile name={state.discipline} size="focus" />
+                <View style={[styles.panelIdentityCopy, compact && styles.fullWidth]}>
+                  <Text variant="sectionTitle" accessibilityRole="header">{disciplineLabels[state.discipline]}</Text>
+                  <StatusPill label={visibilityLabels[state.numeric_zone_visibility]} pending={state.numeric_zone_visibility === 'proposal_confirmation_pending'} />
                 </View>
-                <StatusPill
-                  label={visibilityLabels[state.numeric_zone_visibility]}
-                  tone={state.active_profile ? 'brand' : 'neutral'}
-                />
               </View>
+              <ZoneInfoRow icon="location"><Text tone="textMuted">Route: {state.setup?.setup_route ?? 'nog niet ingesteld'}</Text></ZoneInfoRow>
               {state.active_profile ? (
                 <View style={[styles.profileBlock, styles.profileBlockActive]}>
                   <View style={styles.profileBlockHeading}>
@@ -475,9 +327,7 @@ export function ZoneProfileScreen({
                   <ProfileValues profile={state.active_profile} />
                 </View>
               ) : (
-                <Text style={styles.body}>
-                  Geen actief numeriek profiel; trainingen blijven RPE-gestuurd.
-                </Text>
+                <ZoneInfoRow icon="info"><Text tone="textMuted">Geen actief numeriek profiel; trainingen blijven RPE-gestuurd.</Text></ZoneInfoRow>
               )}
               {pending ? (
                 <View style={[styles.profileBlock, styles.profileBlockPending]}>
@@ -559,30 +409,9 @@ export function ZoneProfileScreen({
                     {state.available_test_scheduling_modes.map((mode) => {
                       const disabled = mode === 'weekly_plan' && !canIntegrate;
                       return (
-                        <Pressable
-                          accessibilityRole="radio"
-                          accessibilityState={{
-                            checked: modes[state.discipline] === mode,
-                            disabled,
-                          }}
-                          disabled={disabled}
-                          key={mode}
-                          onPress={() =>
-                            setModes((current) => ({
-                              ...current,
-                              [state.discipline]: mode,
-                            }))
-                          }
-                          style={[
-                            styles.modeChoice,
-                            modes[state.discipline] === mode && styles.modeActive,
-                            disabled && styles.disabled,
-                          ]}
-                        >
-                          <Text style={styles.modeText}>
-                            {mode === 'standalone' ? 'Losse test' : 'In weekplan'}
-                          </Text>
-                        </Pressable>
+                        <ChoiceRow key={mode} label={mode === 'standalone' ? 'Losse test' : 'In weekplan'}
+                          selected={modes[state.discipline] === mode} disabled={disabled}
+                          onPress={() => setModes((current) => ({ ...current, [state.discipline]: mode }))} />
                       );
                     })}
                   </View>
@@ -625,7 +454,6 @@ export function ZoneProfileScreen({
                     current === state.discipline ? null : state.discipline,
                   )
                 }
-                secondary
               />
               {editingDiscipline === state.discipline && onboarding ? (
                 <FadeInView distance={8} duration={300}>
@@ -650,322 +478,24 @@ export function ZoneProfileScreen({
 }
 
 const styles = StyleSheet.create({
-  safeArea: { backgroundColor: colors.canvas, flex: 1 },
-  keyboard: { flex: 1 },
-  scroll: { flex: 1 },
-  header: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-  },
-  headerBrand: { alignItems: 'center' },
-  logo: {
-    color: colors.brand,
-    fontSize: 14,
-    fontWeight: '900',
-    letterSpacing: 1.3,
-  },
-  caption: {
-    color: colors.inkMuted,
-    fontSize: 10,
-    marginTop: 2,
-    textAlign: 'center',
-  },
-  headerButton: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.line,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: spacing.xs,
-    minHeight: 38,
-    paddingHorizontal: spacing.sm,
-  },
-  headerButtonSymbol: { color: colors.brand, fontSize: 14, fontWeight: '900' },
-  headerButtonText: { color: colors.brand, fontSize: 11, fontWeight: '800' },
-  signOutButton: {
-    alignItems: 'center',
-    backgroundColor: colors.accentSoft,
-    borderRadius: radius.pill,
-    height: 38,
-    justifyContent: 'center',
-    width: 38,
-  },
-  signOutButtonText: {
-    color: colors.accentDark,
-    fontSize: 10,
-    fontWeight: '900',
-  },
-  content: {
-    alignSelf: 'center',
-    gap: spacing.md,
-    maxWidth: 760,
-    padding: spacing.lg,
-    paddingBottom: 80,
-    width: '100%',
-  },
-  intro: {
-    ...shadows.floating,
-    backgroundColor: colors.brandDeep,
-    borderRadius: radius.xl,
-    gap: spacing.sm,
-    overflow: 'hidden',
-    padding: spacing.lg,
-    position: 'relative',
-  },
-  introOrb: {
-    backgroundColor: colors.brandMid,
-    borderRadius: radius.pill,
-    height: 170,
-    opacity: 0.7,
-    position: 'absolute',
-    right: -70,
-    top: -85,
-    width: 170,
-  },
-  introEyebrow: {
-    color: colors.highlight,
-    fontSize: 10,
-    fontWeight: '900',
-    letterSpacing: 1.2,
-    textTransform: 'uppercase',
-  },
-  title: {
-    color: colors.white,
-    fontSize: 28,
-    fontWeight: '900',
-    letterSpacing: -0.9,
-    lineHeight: 32,
-    maxWidth: 330,
-  },
-  introBody: {
-    color: colors.brandSoft,
-    fontSize: 13,
-    lineHeight: 20,
-    maxWidth: 560,
-  },
-  summaryRow: {
-    alignItems: 'center',
-    backgroundColor: colors.brandMid,
-    borderRadius: radius.md,
-    flexDirection: 'row',
-    marginTop: spacing.sm,
-    padding: spacing.md,
-  },
-  summaryItem: { flex: 1 },
-  summaryValue: { color: colors.white, fontSize: 19, fontWeight: '900' },
-  summaryLabel: { color: colors.brandSoft, fontSize: 10, marginTop: 2 },
-  summaryDivider: {
-    backgroundColor: colors.brand,
-    height: 32,
-    marginHorizontal: spacing.md,
-    width: 1,
-  },
-  body: { color: colors.inkMuted, fontSize: 14, lineHeight: 21 },
-  hint: { color: colors.inkMuted, fontSize: 12, lineHeight: 18 },
-  error: {
-    backgroundColor: colors.dangerSoft,
-    borderRadius: radius.md,
-    color: colors.danger,
-    padding: spacing.md,
-  },
-  panel: {
-    ...shadows.card,
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.white,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    gap: spacing.md,
-    padding: spacing.lg,
-  },
-  panelHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-    justifyContent: 'space-between',
-  },
-  panelIdentity: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  panelIdentityCopy: { flex: 1 },
-  disciplineIcon: {
-    alignItems: 'center',
-    backgroundColor: colors.brandSoft,
-    borderRadius: radius.md,
-    height: 46,
-    justifyContent: 'center',
-    width: 46,
-  },
-  disciplineIconText: {
-    color: colors.brand,
-    fontSize: 15,
-    fontWeight: '900',
-  },
-  panelTitle: {
-    color: colors.ink,
-    fontSize: 20,
-    fontWeight: '900',
-    letterSpacing: -0.4,
-  },
-  profileBlock: {
-    borderColor: colors.line,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    gap: spacing.xs,
-    padding: spacing.md,
-  },
-  profileBlockActive: {
-    backgroundColor: '#F5FAF7',
-    borderColor: '#C8DED3',
-  },
-  profileBlockPending: {
-    backgroundColor: colors.accentSoft,
-    borderColor: '#F3CABB',
-  },
-  profileBlockHeading: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  versionLabel: {
-    backgroundColor: colors.brandSoft,
-    borderRadius: radius.pill,
-    color: colors.brand,
-    fontSize: 10,
-    fontWeight: '900',
-    overflow: 'hidden',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
-  },
-  pendingVersionLabel: {
-    backgroundColor: colors.surfaceRaised,
-    borderRadius: radius.pill,
-    color: colors.accentDark,
-    fontSize: 10,
-    fontWeight: '900',
-    overflow: 'hidden',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
-  },
-  valueList: { gap: spacing.sm },
-  valueBlock: {
-    backgroundColor: colors.surfaceRaised,
-    borderRadius: radius.sm,
-    gap: spacing.sm,
-    padding: spacing.sm,
-  },
-  primaryMetric: {
-    alignItems: 'center',
-    backgroundColor: colors.brandSoft,
-    borderRadius: radius.sm,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: spacing.sm,
-  },
-  primaryMetricLabel: {
-    color: colors.brand,
-    fontSize: 10,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  primaryMetricValue: { color: colors.brand, fontSize: 18, fontWeight: '900' },
-  metricHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  metricLabel: {
-    color: colors.inkMuted,
-    fontSize: 10,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  metricValue: { color: colors.ink, fontSize: 16, fontWeight: '900' },
-  boundaryList: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
-  boundaryChip: {
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.sm,
-    gap: 2,
-    minWidth: 72,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  boundaryZone: { color: colors.brand, fontSize: 9, fontWeight: '900' },
-  boundaryValue: { color: colors.ink, fontSize: 10, fontWeight: '700' },
-  sourceRow: {
-    borderTopColor: colors.line,
-    borderTopWidth: 1,
-    gap: 2,
-    paddingTop: spacing.sm,
-  },
-  sourceLabel: {
-    color: colors.inkFaint,
-    fontSize: 9,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  sourceValue: { color: colors.inkMuted, fontSize: 10, lineHeight: 15 },
-  hiddenState: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
-  hiddenStateIcon: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.sm,
-    height: 42,
-    justifyContent: 'center',
-    width: 42,
-  },
-  hiddenStateIconText: { color: colors.brand, fontSize: 9, fontWeight: '900' },
-  valueTitle: { color: colors.ink, fontSize: 14, fontWeight: '800' },
-  history: { gap: spacing.sm },
-  schedulePanel: {
-    backgroundColor: colors.accentSoft,
-    borderRadius: radius.md,
-    gap: spacing.md,
-    padding: spacing.md,
-  },
-  assignment: {
-    borderColor: colors.line,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    gap: spacing.sm,
-    padding: spacing.md,
-  },
-  buttonRow: { flexDirection: 'row', gap: spacing.sm },
-  buttonCell: { flex: 1 },
-  modeChoice: {
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.lineStrong,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    flex: 1,
-    padding: spacing.sm,
-  },
-  modeActive: { backgroundColor: colors.accentSoft, borderColor: colors.accent },
-  modeText: { color: colors.ink, fontSize: 12, fontWeight: '700', textAlign: 'center' },
-  action: {
-    ...shadows.card,
-    alignItems: 'center',
-    backgroundColor: colors.brand,
-    borderRadius: radius.pill,
-    minHeight: 44,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  actionSecondary: {
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.lineStrong,
-    borderWidth: 1,
-  },
-  actionText: { color: colors.white, fontSize: 13, fontWeight: '800' },
-  actionSecondaryText: { color: colors.brand },
-  disabled: { opacity: 0.45 },
-  pressed: { opacity: 0.78, transform: [{ scale: 0.98 }] },
+  safeArea: { backgroundColor: colors.background, flex: 1 }, keyboard: { flex: 1 }, scroll: { flex: 1 },
+  content: { alignSelf: 'center', gap: space[24], maxWidth: layout.readingWidth, padding: layout.phoneGutter, paddingBottom: space[48], width: '100%' },
+  intro: { ...shadows.card, backgroundColor: colors.surface, borderRadius: radius.card, gap: space[24], padding: space[16] },
+  heroHeading: { flexDirection: 'row', alignItems: 'flex-start', gap: space[16] },
+  stacked: { flexDirection: 'column', flexWrap: 'nowrap', alignItems: 'flex-start' },
+  heroCopy: { flex: 1, minWidth: 0, gap: space[8] }, heroTitle: { fontSize: 24, lineHeight: 30 },
+  summaryRow: { flexDirection: 'row', flexWrap: 'wrap', gap: space[24], borderTopWidth: 1, borderTopColor: colors.border, paddingTop: space[24] },
+  summaryItem: { flexDirection: 'row', gap: space[12], alignItems: 'center', flexGrow: 1, flexBasis: 150 },
+  summaryItemCompact: { flexGrow: 0, flexBasis: 'auto', width: '100%' }, fullWidth: { flex: 0, width: '100%' },
+  section: { gap: space[8] }, body: { color: colors.textMuted, fontSize: 16, lineHeight: 24 }, hint: { color: colors.textMuted, fontSize: 14, lineHeight: 20 },
+  panel: { ...shadows.card, backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.card, borderWidth: 1, gap: space[16], padding: space[16] },
+  panelIdentity: { alignItems: 'center', flexDirection: 'row', gap: space[16] }, panelIdentityCopy: { flex: 1, minWidth: 0, gap: space[8] },
+  profileBlock: { borderTopColor: colors.border, borderTopWidth: 1, gap: space[16], paddingTop: space[16] },
+  profileBlockActive: { gap: space[16] }, profileBlockPending: { backgroundColor: colors.warningSoft, borderRadius: radius.inset, padding: space[16] },
+  profileBlockHeading: { alignItems: 'flex-start', flexDirection: 'row', flexWrap: 'wrap', gap: space[8], justifyContent: 'space-between' },
+  versionLabel: { backgroundColor: colors.primarySoft, borderRadius: radius.inset, color: colors.primary, fontSize: 14, paddingHorizontal: space[8], paddingVertical: space[4] },
+  pendingVersionLabel: { color: colors.warning, fontSize: 14 }, valueTitle: { color: colors.text, fontSize: 18, fontWeight: '600', lineHeight: 26 },
+  history: { gap: space[16] }, schedulePanel: { backgroundColor: colors.primarySoft, borderRadius: radius.control, gap: space[24], padding: space[16] },
+  assignment: { borderColor: colors.border, borderRadius: radius.control, borderWidth: 1, gap: space[16], padding: space[16] },
+  buttonRow: { gap: space[12] }, buttonCell: { width: '100%' },
 });
