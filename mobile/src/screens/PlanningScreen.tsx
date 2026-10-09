@@ -806,7 +806,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
   const { effectiveVersion, requested } = useUiVersion();
   const { t } = useLanguage();
   const { rootVersion, setRootVersion, calendarVersion, setCalendarVersion, task, setTask,
-    detailWorkout, setDetailWorkout, weekScroll, calendarPositions, calendarNavigation, locked,
+    detailWorkout, setDetailWorkout, weekScroll, calendarPositions, calendarNavigation, locked, activityBusy,
     sheetOpen, setCalendarVisited, creationStep, setCreationStep, placementMode, setPlacementMode, reviewWorkoutId, setReviewWorkoutId, moveWorkoutId, setMoveWorkoutId } = usePlanningPresentation();
   const active = props.active ?? true;
   const previousRequest = useRef(requested);
@@ -828,12 +828,12 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
   };
   // Detail comparison changes the preference, while its origin stays put.
   useEffect(() => {
-    if (active && previousRequest.current !== requested && !detailWorkout && !locked && !sheetOpen) {
+    if (active && previousRequest.current !== requested && !detailWorkout && !locked && !activityBusy && !sheetOpen) {
       if (calendarOpen) { setCalendarVersion(effectiveVersion('calendar')); if (props.destination && !task) setRootVersion(effectiveVersion('week')); }
       else if (!task) setRootVersion(effectiveVersion('week'));
     }
     previousRequest.current = requested;
-  }, [requested, effectiveVersion, task, detailWorkout, locked, calendarOpen, active, sheetOpen, props.destination, setCalendarVersion, setRootVersion]);
+  }, [requested, effectiveVersion, task, detailWorkout, locked, activityBusy, calendarOpen, active, sheetOpen, props.destination, setCalendarVersion, setRootVersion]);
   useEffect(() => {
     if (task === 'prepare' && flow.view === 'deck' && flow.swipeDraft) {
       setCreationStep('selection');
@@ -866,12 +866,12 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
       kind === 'draft' || (kind === 'prepare' && flow.swipeDraft) ? 'creation' : kind === 'review' ? 'review' : 'existing');
     if (kind === 'review') setReviewWorkoutId(null);
   };
-  const controls = <UiVersionControl disabled={locked || sheetOpen} onSelect={(version) => {
-    if (!locked && !detailWorkout) {
-      if (calendarOpen) { setCalendarVersion(effectiveUiVersion(__DEV__, version, 'calendar')); if (props.destination && !task) { if (version === 'v1') flow.openCalendar(); setRootVersion(effectiveUiVersion(__DEV__, version, 'week')); } }
+  const controls = <UiVersionControl disabled={locked || activityBusy || sheetOpen} onSelect={(version) => {
+    if (!locked && !activityBusy && !sheetOpen && !detailWorkout) {
+      if (calendarOpen) { setCalendarVersion(effectiveUiVersion(version, 'calendar')); if (props.destination && !task) { if (version === 'v1') flow.openCalendar(); setRootVersion(effectiveUiVersion(version, 'week')); } }
       else if (!task) {
-        setRootVersion(effectiveUiVersion(__DEV__, version, 'week'));
-        setCalendarVersion(effectiveUiVersion(__DEV__, version, 'calendar'));
+        setRootVersion(effectiveUiVersion(version, 'week'));
+        setCalendarVersion(effectiveUiVersion(version, 'calendar'));
       }
     }
   }} />;

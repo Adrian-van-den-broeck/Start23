@@ -1,0 +1,29 @@
+Starting Metro Bundler
+
+warning: Bundler cache is empty, rebuilding (this may take a minute)
+Android Bundled 30719ms ..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\entry.js (2215 modules)
+
+› Assets (27):
+..\..\wombo-ui-v2-activities\mobile\node_modules\@expo-google-fonts\material-symbols\400Regular\MaterialSymbols_400Regular.ttf (967KB)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\arrow_down.png (9.5KB)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\arrow_right.xml (307B)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\checkmark.xml (312B)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\error.png (469B)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\file.png (138B)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\forward.png (188B)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\pkg.png (364B)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\react-navigation\elements\back-icon-mask.png (653B)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\react-navigation\elements\back-icon.png (4 variations | 152B)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\react-navigation\elements\clear-icon.png (4 variations | 425B)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\react-navigation\elements\close-icon.png (4 variations | 235B)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\react-navigation\elements\search-icon.png (4 variations | 599B)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\sitemap.png (465B)
+..\..\wombo-ui-v2-activities\mobile\node_modules\expo-router\assets\unmatched.png (4.8KB)
+
+› android bundles (1):
+_expo/static/js/android/entry-839d6f30c36e77243932ed82b14987e3.hbc (5.7MB)
+
+› Files (1):
+metadata.json (1.9KB)
+
+Exported: ../docs/ui/evidence/ui-v2-main-switch/export-android

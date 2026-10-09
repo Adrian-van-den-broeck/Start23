@@ -1,12 +1,10 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { Pressable, Text } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import * as legacy from '../components/WorkoutDetail';
 import { LanguageProvider } from '../i18n/LanguageProvider';
 import * as modern from '../ui-v2/screens/WorkoutDetailScreen';
 import { sourceWorkout } from '../ui-v2/utils/workout.test-fixtures';
-import { UiVersionProvider, useUiVersion } from './UiVersionProvider';
-import { UiVersionControl } from './UiVersionControl';
+import { UiVersionProvider } from './UiVersionProvider';
 import { WorkoutDetailBoundary } from './WorkoutDetailBoundary';
 
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: jest.fn() }));
@@ -70,24 +68,20 @@ test('one stable Modal, exact same snapshot/close callback, no I/O, and scroll s
   expect(SecureStore.setItemAsync).not.toHaveBeenCalled();
 });
 
-function ProgrammaticPreference() {
-  const { requested, setRequested, effectiveVersion } = useUiVersion();
-  return <><Text>{`${requested}/${effectiveVersion('workoutDetail')}`}</Text>
-    <Pressable accessibilityRole="button" accessibilityLabel="request V2" onPress={() => setRequested('v2')}>
-      <Text>Request</Text></Pressable><UiVersionControl /></>;
-}
-
-test('non-development env and programmatic requests force V1 and hide control', async () => {
+test('release users can switch V1 to V2 and back within one detail modal', async () => {
   Object.defineProperty(globalThis, '__DEV__', { value: false, configurable: true });
-  process.env.EXPO_PUBLIC_UI_VERSION = 'v2';
-  const view = await render(<LanguageProvider><UiVersionProvider><ProgrammaticPreference />
+  delete process.env.EXPO_PUBLIC_UI_VERSION;
+  const view = await render(<LanguageProvider><UiVersionProvider>
     <WorkoutDetailBoundary workout={sourceWorkout} onClose={jest.fn()} />
   </UiVersionProvider></LanguageProvider>);
-  expect(view.getByText('v1/v1')).toBeTruthy();
-  await act(async () => { await fireEvent.press(view.getByRole('button', { name: 'request V2' })); });
-  expect(view.getByText('v1/v1')).toBeTruthy();
-  expect(view.queryByRole('button', { name: 'UI V2' })).toBeNull();
-  expect(view.queryByText('Session sequence')).toBeNull();
+  const modal = view.getByTestId('workout-detail-modal');
+  expect(view.getByRole('button', { name: 'UI V1' }).props.accessibilityState.selected).toBe(true);
+  await act(async () => { await fireEvent.press(view.getByRole('button', { name: 'UI V2' })); });
+  expect(view.getByRole('button', { name: 'UI V2' }).props.accessibilityState.selected).toBe(true);
+  expect(view.getByTestId('workout-detail-modal')).toBe(modal);
+  await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
+  expect(view.getByRole('button', { name: 'UI V1' }).props.accessibilityState.selected).toBe(true);
+  expect(view.getByTestId('workout-detail-modal')).toBe(modal);
 });
 
 test('null and new selected snapshots reset only detail offset', async () => {

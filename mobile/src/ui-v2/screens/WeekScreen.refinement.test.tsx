@@ -95,16 +95,16 @@ test('no-plan has a single Prepare action; absent goal has no row', async () => 
   const view = await render(screen(cases[0].model));
   expect(view.getAllByRole('button', { name: 'Prepare week' })).toHaveLength(1);
   expect(view.queryByTestId('week-goal-row')).toBeNull();
-  expect(view.getByTestId('week-development-footer')).toBeTruthy();
+  expect(view.getByTestId('week-version-controls')).toBeTruthy();
 });
 
-test('non-development rendering reserves no footer or comparison controls', async () => {
+test('release rendering retains the supplied version switch', async () => {
   const original = __DEV__;
   try {
     Object.assign(globalThis, { __DEV__: false });
     const view = await render(screen(cases[1].model));
-    expect(view.queryByTestId('week-development-footer')).toBeNull();
-    expect(view.queryByTestId('supplied-dev-controls')).toBeNull();
+    expect(view.getByTestId('week-version-controls')).toBeTruthy();
+    expect(view.getByTestId('supplied-dev-controls')).toBeTruthy();
   } finally { Object.assign(globalThis, { __DEV__: original }); }
 });
 

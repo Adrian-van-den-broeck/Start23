@@ -693,3 +693,48 @@ test('Slice 4B editor write locks shell and comparison, then explicit approval r
   expect(view.getByTestId('training-root-navigation')).toBeTruthy(); expect(flow.setWeekStart).toBe(owner); expect(calendar.loadCalendarRange).toBe(reader);
   expect(api.approvePlanProposal).toHaveBeenCalledWith('token-a', updated.proposal.id, 2); expect(api.editPendingWorkout).toHaveBeenCalledTimes(1);
 });
+
+
+test('release users default to V1 and can round-trip V2 roots without replacing the training owner', async () => {
+  const originalDev = __DEV__;
+  Object.assign(globalThis, { __DEV__: false });
+  delete process.env.EXPO_PUBLIC_UI_VERSION;
+  try {
+    const view = await renderRouter(routes, { initialUrl: '/planning' });
+    await view.findByText('Week van 2026-10-05');
+    expect(view.queryByTestId('training-root-navigation')).toBeNull();
+    const owner = flow.setWeekStart;
+    const plan = flow.plan;
+    await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
+    await view.findByText('Approved');
+    expect(view.getByTestId('training-root-navigation')).toBeTruthy();
+    await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
+    await view.findByText('Training calendar');
+    expect(view.getByRole('button', { name: 'UI V1' })).toBeEnabled();
+    await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: 'Week' }));
+    await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
+    await view.findByText('Your training week');
+    expect(view.queryByTestId('training-root-navigation')).toBeNull();
+    expect(flow.setWeekStart).toBe(owner);
+    expect(flow.plan).toBe(plan);
+    expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
+    expect(api.approvePlanProposal).not.toHaveBeenCalled();
+    await view.unmount();
+  } finally { Object.assign(globalThis, { __DEV__: originalDev }); }
+});
+
+test('release version switching stays disabled during an in-flight activity operation', async () => {
+  const originalDev = __DEV__;
+  Object.assign(globalThis, { __DEV__: false });
+  try {
+    const view = await renderRouter(routes, { initialUrl: '/planning' });
+    await view.findByText('Approved');
+    await act(() => navigation.setActivityBusy(true));
+    expect(view.getByRole('button', { name: 'UI V1' })).toBeDisabled();
+    await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
+    expect(navigation.rootVersion).toBe('v2');
+    await act(() => navigation.setActivityBusy(false));
+    expect(view.getByRole('button', { name: 'UI V1' })).toBeEnabled();
+    await view.unmount();
+  } finally { Object.assign(globalThis, { __DEV__: originalDev }); }
+});

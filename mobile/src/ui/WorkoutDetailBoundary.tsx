@@ -32,10 +32,9 @@ export function WorkoutDetailBoundary({ workout, onClose }: {
       position.current.lastY = event.nativeEvent.contentOffset.y;
     },
   };
-  if (!__DEV__) return <WorkoutDetail workout={workout} onClose={onClose} />;
 
   // The approved V1 component is stateless and returns a native Modal. Reuse its
-  // exact content in development only so this one Modal and comparison control
+  // exact content for the selected presentation so this one Modal and comparison control
   // remain mounted. If V1 gains hooks or changes its frame, revisit this adapter.
   let legacyContent = null;
   if (version === 'v1') {

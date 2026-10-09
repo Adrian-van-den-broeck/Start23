@@ -8,9 +8,8 @@ import { useUiVersion } from './UiVersionProvider';
 export function UiVersionControl({ disabled = false, onSelect }: { disabled?: boolean; onSelect?: (version: 'v1' | 'v2') => void }) {
   const { requested, setRequested } = useUiVersion();
   const { t } = useLanguage();
-  if (!__DEV__) return null;
   return <View style={styles.control}>
-    <Text variant="supporting">{t('uiVersion.development', { version: requested.toUpperCase() })}</Text>
+    <Text variant="supporting">{t('uiVersion.current', { version: requested.toUpperCase() })}</Text>
     <View style={styles.options}>
       {(['v1', 'v2'] as const).map((version) => <Button key={version}
         label={t('uiVersion.choose', { version: version.toUpperCase() })}

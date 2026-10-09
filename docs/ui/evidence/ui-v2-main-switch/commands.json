@@ -1,0 +1,143 @@
+{
+  "previousMain": "ee229a9ac2b8de56a6b5bf69026921eab0ab5b56",
+  "acceptedBatch12": "569cfc6",
+  "rollbackTag": "wombo-ui-v1-pre-v2-6bb3a04",
+  "rollbackCommit": "6bb3a047139d91c71ac065c35a8af595221b54c5",
+  "commands": {
+    "strict-types": {
+      "pid": 11152,
+      "running": false,
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--noUnusedLocals",
+        "--noUnusedParameters"
+      ],
+      "code": 0,
+      "signal": null
+    },
+    "switch-focused": {
+      "pid": 24288,
+      "running": false,
+      "args": [
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "src/navigation/TrainingNavigation.test.tsx",
+        "--testNamePattern",
+        "release users|release version"
+      ],
+      "code": 0,
+      "signal": null
+    },
+    "backend-tests": {
+      "pid": 14680,
+      "running": false,
+      "args": [
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "-q"
+      ],
+      "bin": "F:/Projecten Business/Start23/Code/backend/.venv/Scripts/python.exe",
+      "cwd": "F:/Projecten Business/Start23/Code/.worktrees/wombo-ui-v2-main/backend",
+      "code": 0,
+      "signal": null
+    },
+    "backend-lint": {
+      "pid": 37712,
+      "running": false,
+      "args": [
+        "-m",
+        "ruff",
+        "check",
+        "."
+      ],
+      "bin": "F:/Projecten Business/Start23/Code/backend/.venv/Scripts/python.exe",
+      "cwd": "F:/Projecten Business/Start23/Code/.worktrees/wombo-ui-v2-main/backend",
+      "code": 0,
+      "signal": null
+    },
+    "backend-format": {
+      "pid": 42392,
+      "running": false,
+      "args": [
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "."
+      ],
+      "bin": "F:/Projecten Business/Start23/Code/backend/.venv/Scripts/python.exe",
+      "cwd": "F:/Projecten Business/Start23/Code/.worktrees/wombo-ui-v2-main/backend",
+      "code": 0,
+      "signal": null
+    },
+    "backend-types": {
+      "pid": 41404,
+      "running": false,
+      "args": [
+        "-m",
+        "mypy",
+        "app",
+        "tests"
+      ],
+      "bin": "F:/Projecten Business/Start23/Code/backend/.venv/Scripts/python.exe",
+      "cwd": "F:/Projecten Business/Start23/Code/.worktrees/wombo-ui-v2-main/backend",
+      "code": 0,
+      "signal": null
+    },
+    "full-mobile": {
+      "pid": 34112,
+      "running": false,
+      "args": [
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--setupFilesAfterEnv",
+        "./jest.setup.ts",
+        "../docs/ui/evidence/final-visual-batch-12/deterministic-proposal-fixture-date.cjs",
+        "--json",
+        "--outputFile",
+        "../docs/ui/evidence/ui-v2-main-switch/full-mobile.json"
+      ],
+      "code": 0,
+      "signal": null
+    },
+    "android-release-export": {
+      "pid": 11004,
+      "running": false,
+      "args": [
+        "node_modules/expo/bin/cli",
+        "export",
+        "--platform",
+        "android",
+        "--output-dir",
+        "../docs/ui/evidence/ui-v2-main-switch/export-android",
+        "--clear"
+      ],
+      "code": 0,
+      "signal": null
+    }
+  },
+  "fullMobile": {
+    "suites": 68,
+    "tests": 613,
+    "failed": 0
+  },
+  "backend": {
+    "tests": 778,
+    "passed": true,
+    "includes": "Public contracts, recursive private-load privacy and planning/provenance regressions"
+  },
+  "productionAndroidExport": {
+    "bundle": "_expo/static/js/android/entry-839d6f30c36e77243932ed82b14987e3.hbc",
+    "bytes": 5730549,
+    "sha256": "64a25ef76d6a2da2f438350e962204d4e8aa2a26c14db6a78ca92649d8ee5d3b"
+  },
+  "applicationCredentialScan": "PASS; intentional backend test fixtures excluded from application scan",
+  "committedEnvironmentGuard": "PASS",
+  "uncommittedRootChangesIncluded": false,
+  "newDatabaseChanges": false,
+  "databaseGate": "Fresh database CI after publication; accepted migration already has hosted 10-assertion provenance/grant/RLS proof; no local Docker/Supabase CLI",
+  "completedCheckInAccepted": false
+}

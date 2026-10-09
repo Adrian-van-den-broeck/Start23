@@ -65,7 +65,7 @@ export function CalendarScreen({ model, mode, anchor, loading, error, onModeChan
         <Text variant="label">{t('calendar.retainedRange', { from: fullDate(model.loadedRange.fromDate), to: fullDate(isoDate(addDays(model.loadedRange.toDate, -1))) })}</Text>
         {model.retainedDays.length ? <WeekAgenda days={model.retainedDays} known onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : <Text>{t('calendar.retainedEmpty')}</Text>}
       </View> : null}
-      {__DEV__ && controls ? <View style={styles.notice}><Divider />{controls}</View> : null}
+      {controls ? <View style={styles.notice}><Divider />{controls}</View> : null}
     </ScrollView>
   </ShellSafeArea>;
 }

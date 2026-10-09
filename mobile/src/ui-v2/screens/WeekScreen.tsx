@@ -77,7 +77,7 @@ export function WeekScreen({ model, error, busy, onAction, onOpenWorkout, onProf
             accessibilityLabel={t('week.goal', { name: goalName })} disabled={busy} onAction={onGoal} /></Card> : null}
         </View>
       </ContentTransition>}
-      {__DEV__ && controls ? <View testID="week-development-footer" style={styles.development}><Divider /><View style={styles.developmentControls}>{controls}</View></View> : null}
+      {controls ? <View testID="week-version-controls" style={styles.development}><Divider /><View style={styles.developmentControls}>{controls}</View></View> : null}
     </ScrollView>
   </ShellSafeArea>;
 }

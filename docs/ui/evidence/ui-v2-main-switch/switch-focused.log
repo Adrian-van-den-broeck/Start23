@@ -1,0 +1,52 @@
+PASS src/navigation/TrainingNavigation.test.tsx (7.99 s)
+  √ release users default to V1 and can round-trip V2 roots without replacing the training owner (1084 ms)
+  √ release version switching stays disabled during an in-flight activity operation (400 ms)
+  ○ skipped Slice 5B real create pending reminder return and feedback retain one owner and exact identity across roots
+  ○ skipped Slice 5B V1 V2 navigator replacement from Activities retains task draft and pending HR without history reread
+  ○ skipped Slice 5B create in flight locks roots and version, settles without losing ambiguous attempt identity
+  ○ skipped Slice 5B sign out then athlete B has no A history, feedback view, RPE or HR draft
+  ○ skipped Slice 5B unresolved feedback save locks roots/reminder/version and never writes twice
+  ○ skipped Slice 5A one Activity owner survives Week Activities Calendar Activities and presentation preference changes
+  ○ skipped Slice 5A token rotation keeps Activity state; identity replacement and sign-out remove it
+  ○ skipped Slice 5A shared authoritative refresh updates the one shell reminder after feedback
+  ○ skipped real JS tabs keep one owner, one restore and loaded Calendar context across roots
+  ○ skipped incomplete/version-resume gates direct /planning without a Planning bootstrap
+  ○ skipped incomplete/version-resume gates direct /calendar without a Planning bootstrap
+  ○ skipped incomplete/version-resume gates direct /activities without a Planning bootstrap
+  ○ skipped failed readiness stays closed and retries without starting an owner
+  ○ skipped unauthenticated direct entry returns Auth with no training reads
+  ○ skipped Profile from Week returns to actual origin above tabs
+  ○ skipped Profile from Calendar returns to actual origin above tabs
+  ○ skipped Profile from Activities returns to actual origin above tabs
+  ○ skipped Calendar detail holds the exact loaded object and returns Month/date/scroll without reads
+  ○ skipped resumed draft and revisions survive tabs and safe V1/V2 navigator replacement
+  ○ skipped Slice 4A task transition locks roots and comparison, then re-entry across roots retains the exact returned draft
+  ○ skipped Slice 4A automatic submit restores root tabs directly at pending Week without mounting proposal review
+  ○ skipped approved roots replace tab and stack navigators after all destinations have been visited
+  ○ skipped detail keeps the measured navigation footprint to avoid clamping Calendar scroll
+  ○ skipped creation task hides root navigation, retains root owner during comparison, then returns settled Week
+  ○ skipped legacy direct /tests remains a task with safe Week fallback
+  ○ skipped legacy direct /calibration remains a task with safe Week fallback
+  ○ skipped direct Activities lazily mounts V2 history and root Back settles Week
+  ○ skipped sign-out removes the owner; another athlete gets new empty plan/calendar state
+  ○ skipped requested V1 keeps the original internal Week/Calendar navigation with no root tabs
+  ○ skipped pending RPE has one global reminder and action across root destinations
+  ○ skipped language switching localizes the same three root destinations
+  ○ skipped planning write prevents root navigation and global RPE navigation
+  ○ skipped pending move prevents root navigation and global RPE navigation
+  ○ skipped move chooser prevents root navigation and global RPE navigation
+  ○ skipped activity write prevents root navigation and global RPE navigation
+  ○ skipped sheet dismissal prevents root navigation and global RPE navigation
+  ○ skipped identity replacement without an intermediate sign-out resets flow and selection
+  ○ skipped token rotation preserves owner and shared Calendar selection
+  ○ skipped returning during the same pending Calendar read does not start another read
+  ○ skipped changed approved revision invalidates Calendar; hidden Calendar does not reload until focused
+  ○ skipped V1 swipe animation locks presentation switching before its deferred write
+  ○ skipped Slice 4B review/editor Back preserve one owner and pending proposal while roots remain usable
+  ○ skipped Slice 4B editor write locks shell and comparison, then explicit approval restores active Week without another owner
+
+Test Suites: 1 passed, 1 total
+Tests:       43 skipped, 2 passed, 45 total
+Snapshots:   0 total
+Time:        8.294 s, estimated 65 s
+Ran all test suites matching /src\\navigation\\TrainingNavigation.test.tsx/i with tests matching "release users|release version".

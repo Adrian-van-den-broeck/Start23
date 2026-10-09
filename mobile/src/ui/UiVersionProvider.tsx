@@ -12,12 +12,12 @@ const UiVersionContext = createContext<UiVersionContextValue | null>(null);
 
 export function UiVersionProvider({ children }: { children: ReactNode }) {
   const [requested, setRequested] = useState(() =>
-    initialUiVersion(__DEV__, process.env.EXPO_PUBLIC_UI_VERSION),
+    initialUiVersion(process.env.EXPO_PUBLIC_UI_VERSION),
   );
   const value = useMemo<UiVersionContextValue>(() => ({
-    requested: initialUiVersion(__DEV__, requested),
-    setRequested: (version) => setRequested(initialUiVersion(__DEV__, version)),
-    effectiveVersion: (slice) => effectiveUiVersion(__DEV__, requested, slice),
+    requested: initialUiVersion(requested),
+    setRequested: (version) => setRequested(initialUiVersion(version)),
+    effectiveVersion: (slice) => effectiveUiVersion(requested, slice),
   }), [requested]);
   return <UiVersionContext.Provider value={value}>{children}</UiVersionContext.Provider>;
 }

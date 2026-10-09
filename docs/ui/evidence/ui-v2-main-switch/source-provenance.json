@@ -1,0 +1,44 @@
+{
+  "baseline": "569cfc6",
+  "files": [
+    {
+      "file": "mobile/src/ui/uiVersion.ts",
+      "normalizedSha256": "6ef0a3a4701ce7f92bea50409bde657ad19ecad52b8fb069e50735a8e26197b1"
+    },
+    {
+      "file": "mobile/src/ui/UiVersionProvider.tsx",
+      "normalizedSha256": "d1c59fdebca032fc98c98fc138c35688ae487c297f06adb0abae598c45e40167"
+    },
+    {
+      "file": "mobile/src/ui/UiVersionControl.tsx",
+      "normalizedSha256": "35a3a4abb17affb61bbaecc94f1263ad71db8d66da696322cce23fca510c5861"
+    },
+    {
+      "file": "mobile/src/ui/WorkoutDetailBoundary.tsx",
+      "normalizedSha256": "73e775c01550064d3b2ceaee8a79e946bd257d21ca8687282a27160d5bfb3113"
+    },
+    {
+      "file": "mobile/src/screens/PlanningScreen.tsx",
+      "normalizedSha256": "ae8223506a4897a4a589b36df676c308402af1548565a1fcec9d03cded4fba06"
+    },
+    {
+      "file": "mobile/src/ui-v2/screens/WeekScreen.tsx",
+      "normalizedSha256": "18106f9d957943bb74669a4710965ff254a17c1e4e9f205fc0b0a789874bb8cd"
+    },
+    {
+      "file": "mobile/src/ui-v2/screens/CalendarScreen.tsx",
+      "normalizedSha256": "751d3726ae68313c6531e89d4647a242748030ed8108a984a30ac43df191f721"
+    },
+    {
+      "file": "mobile/src/i18n/LanguageProvider.tsx",
+      "normalizedSha256": "d6692a6d7e5c34d43654b4d91099c03321dccf49dfa67f7732f260269fe1381c"
+    },
+    {
+      "file": "mobile/app/(authenticated)/(training)/activities.tsx",
+      "normalizedSha256": "431e0392d9174871e8a7e92acb5d5d75b9eefabd941bf25373276443bdb55995"
+    }
+  ],
+  "v1Default": true,
+  "releaseSwitchEnabled": true,
+  "privateDomainStateChanged": false
+}

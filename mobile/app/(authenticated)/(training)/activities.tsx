@@ -14,7 +14,7 @@ export default function ActivitiesRoute() {
     activityBusy, setActivityBusy, activityView, setActivityView, activityCorrectionId, setActivityCorrectionId,
   } = usePlanningPresentation();
   const { session, signOut } = useAuth();
-  const version = effectiveUiVersion(__DEV__, rootVersion, 'activities');
+  const version = effectiveUiVersion(rootVersion, 'activities');
   const taskOpen = version === 'v2' && (activityView !== 'history' || !!activityCorrectionId);
   useEffect(() => {
     if (!active || (!activityBusy && !taskOpen)) return;
@@ -30,8 +30,8 @@ export default function ActivitiesRoute() {
       correctionId={activityCorrectionId} onCorrection={setActivityCorrectionId} switchLocked={navigationLocked}
       onVersion={next => {
         if (!navigationLocked) {
-          setRootVersion(effectiveUiVersion(__DEV__, next, 'week'));
-          setCalendarVersion(effectiveUiVersion(__DEV__, next, 'calendar'));
+          setRootVersion(effectiveUiVersion(next, 'week'));
+          setCalendarVersion(effectiveUiVersion(next, 'calendar'));
         }
       }}
       onBack={() => { if (!activityBusy) { if (rootVersion === 'v2') router.navigate('/planning'); else router.replace('/planning'); } }}
