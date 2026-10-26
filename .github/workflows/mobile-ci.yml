@@ -1,0 +1,88 @@
+name: Mobile CI
+
+on:
+  pull_request:
+    paths:
+      - "mobile/**"
+      # Component tests also consume public fixtures and token contracts here.
+      - "docs/ui/**"
+      - ".github/workflows/mobile-ci.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "mobile/**"
+      - "docs/ui/**"
+      - ".github/workflows/mobile-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: mobile
+    env:
+      CI: "true"
+      TZ: UTC
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Install locked mobile dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Reject committed environment files
+        working-directory: .
+        run: |
+          if git ls-files \
+            | grep -E '(^|/)\.env($|\.)' \
+            | grep -v -E '\.env\.example$'; then
+            echo "Committed .env files are forbidden."
+            exit 1
+          fi
+
+      - name: Reject privileged credentials in mobile files
+        working-directory: .
+        run: |
+          if git grep -n -E \
+            '(sb_secret_|SUPABASE_SERVICE_ROLE_KEY|DATABASE_URL=postgres(ql)?://)' \
+            -- mobile; then
+            echo "A privileged credential pattern was found."
+            exit 1
+          fi
+
+      - name: Strict TypeScript
+        run: npm run typecheck
+
+      - name: Unused-code checks
+        run: npm run check:unused
+
+      - name: Privacy and public-data projections
+        run: npm test -- --ci src/privacy.test.ts src/ui-v2/utils
+
+      # Includes the existing asset, token-contract and source-boundary checks.
+      - name: Full mobile suite
+        run: npm test -- --ci
+
+      - name: Date and calendar regressions in other device timezones
+        run: |
+          for zone in Europe/Amsterdam America/Los_Angeles; do
+            TZ="$zone" npm test -- --ci --runTestsByPath \
+              src/screens/PlanningProposalBoundary.test.tsx \
+              src/features/calendar/calendarDates.test.ts \
+              src/ui-v2/utils/calendarViewModel.test.ts \
+              src/ui-v2/utils/weekHomeViewModel.test.ts
+          done

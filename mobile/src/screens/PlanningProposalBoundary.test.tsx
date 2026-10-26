@@ -47,6 +47,15 @@ function presentation() {
 }
 
 beforeEach(() => {
+  // These plans belong to an explicit fixture week. Freeze only Date, as in
+  // PlanningWorkoutMoveBoundary, so asynchronous rendering keeps real timers.
+  jest.useFakeTimers({
+    now: new Date('2026-10-05T12:00:00Z'),
+    doNotFake: ['hrtime', 'nextTick', 'performance', 'queueMicrotask',
+      'requestAnimationFrame', 'cancelAnimationFrame', 'requestIdleCallback',
+      'cancelIdleCallback', 'setImmediate', 'clearImmediate', 'setInterval',
+      'clearInterval', 'setTimeout', 'clearTimeout'],
+  });
   jest.clearAllMocks();
   for (const method of Object.values(api).filter(jest.isMockFunction)) method.mockReset();
   process.env.EXPO_PUBLIC_UI_VERSION = 'v2';
@@ -56,7 +65,7 @@ beforeEach(() => {
   jest.mocked(api.getCalendar).mockResolvedValue({ from_date: '2026-10-05', to_date: '2026-10-12', workouts: [workout], rest_days: [] });
   jest.mocked(api.getPendingWorkoutAlternatives).mockResolvedValue({ plan_id: pendingPlan.id, revision: 3, proposal_id: proposal.id, workout_id: workout.id, alternatives: [], can_remove: false });
 });
-afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.restoreAllMocks(); });
+afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.restoreAllMocks(); jest.useRealTimers(); });
 function restore(kind: 'plan') {
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) =>
     key === 'start23.language-preference' ? 'en' :
@@ -180,29 +189,71 @@ test('stale decision keeps the same reviewed warning/snapshot and never silently
 });
 
 
-test.each(['approve', 'reject'] as const)('distinct active and pending schedules stay separate before and after explicit %s', async action => {
-  const approved = { ...activePlan, workouts: [{ ...workout, id: 'active-only', name: 'Approved source workout' }] };
-  const proposed = { ...workout, id: 'pending-only', name: 'Proposed source workout', scheduled_date: '2026-10-10' };
-  const pending = { ...pendingPlan, workouts: [proposed] };
-  const view = await enterReview(pending, approved);
-  expect(view.getByText('Proposed source workout')).toBeTruthy();
-  expect(view.queryByText('Approved source workout')).toBeNull();
-  await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
-  await view.findByText('Approved source workout');
-  expect(view.queryByText('Proposed source workout')).toBeNull();
-  expect(flow.activePlan).toBe(approved);
-  expect(api.approvePlanProposal).not.toHaveBeenCalled(); expect(api.rejectPlanProposal).not.toHaveBeenCalled();
-  await fireEvent.press(view.getByRole('button', { name: 'Review proposal' }));
-  const result = action === 'approve'
-    ? { ...approved, revision: 3, active_revision: 3, revision_id: 'revision-3', workouts: [proposed] }
-    : { ...pending, revision_state: 'rejected' as const, proposal: { ...proposal, state: 'rejected' as const } };
-  jest.mocked(api.getWeeklyPlan).mockResolvedValue(result);
-  jest.mocked(api.approvePlanProposal).mockResolvedValue({ state: 'applied', plan_id: pending.id, active_revision: 3 });
-  jest.mocked(api.rejectPlanProposal).mockResolvedValue({ state: 'rejected', plan_id: pending.id });
-  await fireEvent.press(view.getByRole('button', { name: action === 'approve' ? 'Approve week' : 'Reject proposal' }));
-  await view.findByTestId('week-header-title');
-  expect(view.getByText(action === 'approve' ? 'Proposed source workout' : 'Approved source workout')).toBeTruthy();
-  expect(view.queryByText(action === 'approve' ? 'Approved source workout' : 'Proposed source workout')).toBeNull();
-  expect(flow.activePlan).toBe(action === 'approve' ? result : approved);
-  expect(flow.activePlan?.workouts).toHaveLength(1);
+describe.each([
+  { label: 'original fixture week, future workout', now: '2026-10-05T12:00:00Z', today: '2026-10-05', weekStart: '2026-10-05', activeDate: '2026-10-07', pendingDate: '2026-10-10' },
+  { label: 'athlete Today differs from UTC date', now: '2026-10-06T22:30:00Z', today: '2026-10-07', weekStart: '2026-10-05', activeDate: '2026-10-07', pendingDate: '2026-10-10' },
+  { label: 'audit date, later fixture week', now: '2026-10-26T12:00:00Z', today: '2026-10-26', weekStart: '2026-10-26', activeDate: '2026-10-28', pendingDate: '2026-10-31' },
+  { label: 'week spans a year boundary', now: '2027-01-01T12:00:00Z', today: '2027-01-01', weekStart: '2026-12-28', activeDate: '2027-01-01', pendingDate: '2027-01-02' },
+  { label: 'Amsterdam DST begins', now: '2027-03-28T01:30:00Z', today: '2027-03-28', weekStart: '2027-03-22', activeDate: '2027-03-28', pendingDate: '2027-03-28' },
+  { label: 'Amsterdam DST ends', now: '2026-10-25T01:30:00Z', today: '2026-10-25', weekStart: '2026-10-19', activeDate: '2026-10-25', pendingDate: '2026-10-25' },
+])('$label', ({ now, today, weekStart, activeDate, pendingDate }) => {
+  test.each(['approve', 'reject'] as const)('distinct active and pending schedules stay separate before and after explicit %s', async action => {
+    jest.setSystemTime(new Date(now));
+    const availableDates = [...new Set([weekStart, activeDate, pendingDate])];
+    const approved = { ...activePlan, week_start: weekStart, available_dates: availableDates, workouts: [{ ...workout, id: 'active-only', name: 'Approved source workout', scheduled_date: activeDate }] };
+    const proposed = { ...workout, id: 'pending-only', name: 'Proposed source workout', scheduled_date: pendingDate };
+    const pending = { ...pendingPlan, week_start: weekStart, available_dates: availableDates, workouts: [proposed] };
+    const view = await enterReview(pending, approved);
+    expect(view.getByText('Proposed source workout')).toBeTruthy();
+    expect(view.queryByText('Approved source workout')).toBeNull();
+    await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
+    await view.findByText('Approved source workout');
+    expect(view.getByText(activeDate === today ? 'Today · 1 workout' : 'Next training day')).toBeTruthy();
+    expect(view.queryByText('Proposed source workout')).toBeNull();
+    expect(flow.plan).toBe(pending);
+    expect(flow.activePlan).toBe(approved);
+    expect(flow.plan).toMatchObject({ id: 'plan-a', revision_id: 'revision-3', revision: 3, active_revision: 2, workouts: [{ id: 'pending-only', scheduled_date: pendingDate }] });
+    expect(flow.activePlan).toMatchObject({ id: 'plan-a', revision_id: 'revision-2', revision: 2, active_revision: 2, workouts: [{ id: 'active-only', scheduled_date: activeDate }] });
+    expect(api.getWeeklyPlan).toHaveBeenNthCalledWith(1, 'token-a', 'plan-a');
+    expect(api.getWeeklyPlan).toHaveBeenNthCalledWith(2, 'token-a', 'plan-a', 2);
+    expect(api.approvePlanProposal).not.toHaveBeenCalled(); expect(api.rejectPlanProposal).not.toHaveBeenCalled();
+    await fireEvent.press(view.getByRole('button', { name: 'Review proposal' }));
+    const result = action === 'approve'
+      ? { ...approved, revision: 3, active_revision: 3, revision_id: 'revision-3', workouts: [proposed] }
+      : { ...pending, revision_state: 'rejected' as const, proposal: { ...proposal, state: 'rejected' as const } };
+    jest.mocked(api.getWeeklyPlan).mockResolvedValue(result);
+    jest.mocked(api.approvePlanProposal).mockResolvedValue({ state: 'applied', plan_id: pending.id, active_revision: 3 });
+    jest.mocked(api.rejectPlanProposal).mockResolvedValue({ state: 'rejected', plan_id: pending.id });
+    await fireEvent.press(view.getByRole('button', { name: action === 'approve' ? 'Approve week' : 'Reject proposal' }));
+    await view.findByTestId('week-header-title');
+    const mutation = action === 'approve' ? api.approvePlanProposal : api.rejectPlanProposal;
+    expect(mutation).toHaveBeenCalledTimes(1);
+    expect(mutation).toHaveBeenCalledWith(...(action === 'approve' ? ['token-a', 'proposal-a', 2] : ['token-a', 'proposal-a']));
+    expect(action === 'approve' ? api.rejectPlanProposal : api.approvePlanProposal).not.toHaveBeenCalled();
+    expect(jest.mocked(api.getWeeklyPlan).mock.calls.at(-1)).toEqual(action === 'approve' ? ['token-a', 'plan-a'] : ['token-a', 'plan-a', 3]);
+    expect(view.getByText(action === 'approve' ? 'Proposed source workout' : 'Approved source workout')).toBeTruthy();
+    expect(view.queryByText(action === 'approve' ? 'Approved source workout' : 'Proposed source workout')).toBeNull();
+    const displayedDate = action === 'approve' ? pendingDate : activeDate;
+    expect(view.getByText(displayedDate === today ? 'Today · 1 workout' : 'Next training day')).toBeTruthy();
+    expect(flow.activePlan).toBe(action === 'approve' ? result : approved);
+    expect(flow.activePlan?.workouts).toHaveLength(1);
+  });
 });
+
+test.each(['2026-10-11T12:00:00Z', '2026-10-26T12:00:00Z', '2030-01-01T12:00:00Z'])(
+  'past fixture workouts at %s stay out of Next Session while the exact pending proposal remains reviewable', async now => {
+    jest.setSystemTime(new Date(now));
+    const view = await enterReview();
+    await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
+    await view.findByText('No upcoming workout planned in this week');
+    expect(view.queryByTestId('week-session-hero')).toBeNull();
+    expect(flow.activePlan).toBe(activePlan);
+    expect(flow.plan).toBe(pendingPlan);
+    await fireEvent.press(view.getByRole('button', { name: 'Review proposal' }));
+    await view.findByText('Review your week proposal');
+    expect(view.getByText(workout.name)).toBeTruthy();
+    expect(flow.plan).toMatchObject({ id: 'plan-a', revision_id: 'revision-3', revision: 3, proposal: { id: 'proposal-a' } });
+    expect(api.approvePlanProposal).not.toHaveBeenCalled();
+    expect(api.rejectPlanProposal).not.toHaveBeenCalled();
+  },
+);
