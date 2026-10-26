@@ -707,8 +707,18 @@ export type CheckInRestriction = {
   status: RestrictionStatus;
   source: 'athlete' | 'physician' | 'physiotherapist' | 'other_professional';
   athlete_plan_choice: AthletePlanChoice;
-  professional_advice?: string;
-  professional_advice_at?: string;
+  professional_advice?: string | null;
+  professional_advice_at?: string | null;
+};
+
+export type InjuryRestriction = Omit<CheckInRestriction, 'source'> & {
+  id: string;
+  source: string;
+  allowed_intensity: 'none' | 'low_only' | 'unrestricted';
+  start_at: string;
+  review_at: string;
+  confirmed_at: string;
+  cleared_at: string | null;
 };
 
 export type ExternalActivity = {

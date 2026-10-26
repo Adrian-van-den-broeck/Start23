@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -14,19 +14,20 @@ import {
   confirmWeeklyCheckInContext,
   createCheckInPlanProposal,
   extractWeeklyCheckInContextCandidate,
+  getInjuryRestrictions,
   saveWeeklyCheckInContext,
   startWeeklyCheckIn,
 } from '../api/client';
 import type {
-  AthletePlanChoice,
   CheckInContextCandidateResponse,
   Discipline,
   ExternalActivity,
   FatigueLevel,
-  RestrictionStatus,
+  InjuryRestriction,
   WeeklyCheckIn,
   WeeklyPlan,
 } from '../api/types';
+import { restoreRestrictions, restrictionPayload, restrictionLabels, sameRestriction } from '../features/checkins/restrictionForm';
 import { Input as FormField } from '../ui-v2/primitives/Input';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
@@ -40,15 +41,9 @@ import { colors, layout, radius, space, typography } from '../ui-v2/tokens';
 
 type Props = {
   accessToken: string;
+  athleteIdentity?: string;
   onBack: () => void;
   onSignOut: () => Promise<void>;
-};
-
-type RestrictionChoice = 'none' | 'low' | 'blocked' | 'professional';
-
-type RestrictionForm = {
-  choice: RestrictionChoice;
-  advice: string;
 };
 
 const disciplines: Discipline[] = ['swim', 'bike', 'run'];
@@ -111,49 +106,6 @@ function dayOffsetsForCandidate(
   );
 }
 
-function restrictionPayload(
-  discipline: Discipline,
-  form: RestrictionForm,
-): {
-  discipline: Discipline;
-  status: RestrictionStatus;
-  source: 'athlete' | 'physiotherapist';
-  athlete_plan_choice: AthletePlanChoice;
-  professional_advice?: string;
-  professional_advice_at?: string;
-} {
-  if (form.choice === 'professional') {
-    if (!form.advice.trim()) {
-      throw new Error(
-        `Vul het professionele advies voor ${disciplineLabels[discipline]} in.`,
-      );
-    }
-    return {
-      discipline,
-      status: 'professional_restricted',
-      source: 'physiotherapist',
-      athlete_plan_choice: 'keep_blocked',
-      professional_advice: form.advice.trim(),
-      professional_advice_at: new Date().toISOString(),
-    };
-  }
-  const values: Record<
-    Exclude<RestrictionChoice, 'professional'>,
-    [RestrictionStatus, AthletePlanChoice]
-  > = {
-    none: ['none', 'resume_unrestricted'],
-    low: ['self_reported_limited', 'train_low_only'],
-    blocked: ['self_reported_blocked', 'keep_blocked'],
-  };
-  const [status, athletePlanChoice] = values[form.choice];
-  return {
-    discipline,
-    status,
-    source: 'athlete',
-    athlete_plan_choice: athletePlanChoice,
-  };
-}
-
 function ActionButton({
   disabled = false,
   label,
@@ -168,24 +120,35 @@ function ActionButton({
   return <Button label={label} disabled={disabled} onPress={onPress} variant={secondary ? 'outline' : 'primary'} />;
 }
 
-export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
+export function CheckInScreen(props: Props) {
+  return <CheckInFormScreen key={props.athleteIdentity ?? props.accessToken} {...props} />;
+}
+
+function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
   const [weekStart, setWeekStart] = useState(nextMonday);
   const [checkIn, setCheckIn] = useState<WeeklyCheckIn | null>(null);
-  const [blockedDays, setBlockedDays] = useState<Set<number>>(() => new Set());
-  const [fatigue, setFatigue] = useState<FatigueLevel>('none');
-  const [reasons, setReasons] = useState<Set<string>>(() => new Set());
-  const [recurringConfirmed, setRecurringConfirmed] = useState(false);
-  const [restrictions, setRestrictions] = useState<
-    Record<Discipline, RestrictionForm>
-  >({
-    swim: { choice: 'none', advice: '' },
-    bike: { choice: 'none', advice: '' },
-    run: { choice: 'none', advice: '' },
-  });
-  const [alarmAcknowledged, setAlarmAcknowledged] = useState(false);
-  const [externalActivities, setExternalActivities] = useState<ExternalActivity[]>(
-    [],
-  );
+  const [blockedDays, setBlockedDaysState] = useState<Set<number>>(() => new Set());
+  const [fatigue, setFatigueState] = useState<FatigueLevel | null>(null);
+  const [reasons, setReasonsState] = useState<Set<string>>(() => new Set());
+  const [recurringConfirmed, setRecurringConfirmedState] = useState<boolean | null>(null);
+  const [restrictions, setRestrictionsState] = useState(() => restoreRestrictions([], []));
+  const [alarmAcknowledged, setAlarmAcknowledgedState] = useState<boolean | null>(null);
+  const [externalActivities, setExternalActivitiesState] = useState<ExternalActivity[]>([]);
+  const [contextDirty, setContextDirty] = useState(false);
+  const [editingContext, setEditingContext] = useState(false);
+  const mutationRunning = useRef(false);
+  const update = <T,>(setter: Dispatch<SetStateAction<T>>) => (value: SetStateAction<T>) => {
+    if (mutationRunning.current) return;
+    setContextDirty(true);
+    setter(value);
+  };
+  const setBlockedDays = update(setBlockedDaysState);
+  const setFatigue = update(setFatigueState);
+  const setReasons = update(setReasonsState);
+  const setRecurringConfirmed = update(setRecurringConfirmedState);
+  const setRestrictions = update(setRestrictionsState);
+  const setAlarmAcknowledged = update(setAlarmAcknowledgedState);
+  const setExternalActivities = update(setExternalActivitiesState);
   const [externalName, setExternalName] = useState('');
   const [externalDiscipline, setExternalDiscipline] =
     useState<Discipline>('run');
@@ -202,47 +165,64 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const isConfirmed = checkIn?.context?.state === 'confirmed';
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
+  const formReady = fatigue !== null && alarmAcknowledged !== null &&
+    Object.values(restrictions).every(item => item.choice !== null && (!item.previous || item.reviewed));
+  const isConfirmed = checkIn?.context?.state === 'confirmed' && !editingContext;
   const isCompleted = checkIn?.status === 'completed';
   const expiryLabel = useMemo(() => {
     if (!checkIn?.context) return null;
     return new Date(checkIn.context.expires_at).toLocaleString('nl-NL');
   }, [checkIn]);
 
-  const run = async (operation: () => Promise<void>) => {
+  const run = async <T,>(operation: () => Promise<T>, apply: (value: T) => void) => {
+    if (mutationRunning.current) return;
+    mutationRunning.current = true;
     setBusy(true);
     setError(null);
     try {
-      await operation();
+      const value = await operation();
+      if (mounted.current) apply(value);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'De check-in is mislukt.');
+      if (mounted.current) setError(caught instanceof Error ? caught.message : 'De check-in is mislukt.');
     } finally {
-      setBusy(false);
+      mutationRunning.current = false;
+      if (mounted.current) setBusy(false);
     }
   };
 
-  const begin = () =>
-    run(async () => {
-      const result = await startWeeklyCheckIn(accessToken, weekStart);
-      setCheckIn(result);
-      if (result.context) {
-        setBlockedDays(
-          new Set(
-            result.context.blocked_dates.map((value) =>
-              Math.round(
-                (new Date(`${value}T12:00:00`).getTime() -
-                  new Date(`${result.week_start}T12:00:00`).getTime()) /
-                  86_400_000,
-              ),
-            ),
-          ),
-        );
-        setFatigue(result.context.fatigue_level);
-        setReasons(new Set(result.context.missed_workout_reasons));
-        setRecurringConfirmed(result.context.recurring_activities_confirmed);
-        setExternalActivities(result.context.external_activities);
-      }
+  const restore = (result: WeeklyCheckIn, active: InjuryRestriction[], preserveReview = false) => {
+    const restored = restoreRestrictions(result.context?.restrictions ?? [], active);
+    const needsCurrentReview = !preserveReview && active.some(item => {
+      if (item.cleared_at !== null || item.status === 'none') return false;
+      const saved = result.context?.restrictions.find(answer => answer.discipline === item.discipline);
+      return !saved || !sameRestriction(saved, item);
     });
+    for (const discipline of disciplines) {
+      if (preserveReview) restored[discipline].reviewed = restrictions[discipline].reviewed;
+      else if (result.context?.state === 'confirmed' && !needsCurrentReview) restored[discipline].reviewed = true;
+    }
+    setRestrictionsState(restored);
+    setBlockedDaysState(dayOffsetsForCandidate(result.week_start, result.context?.blocked_dates ?? []));
+    setFatigueState(result.context?.fatigue_level ?? null);
+    setReasonsState(new Set(result.context?.missed_workout_reasons ?? []));
+    setRecurringConfirmedState(result.context?.recurring_activities_confirmed ?? null);
+    setAlarmAcknowledgedState(result.context?.alarm_symptoms_acknowledged ?? null);
+    setExternalActivitiesState(result.context?.external_activities ?? []);
+    setContextDirty(needsCurrentReview);
+    setEditingContext(result.context?.state === 'confirmed' && needsCurrentReview);
+    setContextCandidate(null);
+    setCheckIn(result);
+  };
+
+  const begin = () => run(
+    () => Promise.all([startWeeklyCheckIn(accessToken, weekStart), getInjuryRestrictions(accessToken)]),
+    ([result, active]) => restore(result, active),
+  );
 
   const addExternalActivity = () => {
     const duration = Number(externalDuration);
@@ -271,15 +251,10 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
 
   const extractContext = () => {
     if (!checkIn || !contextText.trim()) return;
-    void run(async () => {
-      setContextCandidate(
-        await extractWeeklyCheckInContextCandidate(
-          accessToken,
-          checkIn.id,
-          contextText.trim(),
-        ),
-      );
-    });
+    void run(
+      () => extractWeeklyCheckInContextCandidate(accessToken, checkIn.id, contextText.trim()),
+      setContextCandidate,
+    );
   };
 
   const useContextCandidate = () => {
@@ -297,67 +272,42 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
   };
 
   const save = () => {
-    if (!checkIn) return;
-    void run(async () => {
-      const result = await saveWeeklyCheckInContext(accessToken, checkIn.id, {
+    if (!checkIn || !formReady || !recurringConfirmed) return;
+    void run(async () => saveWeeklyCheckInContext(accessToken, checkIn.id, {
         expected_revision: checkIn.context_revision,
         blocked_dates: [...blockedDays].map((offset) =>
           dateAtOffset(checkIn.week_start, offset),
         ),
-        fatigue_level: fatigue,
+        fatigue_level: fatigue!,
         missed_workout_reasons: [...reasons],
         recurring_activities_confirmed: recurringConfirmed,
         external_activities: externalActivities,
-        restrictions: disciplines.map((discipline) =>
+        restrictions: (Object.keys(restrictions) as Discipline[]).map((discipline) =>
           restrictionPayload(discipline, restrictions[discipline]),
         ),
-        alarm_symptoms_acknowledged: alarmAcknowledged,
-      });
-      setCheckIn(result);
-    });
+        alarm_symptoms_acknowledged: alarmAcknowledged!,
+      }), result => restore(result, Object.values(restrictions).flatMap(item => item.previous ? [item.previous] : []), true));
   };
 
   const confirm = () => {
-    if (!checkIn?.context) return;
-    void run(async () => {
-      setCheckIn(
-        await confirmWeeklyCheckInContext(
-          accessToken,
-          checkIn.id,
-          checkIn.context!.revision,
-          checkIn.context!.fingerprint,
-        ),
-      );
-    });
+    if (!checkIn?.context || contextDirty || !formReady || !recurringConfirmed) return;
+    void run(
+      () => confirmWeeklyCheckInContext(accessToken, checkIn.id, checkIn.context!.revision, checkIn.context!.fingerprint),
+      result => restore(result, []),
+    );
   };
 
   const makeProposal = () => {
-    if (!checkIn) return;
-    void run(async () => {
-      const result = await createCheckInPlanProposal(accessToken, checkIn.id);
+    if (!checkIn || !isConfirmed || contextDirty || !formReady || !recurringConfirmed) return;
+    void run(() => createCheckInPlanProposal(accessToken, checkIn.id), result => {
       setProposalPlan(result.plan);
-      setCheckIn((current) =>
-        current
-          ? {
-              ...current,
-              status: 'completed',
-              plan_proposal_id: result.proposal.id,
-            }
-          : current,
-      );
+      setCheckIn(current => current ? { ...current, status: 'completed', plan_proposal_id: result.proposal.id } : current);
     });
   };
 
   const approve = () => {
     if (!proposalPlan?.proposal) return;
-    void run(async () => {
-      await approvePlanProposal(
-        accessToken,
-        proposalPlan.proposal!.id,
-        proposalPlan.proposal!.base_plan_revision ?? 0,
-      );
-      onBack();
-    });
+    void run(() => approvePlanProposal(accessToken, proposalPlan.proposal!.id, proposalPlan.proposal!.base_plan_revision ?? 0), onBack);
   };
 
   return (
@@ -386,7 +336,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
               Je antwoorden worden gestructureerd opgeslagen. Pas na jouw aparte
               bevestiging ontstaat een planvoorstel.
             </Text>
-            <FormField
+            <FormField disabled={busy}
               autoCapitalize="none"
               label="Week start op maandag"
               onChangeText={setWeekStart}
@@ -401,7 +351,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
             <Card elevated padding="form" style={styles.panel}>
               <View style={[styles.chip]}><Text variant="supporting" tone="primary">Gestructureerde bron</Text></View>
               <Text style={styles.title}>Week van {checkIn.week_start}</Text>
-              <FormField
+              <FormField disabled={busy}
                 label="Vertel kort wat er deze week speelt (optioneel)"
                 maxLength={1000}
                 multiline
@@ -441,11 +391,11 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                     <Notice key={question} tone="warning">{`Vraag: ${question}`}</Notice>
                   ))}
                   <ActionButton
-                    label="Neem datums, vermoeidheid en redenen over"
+                    disabled={busy} label="Neem datums, vermoeidheid en redenen over"
                     onPress={useContextCandidate}
                   />
                   <ActionButton
-                    label="Negeer invulvoorstel"
+                    disabled={busy} label="Negeer invulvoorstel"
                     onPress={() => setContextCandidate(null)}
                     secondary
                   />
@@ -454,7 +404,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
               <Text style={styles.body}>Welke dagen zijn volledig geblokkeerd?</Text>
               <View style={styles.rowWrap}>
                 {dayLabels.map((label, offset) => (
-                  <ChoiceRow key={label} label={label}  selected={blockedDays.has(offset)} mode="checkbox" onPress={() =>
+                  <ChoiceRow disabled={busy} key={label} label={label}  selected={blockedDays.has(offset)} mode="checkbox" onPress={() =>
                       setBlockedDays((current) => {
                         const next = new Set(current);
                         if (next.has(offset)) next.delete(offset);
@@ -467,13 +417,13 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
               <Text style={styles.label}>Vermoeidheid</Text>
               <View style={styles.rowWrap}>
                 {(Object.keys(fatigueLabels) as FatigueLevel[]).map((value) => (
-                  <ChoiceRow key={value} label={fatigueLabels[value]}  selected={fatigue === value} mode="radio" onPress={() => setFatigue(value)} />
+                  <ChoiceRow disabled={busy} key={value} label={fatigueLabels[value]}  selected={fatigue === value} mode="radio" onPress={() => setFatigue(value)} />
                 ))}
               </View>
               <Text style={styles.label}>Redenen voor gemiste trainingen</Text>
               <View style={styles.rowWrap}>
                 {missedReasons.map(([value, label]) => (
-                  <ChoiceRow key={value} label={label}  selected={reasons.has(value)} mode="checkbox" onPress={() =>
+                  <ChoiceRow disabled={busy} key={value} label={label}  selected={reasons.has(value)} mode="checkbox" onPress={() =>
                       setReasons((current) => {
                         const next = new Set(current);
                         if (next.has(value)) next.delete(value);
@@ -494,6 +444,22 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
               {disciplines.map((discipline) => (
                 <View key={discipline} style={styles.subsection}>
                   <Text style={styles.label}>{disciplineLabels[discipline]}</Text>
+                  {restrictions[discipline].previous ? <Notice tone="warning">
+                    {`Bestaande beperking: ${restrictionLabels[restrictions[discipline].previous!.status]}. Herbeoordeling: ${new Date(restrictions[discipline].previous!.review_at).toLocaleDateString('nl-NL')}. De beperking vervalt niet door tijdsverloop.`}
+                  </Notice> : null}
+                  {(restrictions[discipline].previous?.professional_advice || restrictions[discipline].original?.professional_advice) ? <Text style={styles.body}>
+                    {`Opgeslagen advies (${restrictions[discipline].previous?.source ?? restrictions[discipline].original?.source}): ${restrictions[discipline].previous?.professional_advice ?? restrictions[discipline].original?.professional_advice} - ${restrictions[discipline].previous?.professional_advice_at ?? restrictions[discipline].original?.professional_advice_at}`}
+                  </Text> : null}
+                  {restrictions[discipline].previous?.professional_advice && restrictions[discipline].original?.professional_advice &&
+                    !sameRestriction(restrictions[discipline].original!, restrictions[discipline].previous!) ? <Text style={styles.body}>
+                    {`Advies in dit opgeslagen antwoord (${restrictions[discipline].original!.source}): ${restrictions[discipline].original!.professional_advice} - ${restrictions[discipline].original!.professional_advice_at}`}
+                  </Text> : null}
+                  {restrictions[discipline].original && ['clearance_required', 'expired'].includes(restrictions[discipline].original!.status) ? <ChoiceRow
+                    label={`Bestaande beperking behouden: ${restrictionLabels[restrictions[discipline].original!.status]}`}
+                    accessibilityLabel={`${disciplineLabels[discipline]}: Bestaande beperking behouden`}
+                    selected={restrictions[discipline].choice === 'retain'} mode="radio"
+                    onPress={() => setRestrictions(current => ({ ...current, [discipline]: { ...current[discipline], choice: 'retain', reviewed: true } }))}
+                  /> : null}
                   <View style={styles.rowWrap}>
                     {(
                       [
@@ -503,21 +469,26 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                         ['professional', 'Professioneel advies'],
                       ] as const
                     ).map(([value, label]) => (
-                      <ChoiceRow key={value} label={label} accessibilityLabel={`${disciplineLabels[discipline]}: ${label}`} selected={restrictions[discipline].choice === value} mode="radio" onPress={() =>
+                      <ChoiceRow disabled={busy} key={value} label={label} accessibilityLabel={`${disciplineLabels[discipline]}: ${label}`} selected={restrictions[discipline].choice === value} mode="radio" onPress={() =>
                           setRestrictions((current) => ({
                             ...current,
-                            [discipline]: { ...current[discipline], choice: value },
+                            [discipline]: { ...current[discipline], choice: value, reviewed: true },
                           }))
                         } />
                     ))}
                   </View>
+                  {restrictions[discipline].previous ? <ChoiceRow
+                    label={`Ik heb de bestaande beperking voor ${disciplineLabels[discipline]} opnieuw beoordeeld.`}
+                    selected={restrictions[discipline].reviewed} mode="checkbox"
+                    onPress={() => setRestrictions(current => ({ ...current, [discipline]: { ...current[discipline], reviewed: !current[discipline].reviewed } }))}
+                  /> : null}
                   {restrictions[discipline].choice === 'professional' ? (
-                    <FormField
+                    <FormField disabled={busy}
                       label="Advies en herleidbare bron"
                       onChangeText={(advice) =>
                         setRestrictions((current) => ({
                           ...current,
-                          [discipline]: { ...current[discipline], advice },
+                          [discipline]: { ...current[discipline], advice, adviceAt: advice === (current[discipline].original?.professional_advice ?? '') ? current[discipline].original?.professional_advice_at : new Date().toISOString() },
                         }))
                       }
                       value={restrictions[discipline].advice}
@@ -525,12 +496,12 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                   ) : null}
                 </View>
               ))}
-              <ChoiceRow  label="Ik begrijp dat alarmsymptomen medische beoordeling vragen en niet door dit plan worden beoordeeld."  selected={alarmAcknowledged} mode="checkbox" onPress={() => setAlarmAcknowledged((value) => !value)} />
+              <ChoiceRow disabled={busy}  label="Ik begrijp dat alarmsymptomen medische beoordeling vragen en niet door dit plan worden beoordeeld."  selected={alarmAcknowledged === true} mode="checkbox" onPress={() => setAlarmAcknowledged((value) => !value)} />
             </Card>
 
             <Card elevated padding="form" style={styles.panel}>
               <Text style={styles.title}>Sport buiten Wombo</Text>
-              <ChoiceRow  label="Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd."  selected={recurringConfirmed} mode="checkbox" onPress={() => setRecurringConfirmed((value) => !value)} />
+              <ChoiceRow disabled={busy}  label="Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd."  selected={recurringConfirmed === true} mode="checkbox" onPress={() => setRecurringConfirmed((value) => !value)} />
               {externalActivities.map((activity, index) => (
                 <View key={`${activity.scheduled_at}-${index}`} style={styles.activityRow}>
                   <Text style={styles.label}>{activity.name}</Text>
@@ -539,46 +510,47 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                     {activity.strenuous ? ' · inspannend' : ''}
                     {activity.recurring ? ' · terugkerend' : ''}
                   </Text>
-                  <QuickActionRow label="Verwijderen" icon="close" onAction={() =>
+                  <QuickActionRow disabled={busy} label="Verwijderen" icon="close" onAction={() =>
                       setExternalActivities((current) =>
                         current.filter((_, currentIndex) => currentIndex !== index),
                       )
                     } />
                 </View>
               ))}
-              <FormField label="Naam extra activiteit" onChangeText={setExternalName} value={externalName} />
+              <FormField disabled={busy} label="Naam extra activiteit" onChangeText={setExternalName} value={externalName} />
               <View style={styles.rowWrap}>
                 {disciplines.map((discipline) => (
-                  <ChoiceRow key={discipline} label={disciplineLabels[discipline]}  selected={externalDiscipline === discipline} mode="radio" onPress={() => setExternalDiscipline(discipline)} />
+                  <ChoiceRow disabled={busy} key={discipline} label={disciplineLabels[discipline]}  selected={externalDiscipline === discipline} mode="radio" onPress={() => setExternalDiscipline(discipline)} />
                 ))}
               </View>
-              <FormField
+              <FormField disabled={busy}
                 autoCapitalize="none"
                 label="Tijdstip (ISO inclusief tijdzone)"
                 onChangeText={setExternalScheduledAt}
                 value={externalScheduledAt}
               />
-              <FormField
+              <FormField disabled={busy}
                 inputMode="decimal"
                 label="Geplande duur (minuten)"
                 onChangeText={setExternalDuration}
                 value={externalDuration}
               />
               <View style={styles.rowWrap}>
-                <ChoiceRow  label="Inspannend"  selected={externalStrenuous} mode="checkbox" onPress={() => setExternalStrenuous((value) => !value)} />
-                <ChoiceRow  label="Terugkerend"  selected={externalRecurring} mode="checkbox" onPress={() => setExternalRecurring((value) => !value)} />
-                <ActionButton label="Toevoegen" onPress={addExternalActivity} secondary />
+                <ChoiceRow disabled={busy}  label="Inspannend"  selected={externalStrenuous} mode="checkbox" onPress={() => setExternalStrenuous((value) => !value)} />
+                <ChoiceRow disabled={busy}  label="Terugkerend"  selected={externalRecurring} mode="checkbox" onPress={() => setExternalRecurring((value) => !value)} />
+                <ActionButton disabled={busy} label="Toevoegen" onPress={addExternalActivity} secondary />
               </View>
             </Card>
 
             <Card elevated padding="form" style={styles.panel}>
-              <ActionButton disabled={busy || !recurringConfirmed} label="Context opslaan" onPress={save} />
+              {!formReady ? <Text style={styles.body}>Beantwoord elke discipline en vermoeidheid, controleer de alarmmelding en beoordeel bestaande beperkingen voordat je opslaat.</Text> : null}
+              <ActionButton disabled={busy || !recurringConfirmed || !formReady} label="Context opslaan" onPress={save} />
               {checkIn.context ? (
                 <>
                   <Text style={styles.body}>
                     Bron: gestructureerd formulier · geldig tot {expiryLabel}
                   </Text>
-                  <ActionButton disabled={busy} label="Deze context bevestigen" onPress={confirm} />
+                  <ActionButton disabled={busy || contextDirty || !formReady || !recurringConfirmed} label="Deze context bevestigen" onPress={confirm} />
                 </>
               ) : null}
             </Card>
@@ -592,7 +564,12 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
             <Text style={styles.body}>
               Alleen een nieuwe, nog goed te keuren planrevisie wordt gemaakt.
             </Text>
-            <ActionButton disabled={busy} label="Maak planvoorstel" onPress={makeProposal} />
+            {checkIn.context?.restrictions.map(item => <View key={item.discipline}>
+              <Text style={styles.body}>{`${disciplineLabels[item.discipline]}: ${restrictionLabels[item.status]}`}</Text>
+              {item.professional_advice ? <Text style={styles.body}>{`${item.source}: ${item.professional_advice} - ${item.professional_advice_at}`}</Text> : null}
+            </View>)}
+            <ActionButton disabled={busy || contextDirty || !formReady || !recurringConfirmed} label="Maak planvoorstel" onPress={makeProposal} />
+            <ActionButton disabled={busy} label="Antwoorden opnieuw beoordelen" secondary onPress={() => { setEditingContext(true); setContextDirty(true); }} />
           </Card>
         ) : null}
 

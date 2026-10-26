@@ -23,6 +23,17 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
+test('active injury restrictions use the existing token-scoped GET contract', async () => {
+  const { client, fetchMock } = loadClient();
+  const supplied: import('./types').InjuryRestriction[] = [{ id: 'restriction-a', discipline: 'run', status: 'professional_restricted', allowed_intensity: 'none', source: 'physician', athlete_plan_choice: 'keep_blocked', start_at: '2026-10-01T12:00:00Z', review_at: '2026-10-08T12:00:00Z', confirmed_at: '2026-10-01T12:00:00Z', professional_advice: 'Synthetic advice', professional_advice_at: '2026-10-01T12:00:00Z', cleared_at: null }];
+  fetchMock.mockResolvedValueOnce(response(200, supplied));
+  await expect(client.getInjuryRestrictions('athlete-token')).resolves.toEqual(supplied);
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+  expect(fetchMock.mock.calls[0][0]).toBe(`${API_URL}/api/v1/me/injury-restrictions`);
+  expect(fetchMock.mock.calls[0][1]).toMatchObject({ headers });
+  expect(fetchMock.mock.calls[0][1]?.body).toBeUndefined();
+});
+
 function activityResponse(rpe: number | null, averageHeartRate = 151) {
   return {
     id: 'activity-id',

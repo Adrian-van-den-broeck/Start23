@@ -3,11 +3,12 @@ import * as api from '../api/client';
 import type { CheckInContextCandidateResponse, WeeklyCheckIn } from '../api/types';
 import fixtures from '../../../docs/ui/evidence/final-visual-batch-12/public-fixtures.json';
 import { CheckInScreen } from './CheckInScreen';
-jest.mock('../api/client', () => ({ approvePlanProposal: jest.fn(), confirmWeeklyCheckInContext: jest.fn(), createCheckInPlanProposal: jest.fn(), extractWeeklyCheckInContextCandidate: jest.fn(), saveWeeklyCheckInContext: jest.fn(), startWeeklyCheckIn: jest.fn() }));
+jest.mock('../api/client', () => ({ approvePlanProposal: jest.fn(), confirmWeeklyCheckInContext: jest.fn(), createCheckInPlanProposal: jest.fn(), extractWeeklyCheckInContextCandidate: jest.fn(), getInjuryRestrictions: jest.fn(), saveWeeklyCheckInContext: jest.fn(), startWeeklyCheckIn: jest.fn() }));
 const open = fixtures.open as WeeklyCheckIn;
-const saved = fixtures.saved as WeeklyCheckIn;
-const confirmed = fixtures.confirmed as WeeklyCheckIn;
-beforeEach(() => { jest.clearAllMocks(); jest.mocked(api.startWeeklyCheckIn).mockResolvedValue(open); jest.mocked(api.saveWeeklyCheckInContext).mockResolvedValue(saved); jest.mocked(api.confirmWeeklyCheckInContext).mockResolvedValue(confirmed); });
+const explicitNone = ['swim', 'bike', 'run'].map(discipline => ({ discipline, status: 'none', source: 'athlete', athlete_plan_choice: 'resume_unrestricted' }));
+const saved = { ...fixtures.saved, context: { ...fixtures.saved.context, restrictions: explicitNone } } as WeeklyCheckIn;
+const confirmed = { ...fixtures.confirmed, context: { ...fixtures.confirmed.context, restrictions: explicitNone } } as WeeklyCheckIn;
+beforeEach(() => { jest.clearAllMocks(); jest.mocked(api.getInjuryRestrictions).mockResolvedValue([]); jest.mocked(api.startWeeklyCheckIn).mockResolvedValue(open); jest.mocked(api.saveWeeklyCheckInContext).mockResolvedValue(saved); jest.mocked(api.confirmWeeklyCheckInContext).mockResolvedValue(confirmed); });
 async function surface(state = open) {
   jest.mocked(api.startWeeklyCheckIn).mockResolvedValue(state);
   const back = jest.fn(); const signOut = jest.fn(async () => undefined);
@@ -28,6 +29,9 @@ test('entry starts the exact week and keeps back/sign-out callbacks', async () =
 });
 test('choices stay drafts; exact structured revision payload precedes separate confirmation', async () => {
   const { view } = await surface();
+  await fireEvent.press(view.getByRole('radio', { name: 'Zwemmen: Vrij' }));
+  await fireEvent.press(view.getByRole('radio', { name: 'Fietsen: Vrij' }));
+  await fireEvent.press(view.getByRole('checkbox', { name: 'Ik begrijp dat alarmsymptomen medische beoordeling vragen en niet door dit plan worden beoordeeld.' }));
   await fireEvent.press(view.getByRole('checkbox', { name: 'Wo' }));
   await fireEvent.press(view.getByRole('radio', { name: 'Hoog' }));
   await fireEvent.press(view.getByRole('checkbox', { name: 'Vermoeidheid' }));
@@ -64,7 +68,7 @@ test('temporary extraction only copies candidate drafts and never chooses an inj
   await fireEvent.press(view.getByRole('button', { name: 'Neem datums, vermoeidheid en redenen over' }));
   expect(view.getByRole('checkbox', { name: 'Wo' })).toBeChecked();
   expect(view.getByRole('radio', { name: 'Hoog' })).toBeChecked();
-  expect(view.getByRole('radio', { name: 'Lopen: Vrij' })).toBeChecked();
+  expect(view.getByRole('radio', { name: 'Lopen: Vrij' })).not.toBeChecked();
   expect(api.saveWeeklyCheckInContext).not.toHaveBeenCalled(); expect(api.confirmWeeklyCheckInContext).not.toHaveBeenCalled();
 });
 test('external sport retains time/duration/flags and explicit add/remove', async () => {

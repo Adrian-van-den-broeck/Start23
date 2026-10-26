@@ -9,6 +9,7 @@ export default function CheckInRoute() {
   if (!session) return null;
   return (
     <CheckInScreen
+      athleteIdentity={session.user.id}
       accessToken={session.access_token}
       onBack={() => router.replace('/planning')}
       onSignOut={signOut}

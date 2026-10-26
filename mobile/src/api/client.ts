@@ -7,13 +7,16 @@ import type {
   CalendarResponse,
   AthletePhysiologyProfile,
   CheckInContextCandidateResponse,
+  CheckInRestriction,
   ChangeProposal,
   CompletedActivity,
   Discipline,
   DisciplineSetup,
   DisciplineSetupInput,
   FieldTestSchedulingResponse,
+  FatigueLevel,
   GoalPlanningOption,
+  InjuryRestriction,
   OnboardingComplete,
   OnboardingState,
   PlanWarning,
@@ -962,6 +965,10 @@ export function startWeeklyCheckIn(
   });
 }
 
+export function getInjuryRestrictions(accessToken: string): Promise<InjuryRestriction[]> {
+  return request(accessToken, '/api/v1/me/injury-restrictions');
+}
+
 export function extractWeeklyCheckInContextCandidate(
   accessToken: string,
   checkInId: string,
@@ -983,7 +990,7 @@ export function saveWeeklyCheckInContext(
   input: {
     expected_revision: number;
     blocked_dates: string[];
-    fatigue_level: string;
+    fatigue_level: FatigueLevel;
     missed_workout_reasons: string[];
     recurring_activities_confirmed: boolean;
     external_activities: Array<{
@@ -994,14 +1001,7 @@ export function saveWeeklyCheckInContext(
       strenuous: boolean;
       recurring: boolean;
     }>;
-    restrictions: Array<{
-      discipline: Discipline;
-      status: string;
-      source: string;
-      athlete_plan_choice: string;
-      professional_advice?: string;
-      professional_advice_at?: string;
-    }>;
+    restrictions: CheckInRestriction[];
     alarm_symptoms_acknowledged: boolean;
   },
 ): Promise<WeeklyCheckIn> {
