@@ -19,19 +19,21 @@ function PlanningOwner({ accessToken, initialOnboarding, children }: PlanningFlo
   const controller = usePlanningController(accessToken, initialOnboarding);
   const { language } = useLanguage();
   const calendar = useCalendarController(accessToken, language, controller.setError);
-  const { invalidateCalendarRange, replaceApprovedPlan } = calendar;
+  const { invalidateCalendarRange, replaceApprovedPlan, acceptApprovedPlan } = calendar;
   const previousPlan = useRef<WeeklyPlan | null>(null);
   // Approved calendar data is reusable across roots, but a changed approved
   // plan context invalidates it. Pending draft edits alone do not reload it.
   useEffect(() => {
     const previous = previousPlan.current;
     const updated = controller.plan;
-    if (previous?.revision_state === 'active' && updated?.revision_state === 'active' &&
+    if (updated?.revision_state === 'active' && controller.taskHandoff?.plan === updated) {
+      acceptApprovedPlan(updated);
+    } else if (previous?.revision_state === 'active' && updated?.revision_state === 'active' &&
       previous.id === updated.id && previous.week_start === updated.week_start && previous.active_revision !== updated.active_revision) {
       replaceApprovedPlan(previous, updated);
     } else invalidateCalendarRange();
     previousPlan.current = updated;
-  }, [controller.plan?.id, controller.plan?.active_revision, invalidateCalendarRange, replaceApprovedPlan]);
+  }, [controller.plan?.id, controller.plan?.active_revision, invalidateCalendarRange, replaceApprovedPlan, acceptApprovedPlan]);
   return (
     <PlanningContext.Provider value={controller}>
       <CalendarContext.Provider value={calendar}>{children}</CalendarContext.Provider>
@@ -49,6 +51,10 @@ export function usePlanningFlow(): PlanningController {
   const value = useContext(PlanningContext);
   if (!value) throw new Error('usePlanningFlow must be used inside PlanningFlowProvider');
   return value;
+}
+
+export function useOptionalPlanningFlow(): PlanningController | null {
+  return useContext(PlanningContext);
 }
 
 export function usePlanningCalendar() {

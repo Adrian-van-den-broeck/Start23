@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState, type PropsWithChildren } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, type PropsWithChildren } from 'react';
 import type { PlannedWorkout } from '../api/types';
 import { useCalendarNavigation } from '../features/calendar/useCalendarNavigation';
 import { usePlanningFlow } from '../features/planning/PlanningFlowProvider';
@@ -26,6 +26,13 @@ function usePresentationOwner() {
   const weekScroll = useRef(0);
   const calendarPositions = useRef<Record<string, number>>({});
   const calendarNavigation = useCalendarNavigation(flow.plan?.week_start ?? flow.weekStart, calendarVisited);
+  const { focusWeek } = calendarNavigation;
+  const approvedSelection = flow.plan?.revision_state === 'active' ? `${flow.plan.id}:${flow.plan.week_start}` : null;
+  const previousSelection = useRef(approvedSelection);
+  useEffect(() => {
+    if (approvedSelection && previousSelection.current !== approvedSelection && flow.plan && flow.taskHandoff?.plan === flow.plan) focusWeek(flow.plan.week_start);
+    previousSelection.current = approvedSelection;
+  }, [approvedSelection, flow.plan, flow.taskHandoff, focusWeek]);
   const locked = flow.busy || transientBusy || !!flow.pendingMove || !!moveWorkoutId || Object.values(flow.pendingWorkouts.editors).some((slot) => slot.loading);
   return {
     rootVersion, setRootVersion, calendarVersion, setCalendarVersion, task, setTask,

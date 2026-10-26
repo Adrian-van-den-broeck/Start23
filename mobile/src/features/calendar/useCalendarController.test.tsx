@@ -14,6 +14,49 @@ const setError = jest.fn();
 function Probe() { owner = useCalendarController('verified-token', 'en', setError); return null; }
 const response = (date: string): CalendarResponse => ({ from_date: date, to_date: '2026-11-02', workouts: [{ ...workout, id: date }], rest_days: [] });
 beforeEach(() => { jest.clearAllMocks(); });
+
+test.each(['success', 'failure'] as const)('task handoff replaces the complete affected week and ignores an obsolete %s', async outcome => {
+  const late = deferred();
+  const retained = { ...workout, id: 'retained-other-week', scheduled_date: '2026-10-14' };
+  const result = { from_date: '2026-10-05', to_date: '2026-10-19', workouts: [workout, retained], rest_days: [] };
+  jest.mocked(getCalendar).mockResolvedValueOnce(result).mockReturnValueOnce(late.promise);
+  await render(<Probe />);
+  await act(() => owner.loadCalendarRange(result.from_date, result.to_date));
+  await act(() => owner.loadCalendarRange(result.from_date, result.to_date));
+  const replacement = { ...workout, id: 'different-plan-occurrence', scheduled_date: '2026-10-08' };
+  const approved = { ...activePlan, id: 'different-plan', workouts: [replacement] };
+  await act(() => owner.acceptApprovedPlan(approved));
+  await act(() => { if (outcome === 'success') late.resolve(result); else late.reject(new Error('Obsolete')); });
+  expect(owner.calendarWorkouts).toEqual([retained, replacement]);
+  expect(owner.calendarRange).toEqual({ fromDate: result.from_date, toDate: result.to_date });
+  expect(setError).not.toHaveBeenCalledWith('Obsolete');
+  await act(() => owner.ensureCalendarRange(result.from_date, result.to_date));
+  expect(getCalendar).toHaveBeenCalledTimes(2);
+});
+
+test('task handoff preserves an unrelated in-flight range and a cached unaffected week', async () => {
+  const unrelated = deferred();
+  const result = { from_date: '2026-10-05', to_date: '2026-10-12', workouts: [workout], rest_days: [] };
+  jest.mocked(getCalendar).mockResolvedValueOnce(result).mockReturnValueOnce(unrelated.promise);
+  await render(<Probe />);
+  await act(() => owner.loadCalendarRange(result.from_date, result.to_date));
+  await act(() => owner.loadCalendarRange('2026-11-02', '2026-11-09'));
+  await act(() => owner.acceptApprovedPlan({ ...activePlan, week_start: '2026-10-19', workouts: [], rest_days: [] }));
+  expect(owner.calendarWorkouts).toEqual([workout]); expect(owner.calendarLoading).toBe(true);
+  await act(() => unrelated.resolve({ from_date: '2026-11-02', to_date: '2026-11-09', workouts: [], rest_days: [] }));
+  expect(owner.calendarRange).toEqual({ fromDate: '2026-11-02', toDate: '2026-11-09' });
+  expect(owner.calendarWorkouts).toEqual([]); expect(getCalendar).toHaveBeenCalledTimes(2);
+});
+
+test('task handoff replaces empty/rest-only week rows without removing a neighboring week', async () => {
+  const retained = { ...workout, id: 'neighbor', scheduled_date: '2026-10-14' };
+  jest.mocked(getCalendar).mockResolvedValueOnce({ from_date: '2026-10-05', to_date: '2026-10-19', workouts: [workout, retained], rest_days: [] });
+  await render(<Probe />);
+  await act(() => owner.loadCalendarRange('2026-10-05', '2026-10-19'));
+  const rest = { date: '2026-10-05', reason: 'planned_rest' as const };
+  await act(() => owner.acceptApprovedPlan({ ...activePlan, workouts: [], rest_days: [rest] }));
+  expect(owner.calendarWorkouts).toEqual([retained]); expect(owner.calendarRestDays).toEqual([rest]);
+});
 test.each(['success', 'failure'] as const)('A %s finishes after B success; B records and provenance remain displayed', async (outcome) => {
   const a = deferred(), b = deferred();
   jest.mocked(getCalendar).mockReturnValueOnce(a.promise).mockReturnValueOnce(b.promise);

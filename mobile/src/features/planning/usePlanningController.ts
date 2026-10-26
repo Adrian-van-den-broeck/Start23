@@ -24,6 +24,16 @@ import { latestPlanIdKey, latestSwipeDraftIdKey, rememberPlanId, rememberSwipeDr
 import { usePendingWorkoutActions } from './usePendingWorkoutActions';
 
 export type PlanningView = 'plan' | 'deck' | 'calendar';
+type PlanApproval = Awaited<ReturnType<typeof approvePlanProposal>>;
+// Supporting tasks publish server snapshots here; selected Week state and the
+// resume locator remain owned by this controller. No task creates another owner.
+export type TaskPlanHandoff = Readonly<{
+  taskKey: string;
+  reviewed: WeeklyPlan;
+  plan: WeeklyPlan;
+  receipt: PlanApproval | null;
+  phase: 'pending' | 'verify' | 'read' | 'persist' | 'complete';
+}>;
 
 // Called once by PlanningFlowProvider; presentations consume its context.
 export function usePlanningController(accessToken: string, initialOnboarding?: OnboardingState) {
@@ -44,6 +54,13 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
   const [plan, setPlan] = useState<WeeklyPlan | null>(null);
   const currentPlan = useRef(plan);
   currentPlan.current = plan;
+  const planResultGeneration = useRef(0);
+  const [taskHandoff, setTaskHandoff] = useState<TaskPlanHandoff | null>(null);
+  const currentHandoff = useRef(taskHandoff);
+  const publishHandoff = (value: TaskPlanHandoff) => {
+    currentHandoff.current = value;
+    setTaskHandoff(value);
+  };
   const moveOwnerAlive = useRef(true);
   useEffect(() => {
     moveOwnerAlive.current = true;
@@ -73,6 +90,8 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
   useEffect(() => {
     if (Platform.OS === 'web') return;
     let mounted = true;
+    const generation = planResultGeneration.current;
+    const isCurrent = () => mounted && generation === planResultGeneration.current;
     setResumeState('loading');
     let readFailed = false;
     const recordReadFailure = (caught: unknown) => {
@@ -82,6 +101,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     };
     SecureStore.getItemAsync(latestSwipeDraftIdKey)
       .then(async (draftId) => {
+        if (!isCurrent()) return true;
         if (!draftId) return false;
         try {
           const restored = await getSwipeWeekDraft(accessToken, draftId);
@@ -91,17 +111,17 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
               restored.plan_id,
             );
             await Promise.all([
-              rememberPlanId(submittedPlan.id),
-              rememberSwipeDraftId(null),
+              rememberPlanId(submittedPlan.id, isCurrent),
+              rememberSwipeDraftId(null, isCurrent),
             ]);
-            if (mounted) {
+            if (isCurrent()) {
               setPlan(submittedPlan);
               setWeekStart(submittedPlan.week_start);
               setView('plan');
             }
             return true;
           }
-          if (mounted) {
+          if (isCurrent()) {
             setSwipeDraft(restored);
             setCrossTrainingOptIns(new Set(restored.cross_training_opt_ins));
             setWeekStart(restored.week_start);
@@ -115,18 +135,19 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
           }
           return true;
         } catch (caught) {
+          if (!isCurrent()) return true;
           recordReadFailure(caught);
-          await rememberSwipeDraftId(null);
+          await rememberSwipeDraftId(null, isCurrent);
           return false;
         }
       })
       .then(async (draftRestored) => {
-        if (draftRestored) return;
+        if (draftRestored || !isCurrent()) return;
         const planId = await SecureStore.getItemAsync(latestPlanIdKey);
-        if (!planId) return;
+        if (!planId || !isCurrent()) return;
         try {
           const restored = await getWeeklyPlan(accessToken, planId);
-          if (mounted) {
+          if (isCurrent()) {
             setPlan(restored);
             setWeekStart(restored.week_start);
             setReusePreviousWeek(
@@ -138,12 +159,13 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
             setInjuries(new Set(restored.confirmed_injuries));
           }
         } catch (caught) {
+          if (!isCurrent()) return;
           recordReadFailure(caught);
-          await rememberPlanId(null);
+          await rememberPlanId(null, isCurrent);
         }
       })
       .catch(recordReadFailure)
-      .finally(() => { if (mounted) setResumeState(readFailed ? 'failed' : 'ready'); });
+      .finally(() => { if (isCurrent()) setResumeState(readFailed ? 'failed' : 'ready'); });
     return () => {
       mounted = false;
     };
@@ -268,6 +290,104 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
       setSwipeDraft(result);
       setView('deck');
     });
+
+  const applyApprovedSnapshot = (updated: WeeklyPlan) => {
+    ++planResultGeneration.current;
+    currentPlan.current = updated;
+    setPlan(updated);
+    setActiveSnapshot(updated);
+    setResumeState('ready');
+    setActiveReadState('ready');
+    setWeekStart(updated.week_start);
+    setSelectedDays(dayOffsetsFor(updated.week_start, updated.available_dates));
+    setReusePreviousWeek(updated.availability_source === 'previous_week');
+    setInjuries(new Set(updated.confirmed_injuries));
+    setSwipeDraft(null);
+    currentMove.current = null;
+    setPendingMove(null);
+    setView('plan');
+  };
+  const runTaskHandoff = async (operation: () => Promise<boolean>): Promise<boolean> => {
+    if (!moveOwnerAlive.current) return false;
+    if (mutationInFlight.current || pendingWorkouts.isLoading()) throw new Error('Wacht tot de huidige planningsactie klaar is.');
+    mutationInFlight.current = true;
+    setBusy(true);
+    setError(null);
+    try { return await operation(); }
+    catch (caught) {
+      if (moveOwnerAlive.current) setError(caught instanceof Error ? caught.message : 'Het plan kon niet worden gesynchroniseerd.');
+      throw caught;
+    } finally {
+      mutationInFlight.current = false;
+      if (moveOwnerAlive.current) setBusy(false);
+    }
+  };
+  const persistTaskPlan = async (handoff: TaskPlanHandoff): Promise<boolean> => {
+    const isCurrent = () => moveOwnerAlive.current && currentHandoff.current === handoff;
+    if (!isCurrent()) return false;
+    // Publish authoritative success before persistence, so a storage error cannot
+    // roll the athlete back to an old week. Completion still requires both writes.
+    await rememberPlanId(handoff.plan.id, isCurrent);
+    if (!isCurrent()) return false;
+    await rememberSwipeDraftId(null, isCurrent);
+    if (!isCurrent()) return false;
+    publishHandoff({ ...handoff, phase: 'complete' });
+    return true;
+  };
+  const receiveTaskPlan = (taskKey: string, snapshot: WeeklyPlan): Promise<boolean> => runTaskHandoff(async () => {
+    const existing = currentHandoff.current;
+    const sameRevision = existing?.taskKey === taskKey && existing.reviewed.id === snapshot.id &&
+      existing.reviewed.revision_id === snapshot.revision_id && existing.reviewed.revision === snapshot.revision;
+    if (sameRevision && (snapshot.revision_state === 'pending_approval' || existing.plan.revision_state === 'active')) {
+      return existing.phase === 'persist' ? persistTaskPlan(existing) : true;
+    }
+    if (snapshot.revision_state === 'pending_approval' && snapshot.proposal?.state === 'pending') {
+      if (snapshot.proposal.kind !== 'plan_revision' || snapshot.proposal.target_plan_revision_id !== snapshot.revision_id) throw new Error('Het voorstel hoort niet bij deze planrevisie.');
+      publishHandoff({ taskKey, reviewed: snapshot, plan: snapshot, receipt: null, phase: 'pending' });
+      // A supporting task's next-week proposal is not the selected approved week.
+      return true;
+    }
+    if (snapshot.state !== 'active' || snapshot.revision_state !== 'active' || snapshot.active_revision !== snapshot.revision) throw new Error('Het ontvangen plan is niet actief of reviewbaar.');
+    const handoff: TaskPlanHandoff = { taskKey, reviewed: sameRevision ? existing.reviewed : snapshot, plan: snapshot, receipt: sameRevision ? existing.receipt : null, phase: 'persist' };
+    publishHandoff(handoff);
+    applyApprovedSnapshot(snapshot);
+    return persistTaskPlan(handoff);
+  });
+  const approveTaskPlan = (taskKey: string, reviewed: WeeklyPlan): Promise<boolean> => runTaskHandoff(async () => {
+    let handoff = currentHandoff.current;
+    if (!handoff || handoff.taskKey !== taskKey || handoff.reviewed !== reviewed) throw new Error('Open het exacte planvoorstel opnieuw voordat je beslist.');
+    if (handoff.phase === 'complete') return true;
+    if (handoff.phase === 'persist') return persistTaskPlan(handoff);
+    if (reviewed.revision_state !== 'pending_approval' || reviewed.proposal?.state !== 'pending') throw new Error('Dit voorstel kan niet worden goedgekeurd.');
+    if (handoff.phase === 'pending') {
+      try {
+        const receipt = await approvePlanProposal(accessToken, reviewed.proposal.id, reviewed.proposal.base_plan_revision ?? 0);
+        if (!moveOwnerAlive.current) return false;
+        handoff = { ...handoff, receipt, phase: 'read' };
+        publishHandoff(handoff);
+      } catch (caught) {
+        if (moveOwnerAlive.current) {
+          const status = caught && typeof caught === 'object' && 'status' in caught ? caught.status : null;
+          if (typeof status !== 'number' || status >= 500) publishHandoff({ ...handoff, phase: 'verify' });
+        }
+        throw caught;
+      }
+    }
+    const receipt = handoff.receipt;
+    if (receipt && (receipt.state !== 'applied' || receipt.plan_id !== reviewed.id || receipt.active_revision !== reviewed.revision)) throw new Error('De goedkeuring hoort niet bij het bekeken planvoorstel.');
+    const updated = await getWeeklyPlan(accessToken, reviewed.id, receipt?.active_revision ?? reviewed.revision);
+    if (!moveOwnerAlive.current || currentHandoff.current !== handoff) return false;
+    if (updated.id !== reviewed.id || updated.revision_id !== reviewed.revision_id || updated.revision !== reviewed.revision || updated.week_start !== reviewed.week_start) throw new Error('Het opgehaalde plan hoort niet bij het bekeken voorstel.');
+    if (handoff.phase === 'verify' && updated.revision_state === 'pending_approval' && updated.proposal?.id === reviewed.proposal.id && updated.proposal.state === 'pending') {
+      publishHandoff({ ...handoff, phase: 'pending' });
+      return false; // Reading status never silently replays the mutation.
+    }
+    if (updated.state !== 'active' || updated.revision_state !== 'active' || updated.active_revision !== updated.revision) throw new Error('Het plan is nog niet als actief bevestigd. Heropen het voorstel.');
+    handoff = { ...handoff, plan: updated, phase: 'persist' };
+    publishHandoff(handoff);
+    applyApprovedSnapshot(updated);
+    return persistTaskPlan(handoff);
+  });
 
   const approve = () => {
     if (currentPlan.current !== plan || plan?.revision_state !== 'pending_approval' || plan.proposal?.state !== 'pending') return;
@@ -440,7 +560,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
   };
 
   return {
-    resumeState, activePlan, activeReadState,
+    resumeState, activePlan, activeReadState, taskHandoff, receiveTaskPlan, approveTaskPlan,
     view, setView, weekStart, setWeekStart, reusePreviousWeek, setReusePreviousWeek,
     selectedDays, injuries, crossTrainingOptIns, plan, swipeDraft, pendingMove,
     primaryGoal, maintenanceMarked, busy, error, setError, availableDates,

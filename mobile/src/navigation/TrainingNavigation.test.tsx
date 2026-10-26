@@ -13,6 +13,8 @@ import { useActivityFlow } from '../features/activities/ActivityFlowProvider';
 import { activityOnboarding, pendingActivity } from '../features/activities/activities.test-fixtures';
 import { usePlanningCalendar, usePlanningFlow } from '../features/planning/PlanningFlowProvider';
 import { activePlan, draft, onboarding, pendingPlan, warning, workout } from '../features/planning/planning.test-fixtures';
+import { approvedNext, nextProposal, nextWorkout, pendingNext } from '../features/planning/planningTask.test-fixtures';
+import { savedCheckIn } from '../features/checkins/checkIn.test-fixtures';
 import { useOptionalPlanningPresentation } from './PlanningPresentationProvider';
 import AuthenticatedLayout from '../../app/(authenticated)/_layout';
 import PlanningRoute from '../../app/(authenticated)/(training)/planning';
@@ -22,6 +24,7 @@ import TrainingLayout from '../../app/(authenticated)/(training)/_layout';
 import ProfileRoute from '../../app/(authenticated)/profile';
 import TestsRoute from '../../app/(authenticated)/tests';
 import CalibrationRoute from '../../app/(authenticated)/calibration';
+import CheckInRoute from '../../app/(authenticated)/check-in';
 
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: jest.fn(), deleteItemAsync: jest.fn() }));
 jest.mock('../api/client', () => ({
@@ -29,6 +32,7 @@ jest.mock('../api/client', () => ({
   getCalendar: jest.fn(), getOnboarding: jest.fn(), getPendingWorkoutAlternatives: jest.fn(), getSwipeWeekDraft: jest.fn(),
   getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(), movePlannedWorkout: jest.fn(), placeSwipeWeekWorkout: jest.fn(),
   rejectPlanProposal: jest.fn(), submitSwipeWeekDraft: jest.fn(), transitionSwipeWeekDraft: jest.fn(), validatePlanLayout: jest.fn(),
+  startWeeklyCheckIn: jest.fn(), getInjuryRestrictions: jest.fn(), createCheckInPlanProposal: jest.fn(),
 }));
 jest.mock('@gorhom/bottom-sheet', () => {
   const React = jest.requireActual<typeof import('react')>('react');
@@ -112,6 +116,7 @@ const routes = {
   '(authenticated)/profile': ProfileRoute,
   '(authenticated)/tests': TestsRoute,
   '(authenticated)/calibration': CalibrationRoute,
+  '(authenticated)/check-in': CheckInRoute,
   '(authenticated)/onboarding': () => <Text>Existing onboarding resume</Text>,
 };
 beforeEach(() => {
@@ -119,6 +124,8 @@ beforeEach(() => {
   mockAuth.session = { access_token: 'token-a', user: { id: 'athlete-a' } };
   for (const method of Object.values(api).filter(jest.isMockFunction)) method.mockReset();
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.latest-plan-id' ? activePlan.id : null);
+  jest.mocked(SecureStore.setItemAsync).mockResolvedValue(undefined);
+  jest.mocked(SecureStore.deleteItemAsync).mockResolvedValue(undefined);
   jest.mocked(api.getOnboarding).mockResolvedValue({ ...onboarding, ...activityOnboarding, current_step: 'completed' });
   jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
   jest.mocked(api.listActivities).mockResolvedValue([]);
@@ -126,6 +133,78 @@ beforeEach(() => {
   jest.mocked(api.getCalendar).mockImplementation(async (_token, from, to) => ({ from_date: from, to_date: to, workouts: [workout], rest_days: [] }));
 });
 afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.useRealTimers(); jest.restoreAllMocks(); });
+
+test('A4 actual check-in route returns authoritative next Week, Calendar and a restart locator through the retained owners', async () => {
+  const animationNow = Date.now.bind(Date);
+  jest.useFakeTimers({ now: new Date('2026-10-05T12:00:00Z'), doNotFake: [
+    'hrtime', 'nextTick', 'performance', 'queueMicrotask', 'requestAnimationFrame', 'cancelAnimationFrame',
+    'requestIdleCallback', 'cancelIdleCallback', 'setImmediate', 'clearImmediate', 'setInterval', 'clearInterval', 'setTimeout', 'clearTimeout',
+  ] });
+  // Native navigation animations need elapsed wall time; calendar constructors
+  // remain fixed to the synthetic athlete's current day.
+  jest.spyOn(Date, 'now').mockImplementation(animationNow);
+  const storage = new Map([['start23.language-preference', 'en'], ['start23.latest-plan-id', activePlan.id]]);
+  const server = new Map([[activePlan.id, activePlan]]);
+  jest.mocked(SecureStore.getItemAsync).mockImplementation(async key => storage.get(key) ?? null);
+  jest.mocked(SecureStore.setItemAsync).mockImplementation(async (key, value) => { storage.set(key, value); });
+  jest.mocked(SecureStore.deleteItemAsync).mockImplementation(async key => { storage.delete(key); });
+  jest.mocked(api.getWeeklyPlan).mockImplementation(async (_token, id) => server.get(id)!);
+  jest.mocked(api.getCalendar).mockImplementation(async (_token, from, to) => ({ from_date: from, to_date: to, rest_days: [], workouts: [...server.values()]
+    .filter(plan => plan.revision_state === 'active').flatMap(plan => plan.workouts).filter(row => row.scheduled_date >= from && row.scheduled_date < to) }));
+  jest.mocked(api.startWeeklyCheckIn).mockResolvedValue({ ...savedCheckIn, week_start: pendingNext.week_start, context: { ...savedCheckIn.context!, state: 'confirmed' } });
+  jest.mocked(api.getInjuryRestrictions).mockResolvedValue([]);
+  jest.mocked(api.createCheckInPlanProposal).mockImplementation(async () => {
+    server.set(pendingNext.id, pendingNext); return { plan: pendingNext, proposal: nextProposal };
+  });
+  jest.mocked(api.approvePlanProposal).mockImplementation(async () => {
+    server.set(approvedNext.id, approvedNext); return { state: 'applied', plan_id: approvedNext.id, active_revision: 1 };
+  });
+  const view = await renderRouter(routes, { initialUrl: '/planning' });
+  await view.findByText(workout.name);
+  const owner = flow.setWeekStart, reader = calendar.loadCalendarRange;
+  await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
+  await view.findByText(workout.name);
+  await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: 'Week' }));
+  await fireEvent.press(view.getByRole('button', { name: /check-in/i }));
+  await view.findByRole('button', { name: 'Start check-in' });
+  await fireEvent.press(view.getByRole('button', { name: 'Start check-in' }));
+  await view.findByText('Klaar voor het voorstel');
+  await fireEvent.press(view.getByRole('button', { name: 'Maak planvoorstel' }));
+  await view.findByText('Voorstel voor ' + pendingNext.week_start);
+  expect(storage.get('start23.latest-plan-id')).toBe(activePlan.id);
+  expect(api.approvePlanProposal).not.toHaveBeenCalled();
+  await fireEvent.press(view.getByRole('button', { name: 'Voorstel goedkeuren' }));
+  await view.findByText(nextWorkout.name);
+  expect(view.getByTestId('path')).toHaveTextContent('/planning');
+  expect(flow.plan).toBe(approvedNext); expect(flow.activePlan).toBe(approvedNext);
+  expect(flow.setWeekStart).toBe(owner); expect(calendar.loadCalendarRange).toBe(reader);
+  expect(storage.get('start23.latest-plan-id')).toBe(approvedNext.id);
+  expect(api.approvePlanProposal).toHaveBeenCalledWith('token-a', nextProposal.id, 0);
+  expect(api.getWeeklyPlan).toHaveBeenLastCalledWith('token-a', approvedNext.id, 1);
+  await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
+  await view.findByText(nextWorkout.name); await view.findByText('Repeated supplied bike');
+  expect(navigation.calendarNavigation.range).toEqual({ fromDate: '2026-10-12', toDate: '2026-10-19' });
+  const reads = jest.mocked(api.getCalendar).mock.calls.length;
+  await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: 'Week' }));
+  await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
+  expect(api.getCalendar).toHaveBeenCalledTimes(reads);
+  await view.unmount();
+  const restarted = await renderRouter(routes, { initialUrl: '/planning' });
+  await restarted.findByText(nextWorkout.name);
+  expect(flow.activePlan).toBe(approvedNext);
+  expect(api.getWeeklyPlan).toHaveBeenLastCalledWith('token-a', approvedNext.id);
+});
+
+test('A4 direct check-in route acquires the existing readiness host, then returns through the same owner', async () => {
+  const view = await renderRouter(routes, { initialUrl: '/check-in' });
+  await view.findByRole('button', { name: 'Start check-in' });
+  expect(api.getOnboarding).toHaveBeenCalledTimes(1);
+  await act(() => router.replace('/planning'));
+  await view.findByText('Approved');
+  expect(flow.activePlan).toBe(activePlan);
+  expect(api.getOnboarding).toHaveBeenCalledTimes(1);
+  expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
+});
 
 test('Slice 5B real create pending reminder return and feedback retain one owner and exact identity across roots', async () => {
   let activities: typeof pendingActivity[] = [];

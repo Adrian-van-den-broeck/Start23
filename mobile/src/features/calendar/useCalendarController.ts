@@ -92,5 +92,28 @@ export function useCalendarController(
     setCalendarGeneration(value => value + 1);
   }, []);
 
-  return { calendarWorkouts, calendarRestDays, calendarLoading, calendarRange, loadCalendarRange, ensureCalendarRange, invalidateCalendarRange, replaceApprovedPlan };
+  const acceptApprovedPlan = useCallback((updated: WeeklyPlan) => {
+    // Include empty/rest-only weeks. ISO dates are compared as local calendar dates.
+    const weekEnd = new Date(`${updated.week_start}T12:00:00Z`);
+    weekEnd.setUTCDate(weekEnd.getUTCDate() + 7);
+    const end = weekEnd.toISOString().slice(0, 10);
+    const touches = (range: CalendarRange | null) => !!range && updated.week_start < range.toDate && end > range.fromDate;
+    const superseded = touches(requestedRangeRef.current);
+    if (superseded) {
+      ++calendarRequestRef.current;
+      requestedRangeRef.current = null;
+      setCalendarLoading(false);
+    }
+    const range = loadedRangeRef.current;
+    if (touches(range) && range) {
+      const inside = (date: string) => date >= range.fromDate && date < range.toDate;
+      setCalendarWorkouts(rows => [...rows.filter(row => !isDateInWeek(row.scheduled_date, updated.week_start)),
+        ...updated.workouts.filter(row => inside(row.scheduled_date))]);
+      setCalendarRestDays(rows => [...rows.filter(row => !isDateInWeek(row.date, updated.week_start)),
+        ...updated.rest_days.filter(row => inside(row.date))]);
+    }
+    if (touches(range) || superseded) setCalendarGeneration(value => value + 1);
+  }, []);
+
+  return { calendarWorkouts, calendarRestDays, calendarLoading, calendarRange, loadCalendarRange, ensureCalendarRange, invalidateCalendarRange, replaceApprovedPlan, acceptApprovedPlan };
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { isoDate } from '../planning/planningDates';
 import { calendarRangeFor, moveCalendarAnchor, visibleCalendarDates, type CalendarMode } from './calendarDates';
 
@@ -14,8 +14,9 @@ export function useCalendarNavigation(initialDate: string, active = true) {
   }, [active, initialDate, saved]);
   const dates = useMemo(() => visibleCalendarDates(selection.anchor, selection.mode), [selection.anchor, selection.mode]);
   const range = calendarRangeFor(dates);
+  const focusWeek = useCallback((date: string) => setSaved(initialSelection(date)), []);
   return {
-    ...selection, dates, range,
+    ...selection, dates, range, focusWeek,
     selectDate: (date: string) => setSaved((current) => ({ ...(current ?? initialSelection(initialDate)), selectedDate: date })),
     changeMode: (mode: CalendarMode) => setSaved((current) => {
       const value = current ?? initialSelection(initialDate);

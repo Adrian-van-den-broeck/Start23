@@ -10,7 +10,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
-  approvePlanProposal,
   confirmWeeklyCheckInContext,
   createCheckInPlanProposal,
   extractWeeklyCheckInContextCandidate,
@@ -28,6 +27,7 @@ import type {
   WeeklyPlan,
 } from '../api/types';
 import { restoreRestrictions, restrictionPayload, restrictionLabels, sameRestriction } from '../features/checkins/restrictionForm';
+import { useOptionalPlanningFlow } from '../features/planning/PlanningFlowProvider';
 import { Input as FormField } from '../ui-v2/primitives/Input';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
@@ -125,6 +125,7 @@ export function CheckInScreen(props: Props) {
 }
 
 function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
+  const planning = useOptionalPlanningFlow();
   const [weekStart, setWeekStart] = useState(nextMonday);
   const [checkIn, setCheckIn] = useState<WeeklyCheckIn | null>(null);
   const [blockedDays, setBlockedDaysState] = useState<Set<number>>(() => new Set());
@@ -173,7 +174,10 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
   const formReady = fatigue !== null && alarmAcknowledged !== null &&
     Object.values(restrictions).every(item => item.choice !== null && (!item.previous || item.reviewed));
   const isConfirmed = checkIn?.context?.state === 'confirmed' && !editingContext;
-  const isCompleted = checkIn?.status === 'completed';
+  const taskKey = checkIn ? `check-in:${checkIn.id}` : null;
+  const handoff = planning?.taskHandoff?.taskKey === taskKey ? planning.taskHandoff : null;
+  const displayedPlan = handoff?.plan ?? proposalPlan;
+  const isCompleted = checkIn?.status === 'completed' || displayedPlan !== null;
   const expiryLabel = useMemo(() => {
     if (!checkIn?.context) return null;
     return new Date(checkIn.context.expires_at).toLocaleString('nl-NL');
@@ -221,7 +225,10 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
 
   const begin = () => run(
     () => Promise.all([startWeeklyCheckIn(accessToken, weekStart), getInjuryRestrictions(accessToken)]),
-    ([result, active]) => restore(result, active),
+    ([result, active]) => {
+      restore(result, active);
+      if (planning?.taskHandoff?.taskKey === `check-in:${result.id}`) setProposalPlan(planning.taskHandoff.plan);
+    },
   );
 
   const addExternalActivity = () => {
@@ -299,15 +306,26 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
 
   const makeProposal = () => {
     if (!checkIn || !isConfirmed || contextDirty || !formReady || !recurringConfirmed) return;
-    void run(() => createCheckInPlanProposal(accessToken, checkIn.id), result => {
-      setProposalPlan(result.plan);
-      setCheckIn(current => current ? { ...current, status: 'completed', plan_proposal_id: result.proposal.id } : current);
-    });
+    void run(async () => {
+      const result = await createCheckInPlanProposal(accessToken, checkIn.id);
+      if (mounted.current) {
+        setProposalPlan(result.plan);
+        setCheckIn(current => current ? { ...current, status: 'completed', plan_proposal_id: result.proposal.id } : current);
+      }
+      if (!planning) throw new Error('Open de check-in vanuit de weekplanning om het voorstel te bewaren.');
+      await planning.receiveTaskPlan(`check-in:${checkIn.id}`, result.plan);
+    }, () => undefined);
   };
 
   const approve = () => {
-    if (!proposalPlan?.proposal) return;
-    void run(() => approvePlanProposal(accessToken, proposalPlan.proposal!.id, proposalPlan.proposal!.base_plan_revision ?? 0), onBack);
+    if (!planning || !taskKey || !displayedPlan) return;
+    void run(async () => {
+      if (!handoff) {
+        await planning.receiveTaskPlan(taskKey, displayedPlan);
+        return false; // Review the retained proposal before a separate approval.
+      }
+      return planning.approveTaskPlan(taskKey, handoff.reviewed);
+    }, completed => { if (completed) onBack(); });
   };
 
   return (
@@ -573,18 +591,20 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
           </Card>
         ) : null}
 
-        {proposalPlan ? (
+        {displayedPlan ? (
           <Card elevated padding="form" style={styles.panel}>
-            <View style={[styles.chip, styles.pendingChip]}><Text variant="supporting" tone="warning">Wacht op jouw goedkeuring</Text></View>
-            <Text style={styles.title}>Voorstel voor {proposalPlan.week_start}</Text>
+            <View style={[styles.chip, styles.pendingChip]}><Text variant="supporting" tone="warning">{handoff?.receipt || displayedPlan.revision_state === 'active' ? 'Goedkeuring ontvangen' : 'Wacht op jouw goedkeuring'}</Text></View>
+            <Text style={styles.title}>Voorstel voor {displayedPlan.week_start}</Text>
             <Text style={styles.body}>
-              {proposalPlan.workouts.length} trainingen · {proposalPlan.rest_days.length} rustdagen
+              {displayedPlan.workouts.length} trainingen · {displayedPlan.rest_days.length} rustdagen
             </Text>
-            {proposalPlan.warnings.map((warning) => (
+            {displayedPlan.warnings.map((warning) => (
               <Notice key={warning.id ?? warning.code} tone="warning">{warning.message}</Notice>
             ))}
-            <ActionButton disabled={busy} label="Voorstel goedkeuren" onPress={approve} />
-            <ActionButton label="Later beslissen" onPress={onBack} secondary />
+            {handoff && ['read', 'persist'].includes(handoff.phase) ? <Notice tone="warning">Je goedkeuring is ontvangen. De synchronisatie is nog niet voltooid. Hervat zonder opnieuw goed te keuren.</Notice> : null}
+            {handoff?.phase === 'verify' ? <Notice tone="warning">De uitkomst is onzeker. Controleer eerst de opgeslagen status voordat je opnieuw beslist.</Notice> : null}
+            {handoff?.phase !== 'complete' ? <ActionButton disabled={busy || !planning} label={handoff?.phase === 'verify' ? 'Goedkeuringsstatus controleren' : handoff && ['read', 'persist'].includes(handoff.phase) ? 'Synchronisatie hervatten' : !handoff ? 'Voorstel bewaren' : 'Voorstel goedkeuren'} onPress={approve} /> : null}
+            <ActionButton label={handoff?.phase === 'complete' ? 'Terug naar Week' : 'Later beslissen'} onPress={onBack} secondary />
           </Card>
         ) : null}
       </ScrollView>

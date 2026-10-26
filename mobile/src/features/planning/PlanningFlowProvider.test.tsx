@@ -137,8 +137,9 @@ test.each(['automatic', 'manual'] as const)('same-tick duplicate %s submit is lo
   await act(() => response.resolve({ plan: pendingPlan, proposal }));
   expect(flow.swipeDraft).toBe(initial); expect(flow.plan).toBeNull(); expect(flow.busy).toBe(true);
   expect(SecureStore.setItemAsync).toHaveBeenCalledWith('start23.latest-plan-id', pendingPlan.id, { keychainAccessible: 'device-only' });
-  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.latest-swipe-draft-id');
+  expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
   await act(() => stored.resolve());
+  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.latest-swipe-draft-id');
   expect(flow.swipeDraft).toBe(initial); expect(flow.plan).toBeNull();
   await act(() => { flow.submitDraft(mode); deleted.resolve(); });
   await waitFor(() => expect(flow.swipeDraft).toBeNull());

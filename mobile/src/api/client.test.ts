@@ -1,3 +1,5 @@
+import { approvedNext, nextProposal, pendingNext } from '../features/planning/planningTask.test-fixtures';
+
 const API_URL = 'https://api.start23.test';
 
 function successfulFetch(): jest.MockedFunction<typeof fetch> {
@@ -22,6 +24,27 @@ const headers = {
   Authorization: 'Bearer athlete-token',
   'Content-Type': 'application/json',
 };
+
+test('A4 check-in generation, explicit approval receipt and exact revision read preserve the public wire contracts', async () => {
+  const { client, fetchMock } = loadClient();
+  const receipt = { state: 'applied', plan_id: pendingNext.id, active_revision: 1 };
+  fetchMock.mockResolvedValueOnce(response(200, { plan: pendingNext, proposal: nextProposal }))
+    .mockResolvedValueOnce(response(200, receipt)).mockResolvedValueOnce(response(200, approvedNext));
+  const generated = await client.createCheckInPlanProposal('athlete-token', 'check-in-a');
+  expect(generated.plan).toEqual(pendingNext);
+  const applied = await client.approvePlanProposal('athlete-token', generated.proposal.id, generated.proposal.base_plan_revision!);
+  expect(applied).toEqual(receipt);
+  await expect(client.getWeeklyPlan('athlete-token', applied.plan_id, applied.active_revision)).resolves.toEqual(approvedNext);
+  expect(fetchMock.mock.calls.map(call => call[0])).toEqual([
+    `${API_URL}/api/v1/checkins/check-in-a/plan-proposals`,
+    `${API_URL}/api/v1/change-proposals/next-proposal/approve`,
+    `${API_URL}/api/v1/weekly-plans/next-plan?revision=1`,
+  ]);
+  for (const call of fetchMock.mock.calls) expect(call[1]?.headers).toEqual(headers);
+  expect(fetchMock.mock.calls[0][1]).toMatchObject({ method: 'POST' });
+  expect(fetchMock.mock.calls[1][1]).toMatchObject({ method: 'POST', body: JSON.stringify({ expected_base_revision: 0 }) });
+  expect(fetchMock.mock.calls[2][1]?.body).toBeUndefined();
+});
 
 test('active injury restrictions use the existing token-scoped GET contract', async () => {
   const { client, fetchMock } = loadClient();
