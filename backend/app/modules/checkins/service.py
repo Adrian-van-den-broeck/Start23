@@ -6,6 +6,8 @@ from typing import Any
 from uuid import UUID
 from zoneinfo import ZoneInfo
 
+from pydantic import ValidationError
+
 from app.modules.coach.context import (
     CheckInContextCoach,
     CheckInContextFacts,
@@ -26,7 +28,11 @@ from .domain import (
     confirmed_restriction_sets,
     context_fingerprint,
 )
-from .repository import CheckInRepository
+from .repository import (
+    CheckInRepository,
+    CheckInRepositoryConflictError,
+    CheckInRepositoryUnavailableError,
+)
 from .schemas import (
     CheckInContextCandidateResponse,
     CheckInContextConfirmation,
@@ -260,16 +266,38 @@ class CheckInService:
             )
         return week_start, available_dates, blocked, low_only
 
+    @staticmethod
+    def _proposal_response(payload: Mapping[str, Any]) -> WeeklyPlanProposalResponse:
+        try:
+            return WeeklyPlanProposalResponse.model_validate(payload)
+        except (ValidationError, KeyError, TypeError) as error:
+            # Stored snapshot validation must not disclose internal payloads.
+            raise CheckInRepositoryUnavailableError from error
+
     async def generate_plan_proposal(
         self,
         access_token: str,
         athlete_id: UUID,
         checkin_id: UUID,
     ) -> WeeklyPlanProposalResponse:
-        context = await self._repository.fetch_planning_context(
-            athlete_id,
-            checkin_id,
+        # Read the owner-scoped attachment before any OPEN-only planning guard.
+        existing = await self._repository.fetch_attached_proposal(
+            access_token, checkin_id
         )
+        if existing is not None:
+            return self._proposal_response(existing)
+        try:
+            context = await self._repository.fetch_planning_context(
+                athlete_id, checkin_id
+            )
+        except CheckInRepositoryConflictError:
+            # Another request can commit between the read and the context guard.
+            existing = await self._repository.fetch_attached_proposal(
+                access_token, checkin_id
+            )
+            if existing is not None:
+                return self._proposal_response(existing)
+            raise
         week_start, available_dates, blocked, low_only = self._planning_inputs(context)
         result = await self._planning_service.generate_checkin_proposal(
             access_token,
@@ -286,7 +314,14 @@ class CheckInService:
             checkin_id,
             result.proposal.id,
         )
-        return result
+        # Creation/attachment is atomic in v3; return the authoritative persisted
+        # snapshot, including a decision made while the request was in flight.
+        attached = await self._repository.fetch_attached_proposal(
+            access_token, checkin_id
+        )
+        if attached is None:
+            raise CheckInRepositoryConflictError("checkin_proposal_unrecoverable")
+        return self._proposal_response(attached)
 
     async def list_restrictions(
         self,

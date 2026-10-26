@@ -14,6 +14,7 @@ import {
   createCheckInPlanProposal,
   extractWeeklyCheckInContextCandidate,
   getInjuryRestrictions,
+  rejectPlanProposal,
   saveWeeklyCheckInContext,
   startWeeklyCheckIn,
 } from '../api/client';
@@ -176,7 +177,11 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
   const isConfirmed = checkIn?.context?.state === 'confirmed' && !editingContext;
   const taskKey = checkIn ? `check-in:${checkIn.id}` : null;
   const handoff = planning?.taskHandoff?.taskKey === taskKey ? planning.taskHandoff : null;
-  const displayedPlan = handoff?.plan ?? proposalPlan;
+  // A freshly recovered terminal snapshot supersedes any retained pending copy.
+  const displayedPlan = proposalPlan && !['pending_approval', 'active'].includes(proposalPlan.revision_state)
+    ? proposalPlan : handoff?.plan ?? proposalPlan;
+  const reviewable = displayedPlan?.revision_state === 'pending_approval' && displayedPlan.proposal?.state === 'pending';
+  const terminal = displayedPlan !== null && !reviewable && displayedPlan.revision_state !== 'active';
   const isCompleted = checkIn?.status === 'completed' || displayedPlan !== null;
   const expiryLabel = useMemo(() => {
     if (!checkIn?.context) return null;
@@ -224,10 +229,20 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
   };
 
   const begin = () => run(
-    () => Promise.all([startWeeklyCheckIn(accessToken, weekStart), getInjuryRestrictions(accessToken)]),
-    ([result, active]) => {
+    async () => {
+      const [result, active] = await Promise.all([startWeeklyCheckIn(accessToken, weekStart), getInjuryRestrictions(accessToken)]);
+      // The week-scoped check-in is the durable locator, including after restart.
+      // The create endpoint replays its exact attachment without generation.
+      const recovered = result.status === 'completed' || result.plan_proposal_id
+        ? await createCheckInPlanProposal(accessToken, result.id) : null;
+      if (recovered && planning) {
+        await planning.receiveTaskPlan(`check-in:${result.id}`, recovered.plan);
+      }
+      return { result, active, recovered };
+    },
+    ({ result, active, recovered }) => {
       restore(result, active);
-      if (planning?.taskHandoff?.taskKey === `check-in:${result.id}`) setProposalPlan(planning.taskHandoff.plan);
+      setProposalPlan(recovered?.plan ?? null);
     },
   );
 
@@ -315,6 +330,17 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
       if (!planning) throw new Error('Open de check-in vanuit de weekplanning om het voorstel te bewaren.');
       await planning.receiveTaskPlan(`check-in:${checkIn.id}`, result.plan);
     }, () => undefined);
+  };
+
+  const reject = () => {
+    if (!checkIn || !reviewable || !displayedPlan?.proposal) return;
+    const proposalId = displayedPlan.proposal.id;
+    void run(async () => {
+      await rejectPlanProposal(accessToken, proposalId);
+      const result = await createCheckInPlanProposal(accessToken, checkIn.id);
+      if (planning) await planning.receiveTaskPlan(`check-in:${checkIn.id}`, result.plan);
+      return result;
+    }, result => setProposalPlan(result.plan));
   };
 
   const approve = () => {
@@ -593,7 +619,7 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
 
         {displayedPlan ? (
           <Card elevated padding="form" style={styles.panel}>
-            <View style={[styles.chip, styles.pendingChip]}><Text variant="supporting" tone="warning">{handoff?.receipt || displayedPlan.revision_state === 'active' ? 'Goedkeuring ontvangen' : 'Wacht op jouw goedkeuring'}</Text></View>
+            <View style={[styles.chip, styles.pendingChip]}><Text variant="supporting" tone="warning">{terminal ? 'Voorstel afgesloten' : handoff?.receipt || displayedPlan.revision_state === 'active' ? 'Goedkeuring ontvangen' : 'Wacht op jouw goedkeuring'}</Text></View>
             <Text style={styles.title}>Voorstel voor {displayedPlan.week_start}</Text>
             <Text style={styles.body}>
               {displayedPlan.workouts.length} trainingen · {displayedPlan.rest_days.length} rustdagen
@@ -603,7 +629,9 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
             ))}
             {handoff && ['read', 'persist'].includes(handoff.phase) ? <Notice tone="warning">Je goedkeuring is ontvangen. De synchronisatie is nog niet voltooid. Hervat zonder opnieuw goed te keuren.</Notice> : null}
             {handoff?.phase === 'verify' ? <Notice tone="warning">De uitkomst is onzeker. Controleer eerst de opgeslagen status voordat je opnieuw beslist.</Notice> : null}
-            {handoff?.phase !== 'complete' ? <ActionButton disabled={busy || !planning} label={handoff?.phase === 'verify' ? 'Goedkeuringsstatus controleren' : handoff && ['read', 'persist'].includes(handoff.phase) ? 'Synchronisatie hervatten' : !handoff ? 'Voorstel bewaren' : 'Voorstel goedkeuren'} onPress={approve} /> : null}
+            {terminal ? <Notice>{`Dit voorstel is afgesloten (${displayedPlan.proposal?.state ?? displayedPlan.revision_state}). Er wordt geen vervangend voorstel gemaakt.`}</Notice> : null}
+            {!terminal && handoff?.phase !== 'complete' ? <ActionButton disabled={busy || !planning} label={handoff?.phase === 'verify' ? 'Goedkeuringsstatus controleren' : handoff && ['read', 'persist'].includes(handoff.phase) ? 'Synchronisatie hervatten' : !handoff ? 'Voorstel bewaren' : 'Voorstel goedkeuren'} onPress={approve} /> : null}
+            {reviewable ? <ActionButton disabled={busy || handoff?.phase !== 'pending'} label="Voorstel afwijzen" onPress={reject} secondary /> : null}
             <ActionButton label={handoff?.phase === 'complete' ? 'Terug naar Week' : 'Later beslissen'} onPress={onBack} secondary />
           </Card>
         ) : null}

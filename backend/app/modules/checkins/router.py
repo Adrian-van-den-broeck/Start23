@@ -15,7 +15,8 @@ from app.core.errors import ErrorResponse
 from app.core.security import AuthenticatedAthlete, AuthenticatedIdentity
 from app.modules.coach.context import CheckInContextCoach
 from app.modules.coach.weekly_plan import WeeklyPlanCoach
-from app.modules.planning.repository import PlanningRepository
+from app.modules.planning.repository import PlanningRepository, PlanningRepositoryError
+from app.modules.planning.router import raise_planning_error
 from app.modules.planning.schemas import WeeklyPlanProposalResponse
 from app.modules.planning.service import PlanningCatalogProvider, PlanningService
 
@@ -87,6 +88,10 @@ def _raise_public_error(error: Exception) -> NoReturn:
                 "Confirm the structured context before generating a plan."
             ),
             "checkin_already_completed": "This check-in is already completed.",
+            "checkin_proposal_unrecoverable": (
+                "The attached check-in proposal cannot be recovered. "
+                "Refresh the check-in."
+            ),
             "restriction_review_required": (
                 "Review every active restriction before completing this check-in."
             ),
@@ -98,6 +103,8 @@ def _raise_public_error(error: Exception) -> NoReturn:
             status_code=status.HTTP_409_CONFLICT,
             detail={"code": error.code, "message": messages[error.code]},
         ) from error
+    if isinstance(error, PlanningRepositoryError):
+        raise_planning_error(error)
     if isinstance(error, (CheckInDomainError, ValueError)):
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,

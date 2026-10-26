@@ -334,3 +334,118 @@ test('the same handoff accepts an already-authoritative task result without reap
   expect(flow.plan).toBe(approvedNext); expect(flow.taskHandoff?.plan).toBe(approvedNext);
   expect(api.approvePlanProposal).not.toHaveBeenCalled();
 });
+
+
+function recoveryServer({ loseFirst = false }: { loseFirst?: boolean } = {}) {
+  let generatedCount = 0;
+  let attached = false;
+  let first = true;
+  jest.mocked(api.startWeeklyCheckIn).mockImplementation(async () => ({
+    ...savedCheckIn, week_start: pendingNext.week_start,
+    status: attached ? 'completed' : 'open', plan_proposal_id: attached ? nextProposal.id : null,
+    context: { ...savedCheckIn.context!, state: 'confirmed' },
+  }));
+  jest.mocked(api.createCheckInPlanProposal).mockImplementation(async (token, id) => {
+    expect(token).toBe('token-a'); expect(id).toBe(savedCheckIn.id);
+    if (!attached) { generatedCount++; attached = true; server.set(pendingNext.id, pendingNext); }
+    const plan = server.get(pendingNext.id)!;
+    if (first && loseFirst) { first = false; throw new Error('Response lost after commit'); }
+    // get_weekly_plan includes the proposal for its exact revision, even terminal.
+    return { plan, proposal: plan.proposal! };
+  });
+  return { count: () => generatedCount, attach: (plan: WeeklyPlan) => { attached = true; server.set(plan.id, plan); } };
+}
+async function openCheckin(view: Awaited<ReturnType<typeof render>>) {
+  await view.findByText(workout.name);
+  await fireEvent.press(view.getByRole('button', { name: /check-in/i }));
+  await fireEvent.press(view.getByRole('button', { name: 'Start check-in' }));
+}
+
+test.each([false, true])('A5 commit/response loss recovers exact pending proposal (restart=%s), then A4 updates Week/Calendar', async restart => {
+  const persisted = recoveryServer({ loseFirst: true });
+  let view = await render(<Host />); await openCheckin(view);
+  await view.findByText('Klaar voor het voorstel');
+  await fireEvent.press(view.getByRole('button', { name: 'Maak planvoorstel' }));
+  await view.findByText('Response lost after commit');
+  expect(server.get(pendingNext.id)).toBe(pendingNext);
+  expect(flow.activePlan).toBe(activePlan); expect(api.approvePlanProposal).not.toHaveBeenCalled();
+  if (restart) { await view.unmount(); view = await render(<Host />); await openCheckin(view); }
+  else { await fireEvent.press(view.getByRole('button', { name: 'Maak planvoorstel' })); }
+  await view.findByText('Voorstel voor ' + pendingNext.week_start);
+  expect(flow.taskHandoff?.plan).toBe(pendingNext);
+  expect(flow.taskHandoff?.reviewed.proposal).toEqual(nextProposal);
+  expect(flow.taskHandoff?.plan.workouts.map(item => item.id)).toEqual(['next-workout-1', 'next-workout-2']);
+  expect(persisted.count()).toBe(1); expect(flow.activePlan).toBe(activePlan);
+  await fireEvent.press(view.getByRole('button', { name: 'Voorstel goedkeuren' }));
+  await view.findByText(nextWorkout.name);
+  expect(server.get(pendingNext.id)).toBe(approvedNext);
+  expect(flow.activePlan).toBe(approvedNext);
+  await fireEvent.press(view.getByRole('button', { name: 'View week' }));
+  await view.findByText('Training calendar'); await view.findByText(nextWorkout.name);
+  expect(calendar.calendarWorkouts.map(item => item.id)).toEqual(['next-workout-1', 'next-workout-2']);
+  expect(api.approvePlanProposal).toHaveBeenCalledTimes(1); expect(persisted.count()).toBe(1);
+});
+
+test('A5 restart recovers an already applied attachment without approving again', async () => {
+  const persisted = recoveryServer(); persisted.attach(approvedNext);
+  const view = await render(<Host />); await openCheckin(view);
+  await view.findByText('Goedkeuring ontvangen');
+  expect(flow.activePlan).toBe(approvedNext); expect(flow.taskHandoff?.phase).toBe('complete');
+  expect(api.approvePlanProposal).not.toHaveBeenCalled(); expect(persisted.count()).toBe(0);
+});
+
+test.each(['rejected', 'expired', 'superseded'] as const)('A5 authoritative %s clears retained pending review and cannot be revived', async state => {
+  const persisted = recoveryServer(); const view = await generated();
+  const terminal: WeeklyPlan = { ...pendingNext, revision_state: state, proposal: { ...nextProposal, state: state === 'superseded' ? 'applied' : state } };
+  persisted.attach(terminal);
+  await fireEvent.press(view.getByRole('button', { name: 'Later beslissen' }));
+  await openCheckin(view);
+  await view.findByText('Voorstel afgesloten');
+  expect(flow.taskHandoff).toBeNull(); expect(flow.activePlan).toBe(activePlan);
+  expect(view.queryByRole('button', { name: 'Voorstel goedkeuren' })).toBeNull();
+  expect(view.queryByRole('button', { name: 'Maak planvoorstel' })).toBeNull();
+  expect(server.get(pendingNext.id)).toBe(terminal); expect(persisted.count()).toBe(1);
+  expect(api.approvePlanProposal).not.toHaveBeenCalled();
+});
+
+test('A5 recovered proposal can be explicitly rejected without activating it', async () => {
+  const persisted = recoveryServer(); persisted.attach(pendingNext);
+  jest.mocked(api.rejectPlanProposal).mockImplementation(async (_token, id) => {
+    expect(id).toBe(nextProposal.id);
+    const rejected: WeeklyPlan = { ...pendingNext, revision_state: 'rejected', proposal: { ...nextProposal, state: 'rejected' } };
+    server.set(rejected.id, rejected);
+    return { state: 'rejected', plan_id: rejected.id, active_revision: null };
+  });
+  const view = await render(<Host />); await openCheckin(view);
+  await view.findByText('Wacht op jouw goedkeuring');
+  await fireEvent.press(view.getByRole('button', { name: 'Voorstel afwijzen' }));
+  await view.findByText('Voorstel afgesloten');
+  expect(server.get(pendingNext.id)?.proposal?.state).toBe('rejected');
+  expect(flow.activePlan).toBe(activePlan); expect(flow.taskHandoff).toBeNull();
+  expect(api.approvePlanProposal).not.toHaveBeenCalled(); expect(persisted.count()).toBe(0);
+});
+
+test.each(['replace', 'signout'] as const)('A5 late recovery cannot publish after account %s', async action => {
+  const persisted = recoveryServer(); persisted.attach(pendingNext);
+  const response = deferred<Awaited<ReturnType<typeof api.createCheckInPlanProposal>>>();
+  jest.mocked(api.createCheckInPlanProposal).mockReturnValue(response.promise);
+  const view = await render(<Host />); await openCheckin(view);
+  await waitFor(() => expect(api.createCheckInPlanProposal).toHaveBeenCalledTimes(1));
+  if (action === 'signout') await view.unmount();
+  else { stored.delete('start23.latest-plan-id'); await view.rerender(<Host identity="athlete-b" token="token-b" />); }
+  await act(() => response.resolve({ plan: pendingNext, proposal: nextProposal }));
+  if (action === 'replace') expect(flow.taskHandoff).toBeNull();
+  expect(stored.get('start23.latest-plan-id')).not.toBe(pendingNext.id);
+  expect(api.approvePlanProposal).not.toHaveBeenCalled();
+});
+
+test('A5 failed recovery keeps review unavailable and permits explicit reload', async () => {
+  const persisted = recoveryServer(); persisted.attach(pendingNext);
+  jest.mocked(api.createCheckInPlanProposal).mockRejectedValueOnce(new Error('Recovery unavailable'));
+  const view = await render(<Host />); await openCheckin(view);
+  await view.findByText('Recovery unavailable');
+  expect(flow.taskHandoff).toBeNull(); expect(flow.activePlan).toBe(activePlan);
+  await fireEvent.press(view.getByRole('button', { name: 'Start check-in' }));
+  await view.findByText('Wacht op jouw goedkeuring');
+  expect(flow.taskHandoff?.plan).toBe(pendingNext); expect(persisted.count()).toBe(0);
+});

@@ -57,7 +57,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
   const planResultGeneration = useRef(0);
   const [taskHandoff, setTaskHandoff] = useState<TaskPlanHandoff | null>(null);
   const currentHandoff = useRef(taskHandoff);
-  const publishHandoff = (value: TaskPlanHandoff) => {
+  const publishHandoff = (value: TaskPlanHandoff | null) => {
     currentHandoff.current = value;
     setTaskHandoff(value);
   };
@@ -338,6 +338,10 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     const existing = currentHandoff.current;
     const sameRevision = existing?.taskKey === taskKey && existing.reviewed.id === snapshot.id &&
       existing.reviewed.revision_id === snapshot.revision_id && existing.reviewed.revision === snapshot.revision;
+    if (['rejected', 'expired', 'superseded'].includes(snapshot.revision_state) || (snapshot.proposal && ['rejected', 'expired'].includes(snapshot.proposal.state))) {
+      if (existing?.taskKey === taskKey) publishHandoff(null);
+      return true; // Preserve terminal server semantics; never revive a review.
+    }
     if (sameRevision && (snapshot.revision_state === 'pending_approval' || existing.plan.revision_state === 'active')) {
       return existing.phase === 'persist' ? persistTaskPlan(existing) : true;
     }

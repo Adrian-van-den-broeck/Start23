@@ -10,4 +10,4 @@ export const pendingNext: WeeklyPlan = {
   confirmed_injuries: ['run', 'swim'], low_only_disciplines: ['bike'],
   workouts: [nextWorkout, { ...nextWorkout, id: 'next-workout-2', name: 'Repeated supplied bike' }], proposal: nextProposal,
 };
-export const approvedNext: WeeklyPlan = { ...pendingNext, state: 'active', active_revision: 1, revision_state: 'active', proposal: null };
+export const approvedNext: WeeklyPlan = { ...pendingNext, state: 'active', active_revision: 1, revision_state: 'active', proposal: { ...nextProposal, state: 'applied' } };

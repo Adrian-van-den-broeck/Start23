@@ -62,6 +62,10 @@ class CheckInRepository(Protocol):
         fingerprint: str,
     ) -> JsonObject: ...
 
+    async def fetch_attached_proposal(
+        self, access_token: str, checkin_id: UUID
+    ) -> JsonObject | None: ...
+
     async def fetch_planning_context(
         self,
         athlete_id: UUID,
@@ -177,6 +181,7 @@ class SupabaseCheckInRepository:
             "check-in context is stale": "checkin_context_stale",
             "check-in context is not confirmed": "checkin_not_confirmed",
             "check-in is already completed": "checkin_already_completed",
+            "check-in proposal is not recoverable": "checkin_proposal_unrecoverable",
             "active restriction review is missing": "restriction_review_required",
         }
         if response.status_code in {400, 409, 422} or code in {
@@ -257,6 +262,21 @@ class SupabaseCheckInRepository:
                 "p_fingerprint": fingerprint,
             },
         )
+        if not isinstance(result, dict):
+            raise CheckInRepositoryUnavailableError
+        return dict(result)
+
+    async def fetch_attached_proposal(
+        self, access_token: str, checkin_id: UUID
+    ) -> JsonObject | None:
+        result = await self._request(
+            "POST",
+            "rpc/get_checkin_plan_proposal",
+            access_token=access_token,
+            json={"p_checkin_id": str(checkin_id)},
+        )
+        if result is None:
+            return None
         if not isinstance(result, dict):
             raise CheckInRepositoryUnavailableError
         return dict(result)

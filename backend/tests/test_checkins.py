@@ -135,6 +135,12 @@ class MemoryCheckInRepository:
         self.rows[checkin_id] = row
         return dict(row)
 
+    async def fetch_attached_proposal(
+        self, access_token: str, checkin_id: UUID
+    ) -> JsonObject | None:
+        await self.fetch(access_token, checkin_id)
+        return None
+
     async def fetch_planning_context(
         self, athlete_id: UUID, checkin_id: UUID
     ) -> JsonObject:
