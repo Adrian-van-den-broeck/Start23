@@ -4,9 +4,10 @@ import { AppHeader } from '../ui-v2/components/AppHeader';
 import { Card } from '../ui-v2/primitives/Card';
 import { Notice } from '../ui-v2/primitives/Notice';
 import { Text } from '../ui-v2/primitives/Text';
+import { Button } from '../ui-v2/primitives/Button';
 import { colors, layout, space } from '../ui-v2/tokens';
-type ScreenStateProps = { loading?: boolean; message?: string; title: string; };
-export function ScreenState({ loading = false, message, title }: ScreenStateProps) {
+type ScreenStateProps = { loading?: boolean; message?: string; title: string; onRetry?: () => void; retryLabel?: string; };
+export function ScreenState({ loading = false, message, title, onRetry, retryLabel }: ScreenStateProps) {
   return <SafeAreaView style={styles.safeArea}>
     <ScrollView contentContainerStyle={styles.content}>
       <AppHeader title="WOMBO" landscape="ridges" />
@@ -14,6 +15,7 @@ export function ScreenState({ loading = false, message, title }: ScreenStateProp
         <Text variant="sectionTitle" accessibilityRole="header">{title}</Text>
         {loading ? <View accessibilityState={{ busy: true }}><ActivityIndicator color={colors.primary} size="large" /></View> : null}
         {message ? <Notice>{message}</Notice> : null}
+        {onRetry && retryLabel ? <Button label={retryLabel} disabled={loading} onPress={onRetry} /> : null}
       </Card>
     </ScrollView>
   </SafeAreaView>;

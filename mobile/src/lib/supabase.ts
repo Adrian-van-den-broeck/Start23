@@ -5,6 +5,19 @@ import {
   processLock,
   type SupabaseClient,
 } from '@supabase/supabase-js';
+import { withDeadline } from './deadline';
+
+export const AUTH_FETCH_DEADLINE_MS = 15_000;
+
+// Buffer inside the deadline so a stalled response body also settles. This is
+// the existing client's transport, not a second auth/session owner.
+export const authFetch: typeof fetch = (input, init) => withDeadline(async signal => {
+  const response = await fetch(input, { ...init, signal });
+  const body = await response.text();
+  return new Response(response.status === 204 ? null : body, {
+    status: response.status, statusText: response.statusText, headers: response.headers,
+  });
+}, AUTH_FETCH_DEADLINE_MS, init?.signal);
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const supabasePublishableKey =
@@ -22,8 +35,10 @@ export function getSupabaseClient(): SupabaseClient {
     throw new Error(supabaseConfigurationError ?? 'Supabase is niet ingesteld.');
   }
   client ??= createClient(supabaseUrl, supabasePublishableKey, {
+    global: { fetch: authFetch },
     auth: {
-      autoRefreshToken: true,
+      // AuthProvider schedules/coalesces refresh and reports recoverable errors.
+      autoRefreshToken: false,
       persistSession: false,
       detectSessionInUrl: false,
       lock: processLock,

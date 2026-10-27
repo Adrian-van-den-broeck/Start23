@@ -13,6 +13,7 @@ import {
 } from 'react-native-safe-area-context';
 
 import { AuthProvider, useAuth } from './src/auth/AuthProvider';
+import { AuthRecoveryState } from './src/auth/AuthRecoveryState';
 import { ActivityFlowProvider, useActivityFlow } from './src/features/activities/ActivityFlowProvider';
 import { FadeInView } from './src/components/FadeInView';
 import { LanguageProvider, useLanguage } from './src/i18n/LanguageProvider';
@@ -29,7 +30,7 @@ import { ZoneProfileScreen } from './src/screens/ZoneProfileScreen';
 import { colors, spacing } from './src/theme/tokens';
 
 function AppContent() {
-  const { configurationError, loading, session } = useAuth();
+  const { configurationError, loading, session, recovery } = useAuth();
   if (loading) {
     return (
       <View style={styles.centered}>
@@ -48,6 +49,7 @@ function AppContent() {
   }
 
   if (!session) {
+    if (recovery) return <AuthRecoveryState />;
     return <AuthScreen />;
   }
 

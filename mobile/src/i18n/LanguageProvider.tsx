@@ -16,6 +16,10 @@ export type LanguagePreference = 'system' | AppLanguage;
 const preferenceStorageKey = 'start23.language-preference';
 
 const nl = {
+  'auth.recoveryTitle': 'Je sessie herstellen',
+  'auth.networkRecovery': 'Je sessie kan tijdelijk niet worden vernieuwd. Je aanmeldgegevens blijven bewaard. Controleer je verbinding en probeer opnieuw.',
+  'auth.storageRecovery': 'Je aanmeldgegevens konden niet veilig worden gelezen of bewaard. Probeer opnieuw.',
+  'common.retry': 'Opnieuw proberen',
   'activities.add': 'Activiteit toevoegen',
   'activities.return': 'Terug naar Activiteiten',
   'activities.continueFeedback': 'Gevoel aanvullen',
@@ -270,6 +274,10 @@ const nl = {
 type TranslationKey = keyof typeof nl;
 
 const en: Record<TranslationKey, string> = {
+  'auth.recoveryTitle': 'Restore your session',
+  'auth.networkRecovery': 'Your session could not be refreshed right now. Your sign-in credentials are preserved. Check your connection and retry.',
+  'auth.storageRecovery': 'Your sign-in credentials could not be read or saved securely. Please retry.',
+  'common.retry': 'Retry',
   'activities.add': 'Add activity',
   'activities.return': 'Back to Activities',
   'activities.continueFeedback': 'Complete feedback',

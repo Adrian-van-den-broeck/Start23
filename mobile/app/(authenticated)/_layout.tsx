@@ -9,6 +9,7 @@ import { useOptionalPlanningPresentation } from '@/navigation/PlanningPresentati
 
 import { ActivityFlowProvider, useActivityFlow } from '@/features/activities/ActivityFlowProvider';
 import { useAuth } from '@/auth/AuthProvider';
+import { AuthRecoveryState, AuthRecoveryNotice } from '@/auth/AuthRecoveryState';
 import { MotionPressable } from '@/components/MotionPressable';
 import { useLanguage } from '@/i18n/LanguageProvider';
 import { ScreenState } from '@/components/ScreenState';
@@ -19,12 +20,14 @@ import { PendingRpeBanner } from '@/ui-v2/components/PendingRpeBanner';
 import { useUiVersion } from '@/ui/UiVersionProvider';
 
 export default function AuthenticatedLayout() {
-  const { configurationError, loading, session } = useAuth();
+  const { configurationError, loading, session, recovery } = useAuth();
   if (loading) return <ScreenState loading title="Je sessie wordt gecontroleerd" />;
+  if (recovery && !session) return <AuthRecoveryState />;
   if (configurationError || !session) return <Redirect href="/" />;
 
   return (
     <View style={styles.shell}>
+      <AuthRecoveryNotice />
       <ActivityFlowProvider accessToken={session.access_token} athleteIdentity={session.user.id}>
       <TrainingFlowHost key={session.user.id} accessToken={session.access_token} athleteIdentity={session.user.id}>
         <AuthenticatedContent accessToken={session.access_token} />
