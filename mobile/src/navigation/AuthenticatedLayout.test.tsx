@@ -1,3 +1,4 @@
+import { pendingActivity } from '../features/activities/activities.test-fixtures';
 import { fireEvent, render } from '@testing-library/react-native';
 import type { PropsWithChildren } from 'react';
 import * as SecureStore from 'expo-secure-store';
@@ -27,7 +28,7 @@ beforeEach(() => { jest.clearAllMocks(); jest.mocked(SecureStore.getItemAsync).m
 
 // Match the actual root UI provider; default V1 still exercises the legacy reminder.
 test.each([1, 2])('shell-owned reminder keeps exact count %s and destination, below a top safe area', async (count) => {
-  jest.mocked(listActivities).mockResolvedValue(Array.from({ length: count }, () => ({})) as Awaited<ReturnType<typeof listActivities>>);
+  jest.mocked(listActivities).mockResolvedValue(Array.from({ length: count }, (_, index) => ({ ...pendingActivity, id: `pending-${index}` })));
   const view = await render(<LanguageProvider><UiVersionProvider><AuthenticatedLayout /></UiVersionProvider></LanguageProvider>);
   const text = `${count} workout${count === 1 ? '' : 's'} waiting for RPE · open Training & RPE`;
   await view.findByText(text);

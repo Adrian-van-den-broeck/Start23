@@ -20,3 +20,7 @@ export function useActivityFlow(): ActivityController {
   if (!value) throw new Error('Activity flow requires ActivityFlowProvider');
   return value;
 }
+
+export function useOptionalActivityFlow(): ActivityController | null {
+  return useContext(ActivityContext);
+}

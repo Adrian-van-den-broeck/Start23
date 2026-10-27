@@ -7,7 +7,7 @@ import { ActivityFlowProvider, useActivityFlow } from './ActivityFlowProvider';
 import { activityOnboarding, completeActivity, externalActivity, pendingActivity } from './activities.test-fixtures';
 
 jest.mock('../../api/client', () => ({
-  confirmActivityMatch: jest.fn(), createActivity: jest.fn(), getCalendar: jest.fn(), getOnboarding: jest.fn(),
+  confirmActivityMatch: jest.fn(), createActivity: jest.fn(), getActivity: jest.fn(), getCalendar: jest.fn(), getOnboarding: jest.fn(),
   listActivities: jest.fn(), listPlannedExternalActivities: jest.fn(), submitActivityRpeWithRefresh: jest.fn(),
 }));
 let flow: ReturnType<typeof useActivityFlow>;
@@ -47,15 +47,16 @@ test('owner is lazy; concurrent entry reads and rerenders issue one exact four-r
   expect(dates).toEqual(['token-a', iso(from), iso(to)]);
   await act(async () => { rows.resolve([completeActivity]); await load; });
   expect(flow.activities).toEqual([completeActivity]); expect(flow.busy).toBe(false);
-  await act(() => flow.ensureActivitiesLoaded()); expect(api.listActivities).toHaveBeenCalledTimes(1);
+  await act(() => flow.ensureActivitiesLoaded()); expect(api.listActivities).toHaveBeenCalledTimes(2);
 });
 
 test('list preserves server order, canonical/provider objects and existing scheduled/planned filters', async () => {
   const imported = { ...completeActivity, id: 'provider-record', source: 'canonical_summary' } as CompletedActivity;
   jest.mocked(api.getCalendar).mockResolvedValue({ from_date: 'from', to_date: 'to', workouts: [workout, { ...workout, id: 'completed', status: 'completed' }], rest_days: [] });
   jest.mocked(api.listPlannedExternalActivities).mockResolvedValue([externalActivity, { ...externalActivity, id: 'cancelled', status: 'cancelled' }]);
-  await loaded([imported, completeActivity, pendingActivity]);
-  expect(flow.activities).toEqual([imported, completeActivity, pendingActivity]); expect(flow.activities[0]).toBe(imported);
+  const completed = { ...completeActivity, id: 'completed-history' };
+  await loaded([imported, completed, pendingActivity]);
+  expect(flow.activities).toEqual([imported, completed, pendingActivity]); expect(flow.activities[0]).toBe(imported);
   expect(flow.workouts).toEqual([workout]); expect(flow.externalActivities).toEqual([externalActivity]); expect(flow.feedbackActivity).toBe(pendingActivity);
 });
 
@@ -102,7 +103,7 @@ test('actual-start default is initialized at first Activity entry and retained o
     jest.setSystemTime(new Date('2026-10-06T13:00:00Z'));
     await view.rerender(<Host entry={false} />); await view.rerender(<Host entry />);
     await act(() => flow.ensureActivitiesLoaded());
-    expect(flow.startedAt).toBe('2026-10-06T11:00:00Z'); expect(api.listActivities).toHaveBeenCalledTimes(1);
+    expect(flow.startedAt).toBe('2026-10-06T11:00:00Z'); expect(api.listActivities).toHaveBeenCalledTimes(2);
   } finally { jest.useRealTimers(); }
 });
 
@@ -135,7 +136,7 @@ test('created activity wins over another pending row; one pending source prevent
 test('feedback uses exact activity and HR value; double press/rerender saves and refreshes once', async () => {
   const view = await loaded([pendingActivity]); await act(() => flow.setHeartRateByActivity({ 'activity-a': ' 151 ' }));
   const feedback = deferred<CompletedActivity>(); jest.mocked(api.submitActivityRpeWithRefresh).mockReturnValue(feedback.promise);
-  let save!: Promise<void>; await act(() => { save = flow.saveRpe('activity-a', 7); void flow.saveRpe('activity-a', 7); });
+  let save!: Promise<boolean>; await act(() => { save = flow.saveRpe('activity-a', 7); void flow.saveRpe('activity-a', 7); });
   await view.rerender(<Host />); expect(flow.feedbackActivity?.id).toBe('activity-a');
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledWith('token-a', pendingActivity, 7, 151);
@@ -156,11 +157,11 @@ test('failed feedback retains pending identity/HR/key; explicit retry succeeds a
   expect(jest.mocked(api.createActivity).mock.calls[1][1]).not.toBe(firstKey);
 });
 
-test('helper success then failed feedback refresh retains the existing displayed rows and cleared HR draft', async () => {
+test('helper success then failed feedback refresh retains the acknowledged completed entity and cleared HR draft', async () => {
   await loaded([pendingActivity]); await act(() => flow.setHeartRateByActivity({ 'activity-a': '148' }));
   jest.mocked(api.listActivities).mockRejectedValueOnce(new Error('Safe feedback refresh failure'));
   await act(() => flow.saveRpe('activity-a', 4));
-  expect(flow.pendingRpe).toEqual([pendingActivity]); expect(flow.heartRateByActivity).toEqual({}); expect(flow.error).toBe('Safe feedback refresh failure');
+  expect(flow.pendingRpe).toEqual([]); expect(flow.activities).toEqual([completeActivity]); expect(flow.heartRateByActivity).toEqual({}); expect(flow.error).toBe('Safe feedback refresh failure');
 });
 
 test.each(['19', '261', '150.5', 'bad'])('invalid HR %s preserves draft and does not submit/refresh', async value => {
@@ -273,7 +274,7 @@ test('existing swim distance-only path sends null duration without estimation', 
 test('identity replacement ignores late pending read and late feedback success', async () => {
   const view = await loaded([pendingActivity]); const feedback = deferred<CompletedActivity>(), pending = deferred<CompletedActivity[]>();
   jest.mocked(api.submitActivityRpeWithRefresh).mockReturnValue(feedback.promise); jest.mocked(api.listActivities).mockReturnValue(pending.promise);
-  let read!: Promise<void>, save!: Promise<void>; await act(() => { read = flow.refreshPendingRpe(); save = flow.saveRpe('activity-a', 4); });
+  let read!: Promise<void>, save!: Promise<boolean>; await act(() => { read = flow.refreshPendingRpe(); save = flow.saveRpe('activity-a', 4); });
   await view.rerender(<Host identity="athlete-b" token="token-b" />);
   await act(async () => { pending.resolve([pendingActivity]); feedback.resolve(completeActivity); await Promise.all([read, save]); });
   expect(flow.activities).toEqual([]); expect(flow.pendingRpe).toEqual([]); expect(flow.error).toBeNull(); expect(api.listActivities).toHaveBeenCalledTimes(2);

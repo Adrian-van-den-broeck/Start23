@@ -97,7 +97,7 @@ test('Back from pending does not write or clear; second create blocked and exact
   await fireEvent.press(view.getByRole('button', { name: 'Complete feedback' })); await fireEvent.press(view.getByRole('button', { name: 'Back to Activities' }));
   expect(flow.feedbackActivity).toBe(pendingActivity); expect(api.createActivity).not.toHaveBeenCalled(); expect(api.submitActivityRpeWithRefresh).not.toHaveBeenCalled();
   await view.rerender(<Host visible={false} />); await view.rerender(<Host />); await view.findByTestId('activity-pending');
-  expect(api.listActivities).toHaveBeenCalledTimes(1); await fireEvent.press(view.getByRole('button', { name: 'Complete feedback' }));
+  expect(api.listActivities).toHaveBeenCalledTimes(2); await fireEvent.press(view.getByRole('button', { name: 'Complete feedback' }));
   expect(view.getByTestId(`activity-summary-${pendingActivity.id}`)).toBeTruthy();
 });
 test('feedback failure/retry, rapid press and rerender never rebind exact activity or discard HR', async () => {
@@ -179,4 +179,30 @@ test('V2 swim distance-only entry preserves null duration without estimating tim
   await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
   expect(api.createActivity).toHaveBeenCalledTimes(1);
   expect(jest.mocked(api.createActivity).mock.calls[0][2]).toEqual(expect.objectContaining({ discipline: 'swim', duration_minutes: null, distance_meters: 1500 }));
+});
+
+
+test('A7 failed correction keeps its exact editor, stored RPE and measurement for retry', async () => {
+  const recent = { ...completeActivity, started_at: new Date().toISOString() };
+  rows = [recent];
+  jest.mocked(api.submitActivityRpeWithRefresh).mockRejectedValueOnce(new Error('RPE temporarily unavailable'));
+  const view = await render(<Host />);
+  const record = within(await view.findByTestId(`activity-row-${recent.id}`));
+  await fireEvent.press(record.getByRole('button', { name: /Correct this week/ }));
+  await fireEvent.changeText(view.getByLabelText('Average heart rate (bpm)'), '151');
+  await fireEvent.press(view.getByRole('radio', { name: rpeFour }));
+  await view.findByText('RPE temporarily unavailable');
+  expect(view.getByLabelText('Average heart rate (bpm)').props.value).toBe('151');
+  expect(view.getByRole('radio', { name: rpeFour })).toBeTruthy();
+  expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledWith('token-a', recent, 4, 151);
+});
+
+
+test('A7 pull-to-refresh publishes remote history without a create or RPE mutation', async () => {
+  const view = await render(<Host />); await view.findByText('No activities recorded yet.');
+  rows = [{ ...completeActivity, id: 'remote-pull-history' }];
+  await fireEvent(view.getByTestId('activity-history-list'), 'refresh');
+  await view.findByTestId('activity-row-remote-pull-history');
+  expect(api.listActivities).toHaveBeenCalledTimes(2);
+  expect(api.createActivity).not.toHaveBeenCalled(); expect(api.submitActivityRpeWithRefresh).not.toHaveBeenCalled();
 });

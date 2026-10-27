@@ -26,7 +26,7 @@ export default function ActivitiesRoute() {
   }, [active, activityBusy, taskOpen, setActivityView, setActivityCorrectionId]);
   if (!session) return null;
   return (
-    <ActivityBoundary version={version} view={activityView} onView={setActivityView}
+    <ActivityBoundary entryManaged active={active} version={version} view={activityView} onView={setActivityView}
       correctionId={activityCorrectionId} onCorrection={setActivityCorrectionId} switchLocked={navigationLocked}
       onVersion={next => {
         if (!navigationLocked) {

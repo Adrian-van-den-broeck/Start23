@@ -583,3 +583,14 @@ test('A6 discovery sends only the bearer token and no client owner or mutation b
   expect(fetchMock.mock.calls[0][1]?.body).toBeUndefined();
   expect(fetchMock.mock.calls[0][1]?.method).toBeUndefined();
 });
+
+
+test('A7 targeted activity resolution uses the existing owner-token GET with no identity override', async () => {
+  const { client, fetchMock } = loadClient();
+  const id = '6a8c2a77-1d7f-4c88-bdc4-0d2ad4b08010';
+  await client.getActivity('athlete-token', id);
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+  expect(fetchMock.mock.calls[0][0]).toBe(`${API_URL}/api/v1/activities/${id}`);
+  expect(fetchMock.mock.calls[0][1]?.headers).toEqual(headers);
+  expect(fetchMock.mock.calls[0][1]?.body).toBeUndefined();
+});

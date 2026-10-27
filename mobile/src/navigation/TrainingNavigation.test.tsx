@@ -234,14 +234,14 @@ test('Slice 5B real create pending reminder return and feedback retain one owner
   const reminder = '1 workout waiting for RPE · open Training & RPE';
   expect(view.getAllByText(reminder)).toHaveLength(1); await fireEvent.press(view.getByText(reminder)); await view.findByText('Activity feedback');
   expect(activityFlow.feedbackActivity?.id).toBe(pendingActivity.id);
-  expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(reads);
+  expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(reads + 2);
   await fireEvent.press(view.getByRole('radio', { name: 'Save RPE · Focus nodig, praten in zinnen. (RPE 4)' })); await view.findByTestId('v2-activities');
   expect(view.queryByText(reminder)).toBeNull(); expect(api.createActivity).toHaveBeenCalledTimes(1); expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledWith('token-a', pendingActivity, 4, 151);
   expect(activityFlow.ensureActivitiesLoaded).toBe(activityOwner); expect(flow.setWeekStart).toBe(planningOwner); expect(calendar.loadCalendarRange).toBe(calendarOwner);
 });
 
-test('Slice 5B V1 V2 navigator replacement from Activities retains task draft and pending HR without history reread', async () => {
+test('Slice 5B V1 V2 navigator replacement from Activities retains task draft and pending HR across its restored route', async () => {
   jest.mocked(api.listActivities).mockResolvedValue([pendingActivity]);
   const view = await renderRouter(routes, { initialUrl: '/activities' }); await view.findByTestId('activity-pending');
   const owner = activityFlow.ensureActivitiesLoaded;
@@ -252,7 +252,7 @@ test('Slice 5B V1 V2 navigator replacement from Activities retains task draft an
   expect(view.getByTestId('path').props.children).toBe('/activities'); expect(activityFlow.ensureActivitiesLoaded).toBe(owner);
   await fireEvent.press(view.getByRole('button', { name: 'UI V2' })); await view.findByText('Activity feedback');
   expect(view.getByLabelText('Average heart rate (bpm)').props.value).toBe('149'); expect(activityFlow.distance).toBe('6789');
-  expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(reads);
+  expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(reads + 1); // Native Tabs rebuild restores Activities through Week: one real refocus.
   expect(api.createActivity).not.toHaveBeenCalled(); expect(api.submitActivityRpeWithRefresh).not.toHaveBeenCalled();
 });
 
@@ -318,7 +318,7 @@ test('Slice 5A one Activity owner survives Week Activities Calendar Activities a
   await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
   expect(activityFlow.ensureActivitiesLoaded).toBe(owner); expect(activityFlow.duration).toBe('52');
   expect(activityFlow.heartRateByActivity).toEqual({ 'activity-a': '148' });
-  expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(1);
+  expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(3);
   expect(api.createActivity).not.toHaveBeenCalled(); expect(api.submitActivityRpeWithRefresh).not.toHaveBeenCalled();
 });
 
@@ -817,4 +817,23 @@ test('release version switching stays disabled during an in-flight activity oper
     expect(view.getByRole('button', { name: 'UI V1' })).toBeEnabled();
     await view.unmount();
   } finally { Object.assign(globalThis, { __DEV__: originalDev }); }
+});
+
+
+test('A7 native route refocus sees remote history while preserving the retained Activity form', async () => {
+  jest.mocked(api.getOnboarding).mockResolvedValue(activityOnboarding);
+  let rows: typeof pendingActivity[] = [];
+  jest.mocked(api.listActivities).mockImplementation(async (_token, pending) => pending ? rows.filter(row => row.processing_state === 'awaiting_rpe') : rows);
+  const view = await renderRouter(routes, { initialUrl: '/activities' });
+  await view.findByText('No activities recorded yet.');
+  const owner = activityFlow.ensureActivitiesLoaded;
+  await act(() => activityFlow.setDistance('7000'));
+  await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: 'Week' }));
+  await view.findByText('Approved');
+  rows = [{ ...pendingActivity, id: 'remote-new-history', rpe: 4, processing_state: 'complete', qualitative_result: 'unplanned', rpe_submitted_at: '2026-10-06T12:00:00Z', updated_at: '2026-10-06T12:00:00Z' }];
+  await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: 'Activities' }));
+  await view.findByTestId('activity-row-remote-new-history');
+  expect(activityFlow.ensureActivitiesLoaded).toBe(owner); expect(activityFlow.distance).toBe('7000');
+  expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(2);
+  expect(api.createActivity).not.toHaveBeenCalled(); expect(api.submitActivityRpeWithRefresh).not.toHaveBeenCalled();
 });

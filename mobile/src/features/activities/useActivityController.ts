@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  confirmActivityMatch, createActivity, getCalendar, getOnboarding,
+  confirmActivityMatch, createActivity, getActivity, getCalendar, getOnboarding,
   listActivities, listPlannedExternalActivities, submitActivityRpeWithRefresh,
 } from '../../api/client';
 import type { CompletedActivity, Discipline, PlannedExternalActivity, PlannedWorkout } from '../../api/types';
@@ -36,25 +36,94 @@ export function useActivityController(accessToken: string) {
   const [idempotencyKey, setIdempotencyKey] = useState(newIdempotencyKey);
   const [createdActivityId, setCreatedActivityId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const mutationError = useRef<string | null>(null);
   const [heartRateByActivity, setHeartRateByActivity] = useState<Record<string, string>>({});
   // The shell pending endpoint and complete list publish to this single source.
   const [pendingRpe, setPendingRpe] = useState<CompletedActivity[]>([]);
-  const feedbackActivity = pendingRpe.find(activity => activity.id === createdActivityId) ?? pendingRpe[0];
+  const [feedbackId, setFeedbackId] = useState<string | null>(null);
+  const feedbackSelection = useRef(feedbackId);
+  feedbackSelection.current = feedbackId;
+  const feedbackActivity = pendingRpe.find(activity => activity.id === createdActivityId) ?? pendingRpe.find(activity => activity.id === feedbackId) ?? pendingRpe[0];
   const createInFlightRef = useRef(false);
+  const createAttempt = useRef<{ key: string; input: ReturnType<typeof activityCreateInput> } | null>(null);
   const rpeInFlightRef = useRef<Set<string>>(new Set());
   const historyLoaded = useRef(false);
   const activityEntered = useRef(false);
-  const loadInFlight = useRef<Promise<void> | null>(null);
+  const focused = useRef(false);
+  const loadInFlight = useRef<{ token: string; promise: Promise<void> } | null>(null);
+  const historySequence = useRef(0);
+  const readClock = useRef(0);
+  // An index of authenticated full entities in this owner, not another manager.
+  const entities = useRef(new Map<string, { row: CompletedActivity; sequence: number }>());
+  const staleIds = useRef(new Set<string>());
+  const activitiesRef = useRef(activities);
+  const pendingRef = useRef(pendingRpe);
+  const createdIdRef = useRef(createdActivityId);
+  createdIdRef.current = createdActivityId;
   const pendingSequence = useRef(0);
   const pendingInFlight = useRef<{ token: string; promise: Promise<void> } | null>(null);
   const pendingContext = useRef<{ path: string; token: string } | null>(null);
 
-  const load = useCallback((access = token.current): Promise<void> => {
-    if (!alive.current) return Promise.resolve();
-    if (loadInFlight.current) return loadInFlight.current;
-    // An older reminder read cannot overwrite post-mutation feedback identity.
+  const publishPending = useCallback((rows: CompletedActivity[]) => {
+    pendingRef.current = rows;
+    setPendingRpe(rows);
+    setFeedbackId(current => rows.some(row => row.id === createdIdRef.current) ? createdIdRef.current
+      : rows.some(row => row.id === current) ? current : rows[0]?.id ?? null);
+  }, []);
+  const indexRows = useCallback((rows: CompletedActivity[], sequence: number) => {
+    for (const row of rows) {
+      if ((entities.current.get(row.id)?.sequence ?? -1) <= sequence) {
+        entities.current.set(row.id, { row, sequence });
+        staleIds.current.delete(row.id);
+        if (row.id === createdIdRef.current && row.processing_state === 'complete') {
+          createdIdRef.current = null;
+          setCreatedActivityId(null);
+          createAttempt.current = null;
+          setIdempotencyKey(newIdempotencyKey());
+        }
+      }
+    }
+    return rows.map(row => entities.current.get(row.id)!.row);
+  }, []);
+  const publishActivity = useCallback((row: CompletedActivity) => {
+    if (!alive.current) return;
+    const [current] = indexRows([row], ++readClock.current);
+    const rows = activitiesRef.current.some(item => item.id === row.id)
+      ? activitiesRef.current.map(item => item.id === row.id ? current : item)
+      : [current, ...activitiesRef.current];
+    activitiesRef.current = rows;
+    setActivities(rows);
+    publishPending([...pendingRef.current.filter(item => item.id !== row.id),
+      ...(current.processing_state === 'awaiting_rpe' ? [current] : [])]);
+  }, [indexRows, publishPending]);
+  const forgetActivity = useCallback((id: string) => {
+    ++historySequence.current;
     ++pendingSequence.current;
+    loadInFlight.current = null;
+    pendingInFlight.current = null;
+    setRefreshing(false);
+    if (createdIdRef.current === id) {
+      createdIdRef.current = null;
+      setCreatedActivityId(null);
+      createAttempt.current = null;
+      setIdempotencyKey(newIdempotencyKey());
+    }
+    entities.current.delete(id);
+    staleIds.current.delete(id);
+    activitiesRef.current = activitiesRef.current.filter(row => row.id !== id);
+    setActivities(activitiesRef.current);
+    publishPending(pendingRef.current.filter(row => row.id !== id));
+  }, [publishPending]);
+
+  const load = useCallback((access = token.current, supersede = false): Promise<void> => {
+    if (!alive.current) return Promise.resolve();
+    if (!supersede && loadInFlight.current?.token === access) return loadInFlight.current.promise;
+    const requestNumber = ++historySequence.current;
+    const pendingNumber = ++pendingSequence.current;
+    const sequence = ++readClock.current;
+    for (const id of entities.current.keys()) staleIds.current.add(id);
     const request = (async () => {
       const now = new Date();
       const from = new Date(now);
@@ -67,9 +136,17 @@ export function useActivityController(accessToken: string) {
         getOnboarding(access),
         listPlannedExternalActivities(access),
       ]);
-      if (!alive.current) return;
-      setActivities(activityRows);
-      setPendingRpe(activityRows.filter(activity => activity.processing_state === 'awaiting_rpe'));
+      if (!alive.current || requestNumber !== historySequence.current) return;
+      const indexed = indexRows(activityRows, sequence);
+      // A read started before an acknowledged write/targeted read cannot drop it.
+      const retained = activitiesRef.current.filter(row => !indexed.some(item => item.id === row.id) &&
+        (entities.current.get(row.id)?.sequence ?? -1) > sequence);
+      activitiesRef.current = [...indexed, ...retained];
+      setActivities(activitiesRef.current);
+      if (pendingNumber === pendingSequence.current) {
+        const known = pendingRef.current.filter(row => !indexed.some(item => item.id === row.id));
+        publishPending([...indexed.filter(row => row.processing_state === 'awaiting_rpe'), ...known]);
+      }
       setWorkouts(calendar.workouts.filter(workout => workout.status === 'scheduled'));
       setExternalActivities(plannedExternal.filter(activity => activity.status === 'planned'));
       if (!onboarding.profile?.timezone_confirmed_at || !onboarding.profile.timezone) {
@@ -77,47 +154,93 @@ export function useActivityController(accessToken: string) {
       }
       setAthleteTimezone(onboarding.profile.timezone);
       historyLoaded.current = true;
-    })();
-    loadInFlight.current = request;
-    void request.finally(() => { if (loadInFlight.current === request) loadInFlight.current = null; }).catch(() => undefined);
+    })().catch((caught: unknown) => {
+      if (alive.current && requestNumber === historySequence.current) throw caught;
+    });
+    const current = { token: access, promise: request };
+    loadInFlight.current = current;
+    void request.finally(() => {
+      if (loadInFlight.current === current) {
+        loadInFlight.current = null;
+        if (alive.current) setRefreshing(false);
+      }
+    }).catch(() => undefined);
     return request;
-  }, []);
+  }, [indexRows, publishPending]);
 
+  const refreshActivities = useCallback(async (supersede = false) => {
+    if (!alive.current) return;
+    const initial = !historyLoaded.current;
+    if (initial) setBusy(true);
+    setRefreshing(true);
+    const request = load(token.current, supersede);
+    const attempt = historySequence.current;
+    try {
+      await request;
+      if (alive.current && attempt === historySequence.current && !mutationError.current) setError(null);
+    }
+    catch (caught) { if (alive.current && attempt === historySequence.current && !mutationError.current) setError(caught instanceof Error ? caught.message : 'Laden is mislukt.'); }
+    finally {
+      if (alive.current && attempt === historySequence.current && !loadInFlight.current) {
+        setRefreshing(false);
+        if (initial) setBusy(createInFlightRef.current || rpeInFlightRef.current.size > 0);
+      }
+    }
+  }, [load]);
   const ensureActivitiesLoaded = useCallback(async () => {
-    if (!alive.current || historyLoaded.current || loadInFlight.current) return;
-    // V1 initialized the actual-start default on Activity entry, not shell entry.
-    // Later mounts keep the same unresolved form and logical attempt.
+    if (!alive.current) return;
     if (!activityEntered.current) {
       activityEntered.current = true;
       setStartedAt(new Date().toISOString());
     }
-    setBusy(true);
-    try { await load(); }
-    catch (caught) { if (alive.current) setError(caught instanceof Error ? caught.message : 'Laden is mislukt.'); }
-    finally { if (alive.current) setBusy(false); }
-  }, [load]);
+    await refreshActivities();
+  }, [refreshActivities]);
+  const setActivitiesFocused = useCallback((active: boolean) => {
+    if (!alive.current || focused.current === active) return;
+    focused.current = active;
+    if (active) void ensureActivitiesLoaded();
+  }, [ensureActivitiesLoaded]);
+  const invalidateActivities = useCallback(() => {
+    if (!alive.current) return;
+    for (const id of entities.current.keys()) staleIds.current.add(id);
+    ++historySequence.current;
+    ++pendingSequence.current;
+    loadInFlight.current = null;
+    pendingInFlight.current = null;
+    pendingContext.current = null;
+    if (focused.current) void refreshActivities(true);
+  }, [refreshActivities]);
 
-  // Preserve the shell's route/token reminder trigger, without another count owner.
+  // The reminder API already returns full public entities. Index them once so
+  // a reminder can resolve its exact UUID without requiring a history download.
   const refreshPendingRpe = useCallback((path?: string): Promise<void> => {
     if (!alive.current) return Promise.resolve();
     const access = token.current;
-    // The training readiness host can reparent the reminder. Its presentation
-    // mount is not another route/token event and must not repeat the read.
     if (path !== undefined) {
       if (pendingContext.current?.path === path && pendingContext.current.token === access) return Promise.resolve();
       pendingContext.current = { path, token: access };
     }
-    if (loadInFlight.current) return loadInFlight.current.catch(() => undefined);
+    if (loadInFlight.current?.token === access) return loadInFlight.current.promise.catch(() => undefined);
     if (pendingInFlight.current?.token === access) return pendingInFlight.current.promise;
-    const sequence = ++pendingSequence.current;
+    const pendingNumber = ++pendingSequence.current;
+    const sequence = ++readClock.current;
     const promise = listActivities(access, true).then(rows => {
-      if (alive.current && sequence === pendingSequence.current) setPendingRpe(rows);
+      if (!alive.current || pendingNumber !== pendingSequence.current) return;
+      const indexed = indexRows(rows, sequence);
+      // Membership absence alone cannot erase the activity currently being
+      // entered/retried. Resolve that exact stale identity before a later PUT.
+      const retained = pendingRef.current.filter(row => !indexed.some(item => item.id === row.id) &&
+        (row.id === feedbackSelection.current || row.id === createdIdRef.current || rpeInFlightRef.current.has(row.id)));
+      for (const row of retained) staleIds.current.add(row.id);
+      publishPending([...indexed.filter(row => row.processing_state === 'awaiting_rpe'), ...retained]);
+      activitiesRef.current = activitiesRef.current.map(row => entities.current.get(row.id)?.row ?? row);
+      setActivities(activitiesRef.current);
     }).catch(() => undefined);
     const request = { token: access, promise };
     pendingInFlight.current = request;
     void promise.finally(() => { if (pendingInFlight.current === request) pendingInFlight.current = null; });
     return promise;
-  }, []);
+  }, [indexRows, publishPending]);
 
   const selectWorkout = (workout: PlannedWorkout | null) => {
     setSelectedWorkout(workout);
@@ -139,35 +262,55 @@ export function useActivityController(accessToken: string) {
   const save = async () => {
     if (!alive.current || createInFlightRef.current) return;
     createInFlightRef.current = true;
+    let confirmed = false;
     const access = token.current;
     setBusy(true);
+    mutationError.current = null;
     setError(null);
     try {
       // A completed POST followed by a failed refresh must not create again.
-      if (createdActivityId) { await load(access); return; }
-      if (pendingRpe.length > 0) throw new Error('Rond eerst de RPE van de opgeslagen activiteit af.');
-      const created = await createActivity(access, idempotencyKey, activityCreateInput({
-        selectedWorkout, selectedExternal, discipline, duration, distance, startedAt, athleteTimezone,
-      }));
+      if (createdIdRef.current) { confirmed = true; await load(access, true); return; }
+      if (pendingRef.current.length > 0 && !createAttempt.current) throw new Error('Rond eerst de RPE van de opgeslagen activiteit af.');
+      const attempt = createAttempt.current ?? {
+        key: idempotencyKey,
+        input: activityCreateInput({ selectedWorkout, selectedExternal, discipline, duration, distance, startedAt, athleteTimezone }),
+      };
+      createAttempt.current = attempt;
+      const created = await createActivity(access, attempt.key, attempt.input);
       if (!alive.current) return;
-      setCreatedActivityId(created.id);
+      confirmed = true;
+      createdIdRef.current = created.processing_state === 'awaiting_rpe' ? created.id : null;
+      setCreatedActivityId(createdIdRef.current);
+      if (created.processing_state === 'complete') {
+        createAttempt.current = null;
+        setIdempotencyKey(newIdempotencyKey());
+      }
+      ++historySequence.current;
+      ++pendingSequence.current;
+      publishActivity(created);
       setSelectedWorkout(null);
       setSelectedExternal(null);
       setStartedAt(new Date().toISOString());
-      await load(access);
+      await load(access, true);
     } catch (caught) {
-      if (alive.current) setError(caught instanceof Error ? caught.message : 'De activiteit kon niet worden opgeslagen.');
+      if (alive.current) {
+        const message = caught instanceof Error ? caught.message : 'De activiteit kon niet worden opgeslagen.';
+        mutationError.current = confirmed ? null : message;
+        setError(message);
+      }
     } finally {
       createInFlightRef.current = false;
-      if (alive.current) setBusy(false);
+      if (alive.current) setBusy(createInFlightRef.current || rpeInFlightRef.current.size > 0);
     }
   };
 
-  const saveRpe = async (activityId: string, rpe: number) => {
-    if (!alive.current || rpeInFlightRef.current.has(activityId)) return;
+  const saveRpe = async (activityId: string, rpe: number): Promise<boolean> => {
+    if (!alive.current || rpeInFlightRef.current.has(activityId)) return false;
+    let confirmed = false;
     rpeInFlightRef.current.add(activityId);
     const access = token.current;
     setBusy(true);
+    mutationError.current = null;
     setError(null);
     try {
       const rawHeartRate = heartRateByActivity[activityId]?.trim() ?? '';
@@ -175,21 +318,50 @@ export function useActivityController(accessToken: string) {
       if (averageHeartRate !== undefined && (!Number.isInteger(averageHeartRate) || averageHeartRate < 20 || averageHeartRate > 260)) {
         throw new Error('Vul een gemiddelde hartslag tussen 20 en 260 bpm in.');
       }
-      const activity = activities.find(candidate => candidate.id === activityId);
-      if (!activity) throw new Error('De activiteit is niet meer beschikbaar.');
-      await submitActivityRpeWithRefresh(access, activity, rpe, averageHeartRate);
-      if (!alive.current) return;
-      if (createdActivityId === activityId) {
+      const cached = entities.current.get(activityId)?.row;
+      const intendedPending = !cached || cached.processing_state === 'awaiting_rpe';
+      let activity = cached;
+      if (!activity || staleIds.current.has(activityId)) {
+        const resolved = await getActivity(access, activityId);
+        if (!alive.current) return false;
+        if (!resolved || resolved.id !== activityId || !['awaiting_rpe', 'complete'].includes(resolved.processing_state) ||
+          typeof resolved.started_at !== 'string' || typeof resolved.timezone !== 'string' ||
+          (resolved.rpe !== null && typeof resolved.rpe !== 'number')) throw new Error('De activiteit kon niet betrouwbaar worden geladen.');
+        // Prefer a newer owner read if one completed while resolution was pending.
+        const newer = entities.current.get(activityId)?.row;
+        activity = newer && newer !== cached && !staleIds.current.has(activityId) ? newer : resolved;
+        publishActivity(activity);
+        if (cached && cached.rpe !== activity.rpe && !intendedPending) throw new Error('De activiteit is intussen gewijzigd. Controleer de opgeslagen RPE.');
+      }
+      if (intendedPending && activity.processing_state !== 'awaiting_rpe') throw new Error('Deze activiteit is intussen verwerkt. Controleer de opgeslagen RPE.');
+      if (!alive.current) return false;
+      const updated = await submitActivityRpeWithRefresh(access, activity, rpe, averageHeartRate);
+      if (!alive.current) return false;
+      ++historySequence.current;
+      ++pendingSequence.current;
+      publishActivity(updated);
+      confirmed = true;
+      if (createdIdRef.current === activityId) {
+        createdIdRef.current = null;
         setCreatedActivityId(null);
+        createAttempt.current = null;
         setIdempotencyKey(newIdempotencyKey());
       }
       setHeartRateByActivity(current => { const next = { ...current }; delete next[activityId]; return next; });
-      await load(access);
+      await load(access, true);
+      return true;
     } catch (caught) {
-      if (alive.current) setError(caught instanceof Error ? caught.message : 'RPE opslaan is mislukt.');
+      if (alive.current) {
+        const status = caught && typeof caught === 'object' && 'status' in caught ? caught.status : null;
+        if (status === 404) forgetActivity(activityId);
+        const message = caught instanceof Error ? caught.message : 'RPE opslaan is mislukt.';
+        mutationError.current = confirmed ? null : message;
+        setError(message);
+      }
+      return confirmed;
     } finally {
       rpeInFlightRef.current.delete(activityId);
-      if (alive.current) setBusy(false);
+      if (alive.current) setBusy(createInFlightRef.current || rpeInFlightRef.current.size > 0);
     }
   };
 
@@ -197,17 +369,19 @@ export function useActivityController(accessToken: string) {
     if (!alive.current) return;
     const access = token.current;
     setBusy(true);
+    mutationError.current = null;
     setError(null);
-    try { await confirmActivityMatch(access, activityId, workoutId); if (alive.current) await load(access); }
+    try { await confirmActivityMatch(access, activityId, workoutId); if (alive.current) await load(access, true); }
     catch (caught) { if (alive.current) setError(caught instanceof Error ? caught.message : 'De koppeling kon niet worden bevestigd.'); }
-    finally { if (alive.current) setBusy(false); }
+    finally { if (alive.current) setBusy(createInFlightRef.current || rpeInFlightRef.current.size > 0); }
   };
 
   return {
     activities, workouts, externalActivities, selectedWorkout, selectedExternal,
     discipline, setDiscipline, duration, setDuration, distance, setDistance, startedAt, setStartedAt,
-    athleteTimezone, busy, error, heartRateByActivity, setHeartRateByActivity, pendingRpe, feedbackActivity,
+    athleteTimezone, busy, refreshing, error, heartRateByActivity, setHeartRateByActivity, pendingRpe, feedbackActivity,
     selectWorkout, selectExternal, save, saveRpe, confirmMatch, ensureActivitiesLoaded, refreshPendingRpe,
+    refreshActivities, setActivitiesFocused, invalidateActivities,
   };
 }
 

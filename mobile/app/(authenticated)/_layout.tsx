@@ -49,13 +49,20 @@ function AuthenticatedContent({ accessToken }: { accessToken: string }) {
 }
 
 function PendingRpeReminder({ accessToken, v2 }: { accessToken: string; v2: boolean }) {
-  const { pendingRpe, refreshPendingRpe } = useActivityFlow();
+  const { pendingRpe, refreshPendingRpe, setActivitiesFocused } = useActivityFlow();
   const count = pendingRpe.length;
   const pathname = usePathname();
-  useEffect(() => { void refreshPendingRpe(pathname); }, [pathname, accessToken, refreshPendingRpe]);
+  const presentation = useOptionalPlanningPresentation();
+  const trainingReady = presentation !== null;
+  useEffect(() => {
+    // The retained shell owns route focus; rebuilding a navigator on the same
+    // Activities URL must not start another full read.
+    if (pathname !== '/activities') setActivitiesFocused(false);
+    else if (trainingReady) setActivitiesFocused(true);
+    void refreshPendingRpe(pathname);
+  }, [pathname, accessToken, trainingReady, refreshPendingRpe, setActivitiesFocused]);
   const { language, t } = useLanguage();
   const router = useRouter();
-  const presentation = useOptionalPlanningPresentation();
   const label = t('rpe.reminder', { count, suffix: count === 1 ? '' : language === 'nl' ? 'en' : 's', verbSuffix: count === 1 ? '' : 'en' });
   const openFeedback = () => { if (presentation?.rootVersion === 'v2') { presentation.setActivityView('feedback'); presentation.setActivityCorrectionId(null); router.navigate('/activities'); } else router.push('/activities'); };
   if (count > 0 && v2) return <PendingRpeBanner label={label} disabled={!!presentation?.navigationLocked} onPress={openFeedback} />;

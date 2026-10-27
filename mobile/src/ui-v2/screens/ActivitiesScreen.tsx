@@ -31,8 +31,9 @@ export function ActivityStatus({ busy, error }: { busy: boolean; error: string |
   </>;
 }
 
-export function ActivitiesScreen({ rows, pending, busy, error, controls, onBack, onProfile, onAdd, onFeedback, onCorrect, onMatch }: {
+export function ActivitiesScreen({ rows, pending, busy, refreshing = false, onRefresh, error, controls, onBack, onProfile, onAdd, onFeedback, onCorrect, onMatch }: {
   rows: readonly ActivityRow[]; pending: ActivityViewModel | null; busy: boolean; error: string | null;
+  refreshing?: boolean; onRefresh?: () => Promise<void>;
   controls: ReactNode; onBack: () => void; onProfile: () => void; onAdd: () => void;
   onFeedback: () => void; onCorrect: (id: string) => void; onMatch: (id: string, workoutId: string) => Promise<void>;
 }) {
@@ -40,7 +41,7 @@ export function ActivitiesScreen({ rows, pending, busy, error, controls, onBack,
   const { width, fontScale } = useWindowDimensions();
   const stacked = width < 390 || fontScale >= 1.5;
   return <ShellSafeArea style={styles.frame} testID="v2-activities">
-    <FlashList data={rows} keyExtractor={row => row.activity.id} keyboardShouldPersistTaps="handled"
+    <FlashList testID="activity-history-list" refreshing={refreshing} onRefresh={onRefresh} data={rows} keyExtractor={row => row.activity.id} keyboardShouldPersistTaps="handled"
       contentContainerStyle={styles.content} extraData={busy}
       ItemSeparatorComponent={() => <View style={{ height: space[16] }} />}
       ListHeaderComponent={<View style={styles.stack}>
@@ -52,6 +53,7 @@ export function ActivitiesScreen({ rows, pending, busy, error, controls, onBack,
           <View pointerEvents="none" style={styles.landscape}><HeaderLandscape compact variant="treesRiver" /></View>
         </View>
         <ActivityStatus busy={busy} error={error} />
+        {error && onRefresh ? <Button label={t('shell.retry')} busy={refreshing} onPress={onRefresh} /> : null}
         {pending ? <Card elevated style={styles.card} testID="activity-pending">
           <Text variant="sectionTitle" accessibilityRole="header">{t('rpe.awaiting')}</Text>
           <ActivitySummary activity={pending} />

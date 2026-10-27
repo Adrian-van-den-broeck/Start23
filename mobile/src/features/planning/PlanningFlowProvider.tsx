@@ -1,5 +1,6 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useRef } from 'react';
 
+import { useOptionalActivityFlow } from '../activities/ActivityFlowProvider';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import type { OnboardingState, WeeklyPlan } from '../../api/types';
 import { useCalendarController } from '../calendar/useCalendarController';
@@ -21,6 +22,16 @@ function PlanningOwner({ accessToken, athleteIdentity, initialOnboarding, childr
   const calendar = useCalendarController(accessToken, language, controller.setError);
   const { invalidateCalendarRange, replaceApprovedPlan, acceptApprovedPlan } = calendar;
   const previousPlan = useRef<WeeklyPlan | null>(null);
+  const activityFlow = useOptionalActivityFlow();
+  const invalidateActivities = activityFlow?.invalidateActivities;
+  const active = controller.activePlan;
+  const approvedIdentity = active ? `${active.id}:${active.revision_id}:${active.revision}` : null;
+  const previousApprovedIdentity = useRef<string | null>(null);
+  useEffect(() => {
+    if (approvedIdentity && previousApprovedIdentity.current !== approvedIdentity &&
+      (previousApprovedIdentity.current !== null || controller.taskHandoff?.plan === active)) invalidateActivities?.();
+    if (approvedIdentity) previousApprovedIdentity.current = approvedIdentity;
+  }, [approvedIdentity, active, controller.taskHandoff, invalidateActivities]);
   // Approved calendar data is reusable across roots, but a changed approved
   // plan context invalidates it. Pending draft edits alone do not reload it.
   useEffect(() => {

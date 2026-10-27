@@ -28,6 +28,8 @@ import { colors, radius, spacing } from '../theme/tokens';
 
 type ActivityScreenProps = {
   onBack: () => void;
+  active?: boolean;
+  entryManaged?: boolean;
   onNavigationBusyChange?: (busy: boolean) => void;
   onOpenProfile?: () => void;
   onSignOut: () => Promise<void>;
@@ -108,7 +110,7 @@ function resultMessage(activity: CompletedActivity, language: AppLanguage): stri
 }
 
 export function ActivityScreen({
-  onBack,
+  onBack, active = true, entryManaged = false,
   onNavigationBusyChange,
   onOpenProfile,
   onSignOut,
@@ -120,11 +122,15 @@ export function ActivityScreen({
       : { swim: 'Swimming', bike: 'Cycling', run: 'Running' };
   const { activities, workouts, externalActivities, selectedWorkout, selectedExternal,
     discipline, setDiscipline, duration, setDuration, distance, setDistance, startedAt, setStartedAt,
-    athleteTimezone, busy, error, heartRateByActivity, setHeartRateByActivity, pendingRpe,
-    feedbackActivity, selectWorkout, selectExternal, save, saveRpe, confirmMatch, ensureActivitiesLoaded,
+    athleteTimezone, busy, refreshing, refreshActivities, setActivitiesFocused, error, heartRateByActivity, setHeartRateByActivity, pendingRpe,
+    feedbackActivity, selectWorkout, selectExternal, save, saveRpe, confirmMatch,
   } = useActivityFlow();
   const [editingRpeActivityId, setEditingRpeActivityId] = useState<string | null>(null);
-  useEffect(() => { void ensureActivitiesLoaded(); }, [ensureActivitiesLoaded]);
+  useEffect(() => {
+    if (entryManaged) return;
+    setActivitiesFocused(active);
+    return () => setActivitiesFocused(false);
+  }, [active, entryManaged, setActivitiesFocused]);
   useEffect(() => {
     onNavigationBusyChange?.(busy);
     return () => onNavigationBusyChange?.(false);
@@ -150,8 +156,11 @@ export function ActivityScreen({
         style={styles.keyboard}
       >
       <FlashList
+        testID="activity-history-list"
         contentContainerStyle={styles.content}
         data={activities}
+        refreshing={refreshing}
+        onRefresh={() => { void refreshActivities(); }}
         extraData={{ busy, editingRpeActivityId, heartRateByActivity }}
         ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
         keyboardShouldPersistTaps="handled"
@@ -407,8 +416,7 @@ export function ActivityScreen({
                       discipline={activity.discipline}
                       label="Gecorrigeerd gevoel"
                       onSelect={(rpe) => {
-                        setEditingRpeActivityId(null);
-                        void saveRpe(activity.id, rpe);
+                        void saveRpe(activity.id, rpe).then(saved => { if (saved) setEditingRpeActivityId(null); });
                       }}
                       selectedValue={activity.rpe}
                     />
