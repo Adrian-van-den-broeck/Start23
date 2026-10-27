@@ -14,7 +14,7 @@ jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: j
 jest.mock('../api/client', () => ({
   approvePlanProposal: jest.fn(), createSwipeWeekDraft: jest.fn(), editPendingWorkout: jest.fn(),
   getCalendar: jest.fn(), getOnboarding: jest.fn(), getPendingWorkoutAlternatives: jest.fn(),
-  getSwipeWeekDraft: jest.fn(), getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(),
+  getSwipeWeekDraft: jest.fn(), discoverPlanning: jest.fn(), getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(),
   movePlannedWorkout: jest.fn(), placeSwipeWeekWorkout: jest.fn(), rejectPlanProposal: jest.fn(),
   submitSwipeWeekDraft: jest.fn(), transitionSwipeWeekDraft: jest.fn(), validatePlanLayout: jest.fn(),
 }));
@@ -44,10 +44,11 @@ const plan: WeeklyPlan = {
 };
 
 beforeEach(() => {
+  jest.mocked(api.discoverPlanning).mockResolvedValue({ active: null, pending: null, draft: null });
   jest.clearAllMocks();
   process.env.EXPO_PUBLIC_UI_VERSION = 'v1';
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => {
-    if (key === 'start23.latest-plan-id') return 'plan';
+    if (key === 'start23.athlete-a.latest-plan-id') return 'plan';
     if (key === 'start23.language-preference') return 'en';
     return null;
   });
@@ -59,7 +60,7 @@ afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.restoreAllMock
 
 test.each(['Week', 'Calendar'])('%s opens exact owned snapshot; comparison and dismissal retain origin without I/O', async (origin) => {
   const spy = jest.spyOn(boundary, 'WorkoutDetailBoundary');
-  const view = await render(<SafeAreaProvider initialMetrics={{ frame: { x: 0, y: 0, width: 360, height: 800 }, insets: { top: 24, bottom: 24, left: 0, right: 0 } }}><LanguageProvider><UiVersionProvider><PlanningScreen accessToken="fixture-token"
+  const view = await render(<SafeAreaProvider initialMetrics={{ frame: { x: 0, y: 0, width: 360, height: 800 }, insets: { top: 24, bottom: 24, left: 0, right: 0 } }}><LanguageProvider><UiVersionProvider><PlanningScreen athleteIdentity="athlete-a" accessToken="fixture-token"
     onSignOut={jest.fn(async () => undefined)} onBackToOnboarding={jest.fn()} onOpenActivities={jest.fn()}
     onOpenCheckIn={jest.fn()} onOpenIntegrations={jest.fn()} onOpenProfile={jest.fn()} onOpenZoneProfile={jest.fn()} />
   </UiVersionProvider></LanguageProvider></SafeAreaProvider>);

@@ -15,7 +15,7 @@ jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: j
 jest.mock('../api/client', () => ({
   approvePlanProposal: jest.fn(), createSwipeWeekDraft: jest.fn(), editPendingWorkout: jest.fn(),
   getCalendar: jest.fn(), getOnboarding: jest.fn(), getPendingWorkoutAlternatives: jest.fn(),
-  getSwipeWeekDraft: jest.fn(), getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(),
+  getSwipeWeekDraft: jest.fn(), discoverPlanning: jest.fn(), getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(),
   movePlannedWorkout: jest.fn(), placeSwipeWeekWorkout: jest.fn(), rejectPlanProposal: jest.fn(),
   submitSwipeWeekDraft: jest.fn(), transitionSwipeWeekDraft: jest.fn(), validatePlanLayout: jest.fn(),
 }));
@@ -63,6 +63,7 @@ beforeEach(() => {
   process.env.EXPO_PUBLIC_UI_VERSION = 'v2';
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : null);
   jest.mocked(api.getOnboarding).mockResolvedValue(onboarding);
+  jest.mocked(api.discoverPlanning).mockResolvedValue({ active: null, pending: null, draft: null });
   jest.mocked(api.getWeeklyPlan).mockImplementation(async (_token, _id, revision) => revision === 2 ? activePlan : pendingPlan);
   jest.mocked(api.getCalendar).mockResolvedValue({ from_date: '2026-10-05', to_date: '2026-10-12', workouts: [workout], rest_days: [] });
   jest.mocked(api.getPendingWorkoutAlternatives).mockResolvedValue({ plan_id: pendingPlan.id, revision: 3, proposal_id: proposal.id, workout_id: workout.id, alternatives: [], can_remove: false });
@@ -71,7 +72,7 @@ afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.restoreAllMock
 function restore(kind: 'plan') {
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) =>
     key === 'start23.language-preference' ? 'en' :
-      key === (kind === 'plan' ? 'start23.latest-plan-id' : 'start23.latest-swipe-draft-id') ? activePlan.id : null);
+      key === (kind === 'plan' ? 'start23.athlete-a.latest-plan-id' : 'start23.athlete-a.latest-swipe-draft-id') ? activePlan.id : null);
 }
 
 

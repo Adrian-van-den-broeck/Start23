@@ -32,6 +32,7 @@ from .schemas import (
     PendingWorkoutAlternativesResponse,
     PendingWorkoutEditRequest,
     PlannedWorkoutMoveRequest,
+    PlanningRecoveryResponse,
     PlanValidationRequest,
     PlanValidationResponse,
     ScheduleProposalRequest,
@@ -302,6 +303,23 @@ async def submit_swipe_week_draft(
             draft_id,
             submission,
         )
+    except Exception as error:
+        raise_planning_error(error)
+
+
+@router.get(
+    "/weekly-plans/recovery",
+    response_model=PlanningRecoveryResponse,
+    responses=error_responses,
+)
+async def discover_planning(
+    access_token: Annotated[str, Depends(get_access_token)],
+    identity: Annotated[AuthenticatedAthlete, Depends(get_authenticated_athlete)],
+    service: Annotated[PlanningService, Depends(get_planning_service)],
+) -> PlanningRecoveryResponse:
+    """Discover bounded authenticated recovery state without generating a plan."""
+    try:
+        return await service.discover_planning(access_token, identity.athlete_id)
     except Exception as error:
         raise_planning_error(error)
 

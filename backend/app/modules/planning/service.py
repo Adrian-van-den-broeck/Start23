@@ -66,7 +66,13 @@ from .domain import (
     remaining_workout_deck,
     validate_manual_schedule,
 )
-from .repository import JsonObject, PlanningRepository, PlanningRepositoryError
+from .repository import (
+    JsonObject,
+    PlanningRepository,
+    PlanningRepositoryError,
+    PlanningRepositoryNotFoundError,
+    PlanningRepositoryUnavailableError,
+)
 from .schemas import (
     CalendarResponse,
     ChangeProposalSummaryResponse,
@@ -74,10 +80,12 @@ from .schemas import (
     PendingWorkoutEditRequest,
     PlannedWorkoutMoveRequest,
     PlannedWorkoutResponse,
+    PlanningRecoveryResponse,
     PlanProposalDecisionResponse,
     PlanValidationRequest,
     PlanValidationResponse,
     PlanWarningResponse,
+    RecoveryDraftLocator,
     RestDayResponse,
     ScheduleProposalRequest,
     SwipeDraftCreateRequest,
@@ -2165,6 +2173,62 @@ class PlanningService:
                 )
             ),
         )
+
+    async def discover_planning(
+        self, access_token: str, athlete_id: UUID
+    ) -> PlanningRecoveryResponse:
+        """Resolve exact public snapshots; inconsistent/racing reads fail closed."""
+        try:
+            found = await self._repository.discover_planning(access_token, athlete_id)
+            active_row, pending_row = found["active"], found["pending"]
+            active = None
+            pending = None
+            if active_row is not None:
+                active = await self.get_plan(
+                    access_token, UUID(active_row["id"]), active_row["active_revision"]
+                )
+                if (
+                    str(active.id) != active_row["id"]
+                    or active.revision != active_row["active_revision"]
+                    or active.revision_state != "active"
+                    or active.state != "active"
+                    or active.revision != active.active_revision
+                    or active.week_start.isoformat() != active_row["week_start"]
+                ):
+                    raise PlanningRepositoryUnavailableError
+            if pending_row is not None:
+                pending = await self.get_plan(
+                    access_token,
+                    UUID(pending_row["plan_id"]),
+                    pending_row["revision_number"],
+                )
+                if (
+                    str(pending.id) != pending_row["plan_id"]
+                    or pending.revision != pending_row["revision_number"]
+                    or pending.revision_state != "pending_approval"
+                    or str(pending.revision_id) != pending_row["id"]
+                    or pending.proposal is None
+                    or pending.proposal.state != "pending"
+                    or pending.proposal.kind != "plan_revision"
+                    or pending.proposal.target_plan_revision_id != pending.revision_id
+                    or pending.proposal.base_plan_revision
+                    != (pending.active_revision or 0)
+                ):
+                    raise PlanningRepositoryUnavailableError
+            draft = (
+                RecoveryDraftLocator.model_validate(found["draft"])
+                if found["draft"]
+                else None
+            )
+            return PlanningRecoveryResponse(active=active, pending=pending, draft=draft)
+        except (
+            ValueError,
+            TypeError,
+            KeyError,
+            PlanningRepositoryNotFoundError,
+        ) as error:
+            # Never serialize stored payloads/Pydantic diagnostics into public errors.
+            raise PlanningRepositoryUnavailableError from error
 
     async def get_plan(
         self,

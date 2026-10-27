@@ -570,3 +570,16 @@ describe('mobile API transport contracts', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
+
+
+test('A6 discovery sends only the bearer token and no client owner or mutation body', async () => {
+  const { client, fetchMock } = loadClient();
+  const found = { active: approvedNext, pending: pendingNext, draft: null };
+  fetchMock.mockResolvedValueOnce(response(200, found));
+  await expect(client.discoverPlanning('athlete-token')).resolves.toEqual(found);
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+  expect(fetchMock.mock.calls[0][0]).toBe(`${API_URL}/api/v1/weekly-plans/recovery`);
+  expect(fetchMock.mock.calls[0][1]?.headers).toEqual(headers);
+  expect(fetchMock.mock.calls[0][1]?.body).toBeUndefined();
+  expect(fetchMock.mock.calls[0][1]?.method).toBeUndefined();
+});

@@ -1,5 +1,5 @@
 import * as Haptics from 'expo-haptics';
-import { useCallback, useRef, useState, type MutableRefObject } from 'react';
+import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 'react';
 
 import { editPendingWorkout, getPendingWorkoutAlternatives } from '../../api/client';
 import type { PendingWorkoutAlternatives, WeeklyPlan } from '../../api/types';
@@ -22,10 +22,19 @@ export function usePendingWorkoutActions(
   currentPlan.current = plan;
   const requests = useRef<Record<string, { lifetime: number; plan: WeeklyPlan; }>>({});
   const loadedFor = useRef<Record<string, WeeklyPlan>>({});
+  const alive = useRef(true);
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+      currentPlan.current = null;
+      requests.current = {};
+    };
+  }, []);
   const planId = plan?.id;
   const revision = plan?.revision;
   const setLoading = useCallback((workoutId: string, loading: boolean, lifetime: number) => {
-    if ((lifetimes.current[workoutId] ?? 0) !== lifetime) return;
+    if (!alive.current || (lifetimes.current[workoutId] ?? 0) !== lifetime) return;
     setEditors((current) => ({
       ...current,
       [workoutId]: { options: current[workoutId]?.options ?? null, loading },

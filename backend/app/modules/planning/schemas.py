@@ -454,6 +454,23 @@ class SwipeWeekDraftResponse(PublicPlanningModel):
     proposal_id: UUID | None = None
 
 
+class RecoveryDraftLocator(PublicPlanningModel):
+    """Exact identity of one still-open owner-visible draft."""
+
+    id: UUID
+    revision: int = Field(ge=1)
+    state: Literal["collecting", "placement"]
+    week_start: date
+
+
+class PlanningRecoveryResponse(PublicPlanningModel):
+    """Separate authoritative active/pending snapshots and an open draft locator."""
+
+    active: WeeklyPlanResponse | None
+    pending: WeeklyPlanResponse | None
+    draft: RecoveryDraftLocator | None
+
+
 class PlanValidationWorkoutInput(PublicPlanningModel):
     """One existing workout position to validate qualitatively."""
 

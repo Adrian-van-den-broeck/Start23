@@ -18,6 +18,7 @@ export function currentWeekStart(today: string): string {
 }
 export function weekHomeViewModel(input: {
   plan: WeeklyPlan | null; activePlan: WeeklyPlan | null; draft: SwipeWeekDraft | null;
+  pendingTaskPlan?: WeeklyPlan | null;
   today: string; resumeState: 'loading' | 'ready' | 'failed'; activeReadState: 'loading' | 'ready' | 'failed';
 }): WeekHomeViewModel {
   const { plan, draft, today } = input;
@@ -25,7 +26,8 @@ export function weekHomeViewModel(input: {
   const supplied = input.activePlan;
   const active = supplied?.revision_state === 'active' && supplied.active_revision === supplied.revision &&
     (!plan || (plan.id === supplied.id && plan.active_revision === supplied.revision && plan.week_start === supplied.week_start)) ? supplied : null;
-  const pending = plan?.revision_state === 'pending_approval' && plan.proposal?.state === 'pending';
+  const proposalPlan = input.pendingTaskPlan ?? plan;
+  const pending = proposalPlan?.revision_state === 'pending_approval' && proposalPlan.proposal?.state === 'pending';
   const weekStart = active?.week_start ?? plan?.week_start ?? draft?.week_start ?? currentWeekStart(today);
   const known = !!(plan || draft || active);
   const readState = input.resumeState === 'loading' || input.activeReadState === 'loading' ? 'loading'

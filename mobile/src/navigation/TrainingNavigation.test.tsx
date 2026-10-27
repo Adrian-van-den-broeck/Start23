@@ -30,7 +30,7 @@ jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: j
 jest.mock('../api/client', () => ({
   listActivities: jest.fn(), listPlannedExternalActivities: jest.fn(), createActivity: jest.fn(), submitActivityRpeWithRefresh: jest.fn(), confirmActivityMatch: jest.fn(), approvePlanProposal: jest.fn(), createSwipeWeekDraft: jest.fn(), editPendingWorkout: jest.fn(),
   getCalendar: jest.fn(), getOnboarding: jest.fn(), getPendingWorkoutAlternatives: jest.fn(), getSwipeWeekDraft: jest.fn(),
-  getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(), movePlannedWorkout: jest.fn(), placeSwipeWeekWorkout: jest.fn(),
+  discoverPlanning: jest.fn(), getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(), movePlannedWorkout: jest.fn(), placeSwipeWeekWorkout: jest.fn(),
   rejectPlanProposal: jest.fn(), submitSwipeWeekDraft: jest.fn(), transitionSwipeWeekDraft: jest.fn(), validatePlanLayout: jest.fn(),
   startWeeklyCheckIn: jest.fn(), getInjuryRestrictions: jest.fn(), createCheckInPlanProposal: jest.fn(),
 }));
@@ -123,10 +123,11 @@ beforeEach(() => {
   jest.clearAllMocks(); process.env.EXPO_PUBLIC_UI_VERSION = 'v2';
   mockAuth.session = { access_token: 'token-a', user: { id: 'athlete-a' } };
   for (const method of Object.values(api).filter(jest.isMockFunction)) method.mockReset();
-  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.latest-plan-id' ? activePlan.id : null);
+  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.athlete-a.latest-plan-id' ? activePlan.id : null);
   jest.mocked(SecureStore.setItemAsync).mockResolvedValue(undefined);
   jest.mocked(SecureStore.deleteItemAsync).mockResolvedValue(undefined);
   jest.mocked(api.getOnboarding).mockResolvedValue({ ...onboarding, ...activityOnboarding, current_step: 'completed' });
+  jest.mocked(api.discoverPlanning).mockResolvedValue({ active: null, pending: null, draft: null });
   jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
   jest.mocked(api.listActivities).mockResolvedValue([]);
   jest.mocked(api.listPlannedExternalActivities).mockResolvedValue([]);
@@ -143,7 +144,7 @@ test('A4 actual check-in route returns authoritative next Week, Calendar and a r
   // Native navigation animations need elapsed wall time; calendar constructors
   // remain fixed to the synthetic athlete's current day.
   jest.spyOn(Date, 'now').mockImplementation(animationNow);
-  const storage = new Map([['start23.language-preference', 'en'], ['start23.latest-plan-id', activePlan.id]]);
+  const storage = new Map([['start23.language-preference', 'en'], ['start23.athlete-a.latest-plan-id', activePlan.id]]);
   const server = new Map([[activePlan.id, activePlan]]);
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async key => storage.get(key) ?? null);
   jest.mocked(SecureStore.setItemAsync).mockImplementation(async (key, value) => { storage.set(key, value); });
@@ -171,14 +172,14 @@ test('A4 actual check-in route returns authoritative next Week, Calendar and a r
   await view.findByText('Klaar voor het voorstel');
   await fireEvent.press(view.getByRole('button', { name: 'Maak planvoorstel' }));
   await view.findByText('Voorstel voor ' + pendingNext.week_start);
-  expect(storage.get('start23.latest-plan-id')).toBe(activePlan.id);
+  expect(storage.get('start23.athlete-a.latest-plan-id')).toBe(activePlan.id);
   expect(api.approvePlanProposal).not.toHaveBeenCalled();
   await fireEvent.press(view.getByRole('button', { name: 'Voorstel goedkeuren' }));
   await view.findByText(nextWorkout.name);
   expect(view.getByTestId('path')).toHaveTextContent('/planning');
   expect(flow.plan).toBe(approvedNext); expect(flow.activePlan).toBe(approvedNext);
   expect(flow.setWeekStart).toBe(owner); expect(calendar.loadCalendarRange).toBe(reader);
-  expect(storage.get('start23.latest-plan-id')).toBe(approvedNext.id);
+  expect(storage.get('start23.athlete-a.latest-plan-id')).toBe(approvedNext.id);
   expect(api.approvePlanProposal).toHaveBeenCalledWith('token-a', nextProposal.id, 0);
   expect(api.getWeeklyPlan).toHaveBeenLastCalledWith('token-a', approvedNext.id, 1);
   await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
@@ -432,7 +433,7 @@ test('Calendar detail holds the exact loaded object and returns Month/date/scrol
 });
 
 test('resumed draft and revisions survive tabs and safe V1/V2 navigator replacement', async () => {
-  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.latest-swipe-draft-id' ? draft.id : null);
+  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.athlete-a.latest-swipe-draft-id' ? draft.id : null);
   jest.mocked(api.getSwipeWeekDraft).mockResolvedValue(draft);
   const view = await renderRouter(routes, { initialUrl: '/planning' });
   await view.findByText('Choose your workouts');
@@ -452,7 +453,7 @@ test('resumed draft and revisions survive tabs and safe V1/V2 navigator replacem
 });
 
 test('Slice 4A task transition locks roots and comparison, then re-entry across roots retains the exact returned draft', async () => {
-  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.latest-swipe-draft-id' ? draft.id : null);
+  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.athlete-a.latest-swipe-draft-id' ? draft.id : null);
   jest.mocked(api.getSwipeWeekDraft).mockResolvedValue(draft);
   const view = await renderRouter(routes, { initialUrl: '/planning' });
   await view.findByText('Choose your workouts');
@@ -487,7 +488,7 @@ test('Slice 4A task transition locks roots and comparison, then re-entry across 
 
 test('Slice 4A automatic submit restores root tabs directly at pending Week without mounting proposal review', async () => {
   const ready = { ...draft, state: 'placement' as const, current_candidate: null };
-  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.latest-swipe-draft-id' ? draft.id : null);
+  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.athlete-a.latest-swipe-draft-id' ? draft.id : null);
   jest.mocked(api.getSwipeWeekDraft).mockResolvedValue(ready);
   const pending = { ...pendingPlan, active_revision: null };
   jest.mocked(api.submitSwipeWeekDraft).mockResolvedValue({ plan: pending, proposal: pending.proposal! });
@@ -716,7 +717,7 @@ test('changed approved revision invalidates Calendar; hidden Calendar does not r
 
 test('V1 swipe animation locks presentation switching before its deferred write', async () => {
   process.env.EXPO_PUBLIC_UI_VERSION = 'v1';
-  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.latest-swipe-draft-id' ? draft.id : null);
+  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.athlete-a.latest-swipe-draft-id' ? draft.id : null);
   jest.mocked(api.getSwipeWeekDraft).mockResolvedValue(draft);
   const timing = Animated.timing;
   jest.spyOn(Animated, 'timing').mockImplementation((value, config) => {

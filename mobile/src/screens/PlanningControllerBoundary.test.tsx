@@ -12,7 +12,7 @@ jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: j
 jest.mock('../api/client', () => ({
   approvePlanProposal: jest.fn(), createSwipeWeekDraft: jest.fn(), editPendingWorkout: jest.fn(),
   getCalendar: jest.fn(), getOnboarding: jest.fn(), getPendingWorkoutAlternatives: jest.fn(),
-  getSwipeWeekDraft: jest.fn(), getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(),
+  getSwipeWeekDraft: jest.fn(), discoverPlanning: jest.fn(), getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(),
   movePlannedWorkout: jest.fn(), placeSwipeWeekWorkout: jest.fn(), rejectPlanProposal: jest.fn(),
   submitSwipeWeekDraft: jest.fn(), transitionSwipeWeekDraft: jest.fn(), validatePlanLayout: jest.fn(),
 }));
@@ -46,11 +46,12 @@ beforeEach(() => {
   jest.mocked(SecureStore.getItemAsync).mockResolvedValue(null);
   process.env.EXPO_PUBLIC_UI_VERSION = 'v1';
   jest.mocked(api.getOnboarding).mockResolvedValue(onboarding);
+  jest.mocked(api.discoverPlanning).mockResolvedValue({ active: null, pending: null, draft: null });
   jest.mocked(api.getWeeklyPlan).mockImplementation(async (_token, _id, revision) => revision === 2 ? activePlan : pendingPlan);
 });
 function resume(kind: 'plan' | 'draft') {
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) =>
-    key === (kind === 'plan' ? 'start23.latest-plan-id' : 'start23.latest-swipe-draft-id') ? (kind === 'plan' ? pendingPlan.id : draft.id) : null);
+    key === (kind === 'plan' ? 'start23.athlete-a.latest-plan-id' : 'start23.athlete-a.latest-swipe-draft-id') ? (kind === 'plan' ? pendingPlan.id : draft.id) : null);
 }
 
 test('V1 create action uses shared owner and preserves confirmation controls', async () => {

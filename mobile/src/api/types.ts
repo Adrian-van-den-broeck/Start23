@@ -858,3 +858,9 @@ export type PolarImportRun = {
   created_at: string;
   completed_at: string | null;
 };
+
+export type PlanningRecovery = {
+  active: WeeklyPlan | null;
+  pending: WeeklyPlan | null;
+  draft: { id: string; revision: number; state: 'collecting' | 'placement'; week_start: string } | null;
+};

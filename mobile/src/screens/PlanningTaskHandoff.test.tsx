@@ -19,7 +19,7 @@ jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: j
 jest.mock('expo-localization', () => ({ getLocales: () => [{ languageCode: 'en' }] }));
 jest.mock('../api/client', () => ({
   approvePlanProposal: jest.fn(), createSwipeWeekDraft: jest.fn(), editPendingWorkout: jest.fn(), getCalendar: jest.fn(),
-  getOnboarding: jest.fn(), getPendingWorkoutAlternatives: jest.fn(), getSwipeWeekDraft: jest.fn(), getWeeklyPlan: jest.fn(),
+  getOnboarding: jest.fn(), getPendingWorkoutAlternatives: jest.fn(), getSwipeWeekDraft: jest.fn(), discoverPlanning: jest.fn(), getWeeklyPlan: jest.fn(),
   markGoalAchieved: jest.fn(), movePlannedWorkout: jest.fn(), placeSwipeWeekWorkout: jest.fn(), rejectPlanProposal: jest.fn(),
   submitSwipeWeekDraft: jest.fn(), transitionSwipeWeekDraft: jest.fn(), validatePlanLayout: jest.fn(),
   startWeeklyCheckIn: jest.fn(), getInjuryRestrictions: jest.fn(), saveWeeklyCheckInContext: jest.fn(),
@@ -67,12 +67,13 @@ beforeEach(() => {
   for (const method of Object.values(api).filter(jest.isMockFunction)) method.mockReset();
   jest.useFakeTimers({ now: new Date('2026-10-05T12:00:00Z'), doNotFake: ['hrtime', 'nextTick', 'performance', 'queueMicrotask', 'requestAnimationFrame', 'cancelAnimationFrame', 'requestIdleCallback', 'cancelIdleCallback', 'setImmediate', 'clearImmediate', 'setInterval', 'clearInterval', 'setTimeout', 'clearTimeout'] });
   process.env.EXPO_PUBLIC_UI_VERSION = 'v2';
-  stored = new Map([['start23.latest-plan-id', activePlan.id], ['start23.language-preference', 'en']]);
+  stored = new Map([['start23.athlete-a.latest-plan-id', activePlan.id], ['start23.language-preference', 'en']]);
   server = new Map([[activePlan.id, activePlan]]);
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async key => stored.get(key) ?? null);
   jest.mocked(SecureStore.setItemAsync).mockImplementation(async (key, value) => { stored.set(key, value); });
   jest.mocked(SecureStore.deleteItemAsync).mockImplementation(async key => { stored.delete(key); });
   jest.mocked(api.getOnboarding).mockResolvedValue(onboarding);
+  jest.mocked(api.discoverPlanning).mockResolvedValue({ active: null, pending: null, draft: null });
   jest.mocked(api.getWeeklyPlan).mockImplementation(async (_token, id) => {
     const plan = server.get(id); if (!plan) throw new Error('Unknown synthetic plan'); return plan;
   });
@@ -108,7 +109,7 @@ test('WOMBO-005: explicit check-in approval replaces the retained old Week and r
   await view.findByText(nextWorkout.name);
   expect(flow.plan).toBe(approvedNext);
   expect(flow.activePlan).toBe(approvedNext);
-  expect(stored.get('start23.latest-plan-id')).toBe(approvedNext.id);
+  expect(stored.get('start23.athlete-a.latest-plan-id')).toBe(approvedNext.id);
   expect(flow.plan?.workouts.map(item => item.id)).toEqual(['next-workout-1', 'next-workout-2']);
   expect(flow.plan?.revision_id).toBe('next-revision-1');
   expect(flow.plan?.revision).toBe(1);
@@ -128,7 +129,7 @@ test('pending next week remains distinct through navigation away and back; no lo
   const view = await generated();
   expect(flow.plan).toBe(activePlan); expect(flow.activePlan).toBe(activePlan);
   expect(flow.taskHandoff?.plan).toBe(pendingNext);
-  expect(stored.get('start23.latest-plan-id')).toBe(activePlan.id);
+  expect(stored.get('start23.athlete-a.latest-plan-id')).toBe(activePlan.id);
   expect(api.getCalendar).not.toHaveBeenCalled();
   await fireEvent.press(view.getByRole('button', { name: 'Later beslissen' }));
   await view.findByText(workout.name);
@@ -152,7 +153,7 @@ test('failed generation preserves the active week and exact confirmed A3 context
   expect(api.createCheckInPlanProposal).toHaveBeenCalledWith('token-a', savedCheckIn.id);
   expect(api.saveWeeklyCheckInContext).not.toHaveBeenCalled();
   expect(flow.plan).toBe(activePlan); expect(flow.taskHandoff).toBeNull();
-  expect(stored.get('start23.latest-plan-id')).toBe(activePlan.id);
+  expect(stored.get('start23.athlete-a.latest-plan-id')).toBe(activePlan.id);
 });
 
 test.each([409, 422])('rejected/stale approval (%i) cannot publish a new active revision', async status => {
@@ -161,7 +162,7 @@ test.each([409, 422])('rejected/stale approval (%i) cannot publish a new active 
   await fireEvent.press(view.getByRole('button', { name: 'Voorstel goedkeuren' }));
   await view.findByText('Proposal unavailable');
   expect(flow.plan).toBe(activePlan); expect(flow.taskHandoff?.phase).toBe('pending');
-  expect(stored.get('start23.latest-plan-id')).toBe(activePlan.id);
+  expect(stored.get('start23.athlete-a.latest-plan-id')).toBe(activePlan.id);
   expect(api.getWeeklyPlan).not.toHaveBeenCalledWith('token-a', pendingNext.id, 1);
 });
 
@@ -184,13 +185,13 @@ test('local persistence failure keeps authoritative success; only storage is ret
   await fireEvent.press(view.getByRole('button', { name: 'Voorstel goedkeuren' }));
   await view.findByText('Storage unavailable');
   expect(flow.activePlan).toBe(approvedNext); expect(flow.taskHandoff?.phase).toBe('persist');
-  expect(stored.get('start23.latest-plan-id')).toBe(activePlan.id);
+  expect(stored.get('start23.athlete-a.latest-plan-id')).toBe(activePlan.id);
   const reads = jest.mocked(api.getWeeklyPlan).mock.calls.length;
   await fireEvent.press(view.getByRole('button', { name: 'Synchronisatie hervatten' }));
   await view.findByText(nextWorkout.name);
   expect(api.getWeeklyPlan).toHaveBeenCalledTimes(reads);
   expect(api.approvePlanProposal).toHaveBeenCalledTimes(1);
-  expect(stored.get('start23.latest-plan-id')).toBe(approvedNext.id);
+  expect(stored.get('start23.athlete-a.latest-plan-id')).toBe(approvedNext.id);
 });
 
 test.each([true, false])('ambiguous approval checks server status before another decision (committed=%s)', async committed => {
@@ -215,7 +216,7 @@ test.each(['receipt', 'snapshot'] as const)('conflicting %s cannot switch to an 
   await fireEvent.press(view.getByRole('button', { name: 'Voorstel goedkeuren' }));
   await waitFor(() => expect(flow.busy).toBe(false));
   expect(flow.plan).toBe(activePlan); expect(flow.taskHandoff?.phase).toBe('read');
-  expect(stored.get('start23.latest-plan-id')).toBe(activePlan.id);
+  expect(stored.get('start23.athlete-a.latest-plan-id')).toBe(activePlan.id);
   expect(view.getByRole('button', { name: 'Synchronisatie hervatten' })).toBeTruthy();
 });
 
@@ -235,7 +236,7 @@ test('same-tick duplicate approval is locked, and completion survives leaving th
   await act(async () => { response.resolve({ state: 'applied', plan_id: approvedNext.id, active_revision: 1 }); await first; });
   await view.findByText(nextWorkout.name);
   expect(flow.taskHandoff?.phase).toBe('complete');
-  expect(stored.get('start23.latest-plan-id')).toBe(approvedNext.id);
+  expect(stored.get('start23.athlete-a.latest-plan-id')).toBe(approvedNext.id);
 });
 
 test('a delayed Calendar read cannot restore obsolete next-week rows after approval', async () => {
@@ -260,12 +261,12 @@ test('athlete replacement ignores the previous owner follow-up response and cann
   await fireEvent.press(view.getByRole('button', { name: 'Voorstel goedkeuren' }));
   expect(flow.taskHandoff?.phase).toBe('read');
   const otherPlan: WeeklyPlan = { ...activePlan, id: 'athlete-b-plan', workouts: [] };
-  stored.set('start23.latest-plan-id', otherPlan.id); server.set(otherPlan.id, otherPlan);
+  stored.set('start23.athlete-b.latest-plan-id', otherPlan.id); server.set(otherPlan.id, otherPlan);
   await view.rerender(<Host identity="athlete-b" />);
   await waitFor(() => expect(flow.plan).toBe(otherPlan));
   await act(() => response.resolve(approvedNext));
   expect(flow.plan).toBe(otherPlan); expect(flow.taskHandoff).toBeNull();
-  expect(stored.get('start23.latest-plan-id')).toBe(otherPlan.id);
+  expect(stored.get('start23.athlete-b.latest-plan-id')).toBe(otherPlan.id);
 });
 
 test.each(['success', 'failure'] as const)('an old resume %s cannot overwrite a completed task handoff or its locator', async outcome => {
@@ -278,8 +279,9 @@ test.each(['success', 'failure'] as const)('an old resume %s cannot overwrite a 
   await view.findByText(nextWorkout.name);
   await act(() => { if (outcome === 'success') late.resolve(activePlan); else late.reject(new Error('Old read failed')); });
   expect(flow.activePlan).toBe(approvedNext); expect(flow.resumeState).toBe('ready');
-  expect(stored.get('start23.latest-plan-id')).toBe(approvedNext.id);
-  expect(SecureStore.deleteItemAsync).not.toHaveBeenCalledWith('start23.latest-plan-id');
+  await waitFor(() => expect(flow.taskHandoff?.phase).toBe('complete'));
+  expect(stored.get('start23.athlete-a.latest-plan-id')).toBe(approvedNext.id);
+  expect(SecureStore.deleteItemAsync).not.toHaveBeenCalledWith('start23.athlete-a.latest-plan-id');
 });
 
 test('an already-issued old-owner storage write finishes before the new owner locator, without an old-owner draft deletion', async () => {
@@ -288,7 +290,6 @@ test('an already-issued old-owner storage write finishes before the new owner lo
   jest.mocked(SecureStore.setItemAsync).mockImplementationOnce(async (key, value) => { await writing.promise; stored.set(key, value); });
   await fireEvent.press(view.getByRole('button', { name: 'Voorstel goedkeuren' }));
   expect(flow.activePlan).toBe(approvedNext); expect(flow.taskHandoff?.phase).toBe('persist');
-  stored.delete('start23.latest-plan-id');
   await view.rerender(<Host identity="athlete-b" token="token-b" />);
   await waitFor(() => expect(flow.taskHandoff).toBeNull());
   const otherPlan: WeeklyPlan = { ...approvedNext, id: 'athlete-b-plan', workouts: [] };
@@ -296,9 +297,10 @@ test('an already-issued old-owner storage write finishes before the new owner lo
   await act(() => { completion = flow.receiveTaskPlan('support:athlete-b', otherPlan); });
   await act(async () => { writing.resolve(); await completion; });
   expect(flow.activePlan).toBe(otherPlan);
-  expect(stored.get('start23.latest-plan-id')).toBe(otherPlan.id);
+  expect(stored.get('start23.athlete-b.latest-plan-id')).toBe(otherPlan.id);
+  expect(stored.get('start23.athlete-a.latest-plan-id')).toBe(approvedNext.id);
   expect(SecureStore.deleteItemAsync).toHaveBeenCalledTimes(1);
-  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.latest-swipe-draft-id');
+  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.athlete-b.latest-swipe-draft-id');
 });
 
 test('generation that finishes after navigation still retains the exact pending proposal in the shared owner', async () => {
@@ -312,7 +314,7 @@ test('generation that finishes after navigation still retains the exact pending 
   await fireEvent.press(view.getByRole('button', { name: 'Weekplanning' }));
   await act(() => response.resolve({ plan: pendingNext, proposal: nextProposal }));
   expect(flow.taskHandoff?.reviewed).toBe(pendingNext); expect(flow.activePlan).toBe(activePlan);
-  expect(stored.get('start23.latest-plan-id')).toBe(activePlan.id);
+  expect(stored.get('start23.athlete-a.latest-plan-id')).toBe(activePlan.id);
   expect(api.approvePlanProposal).not.toHaveBeenCalled();
 });
 
@@ -329,7 +331,7 @@ test('the same handoff accepts an already-authoritative task result without reap
   await act(async () => { await flow.receiveTaskPlan(`check-in:${savedCheckIn.id}`, approvedNext); });
   expect(flow.plan).toBe(approvedNext); expect(flow.taskHandoff?.reviewed).toBe(pendingNext);
   expect(flow.taskHandoff?.phase).toBe('complete');
-  expect(stored.get('start23.latest-plan-id')).toBe(approvedNext.id);
+  expect(stored.get('start23.athlete-a.latest-plan-id')).toBe(approvedNext.id);
   await act(async () => { await flow.receiveTaskPlan(`check-in:${savedCheckIn.id}`, pendingNext); });
   expect(flow.plan).toBe(approvedNext); expect(flow.taskHandoff?.plan).toBe(approvedNext);
   expect(api.approvePlanProposal).not.toHaveBeenCalled();
@@ -432,10 +434,10 @@ test.each(['replace', 'signout'] as const)('A5 late recovery cannot publish afte
   const view = await render(<Host />); await openCheckin(view);
   await waitFor(() => expect(api.createCheckInPlanProposal).toHaveBeenCalledTimes(1));
   if (action === 'signout') await view.unmount();
-  else { stored.delete('start23.latest-plan-id'); await view.rerender(<Host identity="athlete-b" token="token-b" />); }
+  else { stored.delete('start23.athlete-a.latest-plan-id'); await view.rerender(<Host identity="athlete-b" token="token-b" />); }
   await act(() => response.resolve({ plan: pendingNext, proposal: nextProposal }));
   if (action === 'replace') expect(flow.taskHandoff).toBeNull();
-  expect(stored.get('start23.latest-plan-id')).not.toBe(pendingNext.id);
+  expect(stored.get('start23.athlete-a.latest-plan-id')).not.toBe(pendingNext.id);
   expect(api.approvePlanProposal).not.toHaveBeenCalled();
 });
 

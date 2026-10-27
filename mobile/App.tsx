@@ -86,6 +86,7 @@ function AuthenticatedAppContent() {
   if (authenticatedView === 'planning') {
     screen = (
       <PlanningScreen
+        athleteIdentity={session.user.id}
         accessToken={session.access_token}
         onBackToOnboarding={() => setAuthenticatedView('onboarding')}
         onOpenActivities={() => setAuthenticatedView('activities')}

@@ -10,13 +10,13 @@ const CalendarContext = createContext<ReturnType<typeof useCalendarController> |
 
 type PlanningFlowProps = PropsWithChildren<{
   accessToken: string;
-  // Local lifetime isolation only; never sent to the planning API.
-  athleteIdentity?: string;
+  // Auth subject for local lifetime/storage isolation; never sent to the planning API.
+  athleteIdentity: string;
   initialOnboarding?: OnboardingState;
 }>;
 
-function PlanningOwner({ accessToken, initialOnboarding, children }: PlanningFlowProps) {
-  const controller = usePlanningController(accessToken, initialOnboarding);
+function PlanningOwner({ accessToken, athleteIdentity, initialOnboarding, children }: PlanningFlowProps) {
+  const controller = usePlanningController(accessToken, athleteIdentity, initialOnboarding);
   const { language } = useLanguage();
   const calendar = useCalendarController(accessToken, language, controller.setError);
   const { invalidateCalendarRange, replaceApprovedPlan, acceptApprovedPlan } = calendar;
@@ -33,7 +33,7 @@ function PlanningOwner({ accessToken, initialOnboarding, children }: PlanningFlo
       replaceApprovedPlan(previous, updated);
     } else invalidateCalendarRange();
     previousPlan.current = updated;
-  }, [controller.plan?.id, controller.plan?.active_revision, invalidateCalendarRange, replaceApprovedPlan, acceptApprovedPlan]);
+  }, [controller.plan?.id, controller.plan?.active_revision, controller.recoveryVersion, invalidateCalendarRange, replaceApprovedPlan, acceptApprovedPlan]);
   return (
     <PlanningContext.Provider value={controller}>
       <CalendarContext.Provider value={calendar}>{children}</CalendarContext.Provider>

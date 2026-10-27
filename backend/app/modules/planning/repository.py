@@ -1,9 +1,10 @@
 """Supabase persistence boundary for weekly planning."""
 
 from collections.abc import Mapping
-from datetime import date
+from datetime import date, datetime
 from typing import Any, Protocol
 from uuid import UUID
+from zoneinfo import ZoneInfo
 
 import httpx
 
@@ -42,6 +43,11 @@ class PlanningRepositoryUnavailableError(PlanningRepositoryError):
 
 class PlanningRepository(Protocol):
     """Persistence operations required by the Phase 6 service."""
+
+    async def discover_planning(
+        self, access_token: str, athlete_id: UUID
+    ) -> JsonObject:
+        """Read bounded owner-visible recovery locators, without generating work."""
 
     async def fetch_initial_request(
         self,
@@ -585,6 +591,109 @@ class SupabasePlanningRepository:
         if not isinstance(payload, dict):
             raise PlanningRepositoryNotFoundError
         return dict(payload)
+
+    async def discover_planning(
+        self, access_token: str, athlete_id: UUID
+    ) -> JsonObject:
+        # Caller JWT plus explicit opaque owner filter. No service-role reads,
+        # private tables, or client-provided owner identity are used here.
+        async def first(table: str, params: dict[str, str]) -> JsonObject | None:
+            rows = await self._request(
+                "GET",
+                table,
+                access_token=access_token,
+                params={
+                    "internal_athlete_id": f"eq.{athlete_id}",
+                    "limit": "1",
+                    **params,
+                },
+            )
+            if (
+                not isinstance(rows, list)
+                or len(rows) > 1
+                or any(not isinstance(row, dict) for row in rows)
+            ):
+                raise PlanningRepositoryUnavailableError
+            if rows:
+                required = {
+                    "weekly_plans": {"id", "week_start", "active_revision", "state"},
+                    "plan_revisions": {
+                        "id",
+                        "plan_id",
+                        "revision_number",
+                        "state",
+                        "plan",
+                    },
+                    "swipe_week_drafts": {"id", "revision", "state", "week_start"},
+                }[table]
+                if not required <= rows[0].keys():
+                    raise PlanningRepositoryUnavailableError
+            return dict(rows[0]) if rows else None
+
+        profile = await self._request(
+            "POST",
+            "rpc/get_operational_athlete_profile",
+            access_token=access_token,
+            json={},
+        )
+        try:
+            today = datetime.now(ZoneInfo(profile["timezone"])).date()
+        except (TypeError, KeyError, ValueError) as error:
+            raise PlanningRepositoryUnavailableError from error
+        week_start = date.fromordinal(today.toordinal() - today.weekday())
+        # The existing planning UI targets next Monday and A4 selects the
+        # explicitly approved following week. Prefer the latest approved week
+        # through that target; do not jump over it to a distant future plan.
+        target_week = date.fromordinal(week_start.toordinal() + 7)
+        active_params = {
+            "select": "id,week_start,active_revision,state",
+            "state": "eq.active",
+            "active_revision": "not.is.null",
+            "week_start": f"lte.{target_week.isoformat()}",
+            "order": "week_start.desc,id.asc",
+        }
+        active = await first("weekly_plans", active_params)
+        if active is None:
+            active = await first(
+                "weekly_plans",
+                {
+                    **active_params,
+                    "week_start": f"gt.{target_week.isoformat()}",
+                    "order": "week_start.asc,id.asc",
+                },
+            )
+        recovery_floor = (
+            max(week_start, date.fromisoformat(str(active["week_start"])))
+            if active
+            else week_start
+        )
+        pending = await first(
+            "plan_revisions",
+            {
+                "select": (
+                    "id,plan_id,revision_number,state,"
+                    "plan:weekly_plans!plan_revisions_plan_id_athlete_id_fkey!inner"
+                    "(week_start,state)"
+                ),
+                "state": "eq.pending_approval",
+                "plan.state": "in.(active,pending_approval)",
+                "plan.week_start": f"gte.{recovery_floor.isoformat()}",
+                "order": "plan(week_start).asc,revision_number.desc,id.asc",
+            },
+        )
+        # An obsolete draft must never hide a later approved week. Closed drafts
+        # already have a durable plan/proposal; discover those through revisions.
+        draft_floor = recovery_floor
+        draft = await first(
+            "swipe_week_drafts",
+            {
+                "select": "id,revision,state,week_start",
+                "state": "in.(collecting,placement)",
+                "week_start": f"gte.{draft_floor.isoformat()}",
+                "order": "week_start.asc,updated_at.desc,id.asc",
+            },
+        )
+        return {"active": active, "pending": pending, "draft": draft}
 
     async def fetch_proposal(
         self,

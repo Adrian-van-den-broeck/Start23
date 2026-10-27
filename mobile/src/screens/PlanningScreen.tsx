@@ -83,7 +83,7 @@ import { PlanningPresentationProvider, usePlanningPresentation } from '../naviga
 
 type PlanningScreenProps = {
   accessToken: string;
-  athleteIdentity?: string;
+  athleteIdentity: string;
   onSignOut: () => Promise<void>;
   onBackToOnboarding: () => void;
   onOpenActivities: () => void;
@@ -847,17 +847,18 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
       setRootVersion(effectiveVersion('week'));
     }
   }, [task, flow.view, flow.swipeDraft, flow.plan?.revision_state, setTask, setCreationStep, setPlacementMode, setRootVersion, effectiveVersion]);
-  const returnToWeek = () => { if (!locked) { setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); if (props.destination === 'calendar') props.onWeekRoot?.(); } };
+  const returnToWeek = () => { if (!locked) { flow.closeRecoveredReview(); setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); if (props.destination === 'calendar') props.onWeekRoot?.(); } };
   useEffect(() => {
     if (!active || sheetOpen || (!locked && !task && !calendarOpen) || (!locked && props.destination === 'calendar' && !task)) return;
     const handler = BackHandler.addEventListener('hardwareBackPress', () => {
-      if (!locked) { if (task === 'review' && reviewWorkoutId) setReviewWorkoutId(null); else { setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); } }
+      if (!locked) { if (task === 'review' && reviewWorkoutId) setReviewWorkoutId(null); else { flow.closeRecoveredReview(); setTask(null); if (rootVersion === 'v1' && calendarOpen) flow.setView('plan'); } }
       return true;
     });
     return () => handler.remove();
-  }, [task, locked, calendarOpen, rootVersion, flow.setView, active, props.destination, setTask, sheetOpen, reviewWorkoutId, setReviewWorkoutId]);
+  }, [task, locked, calendarOpen, rootVersion, flow.setView, flow.closeRecoveredReview, active, props.destination, setTask, sheetOpen, reviewWorkoutId, setReviewWorkoutId]);
   const action = (kind: WeekAction) => {
     if (locked) return;
+    if (kind === 'review') flow.openRecoveredReview();
     if (kind === 'calendar' && props.onCalendarRoot) { props.onCalendarRoot(); return; }
     if (kind === 'draft' || (kind === 'prepare' && flow.swipeDraft)) flow.openDeck();
     else if (kind === 'calendar') { setCalendarVersion(effectiveVersion('calendar')); flow.openCalendar(); }
@@ -885,10 +886,13 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
   const today = todayParts ? [part('year'), part('month'), part('day')].join('-') : isoDate(now);
   const model = weekHomeViewModel({
     plan: flow.plan, activePlan: flow.activePlan, draft: flow.swipeDraft,
+    pendingTaskPlan: flow.taskHandoff?.taskKey.startsWith('recovery:') && flow.taskHandoff.phase === 'pending' ? flow.taskHandoff.reviewed : null,
     today, resumeState: flow.resumeState, activeReadState: flow.activeReadState
   });
   if (!active) return null;
   return <View style={{ flex: 1 }}>
+    {flow.resumeState === 'failed' || flow.activeReadState === 'failed' ? <V2Button label={t('shell.retry')} disabled={locked} onPress={flow.retryResume} /> : null}
+    {rootVersion === 'v1' && !task && flow.taskHandoff?.taskKey.startsWith('recovery:') && flow.taskHandoff.phase === 'pending' ? <V2Button label={t('week.action.review')} disabled={locked} onPress={() => action('review')} /> : null}
     {calendarOpen && calendarVersion === 'v2' ? <CalendarScreen
       model={calendarViewModel({
         dates: calendarNavigation.dates, anchor: calendarNavigation.anchor,
@@ -938,7 +942,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
           calendarNavigation={calendarNavigation} calendarScrollProps={calendarOpen ? calendarScrollProps : undefined}
           onOpenCalendar={() => { if (props.onCalendarRoot && rootVersion === 'v2') { props.onCalendarRoot(); return; } setCalendarVersion(effectiveVersion('calendar')); flow.openCalendar(); }}
           prepareWeek={task === 'prepare'} versionControl={controls}
-          taskBack={rootVersion === 'v2' && task ? <V2Button variant="tertiary" label={t('week.return')} disabled={locked} onPress={returnToWeek} /> : null} />}
+          taskBack={(rootVersion === 'v2' || flow.taskHandoff?.taskKey.startsWith('recovery:')) && task ? <V2Button variant="tertiary" label={t('week.return')} disabled={locked} onPress={returnToWeek} /> : null} />}
     {moveWorkoutId ? <PlanningWorkoutMoveTask key={moveWorkoutId} workoutId={moveWorkoutId} onClose={() => setMoveWorkoutId(null)} controls={controls} /> : null}
     <WorkoutDetailBoundary workout={detailWorkout} onClose={() => setDetailWorkout(null)} />
   </View>;
@@ -984,7 +988,7 @@ function PlanningPresentation({
     toggleInjury, toggleCrossTraining, generate, approve, reject, openDeck,
     transitionDraft, placeDraftWorkout, submitDraft, requestWorkoutMove,
     markGoalAchievement, clearPlan, cancelWorkoutMove,
-    confirmWorkoutMove,
+    confirmWorkoutMove, resumeState,
   } = usePlanningFlow();
   const { calendarWorkouts, calendarRestDays, calendarLoading, loadCalendarRange } = usePlanningCalendar();
   const dayLabels = useMemo(
@@ -1195,12 +1199,13 @@ function PlanningPresentation({
           style={styles.scroll}
         >
         {error ? <Text style={styles.error}>{error}</Text> : null}
-        {busy ? <ActivityIndicator color={colors.brand} /> : null}
+        {busy || resumeState === 'loading' ? <ActivityIndicator color={colors.brand} /> : null}
+        {resumeState === 'failed' ? <Text accessibilityLiveRegion="polite" style={styles.error}>{t('week.loadFailed')}</Text> : null}
 
         <FadeInView key={view} style={styles.viewContent}>
         {view === 'plan' ? (
           <>
-            {!plan || prepareWeek ? (
+            {(!plan || prepareWeek) && resumeState === 'ready' ? (
               <View style={styles.panel}>
                 <StatusPill label="Jij bevestigt" tone="brand" />
                 <Text style={styles.title}>Wanneer kun je trainen?</Text>
@@ -1332,7 +1337,7 @@ function PlanningPresentation({
                   secondary
                 />
               </View>
-            ) : (
+            ) : plan ? (
               <>
                 <View style={styles.panel}>
                   <View style={styles.cardHeader}>
@@ -1505,7 +1510,7 @@ function PlanningPresentation({
                   </View>
                 ) : null}
               </>
-            )}
+            ) : null}
           </>
         ) : null}
 

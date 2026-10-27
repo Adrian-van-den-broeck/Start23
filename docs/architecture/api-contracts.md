@@ -439,3 +439,33 @@ Resolved for MVP:
 - ratios, exact intensity minutes, and qualitative warnings are fields on the
   weekly-plan representation;
 - test scheduling and a calculated zone update require separate approvals.
+
+## A6 authenticated plan recovery
+
+`GET /api/v1/weekly-plans/recovery` accepts no owner or mutation input. The
+verified token supplies the opaque owner; all Data API queries use the caller
+JWT and existing public SELECT grants/RLS. The strict response contains `active`
+and `pending` public weekly-plan snapshots (or null), and one `draft` locator
+with exact ID, revision, open status and week (or null). No private load,
+physiological recalculation, plan generation or approval occurs.
+
+The server uses the operational profile's confirmed timezone and Monday week.
+Active selection is the latest active week through next Monday (the existing
+UI planning target selected by A4 after approval), otherwise the first later
+active week. This avoids selecting a distant future plan over the current
+planning target. A still-verified local approved later selection is retained.
+Pending selection is the earliest current/future week on/after the selected
+active week, with a pending revision on an active/pending plan, then highest
+revision number;
+UUID breaks ties deterministically. Its proposal must still be pending with the
+exact target and current base. Draft selection is the earliest collecting or
+placement week on/after both current and selected active week, then last update
+and UUID. Every query has limit 1; at most five metadata reads (including timezone)
+and two exact public plan reads are issued. Revision races/inconsistent data
+return a safe 503 for explicit retry. Old active plans retain their original
+snapshot/provenance. Past pending proposals are not selected as a current task.
+
+Native locators are owner-scoped hints, not authorization. Confirmed local
+historical selections can still be read by ID. Transient GET errors preserve
+locators; only authoritative 404 removes the caller's scoped locator. Legacy
+global keys remain read-only and are copied only after successful owner GET.

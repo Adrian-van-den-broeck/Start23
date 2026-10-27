@@ -10,7 +10,7 @@ import { PlanningScreen } from './PlanningScreen';
 let mockFinishDismiss: () => void;
 const mockDismiss = jest.fn();
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: jest.fn(), deleteItemAsync: jest.fn() }));
-jest.mock('../api/client', () => ({ getOnboarding: jest.fn(), getWeeklyPlan: jest.fn(), getSwipeWeekDraft: jest.fn(), getCalendar: jest.fn() }));
+jest.mock('../api/client', () => ({ getOnboarding: jest.fn(), discoverPlanning: jest.fn(), getWeeklyPlan: jest.fn(), getSwipeWeekDraft: jest.fn(), getCalendar: jest.fn() }));
 jest.mock('@gorhom/bottom-sheet', () => {
   const React = jest.requireActual<typeof import('react')>('react');
   const RN = jest.requireActual<typeof import('react-native')>('react-native');
@@ -26,11 +26,12 @@ jest.mock('@gorhom/bottom-sheet', () => {
   };
 });
 jest.mock('react-native-reanimated-carousel', () => ({ Carousel: () => null }));
-beforeEach(() => { jest.clearAllMocks(); process.env.EXPO_PUBLIC_UI_VERSION='v1'; jest.mocked(SecureStore.getItemAsync).mockImplementation(async key => key === 'start23.language-preference' ? 'nl' : null); jest.mocked(api.getOnboarding).mockResolvedValue(onboarding); });
+beforeEach(() => {
+  jest.mocked(api.discoverPlanning).mockResolvedValue({ active: null, pending: null, draft: null }); jest.clearAllMocks(); process.env.EXPO_PUBLIC_UI_VERSION='v1'; jest.mocked(SecureStore.getItemAsync).mockImplementation(async key => key === 'start23.language-preference' ? 'nl' : null); jest.mocked(api.getOnboarding).mockResolvedValue(onboarding); });
 afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; });
 test.each(['profile','integrations','signout'] as const)('existing sheet defers %s callback until modal dismissal', async destination => {
   const profile = jest.fn(); const integrations = jest.fn(); const signout = jest.fn(async () => undefined);
-  const view = await render(<SafeAreaProvider initialMetrics={{frame:{x:0,y:0,width:393,height:830},insets:{top:24,bottom:24,left:0,right:0}}}><LanguageProvider><UiVersionProvider><PlanningScreen accessToken="athlete-token" onOpenProfile={profile} onOpenIntegrations={integrations} onSignOut={signout} onBackToOnboarding={jest.fn()} onOpenActivities={jest.fn()} onOpenCheckIn={jest.fn()} onOpenZoneProfile={jest.fn()} /></UiVersionProvider></LanguageProvider></SafeAreaProvider>);
+  const view = await render(<SafeAreaProvider initialMetrics={{frame:{x:0,y:0,width:393,height:830},insets:{top:24,bottom:24,left:0,right:0}}}><LanguageProvider><UiVersionProvider><PlanningScreen athleteIdentity="athlete-a" accessToken="athlete-token" onOpenProfile={profile} onOpenIntegrations={integrations} onSignOut={signout} onBackToOnboarding={jest.fn()} onOpenActivities={jest.fn()} onOpenCheckIn={jest.fn()} onOpenZoneProfile={jest.fn()} /></UiVersionProvider></LanguageProvider></SafeAreaProvider>);
   await view.findByRole('button', {name:'Profielmenu'});
   await fireEvent.press(view.getByRole('button', {name:'Profielmenu'}));
   await view.findByText('Alles over jouw setup');

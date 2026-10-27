@@ -20,6 +20,7 @@ import type {
   OnboardingComplete,
   OnboardingState,
   PlanWarning,
+  PlanningRecovery,
   PlannedExternalActivity,
   PendingWorkoutAlternatives,
   PolarConnection,
@@ -1114,4 +1115,8 @@ export function markGoalAchieved(
     method: 'POST',
     body: JSON.stringify({ achieved_at: achievedAt }),
   });
+}
+
+export async function discoverPlanning(accessToken: string): Promise<PlanningRecovery> {
+  return request<PlanningRecovery>(accessToken, '/api/v1/weekly-plans/recovery');
 }

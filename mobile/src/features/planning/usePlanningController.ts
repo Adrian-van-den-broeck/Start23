@@ -1,11 +1,11 @@
-import * as SecureStore from 'expo-secure-store';
 import * as Haptics from 'expo-haptics';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Platform } from 'react-native';
+import { AppState } from 'react-native';
 
 import {
   approvePlanProposal,
   createSwipeWeekDraft,
+  discoverPlanning,
   getOnboarding,
   getSwipeWeekDraft,
   getWeeklyPlan,
@@ -20,7 +20,7 @@ import {
 import type { Discipline, OnboardingState, PlanWarning, PlannedWorkout, PrimaryRaceGoal, SwipeWeekDraft, WeeklyPlan } from '../../api/types';
 import { isDateInWeek } from '../../components/WeekSchedule';
 import { availableDatesFor, dayOffsetsFor, isoDate, nextMonday } from './planningDates';
-import { latestPlanIdKey, latestSwipeDraftIdKey, rememberPlanId, rememberSwipeDraftId } from './planningResume';
+import { latestPlanIdKey, latestSwipeDraftIdKey, readResumeId, rememberPlanId as savePlanId, rememberSwipeDraftId as saveDraftId } from './planningResume';
 import { usePendingWorkoutActions } from './usePendingWorkoutActions';
 
 export type PlanningView = 'plan' | 'deck' | 'calendar';
@@ -36,7 +36,7 @@ export type TaskPlanHandoff = Readonly<{
 }>;
 
 // Called once by PlanningFlowProvider; presentations consume its context.
-export function usePlanningController(accessToken: string, initialOnboarding?: OnboardingState) {
+export function usePlanningController(accessToken: string, athleteIdentity: string, initialOnboarding?: OnboardingState) {
   const initialOnboardingRef = useRef({ accessToken, state: initialOnboarding });
   const [view, setView] = useState<PlanningView>('plan');
   const [weekStart, setWeekStart] = useState(nextMonday);
@@ -48,7 +48,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
   const [crossTrainingOptIns, setCrossTrainingOptIns] = useState<Set<Discipline>>(
     () => new Set(),
   );
-  const [resumeState, setResumeState] = useState<'loading' | 'ready' | 'failed'>(Platform.OS === 'web' ? 'ready' : 'loading');
+  const [resumeState, setResumeState] = useState<'loading' | 'ready' | 'failed'>('loading');
   const [activeSnapshot, setActiveSnapshot] = useState<WeeklyPlan | null>(null);
   const [activeReadState, setActiveReadState] = useState<'ready' | 'loading' | 'failed'>('ready');
   const [plan, setPlan] = useState<WeeklyPlan | null>(null);
@@ -87,89 +87,129 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     [selectedDays, weekStart],
   );
 
+  const rememberPlanId = (id: string | null, current = () => true) =>
+    savePlanId(athleteIdentity, id, () => moveOwnerAlive.current && current());
+  const rememberSwipeDraftId = (id: string | null, current = () => true) =>
+    saveDraftId(athleteIdentity, id, () => moveOwnerAlive.current && current());
+  const [resumeAttempt, setResumeAttempt] = useState(0);
+  const resumeRunning = useRef(false);
+  const retryResume = useCallback(() => {
+    if (!resumeRunning.current && !mutationInFlight.current) setResumeAttempt(value => value + 1);
+  }, []);
+  const [recoveryVersion, setRecoveryVersion] = useState(0);
+
   useEffect(() => {
-    if (Platform.OS === 'web') return;
     let mounted = true;
+    resumeRunning.current = true;
     const generation = planResultGeneration.current;
-    const isCurrent = () => mounted && generation === planResultGeneration.current;
+    const isCurrent = () => mounted && moveOwnerAlive.current && generation === planResultGeneration.current;
     setResumeState('loading');
-    let readFailed = false;
-    const recordReadFailure = (caught: unknown) => {
-      // Existing transport metadata; no message parsing or new recovery/retry.
-      if (caught && typeof caught === 'object' && 'status' in caught && caught.status === 404) return;
-      readFailed = true;
+    const validatePlan = (snapshot: WeeklyPlan) => {
+      if (!snapshot || typeof snapshot.id !== 'string' || typeof snapshot.week_start !== 'string' ||
+        typeof snapshot.timezone !== 'string' || !Number.isInteger(snapshot.revision) ||
+        typeof snapshot.revision_id !== 'string' || !Array.isArray(snapshot.available_dates) ||
+        !Array.isArray(snapshot.confirmed_injuries) || !Array.isArray(snapshot.workouts) ||
+        !Array.isArray(snapshot.warnings) || !Array.isArray(snapshot.rest_days) ||
+        !['active', 'pending_approval', 'rejected', 'expired', 'superseded', 'draft'].includes(snapshot.revision_state)) throw new Error('Invalid plan recovery response');
+      return snapshot;
     };
-    SecureStore.getItemAsync(latestSwipeDraftIdKey)
-      .then(async (draftId) => {
-        if (!isCurrent()) return true;
-        if (!draftId) return false;
-        try {
-          const restored = await getSwipeWeekDraft(accessToken, draftId);
-          if (restored.state === 'submitted' && restored.plan_id) {
-            const submittedPlan = await getWeeklyPlan(
-              accessToken,
-              restored.plan_id,
-            );
-            await Promise.all([
-              rememberPlanId(submittedPlan.id, isCurrent),
-              rememberSwipeDraftId(null, isCurrent),
-            ]);
-            if (isCurrent()) {
-              setPlan(submittedPlan);
-              setWeekStart(submittedPlan.week_start);
-              setView('plan');
-            }
-            return true;
-          }
-          if (isCurrent()) {
-            setSwipeDraft(restored);
-            setCrossTrainingOptIns(new Set(restored.cross_training_opt_ins));
-            setWeekStart(restored.week_start);
-            setReusePreviousWeek(
-              restored.availability_source === 'previous_week',
-            );
-            setSelectedDays(
-              dayOffsetsFor(restored.week_start, restored.available_dates),
-            );
-            setView('deck');
-          }
-          return true;
-        } catch (caught) {
-          if (!isCurrent()) return true;
-          recordReadFailure(caught);
-          await rememberSwipeDraftId(null, isCurrent);
-          return false;
-        }
-      })
-      .then(async (draftRestored) => {
-        if (draftRestored || !isCurrent()) return;
-        const planId = await SecureStore.getItemAsync(latestPlanIdKey);
-        if (!planId || !isCurrent()) return;
-        try {
-          const restored = await getWeeklyPlan(accessToken, planId);
-          if (isCurrent()) {
-            setPlan(restored);
-            setWeekStart(restored.week_start);
-            setReusePreviousWeek(
-              restored.availability_source === 'previous_week',
-            );
-            setSelectedDays(
-              dayOffsetsFor(restored.week_start, restored.available_dates),
-            );
-            setInjuries(new Set(restored.confirmed_injuries));
-          }
-        } catch (caught) {
-          if (!isCurrent()) return;
-          recordReadFailure(caught);
-          await rememberPlanId(null, isCurrent);
-        }
-      })
-      .catch(recordReadFailure)
-      .finally(() => { if (isCurrent()) setResumeState(readFailed ? 'failed' : 'ready'); });
-    return () => {
-      mounted = false;
+    const validateDraft = (snapshot: SwipeWeekDraft) => {
+      if (!snapshot || typeof snapshot.id !== 'string' || typeof snapshot.week_start !== 'string' ||
+        !Number.isInteger(snapshot.revision) || !Array.isArray(snapshot.available_dates) ||
+        !Array.isArray(snapshot.cross_training_opt_ins) || !Array.isArray(snapshot.accepted_workouts) ||
+        !Array.isArray(snapshot.placements) || !Array.isArray(snapshot.warnings) ||
+        !['collecting', 'placement', 'submitted'].includes(snapshot.state)) throw new Error('Invalid draft recovery response');
+      return snapshot;
     };
-  }, [accessToken]);
+    const hydratePlan = (snapshot: WeeklyPlan) => {
+      if (!isCurrent()) return;
+      currentPlan.current = snapshot;
+      setPlan(snapshot);
+      setWeekStart(snapshot.week_start);
+      setReusePreviousWeek(snapshot.availability_source === 'previous_week');
+      setSelectedDays(dayOffsetsFor(snapshot.week_start, snapshot.available_dates));
+      setInjuries(new Set(snapshot.confirmed_injuries));
+    };
+    const verify = async <T extends { id: string }>(key: string, get: (id: string) => Promise<T>, save: (id: string | null, current: () => boolean) => Promise<void>): Promise<T | null> => {
+      const locator = await readResumeId(athleteIdentity, key).catch(() => ({ id: null, legacy: false }));
+      if (!locator.id || !isCurrent()) return null;
+      try {
+        const value = await get(locator.id);
+        if (!value || value.id !== locator.id) throw new Error('Invalid recovery response');
+        if (locator.legacy) await save(value.id, isCurrent);
+        return isCurrent() ? value : null;
+      } catch (caught) {
+        const status = caught && typeof caught === 'object' && 'status' in caught ? caught.status : null;
+        if (status === 404) {
+          if (!locator.legacy) await save(null, isCurrent);
+          return null;
+        }
+        if (locator.legacy) return null; // Unverified global hints never block owner discovery.
+        // Stale draft/revision: retain the locator and reconcile via discovery.
+        if (status === 409) return null;
+        throw caught; // Offline/timeout/auth/5xx/malformed is never proof of absence.
+      }
+    };
+    const resume = async () => {
+      const localPlan = await verify(latestPlanIdKey, async id => validatePlan(await getWeeklyPlan(accessToken, id)), rememberPlanId);
+      if (localPlan) hydratePlan(localPlan); // Trustworthy owner-scoped state survives discovery failure.
+      const localDraft = await verify(latestSwipeDraftIdKey, async id => validateDraft(await getSwipeWeekDraft(accessToken, id)), rememberSwipeDraftId);
+      if (!isCurrent()) return;
+      if (localDraft?.state !== 'submitted' && localDraft) setSwipeDraft(localDraft);
+      const found = await discoverPlanning(accessToken);
+      if (!found || !('active' in found) || !('pending' in found) || !('draft' in found)) throw new Error('Invalid recovery response');
+      if (found.active !== null) validatePlan(found.active);
+      if (found.pending !== null) validatePlan(found.pending);
+      if (found.draft !== null && (!found.draft || typeof found.draft.id !== 'string' || !Number.isInteger(found.draft.revision) || !['collecting', 'placement'].includes(found.draft.state))) throw new Error('Invalid draft locator');
+      const localActive = localPlan?.revision_state === 'active' ? localPlan : null;
+      const active = found.active && (!localActive || found.active.week_start >= localActive.week_start) ? found.active : localActive;
+      const pending = found.pending ?? (localPlan?.revision_state === 'pending_approval' && (!active || localPlan.week_start >= active.week_start) && !(found.active?.id === localPlan.id && found.active.revision >= localPlan.revision) ? localPlan : null);
+      if (active && (active.state !== 'active' || active.revision_state !== 'active' || active.active_revision !== active.revision)) throw new Error('Invalid active recovery response');
+      if (pending && (pending.revision_state !== 'pending_approval' || pending.proposal?.state !== 'pending' || pending.proposal.target_plan_revision_id !== pending.revision_id)) throw new Error('Invalid pending recovery response');
+      let selected = pending && (!active || pending.id === active.id) ? pending : active ?? localPlan;
+      let restoredDraft = found.draft ? validateDraft(await getSwipeWeekDraft(accessToken, found.draft.id)) : localDraft;
+      if (found.draft && (!restoredDraft || restoredDraft.id !== found.draft.id || restoredDraft.revision !== found.draft.revision || restoredDraft.state !== found.draft.state)) throw new Error('Draft changed during recovery');
+      if (!isCurrent()) return;
+      if (restoredDraft?.state === 'submitted' && restoredDraft.plan_id) {
+        const submitted = validatePlan(await getWeeklyPlan(accessToken, restoredDraft.plan_id));
+        if (submitted.id !== restoredDraft.plan_id) throw new Error('Invalid submitted plan identity');
+        if (!selected || submitted.week_start >= selected.week_start) selected = submitted;
+        restoredDraft = null;
+      }
+      if (restoredDraft && active && restoredDraft.week_start < active.week_start) restoredDraft = null;
+      if (!isCurrent()) return;
+      setActiveSnapshot(active);
+      if (selected) hydratePlan(selected);
+      else { setPlan(null); currentPlan.current = null; }
+      if (pending && active && pending.id !== active.id) {
+        publishHandoff({ taskKey: `recovery:${pending.id}`, reviewed: pending, plan: pending, receipt: null, phase: 'pending' });
+      } else if (currentHandoff.current?.taskKey.startsWith('recovery:')) publishHandoff(null);
+      setSwipeDraft(restoredDraft);
+      if (restoredDraft) {
+        setCrossTrainingOptIns(new Set(restoredDraft.cross_training_opt_ins));
+        // Keep the approved week selected; the draft opens through existing actions.
+        if (!selected) {
+          setWeekStart(restoredDraft.week_start);
+          setReusePreviousWeek(restoredDraft.availability_source === 'previous_week');
+          setSelectedDays(dayOffsetsFor(restoredDraft.week_start, restoredDraft.available_dates));
+          setView('deck');
+        }
+      }
+      if (selected && selected.id !== localPlan?.id) await rememberPlanId(selected.id, isCurrent);
+      if (restoredDraft && restoredDraft.id !== localDraft?.id) await rememberSwipeDraftId(restoredDraft.id, isCurrent);
+      else if (localDraft && !restoredDraft) await rememberSwipeDraftId(null, isCurrent);
+      if (isCurrent()) { setRecoveryVersion(value => value + 1); setResumeState('ready'); }
+    };
+    void resume().catch(() => { if (isCurrent()) setResumeState('failed'); }).finally(() => {
+      if (mounted) resumeRunning.current = false;
+    });
+    return () => { mounted = false; resumeRunning.current = false; };
+  }, [accessToken, athleteIdentity, resumeAttempt]);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', state => { if (state === 'active') retryResume(); });
+    return () => subscription.remove();
+  }, [retryResume]);
 
   useEffect(() => {
     const initial = initialOnboardingRef.current;
@@ -177,9 +217,11 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
       setPrimaryGoal(initial.state.primary_goal);
       return;
     }
+    let current = true;
     getOnboarding(accessToken)
-      .then((state) => setPrimaryGoal(state.primary_goal))
+      .then((state) => { if (current) setPrimaryGoal(state.primary_goal); })
       .catch(() => undefined);
+    return () => { current = false; };
   }, [accessToken]);
 
   // Week needs the identified active snapshot, never the pending workout rows.
@@ -189,7 +231,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
   const activeRevision = plan?.active_revision;
   const isActive = plan?.revision_state === 'active';
   useEffect(() => {
-    if (!activeId || !activeRevision || isActive) {
+    if (!activeId || !activeRevision || isActive || (activeSnapshot?.id === activeId && activeSnapshot.revision === activeRevision && activeSnapshot.revision_state === 'active')) {
       setActiveReadState('ready');
       return;
     }
@@ -208,27 +250,29 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
       })
       .catch(() => { if (mounted) setActiveReadState('failed'); });
     return () => { mounted = false; };
-  }, [accessToken, activeId, activeRevision, isActive]);
+  }, [accessToken, activeId, activeRevision, isActive, resumeAttempt, activeSnapshot]);
   const activePlan = isActive ? plan : activeSnapshot && activeSnapshot.id === activeId &&
     activeSnapshot.revision === activeRevision && activeSnapshot.week_start === plan?.week_start
       ? activeSnapshot : null;
 
   const run = async (operation: () => Promise<void>) => {
-    if (mutationInFlight.current || pendingWorkouts.isLoading()) return;
+    if (!moveOwnerAlive.current || mutationInFlight.current || pendingWorkouts.isLoading()) return;
     mutationInFlight.current = true;
+    ++planResultGeneration.current;
+    if (currentPlan.current || swipeDraft) setResumeState('ready');
     setBusy(true);
     setError(null);
     try {
       await operation();
     } catch (caught) {
-      setError(
+      if (moveOwnerAlive.current) setError(
         caught instanceof Error
           ? caught.message
           : 'De planningsactie is niet gelukt.',
       );
     } finally {
       mutationInFlight.current = false;
-      setBusy(false);
+      if (moveOwnerAlive.current) setBusy(false);
     }
   };
 
@@ -286,8 +330,14 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
           }
           : {}),
       });
-      await rememberSwipeDraftId(result.id);
+      try { await rememberSwipeDraftId(result.id); }
+      catch (caught) {
+        if (moveOwnerAlive.current) { setSwipeDraft(result); setView('deck'); setResumeState('failed'); }
+        throw caught;
+      }
+      if (!moveOwnerAlive.current) return;
       setSwipeDraft(result);
+      setResumeState('ready');
       setView('deck');
     });
 
@@ -311,6 +361,8 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     if (!moveOwnerAlive.current) return false;
     if (mutationInFlight.current || pendingWorkouts.isLoading()) throw new Error('Wacht tot de huidige planningsactie klaar is.');
     mutationInFlight.current = true;
+    ++planResultGeneration.current;
+    if (currentPlan.current || swipeDraft) setResumeState('ready');
     setBusy(true);
     setError(null);
     try { return await operation(); }
@@ -393,7 +445,22 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     return persistTaskPlan(handoff);
   });
 
+  const openRecoveredReview = useCallback(() => {
+    if (!moveOwnerAlive.current) return;
+    const handoff = currentHandoff.current;
+    if (handoff?.taskKey.startsWith('recovery:') && handoff.phase === 'pending') setPlan(handoff.reviewed);
+  }, []);
+  const closeRecoveredReview = useCallback(() => {
+    if (!moveOwnerAlive.current) return;
+    if (currentHandoff.current?.taskKey.startsWith('recovery:') && activeSnapshot && currentPlan.current === currentHandoff.current.reviewed) setPlan(activeSnapshot);
+  }, [activeSnapshot]);
+
   const approve = () => {
+    const handoff = currentHandoff.current;
+    if (handoff?.taskKey.startsWith('recovery:') && handoff.reviewed === plan) {
+      void approveTaskPlan(handoff.taskKey, handoff.reviewed).catch(() => undefined);
+      return;
+    }
     if (currentPlan.current !== plan || plan?.revision_state !== 'pending_approval' || plan.proposal?.state !== 'pending') return;
     void run(async () => {
       await approvePlanProposal(
@@ -401,7 +468,8 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
         plan.proposal!.id,
         plan.proposal!.base_plan_revision ?? 0,
       );
-      setPlan(await getWeeklyPlan(accessToken, plan.id));
+      const updated = await getWeeklyPlan(accessToken, plan.id);
+      if (moveOwnerAlive.current) setPlan(updated);
     });
   };
 
@@ -409,7 +477,13 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     if (currentPlan.current !== plan || plan?.revision_state !== 'pending_approval' || plan.proposal?.state !== 'pending') return;
     void run(async () => {
       await rejectPlanProposal(accessToken, plan.proposal!.id);
-      setPlan(await getWeeklyPlan(accessToken, plan.id, plan.revision));
+      const updated = await getWeeklyPlan(accessToken, plan.id, plan.revision);
+      if (moveOwnerAlive.current) {
+        if (currentHandoff.current?.taskKey.startsWith('recovery:')) {
+          publishHandoff(null);
+          setPlan(activeSnapshot ?? updated);
+        } else setPlan(updated);
+      }
     });
   };
 
@@ -439,6 +513,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
               : {}),
           },
         );
+        if (!moveOwnerAlive.current) return;
         setSwipeDraft(updated);
         void Haptics.selectionAsync().catch(() => undefined);
       });
@@ -456,6 +531,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
         swipeDraft.revision,
         scheduledDate,
       );
+      if (!moveOwnerAlive.current) return;
       setSwipeDraft(updated);
     });
   };
@@ -473,8 +549,10 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
         rememberPlanId(result.plan.id),
         rememberSwipeDraftId(null),
       ]);
+      if (!moveOwnerAlive.current) return;
       setSwipeDraft(null);
       setPlan(result.plan);
+      setResumeState('ready');
       setView('plan');
       void Haptics.notificationAsync(
         Haptics.NotificationFeedbackType.Success,
@@ -540,7 +618,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     if (!primaryGoal) return;
     void run(async () => {
       await markGoalAchieved(accessToken, primaryGoal.id, isoDate(new Date()));
-      setMaintenanceMarked(true);
+      if (moveOwnerAlive.current) setMaintenanceMarked(true);
     });
   };
 
@@ -550,6 +628,8 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
 
   const pendingWorkouts = usePendingWorkoutActions(accessToken, plan, setPlan, setError, mutationInFlight);
   const clearPlan = () => {
+    if (!moveOwnerAlive.current) return;
+    ++planResultGeneration.current;
     setPlan(null);
     void rememberPlanId(null);
   };
@@ -564,7 +644,8 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
   };
 
   return {
-    resumeState, activePlan, activeReadState, taskHandoff, receiveTaskPlan, approveTaskPlan,
+    openRecoveredReview, closeRecoveredReview,
+    resumeState, retryResume, recoveryVersion, activePlan, activeReadState, taskHandoff, receiveTaskPlan, approveTaskPlan,
     view, setView, weekStart, setWeekStart, reusePreviousWeek, setReusePreviousWeek,
     selectedDays, injuries, crossTrainingOptIns, plan, swipeDraft, pendingMove,
     primaryGoal, maintenanceMarked, busy, error, setError, availableDates,

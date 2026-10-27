@@ -13,7 +13,7 @@ import { activePlan, draft, occurrence, onboarding, pendingPlan, proposal, warni
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: jest.fn(), deleteItemAsync: jest.fn(), WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'device-only' }));
 jest.mock('../../api/client', () => ({
   approvePlanProposal: jest.fn(), createSwipeWeekDraft: jest.fn(), editPendingWorkout: jest.fn(), getCalendar: jest.fn(),
-  getOnboarding: jest.fn(), getPendingWorkoutAlternatives: jest.fn(), getSwipeWeekDraft: jest.fn(), getWeeklyPlan: jest.fn(),
+  getOnboarding: jest.fn(), getPendingWorkoutAlternatives: jest.fn(), getSwipeWeekDraft: jest.fn(), discoverPlanning: jest.fn(), getWeeklyPlan: jest.fn(),
   markGoalAchieved: jest.fn(), movePlannedWorkout: jest.fn(), placeSwipeWeekWorkout: jest.fn(), rejectPlanProposal: jest.fn(),
   submitSwipeWeekDraft: jest.fn(), transitionSwipeWeekDraft: jest.fn(), validatePlanLayout: jest.fn(),
 }));
@@ -41,7 +41,7 @@ function deferred<T>() {
   return { promise, resolve, reject };
 }
 function resume(kind: 'plan' | 'draft', id: string) {
-  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === `start23.latest-${kind === 'plan' ? 'plan' : 'swipe-draft'}-id` ? id : null);
+  jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === `start23.athlete-a.latest-${kind === 'plan' ? 'plan' : 'swipe-draft'}-id` ? id : null);
 }
 async function loadedPlan(plan = activePlan) {
   resume('plan', plan.id);
@@ -65,10 +65,11 @@ beforeEach(() => {
   jest.mocked(SecureStore.deleteItemAsync).mockReset();
   jest.mocked(SecureStore.getItemAsync).mockResolvedValue(null);
   jest.mocked(api.getOnboarding).mockResolvedValue(onboarding);
+  jest.mocked(api.discoverPlanning).mockResolvedValue({ active: null, pending: null, draft: null });
   jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
 });
 
-test('initial load has one owner, no plan discovery, no duplicate effects or writes on rerender/UI switch', async () => {
+test('initial load has one owner, bounded empty discovery, no duplicate effects or writes on rerender/UI switch', async () => {
   const view = await render(<Host />);
   await waitFor(() => expect(api.getOnboarding).toHaveBeenCalledTimes(1));
   expect(flow.plan).toBeNull(); expect(flow.swipeDraft).toBeNull();
@@ -136,10 +137,10 @@ test.each(['automatic', 'manual'] as const)('same-tick duplicate %s submit is lo
   expect(api.submitSwipeWeekDraft).toHaveBeenCalledWith('token-a', draft.id, draft.revision, mode);
   await act(() => response.resolve({ plan: pendingPlan, proposal }));
   expect(flow.swipeDraft).toBe(initial); expect(flow.plan).toBeNull(); expect(flow.busy).toBe(true);
-  expect(SecureStore.setItemAsync).toHaveBeenCalledWith('start23.latest-plan-id', pendingPlan.id, { keychainAccessible: 'device-only' });
+  expect(SecureStore.setItemAsync).toHaveBeenCalledWith('start23.athlete-a.latest-plan-id', pendingPlan.id, { keychainAccessible: 'device-only' });
   expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
   await act(() => stored.resolve());
-  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.latest-swipe-draft-id');
+  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.athlete-a.latest-swipe-draft-id');
   expect(flow.swipeDraft).toBe(initial); expect(flow.plan).toBeNull();
   await act(() => { flow.submitDraft(mode); deleted.resolve(); });
   await waitFor(() => expect(flow.swipeDraft).toBeNull());
@@ -185,20 +186,21 @@ test('submitted draft restores its plan and clears draft only after saving plan 
   resume('draft', draft.id);
   jest.mocked(api.getSwipeWeekDraft).mockResolvedValue({ ...draft, state: 'submitted', plan_id: activePlan.id });
   await render(<Host />);
-  await waitFor(() => expect(flow.plan).toBe(activePlan));
+  await waitFor(() => expect(flow.resumeState).toBe('ready'));
+  expect(flow.plan).toBe(activePlan);
   expect(api.getWeeklyPlan).toHaveBeenCalledWith('token-a', activePlan.id);
-  expect(SecureStore.setItemAsync).toHaveBeenCalledWith('start23.latest-plan-id', activePlan.id, { keychainAccessible: 'device-only' });
-  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.latest-swipe-draft-id');
+  expect(SecureStore.setItemAsync).toHaveBeenCalledWith('start23.athlete-a.latest-plan-id', activePlan.id, { keychainAccessible: 'device-only' });
+  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.athlete-a.latest-swipe-draft-id');
   expect(flow.swipeDraft).toBeNull(); expect(flow.view).toBe('plan');
 });
 
 test('invalid or foreign cached draft is cleared, then invalid or foreign plan is cleared through the existing authenticated reads', async () => {
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key.endsWith('draft-id') ? 'foreign-draft' : key.endsWith('plan-id') ? 'foreign-plan' : null);
-  jest.mocked(api.getSwipeWeekDraft).mockRejectedValue(new Error('Safe unavailable'));
-  jest.mocked(api.getWeeklyPlan).mockRejectedValue(new Error('Safe unavailable'));
+  jest.mocked(api.getSwipeWeekDraft).mockRejectedValue(Object.assign(new Error('Not found'), { status: 404 }));
+  jest.mocked(api.getWeeklyPlan).mockRejectedValue(Object.assign(new Error('Not found'), { status: 404 }));
   await render(<Host />);
-  await waitFor(() => expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.latest-plan-id'));
-  expect(jest.mocked(SecureStore.deleteItemAsync).mock.calls).toEqual([['start23.latest-swipe-draft-id'], ['start23.latest-plan-id']]);
+  await waitFor(() => expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.athlete-a.latest-plan-id'));
+  expect(jest.mocked(SecureStore.deleteItemAsync).mock.calls).toEqual([['start23.athlete-a.latest-plan-id'], ['start23.athlete-a.latest-swipe-draft-id']]);
   expect(flow.plan).toBeNull(); expect(flow.error).toBeNull();
 });
 
@@ -267,8 +269,8 @@ test.each(['automatic', 'manual'] as const)('%s submit runs once, saves both res
   expect(api.submitSwipeWeekDraft).toHaveBeenCalledWith('token-a', draft.id, 4, mode);
   await act(async () => request.resolve({ plan: pendingPlan, proposal }));
   expect(flow.swipeDraft).toBeNull(); expect(flow.plan).toBe(pendingPlan); expect(flow.view).toBe('plan');
-  expect(SecureStore.setItemAsync).toHaveBeenCalledWith('start23.latest-plan-id', pendingPlan.id, { keychainAccessible: 'device-only' });
-  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.latest-swipe-draft-id');
+  expect(SecureStore.setItemAsync).toHaveBeenCalledWith('start23.athlete-a.latest-plan-id', pendingPlan.id, { keychainAccessible: 'device-only' });
+  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.athlete-a.latest-swipe-draft-id');
   expect(api.approvePlanProposal).not.toHaveBeenCalled();
 });
 
@@ -382,7 +384,7 @@ test('identity change resets flow; token rotation preserves edits and owner iden
 test('nested providers fail before creating a second owner', async () => {
   const quiet = jest.spyOn(console, 'error').mockImplementation(() => undefined);
   try {
-    await expect(render(<Host><PlanningFlowProvider accessToken="token-a"><Probe /></PlanningFlowProvider></Host>)).rejects.toThrow('already has an owner');
+    await expect(render(<Host><PlanningFlowProvider accessToken="token-a" athleteIdentity="athlete-a"><Probe /></PlanningFlowProvider></Host>)).rejects.toThrow('already has an owner');
     expect(api.getOnboarding).not.toHaveBeenCalled();
   } finally { quiet.mockRestore(); }
 });
@@ -440,7 +442,7 @@ test('clear rejected plan keeps original storage key and resets only the plan', 
   await loadedPlan({ ...pendingPlan, revision_state: 'rejected' });
   await act(() => flow.clearPlan());
   expect(flow.plan).toBeNull(); expect(flow.weekStart).toBe('2026-10-05'); expect(flow.injuries).toEqual(new Set(['run']));
-  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.latest-plan-id');
+  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.athlete-a.latest-plan-id');
 });
 
 test('released pending editor discards late local options/loading without contaminating its remount', async () => {
@@ -460,13 +462,13 @@ test('released pending editor discards late local options/loading without contam
   expect(api.getPendingWorkoutAlternatives).toHaveBeenCalledTimes(2);
 });
 
-test('failed resume exposes uncertainty without changing reference clearing or retrying on rerender', async () => {
+test('failed resume preserves its reference and exposes uncertainty or retrying on rerender', async () => {
   resume('plan', activePlan.id);
   jest.mocked(api.getWeeklyPlan).mockRejectedValue(new Error('Safe transport error'));
   const view = await render(<Host />);
   await waitFor(() => expect(flow.resumeState).toBe('failed'));
   expect(flow.plan).toBeNull();
-  expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('start23.latest-plan-id');
+  expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
   await view.rerender(<Host />);
   expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
 });

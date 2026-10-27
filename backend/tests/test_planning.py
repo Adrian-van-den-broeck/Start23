@@ -744,6 +744,61 @@ class MemoryPlanningRepository:
                     plan["proposal"] = proposal
         return str(proposal["public_explanation"])
 
+    async def discover_planning(
+        self, access_token: str, athlete_id: UUID
+    ) -> JsonObject:
+        assert athlete_id == self._owner(access_token)
+        owned = [
+            plan
+            for key, plan in self._plans.items()
+            if self._plan_owners[key] == athlete_id
+        ]
+        active = sorted(
+            (plan for plan in owned if plan["revision_state"] == "active"),
+            key=lambda plan: plan["week_start"],
+            reverse=True,
+        )
+        pending = sorted(
+            (plan for plan in owned if plan["revision_state"] == "pending_approval"),
+            key=lambda plan: (plan["week_start"], -plan["revision"]),
+        )
+        drafts = sorted(
+            (
+                draft
+                for key, draft in self._swipe_drafts.items()
+                if self._swipe_draft_owners[key] == athlete_id
+                and draft["state"] in {"collecting", "placement"}
+            ),
+            key=lambda draft: draft["week_start"],
+        )
+        return {
+            "active": (
+                {
+                    key: active[0][key]
+                    for key in ("id", "week_start", "active_revision", "state")
+                }
+                if active
+                else None
+            ),
+            "pending": (
+                {
+                    "id": pending[0]["revision_id"],
+                    "plan_id": pending[0]["id"],
+                    "revision_number": pending[0]["revision"],
+                }
+                if pending
+                else None
+            ),
+            "draft": (
+                {
+                    key: drafts[0][key]
+                    for key in ("id", "week_start", "revision", "state")
+                }
+                if drafts
+                else None
+            ),
+        }
+
     async def fetch_plan(
         self,
         access_token: str,

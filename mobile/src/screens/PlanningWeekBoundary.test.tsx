@@ -1,3 +1,4 @@
+import { pendingNext, nextWorkout } from '../features/planning/planningTask.test-fixtures';
 import { act, within, fireEvent, render, waitFor } from '@testing-library/react-native';
 import type { PropsWithChildren } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -13,7 +14,7 @@ jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: j
 jest.mock('../api/client', () => ({
   approvePlanProposal: jest.fn(), createSwipeWeekDraft: jest.fn(), editPendingWorkout: jest.fn(),
   getCalendar: jest.fn(), getOnboarding: jest.fn(), getPendingWorkoutAlternatives: jest.fn(),
-  getSwipeWeekDraft: jest.fn(), getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(),
+  getSwipeWeekDraft: jest.fn(), discoverPlanning: jest.fn(), getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(),
   movePlannedWorkout: jest.fn(), placeSwipeWeekWorkout: jest.fn(), rejectPlanProposal: jest.fn(),
   submitSwipeWeekDraft: jest.fn(), transitionSwipeWeekDraft: jest.fn(), validatePlanLayout: jest.fn(),
 }));
@@ -48,6 +49,7 @@ beforeEach(() => {
   process.env.EXPO_PUBLIC_UI_VERSION = 'v2';
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : null);
   jest.mocked(api.getOnboarding).mockResolvedValue(onboarding);
+  jest.mocked(api.discoverPlanning).mockResolvedValue({ active: null, pending: null, draft: null });
   jest.mocked(api.getWeeklyPlan).mockImplementation(async (_token, _id, revision) => revision === 2 ? activePlan : pendingPlan);
   jest.mocked(api.getCalendar).mockResolvedValue({ from_date: '2026-10-05', to_date: '2026-10-12', workouts: [workout], rest_days: [] });
   jest.mocked(api.getPendingWorkoutAlternatives).mockResolvedValue({ plan_id: pendingPlan.id, revision: 3, proposal_id: proposal.id, workout_id: workout.id, alternatives: [], can_remove: false });
@@ -56,7 +58,7 @@ afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.restoreAllMock
 function restore(kind: 'plan' | 'draft') {
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) =>
     key === 'start23.language-preference' ? 'en' :
-      key === (kind === 'plan' ? 'start23.latest-plan-id' : 'start23.latest-swipe-draft-id') ? (kind === 'plan' ? activePlan.id : draft.id) : null);
+      key === (kind === 'plan' ? 'start23.athlete-a.latest-plan-id' : 'start23.athlete-a.latest-swipe-draft-id') ? (kind === 'plan' ? activePlan.id : draft.id) : null);
 }
 test('V2 no plan opens provisional availability without a draft/create/read, and returns to Week', async () => {
   const view = await render(presentation());
@@ -266,4 +268,35 @@ test('Calendar entered from V1 retains the V1 origin across safe Calendar V2 com
   await view.findByText('Week van 2026-10-05');
   expect(view.queryByTestId('calendar-scroll')).toBeNull();
   expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
+});
+
+
+test('A6 unknown plan read renders accessible retry and recovers without a new draft', async () => {
+  restore('plan');
+  jest.mocked(api.getWeeklyPlan).mockRejectedValueOnce(Object.assign(new Error('Unavailable'), { status: 503 }));
+  const view = await render(presentation());
+  await view.findByText('The week could not be fully loaded. Check your connection; your known planning is retained.');
+  expect(view.queryByText('Prepare your training week')).toBeNull();
+  expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
+  jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
+  await fireEvent.press(view.getByRole('button', { name: 'Try again' }));
+  await waitFor(() => expect(api.getWeeklyPlan).toHaveBeenCalledTimes(2));
+  expect(api.createSwipeWeekDraft).not.toHaveBeenCalled();
+});
+
+
+test.each(['v1', 'v2'])('A6 %s can review a recovered next-week proposal and return to the active week', async version => {
+  process.env.EXPO_PUBLIC_UI_VERSION = version;
+  jest.mocked(api.discoverPlanning).mockResolvedValue({ active: activePlan, pending: pendingNext, draft: null });
+  const view = await render(presentation());
+  await view.findByRole('button', { name: 'Review proposal' });
+  expect(view.queryByText(nextWorkout.name)).toBeNull();
+  await fireEvent.press(view.getByRole('button', { name: 'Review proposal' }));
+  if (version === 'v2') await view.findByText(nextWorkout.name);
+  else { await view.findByRole('button', { name: 'Week goedkeuren' }); expect(view.getByText(new RegExp(`Week van\\s*${pendingNext.week_start}`))).toBeTruthy(); }
+  expect(api.approvePlanProposal).not.toHaveBeenCalled();
+  await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
+  await view.findByRole('button', { name: 'Review proposal' });
+  expect(view.queryByText(nextWorkout.name)).toBeNull();
+  expect(api.createSwipeWeekDraft).not.toHaveBeenCalled();
 });
