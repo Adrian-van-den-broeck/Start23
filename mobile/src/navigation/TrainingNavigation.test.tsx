@@ -47,6 +47,15 @@ jest.mock('@gorhom/bottom-sheet', () => {
   };
 });
 jest.mock('react-native-reanimated-carousel', () => ({ Carousel: () => null }));
+let mockFadeMounts = 0;
+jest.mock('../components/FadeInView', () => {
+  const React = jest.requireActual<typeof import('react')>('react');
+  const actual = jest.requireActual<typeof import('../components/FadeInView')>('../components/FadeInView');
+  return { FadeInView: (props: Parameters<typeof actual.FadeInView>[0]) => {
+    React.useEffect(() => { mockFadeMounts += 1; }, []);
+    return <actual.FadeInView {...props} />;
+  } };
+});
 const mockAuthListeners = new Set<() => void>();
 const mockSignOut = jest.fn(async () => { mockAuth.session = null; mockAuthListeners.forEach((listener) => listener()); });
 const mockAuth = {
@@ -134,6 +143,25 @@ beforeEach(() => {
   jest.mocked(api.getCalendar).mockImplementation(async (_token, from, to) => ({ from_date: from, to_date: to, workouts: [workout], rest_days: [] }));
 });
 afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.useRealTimers(); jest.restoreAllMocks(); });
+
+test('A9 V1 warm tabs retain their entrance wrapper and shared owner without repeating reads', async () => {
+  process.env.EXPO_PUBLIC_UI_VERSION = 'v1';
+  const view = await renderRouter(routes, { initialUrl: '/planning' });
+  await view.findByText(workout.name);
+  const mounts = mockFadeMounts, owner = flow.setWeekStart;
+  await fireEvent.press(view.getAllByRole('tab', { name: 'Calendar' })[0]);
+  await view.findByText(workout.name);
+  expect(mockFadeMounts).toBe(mounts);
+  const reads = jest.mocked(api.getCalendar).mock.calls.length;
+  await fireEvent.press(view.getAllByRole('tab', { name: 'Week' })[0]);
+  await view.findByText(workout.name);
+  await fireEvent.press(view.getAllByRole('tab', { name: 'Calendar' })[0]);
+  await view.findByText(workout.name);
+  expect(mockFadeMounts).toBe(mounts);
+  expect(flow.setWeekStart).toBe(owner);
+  expect(api.getCalendar).toHaveBeenCalledTimes(reads);
+  expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
+});
 
 test('A4 actual check-in route returns authoritative next Week, Calendar and a restart locator through the retained owners', async () => {
   const animationNow = Date.now.bind(Date);

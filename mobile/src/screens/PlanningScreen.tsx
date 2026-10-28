@@ -1203,7 +1203,7 @@ function PlanningPresentation({
         {busy || resumeState === 'loading' ? <ActivityIndicator color={colors.brand} /> : null}
         {resumeState === 'failed' ? <Text accessibilityLiveRegion="polite" style={styles.error}>{t('week.loadFailed')}</Text> : null}
 
-        <FadeInView key={view} style={styles.viewContent}>
+        <FadeInView style={styles.viewContent}>
         {view === 'plan' ? (
           <>
             {(!plan || prepareWeek) && resumeState === 'ready' ? (
