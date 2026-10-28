@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -333,6 +333,20 @@ function ReviewRow({ label, value }: { label: string; value: string }) {
   );
 }
 
+async function loadIntake(accessToken: string) {
+  // Keep form reads parallel, but completed athletes do not depend on them.
+  // Attach a rejection handler immediately: auxiliary failures must neither
+  // prevent navigation nor become unhandled after this screen has left.
+  const auxiliary = Promise.all([
+    getGoalPlanningOptions(accessToken), getPhysiologyProfile(accessToken),
+  ]);
+  void auxiliary.catch(() => undefined);
+  const next = await getOnboarding(accessToken);
+  if (next.current_step === 'completed') return { next, options: [], physiology: null };
+  const [options, physiology] = await auxiliary;
+  return { next, options, physiology };
+}
+
 export function OnboardingScreen({
   accessToken,
   active = true,
@@ -347,21 +361,19 @@ export function OnboardingScreen({
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const openPlanning = useRef(onOpenPlanning);
+  useEffect(() => { openPlanning.current = onOpenPlanning; }, [onOpenPlanning]);
 
   const reload = useCallback(async () => {
-    const [next, nextGoalOptions, nextPhysiologyProfile] = await Promise.all([
-      getOnboarding(accessToken),
-      getGoalPlanningOptions(accessToken),
-      getPhysiologyProfile(accessToken),
-    ]);
+    const { next, options: nextGoalOptions, physiology: nextPhysiologyProfile } = await loadIntake(accessToken);
     if (next.current_step === 'completed') {
-      onOpenPlanning();
+      openPlanning.current();
       return;
     }
     setState(next);
     setGoalOptions(nextGoalOptions);
     setPhysiologyProfile(nextPhysiologyProfile);
-  }, [accessToken, onOpenPlanning]);
+  }, [accessToken]);
 
   const retryLoad = useCallback(async () => {
     setLoading(true);
@@ -382,15 +394,11 @@ export function OnboardingScreen({
   useEffect(() => {
     if (!active) return;
     let mounted = true;
-    Promise.all([
-      getOnboarding(accessToken),
-      getGoalPlanningOptions(accessToken),
-      getPhysiologyProfile(accessToken),
-    ])
-      .then(([next, nextGoalOptions, nextPhysiologyProfile]) => {
+    loadIntake(accessToken)
+      .then(({ next, options: nextGoalOptions, physiology: nextPhysiologyProfile }) => {
         if (mounted) {
           if (next.current_step === 'completed') {
-            onOpenPlanning();
+            openPlanning.current();
             return;
           }
           setState(next);
@@ -416,7 +424,7 @@ export function OnboardingScreen({
     return () => {
       mounted = false;
     };
-  }, [accessToken, active, onOpenPlanning]);
+  }, [accessToken, active]);
 
   const mutate = async (
     operation: () => Promise<unknown>,
