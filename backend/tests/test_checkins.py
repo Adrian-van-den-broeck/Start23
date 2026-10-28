@@ -491,6 +491,7 @@ def test_restriction_roundtrip_confirmation_and_exact_next_week_inputs(
                 app.state.planning_repository,
                 app.state.planning_catalog_provider,
                 app.state.weekly_plan_coach,
+                app.state.planning_computation,
             ),
             DisabledCheckInContextCoach(),
         )

@@ -17,7 +17,10 @@ from app.modules.onboarding.repository import RepositoryNotFoundError
 from app.modules.onboarding.versioning import CURRENT_ONBOARDING_VERSION
 from app.modules.physiology.models import Discipline
 from app.modules.planning.domain import (
+    PlanningTargetBasis,
+    WeeklyPlanDraft,
     ZoneCapability,
+    build_weekly_plan,
     eligible_workouts,
 )
 from app.modules.planning.repository import (
@@ -2288,6 +2291,16 @@ def test_new_plan_cannot_reinterpret_legacy_training_history() -> None:
         PlanningService._onboarding_baseline(snapshot)
 
 
+def _verify_initial_base_plan(**kwargs: Any) -> WeeklyPlanDraft:
+    """Top-level spy remains serializable at the pure process boundary."""
+    result = build_weekly_plan(**kwargs)
+    assert result.target.phase is TrainingPhase.BASE
+    assert result.target.basis is PlanningTargetBasis.INITIAL_CATALOG_BASELINE
+    assert result.target.target == kwargs["onboarding_baseline"].total
+    assert result.workouts
+    return result
+
+
 @pytest.mark.parametrize("hours", [0, 1, 3, 6, 8, 10, 15])
 def test_fresh_calibrated_run_athlete_can_start_october_week(
     hours: int, monkeypatch: pytest.MonkeyPatch
@@ -2296,23 +2309,10 @@ def test_fresh_calibrated_run_athlete_can_start_october_week(
     from test_mvp_catalog_coverage import _durable_run_catalog
 
     from app.modules.planning import service as planning_service
-    from app.modules.planning.domain import (
-        PlanningTargetBasis,
-        WeeklyPlanDraft,
-        build_weekly_plan,
+
+    monkeypatch.setattr(
+        planning_service, "build_weekly_plan", _verify_initial_base_plan
     )
-
-    build_plan = build_weekly_plan
-
-    def verify_first_plan(**kwargs: Any) -> WeeklyPlanDraft:
-        result = build_plan(**kwargs)
-        assert result.target.phase is TrainingPhase.BASE
-        assert result.target.basis is PlanningTargetBasis.INITIAL_CATALOG_BASELINE
-        assert result.target.target == kwargs["onboarding_baseline"].total
-        assert result.workouts
-        return result
-
-    monkeypatch.setattr(planning_service, "build_weekly_plan", verify_first_plan)
 
     async def reviewed_catalog(
         _provider: StaticCatalogProvider,

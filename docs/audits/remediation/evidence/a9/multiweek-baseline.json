@@ -1,0 +1,52 @@
+[
+  {
+    "input_sha256": "67825ee09a840696cf3a9496428d7b19ced0ee1c8557f20ec7603c54d00408d3",
+    "outcome": "success",
+    "output_sha256": "ecee8aafe01560dbc5b3ba33d2be0e8eeb52daa2fa18689bdcdff5fed2fffe2e"
+  },
+  {
+    "input_sha256": "fd7c7e21d5004091e368d6abe570586750986acdafa5f942db93ec884175995d",
+    "outcome": "fail_closed",
+    "output_sha256": "1c4734255334f77ceedd977579879225fd2cb9a8ca8c9efc76ea5deecae16f91"
+  },
+  {
+    "input_sha256": "66b240e362db58986e7b78a3a20a5332011ab149d9a705cb5e23d7a5a0483e52",
+    "outcome": "fail_closed",
+    "output_sha256": "1c4734255334f77ceedd977579879225fd2cb9a8ca8c9efc76ea5deecae16f91"
+  },
+  {
+    "input_sha256": "331e417a6e79e293143112078f12997c3b6cd48b201a5c2fd10fa9ae5c306eba",
+    "outcome": "fail_closed",
+    "output_sha256": "1c4734255334f77ceedd977579879225fd2cb9a8ca8c9efc76ea5deecae16f91"
+  },
+  {
+    "input_sha256": "d60c907c9fea5a6d53c122c798b4758a192b9f665a1f72d0f55c28e7e8a306f8",
+    "outcome": "success",
+    "output_sha256": "9c5654f7bf2ed57755df7050fe7d7836e33cf1c67c11b3a83d5966aacbde0d59"
+  },
+  {
+    "input_sha256": "c768876061d049d208a33deeffa368455916a91b11760bc8fff00614fc5a7ed8",
+    "outcome": "success",
+    "output_sha256": "be4d224ef0c91e99761b8b8b26782170ea718aa6b6f096085ab59ff4605661df"
+  },
+  {
+    "input_sha256": "e44b7d7a4f292a4da398bf1dc6950153d1fc4fb1ba6216c0886012fe609a9485",
+    "outcome": "success",
+    "output_sha256": "987f0865825c209209cad046d1d3226f4cfeb6cef73ac18a635e3d75009c80e7"
+  },
+  {
+    "input_sha256": "19bfdc50b42586a42e48936dcb4a0b5189cb7bf5d1864ad841cb152c85fc89ea",
+    "outcome": "success",
+    "output_sha256": "2d53af8b2c61b3bf89f4504498270726d1e59d75cacefd61861c9b3f707aea75"
+  },
+  {
+    "input_sha256": "ae61fea6fff0785ecaf6a9b40faa0fd02947017a9c50559770bf34dce9601f5d",
+    "outcome": "success",
+    "output_sha256": "44d9863fed708701023ff47f0f75adaaa11df5bdc05db4a4e5a67a3625768e34"
+  },
+  {
+    "input_sha256": "104275264c25ba9eef8912890f23e05d38c79c6eeb8a206364c171868fb97dcc",
+    "outcome": "success",
+    "output_sha256": "510d04d4b46103b48be160e346f80607239759c441e363e242d807f1bc4027e5"
+  }
+]

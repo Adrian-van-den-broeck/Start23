@@ -44,6 +44,7 @@ from app.modules.pioneer.repository import (
     PioneerRepository,
     SupabasePioneerRepository,
 )
+from app.modules.planning.execution import PlanningComputation
 from app.modules.planning.repository import (
     PlanningRepository,
     SupabasePlanningRepository,
@@ -69,6 +70,7 @@ def _lifespan(
     checkin_context_coach: CheckInContextCoach,
     athlete_identity_repository: AthleteIdentityRepository,
     pioneer_repository: PioneerRepository,
+    planning_computation: PlanningComputation,
 ) -> Callable[[FastAPI], AbstractAsyncContextManager[None]]:
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -83,6 +85,7 @@ def _lifespan(
         )
         yield
         await asyncio.gather(
+            planning_computation.aclose(),
             onboarding_repository.aclose(),
             planning_repository.aclose(),
             planning_catalog_provider.aclose(),
@@ -156,6 +159,7 @@ def create_app(
     beta_access_repository = pioneer_repository or SupabasePioneerRepository(
         app_settings
     )
+    planning_computation = PlanningComputation()
     application = FastAPI(
         title=app_settings.app_name,
         version=app_settings.app_version,
@@ -173,6 +177,7 @@ def create_app(
             context_coach,
             identity_repository,
             beta_access_repository,
+            planning_computation,
         ),
     )
     application.state.settings = app_settings
@@ -182,6 +187,7 @@ def create_app(
     application.state.onboarding_repository = repository
     application.state.planning_repository = weekly_planning_repository
     application.state.planning_catalog_provider = catalog_provider
+    application.state.planning_computation = planning_computation
     application.state.activity_repository = completed_activity_repository
     application.state.checkin_repository = weekly_checkin_repository
     application.state.calibration_repository = zone_calibration_repository

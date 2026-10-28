@@ -66,6 +66,7 @@ from .domain import (
     remaining_workout_deck,
     validate_manual_schedule,
 )
+from .execution import PlanningComputation
 from .repository import (
     JsonObject,
     PlanningRepository,
@@ -182,7 +183,9 @@ class PlanningService:
         repository: PlanningRepository,
         catalog_provider: PlanningCatalogProvider,
         weekly_plan_coach: WeeklyPlanCoach,
+        computation: PlanningComputation,
     ) -> None:
+        self._computation = computation
         self._repository = repository
         self._catalog_provider = catalog_provider
         self._weekly_plan_coach = weekly_plan_coach
@@ -574,7 +577,8 @@ class PlanningService:
         catalog = active_catalog(await self._catalog_provider.fetch_catalog())
         history_rows = await self._repository.fetch_load_history(athlete_id, week_start)
         prior_loads = self._load_samples(history_rows)
-        automatic = build_weekly_plan(
+        automatic = await self._computation.run(
+            build_weekly_plan,
             week_start=week_start,
             timezone_name=timezone_name,
             race_date=race_date,
@@ -697,8 +701,8 @@ class PlanningService:
                 "Stored swipe decision history is invalid."
             ) from error
 
+    @staticmethod
     def _selection_has_completion(
-        self,
         *,
         context: _SwipePlanningContext,
         week_start: date,
@@ -778,8 +782,8 @@ class PlanningService:
                     zone_capabilities=context.capabilities,
                     available_dates=available_dates,
                     selected_template_ids=selected_ids,
-                    onboarding_baseline=self._onboarding_baseline(
-                        self._planning_input(context.source)
+                    onboarding_baseline=PlanningService._onboarding_baseline(
+                        PlanningService._planning_input(context.source)
                     ),
                     maintenance_active=bool(
                         context.source.get("maintenance_active", False)
@@ -790,8 +794,8 @@ class PlanningService:
             return selected_ids
         return None
 
+    @staticmethod
     def _next_swipe_candidate(
-        self,
         *,
         context: _SwipePlanningContext,
         week_start: date,
@@ -801,7 +805,7 @@ class PlanningService:
         selection: SwipeSelectionState,
     ) -> UUID | None:
         accepted = selection.accepted_template_ids
-        completion = self._selection_has_completion(
+        completion = PlanningService._selection_has_completion(
             context=context,
             week_start=week_start,
             available_dates=available_dates,
@@ -857,8 +861,8 @@ class PlanningService:
             "proposal_id": str(proposal_id) if proposal_id is not None else None,
         }
 
+    @staticmethod
     def _swipe_response(
-        self,
         row: Mapping[str, Any],
         context: _SwipePlanningContext,
     ) -> SwipeWeekDraftResponse:
@@ -867,13 +871,13 @@ class PlanningService:
                 "swipe_draft_closed",
                 "This swipe draft was replaced by a newer draft.",
             )
-        selection = self._swipe_history(row)
+        selection = PlanningService._swipe_history(row)
         by_id = {template.id: template for template in context.eligible_deck}
         try:
             accepted = tuple(
                 SwipeWorkoutOccurrenceResponse.model_validate(
                     {
-                        **self._deck_item(
+                        **PlanningService._deck_item(
                             by_id[template_id],
                             contributes_to_zone_calibration=context.capabilities[
                                 by_id[template_id].discipline
@@ -896,7 +900,7 @@ class PlanningService:
             current = (
                 SwipeWorkoutOccurrenceResponse.model_validate(
                     {
-                        **self._deck_item(
+                        **PlanningService._deck_item(
                             by_id[current_id],
                             contributes_to_zone_calibration=context.capabilities[
                                 by_id[current_id].discipline
@@ -958,8 +962,8 @@ class PlanningService:
                         UUID(str(key)): date.fromisoformat(str(value))
                         for key, value in raw_placements.items()
                     },
-                    onboarding_baseline=self._onboarding_baseline(
-                        self._planning_input(context.source)
+                    onboarding_baseline=PlanningService._onboarding_baseline(
+                        PlanningService._planning_input(context.source)
                     ),
                     maintenance_active=bool(
                         context.source.get("maintenance_active", False)
@@ -1203,7 +1207,8 @@ class PlanningService:
         prior_loads = self._load_samples(
             await self._repository.fetch_load_history(athlete_id, week_start)
         )
-        draft = build_weekly_plan(
+        draft = await self._computation.run(
+            build_weekly_plan,
             week_start=week_start,
             timezone_name=timezone_name,
             race_date=race_date,
@@ -1533,7 +1538,8 @@ class PlanningService:
             cross_training_opt_ins=request.cross_training_opt_ins,
         )
         selection = SwipeSelectionState()
-        current = self._next_swipe_candidate(
+        current = await self._computation.run(
+            self._next_swipe_candidate,
             context=context,
             week_start=request.week_start,
             available_dates=available_dates,
@@ -1580,7 +1586,7 @@ class PlanningService:
                 ),
             },
         )
-        return self._swipe_response(row, context)
+        return await self._computation.run(self._swipe_response, row, context)
 
     async def get_swipe_draft(
         self,
@@ -1593,7 +1599,7 @@ class PlanningService:
             athlete_id,
             draft_id,
         )
-        return self._swipe_response(row, context)
+        return await self._computation.run(self._swipe_response, row, context)
 
     async def transition_swipe_draft(
         self,
@@ -1625,7 +1631,7 @@ class PlanningService:
                     occurrence_id=request.candidate_occurrence_id,
                 )
             ):
-                return self._swipe_response(row, context)
+                return await self._computation.run(self._swipe_response, row, context)
             raise PlanningConstraintError(
                 "swipe_draft_stale",
                 "The swipe draft changed after this action was prepared.",
@@ -1663,7 +1669,8 @@ class PlanningService:
                     "swipe_selection_complete",
                     "Workout selection is already complete.",
                 )
-            recomputed_current = self._next_swipe_candidate(
+            recomputed_current = await self._computation.run(
+                self._next_swipe_candidate,
                 context=context,
                 week_start=week_start,
                 available_dates=available_dates,
@@ -1703,7 +1710,8 @@ class PlanningService:
                     by_id[value].discipline for value in selection.accepted_template_ids
                 ),
                 target_composition=context.target_composition,
-            ) or not self._selection_has_completion(
+            ) or not await self._computation.run(
+                self._selection_has_completion,
                 context=context,
                 week_start=week_start,
                 available_dates=available_dates,
@@ -1720,7 +1728,8 @@ class PlanningService:
             current = None
         else:
             next_state = "collecting"
-            current = self._next_swipe_candidate(
+            current = await self._computation.run(
+                self._next_swipe_candidate,
                 context=context,
                 week_start=week_start,
                 available_dates=available_dates,
@@ -1740,7 +1749,7 @@ class PlanningService:
                 state=next_state,
             ),
         )
-        return self._swipe_response(updated, context)
+        return await self._computation.run(self._swipe_response, updated, context)
 
     async def place_swipe_workout(
         self,
@@ -1796,7 +1805,8 @@ class PlanningService:
         low_only = frozenset(
             Discipline(str(value)) for value in row["low_only_disciplines"]
         )
-        build_weekly_plan(
+        await self._computation.run(
+            build_weekly_plan,
             week_start=week_start,
             timezone_name=context.timezone_name,
             race_date=context.race_date,
@@ -1828,7 +1838,7 @@ class PlanningService:
                 state="placement",
             ),
         )
-        return self._swipe_response(updated, context)
+        return await self._computation.run(self._swipe_response, updated, context)
 
     async def submit_swipe_draft(
         self,
@@ -1919,7 +1929,8 @@ class PlanningService:
         plan = WeeklyPlanResponse.model_validate(
             await self._repository.fetch_plan(access_token, plan_id, revision)
         )
-        final_preview = build_weekly_plan(
+        final_preview = await self._computation.run(
+            build_weekly_plan,
             week_start=week_start,
             timezone_name=context.timezone_name,
             race_date=context.race_date,
@@ -2373,7 +2384,8 @@ class PlanningService:
                 snapshot
             )
             week_start = date.fromisoformat(str(context["week_start"]))
-            build_weekly_plan(
+            await self._computation.run(
+                build_weekly_plan,
                 week_start=week_start,
                 timezone_name=timezone_name,
                 race_date=race_date,

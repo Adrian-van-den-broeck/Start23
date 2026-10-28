@@ -15,6 +15,7 @@ from app.core.errors import ErrorResponse
 from app.core.security import AuthenticatedAthlete, AuthenticatedIdentity
 from app.modules.coach.context import CheckInContextCoach
 from app.modules.coach.weekly_plan import WeeklyPlanCoach
+from app.modules.planning.execution import PlanningComputationUnavailableError
 from app.modules.planning.repository import PlanningRepository, PlanningRepositoryError
 from app.modules.planning.router import raise_planning_error
 from app.modules.planning.schemas import WeeklyPlanProposalResponse
@@ -68,7 +69,12 @@ def get_checkin_service(
     context_coach: CheckInContextCoach = request.app.state.checkin_context_coach
     return CheckInService(
         repository,
-        PlanningService(planning_repository, catalog_provider, weekly_plan_coach),
+        PlanningService(
+            planning_repository,
+            catalog_provider,
+            weekly_plan_coach,
+            request.app.state.planning_computation,
+        ),
         context_coach,
     )
 
@@ -103,7 +109,9 @@ def _raise_public_error(error: Exception) -> NoReturn:
             status_code=status.HTTP_409_CONFLICT,
             detail={"code": error.code, "message": messages[error.code]},
         ) from error
-    if isinstance(error, PlanningRepositoryError):
+    if isinstance(
+        error, (PlanningRepositoryError, PlanningComputationUnavailableError)
+    ):
         raise_planning_error(error)
     if isinstance(error, (CheckInDomainError, ValueError)):
         raise HTTPException(

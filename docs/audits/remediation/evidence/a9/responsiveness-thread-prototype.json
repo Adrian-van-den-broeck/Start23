@@ -1,0 +1,84 @@
+{
+  "1": [
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 3.508588200000304
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.008962099999735074,
+      "authenticated_read_wait_seconds": 0.5968923999998879
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 3.6136403999998947
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.01215749999983018,
+      "authenticated_read_wait_seconds": 0.5867040999996789
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 3.546112600000015
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.008714600000075734,
+      "authenticated_read_wait_seconds": 0.5492333000001963
+    }
+  ],
+  "2": [
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 6.811989600000288
+        },
+        {
+          "status": 201,
+          "seconds": 3.6293205000001763
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.13898310000013225,
+      "authenticated_read_wait_seconds": 0.5953843000002053
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 3.6245725999997376
+        },
+        {
+          "status": 201,
+          "seconds": 6.840231799999856
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.1587902999999642,
+      "authenticated_read_wait_seconds": 0.6272452999996858
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 6.945982299999741
+        },
+        {
+          "status": 201,
+          "seconds": 3.7727704999997513
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.19564570000011372,
+      "authenticated_read_wait_seconds": 0.6919474000001173
+    }
+  ]
+}

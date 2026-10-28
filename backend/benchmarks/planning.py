@@ -238,6 +238,59 @@ def calculate(inputs: dict[str, Any]) -> dict[str, Any]:
             setattr(domain, name, original)
 
 
+def multiweek(builder: Any = None) -> list[dict[str, str]]:
+    """Ten adjacent weeks, carrying only successfully planned historical inputs."""
+    build = builder or domain.build_weekly_plan
+    catalog = full_catalog()
+    history: tuple[PlanLoadSample, ...] = ()
+    results = []
+    for index in range(10):
+        inputs = scenario("run_history", catalog)
+        start = START + timedelta(days=7 * index)
+        inputs.update(
+            week_start=start,
+            race_date=START + timedelta(days=70),
+            prior_loads=history,
+            available_dates=tuple(start + timedelta(days=day) for day in range(7)),
+        )
+        entry = {"input_sha256": digest(inputs)}
+        try:
+            draft = build(**inputs)
+        except ValueError as error:
+            entry.update(
+                outcome="fail_closed",
+                output_sha256=digest((getattr(error, "code", None), str(error))),
+            )
+        else:
+            entry.update(outcome="success", output_sha256=digest(draft))
+            history += (
+                PlanLoadSample(
+                    week_start=start,
+                    load=draft.planned_load,
+                    realized_load=draft.planned_load,
+                    phase=draft.target.phase,
+                    target_basis=draft.target.basis,
+                    has_prior_approved_plan=True,
+                    discipline_loads={
+                        sport: InternalLoad(
+                            sum(
+                                (
+                                    row.snapshot.internal_planned_load.value
+                                    for row in draft.workouts
+                                    if row.discipline is sport
+                                    and row.snapshot.internal_planned_load is not None
+                                ),
+                                Decimal(0),
+                            )
+                        )
+                        for sport in Discipline
+                    },
+                ),
+            )
+        results.append(entry)
+    return results
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--runs", type=int, default=3)

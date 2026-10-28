@@ -1,0 +1,84 @@
+{
+  "1": [
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 4.969761400000152
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.01625030000013794,
+      "authenticated_read_wait_seconds": 0.033994500000062544
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 4.7923728999999184
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.010056100000383594,
+      "authenticated_read_wait_seconds": 0.025325100000372913
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 4.84071589999985
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.008718900000076246,
+      "authenticated_read_wait_seconds": 0.027699400000074093
+    }
+  ],
+  "2": [
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 8.381223699999737
+        },
+        {
+          "status": 201,
+          "seconds": 4.76395599999978
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.04345740000007936,
+      "authenticated_read_wait_seconds": 0.04774000000043088
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 9.590857900000174
+        },
+        {
+          "status": 201,
+          "seconds": 6.166282900000169
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.1251878999996734,
+      "authenticated_read_wait_seconds": 0.1297308999996858
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 8.306367900000168
+        },
+        {
+          "status": 201,
+          "seconds": 4.853743499999837
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.04545719999987341,
+      "authenticated_read_wait_seconds": 0.050033999999868684
+    }
+  ]
+}

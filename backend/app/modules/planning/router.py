@@ -19,6 +19,7 @@ from app.modules.physiology.specification import JOREN_PLANNING_RULESET_V2
 from app.modules.workouts.repository import PlanningCatalogUnavailableError
 
 from .domain import PlanningConstraintError
+from .execution import PlanningComputationUnavailableError
 from .repository import (
     PlanningRepository,
     PlanningRepositoryConflictError,
@@ -81,6 +82,7 @@ def get_weekly_plan_coach(request: Request) -> WeeklyPlanCoach:
 
 
 def get_planning_service(
+    request: Request,
     repository: Annotated[PlanningRepository, Depends(get_planning_repository)],
     catalog_provider: Annotated[
         PlanningCatalogProvider,
@@ -92,7 +94,12 @@ def get_planning_service(
     ],
 ) -> PlanningService:
     """Build one request-scoped planning application service."""
-    return PlanningService(repository, catalog_provider, weekly_plan_coach)
+    return PlanningService(
+        repository,
+        catalog_provider,
+        weekly_plan_coach,
+        request.app.state.planning_computation,
+    )
 
 
 def raise_planning_error(error: Exception) -> NoReturn:
@@ -115,6 +122,7 @@ def raise_planning_error(error: Exception) -> NoReturn:
         (
             PlanningRepositoryUnavailableError,
             PlanningCatalogUnavailableError,
+            PlanningComputationUnavailableError,
         ),
     ):
         raise HTTPException(
