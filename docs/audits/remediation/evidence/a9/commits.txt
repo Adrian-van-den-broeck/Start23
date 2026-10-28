@@ -1,0 +1,14 @@
+Accepted A8 base: d0e726dfd291ffde12a459ec430b11fdc5cddc7a
+Branch: fix/wombo-end-to-end-performance
+
+3643e436e3176806ebbda28fbf4cdcfddc53e49a test(performance): record A9 deterministic and V1 loading baselines
+3b1e7dd17d1a930d1fdfdbeaba05e4d6cb7af7b2 perf(planning): reuse exact search metadata and comparison paths
+ff16f08c940fb5e75e517995226680fec036325b perf(mobile): unblock completed intake navigation from auxiliary reads
+393c72a6a1b7009f69d28440182f4fdbfce94d0a perf(api): isolate exact planning in a bounded local process worker
+1b36dd11e5e732029ca02fe4e36026c2b7431314 perf(mobile): share overlapping onboarding reads across scoped consumers
+8aca2655c2c36534a5c3973a466a5ffc3e396d00 perf(v1): retain the entrance wrapper across warm planning tabs
+a5730729c3b2bd7ede8af286f9bcc0a5bfc1bbfc test(performance): preserve A9 end-to-end measurements and verification
+
+The report-only finalization follows these tested commits. Its exact hash is
+returned in the completion message and resolves with:
+git log -1 --format=%H -- docs/audits/remediation/WOMBO_REMEDIATION_A9_REPORT.md
