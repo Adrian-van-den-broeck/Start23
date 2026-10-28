@@ -1,0 +1,357 @@
+{
+  "python": "3.10.10",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "catalog_sha256": "8b1e9952b9ecea23775ed269970ed425a2133a2933e4d8d453544d2f5df10a9b",
+  "cases": {
+    "run_zero": {
+      "outcome": "success",
+      "output_sha256": "915a5b5df8f7edf214dfd40232f5ed0de53499dc6c4818898bc07d68b97feb11",
+      "trace": {
+        "resolve_target": [
+          "0c25aad8abdde1ef503234162395e1cf66ea4d9a713e92806d8a569de62a048f"
+        ],
+        "eligible_workouts": [
+          "f003e1891799fba5a66de5acad19951ed1bb8acd7a11b4d8cc4c890d90fb1872"
+        ],
+        "_bounded_selection": [
+          "d7e8ff73045c50d8ac3a10a31d41e731db5728ba49293a9dff7af051119bde44"
+        ],
+        "schedule_workouts": [
+          "b51b19c4779cdb81d81bdf1196acffd3fadc369c29c38a2899ab7d4a8ae49479"
+        ]
+      },
+      "input_sha256": "26d000df22dcfd83fcf48d86f90edec0706a69d7e09de4c6721788a9b469894c",
+      "seconds": [
+        0.004045899999937319,
+        0.004392000000052576,
+        0.003857599999946615
+      ],
+      "median_seconds": 0.004045899999937319,
+      "max_seconds": 0.004392000000052576
+    },
+    "run_history": {
+      "outcome": "success",
+      "output_sha256": "ecee8aafe01560dbc5b3ba33d2be0e8eeb52daa2fa18689bdcdff5fed2fffe2e",
+      "trace": {
+        "resolve_target": [
+          "00db6469f11ff521851971934c9a58232da64b1e4045dc3e3b6031fed25676d6"
+        ],
+        "eligible_workouts": [
+          "f003e1891799fba5a66de5acad19951ed1bb8acd7a11b4d8cc4c890d90fb1872"
+        ],
+        "_bounded_selection": [
+          "66b73d1d9a6923d30115a42bf7c32b2e110a8d80a919ec6dd39e57349463c34f"
+        ],
+        "schedule_workouts": [
+          "1ddf53910a104edee449ddfb0766b96e59642134a960a597a98b4ab3841a5e00"
+        ]
+      },
+      "input_sha256": "9b9b425839df2428d7db0b9472eb59cd5b67b5e0d2eaab2f449f5ecd178183d2",
+      "seconds": [
+        0.0873706999998376,
+        0.09000190000006114,
+        0.09063319999995656
+      ],
+      "median_seconds": 0.09000190000006114,
+      "max_seconds": 0.09063319999995656
+    },
+    "swim_history": {
+      "outcome": "success",
+      "output_sha256": "f396c2466ea91f9abcdf177ddafe85815b14db5abbc8388e263da8b64bd08def",
+      "trace": {
+        "resolve_target": [
+          "0d8e3c48fb721bccdbede4c2d8f45948dde5c65a681ece83b5f218391790a30f"
+        ],
+        "eligible_workouts": [
+          "780d192f5188b33778b37292f276b78be9b32292e6b98d553c6e9aee0422aa1c"
+        ],
+        "_bounded_selection": [
+          "4baab3ed8386a2a4da9a18adfa2729593c5fca454734320483b082f744a97ce1"
+        ],
+        "schedule_workouts": [
+          "50370fa8b7118fbbb7d171d404fdcd04afa071e1668b7d4d68570d634aeef586"
+        ]
+      },
+      "input_sha256": "074f6066fbf1e239c1cf0f5a7fa9dfabfda96e33aadffb2268f159cba1a879c5",
+      "seconds": [
+        0.0021460999998907937,
+        0.002087500000016007,
+        0.002012000000149783
+      ],
+      "median_seconds": 0.002087500000016007,
+      "max_seconds": 0.0021460999998907937
+    },
+    "duathlon": {
+      "outcome": "success",
+      "output_sha256": "bec3f8c8ddb195b64976f384b6e08cdf3efd2d009811fb1da79e1526366c4d98",
+      "trace": {
+        "resolve_target": [
+          "38587b41b0ccea19fb93d8377a6dffec887ecbff10e988a7c850c1fd0717d56d"
+        ],
+        "eligible_workouts": [
+          "9240d8ea4e09f8c0b133587ed4f28542640e8bc2ed23820e61841dd07a551825"
+        ],
+        "_bounded_selection": [
+          "9776972c22207ad67ff3194afd44dd68df0c8e42d6bafacbbaeb173bc38b8e75"
+        ],
+        "schedule_workouts": [
+          "f38f552af523e1971978961b3c65b953657da2a1e3e6d1fe9d3c467d8e8721e8"
+        ]
+      },
+      "input_sha256": "3b7f095e33213932c4b8f05ac304f3df83fd9e6159935aac5c9f6201c7270bfc",
+      "seconds": [
+        0.10628289999999652,
+        0.10643099999992955,
+        0.13794239999992897
+      ],
+      "median_seconds": 0.10643099999992955,
+      "max_seconds": 0.13794239999992897
+    },
+    "tri_balanced": {
+      "outcome": "success",
+      "output_sha256": "b8a8c4cf9679144014212f12f730250ace6aa11667e667d0a2082202451b75ff",
+      "trace": {
+        "resolve_target": [
+          "fbbcf93f217ce67e3ffb7a0bea7c5d70023645d29d7e0b3fe15d0775ca494a06"
+        ],
+        "eligible_workouts": [
+          "2d23d96eb188ab3aabaab8d31fa943e2715a27a03d0bd63b8fe579385bb6ebb1"
+        ],
+        "_bounded_selection": [
+          "43269947c7a44d16c60d648f56aabea16caefb0c2796433ab5c36058accbcdab"
+        ],
+        "schedule_workouts": [
+          "6f30fd7a9f4489ae810de9951056df8169befdc374a9c466d76945d14cf48d58"
+        ]
+      },
+      "input_sha256": "0b0b3ee63b4a0f1ab05f5c8c79789b8c131b444c6b95c6d06c1e83e9376bbbb2",
+      "seconds": [
+        3.2844405000000734,
+        3.2489302000001317,
+        3.3273381000001336
+      ],
+      "median_seconds": 3.2844405000000734,
+      "max_seconds": 3.3273381000001336
+    },
+    "tri_zero": {
+      "outcome": "fail_closed",
+      "code": "catalog_capacity_unsatisfied",
+      "output_sha256": "1c4734255334f77ceedd977579879225fd2cb9a8ca8c9efc76ea5deecae16f91",
+      "trace": {
+        "resolve_target": [
+          "0c25aad8abdde1ef503234162395e1cf66ea4d9a713e92806d8a569de62a048f"
+        ],
+        "eligible_workouts": [
+          "2d23d96eb188ab3aabaab8d31fa943e2715a27a03d0bd63b8fe579385bb6ebb1"
+        ],
+        "_bounded_selection": [
+          "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
+        ]
+      },
+      "input_sha256": "8b168fadb3b2ef87c32d04853ce3dc0efe1e4e7234e301bae521055740d8605a",
+      "seconds": [
+        3.366414999999961,
+        3.408879200000001,
+        3.4150033999999323
+      ],
+      "median_seconds": 3.408879200000001,
+      "max_seconds": 3.4150033999999323
+    },
+    "tri_one_sport_history": {
+      "outcome": "fail_closed",
+      "code": "zero_history_discipline_baseline_unavailable",
+      "output_sha256": "f83e328314f38bf6eb3f1ef9050e12037954cf5e2b58df26329ab3e90ce819e4",
+      "trace": {},
+      "input_sha256": "bebb2335e20d698e9f424782fc6e37f5c46166151632527488e24470f243213e",
+      "seconds": [
+        2.8199999860589742e-05,
+        2.5499999992462108e-05,
+        2.1400000150606502e-05
+      ],
+      "median_seconds": 2.5499999992462108e-05,
+      "max_seconds": 2.8199999860589742e-05
+    },
+    "run_no_days": {
+      "outcome": "fail_closed",
+      "code": "availability_required",
+      "output_sha256": "75632d0205e5435384f59a839f2af2adb8c6cd671de11f751d5d1bf2a0c4b2e4",
+      "trace": {
+        "resolve_target": [
+          "00db6469f11ff521851971934c9a58232da64b1e4045dc3e3b6031fed25676d6"
+        ],
+        "eligible_workouts": [
+          "f003e1891799fba5a66de5acad19951ed1bb8acd7a11b4d8cc4c890d90fb1872"
+        ],
+        "_bounded_selection": [
+          "66b73d1d9a6923d30115a42bf7c32b2e110a8d80a919ec6dd39e57349463c34f"
+        ]
+      },
+      "input_sha256": "36687c57cc4c448f713626c250a3f98fe163169d0975a3c6b8d1ad65c9ee2f3c",
+      "seconds": [
+        0.08815059999983532,
+        0.08545869999989009,
+        0.08589890000007472
+      ],
+      "median_seconds": 0.08589890000007472,
+      "max_seconds": 0.08815059999983532
+    },
+    "constrained": {
+      "outcome": "success",
+      "output_sha256": "447f98e25c5e3056b993c9cfd925197b345ca7afbb80113cd070cfa4f4fa3d87",
+      "trace": {
+        "resolve_target": [
+          "00db6469f11ff521851971934c9a58232da64b1e4045dc3e3b6031fed25676d6"
+        ],
+        "eligible_workouts": [
+          "f003e1891799fba5a66de5acad19951ed1bb8acd7a11b4d8cc4c890d90fb1872"
+        ],
+        "_bounded_selection": [
+          "66b73d1d9a6923d30115a42bf7c32b2e110a8d80a919ec6dd39e57349463c34f"
+        ],
+        "schedule_workouts": [
+          "84445231b7bba137379aeb3be0b589d1cd9b7dbbcdaf8de9efb14adb5440e3c3"
+        ]
+      },
+      "input_sha256": "8e66b9c541c7be468647b6ca83bad32262d626395b577b28d23c0b333496848e",
+      "seconds": [
+        0.08617670000012367,
+        0.08672780000006242,
+        0.08510279999995873
+      ],
+      "median_seconds": 0.08617670000012367,
+      "max_seconds": 0.08672780000006242
+    },
+    "repeated_occurrences": {
+      "outcome": "success",
+      "output_sha256": "1de1fc03d6e4e0f8c6592b73f5816074fe3b694e5f747f8839fa6a0e6cb00ffd",
+      "trace": {
+        "resolve_target": [
+          "00db6469f11ff521851971934c9a58232da64b1e4045dc3e3b6031fed25676d6"
+        ],
+        "eligible_workouts": [
+          "fdbba15459922e730734430c0cc32f8756dc3705361dd7c64ed5da0ee7f62171"
+        ],
+        "schedule_workouts": [
+          "ff95c1dd479f0c01469fc48daa40cadc19112dd1676b8a2f3da9cd9973118434"
+        ]
+      },
+      "input_sha256": "fb6d232a8c20546b0708a15f631c488ce9de732048b04fcbc1440bbe837f18fc",
+      "seconds": [
+        0.0016401999998834071,
+        0.0015842000000247936,
+        0.0016011999998681858
+      ],
+      "median_seconds": 0.0016011999998681858,
+      "max_seconds": 0.0016401999998834071
+    },
+    "build_week": {
+      "outcome": "success",
+      "output_sha256": "e258588cf41cef9c88f73a43208c0787673f2357e95e6cfc9292846208bbd48f",
+      "trace": {
+        "resolve_target": [
+          "790f143a541c1e0498d01a750e398e62164c62bb62f7854739316f6ec921a378"
+        ],
+        "eligible_workouts": [
+          "e85911d45490dbdbc52ae5ed0097a6efedad81bf813708612c5a9068ed6b3e0e"
+        ],
+        "schedule_workouts": [
+          "d588ccc9257c03165f0ee49909dc9647f27e0326ebfb83a221f95fa6b839bfc1",
+          "42dfe09ea097dd27d95c3fe34ad029d05747552a287ee06b163004d1f7f3b931",
+          "98bae141581dc87db762ed757953fec35416289c839aa91d6df29212c1422f30",
+          "249d235ab533b79e1f1e5b957b6b551d22d84c4e509bfc693a5d8c815130b804",
+          "249d235ab533b79e1f1e5b957b6b551d22d84c4e509bfc693a5d8c815130b804"
+        ],
+        "_bounded_selection": [
+          "7623b0d0ec5c012437bb1fe4352baa3ecd8bf0995d29691d9a1dde0c7ff6cd49"
+        ]
+      },
+      "input_sha256": "d8a3985236ff97c2031527d669cded4548148f548754b00eda6c7eb4a2d2705f",
+      "seconds": [
+        0.010170799999968949,
+        0.009750599999961196,
+        0.010638999999855514
+      ],
+      "median_seconds": 0.010170799999968949,
+      "max_seconds": 0.010638999999855514
+    },
+    "recovery_week": {
+      "outcome": "success",
+      "output_sha256": "cbe877578c8d7c6dd97c4cc3662323143263151c3493d278c70ccdedcf166431",
+      "trace": {
+        "resolve_target": [
+          "1b21b2fece8afb820abf40967111222b6de080e1ae27eec35e44c25334f8190b"
+        ],
+        "eligible_workouts": [
+          "f003e1891799fba5a66de5acad19951ed1bb8acd7a11b4d8cc4c890d90fb1872"
+        ],
+        "_bounded_selection": [
+          "e8601f147fe81359620433a8700d78d7fd01da86d9ab7e21eef2ec432272a1e3"
+        ],
+        "schedule_workouts": [
+          "e070f0c24868d45422cd3bc5d46ef20092c1aba6995e6b57f0d9bfe19fc57abb"
+        ]
+      },
+      "input_sha256": "baf8ffb42d7b91fc7e5598b7ce5b14af069e5c446f0e6d5d55e97739926e3211",
+      "seconds": [
+        0.0035302000001138367,
+        0.003110400000196023,
+        0.0030851999999867985
+      ],
+      "median_seconds": 0.003110400000196023,
+      "max_seconds": 0.0035302000001138367
+    },
+    "taper_week": {
+      "outcome": "success",
+      "output_sha256": "d0bda1a71c8a33fffc416ca6925469e28240b9d6b9de305fddc4368da16777b3",
+      "trace": {
+        "resolve_target": [
+          "7834bee000be26d305604da586d734d754594d2bb97a376a89d414a6c86549fc"
+        ],
+        "eligible_workouts": [
+          "f003e1891799fba5a66de5acad19951ed1bb8acd7a11b4d8cc4c890d90fb1872"
+        ],
+        "_bounded_selection": [
+          "232419d9452bdd435187ac1a9e65afc665190ebd6546409ae042cd3e65867fd1"
+        ],
+        "schedule_workouts": [
+          "c0deee0754babe26d5905813e9c8702d8225fd8236bea8bce4335576c0bbe598"
+        ]
+      },
+      "input_sha256": "043266eef4525d67d45a2f2001e3dd742592b3283e6154007920e4815937e162",
+      "seconds": [
+        0.008006500000192318,
+        0.00746249999997417,
+        0.008005700000012439
+      ],
+      "median_seconds": 0.008005700000012439,
+      "max_seconds": 0.008006500000192318
+    },
+    "restriction": {
+      "outcome": "success",
+      "output_sha256": "56d18e7e973d685973772d6e382cb9c8bfd01b212b33822eeb64d04a6d78c19d",
+      "trace": {},
+      "input_sha256": "7fc653c9b6b9cca2c917bb22cf0697a028e461ca275cfc14fc9f032b23da0bee",
+      "seconds": [
+        0.00010520000000724394,
+        9.15000000532018e-05,
+        8.690000004207832e-05
+      ],
+      "median_seconds": 9.15000000532018e-05,
+      "max_seconds": 0.00010520000000724394
+    },
+    "partial_taper": {
+      "outcome": "fail_closed",
+      "code": "partial_week_taper_rule_required",
+      "output_sha256": "026c19e3d160743381b52814bd0923f2db891c402b5603637ea2b18264306aeb",
+      "trace": {},
+      "input_sha256": "fe7fa57fd3b9b8e686c3d93195e64c71a6064420f5f06be98cbb995d2c68781c",
+      "seconds": [
+        0.00016860000005181064,
+        0.00016300000015689875,
+        0.0001604999999926804
+      ],
+      "median_seconds": 0.00016300000015689875,
+      "max_seconds": 0.00016860000005181064
+    }
+  }
+}

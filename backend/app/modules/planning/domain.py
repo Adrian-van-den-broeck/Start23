@@ -784,6 +784,19 @@ def _bounded_selection(
         )
     )
     sports = tuple(Discipline)
+    # Immutable per-option facts are reused across every dynamic-programming
+    # transition. Keep the original option order and canonical UUID ordering.
+    option_facts = tuple(
+        (
+            item,
+            require_planned_load(item).value,
+            item.intensity_bucket is IntensityBucket.HIGH,
+            sports.index(item.discipline),
+            _has_zone_five(item),
+            str(item.id),
+        )
+        for item in options
+    )
     prefix_counts = tuple(
         sum(item.discipline is sport for item in prefix) for sport in sports
     )
@@ -830,7 +843,7 @@ def _bounded_selection(
             tuple[int, ...],
             bool,
         ],
-        tuple[WorkoutTemplate, ...],
+        tuple[tuple[WorkoutTemplate, ...], tuple[str, ...]],
     ] = {
         (
             prefix_total,
@@ -839,7 +852,7 @@ def _bounded_selection(
             prefix_high_counts,
             prefix_limited_counts,
             prefix_z5,
-        ): prefix
+        ): (prefix, tuple(str(item.id) for item in prefix))
     }
     best: tuple[WorkoutTemplate, ...] | None = None
     best_key: tuple[Decimal, Decimal, int, tuple[str, ...]] | None = None
@@ -853,7 +866,7 @@ def _bounded_selection(
             high_counts,
             limited_counts,
             has_z5,
-        ), selection in states.items():
+        ), (selection, selection_key) in states.items():
             if required_count is not None and count != required_count:
                 continue
             if not all(
@@ -881,7 +894,7 @@ def _bounded_selection(
                 abs(total - target.value),
                 abs(high - budget) if phase is TrainingPhase.BUILD else Decimal(0),
                 count,
-                tuple(str(item.id) for item in selection),
+                selection_key,
             )
             if (best_key is None or score < best_key) and (
                 feasible is None or feasible(selection)
@@ -898,7 +911,7 @@ def _bounded_selection(
                 tuple[int, ...],
                 bool,
             ],
-            tuple[WorkoutTemplate, ...],
+            tuple[tuple[WorkoutTemplate, ...], tuple[str, ...]],
         ] = {}
         for (
             total,
@@ -907,30 +920,22 @@ def _bounded_selection(
             high_counts,
             limited_counts,
             has_z5,
-        ), selection in states.items():
-            for item in options:
+        ), (selection, selection_key) in states.items():
+            for item, item_load, is_high, index, item_z5, item_key in option_facts:
                 if maximum_uses is not None and sum(
                     existing.id == item.id for existing in selection
                 ) >= maximum_uses.get(item.id, 24):
                     continue
-                new_total = total + require_planned_load(item).value
+                new_total = total + item_load
                 if new_total > max_total:
                     continue
-                new_high = high + (
-                    require_planned_load(item).value
-                    if item.intensity_bucket is IntensityBucket.HIGH
-                    else Decimal(0)
-                )
+                new_high = high + (item_load if is_high else Decimal(0))
                 if phase is TrainingPhase.BUILD and new_high > budget:
                     continue
-                index = sports.index(item.discipline)
                 new_counts = counts[:index] + (counts[index] + 1,) + counts[index + 1 :]
                 new_high_counts = (
                     high_counts[:index]
-                    + (
-                        high_counts[index]
-                        + (item.intensity_bucket is IntensityBucket.HIGH),
-                    )
+                    + (high_counts[index] + is_high,)
                     + high_counts[index + 1 :]
                 )
                 if required_composition is not None and new_counts[
@@ -947,11 +952,11 @@ def _bounded_selection(
                             ),
                             Decimal(0),
                         )
-                        + require_planned_load(item).value
+                        + item_load
                     )
                     if sport_total > discipline_caps[item.discipline].value:
                         continue
-                new_z5 = has_z5 or _has_zone_five(item)
+                new_z5 = has_z5 or item_z5
                 new_limited_counts = tuple(
                     value + (item.id == template_id)
                     for template_id, value in zip(
@@ -966,12 +971,10 @@ def _bounded_selection(
                     new_limited_counts,
                     new_z5,
                 )
-                path = selection + (item,)
+                path_key = selection_key + (item_key,)
                 previous = next_states.get(state)
-                if previous is None or tuple(str(value.id) for value in path) < tuple(
-                    str(value.id) for value in previous
-                ):
-                    next_states[state] = path
+                if previous is None or path_key < previous[1]:
+                    next_states[state] = (selection + (item,), path_key)
         states = next_states
         if not states:
             break
