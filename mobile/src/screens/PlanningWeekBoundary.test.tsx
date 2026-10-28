@@ -128,7 +128,7 @@ test('active plus pending reads each snapshot once and review approves exact pro
   await view.rerender(presentation());
   expect(api.approvePlanProposal).toHaveBeenCalledTimes(1);
   expect(api.approvePlanProposal).toHaveBeenCalledWith('token-a', proposal.id, 2);
-  jest.mocked(api.getWeeklyPlan).mockResolvedValue({ ...activePlan, revision: 3, active_revision: 3 });
+  jest.mocked(api.getWeeklyPlan).mockResolvedValue({ ...activePlan, revision: 3, active_revision: 3, revision_id: pendingPlan.revision_id });
   await act(async () => finish());
   await view.findByText('Approved');
   expect(api.getWeeklyPlan).toHaveBeenCalledTimes(3);

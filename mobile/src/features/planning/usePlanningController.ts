@@ -55,6 +55,8 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
   const currentPlan = useRef(plan);
   currentPlan.current = plan;
   const planResultGeneration = useRef(0);
+  const unresolvedGeneration = useRef<Parameters<typeof createSwipeWeekDraft>[1] | null>(null);
+  const unresolvedMove = useRef<{ workout: PlannedWorkout; scheduledDate: string; reviewedPlan: WeeklyPlan } | null>(null);
   const [taskHandoff, setTaskHandoff] = useState<TaskPlanHandoff | null>(null);
   const currentHandoff = useRef(taskHandoff);
   const publishHandoff = (value: TaskPlanHandoff | null) => {
@@ -316,7 +318,7 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
         throw new Error('Kies minstens één beschikbare trainingsdag.');
       }
       const boundPlan = plan?.revision_state === 'active' ? plan : null;
-      const result = await createSwipeWeekDraft(accessToken, {
+      const input = unresolvedGeneration.current ?? {
         week_start: weekStart,
         ...(reusePreviousWeek
           ? { reuse_previous_week: true }
@@ -329,7 +331,15 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
             expected_base_revision: boundPlan.active_revision ?? 0,
           }
           : {}),
-      });
+      };
+      let result: SwipeWeekDraft;
+      try { result = await createSwipeWeekDraft(accessToken, input); }
+      catch (caught) {
+        if (moveOwnerAlive.current && caught && typeof caught === 'object' && 'outcome' in caught && caught.outcome === 'unknown') unresolvedGeneration.current = input;
+        throw caught;
+      }
+      if (!moveOwnerAlive.current) return;
+      unresolvedGeneration.current = null;
       try { await rememberSwipeDraftId(result.id); }
       catch (caught) {
         if (moveOwnerAlive.current) { setSwipeDraft(result); setView('deck'); setResumeState('failed'); }
@@ -424,7 +434,7 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
       } catch (caught) {
         if (moveOwnerAlive.current) {
           const status = caught && typeof caught === 'object' && 'status' in caught ? caught.status : null;
-          if (typeof status !== 'number' || status >= 500) publishHandoff({ ...handoff, phase: 'verify' });
+          if ((caught && typeof caught === 'object' && 'outcome' in caught && caught.outcome === 'unknown') || typeof status !== 'number' || status >= 500) publishHandoff({ ...handoff, phase: 'verify' });
         }
         throw caught;
       }
@@ -457,20 +467,16 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
 
   const approve = () => {
     const handoff = currentHandoff.current;
-    if (handoff?.taskKey.startsWith('recovery:') && handoff.reviewed === plan) {
+    if (handoff && handoff.reviewed === plan) {
       void approveTaskPlan(handoff.taskKey, handoff.reviewed).catch(() => undefined);
       return;
     }
     if (currentPlan.current !== plan || plan?.revision_state !== 'pending_approval' || plan.proposal?.state !== 'pending') return;
-    void run(async () => {
-      await approvePlanProposal(
-        accessToken,
-        plan.proposal!.id,
-        plan.proposal!.base_plan_revision ?? 0,
-      );
-      const updated = await getWeeklyPlan(accessToken, plan.id);
-      if (moveOwnerAlive.current) setPlan(updated);
-    });
+    const taskKey = `plan:${plan.revision_id}`;
+    void receiveTaskPlan(taskKey, plan).then(ready => {
+      if (ready && moveOwnerAlive.current) return approveTaskPlan(taskKey, plan);
+      return false;
+    }).catch(() => undefined);
   };
 
   const reject = () => {
@@ -566,14 +572,41 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
     reviewedPlan: WeeklyPlan,
   ) => {
     if (!moveOwnerAlive.current || currentPlan.current !== reviewedPlan || !reviewedPlan.active_revision) return;
-    const updated = await movePlannedWorkout(
+    const unresolved = unresolvedMove.current;
+    if (unresolved) {
+      const stored = await getWeeklyPlan(accessToken, unresolved.reviewedPlan.id);
+      if (!moveOwnerAlive.current) return;
+      if (stored.revision !== unresolved.reviewedPlan.revision) {
+        // The newer authoritative schedule may include another device's edit.
+        // Adopt it for review without claiming our ambiguous PATCH committed.
+        setPlan(stored);
+        unresolvedMove.current = null;
+        currentMove.current = null;
+        setPendingMove(null);
+        throw new Error('De weekplanning is intussen gewijzigd. Controleer de opgeslagen planning.');
+      }
+      workout = unresolved.workout;
+      scheduledDate = unresolved.scheduledDate;
+      // A6 may have refreshed an equal authoritative revision into a new
+      // object. Keep the original wire identity/precondition, using the live
+      // snapshot solely for the existing publication guard.
+      if (!currentPlan.current || currentPlan.current.id !== unresolved.reviewedPlan.id || currentPlan.current.revision !== unresolved.reviewedPlan.revision) return;
+      reviewedPlan = currentPlan.current;
+    }
+    let updated: WeeklyPlan;
+    try { updated = await movePlannedWorkout(
       accessToken,
       workout.id,
-      reviewedPlan.active_revision,
+      reviewedPlan.active_revision!,
       scheduledDate,
-    );
+    ); }
+    catch (caught) {
+      if (moveOwnerAlive.current && caught && typeof caught === 'object' && 'outcome' in caught && caught.outcome === 'unknown') unresolvedMove.current = { workout, scheduledDate, reviewedPlan };
+      throw caught;
+    }
     if (!moveOwnerAlive.current || currentPlan.current !== reviewedPlan) return;
     setPlan(updated);
+    unresolvedMove.current = null;
     currentMove.current = null;
     setPendingMove(null);
     void Haptics.notificationAsync(
@@ -592,6 +625,11 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
       return;
     }
     void run(async () => {
+      if (unresolvedMove.current) {
+        const attempt = unresolvedMove.current;
+        await applyWorkoutMove(attempt.workout, attempt.scheduledDate, plan);
+        return;
+      }
       const workouts = plan.workouts.map((item) => ({
         workout_id: item.id,
         scheduled_date:

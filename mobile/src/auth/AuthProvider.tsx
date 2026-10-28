@@ -7,19 +7,24 @@ import { AppState, Platform } from 'react-native';
 
 import { getSupabaseClient, supabaseConfigurationError } from '../lib/supabase';
 import { DeadlineError, withDeadline } from '../lib/deadline';
-import { cancelApiRequests } from '../lib/apiCancellation';
+import { activateApiToken, retireApiToken } from '../lib/apiCancellation';
 
 const refreshTokenKey = 'start23.refresh-token';
 export const AUTH_REFRESH_DEADLINE_MS = 45_000;
+export const AUTH_LOGOUT_DEADLINE_MS = 60_000;
 export type AuthRecovery = 'network' | 'timeout' | 'provider' | 'storage_read' | 'storage_write' | 'unavailable';
 
 export function classifyRefreshError(error: unknown): AuthRecovery | 'invalid' {
+  // The bounded Auth transport validates successful refresh DTOs before the
+  // SDK can turn a malformed 200 into this same session_not_found class.
   if (isAuthSessionMissingError(error)) return 'invalid';
   if (isAuthApiError(error) && [
     'refresh_token_not_found', 'refresh_token_already_used', 'session_not_found',
     'session_expired', 'user_not_found', 'user_banned',
   ].includes(error.code ?? '')) return 'invalid';
-  if (error instanceof DeadlineError || (isAuthApiError(error) && error.code === 'request_timeout')) return 'timeout';
+  if (error instanceof DeadlineError || (isAuthApiError(error) && error.code === 'request_timeout') ||
+    (isAuthRetryableFetchError(error) && error.message === 'Request deadline exceeded')) return 'timeout';
+  if (isAuthRetryableFetchError(error) && error.message === 'Auth response could not be validated') return 'unavailable';
   if (isAuthRetryableFetchError(error)) return error.status && error.status >= 500 ? 'provider' : 'network';
   if (isAuthApiError(error) && (error.status === 429 || error.status >= 500)) return 'provider';
   // Unknown/client errors are not proof that a persisted credential is revoked.
@@ -69,8 +74,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
     let expiryTimer: ReturnType<typeof setTimeout> | undefined;
     let foreground = AppState.currentState === 'active' || AppState.currentState === null;
     let storageFailed = false;
-    const accessTokens = new Set<string>();
-    const retireRequests = () => { accessTokens.forEach(cancelApiRequests); accessTokens.clear(); };
+    let signingOut = false;
+    const accessTokens = new Map<string, number>();
+    const retireRequests = () => { accessTokens.forEach((expiry, access) => retireApiToken(access, expiry)); accessTokens.clear(); };
     const persist = (value: string | null, version: number) => {
       const result = writes.then(async () => {
         if (!alive || epoch !== version || token !== value) return;
@@ -85,9 +91,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
       if (!usable(current)) setSession(null);
     };
     const save = (value: string | null, version: number) => persist(value, version).then(() => {
-      if (alive && version === epoch) storageFailed = false;
+      if (alive && version === epoch && token === value) {
+        storageFailed = false;
+        setRecovery(previous => previous === 'storage_write' ? null : previous);
+      }
     }).catch(() => {
-      if (alive && version === epoch) { storageFailed = true; report('storage_write'); }
+      if (alive && version === epoch && token === value) { storageFailed = true; report('storage_write'); }
     });
     const schedule = () => {
       clearTimeout(refreshTimer);
@@ -103,15 +112,16 @@ export function AuthProvider({ children }: PropsWithChildren) {
       if (!alive || version !== epoch) return;
       if (current && current.user.id !== next.user.id) retireRequests();
       current = next;
-      accessTokens.add(next.access_token);
+      activateApiToken(next.access_token);
+      accessTokens.set(next.access_token, (next.expires_at ?? 0) * 1000);
       token = next.refresh_token;
       setSession(usable(next) ? next : null);
-      setRecovery(null);
+      setRecovery(usable(next) ? null : 'unavailable');
       void save(token, version);
       schedule();
     };
     const refresh = (): Promise<void> => {
-      if (!alive) return Promise.resolve();
+      if (!alive || signingOut) return Promise.resolve();
       if (flight?.epoch === epoch) return flight.promise;
       const version = epoch;
       const attempt = { epoch: version, token, promise: Promise.resolve() };
@@ -156,8 +166,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
         }
       })().finally(() => {
         if (flight === attempt) flight = null;
-        if (alive && version === epoch) setLoading(false);
-        else if (alive && !current) setLoading(false);
+        if (alive && !signingOut && version === epoch) setLoading(false);
+        else if (alive && !signingOut && !current) setLoading(false);
       });
       return attempt.promise;
     };
@@ -179,21 +189,25 @@ export function AuthProvider({ children }: PropsWithChildren) {
     actions.current = {
       retry: refresh,
       signOut: async () => {
+        if (signingOut) return;
+        signingOut = true;
         ++epoch; // invalidate before awaiting the SDK or secure storage.
         retireRequests();
         const version = epoch;
         token = null;
         current = null;
         setSession(null);
-        setLoading(false);
+        setLoading(true);
         setRecovery(null);
         clearTimeout(refreshTimer);
         clearTimeout(expiryTimer);
         await save(null, version);
+        if (!alive || epoch !== version) { signingOut = false; return; }
         // SDK may be waiting on its refresh lock. UI/credential clearing is local
         // and immediate; its late event cannot republish the retired owner.
-        try { await withDeadline(() => auth.signOut({ scope: 'local' }), AUTH_REFRESH_DEADLINE_MS); }
+        try { await withDeadline(() => auth.signOut({ scope: 'local' }), AUTH_LOGOUT_DEADLINE_MS); }
         catch { /* Local credentials are already cleared; no global revocation. */ }
+        finally { signingOut = false; if (alive && epoch === version) setLoading(false); }
       },
     };
     void refresh();

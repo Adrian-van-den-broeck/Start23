@@ -1,3 +1,4 @@
+import { localizeRecoveryMessage } from '../i18n/recoveryMessages';
 import { PlanningWorkoutMoveTask } from './PlanningWorkoutMoveTask';
 import {
   BottomSheetBackdrop,
@@ -804,7 +805,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
   const flow = usePlanningFlow();
   const calendar = usePlanningCalendar();
   const { effectiveVersion, requested } = useUiVersion();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const { rootVersion, setRootVersion, calendarVersion, setCalendarVersion, task, setTask,
     detailWorkout, setDetailWorkout, weekScroll, calendarPositions, calendarNavigation, locked, activityBusy,
     sheetOpen, setCalendarVisited, creationStep, setCreationStep, placementMode, setPlacementMode, reviewWorkoutId, setReviewWorkoutId, moveWorkoutId, setMoveWorkoutId } = usePlanningPresentation();
@@ -899,7 +900,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
         selectedDate: calendarNavigation.selectedDate, today: isoDate(now), workouts: calendar.calendarWorkouts,
         restDays: calendar.calendarRestDays, loadedRange: calendar.calendarRange
       })}
-      mode={calendarNavigation.mode} anchor={calendarNavigation.anchor} loading={calendar.calendarLoading} error={flow.error}
+      mode={calendarNavigation.mode} anchor={calendarNavigation.anchor} loading={calendar.calendarLoading} error={localizeRecoveryMessage(flow.error, language)}
       onModeChange={calendarNavigation.changeMode} onMove={calendarNavigation.move} onToday={calendarNavigation.goToday}
       onSelectDate={calendarNavigation.selectDate} onRetry={() => loadCalendarRange(fromDate, toDate)} onBack={returnToWeek}
       onProfile={props.destination === 'calendar' ? props.onOpenProfile : undefined}
@@ -910,7 +911,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
         return workout && shown?.scheduled_date === workout.scheduled_date ? () => { if (!locked) { flow.setError(null); setMoveWorkoutId(id); } } : undefined;
       }}
       controls={controls} scrollProps={calendarScrollProps} />
-      : rootVersion === 'v2' && (!task || (task === 'creation' && !flow.swipeDraft && flow.view === 'plan') || (task === 'review' && ['active', 'rejected'].includes(flow.plan?.revision_state ?? ''))) ? <WeekScreen model={model} error={flow.error} busy={locked}
+      : rootVersion === 'v2' && (!task || (task === 'creation' && !flow.swipeDraft && flow.view === 'plan') || (task === 'review' && ['active', 'rejected'].includes(flow.plan?.revision_state ?? ''))) ? <WeekScreen model={model} error={localizeRecoveryMessage(flow.error, language)} busy={locked}
         onAction={action} onOpenWorkout={(id) => {
           const workout = flow.activePlan?.workouts.find((item) => item.id === id);
           if (workout) setDetailWorkout(workout);
@@ -924,7 +925,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
         : task === 'review' && flow.plan && effectiveVersion('proposalReview') === 'v2' ? <PlanningProposalTask
           controls={controls} busy={locked} workoutId={reviewWorkoutId} onEdit={setReviewWorkoutId} onBack={returnToWeek} />
         : task === 'prepare' && effectiveVersion('planningCreation') === 'v2' ? <AvailabilityScreen
-          busy={locked} error={flow.error} controls={controls} onBack={returnToWeek}
+          busy={locked} error={localizeRecoveryMessage(flow.error, language)} controls={controls} onBack={returnToWeek}
           weekStart={flow.weekStart} selectedDays={flow.selectedDays} reusePreviousWeek={flow.reusePreviousWeek}
           injuries={flow.injuries} crossTrainingOptIns={flow.crossTrainingOptIns}
           onWeekStart={flow.setWeekStart} onToggleDay={flow.toggleDay}
@@ -932,10 +933,10 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
           onInjury={flow.toggleInjury} onCrossTraining={flow.toggleCrossTraining} onCreate={flow.generate} />
         : task === 'creation' && flow.swipeDraft && flow.view === 'deck' && effectiveVersion('planningCreation') === 'v2' ? (
           creationStep === 'placement' && flow.swipeDraft.state === 'placement' ? <PlacementScreen
-            model={planningCreationViewModel(flow.swipeDraft)} busy={locked} error={flow.error} controls={controls}
+            model={planningCreationViewModel(flow.swipeDraft)} busy={locked} error={localizeRecoveryMessage(flow.error, language)} controls={controls}
             onBack={returnToWeek} mode={placementMode} onMode={setPlacementMode}
             onPlace={flow.placeDraftWorkout} onSubmit={flow.submitDraft} onSelection={() => setCreationStep('selection')} />
-          : <SelectionScreen model={planningCreationViewModel(flow.swipeDraft)} busy={locked} error={flow.error}
+          : <SelectionScreen model={planningCreationViewModel(flow.swipeDraft)} busy={locked} error={localizeRecoveryMessage(flow.error, language)}
             controls={controls} onBack={returnToWeek} onTransition={flow.transitionDraft}
             onContinue={() => setCreationStep('placement')} />
         ) : <PlanningPresentation {...props} onOpenWorkout={setDetailWorkout}
@@ -968,7 +969,7 @@ function PlanningPresentation({
   versionControl: React.ReactNode; taskBack: React.ReactNode;
   calendarNavigation: CalendarNavigation; calendarScrollProps?: ScrollViewProps; onOpenCalendar: () => void;
 }) {
-  const { locale, t } = useLanguage();
+  const { language, locale, t } = useLanguage();
   const safeAreaInsets = useSafeAreaInsets();
   const { sheetOpen: profileMenuOpen, setSheetOpen: setProfileMenuOpen } = usePlanningPresentation();
   const profileSheetRef = useRef<BottomSheetModal>(null);
@@ -1198,7 +1199,7 @@ function PlanningPresentation({
           showsVerticalScrollIndicator={false}
           style={styles.scroll}
         >
-        {error ? <Text style={styles.error}>{error}</Text> : null}
+        {error ? <Text style={styles.error}>{localizeRecoveryMessage(error, language)}</Text> : null}
         {busy || resumeState === 'loading' ? <ActivityIndicator color={colors.brand} /> : null}
         {resumeState === 'failed' ? <Text accessibilityLiveRegion="polite" style={styles.error}>{t('week.loadFailed')}</Text> : null}
 

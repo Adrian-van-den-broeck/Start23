@@ -1,4 +1,5 @@
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { LanguageProvider } from '../i18n/LanguageProvider';
+import { fireEvent, render as renderNative, waitFor } from '@testing-library/react-native';
 import * as api from '../api/client';
 import type { CheckInContextCandidateResponse, WeeklyCheckIn } from '../api/types';
 import fixtures from '../../../docs/ui/evidence/final-visual-batch-12/public-fixtures.json';
@@ -97,3 +98,5 @@ test('real documented proposal failure retains confirmed context and never shows
   expect(api.createCheckInPlanProposal).toHaveBeenCalledWith('athlete-token', open.id);
   expect(api.approvePlanProposal).not.toHaveBeenCalled();
 });
+
+function render(ui: Parameters<typeof renderNative>[0]) { return renderNative(ui, { wrapper: LanguageProvider }); }

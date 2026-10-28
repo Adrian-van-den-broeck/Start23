@@ -285,10 +285,10 @@ test.each(['approve', 'reject'] as const)('%s preserves mutation-then-read order
   expect(mutation).toHaveBeenCalledTimes(1); expect(api.getWeeklyPlan).toHaveBeenCalledTimes(2);
   if (action === 'approve') expect(mutation).toHaveBeenCalledWith('token-a', proposal.id, 2);
   else expect(mutation).toHaveBeenCalledWith('token-a', proposal.id);
-  const result = action === 'approve' ? activePlan : { ...pendingPlan, revision_state: 'rejected' as const };
+  const result = action === 'approve' ? { ...pendingPlan, revision_state: 'active' as const, active_revision: 3, proposal: { ...proposal, state: 'applied' as const } } : { ...pendingPlan, revision_state: 'rejected' as const };
   jest.mocked(api.getWeeklyPlan).mockResolvedValueOnce(result);
   await act(async () => request.resolve());
-  expect(jest.mocked(api.getWeeklyPlan).mock.calls[2]).toEqual(action === 'approve' ? ['token-a', pendingPlan.id] : ['token-a', pendingPlan.id, 3]);
+  expect(jest.mocked(api.getWeeklyPlan).mock.calls[2]).toEqual(['token-a', pendingPlan.id, 3]);
   expect(flow.plan).toBe(result); expect(flow.busy).toBe(false);
 });
 

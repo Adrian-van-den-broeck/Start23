@@ -1,3 +1,4 @@
+import { localizeRecoveryMessage } from '../i18n/recoveryMessages';
 import { useEffect, type ComponentProps } from 'react';
 import { View } from 'react-native';
 import { useActivityFlow } from '../features/activities/ActivityFlowProvider';
@@ -41,7 +42,7 @@ export function ActivityBoundary(props: ComponentProps<typeof ActivityScreen> & 
   const correction = props.correctionId ? flow.activities.find(activity => activity.id === props.correctionId) : undefined;
   const feedback = correction ?? (props.view === 'feedback' || props.view === 'entry' ? flow.feedbackActivity : undefined);
   if (feedback) return <ActivityFeedbackScreen activity={activityViewModel(feedback, locale, language)}
-    heartRate={flow.heartRateByActivity[feedback.id] ?? ''} busy={flow.busy} error={flow.error} controls={controls}
+    heartRate={flow.heartRateByActivity[feedback.id] ?? ''} busy={flow.busy} error={localizeRecoveryMessage(flow.error, language)} controls={controls}
     onBack={() => { if (!flow.busy) { props.onCorrection(null); props.onView('history'); } }}
     onHeartRate={value => flow.setHeartRateByActivity(current => ({ ...current, [feedback.id]: value }))}
     onSelect={async value => { if (await flow.saveRpe(feedback.id, value)) { if (correction) props.onCorrection(null); } }} />;
@@ -58,7 +59,7 @@ export function ActivityBoundary(props: ComponentProps<typeof ActivityScreen> & 
         id: activity.id, kind: 'external' as const, name: activity.name, discipline: activity.discipline,
         date: new Date(activity.scheduled_at).toLocaleString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
       })),
-    ]} busy={flow.busy} error={flow.error} blocked={flow.pendingRpe.length > 0} controls={controls}
+    ]} busy={flow.busy} error={localizeRecoveryMessage(flow.error, language)} blocked={flow.pendingRpe.length > 0} controls={controls}
     onBack={() => { if (!flow.busy) props.onView('history'); }}
     onDiscipline={flow.setDiscipline} onDuration={flow.setDuration} onDistance={flow.setDistance} onStartedAt={flow.setStartedAt}
     onChoose={choice => {
@@ -75,7 +76,7 @@ export function ActivityBoundary(props: ComponentProps<typeof ActivityScreen> & 
       match: match ? { id: match.id, name: match.name } : null
     };
   })} pending={flow.feedbackActivity ? activityViewModel(flow.feedbackActivity, locale, language) : null}
-    busy={flow.busy} refreshing={flow.refreshing} onRefresh={() => flow.refreshActivities()} error={flow.error} controls={controls} onBack={props.onBack}
+    busy={flow.busy} refreshing={flow.refreshing} onRefresh={() => flow.refreshActivities()} error={localizeRecoveryMessage(flow.error, language)} controls={controls} onBack={props.onBack}
     onProfile={props.onOpenProfile ?? (() => { void props.onSignOut(); })}
     onAdd={() => { if (!flow.busy && flow.pendingRpe.length === 0) props.onView('entry'); }}
     onFeedback={() => props.onView('feedback')} onCorrect={props.onCorrection} onMatch={flow.confirmMatch} />;

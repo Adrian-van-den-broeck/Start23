@@ -14,6 +14,20 @@ export const AUTH_FETCH_DEADLINE_MS = 15_000;
 export const authFetch: typeof fetch = (input, init) => withDeadline(async signal => {
   const response = await fetch(input, { ...init, signal });
   const body = await response.text();
+  if (response.ok && String(input).includes('/token?grant_type=refresh_token')) {
+    // auth-js also uses AuthSessionMissingError for a 200 body lacking tokens.
+    // Reject malformed success here so that class only reaches our refresh
+    // classifier for the API's explicit session_not_found rejection.
+    let value: unknown;
+    try { value = JSON.parse(body); } catch { throw new Error('Auth response could not be validated'); }
+    if (!value || typeof value !== 'object' ||
+      !('access_token' in value) || typeof value.access_token !== 'string' || !value.access_token ||
+      !('refresh_token' in value) || typeof value.refresh_token !== 'string' || !value.refresh_token ||
+      !('expires_in' in value) || typeof value.expires_in !== 'number' || !Number.isFinite(value.expires_in) || value.expires_in <= 0 ||
+      !('user' in value) || !value.user || typeof value.user !== 'object' || !('id' in value.user) || typeof value.user.id !== 'string' || !value.user.id) {
+      throw new Error('Auth response could not be validated');
+    }
+  }
   return new Response(response.status === 204 ? null : body, {
     status: response.status, statusText: response.statusText, headers: response.headers,
   });

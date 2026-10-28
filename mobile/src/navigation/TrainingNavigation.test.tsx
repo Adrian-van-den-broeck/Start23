@@ -698,20 +698,25 @@ test('returning during the same pending Calendar read does not start another rea
   expect(api.getCalendar).toHaveBeenCalledTimes(1);
 });
 
-test('changed approved revision invalidates Calendar; hidden Calendar does not reload until focused', async () => {
+test('approval merges the exact authoritative week into hidden Calendar before refocus', async () => {
   jest.mocked(api.getWeeklyPlan).mockImplementation(async (_token, _id, revision) => revision === 2 ? activePlan : pendingPlan);
   const view = await renderRouter(routes, { initialUrl: '/planning' });
   await waitFor(() => expect(flow.activePlan).toBe(activePlan));
   await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
   await view.findByText(workout.name);
   await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: 'Week' }));
-  const updated = { ...activePlan, revision: 4, active_revision: 4, revision_id: 'revision-4' };
-  jest.mocked(api.approvePlanProposal).mockResolvedValue({ state: 'applied', plan_id: updated.id, active_revision: 4 });
+  const updatedWorkout = { ...workout, id: 'new-approved-occurrence', name: 'New authoritative workout' };
+  const updated = { ...activePlan, revision: pendingPlan.revision, active_revision: pendingPlan.revision, revision_id: pendingPlan.revision_id, workouts: [updatedWorkout] };
+  jest.mocked(api.approvePlanProposal).mockResolvedValue({ state: 'applied', plan_id: updated.id, active_revision: updated.revision });
   jest.mocked(api.getWeeklyPlan).mockResolvedValue(updated);
   await act(async () => { await flow.approve(); });
+  await waitFor(() => expect(flow.plan).toBe(updated));
+  expect(calendar.calendarWorkouts).toEqual([updatedWorkout]);
   expect(api.getCalendar).toHaveBeenCalledTimes(1);
   await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
-  await waitFor(() => expect(api.getCalendar).toHaveBeenCalledTimes(2));
+  await view.findByText(updatedWorkout.name);
+  expect(calendar.calendarWorkouts.some(row => row.id === workout.id)).toBe(false);
+  expect(api.getCalendar).toHaveBeenCalledTimes(1);
   expect(flow.plan).toBe(updated);
 });
 
@@ -760,7 +765,7 @@ test('Slice 4B editor write locks shell and comparison, then explicit approval r
   await fireEvent.press(view.getByRole('button', { name: /^View alternatives/ }));
   await view.findByRole('radio'); await fireEvent.press(view.getByRole('radio'));
   let finish!: () => void;
-  const updated = { ...pendingPlan, revision: 4, revision_id: 'revision-4', proposal: { ...pendingPlan.proposal!, id: 'proposal-4' } };
+  const updated = { ...pendingPlan, revision: 4, revision_id: 'revision-4', proposal: { ...pendingPlan.proposal!, id: 'proposal-4', target_plan_revision_id: 'revision-4' } };
   jest.mocked(api.editPendingWorkout).mockImplementation(async () => { await new Promise<void>(resolve => { finish = resolve; }); return { plan: updated, proposal: updated.proposal }; });
   await fireEvent.press(view.getByRole('button', { name: 'Replace workout in proposal' }));
   expect(view.getByRole('button', { name: 'Back to proposal' })).toBeDisabled(); expect(view.getByRole('button', { name: 'UI V1' })).toBeDisabled();

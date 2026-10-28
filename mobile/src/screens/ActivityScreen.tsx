@@ -1,3 +1,4 @@
+import { localizeRecoveryMessage } from '../i18n/recoveryMessages';
 import { FlashList } from '@shopify/flash-list';
 import { useEffect, useState } from 'react';
 import {
@@ -167,7 +168,7 @@ export function ActivityScreen({
         keyExtractor={(activity) => activity.id}
         ListHeaderComponent={
           <>
-        {error ? <Text style={styles.error}>{error}</Text> : null}
+        {error ? <Text style={styles.error}>{localizeRecoveryMessage(error, language)}</Text> : null}
         {busy ? <ActivityIndicator color={colors.brand} /> : null}
 
         {feedbackActivity ? [feedbackActivity].map((activity) => (

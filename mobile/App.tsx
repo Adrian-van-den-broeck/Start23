@@ -13,7 +13,7 @@ import {
 } from 'react-native-safe-area-context';
 
 import { AuthProvider, useAuth } from './src/auth/AuthProvider';
-import { AuthRecoveryState } from './src/auth/AuthRecoveryState';
+import { AuthRecoveryState, AuthRecoveryNotice } from './src/auth/AuthRecoveryState';
 import { ActivityFlowProvider, useActivityFlow } from './src/features/activities/ActivityFlowProvider';
 import { FadeInView } from './src/components/FadeInView';
 import { LanguageProvider, useLanguage } from './src/i18n/LanguageProvider';
@@ -53,9 +53,9 @@ function AppContent() {
     return <AuthScreen />;
   }
 
-  return <ActivityFlowProvider accessToken={session.access_token} athleteIdentity={session.user.id}>
+  return <><AuthRecoveryNotice /><ActivityFlowProvider accessToken={session.access_token} athleteIdentity={session.user.id}>
     <AuthenticatedAppContent />
-  </ActivityFlowProvider>;
+  </ActivityFlowProvider></>;
 }
 
 function AuthenticatedAppContent() {

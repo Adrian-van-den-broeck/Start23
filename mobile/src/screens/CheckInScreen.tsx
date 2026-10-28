@@ -14,6 +14,7 @@ import {
   createCheckInPlanProposal,
   extractWeeklyCheckInContextCandidate,
   getInjuryRestrictions,
+  getWeeklyCheckIn,
   rejectPlanProposal,
   saveWeeklyCheckInContext,
   startWeeklyCheckIn,
@@ -29,6 +30,8 @@ import type {
 } from '../api/types';
 import { restoreRestrictions, restrictionPayload, restrictionLabels, sameRestriction } from '../features/checkins/restrictionForm';
 import { useOptionalPlanningFlow } from '../features/planning/PlanningFlowProvider';
+import { useLanguage } from '../i18n/LanguageProvider';
+import { localizeRecoveryMessage } from '../i18n/recoveryMessages';
 import { Input as FormField } from '../ui-v2/primitives/Input';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
@@ -126,6 +129,7 @@ export function CheckInScreen(props: Props) {
 }
 
 function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
+  const { language } = useLanguage();
   const planning = useOptionalPlanningFlow();
   const [weekStart, setWeekStart] = useState(nextMonday);
   const [checkIn, setCheckIn] = useState<WeeklyCheckIn | null>(null);
@@ -139,6 +143,9 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
   const [contextDirty, setContextDirty] = useState(false);
   const [editingContext, setEditingContext] = useState(false);
   const mutationRunning = useRef(false);
+  const beginWeekAttempt = useRef<string | null>(null);
+  const saveAttempt = useRef<Parameters<typeof saveWeeklyCheckInContext>[2] | null>(null);
+  const confirmationAttempt = useRef<{ revision: number; fingerprint: string } | null>(null);
   const update = <T,>(setter: Dispatch<SetStateAction<T>>) => (value: SetStateAction<T>) => {
     if (mutationRunning.current) return;
     setContextDirty(true);
@@ -197,7 +204,7 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
       const value = await operation();
       if (mounted.current) apply(value);
     } catch (caught) {
-      if (mounted.current) setError(caught instanceof Error ? caught.message : 'De check-in is mislukt.');
+      if (mounted.current) setError(localizeRecoveryMessage(caught instanceof Error ? caught.message : 'De check-in is mislukt.', language));
     } finally {
       mutationRunning.current = false;
       if (mounted.current) setBusy(false);
@@ -230,7 +237,14 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
 
   const begin = () => run(
     async () => {
-      const [result, active] = await Promise.all([startWeeklyCheckIn(accessToken, weekStart), getInjuryRestrictions(accessToken)]);
+      const requestedWeek = beginWeekAttempt.current ?? weekStart;
+      beginWeekAttempt.current = requestedWeek;
+      const starting = startWeeklyCheckIn(accessToken, requestedWeek).catch((caught: unknown) => {
+        if (mounted.current && caught && typeof caught === 'object' && 'outcome' in caught && caught.outcome === 'rejected' &&
+          'status' in caught && caught.status === 422) beginWeekAttempt.current = null;
+        throw caught;
+      });
+      const [result, active] = await Promise.all([starting, getInjuryRestrictions(accessToken)]);
       // The week-scoped check-in is the durable locator, including after restart.
       // The create endpoint replays its exact attachment without generation.
       const recovered = result.status === 'completed' || result.plan_proposal_id
@@ -241,6 +255,7 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
       return { result, active, recovered };
     },
     ({ result, active, recovered }) => {
+      beginWeekAttempt.current = null;
       restore(result, active);
       setProposalPlan(recovered?.plan ?? null);
     },
@@ -295,7 +310,9 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
 
   const save = () => {
     if (!checkIn || !formReady || !recurringConfirmed) return;
-    void run(async () => saveWeeklyCheckInContext(accessToken, checkIn.id, {
+    void run(async () => {
+      const previous = saveAttempt.current;
+      const input = previous ?? {
         expected_revision: checkIn.context_revision,
         blocked_dates: [...blockedDays].map((offset) =>
           dateAtOffset(checkIn.week_start, offset),
@@ -308,13 +325,33 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
           restrictionPayload(discipline, restrictions[discipline]),
         ),
         alarm_symptoms_acknowledged: alarmAcknowledged!,
-      }), result => restore(result, Object.values(restrictions).flatMap(item => item.previous ? [item.previous] : []), true));
+      };
+      try {
+        const result = await saveWeeklyCheckInContext(accessToken, checkIn.id, input);
+        if (mounted.current) saveAttempt.current = null;
+        return result;
+      } catch (caught) {
+        if (mounted.current && (previous || (caught && typeof caught === 'object' && 'outcome' in caught && caught.outcome === 'unknown'))) saveAttempt.current = input;
+        throw caught;
+      }
+    }, result => restore(result, Object.values(restrictions).flatMap(item => item.previous ? [item.previous] : []), true));
   };
 
   const confirm = () => {
     if (!checkIn?.context || contextDirty || !formReady || !recurringConfirmed) return;
     void run(
-      () => confirmWeeklyCheckInContext(accessToken, checkIn.id, checkIn.context!.revision, checkIn.context!.fingerprint),
+      async () => {
+        const previous = confirmationAttempt.current;
+        const input = previous ?? { revision: checkIn.context!.revision, fingerprint: checkIn.context!.fingerprint };
+        try {
+          const result = await confirmWeeklyCheckInContext(accessToken, checkIn.id, input.revision, input.fingerprint);
+          if (mounted.current) confirmationAttempt.current = null;
+          return result;
+        } catch (caught) {
+          if (mounted.current && (previous || (caught && typeof caught === 'object' && 'outcome' in caught && caught.outcome === 'unknown'))) confirmationAttempt.current = input;
+          throw caught;
+        }
+      },
       result => restore(result, []),
     );
   };
@@ -370,6 +407,13 @@ function CheckInFormScreen({ accessToken, onBack, onSignOut }: Props) {
       >
         <BrandedFormHeader caption="Wekelijkse check-in" backLabel="Weekplanning" onBack={onBack} onSignOut={onSignOut} />
         {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error}><Notice tone="error">{error}</Notice></View> : null}
+        {error && checkIn && (saveAttempt.current || confirmationAttempt.current) ? <ActionButton disabled={busy}
+          label={language === 'nl' ? 'Controleer opgeslagen check-in' : 'Check saved check-in'}
+          onPress={() => void run(() => getWeeklyCheckIn(accessToken, checkIn.id), result => {
+            if (saveAttempt.current && result.context_revision > saveAttempt.current.expected_revision) saveAttempt.current = null;
+            if (result.context?.state === 'confirmed') confirmationAttempt.current = null;
+            restore(result, []);
+          })} /> : null}
         {busy ? <ActivityIndicator color={colors.primary} /> : null}
 
         {!checkIn ? (

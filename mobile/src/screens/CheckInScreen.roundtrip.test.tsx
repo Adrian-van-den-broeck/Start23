@@ -1,4 +1,6 @@
-import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
+import { getLocales } from 'expo-localization';
+import { LanguageProvider } from '../i18n/LanguageProvider';
+import { act, fireEvent, render as renderNative, waitFor } from '@testing-library/react-native';
 import * as api from '../api/client';
 import type { WeeklyCheckIn } from '../api/types';
 import { activeRestriction, alarmLabel, answers, none, recurringLabel, restrictedAnswers, savedCheckIn } from '../features/checkins/checkIn.test-fixtures';
@@ -13,6 +15,7 @@ const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 let stored: WeeklyCheckIn;
 beforeEach(() => {
   jest.resetAllMocks();
+  jest.mocked(getLocales).mockReturnValue([{ languageCode: 'nl' }] as unknown as ReturnType<typeof getLocales>);
   jest.useFakeTimers({ now: new Date('2026-10-26T12:00:00Z'), doNotFake: [
     'hrtime', 'nextTick', 'performance', 'queueMicrotask', 'requestAnimationFrame', 'cancelAnimationFrame',
     'requestIdleCallback', 'cancelIdleCallback', 'setImmediate', 'clearImmediate', 'setInterval', 'clearInterval', 'setTimeout', 'clearTimeout',
@@ -364,3 +367,5 @@ test('different prior and saved professional advice both remain visible with the
   await save(view);
   expect(lastPayload().restrictions).toStrictEqual(expected);
 });
+
+function render(ui: Parameters<typeof renderNative>[0]) { return renderNative(ui, { wrapper: LanguageProvider }); }

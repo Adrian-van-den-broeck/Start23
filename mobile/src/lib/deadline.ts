@@ -13,6 +13,7 @@ export async function withDeadline<T>(
   milliseconds: number,
   ownerSignal?: AbortSignal | null,
 ): Promise<T> {
+  const expiresAt = Date.now() + milliseconds;
   const controller = new AbortController();
   let timer: ReturnType<typeof setTimeout> | undefined;
   let cancel = () => {};
@@ -23,7 +24,16 @@ export async function withDeadline<T>(
   });
   try {
     if (ownerSignal?.aborted) throw new CancellationError();
-    return await Promise.race([operation(controller.signal), interrupted]);
+    const work = operation(controller.signal).then(value => {
+      // Native backgrounding can delay JS timers. A network completion queued
+      // ahead of the resumed timer must still respect the wall-clock deadline.
+      if (Date.now() >= expiresAt) { controller.abort(); throw new DeadlineError(); }
+      return value;
+    }, error => {
+      if (Date.now() >= expiresAt) { controller.abort(); throw new DeadlineError(); }
+      throw error;
+    });
+    return await Promise.race([work, interrupted]);
   } finally {
     clearTimeout(timer);
     ownerSignal?.removeEventListener('abort', cancel);

@@ -1,12 +1,15 @@
 import { approvedNext, nextProposal, pendingNext } from '../features/planning/planningTask.test-fixtures';
+import { activePlan, draft } from '../features/planning/planning.test-fixtures';
 
 const API_URL = 'https://api.start23.test';
 
 function successfulFetch(): jest.MockedFunction<typeof fetch> {
-  return jest.fn(async (_input: URL | RequestInfo, _init?: RequestInit) => ({
+  return jest.fn(async (input: URL | RequestInfo, _init?: RequestInit) => ({
     ok: true,
     status: 200,
-    json: async () => ({}),
+    json: async () => String(input).endsWith('/swipe-drafts') ? draft
+      : String(input).includes('/activities/') ? activityResponse(6, 148)
+      : String(input).includes('/planned-workouts/') ? activePlan : {},
   } as Response));
 }
 
@@ -594,6 +597,7 @@ test('A6 discovery sends only the bearer token and no client owner or mutation b
 test('A7 targeted activity resolution uses the existing owner-token GET with no identity override', async () => {
   const { client, fetchMock } = loadClient();
   const id = '6a8c2a77-1d7f-4c88-bdc4-0d2ad4b08010';
+  fetchMock.mockResolvedValueOnce(response(200, { ...activityResponse(null), id }));
   await client.getActivity('athlete-token', id);
   expect(fetchMock).toHaveBeenCalledTimes(1);
   expect(fetchMock.mock.calls[0][0]).toBe(`${API_URL}/api/v1/activities/${id}`);

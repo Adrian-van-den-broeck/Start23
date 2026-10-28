@@ -175,7 +175,7 @@ test.each(['approve', 'reject'] as const)('%s is explicit once with exact ID and
   expect(mutation).toHaveBeenCalledTimes(1);
   expect(mutation).toHaveBeenCalledWith(...(action === 'approve' ? ['token-a', proposal.id, 2] : ['token-a', proposal.id]));
   await act(async () => request.resolve());
-  expect(jest.mocked(api.getWeeklyPlan).mock.calls.at(-1)).toEqual(action === 'approve' ? ['token-a', pendingPlan.id] : ['token-a', pendingPlan.id, 3]);
+  expect(jest.mocked(api.getWeeklyPlan).mock.calls.at(-1)).toEqual(['token-a', pendingPlan.id, 3]);
   await view.findByTestId('week-header-title'); expect(view.queryByText('Review your week proposal')).toBeNull();
   expect(flow.activePlan).toBe(action === 'approve' ? result : activePlan);
 });
@@ -231,7 +231,7 @@ describe.each([
     expect(mutation).toHaveBeenCalledTimes(1);
     expect(mutation).toHaveBeenCalledWith(...(action === 'approve' ? ['token-a', 'proposal-a', 2] : ['token-a', 'proposal-a']));
     expect(action === 'approve' ? api.rejectPlanProposal : api.approvePlanProposal).not.toHaveBeenCalled();
-    expect(jest.mocked(api.getWeeklyPlan).mock.calls.at(-1)).toEqual(action === 'approve' ? ['token-a', 'plan-a'] : ['token-a', 'plan-a', 3]);
+    expect(jest.mocked(api.getWeeklyPlan).mock.calls.at(-1)).toEqual(['token-a', 'plan-a', 3]);
     expect(view.getByText(action === 'approve' ? 'Proposed source workout' : 'Approved source workout')).toBeTruthy();
     expect(view.queryByText(action === 'approve' ? 'Approved source workout' : 'Proposed source workout')).toBeNull();
     const displayedDate = action === 'approve' ? pendingDate : activeDate;

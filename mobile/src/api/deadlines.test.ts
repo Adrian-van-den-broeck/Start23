@@ -1,5 +1,5 @@
 ﻿import * as api from './client';
-import { cancelApiRequests } from '../lib/apiCancellation';
+import { activateApiToken, retireApiToken, cancelApiRequests } from '../lib/apiCancellation';
 import { pendingActivity } from '../features/activities/activities.test-fixtures';
 
 jest.mock('./client', () => {
@@ -73,4 +73,30 @@ test('definitive rejection remains distinguishable from uncertain server error',
   await expect(api.submitActivityRpe('A', pendingActivity.id, 4)).rejects.toMatchObject({ outcome: 'rejected', status: 409 });
   await expect(api.submitActivityRpe('A', pendingActivity.id, 4)).rejects.toMatchObject({ outcome: 'unknown', status: 503 });
   expect(jest.getTimerCount()).toBe(0);
+});
+test('retiring an auth token also stops an onboarding GET retry sleeping between attempts', async () => {
+  activateApiToken('retired-owner');
+  fetchMock.mockRejectedValue(new TypeError('offline'));
+  const result = api.getOnboarding('retired-owner').catch(e => e);
+  await jest.advanceTimersByTimeAsync(1);
+  retireApiToken('retired-owner', Date.now() + 60_000);
+  await jest.advanceTimersByTimeAsync(400);
+  expect(await result).toMatchObject({ code: 'request_cancelled', retryable: false });
+  expect(fetchMock).toHaveBeenCalledTimes(1); expect(jest.getTimerCount()).toBe(0);
+  activateApiToken('retired-owner');
+});
+test('WOMBO-012 never-settling fetch must settle within five simulated minutes', async () => {
+  fetchMock.mockReturnValue(new Promise(() => {}));
+  let settled = false;
+  void api.getActivity('A', pendingActivity.id).then(() => { settled = true; }, () => { settled = true; });
+  await jest.advanceTimersByTimeAsync(300_000);
+  expect(settled).toBe(true);
+});
+test.each([200, 404])('late HTTP %s after a suspended JS clock deadline cannot win ahead of the delayed timer', async status => {
+  const pending = deferred<Response>(); fetchMock.mockReturnValue(pending.promise);
+  const result = api.getActivity('A', pendingActivity.id).catch(e => e);
+  jest.setSystemTime(Date.now() + api.API_DEADLINE_MS + 1);
+  pending.resolve(response(status === 200 ? pendingActivity : {}, status));
+  expect(await result).toMatchObject({ code: 'request_timeout', status: null });
+  expect(fetchMock.mock.calls[0][1]?.signal?.aborted).toBe(true); expect(jest.getTimerCount()).toBe(0);
 });

@@ -40,7 +40,9 @@ import type {
   ZoneProfileState,
 } from './types';
 import { CancellationError, DeadlineError, withDeadline } from '../lib/deadline';
-import { registerApiRequest } from '../lib/apiCancellation';
+import { apiTokenRetired, registerApiRequest } from '../lib/apiCancellation';
+import * as validate from './responseValidation';
+import { uncertainWriteMessage, unreadableResponseMessage } from '../i18n/recoveryMessages';
 
 export const API_DEADLINE_MS = 45_000;
 export const PLANNING_DEADLINE_MS = 120_000;
@@ -75,7 +77,9 @@ export class ApiRequestError extends Error {
   get retryable(): boolean {
     if (this.code === 'request_cancelled') return false;
     return (
+      this.code === 'response_unreadable' || this.code === 'response_invalid' ||
       this.status === null ||
+      this.status === 408 ||
       this.status === 429 ||
       (this.status >= 500 && this.status <= 599)
     );
@@ -148,11 +152,12 @@ export async function request<T>(
   accessToken: string,
   path: string,
   options: RequestInit = {},
+  valid?: (body: unknown) => boolean,
 ): Promise<T> {
   if (!apiBaseUrl) {
     throw new Error('Configureer EXPO_PUBLIC_API_BASE_URL.');
   }
-  const method = options.method ?? 'GET';
+  const method = (options.method ?? 'GET').toUpperCase();
   const mutation = !['GET', 'HEAD'].includes(method);
   const controller = new AbortController();
   const unregister = registerApiRequest(accessToken, controller);
@@ -161,43 +166,63 @@ export async function request<T>(
   if (options.signal?.aborted) cancel();
   let dispatched = false;
   let response: Response | undefined;
-  const outcome = () => dispatched && mutation && (!response || response.ok || response.status >= 500) ? 'unknown' as const : 'rejected' as const;
-  const deadline = /\/(?:swipe-drafts|proposals|schedule-proposals|plan-proposals)(?:\/submit)?$/.test(path) && mutation
+  const outcome = (): 'unknown' | 'rejected' => {
+    if (!dispatched || !mutation) return 'rejected';
+    return !response || response.ok || response.status === 408 || response.status >= 500
+      ? 'unknown' : 'rejected';
+  };
+  const deadline = /(?:\/(?:swipe-drafts|proposals|schedule-proposals|plan-proposals|edit-proposals)|\/swipe-drafts\/[^/]+\/submit)$/.test(path) && mutation
     ? PLANNING_DEADLINE_MS : API_DEADLINE_MS;
+  const expiresAt = Date.now() + deadline;
   try {
+    if (apiTokenRetired(accessToken)) throw new CancellationError();
     return await withDeadline(async signal => {
-    dispatched = true;
-    response = await fetch(`${apiBaseUrl}${path}`, {
-      ...options,
-      signal,
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-    });
-  if (!response.ok) {
-    const body = (await response.json().catch(() => ({}))) as ErrorEnvelope;
-    const message =
-      validationMessage(body) ??
-      deterministicErrorMessage(body.error?.code) ??
-      (response.status === 401
-        ? 'Je sessie is verlopen. Meld je opnieuw aan.'
-        : response.status === 503
-          ? 'De Wombo-server is tijdelijk niet beschikbaar. Probeer het zo opnieuw.'
-          : response.status === 409
-            ? 'Deze wijziging is niet meer actueel. Vernieuw het scherm en probeer opnieuw.'
-            : 'De wijziging kon niet veilig worden opgeslagen. Probeer opnieuw.');
-    throw new ApiRequestError(
-      message,
-      response.status,
-      body.error?.code ?? null,
-      outcome(), method,
-    );
-  }
-  if (response.status === 204) return undefined as T;
-  return (await response.json()) as T;
+      dispatched = true;
+      const received = await fetch(`${apiBaseUrl}${path}`, {
+        ...options,
+        signal,
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+      });
+      if (Date.now() >= expiresAt) throw new DeadlineError();
+      response = received;
+      if (!response.ok) {
+        const body = validate.errorEnvelope(await response.json().catch(() => null));
+        const message =
+          validationMessage(body) ??
+          deterministicErrorMessage(body.error?.code) ??
+          (response.status === 401
+            ? 'Je sessie is verlopen. Meld je opnieuw aan.'
+            : response.status === 503
+              ? 'De Wombo-server is tijdelijk niet beschikbaar. Probeer het zo opnieuw.'
+              : response.status === 409
+                ? 'Deze wijziging is niet meer actueel. Vernieuw het scherm en probeer opnieuw.'
+                : 'De wijziging kon niet veilig worden opgeslagen. Probeer opnieuw.');
+        throw new ApiRequestError(
+          message,
+          response.status,
+          body.error?.code ?? null,
+          outcome(), method,
+        );
+      }
+      if (response.status === 204 && !valid) return undefined as T;
+      let body: unknown;
+      try { body = await response.json(); }
+      catch {
+        throw new ApiRequestError(
+          mutation ? uncertainWriteMessage : unreadableResponseMessage,
+          response.status, 'response_unreadable', outcome(), method,
+        );
+      }
+      if (valid && !valid(body)) throw new ApiRequestError(
+        mutation ? uncertainWriteMessage : unreadableResponseMessage,
+        response.status, 'response_invalid', outcome(), method,
+      );
+      return body as T;
     }, deadline, controller.signal);
   } catch (caught) {
     if (caught instanceof ApiRequestError) throw caught;
@@ -205,7 +230,7 @@ export async function request<T>(
       : caught instanceof CancellationError ? 'request_cancelled' : 'network_unavailable';
     throw new ApiRequestError(
       mutation
-        ? 'De uitkomst van het opslaan is nog onbekend. Controleer de opgeslagen status of probeer dezelfde actie opnieuw.'
+        ? uncertainWriteMessage
         : 'De Wombo-server is niet bereikbaar. Controleer je verbinding en probeer opnieuw.',
       response?.status ?? null, code, outcome(), method,
     );
@@ -569,7 +594,7 @@ export function createWeeklyPlanProposal(
   return request(accessToken, '/api/v1/weekly-plans/proposals', {
     method: 'POST',
     body: JSON.stringify(input),
-  });
+  }, validate.planProposalResponse);
 }
 
 export function createSwipeWeekDraft(
@@ -588,7 +613,7 @@ export function createSwipeWeekDraft(
   return request(accessToken, '/api/v1/weekly-plans/swipe-drafts', {
     method: 'POST',
     body: JSON.stringify(input),
-  });
+  }, validate.draftResponse);
 }
 
 export function getSwipeWeekDraft(
@@ -597,7 +622,7 @@ export function getSwipeWeekDraft(
 ): Promise<SwipeWeekDraft> {
   return request(
     accessToken,
-    `/api/v1/weekly-plans/swipe-drafts/${draftId}`,
+    `/api/v1/weekly-plans/swipe-drafts/${draftId}`, {}, body => validate.draftResponse(body) && validate.object(body) && body.id === draftId,
   );
 }
 
@@ -614,7 +639,7 @@ export function transitionSwipeWeekDraft(
   return request(
     accessToken,
     `/api/v1/weekly-plans/swipe-drafts/${draftId}/transitions`,
-    { method: 'POST', body: JSON.stringify(input) },
+    { method: 'POST', body: JSON.stringify(input) }, validate.draftResponse,
   );
 }
 
@@ -634,7 +659,7 @@ export function placeSwipeWeekWorkout(
         expected_revision: expectedRevision,
         scheduled_date: scheduledDate,
       }),
-    },
+    }, validate.draftResponse,
   );
 }
 
@@ -653,7 +678,7 @@ export function submitSwipeWeekDraft(
         expected_revision: expectedRevision,
         placement_mode: placementMode,
       }),
-    },
+    }, validate.planProposalResponse,
   );
 }
 
@@ -663,7 +688,7 @@ export function getWeeklyPlan(
   revision?: number,
 ): Promise<WeeklyPlan> {
   const query = revision === undefined ? '' : `?revision=${revision}`;
-  return request(accessToken, `/api/v1/weekly-plans/${planId}${query}`);
+  return request(accessToken, `/api/v1/weekly-plans/${planId}${query}`, {}, body => validate.planResponse(body) && validate.object(body) && body.id === planId && (revision === undefined || body.revision === revision));
 }
 
 export function getWorkoutDeck(
@@ -697,7 +722,7 @@ export function createScheduleProposal(
     {
       method: 'POST',
       body: JSON.stringify(input),
-    },
+    }, validate.planProposalResponse,
   );
 }
 
@@ -714,7 +739,7 @@ export function approvePlanProposal(
       body: JSON.stringify({
         expected_base_revision: expectedBaseRevision,
       }),
-    },
+    }, validate.approvalResponse,
   );
 }
 
@@ -799,7 +824,7 @@ export function createActivity(
     method: 'POST',
     headers: { 'Idempotency-Key': idempotencyKey },
     body: JSON.stringify(input),
-  });
+  }, validate.activityResponse);
 }
 
 export function listPlannedExternalActivities(
@@ -818,7 +843,7 @@ export function listActivities(
     accessToken,
     pendingRpe
       ? '/api/v1/activities/pending-rpe'
-      : '/api/v1/activities',
+      : '/api/v1/activities', {}, validate.activityListResponse,
   );
 }
 
@@ -826,7 +851,7 @@ export function getActivity(
   accessToken: string,
   activityId: string,
 ): Promise<CompletedActivity> {
-  return request(accessToken, `/api/v1/activities/${activityId}`);
+  return request(accessToken, `/api/v1/activities/${activityId}`, {}, body => validate.activityResponse(body) && validate.object(body) && body.id === activityId);
 }
 
 export function submitActivityRpe(
@@ -847,7 +872,7 @@ export function submitActivityRpe(
         ? {}
         : { average_heart_rate_bpm: averageHeartRateBpm }),
     }),
-  });
+  }, body => validate.activityResponse(body) && validate.object(body) && body.id === activityId);
 }
 
 export async function submitActivityRpeWithRefresh(
@@ -872,12 +897,24 @@ export async function submitActivityRpeWithRefresh(
         caught.code === 'activity_correction_stale');
     if (!refreshable) throw caught;
 
-    const refreshed = await getActivity(accessToken, activity.id);
+    let refreshed: CompletedActivity;
+    try { refreshed = await getActivity(accessToken, activity.id); }
+    catch (readError) {
+      // A failed verification read cannot turn a possibly committed write into
+      // a definite rejection (nor erase its original HTTP context).
+      if (caught.outcome === 'unknown') throw caught;
+      throw readError;
+    }
     const requestedAlreadyStored =
+      refreshed.processing_state === 'complete' &&
       refreshed.rpe === rpe &&
       (averageHeartRateBpm === undefined ||
         refreshed.metrics?.average_heart_rate_bpm === averageHeartRateBpm);
     if (requestedAlreadyStored) return refreshed;
+
+    // A snapshot of old state does not prove the first request stopped. Leave
+    // any replay to an explicit action with the original payload/precondition.
+    if (caught.outcome === 'unknown') throw caught;
 
     if (refreshed.rpe !== activity.rpe) {
       throw new ApiRequestError(
@@ -908,7 +945,7 @@ export function confirmActivityMatch(
     {
       method: 'PUT',
       body: JSON.stringify({ planned_workout_id: plannedWorkoutId }),
-    },
+    }, body => validate.activityResponse(body) && validate.object(body) && body.id === activityId,
   );
 }
 
@@ -991,7 +1028,37 @@ export function startWeeklyCheckIn(
   return request(accessToken, '/api/v1/checkins', {
     method: 'POST',
     body: JSON.stringify({ week_start: weekStart }),
-  });
+  }, validate.checkInResponse);
+}
+
+export function getWeeklyCheckIn(accessToken: string, checkInId: string): Promise<WeeklyCheckIn> {
+  return request(accessToken, `/api/v1/checkins/${checkInId}`, {}, body =>
+    validate.checkInResponse(body) && validate.object(body) && body.id === checkInId);
+}
+
+async function reconcileCheckInWrite(
+  accessToken: string, checkInId: string, write: () => Promise<WeeklyCheckIn>,
+  committed: (stored: WeeklyCheckIn) => boolean,
+): Promise<WeeklyCheckIn> {
+  try { return await write(); }
+  catch (caught) {
+    if (!(caught instanceof ApiRequestError) || !((caught.outcome === 'unknown' && caught.retryable) || caught.status === 409)) throw caught;
+    try {
+      const stored = await getWeeklyCheckIn(accessToken, checkInId);
+      if (committed(stored)) return stored;
+    } catch { /* Preserve the uncertain write, including its original status. */ }
+    throw caught;
+  }
+}
+
+// Compare submitted fields only. Response metadata is not part of the write;
+// arrays in structured context are sets of answers, dates or activities.
+function matchesSubmitted(stored: unknown, submitted: unknown): boolean {
+  if (submitted === null || submitted === undefined) return stored === null || stored === undefined;
+  if (Array.isArray(submitted)) return Array.isArray(stored) && stored.length === submitted.length &&
+    submitted.every(item => stored.filter(value => matchesSubmitted(value, item)).length === submitted.filter(value => matchesSubmitted(value, item)).length);
+  if (validate.object(submitted)) return validate.object(stored) && Object.entries(submitted).every(([key, value]) => matchesSubmitted(stored[key], value));
+  return stored === submitted;
 }
 
 export function getInjuryRestrictions(accessToken: string): Promise<InjuryRestriction[]> {
@@ -1034,10 +1101,12 @@ export function saveWeeklyCheckInContext(
     alarm_symptoms_acknowledged: boolean;
   },
 ): Promise<WeeklyCheckIn> {
-  return request(accessToken, `/api/v1/checkins/${checkInId}/context`, {
+  const { expected_revision, ...answers } = input;
+  return reconcileCheckInWrite(accessToken, checkInId, () => request(accessToken, `/api/v1/checkins/${checkInId}/context`, {
     method: 'PUT',
     body: JSON.stringify(input),
-  });
+  }, body => validate.checkInResponse(body) && validate.object(body) && body.id === checkInId), stored =>
+    stored.context_revision === expected_revision + 1 && matchesSubmitted(stored.context, answers));
 }
 
 export function confirmWeeklyCheckInContext(
@@ -1046,7 +1115,7 @@ export function confirmWeeklyCheckInContext(
   expectedRevision: number,
   contextFingerprint: string,
 ): Promise<WeeklyCheckIn> {
-  return request(
+  return reconcileCheckInWrite(accessToken, checkInId, () => request(
     accessToken,
     `/api/v1/checkins/${checkInId}/context-confirmation`,
     {
@@ -1055,8 +1124,8 @@ export function confirmWeeklyCheckInContext(
         expected_revision: expectedRevision,
         context_fingerprint: contextFingerprint,
       }),
-    },
-  );
+    }, body => validate.checkInResponse(body) && validate.object(body) && body.id === checkInId,
+  ), stored => stored.context?.state === 'confirmed' && stored.context.revision === expectedRevision && stored.context.fingerprint === contextFingerprint);
 }
 
 export function createCheckInPlanProposal(
@@ -1065,7 +1134,7 @@ export function createCheckInPlanProposal(
 ): Promise<WeeklyPlanProposal> {
   return request(accessToken, `/api/v1/checkins/${checkInId}/plan-proposals`, {
     method: 'POST',
-  });
+  }, validate.planProposalResponse);
 }
 
 export function movePlannedWorkout(
@@ -1080,7 +1149,7 @@ export function movePlannedWorkout(
       expected_revision: expectedRevision,
       scheduled_date: scheduledDate,
     }),
-  });
+  }, validate.planResponse);
 }
 
 export function validatePlanLayout(
@@ -1130,7 +1199,7 @@ export function editPendingWorkout(
     {
       method: 'POST',
       body: JSON.stringify(input),
-    },
+    }, validate.planProposalResponse,
   );
 }
 
@@ -1146,5 +1215,5 @@ export function markGoalAchieved(
 }
 
 export async function discoverPlanning(accessToken: string): Promise<PlanningRecovery> {
-  return request<PlanningRecovery>(accessToken, '/api/v1/weekly-plans/recovery');
+  return request<PlanningRecovery>(accessToken, '/api/v1/weekly-plans/recovery', {}, validate.recoveryResponse);
 }

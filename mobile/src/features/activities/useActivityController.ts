@@ -49,6 +49,9 @@ export function useActivityController(accessToken: string) {
   const createInFlightRef = useRef(false);
   const createAttempt = useRef<{ key: string; input: ReturnType<typeof activityCreateInput> } | null>(null);
   const rpeInFlightRef = useRef<Set<string>>(new Set());
+  const unresolvedRpe = useRef(new Map<string, {
+    activity: CompletedActivity; rpe: number; averageHeartRate: number | undefined;
+  }>());
   const historyLoaded = useRef(false);
   const activityEntered = useRef(false);
   const focused = useRef(false);
@@ -99,6 +102,7 @@ export function useActivityController(accessToken: string) {
       ...(current.processing_state === 'awaiting_rpe' ? [current] : [])]);
   }, [indexRows, publishPending]);
   const forgetActivity = useCallback((id: string) => {
+    unresolvedRpe.current.delete(id);
     ++historySequence.current;
     ++pendingSequence.current;
     loadInFlight.current = null;
@@ -312,9 +316,11 @@ export function useActivityController(accessToken: string) {
     setBusy(true);
     mutationError.current = null;
     setError(null);
+    let attempted: { activity: CompletedActivity; rpe: number; averageHeartRate: number | undefined } | undefined;
     try {
+      const previousAttempt = unresolvedRpe.current.get(activityId);
       const rawHeartRate = heartRateByActivity[activityId]?.trim() ?? '';
-      const averageHeartRate = rawHeartRate ? Number(rawHeartRate) : undefined;
+      const averageHeartRate = previousAttempt ? previousAttempt.averageHeartRate : rawHeartRate ? Number(rawHeartRate) : undefined;
       if (averageHeartRate !== undefined && (!Number.isInteger(averageHeartRate) || averageHeartRate < 20 || averageHeartRate > 260)) {
         throw new Error('Vul een gemiddelde hartslag tussen 20 en 260 bpm in.');
       }
@@ -333,10 +339,27 @@ export function useActivityController(accessToken: string) {
         publishActivity(activity);
         if (cached && cached.rpe !== activity.rpe && !intendedPending) throw new Error('De activiteit is intussen gewijzigd. Controleer de opgeslagen RPE.');
       }
-      if (intendedPending && activity.processing_state !== 'awaiting_rpe') throw new Error('Deze activiteit is intussen verwerkt. Controleer de opgeslagen RPE.');
+      if (!previousAttempt && intendedPending && activity.processing_state !== 'awaiting_rpe') throw new Error('Deze activiteit is intussen verwerkt. Controleer de opgeslagen RPE.');
       if (!alive.current) return false;
-      const updated = await submitActivityRpeWithRefresh(access, activity, rpe, averageHeartRate);
+      attempted = previousAttempt ?? { activity, rpe, averageHeartRate };
+      let updated: CompletedActivity;
+      if (previousAttempt) {
+        // Explicit retry first verifies the original operation, including HR.
+        // A new choice/input cannot rewrite an unresolved request's payload.
+        const stored = await getActivity(access, activityId);
+        if (!alive.current) return false;
+        if (stored.processing_state === 'complete' && stored.rpe === attempted.rpe &&
+          (attempted.averageHeartRate === undefined || stored.metrics?.average_heart_rate_bpm === attempted.averageHeartRate)) {
+          updated = stored;
+        } else if (stored.rpe !== attempted.activity.rpe) {
+          publishActivity(stored);
+          unresolvedRpe.current.delete(activityId);
+          attempted = undefined;
+          throw new Error('De activiteit is intussen gewijzigd. Controleer de opgeslagen RPE.');
+        } else updated = await submitActivityRpeWithRefresh(access, attempted.activity, attempted.rpe, attempted.averageHeartRate);
+      } else updated = await submitActivityRpeWithRefresh(access, activity, rpe, averageHeartRate);
       if (!alive.current) return false;
+      unresolvedRpe.current.delete(activityId);
       ++historySequence.current;
       ++pendingSequence.current;
       publishActivity(updated);
@@ -352,6 +375,7 @@ export function useActivityController(accessToken: string) {
       return true;
     } catch (caught) {
       if (alive.current) {
+        if (attempted && caught && typeof caught === 'object' && 'outcome' in caught && caught.outcome === 'unknown') unresolvedRpe.current.set(activityId, attempted);
         const status = caught && typeof caught === 'object' && 'status' in caught ? caught.status : null;
         if (status === 404) forgetActivity(activityId);
         const message = caught instanceof Error ? caught.message : 'RPE opslaan is mislukt.';

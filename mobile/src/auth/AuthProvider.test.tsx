@@ -121,3 +121,13 @@ test('serialized keychain writes finish on B even when an A write is already in 
   expect(jest.mocked(SecureStore.setItemAsync).mock.calls.map(c => c[1])).toEqual(['rotated-A', 'refresh-B']);
   expect(latest.session?.user.id).toBe('B');
 });
+test('logout keeps the sign-in gate busy until the bounded SDK cleanup settles', async () => {
+  await mount(); await flush();
+  const pending = deferred<{ error: null }>(); signOut.mockReturnValue(pending.promise);
+  await act(async () => { void latest.signOut(); }); await flush();
+  expect(latest.session).toBeNull(); expect(latest.loading).toBe(true);
+  await act(async () => { await jest.advanceTimersByTimeAsync(60_000); });
+  expect(latest.loading).toBe(false); expect(latest.session).toBeNull();
+  await act(async () => { pending.resolve({ error: null }); event('SIGNED_OUT', null); });
+  expect(latest.session).toBeNull();
+});
