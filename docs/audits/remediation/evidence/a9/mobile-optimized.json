@@ -1,0 +1,304 @@
+{
+  "environment": "Jest React development renderer, real screens/controllers, mocked API 40ms and auxiliary intake reads 240ms; native animations mocked; not device latency",
+  "operations": {
+    "completed-onboarding-to-training-callback": {
+      "milliseconds": [
+        88,
+        57,
+        58,
+        59,
+        64
+      ],
+      "median_milliseconds": 59,
+      "max_milliseconds": 88,
+      "request_counts": [
+        {
+          "getGoalPlanningOptions": 1,
+          "getPhysiologyProfile": 1,
+          "getOnboarding": 1
+        },
+        {
+          "getGoalPlanningOptions": 1,
+          "getPhysiologyProfile": 1,
+          "getOnboarding": 1
+        },
+        {
+          "getGoalPlanningOptions": 1,
+          "getPhysiologyProfile": 1,
+          "getOnboarding": 1
+        },
+        {
+          "getGoalPlanningOptions": 1,
+          "getPhysiologyProfile": 1,
+          "getOnboarding": 1
+        },
+        {
+          "getGoalPlanningOptions": 1,
+          "getPhysiologyProfile": 1,
+          "getOnboarding": 1
+        }
+      ],
+      "render_milliseconds": [
+        26,
+        4,
+        3,
+        5,
+        5
+      ],
+      "commits": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "profile-cold": {
+      "milliseconds": [
+        114,
+        91,
+        92,
+        102,
+        90
+      ],
+      "median_milliseconds": 92,
+      "max_milliseconds": 114,
+      "request_counts": [
+        {
+          "getOnboarding": 1
+        },
+        {
+          "getOnboarding": 1
+        },
+        {
+          "getOnboarding": 1
+        },
+        {
+          "getOnboarding": 1
+        },
+        {
+          "getOnboarding": 1
+        }
+      ],
+      "render_milliseconds": [
+        62,
+        48,
+        45,
+        47,
+        46
+      ],
+      "commits": [
+        3,
+        3,
+        3,
+        3,
+        3
+      ]
+    },
+    "profile-warm": {
+      "milliseconds": [
+        102,
+        90,
+        88,
+        92,
+        102
+      ],
+      "median_milliseconds": 92,
+      "max_milliseconds": 102,
+      "request_counts": [
+        {
+          "getOnboarding": 1
+        },
+        {
+          "getOnboarding": 1
+        },
+        {
+          "getOnboarding": 1
+        },
+        {
+          "getOnboarding": 1
+        },
+        {
+          "getOnboarding": 1
+        }
+      ],
+      "render_milliseconds": [
+        46,
+        43,
+        45,
+        45,
+        47
+      ],
+      "commits": [
+        3,
+        3,
+        3,
+        3,
+        3
+      ]
+    },
+    "week-cold": {
+      "milliseconds": [
+        334,
+        202,
+        186,
+        303,
+        210
+      ],
+      "median_milliseconds": 210,
+      "max_milliseconds": 334,
+      "request_counts": [
+        {
+          "listActivities": 1,
+          "getOnboarding": 1,
+          "discoverPlanning": 1,
+          "getWeeklyPlan": 1
+        },
+        {
+          "listActivities": 1,
+          "getOnboarding": 1,
+          "discoverPlanning": 1,
+          "getWeeklyPlan": 1
+        },
+        {
+          "listActivities": 1,
+          "getOnboarding": 1,
+          "discoverPlanning": 1,
+          "getWeeklyPlan": 1
+        },
+        {
+          "listActivities": 1,
+          "getOnboarding": 1,
+          "discoverPlanning": 1,
+          "getWeeklyPlan": 1
+        },
+        {
+          "listActivities": 1,
+          "getOnboarding": 1,
+          "discoverPlanning": 1,
+          "getWeeklyPlan": 1
+        }
+      ],
+      "render_milliseconds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "commits": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "calendar-cold": {
+      "milliseconds": [
+        189,
+        181,
+        182,
+        131,
+        196
+      ],
+      "median_milliseconds": 182,
+      "max_milliseconds": 196,
+      "request_counts": [
+        {
+          "getCalendar": 2
+        },
+        {
+          "getCalendar": 2
+        },
+        {
+          "getCalendar": 2
+        },
+        {
+          "getCalendar": 1
+        },
+        {
+          "getCalendar": 2
+        }
+      ],
+      "render_milliseconds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "commits": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "week-warm": {
+      "milliseconds": [
+        73,
+        72,
+        69,
+        32,
+        33
+      ],
+      "median_milliseconds": 69,
+      "max_milliseconds": 73,
+      "request_counts": [
+        {},
+        {},
+        {},
+        {},
+        {}
+      ],
+      "render_milliseconds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "commits": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "calendar-warm": {
+      "milliseconds": [
+        34,
+        32,
+        70,
+        32,
+        32
+      ],
+      "median_milliseconds": 32,
+      "max_milliseconds": 70,
+      "request_counts": [
+        {},
+        {},
+        {},
+        {},
+        {}
+      ],
+      "render_milliseconds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "commits": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "1": [
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 5.331270700000459
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.01053550000051473,
+      "authenticated_read_wait_seconds": 0.02798530000018218
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 5.011216099999729
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.008656799999698706,
+      "authenticated_read_wait_seconds": 0.021962099999655038
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 5.013178700000026
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.009613400000489492,
+      "authenticated_read_wait_seconds": 0.023670200000196928
+    }
+  ],
+  "2": [
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 4.951658200000566
+        },
+        {
+          "status": 201,
+          "seconds": 8.493168699999842
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.0449241999995138,
+      "authenticated_read_wait_seconds": 0.04930849999982456
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 8.579204100000425
+        },
+        {
+          "status": 201,
+          "seconds": 4.948655500000314
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.11890479999965464,
+      "authenticated_read_wait_seconds": 0.1232334999995146
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 5.166998799999419
+        },
+        {
+          "status": 201,
+          "seconds": 8.768584099999316
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 0.046445300000414136,
+      "authenticated_read_wait_seconds": 0.05112080000071728
+    }
+  ]
+}

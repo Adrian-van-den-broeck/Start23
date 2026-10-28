@@ -1,0 +1,232 @@
+{
+  "environment": "Pixel 4 Android 15 API35 x86_64 emulator; isolated Hermes release APK; synthetic localhost 40ms, auxiliary intake reads 240ms; host screenshot sampling overhead included. Marker is fully readable public heading/form label after authoritative response, not physical-device or production latency.",
+  "metric_limit": "Stable public content-marker upper bound, not exact first frame; sampling overhead is included. No significance or physical-device claim.",
+  "operations": {
+    "authenticated-startup": {
+      "milliseconds": [
+        2883.668700000271,
+        2593.2079000003796,
+        2915.296899999703,
+        3019.6759999998903,
+        3079.209399999854
+      ],
+      "median_milliseconds": 2915.296899999703,
+      "max_milliseconds": 3079.209399999854,
+      "request_counts": [
+        9,
+        9,
+        9,
+        9,
+        9
+      ],
+      "route_counts": {
+        "/api/v1/activities/pending-rpe": 2,
+        "/api/v1/me/physiology-profile": 1,
+        "/api/v1/onboarding": 2,
+        "/api/v1/onboarding/goal-options": 1,
+        "/api/v1/weekly-plans/plan-a": 1,
+        "/api/v1/weekly-plans/recovery": 1,
+        "/auth/v1/token": 1
+      },
+      "capture_median_milliseconds": [
+        404.3993499999997,
+        415.62859999999637,
+        409.05249999999796,
+        429.0485500000068,
+        424.7897499999963
+      ],
+      "capture_max_milliseconds": 490.132500000007,
+      "android_first_draw_milliseconds": [
+        370,
+        392,
+        422,
+        387,
+        475
+      ],
+      "server_response_median_milliseconds": 49.37309999996796
+    },
+    "week-calendar-cold": {
+      "milliseconds": [
+        862.9621999998562,
+        895.0027000000773,
+        908.8724999992337,
+        898.8499999995838,
+        916.5130000001227
+      ],
+      "median_milliseconds": 898.8499999995838,
+      "max_milliseconds": 916.5130000001227,
+      "request_counts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "route_counts": {
+        "/api/v1/calendar": 1
+      },
+      "capture_median_milliseconds": [
+        402.4825000000001,
+        416.46324999999706,
+        424.4942499999961,
+        419.51744999999937,
+        425.647450000004
+      ],
+      "capture_max_milliseconds": 440.7191000000021,
+      "android_first_draw_milliseconds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "server_response_median_milliseconds": 51.1868999999715
+    },
+    "calendar-week-warm": {
+      "milliseconds": [
+        849.2548000003808,
+        888.0982999999105,
+        1217.156800000339,
+        873.804800000471,
+        875.6367999994836
+      ],
+      "median_milliseconds": 875.6367999994836,
+      "max_milliseconds": 1217.156800000339,
+      "request_counts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "route_counts": {},
+      "capture_median_milliseconds": [
+        396.39534999999887,
+        411.6796499999982,
+        394.42459999999846,
+        408.5500500000053,
+        409.700800000006
+      ],
+      "capture_max_milliseconds": 448.1843999999983,
+      "android_first_draw_milliseconds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "server_response_median_milliseconds": null
+    },
+    "week-calendar-warm": {
+      "milliseconds": [
+        844.9392000002263,
+        863.3841000000757,
+        838.00760000031,
+        828.235400000267,
+        844.466100000318
+      ],
+      "median_milliseconds": 844.466100000318,
+      "max_milliseconds": 863.3841000000757,
+      "request_counts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "route_counts": {},
+      "capture_median_milliseconds": [
+        391.72775,
+        403.29219999999987,
+        390.0336499999976,
+        384.5729000000065,
+        393.65444999999454
+      ],
+      "capture_max_milliseconds": 405.956299999998,
+      "android_first_draw_milliseconds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "server_response_median_milliseconds": null
+    },
+    "profile-cold": {
+      "milliseconds": [
+        1261.7165000001478,
+        1274.0474000001996,
+        1230.8854000002611,
+        1245.5251000001226,
+        1306.471199999578
+      ],
+      "median_milliseconds": 1261.7165000001478,
+      "max_milliseconds": 1306.471199999578,
+      "request_counts": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "route_counts": {
+        "/api/v1/activities/pending-rpe": 1,
+        "/api/v1/onboarding": 1
+      },
+      "capture_median_milliseconds": [
+        389.46770000000106,
+        406.09500000000116,
+        391.31150000000343,
+        398.3234999999986,
+        403.7499000000098
+      ],
+      "capture_max_milliseconds": 427.5491000000038,
+      "android_first_draw_milliseconds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "server_response_median_milliseconds": 49.56319999991683
+    },
+    "profile-warm": {
+      "milliseconds": [
+        1279.279200000019,
+        1288.448999999673,
+        1260.7062000006408,
+        1253.8019999992684,
+        1205.2118000001428
+      ],
+      "median_milliseconds": 1260.7062000006408,
+      "max_milliseconds": 1288.448999999673,
+      "request_counts": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "route_counts": {
+        "/api/v1/activities/pending-rpe": 1,
+        "/api/v1/onboarding": 1
+      },
+      "capture_median_milliseconds": [
+        416.31029999999737,
+        408.77850000000035,
+        398.46510000000126,
+        394.6841999999888,
+        388.9974999999977
+      ],
+      "capture_max_milliseconds": 425.8781000000017,
+      "android_first_draw_milliseconds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "server_response_median_milliseconds": 47.56185000005644
+    }
+  }
+}

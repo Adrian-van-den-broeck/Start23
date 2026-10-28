@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-28",
+  "timezone_context": "Europe/Amsterdam",
+  "host": "Windows-10-10.0.19045-SP0",
+  "cpu": "Intel Core i7-7820X @ 3.60GHz, 8 cores / 16 logical CPUs",
+  "ram": "32 GiB nominal; Windows visible 33223908 KiB",
+  "python": "3.10.10",
+  "backend_versions": {
+    "fastapi": "0.139.2",
+    "pydantic": "2.13.4",
+    "httpx": "0.28.1",
+    "pytest": "8.4.2",
+    "mypy": "1.20.2",
+    "ruff": "0.16.0"
+  },
+  "mobile_versions": {
+    "expo": "57.0.24",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "expo-router": "57.0.22",
+    "typescript": "6.0.3",
+    "jest": "29.7.0",
+    "@shopify/flash-list": "2.0.2",
+    "pngjs": "3.4.0"
+  },
+  "node": "v24.18.0",
+  "avd": {
+    "hw.cpu.ncore": "4",
+    "hw.gpu.mode": "auto",
+    "hw.lcd.density": "440",
+    "hw.lcd.height": "2280",
+    "hw.lcd.width": "1080",
+    "hw.ramSize": "5466"
+  },
+  "emulator_runtime": {
+    "android": "15",
+    "api": 35,
+    "abi": "x86_64",
+    "display": "1080x2280",
+    "density": 440,
+    "timezone": "GMT"
+  },
+  "build": "Local standalone Hermes release variant, generated benchmark-only package/signing, no Metro/debugger",
+  "apk_sha256": {
+    "baseline": "58bfa7d501f67fb21cf39bf4e272cbcef95243ada183c18d46f9e1cd7520bb93",
+    "optimized": "ba3b631655297d35e51927bdf67ffe5d7f3becaee6a9177c794e3a32e81fd512"
+  },
+  "database": "PostgreSQL/pgTAP: DEFERRED BY OWNER \u2014 PRE-BETA"
+}

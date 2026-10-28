@@ -1,0 +1,14 @@
+{
+  "baseline": {
+    "total_calls": 32801561,
+    "profiled_seconds": 23.209315599999996,
+    "uuid_string_calls": 10195454,
+    "uuid_string_self_seconds": 9.3332253
+  },
+  "optimized": {
+    "total_calls": 3047017,
+    "profiled_seconds": 4.177733099999999,
+    "uuid_string_calls": 379,
+    "uuid_string_self_seconds": 0.0005054
+  }
+}

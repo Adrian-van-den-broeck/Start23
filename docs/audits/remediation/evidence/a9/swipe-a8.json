@@ -1,0 +1,37 @@
+{
+  "1": [
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 16.38838670000041
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 16.22002210000028,
+      "authenticated_read_wait_seconds": 16.226265900000726
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 16.300668200000473
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 16.080404799999997,
+      "authenticated_read_wait_seconds": 16.08573559999968
+    },
+    {
+      "planning": [
+        {
+          "status": 201,
+          "seconds": 16.24806720000015
+        }
+      ],
+      "authenticated_read_status": 200,
+      "scheduler_delay_seconds": 16.080032000000756,
+      "authenticated_read_wait_seconds": 16.084654900000714
+    }
+  ]
+}

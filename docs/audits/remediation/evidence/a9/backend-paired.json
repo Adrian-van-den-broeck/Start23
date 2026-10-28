@@ -1,0 +1,158 @@
+{
+  "reference_sha": "d0e726dfd291ffde12a459ec430b11fdc5cddc7a",
+  "measurement": "Interleaved raw domain wall/CPU time; canonical output validation outside timing; every result matches A8 golden",
+  "cases": {
+    "run_history": {
+      "a8": {
+        "runs": [
+          {
+            "seconds": 0.46903049999946234,
+            "cpu_seconds": 0.46875
+          },
+          {
+            "seconds": 0.4394787000001088,
+            "cpu_seconds": 0.421875
+          },
+          {
+            "seconds": 0.47725309999987076,
+            "cpu_seconds": 0.484375
+          }
+        ],
+        "median_seconds": 0.46903049999946234,
+        "max_seconds": 0.47725309999987076
+      },
+      "optimized": {
+        "runs": [
+          {
+            "seconds": 0.08789190000061353,
+            "cpu_seconds": 0.09375
+          },
+          {
+            "seconds": 0.08367629999975179,
+            "cpu_seconds": 0.078125
+          },
+          {
+            "seconds": 0.09118849999958911,
+            "cpu_seconds": 0.09375
+          }
+        ],
+        "median_seconds": 0.08789190000061353,
+        "max_seconds": 0.09118849999958911
+      }
+    },
+    "duathlon": {
+      "a8": {
+        "runs": [
+          {
+            "seconds": 0.3508501999995133,
+            "cpu_seconds": 0.359375
+          },
+          {
+            "seconds": 0.34569699999974546,
+            "cpu_seconds": 0.34375
+          },
+          {
+            "seconds": 0.3392140999994808,
+            "cpu_seconds": 0.34375
+          }
+        ],
+        "median_seconds": 0.34569699999974546,
+        "max_seconds": 0.3508501999995133
+      },
+      "optimized": {
+        "runs": [
+          {
+            "seconds": 0.09877969999979541,
+            "cpu_seconds": 0.09375
+          },
+          {
+            "seconds": 0.13423430000057124,
+            "cpu_seconds": 0.140625
+          },
+          {
+            "seconds": 0.09922359999927721,
+            "cpu_seconds": 0.09375
+          }
+        ],
+        "median_seconds": 0.09922359999927721,
+        "max_seconds": 0.13423430000057124
+      }
+    },
+    "tri_balanced": {
+      "a8": {
+        "runs": [
+          {
+            "seconds": 15.158891699999913,
+            "cpu_seconds": 14.875
+          },
+          {
+            "seconds": 14.84090230000038,
+            "cpu_seconds": 14.671875
+          },
+          {
+            "seconds": 14.945330200000171,
+            "cpu_seconds": 14.796875
+          }
+        ],
+        "median_seconds": 14.945330200000171,
+        "max_seconds": 15.158891699999913
+      },
+      "optimized": {
+        "runs": [
+          {
+            "seconds": 3.3092455999994854,
+            "cpu_seconds": 3.3125
+          },
+          {
+            "seconds": 3.2810208000000785,
+            "cpu_seconds": 3.28125
+          },
+          {
+            "seconds": 3.530985800000053,
+            "cpu_seconds": 3.46875
+          }
+        ],
+        "median_seconds": 3.3092455999994854,
+        "max_seconds": 3.530985800000053
+      }
+    },
+    "tri_zero": {
+      "a8": {
+        "runs": [
+          {
+            "seconds": 18.86691350000001,
+            "cpu_seconds": 18.453125
+          },
+          {
+            "seconds": 18.111608399999568,
+            "cpu_seconds": 17.890625
+          },
+          {
+            "seconds": 17.476858800000628,
+            "cpu_seconds": 17.3125
+          }
+        ],
+        "median_seconds": 18.111608399999568,
+        "max_seconds": 18.86691350000001
+      },
+      "optimized": {
+        "runs": [
+          {
+            "seconds": 4.277838799999699,
+            "cpu_seconds": 4.203125
+          },
+          {
+            "seconds": 3.933533299999908,
+            "cpu_seconds": 3.890625
+          },
+          {
+            "seconds": 3.4939995000004274,
+            "cpu_seconds": 3.484375
+          }
+        ],
+        "median_seconds": 3.933533299999908,
+        "max_seconds": 4.277838799999699
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+    "application_implementation_sha":  "8aca2655c2c36534a5c3973a466a5ffc3e396d00",
+    "mobile_tests":  887,
+    "mobile_suites":  83,
+    "mobile_seconds":  124.767,
+    "backend_tests":  850,
+    "backend_seconds":  133.56,
+    "backend_privacy_public_contract_subset":  38,
+    "mobile_recursive_privacy":  1,
+    "strict_typescript":  "PASS",
+    "unused_typescript":  "PASS",
+    "ruff_backend_and_native_benchmarks":  "PASS",
+    "ruff_format":  "PASS",
+    "strict_mypy":  "PASS — app/tests/benchmarks, 148 source files",
+    "native_benchmark_tool_smoke":  "PASS — one six-operation synthetic journey",
+    "performance_harness":  "PASS — 2 suites / 2 tests, 5 samples each",
+    "database":  "PostgreSQL/pgTAP: DEFERRED BY OWNER — PRE-BETA",
+    "production_staging":  "UNCHANGED",
+    "push_merge_deployment":  "NONE",
+    "mobile_privacy_source_public_views":  "58 tests / 8 suites — PASS"
+}
