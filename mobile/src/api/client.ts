@@ -39,6 +39,11 @@ import type {
   ZoneSetupOption,
   ZoneProfileState,
 } from './types';
+import { CancellationError, DeadlineError, withDeadline } from '../lib/deadline';
+import { registerApiRequest } from '../lib/apiCancellation';
+
+export const API_DEADLINE_MS = 45_000;
+export const PLANNING_DEADLINE_MS = 120_000;
 
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, '');
 
@@ -55,17 +60,20 @@ type ErrorEnvelope = {
   };
 };
 
-class ApiRequestError extends Error {
+export class ApiRequestError extends Error {
   constructor(
     message: string,
     readonly status: number | null,
     readonly code: string | null,
+    readonly outcome: 'rejected' | 'unknown' = 'rejected',
+    readonly method: string = 'GET',
   ) {
     super(message);
     this.name = 'ApiRequestError';
   }
 
   get retryable(): boolean {
+    if (this.code === 'request_cancelled') return false;
     return (
       this.status === null ||
       this.status === 429 ||
@@ -136,7 +144,7 @@ function deterministicErrorMessage(code: string | undefined): string | null {
   }
 }
 
-async function request<T>(
+export async function request<T>(
   accessToken: string,
   path: string,
   options: RequestInit = {},
@@ -144,10 +152,24 @@ async function request<T>(
   if (!apiBaseUrl) {
     throw new Error('Configureer EXPO_PUBLIC_API_BASE_URL.');
   }
-  let response: Response;
+  const method = options.method ?? 'GET';
+  const mutation = !['GET', 'HEAD'].includes(method);
+  const controller = new AbortController();
+  const unregister = registerApiRequest(accessToken, controller);
+  const cancel = () => controller.abort();
+  options.signal?.addEventListener('abort', cancel, { once: true });
+  if (options.signal?.aborted) cancel();
+  let dispatched = false;
+  let response: Response | undefined;
+  const outcome = () => dispatched && mutation && (!response || response.ok || response.status >= 500) ? 'unknown' as const : 'rejected' as const;
+  const deadline = /\/(?:swipe-drafts|proposals|schedule-proposals|plan-proposals)(?:\/submit)?$/.test(path) && mutation
+    ? PLANNING_DEADLINE_MS : API_DEADLINE_MS;
   try {
+    return await withDeadline(async signal => {
+    dispatched = true;
     response = await fetch(`${apiBaseUrl}${path}`, {
       ...options,
+      signal,
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,
@@ -155,13 +177,6 @@ async function request<T>(
         ...options.headers,
       },
     });
-  } catch {
-    throw new ApiRequestError(
-      'De Wombo-server is niet bereikbaar. Controleer je verbinding en probeer opnieuw.',
-      null,
-      'network_unavailable',
-    );
-  }
   if (!response.ok) {
     const body = (await response.json().catch(() => ({}))) as ErrorEnvelope;
     const message =
@@ -178,10 +193,23 @@ async function request<T>(
       message,
       response.status,
       body.error?.code ?? null,
+      outcome(), method,
     );
   }
   if (response.status === 204) return undefined as T;
   return (await response.json()) as T;
+    }, deadline, controller.signal);
+  } catch (caught) {
+    if (caught instanceof ApiRequestError) throw caught;
+    const code = caught instanceof DeadlineError ? 'request_timeout'
+      : caught instanceof CancellationError ? 'request_cancelled' : 'network_unavailable';
+    throw new ApiRequestError(
+      mutation
+        ? 'De uitkomst van het opslaan is nog onbekend. Controleer de opgeslagen status of probeer dezelfde actie opnieuw.'
+        : 'De Wombo-server is niet bereikbaar. Controleer je verbinding en probeer opnieuw.',
+      response?.status ?? null, code, outcome(), method,
+    );
+  } finally { unregister(); options.signal?.removeEventListener('abort', cancel); }
 }
 
 function wait(milliseconds: number): Promise<void> {

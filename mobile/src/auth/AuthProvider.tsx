@@ -7,6 +7,7 @@ import { AppState, Platform } from 'react-native';
 
 import { getSupabaseClient, supabaseConfigurationError } from '../lib/supabase';
 import { DeadlineError, withDeadline } from '../lib/deadline';
+import { cancelApiRequests } from '../lib/apiCancellation';
 
 const refreshTokenKey = 'start23.refresh-token';
 export const AUTH_REFRESH_DEADLINE_MS = 45_000;
@@ -68,6 +69,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
     let expiryTimer: ReturnType<typeof setTimeout> | undefined;
     let foreground = AppState.currentState === 'active' || AppState.currentState === null;
     let storageFailed = false;
+    const accessTokens = new Set<string>();
+    const retireRequests = () => { accessTokens.forEach(cancelApiRequests); accessTokens.clear(); };
     const persist = (value: string | null, version: number) => {
       const result = writes.then(async () => {
         if (!alive || epoch !== version || token !== value) return;
@@ -92,13 +95,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
       if (!alive || !current) return;
       const remaining = (current.expires_at ?? 0) * 1000 - Date.now();
       expiryTimer = setTimeout(() => {
-        if (alive && !usable(current)) { setSession(null); report('timeout'); }
+        if (alive && !usable(current)) { retireRequests(); setSession(null); report('timeout'); }
       }, Math.max(0, remaining));
       if (foreground) refreshTimer = setTimeout(() => { void refresh(); }, Math.max(1_000, remaining - 60_000));
     };
     const accept = (next: Session, version: number) => {
       if (!alive || version !== epoch) return;
+      if (current && current.user.id !== next.user.id) retireRequests();
       current = next;
+      accessTokens.add(next.access_token);
       token = next.refresh_token;
       setSession(usable(next) ? next : null);
       setRecovery(null);
@@ -139,6 +144,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           const kind = classifyRefreshError(error);
           if (kind === 'invalid') {
             ++epoch;
+            retireRequests();
             token = null;
             current = null;
             setSession(null);
@@ -174,6 +180,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       retry: refresh,
       signOut: async () => {
         ++epoch; // invalidate before awaiting the SDK or secure storage.
+        retireRequests();
         const version = epoch;
         token = null;
         current = null;
@@ -197,6 +204,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     });
     return () => {
       alive = false;
+      retireRequests();
       ++epoch;
       clearTimeout(refreshTimer);
       clearTimeout(expiryTimer);

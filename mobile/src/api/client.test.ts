@@ -172,6 +172,7 @@ describe('mobile API transport contracts', () => {
         method: 'POST',
         body: JSON.stringify(input),
         headers,
+        signal: expect.anything(),
       },
     );
   });
@@ -245,6 +246,7 @@ describe('mobile API transport contracts', () => {
           resting_heart_rate_bpm: 52,
         }),
         headers,
+        signal: expect.anything(),
       },
     );
     expect(fetchMock).toHaveBeenNthCalledWith(
@@ -254,6 +256,7 @@ describe('mobile API transport contracts', () => {
         method: 'PATCH',
         body: JSON.stringify({ first_name: 'Ada', last_name: 'Lovelace' }),
         headers,
+        signal: expect.anything(),
       },
     );
     expect(
@@ -401,6 +404,7 @@ describe('mobile API transport contracts', () => {
           average_heart_rate_bpm: 151,
         }),
         headers,
+        signal: expect.anything(),
       },
     );
   });
@@ -526,6 +530,7 @@ describe('mobile API transport contracts', () => {
           ],
         }),
         headers,
+        signal: expect.anything(),
       },
     );
     expect(fetchMock).toHaveBeenNthCalledWith(
@@ -538,6 +543,7 @@ describe('mobile API transport contracts', () => {
           scheduled_date: '2026-09-23',
         }),
         headers,
+        signal: expect.anything(),
       },
     );
   });
