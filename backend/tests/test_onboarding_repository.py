@@ -21,6 +21,39 @@ def _settings() -> Settings:
     )
 
 
+def test_a9_complete_state_uses_eleven_parallel_owner_scoped_reads() -> None:
+    async def exercise() -> None:
+        athlete_id = uuid4()
+        captured: list[httpx.Request] = []
+        all_started = asyncio.Event()
+
+        async def handler(request: httpx.Request) -> httpx.Response:
+            captured.append(request)
+            if len(captured) == 11:
+                all_started.set()
+            await all_started.wait()
+            if request.url.path.endswith("rpc/get_operational_athlete_profile"):
+                return httpx.Response(200, json=None)
+            return httpx.Response(200, json=[])
+
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            repository = SupabaseOnboardingRepository(_settings(), client=client)
+            await asyncio.wait_for(
+                repository.fetch_state("athlete-token", athlete_id), 10
+            )
+        assert len(captured) == 11
+        assert len({request.url.path for request in captured}) == 11
+        for request in captured:
+            assert request.headers["Authorization"] == "Bearer athlete-token"
+            if "/rpc/" not in request.url.path:
+                assert any(
+                    request.url.params.get(key) == f"eq.{athlete_id}"
+                    for key in ("athlete_id", "internal_athlete_id")
+                )
+
+    asyncio.run(exercise())
+
+
 def test_fetch_state_allows_missing_forward_zone_setup_table() -> None:
     athlete_id = uuid4()
 

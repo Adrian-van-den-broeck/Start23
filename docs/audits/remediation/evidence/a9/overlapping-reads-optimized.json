@@ -1,0 +1,25 @@
+{
+  "environment": "Actual client/deadline/controller integration, synthetic 40 ms fetch, development Jest; no device latency",
+  "measurements": [
+    {
+      "milliseconds": 53,
+      "requests": 1
+    },
+    {
+      "milliseconds": 47,
+      "requests": 1
+    },
+    {
+      "milliseconds": 46,
+      "requests": 1
+    },
+    {
+      "milliseconds": 47,
+      "requests": 1
+    },
+    {
+      "milliseconds": 47,
+      "requests": 1
+    }
+  ]
+}

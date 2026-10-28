@@ -48,6 +48,8 @@ export const API_DEADLINE_MS = 45_000;
 export const PLANNING_DEADLINE_MS = 120_000;
 
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, '');
+// Only overlapping reads are shared. No completed snapshot or token is cached.
+const onboardingReads = new Map<string, Promise<OnboardingState>>();
 
 type ErrorEnvelope = {
   error?: {
@@ -159,6 +161,8 @@ export async function request<T>(
   }
   const method = (options.method ?? 'GET').toUpperCase();
   const mutation = !['GET', 'HEAD'].includes(method);
+  // A read begun before/during a write cannot satisfy a post-write refresh.
+  if (mutation) onboardingReads.delete(accessToken);
   const controller = new AbortController();
   const unregister = registerApiRequest(accessToken, controller);
   const cancel = () => controller.abort();
@@ -234,14 +238,27 @@ export async function request<T>(
         : 'De Wombo-server is niet bereikbaar. Controleer je verbinding en probeer opnieuw.',
       response?.status ?? null, code, outcome(), method,
     );
-  } finally { unregister(); options.signal?.removeEventListener('abort', cancel); }
+  } finally {
+    if (mutation) onboardingReads.delete(accessToken);
+    unregister(); options.signal?.removeEventListener('abort', cancel);
+  }
 }
 
 function wait(milliseconds: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
-export async function getOnboarding(
+export function getOnboarding(accessToken: string): Promise<OnboardingState> {
+  const pending = onboardingReads.get(accessToken);
+  if (pending) return pending;
+  const read = fetchOnboarding(accessToken);
+  onboardingReads.set(accessToken, read);
+  const remove = () => { if (onboardingReads.get(accessToken) === read) onboardingReads.delete(accessToken); };
+  void read.then(remove, remove);
+  return read;
+}
+
+async function fetchOnboarding(
   accessToken: string,
 ): Promise<OnboardingState> {
   const retryDelays = [400, 1200];
