@@ -67,6 +67,7 @@ from .domain import (
     validate_manual_schedule,
 )
 from .execution import PlanningComputation
+from .registration import parse_weekly_registration
 from .repository import (
     JsonObject,
     PlanningRepository,
@@ -499,10 +500,14 @@ class PlanningService:
                         row.get("reduced_realized_progression", False)
                     ),
                     realized_load=(
-                        InternalLoad(Decimal(str(row["realized_tss"])))
-                        if row.get("realized_tss") is not None
+                        InternalLoad(quality.planner_usable_load)
+                        if quality is not None
+                        and quality.planner_usable_load is not None
+                        else InternalLoad(Decimal(str(row["realized_tss"])))
+                        if quality is None and row.get("realized_tss") is not None
                         else None
                     ),
+                    weekly_registration=quality,
                     target_basis=(
                         PlanningTargetBasis(str(row["target_basis"]))
                         if row.get("target_basis") is not None
@@ -548,6 +553,9 @@ class PlanningService:
                     },
                 )
                 for row in rows
+                for quality in (
+                    parse_weekly_registration(row.get("weekly_registration")),
+                )
             )
         except (KeyError, ValueError) as error:
             raise PlanningDomainError("Stored plan load history is invalid.") from error
@@ -1035,8 +1043,9 @@ class PlanningService:
         selected_occurrence_ids: tuple[UUID, ...] | None = None,
         fixed_occurrence_dates: Mapping[UUID, date] | None = None,
         checkin_id: UUID | None = None,
+        registration_evidence: tuple[JsonObject, ...] | None = None,
     ) -> str:
-        canonical = {
+        canonical: JsonObject = {
             "input_fingerprint": input_fingerprint,
             "week_start": week_start.isoformat(),
             "available_dates": sorted(value.isoformat() for value in available_dates),
@@ -1072,6 +1081,8 @@ class PlanningService:
                 )
             },
         }
+        if registration_evidence is not None:
+            canonical["weekly_registration_evidence"] = registration_evidence
         return hashlib.sha256(
             json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode()
         ).hexdigest()
@@ -1095,8 +1106,14 @@ class PlanningService:
         draft: Any,
         workout_source: str,
         checkin_id: UUID | None = None,
+        registration_evidence: tuple[JsonObject, ...] | None = None,
     ) -> JsonObject:
         return {
+            **(
+                {"weekly_registration_evidence": list(registration_evidence)}
+                if registration_evidence is not None
+                else {}
+            ),
             "initial_plan_request_id": (
                 str(request_id) if request_id is not None else None
             ),
@@ -1204,8 +1221,19 @@ class PlanningService:
                     "field_test_assignment_required",
                     "Field-test workouts must use the typed test-assignment flow.",
                 )
-        prior_loads = self._load_samples(
-            await self._repository.fetch_load_history(athlete_id, week_start)
+        history_rows = await self._repository.fetch_load_history(athlete_id, week_start)
+        prior_loads = self._load_samples(history_rows)
+        registration_evidence = (
+            tuple(
+                {
+                    "week_start": row["week_start"],
+                    "weekly_registration": row["weekly_registration"],
+                }
+                for row in history_rows
+            )
+            if history_rows
+            and all("weekly_registration" in row for row in history_rows)
+            else None
         )
         draft = await self._computation.run(
             build_weekly_plan,
@@ -1234,6 +1262,7 @@ class PlanningService:
                 "The planning input fingerprint is missing."
             ) from error
         generation_fingerprint = self._generation_fingerprint(
+            registration_evidence=registration_evidence,
             input_fingerprint=input_fingerprint,
             week_start=week_start,
             available_dates=available_dates,
@@ -1250,6 +1279,7 @@ class PlanningService:
         result = await self._repository.create_plan_proposal(
             athlete_id,
             self._proposal_payload(
+                registration_evidence=registration_evidence,
                 request_id=request_id,
                 input_fingerprint=input_fingerprint,
                 generation_fingerprint=generation_fingerprint,

@@ -18,6 +18,10 @@ def single_planned_zone(segments: list[dict[str, Any]]) -> int | None:
     zones: set[int] = set()
     for segment in segments:
         zone = segment.get("zone_target")
+        if "zone_target" not in segment:
+            zone = segment.get("zone")  # historical explicit snapshot spelling
+        elif "zone" in segment and segment["zone"] != zone:
+            return None
         if type(zone) is not int or not 1 <= zone <= 5:
             return None
         if segment.get("protocol_target") or segment.get("rpe_target"):

@@ -103,7 +103,10 @@ revoke all on function private.guard_skipped_workout_activity() from public, ano
 create function public.get_plan_load_history_for_planning_v16(p_athlete_id uuid, p_before_week date)
 returns setof jsonb language plpgsql stable security definer set search_path = '' as $$
 begin
-  if coalesce((select auth.jwt() ->> 'role'), '') <> 'service_role' then
+  -- Direct EXECUTE remains service-only. The owner clause supports the narrow
+  -- internal approval trigger; it returns no private evidence to the caller.
+  if coalesce((select auth.jwt() ->> 'role'), '') <> 'service_role'
+    and (select auth.uid()) is distinct from p_athlete_id then
     raise exception 'service role required' using errcode = '42501';
   end if;
   return query

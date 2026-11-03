@@ -3,7 +3,7 @@
 from collections.abc import Callable, Collection, Mapping
 from dataclasses import dataclass, field
 from datetime import date, datetime, time, timedelta, timezone
-from decimal import Decimal
+from decimal import Context, Decimal, localcontext
 from enum import Enum
 from itertools import combinations
 from uuid import UUID
@@ -50,6 +50,7 @@ from app.modules.physiology.taper import (
     calculate_taper_baseline,
     calculate_taper_target,
 )
+from app.modules.physiology.weekly_registration import WeeklyCompleteness
 from app.modules.workouts.catalog import (
     FallbackCompatibility,
     PlannedWorkoutSnapshot,
@@ -120,6 +121,7 @@ class PlanLoadSample:
     )
     # Actor-level provenance includes approved plans outside the history window.
     has_prior_approved_plan: bool = False
+    weekly_registration: WeeklyCompleteness | None = field(default=None, repr=False)
 
 
 @dataclass(frozen=True, slots=True)
@@ -209,6 +211,33 @@ def _build_week(*, week_start: date, race_date: date) -> int:
 
 
 def resolve_target(
+    *,
+    week_start: date,
+    race_date: date,
+    prior_loads: tuple[PlanLoadSample, ...],
+    initial_catalog_load: InternalLoad,
+    maintenance_active: bool = False,
+    prior_approved_plan_exists: bool | None = None,
+) -> PlanningTarget:
+    """Keep historical arithmetic; new consumer policy uses reproducible precision."""
+
+    def calculate() -> PlanningTarget:
+        return _resolve_target(
+            week_start=week_start,
+            race_date=race_date,
+            prior_loads=prior_loads,
+            initial_catalog_load=initial_catalog_load,
+            maintenance_active=maintenance_active,
+            prior_approved_plan_exists=prior_approved_plan_exists,
+        )
+
+    if any(sample.weekly_registration is not None for sample in prior_loads):
+        with localcontext(Context(prec=50)):
+            return calculate()
+    return calculate()
+
+
+def _resolve_target(
     *,
     week_start: date,
     race_date: date,
@@ -319,6 +348,17 @@ def resolve_target(
             basis=PlanningTargetBasis.RECOVERY_FACTOR,
             target=recovery.target,
         )
+    if prior_loads:
+        registration = prior_loads[-1].weekly_registration
+        if registration is not None and (
+            not registration.progression_eligible
+            or not registration.volume_debt_eligible
+        ):
+            return PlanningTarget(
+                phase=phase,
+                basis=PlanningTargetBasis.PRIOR_PLANNED_HOLD,
+                target=prior_loads[-1].load,
+            )
     if prior_loads and prior_loads[-1].realized_load is not None:
         latest = prior_loads[-1]
         assert latest.realized_load is not None
@@ -362,6 +402,10 @@ def resolve_target(
                 )
                 for sample in prior_loads
                 if sample.realized_load is not None
+                and (
+                    sample.weekly_registration is None
+                    or sample.weekly_registration.reference_baseline_eligible
+                )
             ),
             as_of=week_start - timedelta(days=1),
             exclude_recovery_weeks=True,
@@ -409,6 +453,11 @@ def _desired_high_fraction(
             return standard
         candidate = prior_loads[-2]
     if candidate.phase in {TrainingPhase.RECOVERY, TrainingPhase.TAPER}:
+        return standard
+    if (
+        candidate.weekly_registration is not None
+        and not candidate.weekly_registration.intensity_debt_eligible
+    ):
         return standard
     required = (
         candidate.planned_high_minutes,

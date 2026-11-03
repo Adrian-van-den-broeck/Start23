@@ -214,6 +214,7 @@ class SupabasePlanningRepository:
             timeout=settings.supabase_data_api_timeout_seconds,
         )
         self._legacy_owner = LegacyAthleteOwnerAdapter(settings, self._client)
+        self._v2_ready = settings.realized_v2_storage_ready
 
     async def _rpc_athlete_id(self, athlete_id: UUID) -> UUID:
         try:
@@ -444,7 +445,9 @@ class SupabasePlanningRepository:
         rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         payload = await self._request(
             "POST",
-            "rpc/get_plan_load_history_for_planning_v15",
+            "rpc/get_plan_load_history_for_planning_v16"
+            if self._v2_ready
+            else "rpc/get_plan_load_history_for_planning_v15",
             service=True,
             json={
                 "p_athlete_id": str(rpc_athlete_id),
@@ -454,6 +457,7 @@ class SupabasePlanningRepository:
         if not isinstance(payload, list) or any(
             not isinstance(row, dict)
             or type(row.get("has_prior_approved_plan")) is not bool
+            or (self._v2_ready and not isinstance(row.get("weekly_registration"), dict))
             for row in payload
         ):
             raise PlanningRepositoryUnavailableError
@@ -467,11 +471,18 @@ class SupabasePlanningRepository:
         rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
-            "rpc/create_weekly_plan_proposal_v3",
+            "rpc/create_weekly_plan_proposal_v4"
+            if self._v2_ready
+            else "rpc/create_weekly_plan_proposal_v3",
             service=True,
             json={
                 "p_athlete_id": str(rpc_athlete_id),
-                "p_payload": payload,
+                "p_payload": {
+                    "weekly_registration_evidence": [],
+                    **payload,
+                }
+                if self._v2_ready
+                else payload,
             },
         )
         if not isinstance(result, dict):

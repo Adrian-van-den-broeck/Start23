@@ -60,6 +60,13 @@ def canonical(value: Any) -> Any:
         return {
             field.name: canonical(getattr(value, field.name))
             for field in dataclasses.fields(value)
+            # The additive v2 field is absent in the pinned A8/A9 corpus.
+            # Preserve those original input hashes; populated new evidence is
+            # still serialized and compared in full.
+            if not (
+                field.name == "weekly_registration"
+                and getattr(value, field.name) is None
+            )
         }
     if isinstance(value, Enum):
         return value.value

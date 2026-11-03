@@ -47,6 +47,32 @@ def test_sql_syntax_with_existing_parser() -> None:
             MIGRATION.parent / "20261103135735_realized_v2_weekly_registration.sql"
         ).read_text()
     )
+    assert parser.parse_sql(
+        (
+            MIGRATION.parent
+            / "20261103140959_realized_v2_planning_evidence_preconditions.sql"
+        ).read_text()
+    )
+
+
+def test_new_pending_plans_freeze_evidence_and_guard_approval() -> None:
+    sql = (
+        (
+            MIGRATION.parent
+            / "20261103140959_realized_v2_planning_evidence_preconditions.sql"
+        )
+        .read_text()
+        .lower()
+    )
+    assert "create table private.realized_v2_plan_evidence" in sql
+    assert "force row level security" in sql
+    assert (
+        "v_evidence is distinct from p_payload -> 'weekly_registration_evidence'" in sql
+    )
+    assert "old.state = 'pending_approval' and new.state = 'active'" in sql
+    assert "before update of state on public.plan_revisions" in sql
+    assert "v_evidence.evidence is distinct from" in sql
+    assert "update private.activity_loads" not in sql
 
 
 def test_weekly_registration_is_explicit_owned_and_stale_safe() -> None:

@@ -85,7 +85,7 @@ def test_openapi_contains_expected_foundation_paths(client: TestClient) -> None:
         "/api/v1/weekly-plans/{plan_id}/pending-workouts/{workout_id}/edit-proposals",
         "/api/v1/weekly-plans/{plan_id}/validate",
         "/api/v1/planned-workouts/{workout_id}",
-        # D10 adds an explicit stale-safe registration flow, separate from activity creation.
+        # D10 adds explicit stale-safe registration alongside activity creation.
         "/api/v1/planned-workouts/{workout_id}/registration",
         "/api/v1/calendar",
         "/api/v1/activities",

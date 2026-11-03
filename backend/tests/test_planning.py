@@ -1146,8 +1146,13 @@ def test_run_marathon_high_history_fails_closed_before_swipe_count(
         "2026-08-05",
         "2026-08-08",
     ]
-    assert "tss" not in str(diagnostic.__dict__).casefold()
-    assert "planned_load" not in str(diagnostic.__dict__).casefold()
+    # Verify the actual emitted log. LogRecord.pathname is not emitted and may
+    # contain this feature worktree's name; treating it as telemetry is false.
+    from app.core.logging import JsonFormatter
+
+    emitted = JsonFormatter().format(diagnostic).casefold()
+    assert "tss" not in emitted
+    assert "planned_load" not in emitted
 
     caplog.clear()
     app.state.settings.environment = "production"
