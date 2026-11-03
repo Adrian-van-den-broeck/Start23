@@ -2,8 +2,10 @@
 
 Date: 2026-11-04, Europe/Amsterdam. Local offline verification only.
 Start SHA: `cef4d0adfb09f5f1937528a98c594a6442816f20`.
-Final software SHA: see the local delivery addendum in
-[the implementation report](JOREN_C1_IMPLEMENTATION_REPORT.md).
+Final verified software/artifact SHA:
+`0eb69f54029018e99e8e4d407930a010976f968d`; see the local delivery addendum in
+[the implementation report](JOREN_C1_IMPLEMENTATION_REPORT.md) for the final
+documentation-only recording commit.
 
 ## Results
 
@@ -54,6 +56,11 @@ approval gaps. Default execution writes no file. Use a new local path for each
 optional `--timings` report; timings are deliberately not reproducible metadata.
 Git attributes preserve original report/source bytes and canonical manifest LF
 bytes even under this workstation's `core.autocrlf=true` setting.
+All 20 source/report custody files and the canonical manifest were also compared
+with their staged Git blobs: zero byte mismatches, identical manifest digest.
+A ZIP archive of the committed `docs/catalog` tree reproduced those same 21 files
+byte-for-byte. Final rehashing of all four external originals matched the supplied
+hashes again after implementation and verification.
 
 Focused tests use independent original OOXML cells and the review's independently
 materialized numerical table as oracles. They cover every row's raw values,

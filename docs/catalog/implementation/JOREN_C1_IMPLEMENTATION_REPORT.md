@@ -12,7 +12,10 @@ Implementation worktree:
 `F:\Projecten Business\Start23\Code\.worktrees\joren-three-sport-catalog-c1`.
 The requested branch/worktree already existed clean at the exact accepted SHA;
 it was verified and reused. The older root checkout was not used for implementation.
-Final verified implementation SHA is recorded in the local delivery addendum.
+Final verified implementation SHA:
+`0eb69f54029018e99e8e4d407930a010976f968d`.
+The final documentation-only commit records that exact software/artifact commit;
+resolve the delivered branch tip with `git rev-parse feat/joren-three-sport-catalog-c1`.
 
 Read authority: root/worktree AGENTS.md, current MVP roadmap including the realized
 V2 amendment, final reconciliation, A–F brief, planning simulation and C1–C8
@@ -73,3 +76,14 @@ PostgreSQL/pgTAP is **DEFERRED BY OWNER — PRE-BETA**, not passed. No API/mobil
 database contract is changed by C1; corresponding runtime/release gates belong
 to later approved integration. This report claims only the verified offline C1
 foundation, not completion of the three-sport integration or release readiness.
+
+## Local delivery addendum
+
+The exact final software/source/artifact SHA is
+`0eb69f54029018e99e8e4d407930a010976f968d`, based directly on
+`cef4d0adfb09f5f1937528a98c594a6442816f20`. The following commit changes only this
+report and validation documentation to record the immutable SHA and custody checks.
+All source reports/originals and the canonical artifact were also checked against
+their staged Git blobs, confirming byte preservation under the recorded attributes.
+Local source/software checks pass; the implementation worktree is delivered clean.
+No push, merge, deployment or production/staging change occurred.
