@@ -13,12 +13,14 @@ pgTAP is **DEFERRED BY OWNER — PRE-BETA**. No hosted database was changed.
 ## Exact baseline, isolation and commits
 
 - Start: `e2d450be4a1d5ec3d65037bd6901f2f03d6b14e6` (accepted cumulative A9).
-- Final tested implementation: `a0096135814c474ed667adcb957b99a66b54b769`.
+- Final implementation: `4d807f9ac18f576fb2fda51eb0016d48510c177d`.
+- Full-suite tested snapshot: `a0096135814c474ed667adcb957b99a66b54b769`.
 - Branch: `feat/joren-realized-tss-v2`.
 - Worktree: `F:/Projecten Business/Start23/Code/.worktrees/joren-realized-tss-v2`.
-- This report is committed in a subsequent documentation-only commit. The final
-  implementation SHA above identifies all tested code, migrations, specifications
-  and benchmark evidence; the delivery HEAD additionally includes this report.
+- The final implementation adds this report and removes only trailing blank lines
+  in two test files after the tested snapshot. Backend/mobile/SQL differences
+  ignoring blank lines are empty. A subsequent documentation-only commit updates
+  this report with that final implementation SHA; delivery HEAD includes it.
 
 Consecutive Git ancestry checks confirmed:
 
@@ -222,8 +224,10 @@ repr/input leakage. No secret or .env file was added.
 ## Complete software verification
 
 Existing Python 3.10.10 virtualenv and installed mobile dependencies were reused.
-No database tooling was installed. Verification was run against the final source
-tree before its slice 9 commit; that commit changed no tested content afterwards.
+No database tooling was installed. Full verification ran against the slice 9
+source tree. Subsequent commits add the report and remove trailing blank lines
+from two tests; production code and test behavior are unchanged. The final diff
+check passes outside the deliberately unchanged historical review archive.
 
 | Check | Result |
 | --- | --- |
