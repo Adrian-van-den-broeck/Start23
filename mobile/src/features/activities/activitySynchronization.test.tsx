@@ -53,6 +53,7 @@ afterEach(() => jest.useRealTimers());
 
 test('WOMBO-010 A: a remote pending reminder absent from first history can submit its exact RPE identity', async () => {
   await render(<Host />);
+  await act(() => flow.setDuration('45'));
   expect(flow.activities).toEqual([]);
   server = [remote];
   await act(() => flow.refreshPendingRpe());
@@ -65,6 +66,7 @@ test('WOMBO-010 A: a remote pending reminder absent from first history can submi
 
 test('WOMBO-010 B: reentry refreshes remote history and planned choices after an earlier successful load', async () => {
   const view = await render(<Host />);
+  await act(() => flow.setDuration('45'));
   expect(flow.activities).toEqual([]); expect(flow.workouts).toEqual([workout]);
   await view.rerender(<Host entry={false} />);
   server = [remote];
@@ -78,6 +80,7 @@ test('WOMBO-010 B: reentry refreshes remote history and planned choices after an
 
 test('first load, unchanged reentry and rerender have bounded distinct behavior', async () => {
   const view = await render(<Host />);
+  await act(() => flow.setDuration('45'));
   expect(api.listActivities).toHaveBeenCalledTimes(1);
   await view.rerender(<Host />); expect(api.listActivities).toHaveBeenCalledTimes(1);
   await view.rerender(<Host entry={false} />); await view.rerender(<Host />);
@@ -85,7 +88,8 @@ test('first load, unchanged reentry and rerender have bounded distinct behavior'
 });
 
 test('unknown activity resolves by exact owner GET without downloading history', async () => {
-  await render(<Host />); server = [remote];
+  await render(<Host />);
+  await act(() => flow.setDuration('45')); server = [remote];
   await act(() => flow.saveRpe(remote.id, 4));
   expect(api.getActivity).toHaveBeenCalledWith('token-a', remote.id);
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledWith('token-a', remote, 4, undefined);
@@ -95,6 +99,7 @@ test('unknown activity resolves by exact owner GET without downloading history',
 
 test('stale deleted reminder reports absence, removes only that identity and performs no RPE write', async () => {
   server = [remote]; await render(<Host />);
+  await act(() => flow.setDuration('45'));
   await act(() => flow.setHeartRateByActivity({ [remote.id]: '151' }));
   server = [];
   await act(() => flow.refreshActivities()); // An absent list row alone is not deletion proof.
@@ -108,6 +113,7 @@ test('stale deleted reminder reports absence, removes only that identity and per
 
 test('a remotely completed stale reminder cannot turn its RPE choice into a correction', async () => {
   server = [remote]; await render(<Host />);
+  await act(() => flow.setDuration('45'));
   jest.mocked(api.listActivities).mockRejectedValueOnce(new Error('Offline'));
   await act(() => flow.refreshActivities());
   const completed = { ...remote, ...completeActivity, id: remote.id };
@@ -120,6 +126,7 @@ test('a remotely completed stale reminder cannot turn its RPE choice into a corr
 
 test.each(['foreign', 'malformed', 'offline'])('unverified %s activity resolution cannot write RPE', async reason => {
   await render(<Host />);
+  await act(() => flow.setDuration('45'));
   if (reason === 'offline') jest.mocked(api.getActivity).mockRejectedValueOnce(new Error('Offline'));
   else jest.mocked(api.getActivity).mockResolvedValueOnce(reason === 'foreign' ? { ...remote, id: 'different-id' } : { id: remote.id } as CompletedActivity);
   await act(() => flow.saveRpe(remote.id, 4));
@@ -128,6 +135,7 @@ test.each(['foreign', 'malformed', 'offline'])('unverified %s activity resolutio
 
 test('failed refresh preserves history, planned choices, measurements and local input', async () => {
   server = [remote]; await render(<Host />);
+  await act(() => flow.setDuration('45'));
   await act(() => { flow.setDuration('58'); flow.setDistance('8000'); flow.setStartedAt('2026-10-06T09:00:00Z'); flow.setHeartRateByActivity({ [remote.id]: '150' }); flow.selectWorkout(workout); });
   const previous = flow;
   jest.mocked(api.listActivities).mockRejectedValueOnce(new Error('Offline'));
@@ -141,6 +149,7 @@ test('failed refresh preserves history, planned choices, measurements and local 
 
 test.each(['success', 'error'])('newer forced history wins over late old %s', async outcome => {
   await render(<Host />);
+  await act(() => flow.setDuration('45'));
   const old = deferred<CompletedActivity[]>(), current = deferred<CompletedActivity[]>();
   jest.mocked(api.listActivities).mockReturnValueOnce(old.promise).mockReturnValueOnce(current.promise);
   let first!: Promise<void>, second!: Promise<void>;
@@ -166,6 +175,7 @@ test('duplicate refresh and repeated focus events coalesce without requests on r
 
 test('older reminder cannot overwrite a newer full-history completion', async () => {
   await render(<Host />);
+  await act(() => flow.setDuration('45'));
   const reminder = deferred<CompletedActivity[]>();
   jest.mocked(api.listActivities).mockImplementationOnce(() => reminder.promise);
   let pending!: Promise<void>;
@@ -179,6 +189,7 @@ test.each(['switch', 'logout'])('late history after %s cannot publish into anoth
   const response = deferred<CompletedActivity[]>();
   jest.mocked(api.listActivities).mockReturnValueOnce(response.promise);
   const view = await render(<Host />);
+  await act(() => flow.setDuration('45'));
   if (action === 'switch') await view.rerender(<Host identity="athlete-b" token="token-b" />); else await view.unmount();
   await act(() => response.resolve([remote]));
   if (action === 'switch') { expect(flow.activities).toEqual([]); expect(flow.pendingRpe).toEqual([]); }
@@ -198,6 +209,7 @@ test.each(['switch', 'logout'])('late targeted RPE resolution after %s cannot is
 
 test('an unresolved logical POST survives refresh with the same key and payload', async () => {
   const view = await render(<Host />);
+  await act(() => flow.setDuration('45'));
   await act(() => { flow.setDuration('52'); flow.setDistance('6000'); });
   jest.mocked(api.createActivity).mockRejectedValueOnce(new Error('Unknown commit'));
   await act(() => flow.save()); const original = jest.mocked(api.createActivity).mock.calls[0];
@@ -210,7 +222,8 @@ test('an unresolved logical POST survives refresh with the same key and payload'
 });
 
 test('read refresh while a POST is pending cannot unlock it or create another logical attempt', async () => {
-  await render(<Host />); const response = deferred<CompletedActivity>();
+  await render(<Host />);
+  await act(() => flow.setDuration('45')); const response = deferred<CompletedActivity>();
   jest.mocked(api.createActivity).mockReturnValueOnce(response.promise);
   let mutation!: Promise<void>; await act(() => { mutation = flow.save(); });
   await act(() => flow.refreshActivities()); expect(flow.busy).toBe(true);
@@ -221,6 +234,7 @@ test('read refresh while a POST is pending cannot unlock it or create another lo
 
 test('refresh preserves a chosen feedback identity and HR while new reminders arrive', async () => {
   server = [remote]; const view = await render(<Host />);
+  await act(() => flow.setDuration('45'));
   await act(() => flow.setHeartRateByActivity({ [remote.id]: '153' }));
   server = [{ ...pendingActivity, id: 'another-remote' }, remote];
   await act(() => flow.refreshActivities());
@@ -230,6 +244,7 @@ test('refresh preserves a chosen feedback identity and HR while new reminders ar
 
 test('correction resolves stale identity without silently changing its reviewed expected RPE', async () => {
   server = [completeActivity]; await render(<Host />);
+  await act(() => flow.setDuration('45'));
   jest.mocked(api.listActivities).mockRejectedValueOnce(new Error('Offline'));
   await act(() => flow.refreshActivities());
   server = [{ ...completeActivity, rpe: 5, updated_at: '2026-10-06T13:00:00Z' }];
@@ -240,6 +255,7 @@ test('correction resolves stale identity without silently changing its reviewed 
 
 test('correction and post-write refresh preserve UUID, expected RPE and do not duplicate mutations', async () => {
   server = [completeActivity]; await render(<Host />);
+  await act(() => flow.setDuration('45'));
   const result = deferred<CompletedActivity>(); jest.mocked(api.submitActivityRpeWithRefresh).mockReturnValueOnce(result.promise);
   let first!: Promise<boolean>;
   await act(() => { first = flow.saveRpe(completeActivity.id, 4); void flow.saveRpe(completeActivity.id, 4); });
@@ -254,10 +270,12 @@ test('correction and post-write refresh preserve UUID, expected RPE and do not d
 test('repeated templates on the same date remain independent planned-workout choices', async () => {
   const second = { ...workout, id: 'second-occurrence' };
   jest.mocked(api.getCalendar).mockImplementation(async (_token, from, to) => ({ from_date: from, to_date: to, workouts: [workout, second], rest_days: [] }));
-  await render(<Host />); await act(() => flow.selectWorkout(second));
+  await render(<Host />);
+  await act(() => flow.setDuration('45')); await act(() => flow.selectWorkout(second));
   await act(() => flow.refreshActivities()); expect(flow.workouts).toEqual([workout, second]);
   expect(flow.selectedWorkout).toBe(second);
   jest.mocked(api.createActivity).mockImplementationOnce(async () => { server = [pendingActivity]; return pendingActivity; });
+  await act(() => flow.setDuration('45'));
   await act(() => flow.save());
   expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.any(String), expect.objectContaining({ planned_workout_id: second.id }));
 });
@@ -265,6 +283,7 @@ test('repeated templates on the same date remain independent planned-workout cho
 
 test('pending-only refresh cannot erase an in-flight feedback choice or its HR draft', async () => {
   server = [remote]; await render(<Host />);
+  await act(() => flow.setDuration('45'));
   await act(() => flow.setHeartRateByActivity({ [remote.id]: '155' }));
   const response = deferred<CompletedActivity>();
   jest.mocked(api.submitActivityRpeWithRefresh).mockReturnValueOnce(response.promise);
@@ -280,6 +299,7 @@ test('pending-only refresh cannot erase an in-flight feedback choice or its HR d
 
 test('refresh cannot rewrite the payload of an unresolved create when server timezone changes', async () => {
   await render(<Host />);
+  await act(() => flow.setDuration('45'));
   jest.mocked(api.createActivity).mockRejectedValueOnce(new Error('Unknown commit'));
   await act(() => flow.save()); const original = jest.mocked(api.createActivity).mock.calls[0];
   jest.mocked(api.getOnboarding).mockResolvedValue({ ...activityOnboarding, profile: { ...activityOnboarding.profile!, timezone: 'America/Los_Angeles' } });
@@ -293,6 +313,7 @@ test('refresh cannot rewrite the payload of an unresolved create when server tim
 
 test('completed idempotent create replay reconciles the exact attempt and only then rotates its key', async () => {
   await render(<Host />);
+  await act(() => flow.setDuration('45'));
   jest.mocked(api.createActivity).mockRejectedValueOnce(new Error('Unknown commit'));
   await act(() => flow.save()); const key = jest.mocked(api.createActivity).mock.calls[0][1];
   server = [completeActivity]; await act(() => flow.refreshActivities());
@@ -311,6 +332,7 @@ test('completed idempotent create replay reconciles the exact attempt and only t
 
 test('definitively deleted locally created activity can be replaced only by a new explicit create', async () => {
   await render(<Host />);
+  await act(() => flow.setDuration('45'));
   jest.mocked(api.createActivity).mockImplementationOnce(async () => { server = [pendingActivity]; return pendingActivity; });
   await act(() => flow.save()); const key = jest.mocked(api.createActivity).mock.calls[0][1];
   server = []; await act(() => flow.refreshActivities());
@@ -325,6 +347,7 @@ test('definitively deleted locally created activity can be replaced only by a ne
 
 test('authoritative remote feedback completion releases a known local create without an extra POST', async () => {
   await render(<Host />);
+  await act(() => flow.setDuration('45'));
   jest.mocked(api.createActivity).mockImplementationOnce(async () => { server = [pendingActivity]; return pendingActivity; });
   await act(() => flow.save()); const firstKey = jest.mocked(api.createActivity).mock.calls[0][1];
   server = [completeActivity]; await act(() => flow.refreshActivities());
@@ -336,7 +359,8 @@ test('authoritative remote feedback completion releases a known local create wit
 
 
 test('rapid choices while exact activity GET is unresolved resolve and mutate once', async () => {
-  await render(<Host />); server = [remote];
+  await render(<Host />);
+  await act(() => flow.setDuration('45')); server = [remote];
   const response = deferred<CompletedActivity>(); jest.mocked(api.getActivity).mockReturnValueOnce(response.promise);
   let first!: Promise<boolean>;
   await act(() => { first = flow.saveRpe(remote.id, 4); void flow.saveRpe(remote.id, 4); });
@@ -344,3 +368,4 @@ test('rapid choices while exact activity GET is unresolved resolve and mutate on
   await act(async () => { response.resolve(remote); await first; });
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
 });
+

@@ -84,6 +84,7 @@ class ActivitySummaryInput(PublicActivityModel):
     started_at: datetime
     timezone: str = Field(min_length=1, max_length=100)
     duration_minutes: Decimal | None = Field(default=None, gt=0, le=1440, max_digits=8)
+    performed_duration_confirmed: bool = Field(default=False, strict=True)
     distance_meters: int | None = Field(default=None, gt=0, le=1_000_000)
     elevation_gain_meters: int | None = Field(default=None, ge=0, le=100_000)
     metrics: ActivityMetricInput | None = None

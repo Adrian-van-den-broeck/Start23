@@ -127,7 +127,20 @@ def select_rpe_estimate(
     elif basis.planned_minutes == 0 or actual_minutes == 0:
         reason = "zero_duration"
     if reason is not None:
-        return RpeSelection(None, reason, False, {"version": VERSION})
+        return RpeSelection(
+            None,
+            reason,
+            False,
+            {
+                "version": VERSION,
+                "mapping_version": VERSION,
+                "rpe": rpe,
+                "planned": dict(basis.snapshot) if basis is not None else None,
+                "observation_method": measurement.calculation_method,
+                "observation_version": measurement.ruleset_version.value,
+                "observation_status": measurement.status,
+            },
+        )
     assert basis is not None and basis.planned_load is not None
     assert basis.planned_minutes is not None and actual_minutes is not None
     assert basis.planned_zone is not None

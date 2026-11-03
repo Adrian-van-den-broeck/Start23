@@ -3,6 +3,7 @@
 import hashlib
 import json
 from collections.abc import Mapping
+from dataclasses import replace
 from decimal import Decimal
 from typing import Any
 from uuid import UUID
@@ -25,6 +26,7 @@ from app.modules.physiology.models import (
     RulesetVersion,
     TrainingZone,
 )
+from app.modules.physiology.realized_v2 import VERSION as REALIZED_V2
 from app.modules.physiology.specification import PHASE_3_RULESET_V3
 from app.modules.physiology.zones import (
     CalculatedZoneBoundary,
@@ -36,6 +38,7 @@ from app.modules.physiology.zones import (
     classify_zone_value,
 )
 
+from .realized_context import ApprovedWorkoutBasis, select_rpe_estimate
 from .repository import ActivityRepository, JsonObject
 from .schemas import (
     ActivityMatchConfirmation,
@@ -60,8 +63,11 @@ class ActivityCorrectionConflictError(ActivityDomainError):
 class ActivityService:
     """Coordinate validation, pure decisions, and owner-scoped persistence."""
 
-    def __init__(self, repository: ActivityRepository) -> None:
+    def __init__(
+        self, repository: ActivityRepository, *, enable_estimates: bool = False
+    ) -> None:
         self._repository = repository
+        self._enable_estimates = enable_estimates
 
     @staticmethod
     def _response(row: Mapping[str, Any]) -> ActivityResponse:
@@ -82,6 +88,9 @@ class ActivityService:
         summary: ActivitySummaryInput,
     ) -> ActivityResponse:
         payload = summary.model_dump(mode="json", exclude_none=True)
+        # Old request fingerprints stay stable for callers omitting confirmation.
+        if not summary.performed_duration_confirmed:
+            payload.pop("performed_duration_confirmed", None)
         row = await self._repository.create_activity(
             access_token,
             idempotency_key,
@@ -194,11 +203,27 @@ class ActivityService:
             duration = DurationMinutes(Decimal(str(context["duration_minutes"] or 0)))
         except (KeyError, TypeError, ValueError) as error:
             raise ActivityDomainError("Stored activity duration is invalid.") from error
-        legacy_revision = (
-            context.get("rpe") is not None
-            and context.get("load_ruleset_version") != VERSION.value
-        )
+        stored_version = context.get("load_ruleset_version")
+        legacy_revision = context.get("rpe") is not None and stored_version in {
+            "phase-3-ruleset-1",
+            "phase-3-ruleset-2",
+            "phase-3-ruleset-3",
+        }
+        if is_correction and not legacy_revision and stored_version != VERSION.value:
+            raise ActivityDomainError(
+                "Unsupported stored activity calculation version."
+            )
         stored = context.get("private_load_snapshot")
+        if is_correction and isinstance(stored, dict):
+            valid_methods = (
+                {"actual_rpe_times_duration_hours"}
+                if legacy_revision
+                else {"observed_zone_minutes", "average_hr_zone_duration"}
+            )
+            if stored.get("calculation_method") not in valid_methods or (
+                stored.get("ruleset_version") != stored_version
+            ):
+                raise ActivityDomainError("Unsupported stored calculation method.")
         preserve_measurement = (
             context.get("rpe") is not None
             and isinstance(stored, dict)
@@ -376,6 +401,53 @@ class ActivityService:
                 else {}
             ),
         }
+        selected_v2 = context.get("selected_realized_v2")
+        use_v2 = context.get("realized_version") == REALIZED_V2 and (
+            (not is_correction and self._enable_estimates)
+            or isinstance(selected_v2, dict)
+        )
+        if use_v2 and measurement is not None:
+            raw_basis = context.get("approved_workout_basis")
+            try:
+                basis = (
+                    ApprovedWorkoutBasis.parse(raw_basis)
+                    if isinstance(raw_basis, dict)
+                    else None
+                )
+                selection = select_rpe_estimate(
+                    basis=basis,
+                    measurement=measurement,
+                    actual_minutes=duration.value
+                    if context.get("duration_minutes") is not None
+                    else None,
+                    duration_confirmed=context.get("performed_duration_confirmed")
+                    is True,
+                    rpe=submission.rpe,
+                )
+            except (KeyError, TypeError, ValueError) as error:
+                raise ActivityDomainError(
+                    "Stored estimation context is invalid."
+                ) from error
+            # An explicitly supplied array, including all-zero bins, is evidence
+            # with existing semantics. It is never replaced by a whole estimate.
+            if raw_zones is not None and selection.value is not None:
+                selection = replace(
+                    selection,
+                    value=None,
+                    planner_eligible=False,
+                    reason="explicit_zone_evidence_unavailable",
+                )
+            payload["rpe_estimate"] = {
+                "value": str(selection.value) if selection.value is not None else None,
+                "planner_eligible": selection.planner_eligible,
+                "reason": selection.reason,
+                "provenance": dict(selection.provenance),
+            }
+            if selection.value is not None and result.result.value == "deviation":
+                payload["public_message"] = (
+                    "Je ervaren inspanning en uitgevoerde duur zijn opgeslagen. "
+                    "De beoordeling is een schatting."
+                )
         row = (
             await self._repository.revise_activity_rpe(
                 athlete_id,

@@ -834,6 +834,7 @@ export function createActivity(
     started_at: string;
     timezone: string;
     duration_minutes: string | null;
+    performed_duration_confirmed?: boolean;
     distance_meters?: number;
   },
 ): Promise<CompletedActivity> {

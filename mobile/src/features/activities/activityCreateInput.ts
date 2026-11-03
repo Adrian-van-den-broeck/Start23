@@ -45,6 +45,7 @@ export function activityCreateInput({ discipline, duration, distance, startedAt,
     started_at: startedAt,
     timezone: athleteTimezone,
     duration_minutes: numericDuration === null ? null : String(numericDuration),
+    performed_duration_confirmed: numericDuration !== null,
     ...(numericDistance === undefined
       ? {}
       : { distance_meters: numericDistance }),

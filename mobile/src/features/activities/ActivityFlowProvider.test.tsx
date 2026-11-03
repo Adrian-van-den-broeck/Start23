@@ -20,6 +20,8 @@ async function loaded(rows: CompletedActivity[] = []) {
   jest.mocked(api.listActivities).mockResolvedValue(rows);
   const view = await render(<Host />);
   await act(() => flow.ensureActivitiesLoaded());
+  // D06 supersedes the prefilled duration: fixture athlete enters performed time.
+  await act(() => flow.setDuration('45'));
   return view;
 }
 beforeEach(() => {
@@ -30,6 +32,21 @@ beforeEach(() => {
   jest.mocked(api.listPlannedExternalActivities).mockResolvedValue([]);
   jest.mocked(api.createActivity).mockResolvedValue(pendingActivity);
   jest.mocked(api.submitActivityRpeWithRefresh).mockResolvedValue(completeActivity);
+});
+
+test('D06 duration starts unknown and selecting a prescription never confirms performed time', async () => {
+  await render(<Host />);
+  await act(() => flow.ensureActivitiesLoaded());
+  expect(flow.duration).toBe('');
+  await act(() => flow.selectWorkout(workout));
+  expect(flow.duration).toBe('');
+  await act(() => flow.save());
+  expect(api.createActivity).not.toHaveBeenCalled();
+  await act(() => flow.setDuration('37'));
+  await act(() => flow.save());
+  expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.any(String), expect.objectContaining({
+    planned_workout_id: workout.id, duration_minutes: '37', performed_duration_confirmed: true,
+  }));
 });
 
 test('owner is lazy; concurrent entry reads and rerenders issue one exact four-read load', async () => {
@@ -82,7 +99,7 @@ test('rapid create and rerender during transport yield one create with exact exi
   let save!: Promise<void>; await act(() => { save = flow.save(); void flow.save(); });
   await view.rerender(<Host />); expect(api.createActivity).toHaveBeenCalledTimes(1); expect(flow.busy).toBe(true);
   expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.stringMatching(/^[0-9a-f-]{36}$/), {
-    discipline: 'run', started_at: '2026-10-06T12:00:00Z', timezone: 'Europe/Amsterdam', duration_minutes: '45',
+    discipline: 'run', started_at: '2026-10-06T12:00:00Z', timezone: 'Europe/Amsterdam', duration_minutes: '45', performed_duration_confirmed: true,
   });
   jest.mocked(api.listActivities).mockResolvedValue([pendingActivity]);
   await act(async () => { create.resolve(pendingActivity); await save; });
@@ -223,7 +240,7 @@ test('identity replacement clears data/form/attempt; old async create cannot ref
   const view = await loaded(); const create = deferred<CompletedActivity>(); jest.mocked(api.createActivity).mockReturnValue(create.promise);
   let old!: Promise<void>; await act(() => { flow.setDuration('52'); }); await act(() => { old = flow.save(); });
   await view.rerender(<Host identity="athlete-b" token="token-b" />);
-  expect(flow.activities).toEqual([]); expect(flow.pendingRpe).toEqual([]); expect(flow.duration).toBe('45'); expect(flow.athleteTimezone).toBe('');
+  expect(flow.activities).toEqual([]); expect(flow.pendingRpe).toEqual([]); expect(flow.duration).toBe(''); expect(flow.athleteTimezone).toBe('');
   await act(async () => { create.resolve(pendingActivity); await old; }); expect(api.listActivities).toHaveBeenCalledTimes(1);
   expect(flow.pendingRpe).toEqual([]); await act(() => flow.ensureActivitiesLoaded()); expect(api.listActivities).toHaveBeenLastCalledWith('token-b');
 });
@@ -241,10 +258,12 @@ test('provider refuses nesting before instantiating another controller/read', as
   expect(api.listActivities).not.toHaveBeenCalled(); error.mockRestore();
 });
 
-test.each(['planned', 'external'] as const)('selection %s retains exact identity and existing duration/distance defaults in create payload', async source => {
+test.each(['planned', 'external'] as const)('selection %s retains identity and requires explicitly entered performed duration', async source => {
   await loaded();
   await act(() => { if (source === 'planned') flow.selectWorkout(workout); else flow.selectExternal(externalActivity); });
   expect(flow.discipline).toBe(source === 'planned' ? workout.discipline : externalActivity.discipline);
+  expect(flow.duration).toBe('');
+  await act(() => flow.setDuration(source === 'planned' ? String(Number(workout.duration_minutes)) : '60'));
   await act(() => flow.save());
   const payload = jest.mocked(api.createActivity).mock.calls[0][2];
   expect(payload).toEqual(expect.objectContaining(source === 'planned' ? {
@@ -279,3 +298,4 @@ test('identity replacement ignores late pending read and late feedback success',
   await act(async () => { pending.resolve([pendingActivity]); feedback.resolve(completeActivity); await Promise.all([read, save]); });
   expect(flow.activities).toEqual([]); expect(flow.pendingRpe).toEqual([]); expect(flow.error).toBeNull(); expect(api.listActivities).toHaveBeenCalledTimes(2);
 });
+

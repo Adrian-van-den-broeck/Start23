@@ -48,9 +48,13 @@ def get_activity_repository(request: Request) -> ActivityRepository:
 
 
 def get_activity_service(
+    request: Request,
     repository: Annotated[ActivityRepository, Depends(get_activity_repository)],
 ) -> ActivityService:
-    return ActivityService(repository)
+    return ActivityService(
+        repository,
+        enable_estimates=request.app.state.settings.realized_v2_selection_enabled,
+    )
 
 
 def _raise_public_error(error: Exception) -> NoReturn:

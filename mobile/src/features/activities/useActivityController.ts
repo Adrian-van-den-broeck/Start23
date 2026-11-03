@@ -29,7 +29,7 @@ export function useActivityController(accessToken: string) {
   const [selectedWorkout, setSelectedWorkout] = useState<PlannedWorkout | null>(null);
   const [selectedExternal, setSelectedExternal] = useState<PlannedExternalActivity | null>(null);
   const [discipline, setDiscipline] = useState<Discipline>('run');
-  const [duration, setDuration] = useState('45');
+  const [duration, setDuration] = useState('');
   const [distance, setDistance] = useState('');
   const [startedAt, setStartedAt] = useState(() => new Date().toISOString());
   const [athleteTimezone, setAthleteTimezone] = useState('');
@@ -251,7 +251,7 @@ export function useActivityController(accessToken: string) {
     setSelectedExternal(null);
     if (workout) {
       setDiscipline(workout.discipline);
-      setDuration(workout.duration_minutes === null ? '' : String(Number(workout.duration_minutes)));
+      setDuration('');
       setDistance(workout.distance_meters === null ? '' : String(workout.distance_meters));
     }
   };
@@ -259,7 +259,7 @@ export function useActivityController(accessToken: string) {
     setSelectedWorkout(null);
     setSelectedExternal(activity);
     setDiscipline(activity.discipline);
-    setDuration(String(Number(activity.duration_minutes)));
+    setDuration('');
     setDistance('');
   };
 

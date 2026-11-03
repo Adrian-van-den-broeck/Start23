@@ -111,6 +111,8 @@ class SupabaseActivityRepository:
         )
         self._owns_client = client is None
         self._legacy_owner = LegacyAthleteOwnerAdapter(settings, self._client)
+        self._v2_ready = settings.realized_v2_storage_ready
+        self._v2_selection = settings.realized_v2_selection_enabled
 
     async def _rpc_athlete_id(self, athlete_id: UUID) -> UUID:
         try:
@@ -202,6 +204,8 @@ class SupabaseActivityRepository:
         rpc_name = (
             "create_external_activity_summary"
             if external_activity_id is not None
+            else "create_activity_summary_v2"
+            if self._v2_selection
             else "create_activity_summary"
         )
         result = await self._request(
@@ -276,7 +280,9 @@ class SupabaseActivityRepository:
         rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
-            "rpc/get_activity_processing_context",
+            "rpc/get_activity_processing_context_v2"
+            if self._v2_ready
+            else "rpc/get_activity_processing_context",
             service=True,
             json={
                 "p_athlete_id": str(rpc_athlete_id),
@@ -296,7 +302,9 @@ class SupabaseActivityRepository:
         rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
-            "rpc/complete_activity_rpe",
+            "rpc/complete_activity_rpe_v2"
+            if "rpe_estimate" in payload
+            else "rpc/complete_activity_rpe",
             service=True,
             json={
                 "p_athlete_id": str(rpc_athlete_id),
@@ -317,7 +325,9 @@ class SupabaseActivityRepository:
         rpc_athlete_id = await self._rpc_athlete_id(athlete_id)
         result = await self._request(
             "POST",
-            "rpc/revise_activity_rpe",
+            "rpc/complete_activity_rpe_v2"
+            if "rpe_estimate" in payload
+            else "rpc/revise_activity_rpe",
             service=True,
             json={
                 "p_athlete_id": str(rpc_athlete_id),

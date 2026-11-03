@@ -38,6 +38,9 @@ class Settings(BaseSettings):
     physiology_review_record_id: str = ""
     physiology_review_ruleset_version: str = ""
     physiology_accountable_owner: str = ""
+    # Local verification only until PostgreSQL replay and release review pass.
+    realized_v2_storage_ready: bool = False
+    realized_v2_selection_enabled: bool = False
     polar_client_id: str = ""
     polar_client_secret: SecretStr = SecretStr("")
     polar_oauth_redirect_url: AnyHttpUrl = AnyHttpUrl(
@@ -86,6 +89,17 @@ class Settings(BaseSettings):
         if value != "/" and value.endswith("/"):
             raise ValueError("api_v1_prefix must not end with '/'")
         return value
+
+    @model_validator(mode="after")
+    def guard_realized_v2_preview(self) -> "Settings":
+        if self.realized_v2_selection_enabled and not self.realized_v2_storage_ready:
+            raise ValueError("Realized v2 selection requires its storage contract.")
+        if self.realized_v2_storage_ready and self.environment in {
+            "staging",
+            "production",
+        }:
+            raise ValueError("Realized v2 database and release gates remain open.")
+        return self
 
     @model_validator(mode="after")
     def require_deployed_supabase_keys(self) -> "Settings":
