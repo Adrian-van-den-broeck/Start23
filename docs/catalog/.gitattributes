@@ -1,0 +1,5 @@
+# Custody copies must survive Windows autocrlf byte-for-byte.
+/*.md -text whitespace=cr-at-eol
+/sources/* -text
+# Canonical JSON bytes use LF on every checkout.
+/implementation/joren_c1_manifest_v1.json text eol=lf
