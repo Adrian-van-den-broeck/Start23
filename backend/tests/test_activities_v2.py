@@ -26,6 +26,7 @@ class V2MemoryRepository(MemoryActivityRepository):
         self.basis = planned_context(planned_tss="120", planned_duration_minutes="120")
         self.confirmed = True
         self.snapshot_history: list[JsonObject] = []
+        self.prospective = True
 
     async def fetch_processing_context(
         self, athlete_id: UUID, activity_id: UUID
@@ -34,7 +35,7 @@ class V2MemoryRepository(MemoryActivityRepository):
         previous = self.load_snapshots.get(activity_id, {}).get("rpe_estimate")
         context.update(
             {
-                "realized_version": VERSION,
+                "realized_version": VERSION if self.prospective else None,
                 "performed_duration_confirmed": self.confirmed,
                 "approved_workout_basis": previous["provenance"].get("planned")
                 if previous is not None
@@ -183,3 +184,76 @@ def test_selection_configuration_cannot_activate_hosted_or_without_storage() -> 
         Settings(realized_v2_selection_enabled=True)
     with pytest.raises(ValueError, match="release gates"):
         Settings(environment="staging", realized_v2_storage_ready=True)
+
+
+def test_disabling_new_selection_retains_versioned_correction_reader(
+    v2_client: tuple[TestClient, V2MemoryRepository],
+) -> None:
+    client, repo = v2_client
+    identifier = create_and_rate(client, repo, duration_minutes="120")
+    getattr(client.app, "state").settings.realized_v2_selection_enabled = False
+    response = client.put(
+        f"/api/v1/activities/{identifier}/rpe",
+        headers=_headers(),
+        json={"rpe": 2, "expected_current_rpe": 3},
+    )
+    assert response.status_code == 200
+    assert repo.load_snapshots[identifier]["rpe_estimate"]["value"] == "105.000"
+    assert len(repo.snapshot_history) == 1
+
+
+def test_historical_observation_correction_never_activates_v2(
+    v2_client: tuple[TestClient, V2MemoryRepository],
+) -> None:
+    client, repo = v2_client
+    repo.prospective = False
+    identifier = create_and_rate(
+        client, repo, metrics={"zone_minutes": ["0", "60", "0", "0", "0"]}
+    )
+    original = dict(repo.load_snapshots[identifier])
+    response = client.put(
+        f"/api/v1/activities/{identifier}/rpe",
+        headers=_headers(),
+        json={"rpe": 8, "expected_current_rpe": 3},
+    )
+    assert response.status_code == 200
+    assert "rpe_estimate" not in repo.load_snapshots[identifier]
+    assert repo.load_snapshots[identifier]["realized_tss"] == original["realized_tss"]
+
+
+def test_unknown_method_does_not_dispatch_to_retired_formula(
+    v2_client: tuple[TestClient, V2MemoryRepository],
+) -> None:
+    client, repo = v2_client
+    identifier = create_and_rate(client, repo)
+    repo.load_snapshots[identifier]["calculation_method"] = "unknown_method"
+    before = dict(repo._rows[identifier])
+    response = client.put(
+        f"/api/v1/activities/{identifier}/rpe",
+        headers=_headers(),
+        json={"rpe": 8, "expected_current_rpe": 3},
+    )
+    assert response.status_code == 422
+    assert repo._rows[identifier] == before
+    assert repo.snapshot_history == []
+
+
+def test_initial_v2_estimate_replay_and_wrong_owner_do_not_duplicate(
+    v2_client: tuple[TestClient, V2MemoryRepository],
+) -> None:
+    client, repo = v2_client
+    identifier = create_and_rate(client, repo)
+    before = dict(repo.load_snapshots[identifier])
+    for _ in range(2):
+        replay = client.put(
+            f"/api/v1/activities/{identifier}/rpe", headers=_headers(), json={"rpe": 3}
+        )
+        assert replay.status_code == 200
+    assert repo.load_snapshots[identifier] == before
+    denied = client.put(
+        f"/api/v1/activities/{identifier}/rpe",
+        headers=_headers("athlete-b"),
+        json={"rpe": 8},
+    )
+    assert denied.status_code == 404
+    assert repo.snapshot_history == []
