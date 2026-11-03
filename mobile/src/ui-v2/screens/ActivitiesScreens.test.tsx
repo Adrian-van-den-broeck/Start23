@@ -20,6 +20,19 @@ const row: ActivityRow = { activity: complete, canCorrect: true, match: null };
 const entry = { discipline: 'run' as const, duration: '45', distance: '', startedAt: '2026-10-06T10:00:00Z', timezone: 'Europe/Amsterdam', choices: [], selectedId: null, selectedName: null, busy: false, error: null, blocked: false, controls: null, onDiscipline: jest.fn(), onDuration: jest.fn(), onDistance: jest.fn(), onStartedAt: jest.fn(), onChoose: jest.fn(), onSave: jest.fn(async () => undefined), onBack: jest.fn() };
 beforeEach(() => { jest.clearAllMocks(); jest.mocked(SecureStore.getItemAsync).mockResolvedValue('en'); });
 
+test('new Session-RPE feedback displays authoritative Zone 2 for score 3', async () => {
+  const onSelect = jest.fn(async () => undefined);
+  const activity = activityViewModel({ ...pendingActivity, session_rpe_version: '2', session_rpe_guidance: [
+    { rpe: 3, zone_number: 2, display_label: 'Zone 2 · RPE 3-4' },
+  ] }, 'en-GB', 'en');
+  const view = await render(host(<ActivityFeedbackScreen activity={activity} heartRate="" busy={false} error={null}
+    controls={null} onHeartRate={jest.fn()} onSelect={onSelect} onBack={jest.fn()} />));
+  const choice = await view.findByRole('radio', { name: /RPE 3.*Zone 2/ });
+  await fireEvent.press(choice);
+  expect(onSelect).toHaveBeenCalledWith(3);
+  expect(JSON.stringify(view.toJSON())).not.toMatch(/tss|private_load|correction_factor/i);
+});
+
 test('truthful empty history, heading and add action without analytics', async () => {
   const view = await render(host(<ActivitiesScreen {...base} rows={[]} pending={null} />));
   await view.findByRole('header', { name: 'Activities' }); expect(view.getByText('No activities recorded yet.')).toBeTruthy();

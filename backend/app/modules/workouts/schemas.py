@@ -48,8 +48,8 @@ class RpeZoneResponse(PublicWorkoutModel):
     """Reviewed sport-specific RPE zone shown to the athlete."""
 
     zone_number: int = Field(ge=1, le=5)
-    target_rpe_min: int = Field(ge=2, le=10)
-    target_rpe_max: int = Field(ge=2, le=10)
+    target_rpe_min: int = Field(ge=1, le=10)
+    target_rpe_max: int = Field(ge=1, le=10)
     display_label: str
     training_type: str
     description: str
@@ -58,13 +58,17 @@ class RpeZoneResponse(PublicWorkoutModel):
 def rpe_zone_responses(
     discipline: Discipline,
     segments: tuple[object, ...],
+    *,
+    version: str = "phase-13-joren-ruleset-1",
 ) -> tuple[RpeZoneResponse, ...]:
     """Derive unique canonical zones from domain or validated response segments."""
     zones: set[TrainingZone] = set()
     for segment in segments:
         zone = getattr(segment, "zone_target", None)
         if zone is None:
-            zone = zone_for_rpe_value(int(getattr(segment, "expected_rpe")))
+            zone = zone_for_rpe_value(
+                int(getattr(segment, "expected_rpe")), version=version
+            )
         zones.add(TrainingZone(zone))
     return tuple(
         RpeZoneResponse(
@@ -76,7 +80,7 @@ def rpe_zone_responses(
             description=definition.description,
         )
         for definition in (
-            rpe_zone(discipline, zone)
+            rpe_zone(discipline, zone, version=version)
             for zone in sorted(zones, key=lambda item: item.value)
         )
     )

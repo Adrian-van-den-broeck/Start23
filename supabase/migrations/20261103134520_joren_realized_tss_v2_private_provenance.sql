@@ -80,7 +80,7 @@ begin
       coalesce((p_payload ->> 'performed_duration_confirmed')::boolean, false) and activity.duration_minutes is not null
     from public.activities activity where activity.id = (v_result ->> 'id')::uuid and activity.athlete_id = v_owner
     on conflict (activity_id) do nothing;
-  return v_result;
+  return private.activity_public_json((v_result ->> 'id')::uuid, v_owner);
 end;
 $$;
 revoke all on function public.create_activity_summary_v2(uuid, text, jsonb) from public, anon, authenticated, service_role;

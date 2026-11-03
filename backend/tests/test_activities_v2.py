@@ -28,6 +28,21 @@ class V2MemoryRepository(MemoryActivityRepository):
         self.snapshot_history: list[JsonObject] = []
         self.prospective = True
 
+    async def create_activity(
+        self,
+        access_token: str,
+        idempotency_key: UUID,
+        request_fingerprint: str,
+        payload: JsonObject,
+    ) -> JsonObject:
+        row = await super().create_activity(
+            access_token, idempotency_key, request_fingerprint, payload
+        )
+        self._rows[UUID(row["id"])]["session_rpe_version"] = (
+            "2" if self.prospective else "legacy"
+        )
+        return dict(self._rows[UUID(row["id"])])
+
     async def fetch_processing_context(
         self, athlete_id: UUID, activity_id: UUID
     ) -> JsonObject:
@@ -107,6 +122,11 @@ def test_owner_a_half_duration_example_and_subjective_feedback(
     assert payload["rpe_estimate"]["provenance"]["reported_zone"] == 2
     assert not payload["rpe_estimate"]["planner_eligible"]
     assert payload["qualitative_result"] == "deviation"
+    response = client.get(f"/api/v1/activities/{identifier}", headers=_headers())
+    assert response.json()["session_rpe_version"] == "2"
+    third = response.json()["session_rpe_guidance"][2]
+    assert third["rpe"] == 3 and third["zone_number"] == 2
+    assert third["display_label"] == "Zone 2 · RPE 3-4"
 
 
 @pytest.mark.parametrize(
@@ -288,3 +308,20 @@ def test_explicit_skipped_unknown_and_stale_registration(
     assert restored.status_code == 200 and restored.json()["status"] == "unknown"
     assert client.get(path, headers=_headers("athlete-b")).status_code == 404
     assert len(repo.registration_events[workout_id]) == 2
+
+
+@pytest.mark.parametrize("score", [True, "3", 3.0, 3.5, 0, 11, None])
+def test_current_session_feedback_requires_canonical_integer(
+    v2_client: tuple[TestClient, V2MemoryRepository],
+    score: Any,
+) -> None:
+    client, repo = v2_client
+    identifier = create_and_rate(client, repo)
+    previous = dict(repo.load_snapshots[identifier])
+    result = client.put(
+        f"/api/v1/activities/{identifier}/rpe",
+        headers=_headers(),
+        json={"rpe": score, "expected_current_rpe": 3},
+    )
+    assert result.status_code == 422
+    assert repo.load_snapshots[identifier] == previous

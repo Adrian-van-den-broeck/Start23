@@ -53,6 +53,11 @@ def test_sql_syntax_with_existing_parser() -> None:
             / "20261103140959_realized_v2_planning_evidence_preconditions.sql"
         ).read_text()
     )
+    assert parser.parse_sql(
+        (
+            MIGRATION.parent / "20261103142339_realized_v2_session_rpe_guidance.sql"
+        ).read_text()
+    )
 
 
 def test_new_pending_plans_freeze_evidence_and_guard_approval() -> None:

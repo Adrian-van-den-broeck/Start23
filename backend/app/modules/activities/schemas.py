@@ -151,6 +151,14 @@ class ActivityMetricResponse(ActivityMetricInput):
     """Persisted safe metric summary."""
 
 
+class SessionRpeGuidance(PublicActivityModel):
+    """Public exertion labels only; never a load, factor or calibration anchor."""
+
+    rpe: int = Field(ge=1, le=10, strict=True)
+    zone_number: int = Field(ge=1, le=5)
+    display_label: str
+
+
 class ActivityResponse(PublicActivityModel):
     """Owner-scoped activity without planned or realized load values."""
 
@@ -164,6 +172,8 @@ class ActivityResponse(PublicActivityModel):
     distance_meters: int | None
     elevation_gain_meters: int | None
     rpe: int | None = Field(default=None, ge=1, le=10)
+    session_rpe_version: Literal["legacy", "2"] = "legacy"
+    session_rpe_guidance: tuple[SessionRpeGuidance, ...] = ()
     rpe_submitted_at: datetime | None
     match_status: Literal["matched", "unmatched"]
     processing_state: Literal["awaiting_rpe", "complete"]
@@ -185,9 +195,9 @@ class ActivityResponse(PublicActivityModel):
 class ActivityRpeSubmission(PublicActivityModel):
     """Athlete RPE, correctable only during its current local week."""
 
-    rpe: int = Field(ge=1, le=10)
+    rpe: int = Field(ge=1, le=10, strict=True)
     average_heart_rate_bpm: int | None = Field(default=None, ge=20, le=260)
-    expected_current_rpe: int | None = Field(default=None, ge=1, le=10)
+    expected_current_rpe: int | None = Field(default=None, ge=1, le=10, strict=True)
 
 
 class ActivityMatchConfirmation(PublicActivityModel):

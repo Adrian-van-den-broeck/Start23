@@ -197,6 +197,7 @@ export function ActivityScreen({
             <RpeChoiceList
               disabled={busy}
               discipline={activity.discipline}
+              guidance={activity.session_rpe_guidance}
               label="Hoe voelde deze training?"
               onSelect={(rpe) => void saveRpe(activity.id, rpe)}
             />
@@ -424,6 +425,7 @@ export function ActivityScreen({
                     <RpeChoiceList
                       disabled={busy}
                       discipline={activity.discipline}
+                      guidance={activity.session_rpe_guidance}
                       label="Gecorrigeerd gevoel"
                       onSelect={(rpe) => {
                         void saveRpe(activity.id, rpe).then(saved => { if (saved) setEditingRpeActivityId(null); });

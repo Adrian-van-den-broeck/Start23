@@ -21,11 +21,18 @@ export function workoutRegistration(value: unknown): boolean {
 
 export function activityResponse(value: unknown): boolean {
   if (!object(value)) return false;
+  if (value.session_rpe_version === '2' && (!Array.isArray(value.session_rpe_guidance) ||
+      value.session_rpe_guidance.length !== 10 ||
+      new Set(value.session_rpe_guidance.map(row => object(row) ? row.rpe : null)).size !== 10)) return false;
   return fields(value, ['id', 'started_at', 'timezone', 'created_at', 'updated_at'], id) &&
     fields(value, ['planned_workout_id', 'rpe_submitted_at', 'correction_proposal_id'], v => nullable(v, text)) &&
     discipline(value.discipline) && value.source === 'canonical_summary' &&
     nullable(value.duration_minutes, text) && nullable(value.distance_meters, number) && nullable(value.elevation_gain_meters, number) &&
     nullable(value.rpe, integer) && oneOf(value.match_status, ['matched', 'unmatched']) &&
+    (value.session_rpe_version === undefined || oneOf(value.session_rpe_version, ['legacy', '2'])) &&
+    (value.session_rpe_guidance === undefined || array(value.session_rpe_guidance, row =>
+      object(row) && integer(row.rpe) && row.rpe >= 1 && row.rpe <= 10 &&
+      integer(row.zone_number) && row.zone_number >= 1 && row.zone_number <= 5 && text(row.display_label))) &&
     oneOf(value.processing_state, ['awaiting_rpe', 'complete']) &&
     (value.processing_state !== 'complete' || (integer(value.rpe) && id(value.rpe_submitted_at))) &&
     oneOf(value.qualitative_result, ['awaiting_rpe', 'perfect_match', 'overshoot', 'hidden_fatigue', 'deviation', 'unplanned']) &&

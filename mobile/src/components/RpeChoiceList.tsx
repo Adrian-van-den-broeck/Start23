@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import type { Discipline } from '../api/types';
+import type { CompletedActivity, Discipline } from '../api/types';
 import { type CanonicalRpe, rpeChoices } from '../lib/rpe';
 import { colors, radius, spacing } from '../theme/tokens';
 import { MotionPressable as Pressable } from './MotionPressable';
@@ -11,6 +11,7 @@ type RpeChoiceListProps = {
   label: string;
   onSelect: (value: CanonicalRpe) => void;
   selectedValue?: number | null;
+  guidance?: CompletedActivity['session_rpe_guidance'];
 };
 
 export function RpeChoiceList({
@@ -19,6 +20,7 @@ export function RpeChoiceList({
   label,
   onSelect,
   selectedValue = null,
+  guidance,
 }: RpeChoiceListProps) {
   return (
     <View style={styles.field}>
@@ -26,9 +28,11 @@ export function RpeChoiceList({
       <View accessibilityLabel={label} accessibilityRole="radiogroup" style={styles.list}>
         {rpeChoices(discipline).map((choice) => {
           const selected = selectedValue === choice.value;
+          const zoneLabel = guidance?.find(row => row.rpe === choice.value)?.display_label;
+          const description = `${choice.description}${zoneLabel ? ` · ${zoneLabel}` : ''}`;
           return (
             <Pressable
-              accessibilityLabel={`${choice.description} (RPE ${choice.value})`}
+              accessibilityLabel={`${description} (RPE ${choice.value})`}
               accessibilityRole="radio"
               accessibilityState={{ checked: selected, disabled }}
               disabled={disabled}
@@ -48,7 +52,7 @@ export function RpeChoiceList({
                 </Text>
               </View>
               <Text style={[styles.description, selected && styles.descriptionSelected]}>
-                {choice.description}
+                {description}
               </Text>
             </Pressable>
           );

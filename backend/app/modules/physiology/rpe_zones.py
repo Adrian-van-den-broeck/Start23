@@ -35,6 +35,24 @@ _RPE_RANGES = {
     TrainingZone.ZONE_4: (7, 8),
     TrainingZone.ZONE_5: (9, 10),
 }
+LEGACY_MAPPING_VERSION = "phase-13-joren-ruleset-1"
+SESSION_MAPPING_V2 = "joren-realized-tss-matrix-2"
+_RPE_RANGES_V2 = {
+    TrainingZone.ZONE_1: (1, 2),
+    TrainingZone.ZONE_2: (3, 4),
+    TrainingZone.ZONE_3: (5, 6),
+    TrainingZone.ZONE_4: (7, 8),
+    TrainingZone.ZONE_5: (9, 10),
+}
+
+
+def _ranges(version: str) -> dict[TrainingZone, tuple[int, int]]:
+    if version == LEGACY_MAPPING_VERSION:
+        return _RPE_RANGES
+    if version == SESSION_MAPPING_V2:
+        return _RPE_RANGES_V2
+    raise ValueError("Unsupported RPE guidance version.")
+
 
 _SPORT_GUIDANCE = {
     Discipline.RUN: {
@@ -85,9 +103,11 @@ _SPORT_GUIDANCE = {
 }
 
 
-def rpe_zone(discipline: Discipline, zone: TrainingZone) -> RpeZoneDefinition:
+def rpe_zone(
+    discipline: Discipline, zone: TrainingZone, *, version: str = LEGACY_MAPPING_VERSION
+) -> RpeZoneDefinition:
     """Return the single reviewed definition used by planning and the public API."""
-    rpe_min, rpe_max = _RPE_RANGES[zone]
+    rpe_min, rpe_max = _ranges(version)[zone]
     training_type, description = _SPORT_GUIDANCE[discipline][zone]
     return RpeZoneDefinition(
         zone=zone,
@@ -98,16 +118,25 @@ def rpe_zone(discipline: Discipline, zone: TrainingZone) -> RpeZoneDefinition:
     )
 
 
-def zone_for_rpe_range(rpe_min: int, rpe_max: int) -> TrainingZone:
+def zone_for_rpe_range(
+    rpe_min: int, rpe_max: int, *, version: str = LEGACY_MAPPING_VERSION
+) -> TrainingZone:
     """Resolve an exact reviewed RPE range to its canonical zone."""
-    for zone, rpe_range in _RPE_RANGES.items():
+    for zone, rpe_range in _ranges(version).items():
         if rpe_range == (rpe_min, rpe_max):
             return zone
     raise ValueError("RPE target does not match a canonical triathlon RPE zone.")
 
 
-def zone_for_rpe_value(rpe: int) -> TrainingZone:
+def zone_for_rpe_value(
+    rpe: int, *, version: str = LEGACY_MAPPING_VERSION
+) -> TrainingZone:
     """Map one legacy/session score to the canonical athlete-facing zone."""
+    _ranges(version)
+    if version == SESSION_MAPPING_V2:
+        if type(rpe) is not int or not 1 <= rpe <= 10:
+            raise ValueError("Session RPE must be an integer from 1 through 10.")
+        return TrainingZone((rpe + 1) // 2)
     if not 1 <= rpe <= 10:
         raise ValueError("RPE must be within 1 through 10.")
     if rpe <= 3:

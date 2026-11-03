@@ -27,6 +27,8 @@ from app.modules.physiology.models import (
     TrainingZone,
 )
 from app.modules.physiology.realized_v2 import VERSION as REALIZED_V2
+from app.modules.physiology.realized_v2 import session_rpe_zone
+from app.modules.physiology.rpe_zones import rpe_zone
 from app.modules.physiology.specification import PHASE_3_RULESET_V3
 from app.modules.physiology.zones import (
     CalculatedZoneBoundary,
@@ -45,6 +47,7 @@ from .schemas import (
     ActivityResponse,
     ActivityRpeSubmission,
     ActivitySummaryInput,
+    SessionRpeGuidance,
     WorkoutRegistrationConfirmation,
     WorkoutRegistrationResponse,
 )
@@ -74,7 +77,21 @@ class ActivityService:
     @staticmethod
     def _response(row: Mapping[str, Any]) -> ActivityResponse:
         try:
-            return ActivityResponse.model_validate(row)
+            response = ActivityResponse.model_validate(row)
+            if response.session_rpe_version == "2":
+                response.session_rpe_guidance = tuple(
+                    SessionRpeGuidance(
+                        rpe=score,
+                        zone_number=session_rpe_zone(score).value,
+                        display_label=rpe_zone(
+                            response.discipline,
+                            session_rpe_zone(score),
+                            version=REALIZED_V2,
+                        ).display_label,
+                    )
+                    for score in range(1, 11)
+                )
+            return response
         except (KeyError, ValueError) as error:
             raise ActivityDomainError("Stored activity data is invalid.") from error
 

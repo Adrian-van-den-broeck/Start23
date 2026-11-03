@@ -9,10 +9,10 @@ from dataclasses import dataclass
 from decimal import ROUND_HALF_EVEN, Context, Decimal, localcontext
 
 from .models import TrainingZone
-from .rpe_zones import zone_for_rpe_value
+from .rpe_zones import LEGACY_MAPPING_VERSION, SESSION_MAPPING_V2, zone_for_rpe_value
 
-VERSION = "joren-realized-tss-matrix-2"
-LEGACY_MAPPING = "phase-13-joren-ruleset-1"
+VERSION = SESSION_MAPPING_V2
+LEGACY_MAPPING = LEGACY_MAPPING_VERSION
 NUMERIC_POLICY = "decimal-50-half-even-divide-last-1"
 METHOD = "duration_adjusted_session_rpe"
 _CONTEXT = Context(prec=50, rounding=ROUND_HALF_EVEN)
@@ -23,7 +23,7 @@ def session_rpe_zone(rpe: int, *, version: str = VERSION) -> TrainingZone:
     if type(rpe) is not int or not 1 <= rpe <= 10:
         raise ValueError("Session RPE must be an integer from 1 through 10.")
     if version == VERSION:
-        return TrainingZone((rpe + 1) // 2)
+        return zone_for_rpe_value(rpe, version=VERSION)
     if version == LEGACY_MAPPING:
         return zone_for_rpe_value(rpe)
     raise ValueError("Unsupported Session-RPE mapping version.")

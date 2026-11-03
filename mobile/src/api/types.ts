@@ -804,6 +804,8 @@ export type CompletedActivity = {
   distance_meters: number | null;
   elevation_gain_meters: number | null;
   rpe: number | null;
+  session_rpe_version?: 'legacy' | '2';
+  session_rpe_guidance?: Array<{ rpe: number; zone_number: number; display_label: string }>;
   rpe_submitted_at: string | null;
   match_status: 'matched' | 'unmatched';
   processing_state: 'awaiting_rpe' | 'complete';

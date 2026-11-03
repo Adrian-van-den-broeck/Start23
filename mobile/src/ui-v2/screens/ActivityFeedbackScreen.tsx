@@ -26,7 +26,7 @@ export function ActivityFeedbackScreen({ activity, heartRate, busy, error, contr
           value={heartRate} onChangeText={onHeartRate} disabled={busy} />
       </Card>
       <Card elevated padding="form">
-        <RpeChoices discipline={activity.discipline} selectedValue={activity.rpe} busy={busy} onSelect={onSelect} />
+        <RpeChoices discipline={activity.discipline} selectedValue={activity.rpe} busy={busy} onSelect={onSelect} guidance={activity.rpeGuidance} />
       </Card>
       <View style={{ gap: space[24] }}>{controls}</View>
     </Screen>

@@ -11,6 +11,7 @@ export type ActivityViewModel = Readonly<{
   averageHeartRate: number | null; result: CompletedActivity['qualitative_result'];
   publicMessage: string | null; pending: boolean; correctionProposal: boolean;
   distanceOnly: boolean; partialCoverage: boolean;
+  rpeGuidance?: CompletedActivity['session_rpe_guidance'];
 }>;
 
 // Only explicit public display fields cross the presentation boundary.
@@ -28,6 +29,7 @@ export function activityViewModel(activity: CompletedActivity, locale: string, l
       : observedRunPace(activity.duration_minutes, activity.distance_meters),
     source: activity.source === 'canonical_summary' ? activity.source : null,
     rpe: activity.rpe,
+    rpeGuidance: activity.session_rpe_guidance?.map(row => ({ rpe: row.rpe, zone_number: row.zone_number, display_label: row.display_label })),
     rpeDescription: activity.rpe === null ? null : rpeDescription(activity.discipline, activity.rpe),
     averageHeartRate: activity.metrics?.average_heart_rate_bpm ?? null,
     result: activity.qualitative_result,

@@ -1,15 +1,16 @@
 import { StyleSheet, View } from 'react-native';
 import { useRef, useState } from 'react';
-import type { Discipline } from '../../api/types';
+import type { CompletedActivity, Discipline } from '../../api/types';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { rpeChoices, type CanonicalRpe } from '../../lib/rpe';
 import { ChoiceRow } from '../primitives/ChoiceRow';
 import { Text } from '../primitives/Text';
 import { space } from '../tokens';
 
-export function RpeChoices({ discipline, busy, selectedValue, onSelect }: {
+export function RpeChoices({ discipline, busy, selectedValue, onSelect, guidance }: {
   discipline: Discipline; busy: boolean; selectedValue: number | null;
   onSelect: (value: CanonicalRpe) => Promise<void>;
+  guidance?: CompletedActivity['session_rpe_guidance'];
 }) {
   const { t } = useLanguage();
   return <View style={styles.stack}>
@@ -17,8 +18,8 @@ export function RpeChoices({ discipline, busy, selectedValue, onSelect }: {
     <Text>{t('activities.saveOnChoice')}</Text>
     <View accessibilityRole="radiogroup" accessibilityLabel={t('rpe.prompt')} style={styles.stack}>
       {rpeChoices(discipline).map(choice => <SavingRpeChoice key={choice.value}
-        label={`${choice.value} · ${choice.description}`}
-        accessibilityLabel={`${t('activities.saveFeedback')} · ${choice.description} (RPE ${choice.value})`}
+        label={`${choice.value} · ${choice.description}${guidance?.find(row => row.rpe === choice.value) ? ` · ${guidance.find(row => row.rpe === choice.value)!.display_label}` : ''}`}
+        accessibilityLabel={`${t('activities.saveFeedback')} · ${choice.description} (RPE ${choice.value})${guidance?.find(row => row.rpe === choice.value) ? ` · ${guidance.find(row => row.rpe === choice.value)!.display_label}` : ''}`}
         selected={selectedValue === choice.value} busy={busy}
         onPress={() => onSelect(choice.value)} />)}
     </View>
