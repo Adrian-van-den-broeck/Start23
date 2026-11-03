@@ -110,6 +110,7 @@ test('account switch during POST cannot publish late A into B; abort does not as
   const pending = deferred<Response>(); const original = handler;
   handler = (path, init) => init.method === 'POST' ? pending.promise : original(path, init);
   const view = await render(<ActivityHost />); await act(() => activity.ensureActivitiesLoaded());
+  await act(() => activity.setDuration('45')); // D06: explicitly entered performed time.
   await act(async () => { void activity.save(); }); await flush();
   await view.rerender(<ActivityHost identity="B" />); cancelApiRequests('A'); await flush();
   rows = [pendingActivity]; pending.resolve(response(pendingActivity)); await flush();
@@ -157,6 +158,7 @@ test('RPE explicit retry first verifies original identity and preserves RPE/HR/p
 });
 test('malformed activity create retains one immutable logical attempt for explicit idempotent replay', async () => {
   await render(<ActivityHost />); await act(() => activity.ensureActivitiesLoaded());
+  await act(() => activity.setDuration('45')); // D06 supersedes the former default.
   const original = handler; let count = 0;
   handler = (path, init) => {
     if (init.method === 'POST' && path.endsWith('/activities')) { rows = [pendingActivity]; return Promise.resolve(++count === 1 ? unreadable() : response(rows[0])); }

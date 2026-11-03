@@ -113,11 +113,7 @@ def select_rpe_estimate(
         reason = "missing_approved_occurrence"
     elif (
         basis.planned_version != OBSERVED_VERSION.value
-        or basis.planned_method
-        not in {
-            "planned_zone_minutes",
-            "source_catalog_predefined_tss",
-        }
+        or basis.planned_method != "planned_zone_minutes"
     ):
         reason = "unsupported_planned_method_version"
     elif basis.planned_zone is None:

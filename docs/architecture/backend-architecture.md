@@ -1,5 +1,7 @@
 # Start23 Backend Architecture
 
+> Current realized-load direction: [Joren v2](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 ## Status
 
 This document defines the backend architecture for Start23. The FastAPI
@@ -437,3 +439,9 @@ Resolved decisions:
 - Polar AccessLink is the provisional first Phase 9 adapter; its signed events
   and bounded imports map to canonical activities and cannot mutate plans;
 - the mobile client upgrades to Expo SDK 57 before mobile implementation.
+
+## Joren realized v2 amendment - 2026-11-03
+
+The modular monolith adds pure physiology/realized_v2.py and physiology/weekly_registration.py, typed private parsing in planning/registration.py and occurrence selection in activities/realized_context.py. Existing thin routes/repositories and the bounded planning process worker remain. The estimator performs no catalog planning or I/O; no new service, queue or provider converter is introduced.
+
+See the [authoritative v2 specification](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

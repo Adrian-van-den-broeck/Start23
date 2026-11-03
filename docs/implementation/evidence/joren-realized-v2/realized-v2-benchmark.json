@@ -1,0 +1,54 @@
+{
+  "python": "3.10.10",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "iterations_per_sample": 10000,
+  "seconds_per_calculation": [
+    7.433880000007775e-06,
+    8.365319999938947e-06,
+    8.140960000037011e-06
+  ],
+  "catalog": {
+    "swim": {
+      "total": 56,
+      "structurally_eligible": 0,
+      "source_total": 54,
+      "source_eligible": 0,
+      "eligible_source_or_template_ids": [],
+      "excluded": {
+        "mixed_or_non_zone_prescription": 56
+      }
+    },
+    "bike": {
+      "total": 54,
+      "structurally_eligible": 5,
+      "source_total": 50,
+      "source_eligible": 5,
+      "eligible_source_or_template_ids": [
+        "BIK-001",
+        "BIK-002",
+        "BIK-003",
+        "BIK-004",
+        "BIK-005"
+      ],
+      "excluded": {
+        "mixed_or_non_zone_prescription": 49
+      }
+    },
+    "run": {
+      "total": 52,
+      "structurally_eligible": 5,
+      "source_total": 50,
+      "source_eligible": 5,
+      "eligible_source_or_template_ids": [
+        "RUN-001",
+        "RUN-002",
+        "RUN-003",
+        "RUN-004",
+        "RUN-005"
+      ],
+      "excluded": {
+        "mixed_or_non_zone_prescription": 47
+      }
+    }
+  }
+}

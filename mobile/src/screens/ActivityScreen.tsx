@@ -313,11 +313,11 @@ export function ActivityScreen({
           />
           <Pressable
             accessibilityRole="button"
-            disabled={busy || !athleteTimezone || pendingRpe.length > 0}
+            disabled={busy || !athleteTimezone || pendingRpe.length > 0 || registrationOutcome === 'skipped'}
             onPress={() => void save()}
             style={[
               styles.action,
-              (busy || !athleteTimezone || pendingRpe.length > 0) && styles.disabled,
+              (busy || !athleteTimezone || pendingRpe.length > 0 || registrationOutcome === 'skipped') && styles.disabled,
             ]}
           >
             <Text style={styles.actionText}>{t('activity.save')}</Text>

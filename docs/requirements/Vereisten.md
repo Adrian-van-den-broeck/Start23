@@ -1,4 +1,6 @@
 # Specificatie fysiologische formules
+
+> Current realized-load direction: [Joren v2](JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
 ## Status
 Draft - goedkeuring vereist vóór berekeningscode
 Dit document is de veiligheidspoort ("safety gate") van Fase 3. Het scheidt vereisten die al expliciet zijn van keuzes die een technische aanname anders tot fysiologisch beleid zouden maken. Zolang dit document niet is goedgekeurd en er geen stabiele ruleset-versie aan is toegewezen, faalt de backend gesloten ("fails closed") en evalueert hij geen enkele fysiologische regel.
@@ -143,3 +145,9 @@ Indien aanvaard, wordt het resterende deel van 0,8 gelijk verdeeld of naar rato 
 Wat gebeurt er wanneer twee of alle drie de disciplines geblokkeerd zijn?
 Welke ernst/status activeert de verwijdering en wat zijn de vervalregels?
 Volstaat een expliciete vrijgave door de atleet, of is een andere beoordeling vereist?
+
+## Joren realized v2 amendment - 2026-11-03
+
+Nieuwe sessies kunnen een private, versiegebonden RPE-schatting krijgen na bevestiging van de werkelijk uitgevoerde duur. Alleen eenduidige geplande zones komen in aanmerking. Overgeslagen en onbekende trainingen blijven verschillend. Een bekend subtotaal bewijst geen volledige week. De atleet ziet geen private belasting, TSS of correctiefactor.
+
+See the [authoritative v2 specification](JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

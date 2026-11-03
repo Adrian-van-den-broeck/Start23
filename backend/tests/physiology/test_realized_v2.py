@@ -20,6 +20,46 @@ FACTORS = (
     ("0.625", "0.750", "0.875", "1.000", "1.125"),
     ("0.600", "0.625", "0.750", "0.875", "1.000"),
 )
+FULL_LOADS = (
+    ("120", "135", "150", "150", "150"),
+    ("105", "120", "135", "150", "150"),
+    ("90", "105", "120", "135", "150"),
+    ("75", "90", "105", "120", "135"),
+    ("72", "75", "90", "105", "120"),
+)
+HALF_LOADS = (
+    ("60", "67.5", "75", "75", "75"),
+    ("52.5", "60", "67.5", "75", "75"),
+    ("45", "52.5", "60", "67.5", "75"),
+    ("37.5", "45", "52.5", "60", "67.5"),
+    ("36", "37.5", "45", "52.5", "60"),
+)
+
+
+@pytest.mark.parametrize(
+    "p,q,full,half",
+    [
+        (p, q, FULL_LOADS[p - 1][q - 1], HALF_LOADS[p - 1][q - 1])
+        for p in range(1, 6)
+        for q in range(1, 6)
+    ],
+)
+def test_all_25_full_and_half_duration_results_for_both_scores(
+    p: int,
+    q: int,
+    full: str,
+    half: str,
+) -> None:
+    for score in (q * 2 - 1, q * 2):
+        for actual, expected in (("120", full), ("60", half)):
+            result = estimate_realized(
+                planned_load=Decimal(120),
+                planned_minutes=Decimal(120),
+                actual_minutes=Decimal(actual),
+                planned_zone=p,
+                rpe=score,
+            )
+            assert result.value == Decimal(expected)
 
 
 @pytest.mark.parametrize(

@@ -59,8 +59,8 @@ export function ActivityEntryScreen(props: {
         <Input label={t('activity.distance')} icon="location" inputMode="numeric" value={props.distance}
           onChangeText={props.onDistance} disabled={props.busy} />
         <Divider />
-        <Button label={t('activity.save')} trailingIcon="forward" busy={props.busy} disabled={!props.timezone || props.blocked}
-          disabledReason={props.blocked ? t('activities.blocked') : !props.timezone ? t('activities.timezoneMissing') : undefined}
+        <Button label={t('activity.save')} trailingIcon="forward" busy={props.busy} disabled={!props.timezone || props.blocked || props.registrationOutcome === 'skipped'}
+          disabledReason={props.registrationOutcome === 'skipped' ? t('activities.resetSkippedFirst') : props.blocked ? t('activities.blocked') : !props.timezone ? t('activities.timezoneMissing') : undefined}
           onPress={props.onSave} />
         {props.onRegistration && props.choices.some(choice => choice.id === props.selectedId && choice.kind === 'workout') ? <View style={styles.stack}>
           <Button label={t('activities.confirmSkipped')} variant="secondary" disabled={props.busy || props.blocked}

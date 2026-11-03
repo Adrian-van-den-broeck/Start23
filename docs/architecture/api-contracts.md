@@ -1,5 +1,7 @@
 # Start23 API Contracts
 
+> Current realized-load direction: [Joren v2](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 ## Status
 
 This document defines the client and integration API surface. Foundation,
@@ -469,3 +471,9 @@ Native locators are owner-scoped hints, not authorization. Confirmed local
 historical selections can still be read by ID. Transient GET errors preserve
 locators; only authoritative 404 removes the caller's scoped locator. Legacy
 global keys remain read-only and are copied only after successful owner GET.
+
+## Joren realized v2 amendment - 2026-11-03
+
+Activity creation accepts optional strict performed_duration_confirmed (default false). Current Session-RPE submissions and correction preconditions require canonical JSON integers 1-10. Responses add optional-compatible session_rpe_version and server-owned per-score public guidance. GET/PUT /api/v1/planned-workouts/{workout_id}/registration carries exact plan_revision_id, expected_registration_revision and skipped/unknown status. No numeric load/factor/ratio/private evidence is public.
+
+See the [authoritative v2 specification](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

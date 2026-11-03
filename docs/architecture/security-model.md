@@ -1,5 +1,7 @@
 # Start23 Security Model
 
+> Current realized-load direction: [Joren v2](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 ## Status
 
 This document defines the security boundaries for the Start23 Expo client,
@@ -490,3 +492,9 @@ Resolved for MVP:
 - chat approval is disabled;
 - Expo SDK 57 upgrade and secure storage policy are selected;
 - no athlete-facing or general support interface displays TSS.
+
+## Joren realized v2 amendment - 2026-11-03
+
+All new value/provenance/evidence tables are private with forced RLS, owner-composite foreign keys, opaque-owner synchronization and narrow server grants. Registration definer RPCs derive auth.uid() and expose only safe status/revision fields. The internal plan-approval guard reuses v16 evidence without granting athletes private execution/read access. P/E/subtotals/factors/ratios are excluded from public DTOs, errors/logging/telemetry/accessibility and LLM facts.
+
+See the [authoritative v2 specification](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

@@ -14,11 +14,11 @@ from app.modules.physiology.weekly_registration import (
 
 
 class RegistrationEvidence(BaseModel):
-    model_config = ConfigDict(extra="forbid", strict=True)
+    model_config = ConfigDict(extra="forbid", strict=True, hide_input_in_errors=True)
     activity_id: str | None
     occurrence_id: str | None
     status: RegistrationStatus
-    value: str | None
+    value: str | None = Field(repr=False)
     method: str
     version: str
     eligible: bool
@@ -26,11 +26,11 @@ class RegistrationEvidence(BaseModel):
 
 
 class WeeklyEvidence(BaseModel):
-    model_config = ConfigDict(extra="forbid", strict=True)
+    model_config = ConfigDict(extra="forbid", strict=True, hide_input_in_errors=True)
     policy: str
     expected_known: bool
     expected_occurrences: list[str]
-    registrations: list[RegistrationEvidence] = Field(default_factory=list)
+    registrations: list[RegistrationEvidence] = Field(default_factory=list, repr=False)
 
 
 def parse_weekly_registration(data: object) -> WeeklyCompleteness | None:

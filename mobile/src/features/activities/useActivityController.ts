@@ -253,9 +253,9 @@ export function useActivityController(accessToken: string) {
     setRegistrationOutcome(null);
     setSelectedWorkout(workout);
     setSelectedExternal(null);
+    setDuration('');
     if (workout) {
       setDiscipline(workout.discipline);
-      setDuration('');
       setDistance(workout.distance_meters === null ? '' : String(workout.distance_meters));
     }
   };
@@ -302,7 +302,8 @@ export function useActivityController(accessToken: string) {
       }
       registrationAttempt.current = null;
       setRegistrationOutcome(status);
-      setSelectedWorkout(null); setDuration('');
+      // Keep the exact named context visible with its confirmation/undo action.
+      setDuration('');
       mutationError.current = null;
     } catch (caught) {
       if (alive.current) {
@@ -327,6 +328,8 @@ export function useActivityController(accessToken: string) {
     setError(null);
     try {
       if (registrationAttempt.current) throw new Error('Herhaal eerst de vorige registratie om de status te controleren.');
+      if (registrationOutcome === 'skipped') throw new Error('Zet de uitvoering eerst terug op onbekend voordat je een activiteit opslaat.');
+      setRegistrationOutcome(null);
       // A completed POST followed by a failed refresh must not create again.
       if (createdIdRef.current) { confirmed = true; await load(access, true); return; }
       if (pendingRef.current.length > 0 && !createAttempt.current) throw new Error('Rond eerst de RPE van de opgeslagen activiteit af.');

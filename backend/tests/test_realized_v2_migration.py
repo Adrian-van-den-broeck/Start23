@@ -91,11 +91,20 @@ def test_weekly_registration_is_explicit_owned_and_stale_safe() -> None:
     assert "(select auth.uid())" in sql
     assert "p_expected_registration_revision" in sql
     assert "v_context ->> 'status' = p_status then return v_context" in sql
-    assert "for update of plan" in sql
+    assert "for no key update of plan" in sql
+    assert (
+        "revision.revision_number = plan.active_revision and revision.state = 'active'"
+        in sql
+    )
     assert "workout_registration_immutable" in sql
     assert "guard_skipped_workout_activity" in sql
     assert "get_plan_load_history_for_planning_v16" in sql
     assert "'expected_known', revision.id is not null" in sql
     assert "workout.status <> 'cancelled'" in sql
     assert "get_plan_load_history_for_planning_v15" in sql
+    assert "from private.provider_activity_imports imported" in sql
+    assert (
+        "calculation.realized_tss is not null and load.realized_tss is not null" in sql
+    )
+    assert "coalesce(load.ruleset_version, 'unavailable')" in sql
     assert "delete from" not in sql

@@ -45,11 +45,11 @@ returns jsonb language plpgsql security definer set search_path = '' as $$
 declare v_context jsonb; v_workout public.planned_workouts; v_plan public.weekly_plans;
 begin
   if (select auth.uid()) is null then raise exception 'authentication required' using errcode = '42501'; end if;
-  -- Lock plan, then exact occurrence. Both
-  -- registration and activity creation serialize on this occurrence below.
+  -- Lock plan, then exact occurrence. NO KEY UPDATE serializes plan pointer
+  -- changes without blocking existing FK KEY SHARE checks during RPE completion.
   select plan.* into v_plan from public.weekly_plans plan join public.planned_workouts workout
     on workout.plan_id = plan.id and workout.athlete_id = plan.athlete_id
-    where workout.id = p_workout_id and workout.athlete_id = (select auth.uid()) for update of plan;
+    where workout.id = p_workout_id and workout.athlete_id = (select auth.uid()) for no key update of plan;
   if not found then raise exception 'planned workout not found' using errcode = 'P0002'; end if;
   select * into v_workout from public.planned_workouts where id = p_workout_id and athlete_id = (select auth.uid()) for update;
   v_context := public.get_workout_registration(p_workout_id);
@@ -86,7 +86,17 @@ begin
   if new.planned_workout_id is null then return new; end if;
   perform 1 from public.weekly_plans plan join public.planned_workouts workout
     on workout.plan_id = plan.id and workout.athlete_id = plan.athlete_id
-    where workout.id = new.planned_workout_id and workout.athlete_id = new.athlete_id for update of plan;
+    where workout.id = new.planned_workout_id and workout.athlete_id = new.athlete_id for no key update of plan;
+  -- Recheck after acquiring the plan lock: an approval may have superseded the
+  -- occurrence after the original create/match RPC's validation query.
+  if not exists (select 1 from public.planned_workouts workout
+    join public.weekly_plans plan on plan.id = workout.plan_id and plan.athlete_id = workout.athlete_id
+    join public.plan_revisions revision on revision.id = workout.revision_id and revision.athlete_id = workout.athlete_id
+    where workout.id = new.planned_workout_id and workout.athlete_id = new.athlete_id
+      and revision.revision_number = plan.active_revision and revision.state = 'active'
+      and workout.status <> 'cancelled') then
+    raise exception 'activity correction is stale' using errcode = '40001';
+  end if;
   perform 1 from public.planned_workouts where id = new.planned_workout_id and athlete_id = new.athlete_id for update;
   select status into v_status from private.workout_registration_events
     where planned_workout_id = new.planned_workout_id and athlete_id = new.athlete_id order by revision desc limit 1;
@@ -135,12 +145,17 @@ begin
         when load.ruleset_version = 'phase-13-joren-ruleset-1' and load.realized_tss is not null then load.realized_tss::text
         else calculation.realized_tss::text end,
       'method', case when load.ruleset_version = 'phase-13-joren-ruleset-1' and load.realized_tss is not null then load.calculation_method
-        when calculation.realized_tss is not null then calculation.calculation_method else 'unavailable' end,
+        when calculation.realized_tss is not null then calculation.calculation_method else coalesce(load.calculation_method, 'unavailable') end,
       'version', case when load.ruleset_version = 'phase-13-joren-ruleset-1' and load.realized_tss is not null then load.ruleset_version
-        when calculation.realized_tss is not null then calculation.calculation_version else 'unavailable' end,
+        when calculation.realized_tss is not null then calculation.calculation_version else coalesce(load.ruleset_version, 'unavailable') end,
       'eligible', activity.rpe is not null and not (calculation.realized_tss is not null and load.realized_tss is not null) and coalesce(
         (load.ruleset_version = 'phase-13-joren-ruleset-1' and load.load_status in ('complete','estimated_from_average_hr') and load.realized_tss is not null)
-        or (load.realized_tss is null and calculation.planner_eligible), false),
+        or (load.realized_tss is null and calculation.planner_eligible), false)
+        -- An unmatched import is not proof of distinct extra work. Keep its
+        -- observed value/provenance, but hold until identity is resolved.
+        and not (activity.planned_workout_id is null and exists (
+          select 1 from private.provider_activity_imports imported
+          where imported.activity_id = activity.id and imported.athlete_id = activity.athlete_id)),
       'calculation_id', case when calculation.realized_tss is not null and load.realized_tss is null then calculation.id::text
         else activity.id::text || ':' || coalesce(load.ruleset_version, 'unavailable') || ':' || coalesce(activity.rpe::text, 'pending') end
     ) order by activity.id) as rows

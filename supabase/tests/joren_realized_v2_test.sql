@@ -1,6 +1,6 @@
 -- DEFERRED BY OWNER - PRE-BETA. Run after replaying the forward chain.
 begin;
-select plan(10);
+select plan(22);
 select has_table('private', 'realized_v2_calculations');
 select has_table('private', 'realized_v2_activity_inputs');
 select ok((select relrowsecurity and relforcerowsecurity from pg_class where oid = 'private.realized_v2_calculations'::regclass), 'private calculation RLS forced');
@@ -11,5 +11,17 @@ select ok(not has_table_privilege('service_role','private.realized_v2_calculatio
 select ok(has_function_privilege('service_role','public.complete_activity_rpe_v2(uuid,uuid,jsonb)','EXECUTE'), 'trusted completion allowed');
 select ok(not has_function_privilege('authenticated','public.complete_activity_rpe_v2(uuid,uuid,jsonb)','EXECUTE'), 'athlete cannot submit private calculation');
 select ok(not has_function_privilege('authenticated','public.get_activity_processing_context_v2(uuid,uuid)','EXECUTE'), 'private context denied');
+select has_table('private', 'workout_registration_events');
+select has_table('private', 'realized_v2_plan_evidence');
+select ok((select relrowsecurity and relforcerowsecurity from pg_class where oid = 'private.workout_registration_events'::regclass), 'registration RLS forced');
+select ok((select relrowsecurity and relforcerowsecurity from pg_class where oid = 'private.realized_v2_plan_evidence'::regclass), 'plan evidence RLS forced');
+select ok(not has_table_privilege('authenticated','private.workout_registration_events','SELECT'), 'registration ledger stays private');
+select ok(not has_table_privilege('authenticated','private.realized_v2_plan_evidence','SELECT'), 'plan evidence stays private');
+select ok(not has_table_privilege('service_role','private.realized_v2_plan_evidence','UPDATE'), 'plan evidence immutable to service');
+select ok(not has_function_privilege('authenticated','public.get_plan_load_history_for_planning_v16(uuid,date)','EXECUTE'), 'v16 private load denied');
+select ok(not has_function_privilege('authenticated','public.create_weekly_plan_proposal_v4(uuid,jsonb)','EXECUTE'), 'athlete cannot submit private planning evidence');
+select ok(has_function_privilege('service_role','public.create_weekly_plan_proposal_v4(uuid,jsonb)','EXECUTE'), 'trusted planning allowed');
+select ok(not has_function_privilege('anon','public.confirm_workout_registration(uuid,uuid,integer,text)','EXECUTE'), 'anonymous registration denied');
+select ok(has_function_privilege('authenticated','public.confirm_workout_registration(uuid,uuid,integer,text)','EXECUTE'), 'authenticated registration can confirm own status');
 select * from finish();
 rollback;

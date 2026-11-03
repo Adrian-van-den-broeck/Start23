@@ -1,5 +1,7 @@
 # Joren planning ruleset 2 implementation
 
+> Current realized-load direction: [Joren v2](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 The final Joren answers in the implementation request supersede the open
 questions in `docs/requirements/joren-workout-selection-phase-2026-09-28.md`.
 New planning decisions use `joren-planning-ruleset-2`. Phase 13 retains the
@@ -83,3 +85,9 @@ so hosted application smoke remains unavailable.
 
 Broader asymmetric triathlon, swimrun, brick and goal-specific methodology
 remain future product decisions. No new formula for those areas was added.
+
+## Joren realized v2 amendment - 2026-11-03
+
+Planning coefficients, restrictions, phase selection, exact occurrences and process-worker behavior are retained. The prospective weekly-registration-2 consumer admits complete measured/eligible-estimated mixtures and holds incomplete evidence. No Session-RPE intensity minutes are invented. Pending v4 proposals freeze private v16 evidence and are stale when that evidence changes.
+
+See the [authoritative v2 specification](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

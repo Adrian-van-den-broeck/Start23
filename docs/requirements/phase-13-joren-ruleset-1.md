@@ -1,5 +1,7 @@
 # Phase 13 Joren ruleset 1
 
+> Current realized-load direction: [Joren v2](JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 Version: `phase-13-joren-ruleset-1`. Product decisions accepted 2026-09-10;
 implementation continued 2026-09-11. Production review remains open.
 
@@ -497,3 +499,9 @@ Preserve the existing architecture:
 - athlete confirmation remains required;
 - stale-safe/version-precondition behavior must remain intact;
 - TSS/private load remains private.
+
+## Joren realized v2 amendment - 2026-11-03
+
+This version remains authoritative for observed zone/mean-HR load, calibration anchors and historical calculations. The new fallback is a separate matrix-2 version; Session-RPE 3->Z2 applies only under its explicit mapping dispatch. Historical Session-RPE 3->Z1 and all calibration-block anchors remain unchanged.
+
+See the [authoritative v2 specification](JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

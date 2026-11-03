@@ -58,7 +58,7 @@ test('explicit skipped registration uses exact revision and creates no zero-minu
   expect(api.confirmWorkoutRegistration).toHaveBeenCalledWith('token-a', workout.id, {
     plan_revision_id: 'approved-revision', expected_registration_revision: 0, status: 'skipped',
   });
-  expect(flow.registrationOutcome).toBe('skipped'); expect(flow.selectedWorkout).toBeNull();
+  expect(flow.registrationOutcome).toBe('skipped'); expect(flow.selectedWorkout?.id).toBe(workout.id);
   expect(flow.duration).toBe(''); expect(api.createActivity).not.toHaveBeenCalled();
 });
 

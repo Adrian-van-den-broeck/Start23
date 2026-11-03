@@ -97,6 +97,7 @@ describe('unplanned workout regression', () => {
       </ActivityFlowProvider></LanguageProvider>,
     );
     await screen.findByText('Record a workout');
+    await fireEvent.changeText(screen.getByLabelText('Actual duration (minutes)'), '45');
     await fireEvent.press(
       screen.getByRole('button', { name: 'Save activity' }),
     );
@@ -176,6 +177,7 @@ describe('unplanned workout regression', () => {
     const saveButton = await screen.findByRole('button', {
       name: 'Save activity',
     });
+    await fireEvent.changeText(screen.getByLabelText('Actual duration (minutes)'), '45');
     await fireEvent.press(saveButton);
     await fireEvent.press(saveButton);
 
@@ -209,6 +211,7 @@ describe('unplanned workout regression', () => {
       </ActivityFlowProvider></LanguageProvider>,
     );
     const save = await screen.findByRole('button', { name: 'Save activity' });
+    await fireEvent.changeText(screen.getByLabelText('Actual duration (minutes)'), '45');
     await fireEvent.press(save);
     await screen.findByText('network timeout');
     await fireEvent.press(save);

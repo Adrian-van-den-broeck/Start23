@@ -1,5 +1,7 @@
 # Start23 MVP Roadmap
 
+> Current realized-load direction: [Joren v2](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 ## Status
 
 This roadmap tracks small, reviewable implementation phases. Phase 1 is
@@ -2455,3 +2457,9 @@ Every phase must:
   adjustment.
 - Phase 10 date-only planning and local-date BR-006 spacing remain implemented;
   two-user isolation and renewed BR-006 physiological review remain open.
+
+## Joren realized v2 amendment - 2026-11-03
+
+Target MVP adds the approved prospective duration-adjusted RPE fallback and explicit weekly registration. Phase13 calibration/baseline and planning-v2 safety coefficients are retained. Local software implementation does not close database, independent review or release gates.
+
+See the [authoritative v2 specification](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

@@ -257,3 +257,75 @@ def test_new_consumer_does_not_round_a_subthreshold_completion_up_to_80_percent(
         result = target((latest,))
     assert result.basis is PlanningTargetBasis.REALIZED_BASELINE
     assert result.target.value == raw
+
+
+def single_estimated(value: Decimal) -> PlanLoadSample:
+    quality = aggregate_week(
+        expected_occurrences=("one",),
+        expected_known=True,
+        registrations=(
+            WorkoutRegistration(
+                "a",
+                "one",
+                "estimated",
+                value,
+                "duration_adjusted_session_rpe",
+                "joren-realized-tss-matrix-2",
+                True,
+            ),
+        ),
+    )
+    return replace(
+        sample(skipped=True),
+        realized_load=InternalLoad(value),
+        weekly_registration=quality,
+    )
+
+
+def test_complete_estimated_week_retains_existing_lower_realized_fatigue_rule() -> None:
+    latest = replace(single_estimated(Decimal(60)), reduced_realized_progression=True)
+    result = target((latest,))
+    assert result.basis is PlanningTargetBasis.REALIZED_PROGRESSION
+    assert result.target.value == 66
+
+
+def test_raw_estimated_week_above_110_percent_retains_strict_debt_boundary() -> None:
+    raw = Decimal("110." + "0" * 39 + "1")
+    result = target((single_estimated(raw),))
+    assert result.basis is PlanningTargetBasis.PHYSIOLOGICAL_DEBT
+    assert result.target.value < 100
+    assert (
+        target((single_estimated(Decimal(110)),)).basis
+        is PlanningTargetBasis.REALIZED_PROGRESSION
+    )
+
+
+def test_confirmed_injury_restrictions_precede_even_incomplete_week_evidence() -> None:
+    from app.modules.physiology.models import Discipline
+    from app.modules.planning.domain import build_weekly_plan
+    from benchmarks.planning import full_catalog, scenario
+
+    inputs = scenario("run_history", full_catalog())
+    inputs["prior_loads"] = (sample(skipped=False),)
+    inputs["confirmed_injuries"] = frozenset({Discipline.RUN})
+    result = build_weekly_plan(**inputs)
+    assert result.target.basis is PlanningTargetBasis.INJURY_REST_ONLY
+    assert result.workouts == () and result.target.target.value == 0
+
+
+def test_private_evidence_repr_and_validation_do_not_echo_numeric_values() -> None:
+    from pydantic import ValidationError
+
+    from app.modules.planning.registration import (
+        RegistrationEvidence,
+        parse_weekly_registration,
+    )
+
+    data = evidence(skipped=True)
+    data["registrations"][0]["value"] = "987.654321"
+    parsed = RegistrationEvidence.model_validate(data["registrations"][0])
+    assert "987.654321" not in repr(parsed)
+    data["registrations"][0]["value"] = 987.654321
+    with pytest.raises(ValidationError) as caught:
+        parse_weekly_registration(data)
+    assert "987.654321" not in str(caught.value)

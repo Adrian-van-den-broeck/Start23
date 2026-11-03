@@ -1,5 +1,7 @@
 # Database migration workflow
 
+> Current realized-load direction: [Joren v2](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 ## Status
 
 Remediation migrations through
@@ -306,3 +308,9 @@ Hosted catalog and rollback-only SQL verification already prove the intended
 grants, policies, immutable ownership, trigger behavior, and cross-athlete row
 isolation. Real access-token tests through FastAPI and the Data API remain the
 final integration gate.
+
+## Joren realized v2 amendment - 2026-11-03
+
+Four new local forward migrations 20261103134520,20261103135735,20261103140959,20261103142339 remain UNAPPLIED. They add private provenance, registration/v16 evidence, pending-plan evidence preconditions and public Session-RPE version labels. No applied migration or old record is rewritten. PostgreSQL/pgTAP is DEFERRED BY OWNER - PRE-BETA; syntax/static checks do not establish actual RPC/RLS/numeric compatibility.
+
+See the [authoritative v2 specification](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

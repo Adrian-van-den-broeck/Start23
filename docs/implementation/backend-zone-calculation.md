@@ -1,5 +1,7 @@
 # Backend zone calculation, field tests, and Week-1 calibration
 
+> Current realized-load direction: [Joren v2](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 Status: `current Phase 13/14 contract implemented locally; database and device
 runtime gates remain`
 
@@ -126,3 +128,9 @@ and rollback-only pgTAP suite still require execution against a disposable or
 linked PostgreSQL runtime, followed by real-token two-user isolation and
 physical-device checks. These are R6/release gates; this remediation does not
 start or complete R6.
+
+## Joren realized v2 amendment - 2026-11-03
+
+Calibration-block RPE and Phase13 HR/CSS anchors retain their existing meanings and version. Ordinary new Session-RPE uses a separate explicit mapping, including score 3->Z2. No session estimate calibrates or activates zones. Old catalog/protocol targets remain attributable to their immutable versions.
+
+See the [authoritative v2 specification](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

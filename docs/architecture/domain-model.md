@@ -1,5 +1,7 @@
 # Start23 Domain Model
 
+> Current realized-load direction: [Joren v2](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 ## Status
 
 This document defines the logical domain model for Start23. Phase 2 implements
@@ -636,3 +638,9 @@ Resolved for MVP:
 - `phase-10-ruleset-1` preserves the 72 elapsed-hour run rule and changes only
   the 48-hour bike/swim rule to require two complete intervening athlete-local
   rest dates. This material amendment reopens physiological production review.
+
+## Joren realized v2 amendment - 2026-11-03
+
+Private v2 input confirmations, immutable calculation revisions, append-only workout registration events and immutable pending-plan evidence snapshots coexist with unchanged Phase13 activity loads. WeeklyCompleteness separates known subtotal, expected occurrence identities/counts, pending/unknown/skipped/source quality and nullable planner-usable load with explicit consumer eligibility.
+
+See the [authoritative v2 specification](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

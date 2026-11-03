@@ -1,5 +1,7 @@
 # Physiological Formula Specification
 
+> Current realized-load direction: [Joren v2](JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 > Active amendment: [phase-13-joren-ruleset-1](phase-13-joren-ruleset-1.md)
 > supersedes conflicting onboarding, BR-004 progression/load snapshots,
 > BR-005 private zone-time load, BR-008 taper timing and BR-009 calibration.
@@ -316,3 +318,9 @@ UI; a due review never silently clears a restriction.
   replacement persistence
 - Implementation: deterministic Python modules with ruleset, boundary,
   invalid-input, precedence, purity, timezone, and DST tests
+
+## Joren realized v2 amendment - 2026-11-03
+
+For eligible exact single-zone occurrences, the new private heuristic is P*A*F/T, F=clamp(1+0.125*(q-p),0.600,1.250), q from1-2/3-4/5-6/7-8/9-10. Decimal 50 divide-last storage is unquantized; no ratio/final cap. Mixed structures and automatic A!=T use remain disabled. Earlier formula sections remain historical/version-specific.
+
+See the [authoritative v2 specification](JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

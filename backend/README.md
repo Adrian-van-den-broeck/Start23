@@ -1,5 +1,7 @@
 # Start23 backend
 
+> Current realized-load direction: [Joren v2](../docs/requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 FastAPI foundation, Supabase access-token authentication, the deterministic
 physiology core, onboarding, the reviewed workout catalog, and weekly planning
 for the Start23 modular monolith.
@@ -174,3 +176,9 @@ worker architecture:
 ```bash
 start23-retry-polar-imports
 ```
+
+## Joren realized v2 amendment - 2026-11-03
+
+Local preview uses START23_REALIZED_V2_STORAGE_READY=false and START23_REALIZED_V2_SELECTION_ENABLED=false by default. Selection requires storage readiness; staging/production reject readiness while release gates are open. Reuse existing Python/npm tooling; do not install PostgreSQL tooling for this task. Run pytest, Ruff/format, strict mypy, mobile Jest/TypeScript/unused-code and the synthetic A9/realized benchmarks. No hosted activation or deployment occurred.
+
+See the [authoritative v2 specification](../docs/requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

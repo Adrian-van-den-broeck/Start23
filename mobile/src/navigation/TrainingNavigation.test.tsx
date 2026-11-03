@@ -248,6 +248,7 @@ test('Slice 5B real create pending reminder return and feedback retain one owner
   await fireEvent.press(view.getByRole('tab', { name: 'Activities' })); await view.findByText('No activities recorded yet.');
   await fireEvent.press(view.getByRole('button', { name: 'Add activity' }));
   await fireEvent.changeText(view.getByLabelText('Distance (metres, optional)'), '5000');
+  await fireEvent.changeText(view.getByLabelText('Actual duration (minutes)'), '45');
   await fireEvent.press(view.getByRole('button', { name: 'Save activity' })); await view.findByText('Activity feedback');
   await fireEvent.changeText(view.getByLabelText('Average heart rate (bpm)'), '151');
   const reads = jest.mocked(api.listActivities).mock.calls.filter(call => !call[1]).length;
@@ -289,6 +290,7 @@ test('Slice 5B create in flight locks roots and version, settles without losing 
   jest.mocked(api.createActivity).mockImplementation(() => new Promise((_resolve, no) => { reject = no; }));
   const view = await renderRouter(routes, { initialUrl: '/activities' }); await view.findByText('No activities recorded yet.');
   await fireEvent.press(view.getByRole('button', { name: 'Add activity' }));
+  await fireEvent.changeText(view.getByLabelText('Actual duration (minutes)'), '45');
   const save = view.getByRole('button', { name: 'Save activity' }); await fireEvent.press(save); await fireEvent.press(save);
   expect(view.queryByTestId('training-root-navigation')).toBeNull(); expect(view.getByRole('button', { name: 'UI V1' })).toBeDisabled();
   expect(view.getByRole('button', { name: 'Back to Activities' })).toBeDisabled(); expect(api.createActivity).toHaveBeenCalledTimes(1);

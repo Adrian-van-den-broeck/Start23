@@ -1,5 +1,7 @@
 # Business Rule Traceability
 
+> Current realized-load direction: [Joren v2](JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 > Active amendment: [phase-13-joren-ruleset-1](phase-13-joren-ruleset-1.md)
 > supersedes conflicting onboarding, BR-004 progression/load snapshots,
 > BR-005 private zone-time load, BR-008 taper timing and BR-009 calibration.
@@ -786,3 +788,9 @@ This document must be updated in the same change whenever:
 
 No rule may be marked `Verified` until its implementation, database behavior,
 API contracts, and required tests all agree.
+
+## Joren realized v2 amendment - 2026-11-03
+
+BR-005 gains the matrix-2 fallback after existing observations/mean-HR. BR-004/BR-002 consume only complete eligible weekly evidence under weekly-registration-2; intensity debt still requires actual classified-minute evidence. Existing injury, illness, fatigue, recovery/taper, coefficients and pending athlete confirmation are unchanged.
+
+See the [authoritative v2 specification](JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

@@ -137,3 +137,48 @@ def test_repeated_template_preserves_distinct_occurrences_and_original_load() ->
     assert selection(basis=ApprovedWorkoutBasis.parse(first)).value == 100
     assert selection(basis=ApprovedWorkoutBasis.parse(second)).value == 120
     assert first["planned_tss"] == "100"
+
+
+@pytest.mark.parametrize(
+    "duration,bins,value",
+    [
+        ("15", ("15", "0", "0", "0", "0"), "7.50"),
+        ("30", ("30", "0", "0", "0", "0"), "15.00"),
+        ("30", ("0", "0", "0", "0", "30"), "60.00"),
+    ],
+)
+def test_warmup_skipped_hard_block_and_hard_only_keep_observed_evidence(
+    duration: str,
+    bins: tuple[str, ...],
+    value: str,
+) -> None:
+    basis = ApprovedWorkoutBasis.parse(
+        planned_context(
+            planned_tss="75",
+            segments=[{"zone_target": 1}, {"zone_target": 5}, {"zone_target": 1}],
+        )
+    )
+    observed = zone_load(
+        discipline=Discipline.BIKE,
+        total_minutes=Decimal(duration),
+        minutes_by_zone=tuple(Decimal(item) for item in bins),
+    )
+    result = selection(
+        basis=basis, measurement=observed, actual_minutes=Decimal(duration)
+    )
+    assert result.value is None and result.reason == "observation_selected"
+    assert observed.load is not None and observed.load.value == Decimal(value)
+    assert (
+        selection(basis=basis, actual_minutes=Decimal(duration)).reason
+        == "unsupported_structure"
+    )
+
+
+def test_original_source_load_version_is_not_silently_relabelled() -> None:
+    basis = ApprovedWorkoutBasis.parse(
+        planned_context(
+            planned_method="source_catalog_predefined_tss",
+            planned_version="start23-source-catalog-v0.1",
+        )
+    )
+    assert selection(basis=basis).reason == "unsupported_planned_method_version"

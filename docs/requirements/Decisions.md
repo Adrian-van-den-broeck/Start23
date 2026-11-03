@@ -1,5 +1,7 @@
 # Meeting Notulen: Wombo MVP Afstemming
 
+> Current realized-load direction: [Joren v2](JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md), product-approved 2026-11-03. Local software only; database/release gates remain open. Historical sections retain their versioned scope.
+
 **Datum:** 5 november
 **Aanwezigen:**
 * **Adrian** (Speaker 1 – Tech Lead / Software Development)
@@ -104,3 +106,9 @@
   * Field test planningsbug herstellen.
   * RPE activity state concurrency/refresh error fixen.
 - [ ] **Website/Beta funnel:** Generieke toegangscode-functionaliteit afronden via Supabase voor bèta-testers (Pioniers).
+
+## Joren realized v2 amendment - 2026-11-03
+
+The owner approved the new realized-load product direction on2026-11-03, including the linear matrix, actual-duration ratio, prospective RPE mapping and complete-registration planning gate. This supersedes the earlier unapproved Joren review options, not unrelated prior physiology/planning decisions. The heuristic is unvalidated; no qualified external signature is claimed.
+
+See the [authoritative v2 specification](JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.

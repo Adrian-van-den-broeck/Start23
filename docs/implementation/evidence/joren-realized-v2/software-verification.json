@@ -1,0 +1,47 @@
+{
+  "scope": "Software verification only; PostgreSQL execution and scientific/release gates open",
+  "backend": {
+    "pytest": {
+      "passed": 1013,
+      "warnings": 1,
+      "seconds": 160.46
+    },
+    "ruff_check": "passed app tests benchmarks",
+    "ruff_format": "passed 161 files",
+    "mypy_strict": "passed 155 source files"
+  },
+  "mobile": {
+    "typecheck": "passed",
+    "unused": "passed",
+    "jest": {
+      "suites": 83,
+      "passed": 892,
+      "seconds": 136.599
+    }
+  },
+  "static_sql": {
+    "new_migrations": 4,
+    "pgtap_file_parsed": true,
+    "postgresql_execution": "DEFERRED BY OWNER - PRE-BETA",
+    "pgtap_assertions_prepared_not_run": 22
+  },
+  "documentation": {
+    "original_fixture_ids_retained": 129,
+    "decision_rows": 18,
+    "pdf_sha256": "b31f7fd72ebdda6f54f87fc5f25b69e53600f3476f5572d5e75af48615aef194",
+    "historical_review_files_preserved": 5
+  },
+  "commands": {
+    "backend": [
+      "python -m ruff check app tests benchmarks",
+      "python -m ruff format --check app tests benchmarks",
+      "python -m mypy app tests",
+      "python -B -m pytest -q -p no:cacheprovider"
+    ],
+    "mobile": [
+      "npm run typecheck",
+      "npm run check:unused",
+      "npm test -- --silent"
+    ]
+  }
+}
