@@ -371,5 +371,3 @@ test('rapid choices while exact activity GET is unresolved resolve and mutate on
   await act(async () => { response.resolve(remote); await first; });
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
 });
-
-

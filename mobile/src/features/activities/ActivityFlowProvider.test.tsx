@@ -337,5 +337,3 @@ test('identity replacement ignores late pending read and late feedback success',
   await act(async () => { pending.resolve([pendingActivity]); feedback.resolve(completeActivity); await Promise.all([read, save]); });
   expect(flow.activities).toEqual([]); expect(flow.pendingRpe).toEqual([]); expect(flow.error).toBeNull(); expect(api.listActivities).toHaveBeenCalledTimes(2);
 });
-
-
