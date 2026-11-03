@@ -123,9 +123,7 @@ def test_unsupported_basis_is_not_converted(changes: dict[str, Any]) -> None:
     )
 
 
-def test_overrun_value_is_exact_but_missing_reliability_policy_blocks_automatic_use() -> (
-    None
-):
+def test_overrun_keeps_exact_value_and_blocks_automatic_use() -> None:
     result = selection(actual_minutes=Decimal(90), rpe=1)
     assert result.value == Decimal("131.25")
     assert result.provenance["ratio_numerator"] == "90"
