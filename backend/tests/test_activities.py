@@ -47,6 +47,41 @@ class MemoryActivityRepository:
         self.known_hr_profile: JsonObject | None = None
         self.known_hr_profile_id = uuid4()
         self.load_snapshots: dict[UUID, JsonObject] = {}
+        self.registration_events: dict[UUID, list[JsonObject]] = {}
+        self.registration_plan_revision = uuid4()
+
+    async def get_workout_registration(
+        self, access_token: str, workout_id: UUID
+    ) -> JsonObject:
+        owner = self._owner(access_token)
+        if self.planned_workouts.get(owner) != workout_id:
+            raise ActivityRepositoryNotFoundError
+        events = self.registration_events.get(workout_id, [])
+        return {
+            "planned_workout_id": str(workout_id),
+            "plan_revision_id": str(self.registration_plan_revision),
+            "registration_revision": len(events),
+            "status": events[-1]["status"] if events else "unknown",
+        }
+
+    async def confirm_workout_registration(
+        self, access_token: str, workout_id: UUID, payload: JsonObject
+    ) -> JsonObject:
+        current = await self.get_workout_registration(access_token, workout_id)
+        if payload["plan_revision_id"] != current["plan_revision_id"]:
+            raise ActivityRepositoryConflictError("activity_correction_stale")
+        if any(
+            row["planned_workout_id"] == str(workout_id) for row in self._rows.values()
+        ):
+            raise ActivityRepositoryConflictError("planned_workout_already_matched")
+        if payload["status"] != current["status"]:
+            if (
+                payload["expected_registration_revision"]
+                != current["registration_revision"]
+            ):
+                raise ActivityRepositoryConflictError("activity_correction_stale")
+            self.registration_events.setdefault(workout_id, []).append(dict(payload))
+        return await self.get_workout_registration(access_token, workout_id)
 
     def _owner(self, token: str) -> UUID:
         try:

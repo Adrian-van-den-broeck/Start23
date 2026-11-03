@@ -93,6 +93,14 @@ class ActivityRepository(Protocol):
 
     async def aclose(self) -> None: ...
 
+    async def get_workout_registration(
+        self, access_token: str, workout_id: UUID
+    ) -> JsonObject: ...
+
+    async def confirm_workout_registration(
+        self, access_token: str, workout_id: UUID, payload: JsonObject
+    ) -> JsonObject: ...
+
 
 class SupabaseActivityRepository:
     """Use caller RLS for public writes and narrow secret RPCs for hidden load."""
@@ -361,3 +369,40 @@ class SupabaseActivityRepository:
     async def aclose(self) -> None:
         if self._owns_client:
             await self._client.aclose()
+
+    async def get_workout_registration(
+        self, access_token: str, workout_id: UUID
+    ) -> JsonObject:
+        if not self._v2_ready:
+            raise ActivityRepositoryUnavailableError
+        result = await self._request(
+            "POST",
+            "rpc/get_workout_registration",
+            access_token=access_token,
+            json={"p_workout_id": str(workout_id)},
+        )
+        if not isinstance(result, dict):
+            raise ActivityRepositoryUnavailableError
+        return dict(result)
+
+    async def confirm_workout_registration(
+        self, access_token: str, workout_id: UUID, payload: JsonObject
+    ) -> JsonObject:
+        if not self._v2_ready:
+            raise ActivityRepositoryUnavailableError
+        result = await self._request(
+            "POST",
+            "rpc/confirm_workout_registration",
+            access_token=access_token,
+            json={
+                "p_workout_id": str(workout_id),
+                "p_revision_id": payload["plan_revision_id"],
+                "p_expected_registration_revision": payload[
+                    "expected_registration_revision"
+                ],
+                "p_status": payload["status"],
+            },
+        )
+        if not isinstance(result, dict):
+            raise ActivityRepositoryUnavailableError
+        return dict(result)

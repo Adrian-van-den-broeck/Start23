@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   confirmActivityMatch, createActivity, getActivity, getCalendar, getOnboarding,
   listActivities, listPlannedExternalActivities, submitActivityRpeWithRefresh,
+  getWorkoutRegistration, confirmWorkoutRegistration,
 } from '../../api/client';
 import type { CompletedActivity, Discipline, PlannedExternalActivity, PlannedWorkout } from '../../api/types';
 import { activityCreateInput, newIdempotencyKey } from './activityCreateInput';
@@ -30,6 +31,8 @@ export function useActivityController(accessToken: string) {
   const [selectedExternal, setSelectedExternal] = useState<PlannedExternalActivity | null>(null);
   const [discipline, setDiscipline] = useState<Discipline>('run');
   const [duration, setDuration] = useState('');
+  const [registrationOutcome, setRegistrationOutcome] = useState<'unknown' | 'skipped' | null>(null);
+  const registrationAttempt = useRef<{ workoutId: string; input: Parameters<typeof confirmWorkoutRegistration>[2] } | null>(null);
   const [distance, setDistance] = useState('');
   const [startedAt, setStartedAt] = useState(() => new Date().toISOString());
   const [athleteTimezone, setAthleteTimezone] = useState('');
@@ -247,6 +250,7 @@ export function useActivityController(accessToken: string) {
   }, [indexRows, publishPending]);
 
   const selectWorkout = (workout: PlannedWorkout | null) => {
+    setRegistrationOutcome(null);
     setSelectedWorkout(workout);
     setSelectedExternal(null);
     if (workout) {
@@ -256,11 +260,61 @@ export function useActivityController(accessToken: string) {
     }
   };
   const selectExternal = (activity: PlannedExternalActivity) => {
+    setRegistrationOutcome(null);
     setSelectedWorkout(null);
     setSelectedExternal(activity);
     setDiscipline(activity.discipline);
     setDuration('');
     setDistance('');
+  };
+
+  const registerCompletion = async (status: 'unknown' | 'skipped') => {
+    if (!alive.current || createInFlightRef.current || rpeInFlightRef.current.size || !selectedWorkout) return;
+    createInFlightRef.current = true;
+    setBusy(true); setError(null); setRegistrationOutcome(null);
+    const access = token.current;
+    const workoutId = selectedWorkout.id;
+    try {
+      if (createAttempt.current || createdIdRef.current) {
+        throw new Error('Rond eerst de opgeslagen activiteit of het eerdere opslagverzoek af.');
+      }
+      const unresolved = registrationAttempt.current;
+      if (unresolved && (unresolved.workoutId !== workoutId || unresolved.input.status !== status)) {
+        throw new Error('Herhaal eerst de vorige registratie om de status te controleren.');
+      }
+      const current = await getWorkoutRegistration(access, workoutId);
+      if (!alive.current) return;
+      if (current.planned_workout_id !== workoutId || !Number.isInteger(current.registration_revision) ||
+          !current.plan_revision_id || !['unknown', 'skipped'].includes(current.status)) {
+        throw new Error('De registratiestatus kon niet betrouwbaar worden geladen.');
+      }
+      if (current.status !== status) {
+        const attempt = unresolved ?? { workoutId, input: {
+          plan_revision_id: current.plan_revision_id,
+          expected_registration_revision: current.registration_revision, status,
+        } };
+        registrationAttempt.current = attempt;
+        const confirmed = await confirmWorkoutRegistration(access, workoutId, attempt.input);
+        if (!alive.current) return;
+        if (confirmed.planned_workout_id !== workoutId || confirmed.status !== status) {
+          throw new Error('De registratie kon niet worden bevestigd.');
+        }
+      }
+      registrationAttempt.current = null;
+      setRegistrationOutcome(status);
+      setSelectedWorkout(null); setDuration('');
+      mutationError.current = null;
+    } catch (caught) {
+      if (alive.current) {
+        if (caught && typeof caught === 'object' && 'status' in caught && typeof caught.status === 'number' &&
+            [400, 404, 409, 422].includes(caught.status)) registrationAttempt.current = null;
+        const message = caught instanceof Error ? caught.message : 'Registreren is mislukt.';
+        mutationError.current = message; setError(message);
+      }
+    } finally {
+      createInFlightRef.current = false;
+      if (alive.current) setBusy(rpeInFlightRef.current.size > 0);
+    }
   };
 
   const save = async () => {
@@ -272,6 +326,7 @@ export function useActivityController(accessToken: string) {
     mutationError.current = null;
     setError(null);
     try {
+      if (registrationAttempt.current) throw new Error('Herhaal eerst de vorige registratie om de status te controleren.');
       // A completed POST followed by a failed refresh must not create again.
       if (createdIdRef.current) { confirmed = true; await load(access, true); return; }
       if (pendingRef.current.length > 0 && !createAttempt.current) throw new Error('Rond eerst de RPE van de opgeslagen activiteit af.');
@@ -294,6 +349,7 @@ export function useActivityController(accessToken: string) {
       publishActivity(created);
       setSelectedWorkout(null);
       setSelectedExternal(null);
+      setDuration('');
       setStartedAt(new Date().toISOString());
       await load(access, true);
     } catch (caught) {
@@ -405,6 +461,7 @@ export function useActivityController(accessToken: string) {
     discipline, setDiscipline, duration, setDuration, distance, setDistance, startedAt, setStartedAt,
     athleteTimezone, busy, refreshing, error, heartRateByActivity, setHeartRateByActivity, pendingRpe, feedbackActivity,
     selectWorkout, selectExternal, save, saveRpe, confirmMatch, ensureActivitiesLoaded, refreshPendingRpe,
+    registerCompletion, registrationOutcome,
     refreshActivities, setActivitiesFocused, invalidateActivities,
   };
 }

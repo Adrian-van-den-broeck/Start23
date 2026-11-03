@@ -42,3 +42,29 @@ def test_sql_syntax_with_existing_parser() -> None:
 
     parser = pytest.importorskip("pglast")
     assert parser.parse_sql(MIGRATION.read_text())
+    assert parser.parse_sql(
+        (
+            MIGRATION.parent / "20261103135735_realized_v2_weekly_registration.sql"
+        ).read_text()
+    )
+
+
+def test_weekly_registration_is_explicit_owned_and_stale_safe() -> None:
+    sql = (
+        (MIGRATION.parent / "20261103135735_realized_v2_weekly_registration.sql")
+        .read_text()
+        .lower()
+    )
+    assert "create table private.workout_registration_events" in sql
+    assert "force row level security" in sql
+    assert "(select auth.uid())" in sql
+    assert "p_expected_registration_revision" in sql
+    assert "v_context ->> 'status' = p_status then return v_context" in sql
+    assert "for update of plan" in sql
+    assert "workout_registration_immutable" in sql
+    assert "guard_skipped_workout_activity" in sql
+    assert "get_plan_load_history_for_planning_v16" in sql
+    assert "'expected_known', revision.id is not null" in sql
+    assert "workout.status <> 'cancelled'" in sql
+    assert "get_plan_load_history_for_planning_v15" in sql
+    assert "delete from" not in sql

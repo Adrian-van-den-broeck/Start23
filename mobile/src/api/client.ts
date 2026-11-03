@@ -845,6 +845,21 @@ export function createActivity(
   }, validate.activityResponse);
 }
 
+export type WorkoutRegistration = {
+  planned_workout_id: string; plan_revision_id: string;
+  registration_revision: number; status: 'unknown' | 'skipped';
+};
+export function getWorkoutRegistration(accessToken: string, workoutId: string): Promise<WorkoutRegistration> {
+  return request(accessToken, `/api/v1/planned-workouts/${workoutId}/registration`, undefined, validate.workoutRegistration);
+}
+export function confirmWorkoutRegistration(accessToken: string, workoutId: string, input: {
+  plan_revision_id: string; expected_registration_revision: number; status: 'unknown' | 'skipped';
+}): Promise<WorkoutRegistration> {
+  return request(accessToken, `/api/v1/planned-workouts/${workoutId}/registration`, {
+    method: 'PUT', body: JSON.stringify(input),
+  }, validate.workoutRegistration);
+}
+
 export function listPlannedExternalActivities(
   accessToken: string,
   weekStart?: string,

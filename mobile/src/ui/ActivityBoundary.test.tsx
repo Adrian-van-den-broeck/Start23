@@ -52,7 +52,10 @@ afterEach(async () => {
 });
 async function openEntry() {
   const view = await render(<Host />); await view.findByText('No activities recorded yet.');
-  await fireEvent.press(view.getByRole('button', { name: 'Add activity' })); return view;
+  await fireEvent.press(view.getByRole('button', { name: 'Add activity' }));
+  // D06: the athlete explicitly enters performed time; a prescription is no default.
+  await fireEvent.changeText(view.getByLabelText('Actual duration (minutes)'), '45');
+  return view;
 }
 const rpeFour = 'Save RPE · Focus nodig, praten in zinnen. (RPE 4)';
 
@@ -61,7 +64,7 @@ test('V2 create validates existing fields, calls exact shared payload, then same
   await fireEvent.changeText(view.getByLabelText('Distance (metres, optional)'), '5000');
   await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
   await view.findByText('Activity feedback'); expect(flow.feedbackActivity?.id).toBe(pendingActivity.id);
-  expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.stringMatching(/^[\da-f-]{36}$/), { discipline: 'run', duration_minutes: '45', distance_meters: 5000, started_at: '2026-10-06T10:00:00Z', timezone: 'Europe/Amsterdam' });
+  expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.stringMatching(/^[\da-f-]{36}$/), { discipline: 'run', duration_minutes: '45', performed_duration_confirmed: true, distance_meters: 5000, started_at: '2026-10-06T10:00:00Z', timezone: 'Europe/Amsterdam' });
   expect(api.submitActivityRpeWithRefresh).not.toHaveBeenCalled(); expect(view.getAllByRole('radio')).toHaveLength(10); expect(view.getAllByTestId('activity-feedback-scroll')).toHaveLength(1);
   await fireEvent.changeText(view.getByLabelText('Average heart rate (bpm)'), '151');
   await fireEvent.press(view.getByRole('radio', { name: rpeFour })); await view.findByTestId('v2-activities');
@@ -137,7 +140,9 @@ test('athlete replacement gets a fresh logical key rather than A’s ambiguous c
   const view = await openEntry(); await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
   const firstKey = jest.mocked(api.createActivity).mock.calls[0][1];
   await view.rerender(<Host identity="athlete-b" token="token-b" />); await view.findByText('No activities recorded yet.');
-  await fireEvent.press(view.getByRole('button', { name: 'Add activity' })); await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
+  await fireEvent.press(view.getByRole('button', { name: 'Add activity' }));
+  await fireEvent.changeText(view.getByLabelText('Actual duration (minutes)'), '45');
+  await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
   expect(jest.mocked(api.createActivity).mock.calls[1][0]).toBe('token-b');
   expect(jest.mocked(api.createActivity).mock.calls[1][1]).not.toBe(firstKey);
 });
@@ -154,16 +159,18 @@ test('planned source selection keeps exact workout ID in create', async () => {
   jest.mocked(api.getCalendar).mockResolvedValue({ from_date: 'from', to_date: 'to', workouts: [workout], rest_days: [] });
   const view = await openEntry(); await fireEvent.press(view.getByRole('button', { name: 'Choose a planned or extra workout' }));
   await fireEvent.press(view.getByRole('radio', { name: new RegExp(workout.name) }));
+  await fireEvent.changeText(view.getByLabelText('Actual duration (minutes)'), '45');
   await fireEvent.press(view.getByRole('button', { name: 'Save activity' })); expect(jest.mocked(api.createActivity).mock.calls[0][2].planned_workout_id).toBe(workout.id);
 });
 
-test('V2 planned external selection uses its exact identity and existing duration default', async () => {
+test('V2 external selection retains identity and requires performed time', async () => {
   const external = { ...externalActivity, name: 'Exact external ride', scheduled_at: '2026-10-06T10:00:00Z' };
   jest.mocked(api.listPlannedExternalActivities).mockResolvedValue([external]);
   const view = await openEntry();
   await fireEvent.press(view.getByRole('button', { name: 'Choose a planned or extra workout' }));
   await fireEvent.press(view.getByRole('radio', { name: /Exact external ride.*Cycling.*Outside Wombo/ }));
-  expect(view.getByLabelText('Actual duration (minutes)').props.value).toBe('60');
+  expect(view.getByLabelText('Actual duration (minutes)').props.value).toBe('');
+  await fireEvent.changeText(view.getByLabelText('Actual duration (minutes)'), '60');
   expect(view.queryByRole('radio', { name: 'Running' })).toBeNull();
   await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
   const payload = jest.mocked(api.createActivity).mock.calls[0][2];

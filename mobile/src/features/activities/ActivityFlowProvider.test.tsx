@@ -9,6 +9,7 @@ import { activityOnboarding, completeActivity, externalActivity, pendingActivity
 jest.mock('../../api/client', () => ({
   confirmActivityMatch: jest.fn(), createActivity: jest.fn(), getActivity: jest.fn(), getCalendar: jest.fn(), getOnboarding: jest.fn(),
   listActivities: jest.fn(), listPlannedExternalActivities: jest.fn(), submitActivityRpeWithRefresh: jest.fn(),
+  getWorkoutRegistration: jest.fn(), confirmWorkoutRegistration: jest.fn(),
 }));
 let flow: ReturnType<typeof useActivityFlow>;
 function Probe() { flow = useActivityFlow(); return null; }
@@ -47,6 +48,43 @@ test('D06 duration starts unknown and selecting a prescription never confirms pe
   expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.any(String), expect.objectContaining({
     planned_workout_id: workout.id, duration_minutes: '37', performed_duration_confirmed: true,
   }));
+});
+
+test('explicit skipped registration uses exact revision and creates no zero-minute activity', async () => {
+  await loaded(); await act(() => flow.selectWorkout(workout));
+  jest.mocked(api.getWorkoutRegistration).mockResolvedValue({ planned_workout_id: workout.id, plan_revision_id: 'approved-revision', registration_revision: 0, status: 'unknown' });
+  jest.mocked(api.confirmWorkoutRegistration).mockResolvedValue({ planned_workout_id: workout.id, plan_revision_id: 'approved-revision', registration_revision: 1, status: 'skipped' });
+  await act(() => flow.registerCompletion('skipped'));
+  expect(api.confirmWorkoutRegistration).toHaveBeenCalledWith('token-a', workout.id, {
+    plan_revision_id: 'approved-revision', expected_registration_revision: 0, status: 'skipped',
+  });
+  expect(flow.registrationOutcome).toBe('skipped'); expect(flow.selectedWorkout).toBeNull();
+  expect(flow.duration).toBe(''); expect(api.createActivity).not.toHaveBeenCalled();
+});
+
+test('lost skipped response reconciles by authoritative read without another mutation', async () => {
+  await loaded(); await act(() => flow.selectWorkout(workout));
+  jest.mocked(api.getWorkoutRegistration)
+    .mockResolvedValueOnce({ planned_workout_id: workout.id, plan_revision_id: 'approved-revision', registration_revision: 0, status: 'unknown' })
+    .mockResolvedValueOnce({ planned_workout_id: workout.id, plan_revision_id: 'approved-revision', registration_revision: 1, status: 'skipped' });
+  jest.mocked(api.confirmWorkoutRegistration).mockRejectedValueOnce(new Error('Response lost'));
+  await act(() => flow.registerCompletion('skipped'));
+  expect(flow.error).toBe('Response lost'); expect(flow.registrationOutcome).toBeNull();
+  await act(() => flow.save()); expect(api.createActivity).not.toHaveBeenCalled();
+  await act(() => flow.registerCompletion('skipped'));
+  expect(api.confirmWorkoutRegistration).toHaveBeenCalledTimes(1);
+  expect(flow.registrationOutcome).toBe('skipped'); expect(flow.error).toBeNull();
+});
+
+test('unknown reset is a separate stale-safe registration decision', async () => {
+  await loaded(); await act(() => flow.selectWorkout(workout));
+  jest.mocked(api.getWorkoutRegistration).mockResolvedValue({ planned_workout_id: workout.id, plan_revision_id: 'approved-revision', registration_revision: 2, status: 'skipped' });
+  jest.mocked(api.confirmWorkoutRegistration).mockResolvedValue({ planned_workout_id: workout.id, plan_revision_id: 'approved-revision', registration_revision: 3, status: 'unknown' });
+  await act(() => flow.registerCompletion('unknown'));
+  expect(api.confirmWorkoutRegistration).toHaveBeenCalledWith('token-a', workout.id, {
+    plan_revision_id: 'approved-revision', expected_registration_revision: 2, status: 'unknown',
+  });
+  expect(flow.registrationOutcome).toBe('unknown'); expect(api.createActivity).not.toHaveBeenCalled();
 });
 
 test('owner is lazy; concurrent entry reads and rerenders issue one exact four-read load', async () => {
@@ -170,6 +208,7 @@ test('failed feedback retains pending identity/HR/key; explicit retry succeeds a
   await act(() => flow.saveRpe('activity-a', 4)); expect(flow.pendingRpe).toEqual([pendingActivity]); expect(flow.heartRateByActivity).toEqual({ 'activity-a': '148' });
   expect(flow.error).toBe('Safe feedback failure'); expect(api.listActivities).toHaveBeenCalledTimes(2);
   jest.mocked(api.listActivities).mockResolvedValue([completeActivity]); await act(() => flow.saveRpe('activity-a', 4));
+  await act(() => flow.setDuration('45'));
   await act(() => flow.save()); expect(api.createActivity).toHaveBeenCalledTimes(2);
   expect(jest.mocked(api.createActivity).mock.calls[1][1]).not.toBe(firstKey);
 });
@@ -298,4 +337,5 @@ test('identity replacement ignores late pending read and late feedback success',
   await act(async () => { pending.resolve([pendingActivity]); feedback.resolve(completeActivity); await Promise.all([read, save]); });
   expect(flow.activities).toEqual([]); expect(flow.pendingRpe).toEqual([]); expect(flow.error).toBeNull(); expect(api.listActivities).toHaveBeenCalledTimes(2);
 });
+
 

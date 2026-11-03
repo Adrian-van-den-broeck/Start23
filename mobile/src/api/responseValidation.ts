@@ -13,6 +13,12 @@ const strings = (value: unknown) => array(value, text);
 const discipline = (value: unknown) => oneOf(value, ['run', 'bike', 'swim']);
 const fields = (value: ObjectValue, names: string[], check: (item: unknown) => boolean) => names.every(name => check(value[name]));
 
+export function workoutRegistration(value: unknown): boolean {
+  return object(value) && fields(value, ['planned_workout_id', 'plan_revision_id'], id) &&
+    integer(value.registration_revision) && value.registration_revision >= 0 &&
+    oneOf(value.status, ['unknown', 'skipped']);
+}
+
 export function activityResponse(value: unknown): boolean {
   if (!object(value)) return false;
   return fields(value, ['id', 'started_at', 'timezone', 'created_at', 'updated_at'], id) &&

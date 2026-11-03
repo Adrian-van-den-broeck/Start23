@@ -194,3 +194,16 @@ class ActivityMatchConfirmation(PublicActivityModel):
     """Explicit athlete confirmation for one suggested planned-workout match."""
 
     planned_workout_id: UUID
+
+
+class WorkoutRegistrationResponse(PublicActivityModel):
+    planned_workout_id: UUID
+    plan_revision_id: UUID
+    registration_revision: int = Field(ge=0)
+    status: Literal["unknown", "skipped"]
+
+
+class WorkoutRegistrationConfirmation(PublicActivityModel):
+    plan_revision_id: UUID
+    expected_registration_revision: int = Field(ge=0, strict=True)
+    status: Literal["unknown", "skipped"]

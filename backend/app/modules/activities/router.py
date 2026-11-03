@@ -25,6 +25,8 @@ from .schemas import (
     ActivityResponse,
     ActivityRpeSubmission,
     ActivitySummaryInput,
+    WorkoutRegistrationConfirmation,
+    WorkoutRegistrationResponse,
 )
 from .service import (
     ActivityCorrectionConflictError,
@@ -55,6 +57,41 @@ def get_activity_service(
         repository,
         enable_estimates=request.app.state.settings.realized_v2_selection_enabled,
     )
+
+
+@router.get(
+    "/planned-workouts/{workout_id}/registration",
+    response_model=WorkoutRegistrationResponse,
+)
+async def get_workout_registration(
+    workout_id: UUID,
+    access_token: Annotated[str, Depends(get_access_token)],
+    _: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[ActivityService, Depends(get_activity_service)],
+) -> WorkoutRegistrationResponse:
+    try:
+        return await service.workout_registration(access_token, workout_id)
+    except Exception as error:
+        _raise_public_error(error)
+
+
+@router.put(
+    "/planned-workouts/{workout_id}/registration",
+    response_model=WorkoutRegistrationResponse,
+)
+async def confirm_workout_registration(
+    workout_id: UUID,
+    confirmation: WorkoutRegistrationConfirmation,
+    access_token: Annotated[str, Depends(get_access_token)],
+    _: Annotated[AuthenticatedIdentity, Depends(get_authenticated_identity)],
+    service: Annotated[ActivityService, Depends(get_activity_service)],
+) -> WorkoutRegistrationResponse:
+    try:
+        return await service.workout_registration(
+            access_token, workout_id, confirmation
+        )
+    except Exception as error:
+        _raise_public_error(error)
 
 
 def _raise_public_error(error: Exception) -> NoReturn:

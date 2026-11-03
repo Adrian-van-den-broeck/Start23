@@ -326,6 +326,7 @@ test('completed idempotent create replay reconciles the exact attempt and only t
   expect(jest.mocked(api.createActivity).mock.calls[1][1]).toBe(key);
   expect(flow.pendingRpe).toEqual([]);
   jest.mocked(api.createActivity).mockImplementationOnce(async () => { server = [remote]; return remote; });
+  await act(() => flow.setDuration('45')); // New performed activity requires its own duration.
   await act(() => flow.save());
   expect(jest.mocked(api.createActivity).mock.calls[2][1]).not.toBe(key);
 });
@@ -339,6 +340,7 @@ test('definitively deleted locally created activity can be replaced only by a ne
   await act(() => flow.saveRpe(pendingActivity.id, 4));
   expect(flow.pendingRpe).toEqual([]); expect(api.createActivity).toHaveBeenCalledTimes(1);
   jest.mocked(api.createActivity).mockImplementationOnce(async () => { server = [remote]; return remote; });
+  await act(() => flow.setDuration('45')); // New performed activity requires its own duration.
   await act(() => flow.save());
   expect(api.createActivity).toHaveBeenCalledTimes(2);
   expect(jest.mocked(api.createActivity).mock.calls[1][1]).not.toBe(key);
@@ -353,6 +355,7 @@ test('authoritative remote feedback completion releases a known local create wit
   server = [completeActivity]; await act(() => flow.refreshActivities());
   expect(flow.pendingRpe).toEqual([]); expect(api.createActivity).toHaveBeenCalledTimes(1);
   jest.mocked(api.createActivity).mockImplementationOnce(async () => { server = [remote]; return remote; });
+  await act(() => flow.setDuration('45')); // New performed activity requires its own duration.
   await act(() => flow.save());
   expect(jest.mocked(api.createActivity).mock.calls[1][1]).not.toBe(firstKey);
 });
@@ -368,4 +371,5 @@ test('rapid choices while exact activity GET is unresolved resolve and mutate on
   await act(async () => { response.resolve(remote); await first; });
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
 });
+
 

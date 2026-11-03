@@ -20,6 +20,8 @@ export function ActivityEntryScreen(props: {
   onDiscipline: (value: Discipline) => void; onDuration: (value: string) => void;
   onDistance: (value: string) => void; onStartedAt: (value: string) => void;
   onChoose: (choice: ActivityChoice | null) => void; onSave: () => Promise<void>; onBack: () => void;
+  onRegistration?: (status: 'unknown' | 'skipped') => Promise<void>;
+  registrationOutcome?: 'unknown' | 'skipped' | null;
 }) {
   const { t } = useLanguage();
   const [choosing, setChoosing] = useState(false);
@@ -28,6 +30,7 @@ export function ActivityEntryScreen(props: {
       scrollProps={{ keyboardShouldPersistTaps: 'handled', testID: 'activity-entry-scroll' }}>
       <ActivityStatus busy={props.busy} error={props.error} />
       <Text>{t('activity.registerHint')}</Text>
+      {props.registrationOutcome ? <Text accessibilityRole="alert">{t(props.registrationOutcome === 'skipped' ? 'activities.skippedConfirmed' : 'activities.unknownConfirmed')}</Text> : null}
       <Card elevated padding="form" style={styles.stack}>
         <Text variant="sectionTitle" accessibilityRole="header">{props.selectedName ?? t('activity.unplanned')}</Text>
         <Button label={t('activities.chooseContext')} variant="secondary" trailingIcon="chevron" disabled={props.busy}
@@ -59,6 +62,12 @@ export function ActivityEntryScreen(props: {
         <Button label={t('activity.save')} trailingIcon="forward" busy={props.busy} disabled={!props.timezone || props.blocked}
           disabledReason={props.blocked ? t('activities.blocked') : !props.timezone ? t('activities.timezoneMissing') : undefined}
           onPress={props.onSave} />
+        {props.onRegistration && props.choices.some(choice => choice.id === props.selectedId && choice.kind === 'workout') ? <View style={styles.stack}>
+          <Button label={t('activities.confirmSkipped')} variant="secondary" disabled={props.busy || props.blocked}
+            onPress={() => props.onRegistration!('skipped')} />
+          <Button label={t('activities.resetUnknown')} variant="secondary" disabled={props.busy || props.blocked}
+            onPress={() => props.onRegistration!('unknown')} />
+        </View> : null}
       </Card>
       {props.controls}
     </Screen>

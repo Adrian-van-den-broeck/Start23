@@ -45,6 +45,8 @@ from .schemas import (
     ActivityResponse,
     ActivityRpeSubmission,
     ActivitySummaryInput,
+    WorkoutRegistrationConfirmation,
+    WorkoutRegistrationResponse,
 )
 
 
@@ -103,6 +105,26 @@ class ActivityService:
         return self._response(
             await self._repository.fetch_activity(access_token, activity_id)
         )
+
+    async def workout_registration(
+        self,
+        access_token: str,
+        workout_id: UUID,
+        confirmation: WorkoutRegistrationConfirmation | None = None,
+    ) -> WorkoutRegistrationResponse:
+        row = (
+            await self._repository.get_workout_registration(access_token, workout_id)
+            if confirmation is None
+            else await self._repository.confirm_workout_registration(
+                access_token, workout_id, confirmation.model_dump(mode="json")
+            )
+        )
+        try:
+            return WorkoutRegistrationResponse.model_validate(row)
+        except ValueError as error:
+            raise ActivityDomainError(
+                "Stored registration state is invalid."
+            ) from error
 
     async def list(
         self,

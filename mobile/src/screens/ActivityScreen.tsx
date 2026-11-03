@@ -124,7 +124,7 @@ export function ActivityScreen({
   const { activities, workouts, externalActivities, selectedWorkout, selectedExternal,
     discipline, setDiscipline, duration, setDuration, distance, setDistance, startedAt, setStartedAt,
     athleteTimezone, busy, refreshing, refreshActivities, setActivitiesFocused, error, heartRateByActivity, setHeartRateByActivity, pendingRpe,
-    feedbackActivity, selectWorkout, selectExternal, save, saveRpe, confirmMatch,
+    feedbackActivity, selectWorkout, selectExternal, save, saveRpe, confirmMatch, registerCompletion, registrationOutcome,
   } = useActivityFlow();
   const [editingRpeActivityId, setEditingRpeActivityId] = useState<string | null>(null);
   useEffect(() => {
@@ -321,6 +321,15 @@ export function ActivityScreen({
           >
             <Text style={styles.actionText}>{t('activity.save')}</Text>
           </Pressable>
+          {registrationOutcome ? <Text accessibilityRole="alert">{t(registrationOutcome === 'skipped' ? 'activities.skippedConfirmed' : 'activities.unknownConfirmed')}</Text> : null}
+          {selectedWorkout ? <>
+            <Pressable accessibilityRole="button" disabled={busy || pendingRpe.length > 0} onPress={() => void registerCompletion('skipped')}>
+              <Text style={styles.link}>{t('activities.confirmSkipped')}</Text>
+            </Pressable>
+            <Pressable accessibilityRole="button" disabled={busy || pendingRpe.length > 0} onPress={() => void registerCompletion('unknown')}>
+              <Text style={styles.link}>{t('activities.resetUnknown')}</Text>
+            </Pressable>
+          </> : null}
         </View>
 
         <View style={styles.recentHeading}>

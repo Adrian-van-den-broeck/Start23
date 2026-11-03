@@ -257,3 +257,34 @@ def test_initial_v2_estimate_replay_and_wrong_owner_do_not_duplicate(
     )
     assert denied.status_code == 404
     assert repo.snapshot_history == []
+
+
+def test_explicit_skipped_unknown_and_stale_registration(
+    v2_client: tuple[TestClient, V2MemoryRepository],
+) -> None:
+    client, repo = v2_client
+    owner = repo._token_owners["athlete-a"]
+    workout_id = repo.planned_workouts[owner]
+    path = f"/api/v1/planned-workouts/{workout_id}/registration"
+    initial = client.get(path, headers=_headers())
+    assert initial.status_code == 200
+    assert initial.json()["status"] == "unknown"
+    payload = {
+        "status": "skipped",
+        "plan_revision_id": initial.json()["plan_revision_id"],
+        "expected_registration_revision": 0,
+    }
+    for _ in range(2):
+        result = client.put(path, headers=_headers(), json=payload)
+        assert result.status_code == 200 and result.json()["status"] == "skipped"
+        assert result.json()["registration_revision"] == 1
+    stale = client.put(path, headers=_headers(), json={**payload, "status": "unknown"})
+    assert stale.status_code == 409
+    restored = client.put(
+        path,
+        headers=_headers(),
+        json={**payload, "status": "unknown", "expected_registration_revision": 1},
+    )
+    assert restored.status_code == 200 and restored.json()["status"] == "unknown"
+    assert client.get(path, headers=_headers("athlete-b")).status_code == 404
+    assert len(repo.registration_events[workout_id]) == 2
