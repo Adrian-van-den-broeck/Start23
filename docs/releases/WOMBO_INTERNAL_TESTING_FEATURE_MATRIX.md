@@ -1,0 +1,38 @@
+> Historical audit snapshot. Current remediation and decisions: [remediation report](WOMBO_INTERNAL_TESTING_REMEDIATION_REPORT.md). The original audit worktree remains unchanged.
+
+# WOMBO Internal Testing feature matrix
+
+2026-11-04. Audited cumulative SHA `f5831d3cbde04f60053402eb3083a1f1e6ade7a8`, plus the uncommitted preparation overlay identified in the readiness report. Overall backend and mobile decisions remain **NO-GO**. “Included” below describes source inclusion, not distribution approval.
+
+| Feature | Actual path / gate | Release assessment |
+| --- | --- | --- |
+| Accepted UI V2 through Batch 12 | `src/ui-v2`, shared boundaries/controllers, `UiVersionProvider`; accepted integration `aff74558...` is an ancestor. | Included. V1 default without public UI flag; release-build V2 switch works. Device verification open. |
+| UI V1/V2 shared state | Planning/Activity/Calendar providers and navigation mutation locks; no separate backend data model. | Included; automated owner/revision/lock tests pass. Switching never rolls back server state. |
+| Login and refresh | `AuthProvider`, SecureStore refresh credentials, bounded refresh/retry and cancellation. | A8 included; automated expiry/network/account regressions pass; real-device refresh open. |
+| Onboarding/profile/race/zones | Existing typed API routes and thin shared forms; pending zone approvals. | Existing scope retained. No invented thresholds or automatic zone activation; hosted two-token/device checks open. |
+| Training-plan creation and recovery | `usePlanningController` calls `/weekly-plans/recovery` on startup; server owner-scoped discovery. | A6 included, **mobile-only blocker**: route absent from observed hosted OpenAPI. Errors retain known state and fail closed, rather than proving absence. |
+| Calendar week/month/detail/move | Existing Calendar provider, server immutable occurrence/revision data, move preconditions. | Included; automated navigation, date, revision and retry coverage passes. |
+| Check-in injury/restriction round-trip and handoff | A3/A4 shared saved context, explicit review and pending-plan handoff. | Included; automated tests pass. |
+| Check-in proposal replay | A5 service calls `get_checkin_plan_proposal`; migration `20261026224844`. | **Backend blocker** until schema/grants/atomic replay are established. Not gated by V2 flags. |
+| Activity creation/completion | Legacy activity routes/RPCs when V2 off; shared Activity provider. | Existing scope included. Overlay removes V2-only create field before network; user-entered duration remains required where already required. |
+| Activity history and pending RPE synchronization | A7 token/owner-scoped shared caches, authoritative rereads and Calendar invalidation. | Included; automated same-owner and account-switch tests pass. |
+| Session-RPE and current-week correction | Existing RPE endpoint, expected-current-value precondition, original stored provenance. | Legacy behavior retained while V2 selection is off; retry/correction tests pass. New labels only dispatch from authoritative versioned activity responses. |
+| Actual-duration confirmation | Input starts blank; choosing a prescription does not confirm performed time. | Retained. Overlay omits `performed_duration_confirmed` on the wire until V2 release approval; no inferred duration. |
+| Explicit skipped versus unknown database registration | New registration API; repository checks storage readiness before I/O. Original mobile buttons had no matching gate. | **Disabled in prepared overlay**: hardcoded `realizedV2MobileEnabled=false`, both UIs hide actions, API helpers reject before fetch. No env variable can turn it on. Old unregistered work is not relabeled skipped. |
+| Realized V2 calculation/storage/weekly consumers | `START23_REALIZED_V2_STORAGE_READY=false`, `...SELECTION_ENABLED=false`; v16/v4 dispatch only with storage ready. | **Must remain off**. Settings reject readiness in staging/production. Missing storage registration refuses before RPC. Legacy v15/v3 paths remain selected. Historical provenance is preserved. |
+| Realized V2 correction/history after future activation | Correction dispatch follows stored version; service can require v2 RPC for existing v2 provenance. | Turning selection off alone would not remove storage-reader/correction dependencies. No current V2 data was inspected; do not assume a flag rollback erases this requirement. |
+| New 61-workout catalog / later source revisions | `joren_draft.py`, `joren_c2_verification.py`, `joren_c21_corrections.py` are offline evidence modules; no active catalog/router imports. Draft status fixed INACTIVE/PENDING; no operational method. | **Inactive**. No source import into runtime templates, no new migration, no mobile catalog dependency or launch hook. Old current catalog remains authoritative. |
+| Corrected swim source derivative | C2.1 immutable overlay retained separately from original sources. | Source review only. No active workouts/methods, pace-to-duration inference or runtime source replacement. |
+| Lighter beginner workouts | Real new sources pending; no synthetic sessions or shortened substitutes supplied. | **Unavailable**, pending Joren and later acceptance. |
+| Planned-load method selection / new sport allocation | Offline C2 policy evidence; no planner import of new active-time intensity helper. | **Inactive**. No unapproved method selection, allocation, progression or coefficient change. |
+| Incomplete swimming realization | No new validated swim pace/power converter; distance-only sessions cannot fabricate time. | **Unavailable**; existing supported observation behavior only. |
+| Catalog C3–C8 | No activated implementation/entry path in candidate. | **Disabled/deferred**; require separate acceptance, storage, compatibility and release verification. |
+| Injury/recovery/taper safeguards | Existing deterministic Python precedence and explicit athlete approvals retained; restrictions never auto-clear. | Included. No relaxation to accommodate missing catalog coverage; fail-closed results remain failures. |
+| Offline/ambiguous responses/performance | A8 deadlines, owner cancellation, preserved credentials; A9 bounded local process planner and shared reads. | Included. Automated retry and responsiveness parity coverage; no production latency or device success inferred. |
+| Optional Polar / other unfinished capabilities | Existing Polar configuration requires complete credentials and production legal/privacy/owner approvals when environment correctly production; non-race/unsupported paths remain capability/fail-closed. | Do not activate. Hosted credentials/approval state unknown; observed production `local` environment weakens confidence in deployed guard enforcement. |
+
+No code path was considered disabled merely because a report says so. Inspections covered router registration, settings construction, repository dispatch, active catalog imports, mobile callbacks, transport serialization and deployment hooks. Source statuses alone were not used as proof of runtime isolation.
+
+Regression overlay files are `src/lib/releaseGates.ts`, `src/api/client.ts`, activity input builder, V1 activity screen and V2 activity boundary, plus focused expected-payload/transport/UI tests. The gate is a release restriction, not approval of any new physiology. A6 remains enabled and incompatible with the observed backend, which is why this tree is not called a safe mobile-only candidate.
+
+No hosted feature flag, data, tester list, release or service was changed.

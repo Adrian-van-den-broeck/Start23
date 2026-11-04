@@ -1,0 +1,25 @@
+{
+  "base_sha": "f5831d3cbde04f60053402eb3083a1f1e6ade7a8",
+  "files": {
+    "backend/.env.example": "4de5ecde9a1d271624450a87b662859839818872b34823c62994a996bdd71dad",
+    "mobile/package-lock.json": "d87e5dcbe502adffc2bf30d045841802359dff6d891c09bae02d7f269ee16c9f",
+    "mobile/package.json": "89ed027f375b613ed019cd57b8e1533f2edbd50558d43b39c3397049e7802d09",
+    "mobile/scripts/verify-dependency-security.cjs": "a31ea5afa35a35e5037698aa26c53e8abf053330e2b16ea79682d37293e9ffb0",
+    "mobile/src/api/client.test.ts": "3f2b73bb7899c91925717b89dc399d958e200ef2f281b89ad537f162450698c2",
+    "mobile/src/api/client.ts": "80a615c5bf25809fa89d8cfeb165f614adb38464da6c3c0d810f664d81aadea9",
+    "mobile/src/api/planningRecovery.ts": "fb38235bd577c504990a72a67725cbd899f020288b86ea115c46feff5965b462",
+    "mobile/src/api/planningRecoveryCompatibility.test.ts": "31312c4479e09a94bb056e74995733a9a385a315fd9f6ba7b809e03202cc4079",
+    "mobile/src/features/activities/ActivityFlowProvider.test.tsx": "45bdd6a7c3b3fd5159728fa7aa25de778c27366a3ab609f2ae544083ccee7852",
+    "mobile/src/features/activities/activityCreateInput.ts": "41f5ff051da535babd6a25e8f8dd56439688e0edbb5d35e7cdde3d9ea23e506f",
+    "mobile/src/features/planning/planningRecovery.test.tsx": "95319869ce0c52a6c5570d3ac58f00bbe19d5554add41c3a172522d05a941455",
+    "mobile/src/features/planning/usePlanningController.ts": "75cef4b36d1f1481c2740c62147b14e9f0bb732a2d6f0a1aa7fc1244ab3402dd",
+    "mobile/src/i18n/LanguageProvider.tsx": "7314dd23c17223882ddf8edbaf0294ddef65ec181336d37339074c9e5897f3d9",
+    "mobile/src/lib/releaseGates.ts": "2e073f5dcfaafe4f6a9063de79094c582bcef6a4d0ff5da7c2139980040f58ca",
+    "mobile/src/screens/ActivityScreen.tsx": "07be56268138ec9785e16067540dda4f5ca153d8c250d866ed0cb8f81df202cc",
+    "mobile/src/screens/PlanningScreen.tsx": "ef15bdbb78efbf38e5612b8e3b0247d7b84a9436b49080620717b66d832bd4f9",
+    "mobile/src/ui/ActivityBoundary.test.tsx": "fa6738bade321f4c3e448b29324902b455621859d42d62464b2d6d2871f5f5d4",
+    "mobile/src/ui/ActivityBoundary.tsx": "bf2f249d79763b1d2049ec01a7e313cd5f64ea55d8cfb7861cdb35068e0f770a",
+    "scripts/verify-wombo-android-release.ps1": "cbe72cfdf08a9d5c9ea0fe51f359177e4c5c6abf1f70adc0956cc3fc11d44bc6"
+  },
+  "final_software_sha": "8f75140169e074111e868d48bcf67e82aed8f899"
+}

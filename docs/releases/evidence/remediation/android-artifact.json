@@ -1,0 +1,25 @@
+{
+  "sha256": "47640a8152f2c50282ac37a335256bec0fe1c93f86bf1bad6b1e718e5acef370",
+  "size_bytes": 32545847,
+  "merged_manifest_package": "com.adrivdbs.wombo",
+  "version_name": "1.0.0",
+  "local_version_code": "1",
+  "aab_manifest_contains_package": true,
+  "bundle_contains_production_api": true,
+  "bundle_contains_placeholder_key": true,
+  "bundle_contains_r6_staging": false,
+  "source_files_verified": 285,
+  "zip_integrity": "pass",
+  "signature_verified": true,
+  "certificate_owner": "Android Debug",
+  "certificate_sha256": "FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C",
+  "production_upload_signed": false,
+  "distributable": false,
+  "raw_hermes_binary_pattern_match": true,
+  "source_content_secret_key_pattern_modules": [],
+  "source_content_prefix_marker_modules": [
+    "/node_modules/@supabase/supabase-js/dist/index.cjs",
+    "/node_modules/@supabase/functions-js/dist/main/FunctionsClient.js"
+  ],
+  "binary_scan_limitation": "Hermes strings are stored contiguously; a raw prefix regex may cross string boundaries. Marker alone is not credential evidence."
+}
