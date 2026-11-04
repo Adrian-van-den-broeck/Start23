@@ -1,0 +1,1419 @@
+{
+  "bound_seconds_including_imports": 8,
+  "continuation": {
+    "measured": {
+      "basis": "realized_progression",
+      "planner": {
+        "active_time_compliance": {
+          "bike": {
+            "high_ratio": "0",
+            "high_seconds": "0",
+            "low_seconds": "2400",
+            "status": "ACCEPTED"
+          },
+          "run": {
+            "high_ratio": "0",
+            "high_seconds": "0",
+            "low_seconds": "1500",
+            "status": "ACCEPTED"
+          },
+          "swim": {
+            "high_ratio": null,
+            "high_seconds": "0",
+            "low_seconds": "0",
+            "status": "UNVERIFIED"
+          }
+        },
+        "budget_ceiling": "WITHIN",
+        "count": 3,
+        "dates": [
+          "2026-11-02",
+          "2026-11-05",
+          "2026-11-06"
+        ],
+        "fit": "TARGET_NEAREST_FIT",
+        "known_minutes": "65",
+        "occurrence_identity_status": "UNALLOCATED_DRAFT",
+        "one_per_sport": true,
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "phase": "build",
+        "policy_result": "UNVERIFIED_SWIM_TIME",
+        "selected_p": "43.1",
+        "source_ids": [
+          "TR-RUN-024",
+          "TR-BIKE-023",
+          "TR-SWIM-021"
+        ],
+        "sport_counts": {
+          "bike": 1,
+          "run": 1,
+          "swim": 1
+        },
+        "sport_p": {
+          "bike": "20.2",
+          "run": "14.5",
+          "swim": "8.4"
+        },
+        "sport_share": {
+          "bike": "0.4686774941995359628770301624",
+          "run": "0.3364269141531322505800464037",
+          "swim": "0.1948955916473317865429234339"
+        },
+        "target": "47.410",
+        "target_basis": "realized_progression",
+        "unknown_swim_time": true,
+        "warnings": [
+          "distance_only_swim_excluded_from_time_ratio",
+          "target_outside_catalog_capacity"
+        ]
+      },
+      "registration": {
+        "known_subtotal": "42",
+        "progression_eligible": true,
+        "reason": null
+      },
+      "target": "47.410"
+    },
+    "partial_observed": {
+      "basis": "prior_planned_hold",
+      "planner": {
+        "active_time_compliance": {
+          "bike": {
+            "high_ratio": "0",
+            "high_seconds": "0",
+            "low_seconds": "2400",
+            "status": "ACCEPTED"
+          },
+          "run": {
+            "high_ratio": "0",
+            "high_seconds": "0",
+            "low_seconds": "1500",
+            "status": "ACCEPTED"
+          },
+          "swim": {
+            "high_ratio": null,
+            "high_seconds": "0",
+            "low_seconds": "0",
+            "status": "UNVERIFIED"
+          }
+        },
+        "budget_ceiling": "WITHIN",
+        "count": 3,
+        "dates": [
+          "2026-11-02",
+          "2026-11-05",
+          "2026-11-06"
+        ],
+        "fit": "EXACT_LOAD",
+        "known_minutes": "65",
+        "occurrence_identity_status": "UNALLOCATED_DRAFT",
+        "one_per_sport": true,
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "phase": "build",
+        "policy_result": "UNVERIFIED_SWIM_TIME",
+        "selected_p": "43.1",
+        "source_ids": [
+          "TR-RUN-024",
+          "TR-BIKE-023",
+          "TR-SWIM-021"
+        ],
+        "sport_counts": {
+          "bike": 1,
+          "run": 1,
+          "swim": 1
+        },
+        "sport_p": {
+          "bike": "20.2",
+          "run": "14.5",
+          "swim": "8.4"
+        },
+        "sport_share": {
+          "bike": "0.4686774941995359628770301624",
+          "run": "0.3364269141531322505800464037",
+          "swim": "0.1948955916473317865429234339"
+        },
+        "target": "43.1",
+        "target_basis": "prior_planned_hold",
+        "unknown_swim_time": true,
+        "warnings": [
+          "distance_only_swim_excluded_from_time_ratio"
+        ]
+      },
+      "registration": {
+        "known_subtotal": "37",
+        "progression_eligible": false,
+        "reason": "partial_or_unavailable_load"
+      },
+      "target": "43.1"
+    },
+    "skipped": {
+      "basis": "realized_baseline",
+      "planner": {
+        "code": "swipe_selection_invalid",
+        "outcome": "FAIL_CLOSED"
+      },
+      "registration": {
+        "known_subtotal": "34",
+        "progression_eligible": true,
+        "reason": null
+      },
+      "target": "34"
+    },
+    "third_after_incomplete_second": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "2400",
+          "status": "ACCEPTED"
+        },
+        "run": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "1500",
+          "status": "ACCEPTED"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "UNVERIFIED"
+        }
+      },
+      "budget_ceiling": "WITHIN",
+      "count": 3,
+      "dates": [
+        "2026-11-09",
+        "2026-11-12",
+        "2026-11-13"
+      ],
+      "fit": "EXACT_LOAD",
+      "known_minutes": "65",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": true,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "build",
+      "policy_result": "UNVERIFIED_SWIM_TIME",
+      "selected_p": "43.1",
+      "source_ids": [
+        "TR-RUN-024",
+        "TR-BIKE-023",
+        "TR-SWIM-021"
+      ],
+      "sport_counts": {
+        "bike": 1,
+        "run": 1,
+        "swim": 1
+      },
+      "sport_p": {
+        "bike": "20.2",
+        "run": "14.5",
+        "swim": "8.4"
+      },
+      "sport_share": {
+        "bike": "0.4686774941995359628770301624",
+        "run": "0.3364269141531322505800464037",
+        "swim": "0.1948955916473317865429234339"
+      },
+      "target": "43.1",
+      "target_basis": "prior_planned_hold",
+      "unknown_swim_time": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio"
+      ]
+    },
+    "unknown": {
+      "basis": "prior_planned_hold",
+      "planner": {
+        "active_time_compliance": {
+          "bike": {
+            "high_ratio": "0",
+            "high_seconds": "0",
+            "low_seconds": "2400",
+            "status": "ACCEPTED"
+          },
+          "run": {
+            "high_ratio": "0",
+            "high_seconds": "0",
+            "low_seconds": "1500",
+            "status": "ACCEPTED"
+          },
+          "swim": {
+            "high_ratio": null,
+            "high_seconds": "0",
+            "low_seconds": "0",
+            "status": "UNVERIFIED"
+          }
+        },
+        "budget_ceiling": "WITHIN",
+        "count": 3,
+        "dates": [
+          "2026-11-02",
+          "2026-11-05",
+          "2026-11-06"
+        ],
+        "fit": "EXACT_LOAD",
+        "known_minutes": "65",
+        "occurrence_identity_status": "UNALLOCATED_DRAFT",
+        "one_per_sport": true,
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "phase": "build",
+        "policy_result": "UNVERIFIED_SWIM_TIME",
+        "selected_p": "43.1",
+        "source_ids": [
+          "TR-RUN-024",
+          "TR-BIKE-023",
+          "TR-SWIM-021"
+        ],
+        "sport_counts": {
+          "bike": 1,
+          "run": 1,
+          "swim": 1
+        },
+        "sport_p": {
+          "bike": "20.2",
+          "run": "14.5",
+          "swim": "8.4"
+        },
+        "sport_share": {
+          "bike": "0.4686774941995359628770301624",
+          "run": "0.3364269141531322505800464037",
+          "swim": "0.1948955916473317865429234339"
+        },
+        "target": "43.1",
+        "target_basis": "prior_planned_hold",
+        "unknown_swim_time": true,
+        "warnings": [
+          "distance_only_swim_excluded_from_time_ratio"
+        ]
+      },
+      "registration": {
+        "known_subtotal": "34",
+        "progression_eligible": false,
+        "reason": "unknown_workout_completion"
+      },
+      "target": "43.1"
+    }
+  },
+  "one_each_combinations": {
+    "one_each_all_easy_within_45_count": 33,
+    "scoring": "UNAPPROVED diagnostic absolute share-error, then budget distance, then IDs",
+    "top_share_fits": [
+      {
+        "ids": [
+          "TR-BIKE-023",
+          "TR-RUN-023",
+          "TR-SWIM-021"
+        ],
+        "shares": [
+          "101/201",
+          "58/201",
+          "14/67"
+        ],
+        "total": "40.2"
+      },
+      {
+        "ids": [
+          "TR-BIKE-023",
+          "TR-RUN-025",
+          "TR-SWIM-021"
+        ],
+        "shares": [
+          "101/197",
+          "54/197",
+          "42/197"
+        ],
+        "total": "39.4"
+      },
+      {
+        "ids": [
+          "TR-BIKE-023",
+          "TR-RUN-024",
+          "TR-SWIM-021"
+        ],
+        "shares": [
+          "202/431",
+          "145/431",
+          "84/431"
+        ],
+        "total": "43.1"
+      },
+      {
+        "ids": [
+          "TR-BIKE-022",
+          "TR-RUN-025",
+          "TR-SWIM-021"
+        ],
+        "shares": [
+          "151/343",
+          "108/343",
+          "12/49"
+        ],
+        "total": "34.3"
+      },
+      {
+        "ids": [
+          "TR-BIKE-022",
+          "TR-RUN-022",
+          "TR-SWIM-021"
+        ],
+        "shares": [
+          "151/322",
+          "87/322",
+          "6/23"
+        ],
+        "total": "32.2"
+      },
+      {
+        "ids": [
+          "TR-BIKE-023",
+          "TR-RUN-026",
+          "TR-SWIM-021"
+        ],
+        "shares": [
+          "101/224",
+          "81/224",
+          "3/16"
+        ],
+        "total": "44.8"
+      },
+      {
+        "ids": [
+          "TR-BIKE-023",
+          "TR-RUN-022",
+          "TR-SWIM-021"
+        ],
+        "shares": [
+          "202/373",
+          "87/373",
+          "84/373"
+        ],
+        "total": "37.3"
+      },
+      {
+        "ids": [
+          "TR-BIKE-024",
+          "TR-RUN-025",
+          "TR-SWIM-021"
+        ],
+        "shares": [
+          "21/37",
+          "9/37",
+          "7/37"
+        ],
+        "total": "44.4"
+      },
+      {
+        "ids": [
+          "TR-BIKE-022",
+          "TR-RUN-023",
+          "TR-SWIM-021"
+        ],
+        "shares": [
+          "151/351",
+          "116/351",
+          "28/117"
+        ],
+        "total": "35.1"
+      },
+      {
+        "ids": [
+          "TR-BIKE-024",
+          "TR-RUN-022",
+          "TR-SWIM-021"
+        ],
+        "shares": [
+          "28/47",
+          "29/141",
+          "28/141"
+        ],
+        "total": "42.3"
+      }
+    ]
+  },
+  "scenarios": {
+    "current:build_1": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "current:build_2": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "current:build_3": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "current:build_4": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "historical61:build_1": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "historical61:build_2": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "historical61:build_3": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "historical61:build_4": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "21600",
+          "status": "ACCEPTED"
+        },
+        "run": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "9000",
+          "status": "ACCEPTED"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "UNVERIFIED"
+        }
+      },
+      "budget_ceiling": "WITHIN",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "fit": "EXACT_LOAD",
+      "input_sha256": "c1e18ac49a6ef5079d2e48c0e1be38dab1ad9cbd58fd700305b4dc7d3a972cc8",
+      "known_minutes": "510",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": true,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "build",
+      "policy_result": "UNVERIFIED_SWIM_TIME",
+      "selected_p": "550.0",
+      "source_ids": [
+        "TR-BIKE-012",
+        "TR-SWIM-019",
+        "TR-RUN-016"
+      ],
+      "sport_counts": {
+        "bike": 1,
+        "run": 1,
+        "swim": 1
+      },
+      "sport_p": {
+        "bike": "337.5",
+        "run": "161.7",
+        "swim": "50.8"
+      },
+      "sport_share": {
+        "bike": "0.6136363636363636363636363636",
+        "run": "0.294",
+        "swim": "0.09236363636363636363636363636"
+      },
+      "target": "550.00",
+      "target_basis": "realized_progression",
+      "unknown_swim_time": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio"
+      ]
+    },
+    "historical61:tri_zero": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "previous61:build_1": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "previous61:build_2": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "previous61:build_3": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "previous61:build_4": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": "1/141",
+          "high_seconds": "180",
+          "low_seconds": "25200",
+          "status": "ACCEPTED"
+        },
+        "run": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "5400",
+          "status": "ACCEPTED"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "UNVERIFIED"
+        }
+      },
+      "budget_ceiling": "WITHIN",
+      "count": 4,
+      "dates": [
+        "2026-10-26",
+        "2026-10-27",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "fit": "EXACT_LOAD",
+      "input_sha256": "a05007bdd2975c83a23f2cf10d3a447962657257278a9300ec783c2bac1c63c3",
+      "known_minutes": "513",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": false,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "build",
+      "policy_result": "UNVERIFIED_SWIM_TIME",
+      "selected_p": "550.0",
+      "source_ids": [
+        "TR-BIKE-011",
+        "TR-SWIM-006",
+        "TR-BIKE-020",
+        "TR-RUN-010"
+      ],
+      "sport_counts": {
+        "bike": 2,
+        "run": 1,
+        "swim": 1
+      },
+      "sport_p": {
+        "bike": "393.9",
+        "run": "97.0",
+        "swim": "59.1"
+      },
+      "sport_share": {
+        "bike": "0.7161818181818181818181818182",
+        "run": "0.1763636363636363636363636364",
+        "swim": "0.1074545454545454545454545455"
+      },
+      "target": "550.00",
+      "target_basis": "realized_progression",
+      "unknown_swim_time": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio"
+      ]
+    },
+    "previous61:tri_zero": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "v6:all_easy_build": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "2400",
+          "status": "ACCEPTED"
+        },
+        "run": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "1500",
+          "status": "ACCEPTED"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "UNVERIFIED"
+        }
+      },
+      "budget_ceiling": "WITHIN",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "fit": "TARGET_NEAREST_FIT",
+      "input_sha256": "3a0f0896ead24fd4dc51d68dd8b7f0d038fa9c232c1746ad2e16f5c4a80c5366",
+      "known_minutes": "65",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": true,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "build",
+      "policy_result": "UNVERIFIED_SWIM_TIME",
+      "selected_p": "43.1",
+      "source_ids": [
+        "TR-RUN-024",
+        "TR-BIKE-023",
+        "TR-SWIM-021"
+      ],
+      "sport_counts": {
+        "bike": 1,
+        "run": 1,
+        "swim": 1
+      },
+      "sport_p": {
+        "bike": "20.2",
+        "run": "14.5",
+        "swim": "8.4"
+      },
+      "sport_share": {
+        "bike": "0.4686774941995359628770301624",
+        "run": "0.3364269141531322505800464037",
+        "swim": "0.1948955916473317865429234339"
+      },
+      "target": "47.410",
+      "target_basis": "realized_progression",
+      "unknown_swim_time": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio",
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "v6:all_injured": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        },
+        "run": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        }
+      },
+      "budget_ceiling": "WITHIN",
+      "count": 0,
+      "dates": [],
+      "fit": "EXACT_LOAD",
+      "input_sha256": "34615c5d7a2ec2af22a1f9feda215a2a33fb051a7e36c33d5d16db62f7ec6f38",
+      "known_minutes": "0",
+      "occurrence_identity_status": "UNIQUE",
+      "one_per_sport": false,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "recovery",
+      "policy_result": "DIAGNOSTIC_PASS; SUITABILITY/OPERATIONAL_P UNAPPROVED",
+      "selected_p": "0",
+      "source_ids": [],
+      "sport_counts": {},
+      "sport_p": {
+        "bike": "0",
+        "run": "0",
+        "swim": "0"
+      },
+      "sport_share": {
+        "bike": null,
+        "run": null,
+        "swim": null
+      },
+      "target": "0",
+      "target_basis": "injury_rest_only",
+      "unknown_swim_time": false,
+      "warnings": [
+        "all_disciplines_blocked_rest_only"
+      ]
+    },
+    "v6:beginner_recovery": {
+      "code": "swipe_selection_invalid",
+      "input_sha256": "41ee288cb3249969c3c43dfc5d3732f0abdfb0433f82aa5918fca6d7e42bc930",
+      "outcome": "FAIL_CLOSED"
+    },
+    "v6:beginner_taper": {
+      "code": "swipe_selection_invalid",
+      "input_sha256": "8b04b40c986c885d57412e8001d14fd6c31bca29b175b6818c8f23b2d77e6faf",
+      "outcome": "FAIL_CLOSED"
+    },
+    "v6:bike_zero": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "5400",
+          "status": "ACCEPTED"
+        },
+        "run": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        }
+      },
+      "budget_ceiling": "EXCEEDED; UNSUITABLE FOR APPROVED BUDGET",
+      "count": 2,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29"
+      ],
+      "fit": "TARGET_NEAREST_FIT",
+      "input_sha256": "e5beee9eed77fe3a85b578e589f7934432777b624a5593bc29b426ad8814d146",
+      "known_minutes": "90",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": false,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "base",
+      "policy_result": "FAIL_CLOSED_FOR_V6_POLICY",
+      "selected_p": "45.3",
+      "source_ids": [
+        "TR-BIKE-001",
+        "TR-BIKE-022"
+      ],
+      "sport_counts": {
+        "bike": 2
+      },
+      "sport_p": {
+        "bike": "45.3",
+        "run": "0",
+        "swim": "0"
+      },
+      "sport_share": {
+        "bike": "1",
+        "run": "0E+1",
+        "swim": "0E+1"
+      },
+      "target": "45.0",
+      "target_basis": "initial_catalog_baseline",
+      "unknown_swim_time": false,
+      "warnings": [
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "v6:build_1": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "v6:build_2": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "v6:build_3": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "v6:build_4": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "v6:candidate": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "2400",
+          "status": "ACCEPTED"
+        },
+        "run": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "1500",
+          "status": "ACCEPTED"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "UNVERIFIED"
+        }
+      },
+      "budget_ceiling": "WITHIN",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "fit": "TARGET_NEAREST_FIT",
+      "input_sha256": "d99c3ab64d6bb192fb1b7a8d3fcf580cbd051bb5b99e2d4a878489515a340c9c",
+      "known_minutes": "65",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": true,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "base",
+      "policy_result": "UNVERIFIED_SWIM_TIME",
+      "selected_p": "43.1",
+      "source_ids": [
+        "TR-RUN-024",
+        "TR-BIKE-023",
+        "TR-SWIM-021"
+      ],
+      "sport_counts": {
+        "bike": 1,
+        "run": 1,
+        "swim": 1
+      },
+      "sport_p": {
+        "bike": "20.2",
+        "run": "14.5",
+        "swim": "8.4"
+      },
+      "sport_share": {
+        "bike": "0.4686774941995359628770301624",
+        "run": "0.3364269141531322505800464037",
+        "swim": "0.1948955916473317865429234339"
+      },
+      "target": "45.0",
+      "target_basis": "initial_catalog_baseline",
+      "unknown_swim_time": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio",
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "v6:candidate_no_dates": {
+      "code": "availability_required",
+      "input_sha256": "10865defe4e67191216fcd0b9cda38bf95985a4c6a3985cb60f9841b4f8bf553",
+      "outcome": "FAIL_CLOSED"
+    },
+    "v6:candidate_one_day": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "2400",
+          "status": "ACCEPTED"
+        },
+        "run": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "1500",
+          "status": "ACCEPTED"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "UNVERIFIED"
+        }
+      },
+      "budget_ceiling": "WITHIN",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-26",
+        "2026-10-26"
+      ],
+      "fit": "TARGET_NEAREST_FIT",
+      "input_sha256": "4743b83410d353a008c203e124e2bc573889564e9d98e72e49db6c797f4ab67e",
+      "known_minutes": "65",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": true,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "base",
+      "policy_result": "UNVERIFIED_SWIM_TIME",
+      "selected_p": "43.1",
+      "source_ids": [
+        "TR-BIKE-023",
+        "TR-RUN-024",
+        "TR-SWIM-021"
+      ],
+      "sport_counts": {
+        "bike": 1,
+        "run": 1,
+        "swim": 1
+      },
+      "sport_p": {
+        "bike": "20.2",
+        "run": "14.5",
+        "swim": "8.4"
+      },
+      "sport_share": {
+        "bike": "0.4686774941995359628770301624",
+        "run": "0.3364269141531322505800464037",
+        "swim": "0.1948955916473317865429234339"
+      },
+      "target": "45.0",
+      "target_basis": "initial_catalog_baseline",
+      "unknown_swim_time": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio",
+        "workouts_consolidated_on_available_dates",
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "v6:candidate_shortage": {
+      "code": "catalog_empty",
+      "input_sha256": "b46f1cba22bc3523f2dea264b1e6e9b25760b53371147124d4998845d381871d",
+      "outcome": "FAIL_CLOSED"
+    },
+    "v6:injury_run": {
+      "code": "restricted_zero_base_allocation_unavailable",
+      "input_sha256": "c24e5151614673ee98de4b472a8ea4d536a9b1fb834d02fe3d33b223f9b2a5a3",
+      "outcome": "FAIL_CLOSED"
+    },
+    "v6:limited_dates": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "v6:long_bike_only": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "25200",
+          "status": "ACCEPTED"
+        },
+        "run": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        }
+      },
+      "budget_ceiling": "EXCEEDED; UNSUITABLE FOR APPROVED BUDGET",
+      "count": 1,
+      "dates": [
+        "2026-10-29"
+      ],
+      "fit": "TARGET_NEAREST_FIT",
+      "input_sha256": "3dd88450714e04f81685f9a25de253241d0e6ef0530933207d1b4f566d5e1ee6",
+      "known_minutes": "420",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": true,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "base",
+      "policy_result": "FAIL_CLOSED_FOR_V6_POLICY",
+      "selected_p": "393.8",
+      "source_ids": [
+        "TR-BIKE-013"
+      ],
+      "sport_counts": {
+        "bike": 1
+      },
+      "sport_p": {
+        "bike": "393.8",
+        "run": "0",
+        "swim": "0"
+      },
+      "sport_share": {
+        "bike": "1",
+        "run": "0E+1",
+        "swim": "0E+1"
+      },
+      "target": "45.0",
+      "target_basis": "initial_catalog_baseline",
+      "unknown_swim_time": false,
+      "warnings": [
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "v6:minimum": {
+      "code": "swipe_selection_invalid",
+      "input_sha256": "6201955b3de90577d6d6f6bde929f065fb0f7b3c6cfbc81a9d569656043342df",
+      "outcome": "FAIL_CLOSED"
+    },
+    "v6:missing_swim_capability": {
+      "code": "catalog_coverage_unsatisfied",
+      "input_sha256": "871592149aef65249b95fd6f4081d74210366552ba86c5772e544b9dc1dba523",
+      "outcome": "FAIL_CLOSED"
+    },
+    "v6:recovery": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "12600",
+          "status": "ACCEPTED"
+        },
+        "run": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "4800",
+          "status": "ACCEPTED"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "UNVERIFIED"
+        }
+      },
+      "budget_ceiling": "WITHIN",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "fit": "EXACT_LOAD",
+      "input_sha256": "8eadcc5161b3d9ac07cae680cf371e740176cbef748c41a46cfd387511e22ede",
+      "known_minutes": "290",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": true,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "recovery",
+      "policy_result": "UNVERIFIED_SWIM_TIME",
+      "selected_p": "300.0",
+      "source_ids": [
+        "TR-RUN-009",
+        "TR-BIKE-008",
+        "TR-SWIM-001"
+      ],
+      "sport_counts": {
+        "bike": 1,
+        "run": 1,
+        "swim": 1
+      },
+      "sport_p": {
+        "bike": "196.9",
+        "run": "86.2",
+        "swim": "16.9"
+      },
+      "sport_share": {
+        "bike": "0.6563333333333333333333333333",
+        "run": "0.2873333333333333333333333333",
+        "swim": "0.05633333333333333333333333333"
+      },
+      "target": "300.00",
+      "target_basis": "recovery_factor",
+      "unknown_swim_time": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio"
+      ]
+    },
+    "v6:repeat_bike": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "5400",
+          "status": "ACCEPTED"
+        },
+        "run": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        }
+      },
+      "budget_ceiling": "EXCEEDED; UNSUITABLE FOR APPROVED BUDGET",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "fit": "TARGET_NEAREST_FIT",
+      "input_sha256": "71f31a7e1950258b1334d3dcde8ef4b7067cc460a6d4dafbda601e7869e7744b",
+      "known_minutes": "90",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": false,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "base",
+      "policy_result": "FAIL_CLOSED_FOR_V6_POLICY",
+      "selected_p": "45.3",
+      "source_ids": [
+        "TR-BIKE-022",
+        "TR-BIKE-022",
+        "TR-BIKE-022"
+      ],
+      "sport_counts": {
+        "bike": 3
+      },
+      "sport_p": {
+        "bike": "45.3",
+        "run": "0",
+        "swim": "0"
+      },
+      "sport_share": {
+        "bike": "1",
+        "run": "0E+1",
+        "swim": "0E+1"
+      },
+      "target": "45.0",
+      "target_basis": "initial_catalog_baseline",
+      "unknown_swim_time": false,
+      "warnings": [
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "v6:repeat_explicit": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "4800",
+          "status": "ACCEPTED"
+        },
+        "run": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        }
+      },
+      "budget_ceiling": "WITHIN",
+      "count": 2,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29"
+      ],
+      "fit": "TARGET_NEAREST_FIT",
+      "input_sha256": "0b23abfcca3f03ca97bf16bf515d8ab4446c22e580e9f866fc00031984dd2b65",
+      "known_minutes": "80",
+      "occurrence_identity_status": "UNIQUE",
+      "one_per_sport": false,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "base",
+      "policy_result": "DIAGNOSTIC_PASS; SUITABILITY/OPERATIONAL_P UNAPPROVED",
+      "selected_p": "40.4",
+      "source_ids": [
+        "TR-BIKE-023",
+        "TR-BIKE-023"
+      ],
+      "sport_counts": {
+        "bike": 2
+      },
+      "sport_p": {
+        "bike": "40.4",
+        "run": "0",
+        "swim": "0"
+      },
+      "sport_share": {
+        "bike": "1",
+        "run": "0E+1",
+        "swim": "0E+1"
+      },
+      "target": "45.0",
+      "target_basis": "initial_catalog_baseline",
+      "unknown_swim_time": false,
+      "warnings": [
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "v6:run_zero": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        },
+        "run": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "3900",
+          "status": "ACCEPTED"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        }
+      },
+      "budget_ceiling": "EXCEEDED; UNSUITABLE FOR APPROVED BUDGET",
+      "count": 2,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29"
+      ],
+      "fit": "TARGET_NEAREST_FIT",
+      "input_sha256": "a0d73679f0e3a6ded419def7098d50a48aa309eb642adaffb1851628c29eaed1",
+      "known_minutes": "65",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": false,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "base",
+      "policy_result": "FAIL_CLOSED_FOR_V6_POLICY",
+      "selected_p": "45.2",
+      "source_ids": [
+        "TR-RUN-003",
+        "TR-RUN-026"
+      ],
+      "sport_counts": {
+        "run": 2
+      },
+      "sport_p": {
+        "bike": "0",
+        "run": "45.2",
+        "swim": "0"
+      },
+      "sport_share": {
+        "bike": "0E+1",
+        "run": "1",
+        "swim": "0E+1"
+      },
+      "target": "45.0",
+      "target_basis": "initial_catalog_baseline",
+      "unknown_swim_time": false,
+      "warnings": [
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "v6:swim_zero": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        },
+        "run": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "NOT APPLICABLE"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "UNVERIFIED"
+        }
+      },
+      "budget_ceiling": "WITHIN",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "fit": "TARGET_NEAREST_FIT",
+      "input_sha256": "d92693a9a9c260c78a821a303d21c21a1b557b098072ba6788903611ab225ca7",
+      "known_minutes": "0",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": false,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "base",
+      "policy_result": "UNVERIFIED_SWIM_TIME",
+      "selected_p": "43.9",
+      "source_ids": [
+        "TR-SWIM-022",
+        "TR-SWIM-001",
+        "TR-SWIM-022"
+      ],
+      "sport_counts": {
+        "swim": 3
+      },
+      "sport_p": {
+        "bike": "0",
+        "run": "0",
+        "swim": "43.9"
+      },
+      "sport_share": {
+        "bike": "0E+1",
+        "run": "0E+1",
+        "swim": "1"
+      },
+      "target": "45.0",
+      "target_basis": "initial_catalog_baseline",
+      "unknown_swim_time": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio",
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "v6:taper": {
+      "active_time_compliance": {
+        "bike": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "1800",
+          "status": "ACCEPTED"
+        },
+        "run": {
+          "high_ratio": "0",
+          "high_seconds": "0",
+          "low_seconds": "4200",
+          "status": "ACCEPTED"
+        },
+        "swim": {
+          "high_ratio": null,
+          "high_seconds": "0",
+          "low_seconds": "0",
+          "status": "UNVERIFIED"
+        }
+      },
+      "budget_ceiling": "WITHIN",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "fit": "EXACT_LOAD",
+      "input_sha256": "bbe8266614a2da6e7f9339b474b79ac2f03fd4e92defa2c1e1083afe8a2542d6",
+      "known_minutes": "100",
+      "occurrence_identity_status": "UNALLOCATED_DRAFT",
+      "one_per_sport": true,
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "phase": "taper",
+      "policy_result": "UNVERIFIED_SWIM_TIME",
+      "selected_p": "175.0",
+      "source_ids": [
+        "TR-RUN-008",
+        "TR-BIKE-022",
+        "TR-SWIM-009"
+      ],
+      "sport_counts": {
+        "bike": 1,
+        "run": 1,
+        "swim": 1
+      },
+      "sport_p": {
+        "bike": "15.1",
+        "run": "75.5",
+        "swim": "84.4"
+      },
+      "sport_share": {
+        "bike": "0.08628571428571428571428571429",
+        "run": "0.4314285714285714285714285714",
+        "swim": "0.4822857142857142857142857143"
+      },
+      "target": "175.00",
+      "target_basis": "taper_factor",
+      "unknown_swim_time": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio"
+      ]
+    },
+    "v6:tri_zero": {
+      "bound_seconds": 8,
+      "outcome": "DIAGNOSTIC_TIMEOUT"
+    },
+    "v6:unconfirmed_swim_capability": {
+      "code": "catalog_coverage_unsatisfied",
+      "input_sha256": "6bb07ef0e419b3d1fcb1521c9a3bacd2600053cff607dcb30aba1fde5fe5aeda",
+      "outcome": "FAIL_CLOSED"
+    }
+  },
+  "schema": "joren-v6-planner-probes-2",
+  "status": "UNAPPROVED HYPOTHETICAL; INACTIVE"
+}

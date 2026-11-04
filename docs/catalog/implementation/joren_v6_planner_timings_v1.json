@@ -1,0 +1,185 @@
+{
+  "measurements": [
+    {
+      "case": "tri_zero",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.022932100000617
+    },
+    {
+      "case": "minimum",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.8129893000004813
+    },
+    {
+      "case": "candidate",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.8133322000066983
+    },
+    {
+      "case": "candidate_one_day",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.8075700999979745
+    },
+    {
+      "case": "candidate_no_dates",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.7618352999998024
+    },
+    {
+      "case": "limited_dates",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.008865999996488
+    },
+    {
+      "case": "run_zero",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 1.5048577999987174
+    },
+    {
+      "case": "bike_zero",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 1.8950135999984923
+    },
+    {
+      "case": "swim_zero",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.778141399998276
+    },
+    {
+      "case": "recovery",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.020394900006067
+    },
+    {
+      "case": "taper",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 1.0221290000044974
+    },
+    {
+      "case": "build_1",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.014827999999397
+    },
+    {
+      "case": "build_2",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.018978499996592
+    },
+    {
+      "case": "build_3",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.008934500001487
+    },
+    {
+      "case": "build_4",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.006533200001286
+    },
+    {
+      "case": "repeat_bike",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.7661471000028541
+    },
+    {
+      "case": "long_bike_only",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.7528175999977975
+    },
+    {
+      "case": "injury_run",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.7799460000023828
+    },
+    {
+      "case": "all_injured",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.7649951999992481
+    },
+    {
+      "case": "missing_swim_capability",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.7768486999993911
+    },
+    {
+      "case": "candidate_shortage",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.812494500001776
+    },
+    {
+      "case": "tri_zero",
+      "mode": "previous61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.011217999999644
+    },
+    {
+      "case": "build_1",
+      "mode": "previous61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.024817199999234
+    },
+    {
+      "case": "build_2",
+      "mode": "previous61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.02349200000026
+    },
+    {
+      "case": "build_3",
+      "mode": "previous61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.012194699993415
+    },
+    {
+      "case": "build_4",
+      "mode": "previous61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.018182399995567
+    },
+    {
+      "case": "build_1",
+      "mode": "current",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 4.055574899997737
+    },
+    {
+      "case": "build_2",
+      "mode": "current",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 3.917364599998109
+    },
+    {
+      "case": "build_3",
+      "mode": "current",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 3.9558453999998164
+    },
+    {
+      "case": "build_4",
+      "mode": "current",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 3.906934899998305
+    }
+  ],
+  "serial_uncontended_workers": true
+}

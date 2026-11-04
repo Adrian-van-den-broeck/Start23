@@ -1,0 +1,245 @@
+{
+  "measurements": [
+    {
+      "case": "tri_zero",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.009535999997752
+    },
+    {
+      "case": "minimum",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.7225907999963965
+    },
+    {
+      "case": "candidate",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.7346000999968965
+    },
+    {
+      "case": "candidate_one_day",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.740972799998417
+    },
+    {
+      "case": "candidate_no_dates",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.7486466999980621
+    },
+    {
+      "case": "limited_dates",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.022246500004258
+    },
+    {
+      "case": "run_zero",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 1.4797306999971624
+    },
+    {
+      "case": "bike_zero",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 1.8285162999964086
+    },
+    {
+      "case": "swim_zero",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.7257695000007516
+    },
+    {
+      "case": "recovery",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.9806941999995615
+    },
+    {
+      "case": "taper",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 1.0479130999956396
+    },
+    {
+      "case": "build_1",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.023007900002995
+    },
+    {
+      "case": "build_2",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.021102400001837
+    },
+    {
+      "case": "build_3",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.020162699998764
+    },
+    {
+      "case": "build_4",
+      "mode": "v6",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.015820900000108
+    },
+    {
+      "case": "repeat_bike",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.7020068999991054
+    },
+    {
+      "case": "long_bike_only",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.731297700003779
+    },
+    {
+      "case": "injury_run",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.7220807000048808
+    },
+    {
+      "case": "all_injured",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.736928700003773
+    },
+    {
+      "case": "missing_swim_capability",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.71941639999568
+    },
+    {
+      "case": "candidate_shortage",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.7254443999991054
+    },
+    {
+      "case": "all_easy_build",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.7896994999973685
+    },
+    {
+      "case": "beginner_recovery",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.7310166000024765
+    },
+    {
+      "case": "beginner_taper",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.7346791000018129
+    },
+    {
+      "case": "repeat_explicit",
+      "mode": "v6",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.7203867999996874
+    },
+    {
+      "case": "unconfirmed_swim_capability",
+      "mode": "v6",
+      "outcome": "FAIL_CLOSED",
+      "wall_seconds": 0.7303660999968997
+    },
+    {
+      "case": "tri_zero",
+      "mode": "previous61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.020022299999255
+    },
+    {
+      "case": "build_1",
+      "mode": "previous61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.015575099998387
+    },
+    {
+      "case": "build_2",
+      "mode": "previous61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.015023400002974
+    },
+    {
+      "case": "build_3",
+      "mode": "previous61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.021304000001692
+    },
+    {
+      "case": "build_4",
+      "mode": "previous61",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 4.730029600003036
+    },
+    {
+      "case": "build_1",
+      "mode": "current",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.01129519999813
+    },
+    {
+      "case": "build_2",
+      "mode": "current",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.010194200003752
+    },
+    {
+      "case": "build_3",
+      "mode": "current",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.012023999996018
+    },
+    {
+      "case": "build_4",
+      "mode": "current",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.023097500001313
+    },
+    {
+      "case": "tri_zero",
+      "mode": "historical61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.011738200002583
+    },
+    {
+      "case": "build_1",
+      "mode": "historical61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.023604400004842
+    },
+    {
+      "case": "build_2",
+      "mode": "historical61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.01202110000304
+    },
+    {
+      "case": "build_3",
+      "mode": "historical61",
+      "outcome": "DIAGNOSTIC_TIMEOUT",
+      "wall_seconds": 8.018633799998497
+    },
+    {
+      "case": "build_4",
+      "mode": "historical61",
+      "outcome": "PENDING_HYPOTHETICAL_PLAN",
+      "wall_seconds": 0.7939673000000766
+    }
+  ],
+  "serial_uncontended_workers": true
+}
