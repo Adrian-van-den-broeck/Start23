@@ -1,0 +1,5 @@
+{
+  "uncompressed_sha256": "a8c6cb0891f618ae34b8a8f4a28f028dc9e51f539cd99f6c5040584990f00348",
+  "gzip_sha256": "fe80c794b7d6aa96d8f4de2937c5a355742ebab5643eb93bd5ec06598465b320",
+  "reason": "Lossless custody of unified-diff context lines without report-format trailing-whitespace diagnostics; original audit worktree unchanged."
+}
