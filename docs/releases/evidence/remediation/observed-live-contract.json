@@ -1,0 +1,323 @@
+{
+  "openapi": "3.1.0",
+  "paths": {
+    "/health": {
+      "get": {}
+    },
+    "/ready": {
+      "get": {}
+    },
+    "/api/v1/health": {
+      "get": {}
+    },
+    "/api/v1/ready": {
+      "get": {}
+    },
+    "/api/v1/me": {
+      "get": {}
+    },
+    "/api/v1/me/profile": {
+      "get": {}
+    },
+    "/api/v1/me/identifying-profile": {
+      "get": {},
+      "patch": {}
+    },
+    "/api/v1/me/physiology-profile": {
+      "get": {},
+      "patch": {}
+    },
+    "/api/v1/me/operational-profile": {
+      "get": {},
+      "patch": {}
+    },
+    "/api/v1/onboarding": {
+      "get": {}
+    },
+    "/api/v1/onboarding/goal-options": {
+      "get": {}
+    },
+    "/api/v1/me/training-history": {
+      "put": {}
+    },
+    "/api/v1/me/goals": {
+      "post": {}
+    },
+    "/api/v1/me/goals/{goal_id}": {
+      "put": {}
+    },
+    "/api/v1/me/zones/{discipline}": {
+      "put": {}
+    },
+    "/api/v1/onboarding/complete": {
+      "post": {}
+    },
+    "/api/v1/change-proposals/{proposal_id}/approve": {
+      "post": {}
+    },
+    "/api/v1/change-proposals/{proposal_id}/reject": {
+      "post": {}
+    },
+    "/api/v1/workout-catalog": {
+      "get": {}
+    },
+    "/api/v1/weekly-plans/proposals": {
+      "post": {}
+    },
+    "/api/v1/weekly-plans/swipe-drafts": {
+      "post": {}
+    },
+    "/api/v1/weekly-plans/swipe-drafts/{draft_id}": {
+      "get": {}
+    },
+    "/api/v1/weekly-plans/swipe-drafts/{draft_id}/transitions": {
+      "post": {}
+    },
+    "/api/v1/weekly-plans/swipe-drafts/{draft_id}/placements/{occurrence_id}": {
+      "put": {}
+    },
+    "/api/v1/weekly-plans/swipe-drafts/{draft_id}/submit": {
+      "post": {}
+    },
+    "/api/v1/weekly-plans/{plan_id}": {
+      "get": {}
+    },
+    "/api/v1/weekly-plans/{plan_id}/deck": {
+      "get": {}
+    },
+    "/api/v1/weekly-plans/{plan_id}/schedule-proposals": {
+      "post": {}
+    },
+    "/api/v1/weekly-plans/{plan_id}/pending-workouts/{workout_id}/alternatives": {
+      "get": {}
+    },
+    "/api/v1/weekly-plans/{plan_id}/pending-workouts/{workout_id}/edit-proposals": {
+      "post": {}
+    },
+    "/api/v1/weekly-plans/{plan_id}/validate": {
+      "post": {}
+    },
+    "/api/v1/planned-workouts/{workout_id}": {
+      "patch": {}
+    },
+    "/api/v1/calendar": {
+      "get": {}
+    },
+    "/api/v1/change-proposals": {
+      "get": {}
+    },
+    "/api/v1/change-proposals/{proposal_id}": {
+      "get": {}
+    },
+    "/api/v1/activities": {
+      "post": {},
+      "get": {}
+    },
+    "/api/v1/activities/pending-rpe": {
+      "get": {}
+    },
+    "/api/v1/activities/{activity_id}": {
+      "get": {}
+    },
+    "/api/v1/activities/{activity_id}/rpe": {
+      "put": {}
+    },
+    "/api/v1/activities/{activity_id}/planned-workout-match": {
+      "put": {}
+    },
+    "/api/v1/checkins": {
+      "post": {}
+    },
+    "/api/v1/checkins/{checkin_id}": {
+      "get": {}
+    },
+    "/api/v1/checkins/{checkin_id}/context-candidates": {
+      "post": {}
+    },
+    "/api/v1/checkins/{checkin_id}/context": {
+      "put": {}
+    },
+    "/api/v1/checkins/{checkin_id}/context-confirmation": {
+      "post": {}
+    },
+    "/api/v1/checkins/{checkin_id}/plan-proposals": {
+      "post": {}
+    },
+    "/api/v1/me/injury-restrictions": {
+      "get": {}
+    },
+    "/api/v1/planned-external-activities": {
+      "get": {}
+    },
+    "/api/v1/me/goals/{goal_id}/achievement": {
+      "post": {}
+    },
+    "/api/v1/onboarding/zone-options/{discipline}": {
+      "get": {}
+    },
+    "/api/v1/onboarding/disciplines/{discipline}/setup": {
+      "put": {}
+    },
+    "/api/v1/calibration/protocols/{discipline}": {
+      "get": {}
+    },
+    "/api/v1/calibration/observations": {
+      "post": {}
+    },
+    "/api/v1/calibration/evaluate": {
+      "post": {}
+    },
+    "/api/v1/calibration/evaluations/{evaluation_id}/threshold/confirm": {
+      "post": {}
+    },
+    "/api/v1/calibration/evaluations/{evaluation_id}/threshold/reject": {
+      "post": {}
+    },
+    "/api/v1/calibration/status": {
+      "get": {}
+    },
+    "/api/v1/calibration/test-assignments": {
+      "post": {}
+    },
+    "/api/v1/calibration/test-assignments/{proposal_id}/approve": {
+      "post": {}
+    },
+    "/api/v1/calibration/test-assignments/{proposal_id}/reject": {
+      "post": {}
+    },
+    "/api/v1/me/zone-profile": {
+      "get": {}
+    },
+    "/api/v1/pioneer-access/redemption": {
+      "get": {}
+    },
+    "/api/v1/pioneer-access/redemptions": {
+      "post": {}
+    },
+    "/api/v1/integrations/polar/oauth/start": {
+      "post": {}
+    },
+    "/api/v1/integrations/polar/oauth/callback": {
+      "get": {}
+    },
+    "/api/v1/integrations/polar": {
+      "get": {},
+      "delete": {}
+    },
+    "/api/v1/integrations/polar/imports": {
+      "post": {},
+      "get": {}
+    },
+    "/api/v1/integrations/polar/imports/{import_id}/retry": {
+      "post": {}
+    },
+    "/api/v1/webhooks/polar": {
+      "post": {}
+    }
+  },
+  "activity_input": {
+    "properties": {
+      "planned_workout_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Planned Workout Id"
+      },
+      "planned_external_activity_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Planned External Activity Id"
+      },
+      "discipline": {
+        "$ref": "#/components/schemas/Discipline"
+      },
+      "started_at": {
+        "type": "string",
+        "format": "date-time",
+        "title": "Started At"
+      },
+      "timezone": {
+        "type": "string",
+        "maxLength": 100,
+        "minLength": 1,
+        "title": "Timezone"
+      },
+      "duration_minutes": {
+        "anyOf": [
+          {
+            "type": "number",
+            "maximum": 1440.0,
+            "exclusiveMinimum": 0.0
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Duration Minutes"
+      },
+      "distance_meters": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "maximum": 1000000.0,
+            "exclusiveMinimum": 0.0
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Distance Meters"
+      },
+      "elevation_gain_meters": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "maximum": 100000.0,
+            "minimum": 0.0
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Elevation Gain Meters"
+      },
+      "metrics": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/ActivityMetricInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+      "discipline",
+      "started_at",
+      "timezone"
+    ],
+    "title": "ActivitySummaryInput",
+    "description": "Authenticated phase-one canonical completed-activity summary."
+  },
+  "source_sha256": "8ecb87f326f8abf2392874d4bd178a199648a68bb42bdd3bf9732968b5290dd9",
+  "capture_date": "2026-11-04"
+}
