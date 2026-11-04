@@ -13,7 +13,12 @@
     },
     "wombo": {
       "environment": "production",
-      "autoIncrement": true
+      "distribution": "store",
+      "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle",
+        "credentialsSource": "remote"
+      }
     }
   },
   "submit": {

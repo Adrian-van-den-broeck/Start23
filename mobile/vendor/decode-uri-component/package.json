@@ -1,0 +1,24 @@
+{
+  "name": "decode-uri-component",
+  "version": "0.5.1+wombo.cjs.1",
+  "description": "CommonJS packaging of upstream decode-uri-component 0.5.1, algorithm unchanged",
+  "license": "MIT",
+  "type": "commonjs",
+  "main": "index.cjs",
+  "types": "index.d.cts",
+  "exports": {
+    "types": "./index.d.cts",
+    "default": "./index.cjs"
+  },
+  "sideEffects": false,
+  "files": [
+    "index.cjs",
+    "index.d.cts",
+    "LICENSE",
+    "PROVENANCE.json",
+    "upstream-index.mjs"
+  ],
+  "engines": {
+    "node": ">=14.16"
+  }
+}

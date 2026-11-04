@@ -1,0 +1,19 @@
+{
+  "upstream_name": "decode-uri-component",
+  "upstream_version": "0.5.1",
+  "upstream_tarball": "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.5.1.tgz",
+  "upstream_integrity": "sha512-vWHQkXgg2cE3BB4rR0c+PYw9BCQzLoNIRMI7AunIkZst74tw/vpPp7VLoYtsR/cy1f55g3XDWUslfeCZjiZJyA==",
+  "tarball_sha256": "68747a955bbb6a700d758155cf5ff15595c0dfa38504d385abdb249c688bfb15",
+  "upstream_source_sha256": "6a86ac891edf15c5efa0841ebb31935e3669d58b98318b57d7b08a4530317cb0",
+  "adapted_source_sha256": "621c20e0d371040b29c70e507b1b8c5f9d60145580bb86679f2e13ec3196cca2",
+  "changes": [
+    "prepend strict mode",
+    "replace ESM default function export with CommonJS module.exports function",
+    "terminate CommonJS assignment with semicolon"
+  ],
+  "algorithm_changes": false,
+  "advisories_fixed": [
+    "GHSA-qr28-fpjm-wq7f",
+    "GHSA-vcc3-ghjq-m6fr"
+  ]
+}
