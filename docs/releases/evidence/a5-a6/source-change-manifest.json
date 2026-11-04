@@ -1,0 +1,32 @@
+{
+  "baseline": "abcc800d594e9e46784148cc799c51834daed329",
+  "verified_source_sha": "5e990ccb831f03926ea35b722eaa4ec4493bcdbe",
+  "minimal_backend_sha": "e2d450be4a1d5ec3d65037bd6901f2f03d6b14e6",
+  "changed_files_sha256": {
+    "mobile/eas.json": "ce24f61e7fb6548a4e09fd93856e43ed0dc89a717ed7e7cc92aaad6e5e2f9a4c",
+    "mobile/package-lock.json": "78fefb59eac916ad9b9c00a0ae9a7c83a6812a26e93411c9262b1bb1f3c4fa9d",
+    "mobile/package.json": "8383b86461dc7de2262ba03b75bc58b4b98738e52970aad96bd9412a072b719c",
+    "mobile/scripts/verify-decoder-security.cjs": "20ccc097da20b5496109968b4be572f63471becc32f76e026b540ded50c32096",
+    "mobile/src/lib/urlDecoding.test.ts": "da3a5d69442553dd36176cc7f699c6dcd1028a93ec06fe5487509ad8d41a41b5",
+    "mobile/vendor/decode-uri-component/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "mobile/vendor/decode-uri-component/LICENSE": "ed7a9a0f74e43951b2520efe1a4349cb9ed5f3dff0b0f268e2e51a4d38df7ea4",
+    "mobile/vendor/decode-uri-component/PROVENANCE.json": "06df21887eb670200e692a49ef3fa31828121d58be0fedff74583df380a1f47e",
+    "mobile/vendor/decode-uri-component/index.cjs": "621c20e0d371040b29c70e507b1b8c5f9d60145580bb86679f2e13ec3196cca2",
+    "mobile/vendor/decode-uri-component/index.d.cts": "384c2af88f48f076889e4e11f14aa45ba66a179950ce26428faca8773aa87e8e",
+    "mobile/vendor/decode-uri-component/package.json": "94afefcb5b0001d3288e97c2ec252b2eaf0d31dcb7673d60809441101306c9a7",
+    "mobile/vendor/decode-uri-component/upstream-index.mjs": "6a86ac891edf15c5efa0841ebb31935e3669d58b98318b57d7b08a4530317cb0",
+    "scripts/a5-a6/a5-catalog-template.sql": "d844d6e58be20c0a5d01d91c647df4ba403827c928c73d51cb77e9a4fab7a7c5",
+    "scripts/a5-a6/isolated-concurrency-check.sql": "2c9998354d04c063303b673d631a0a4b0ef559b2ec6cbb5ef9594f28cd128b93",
+    "scripts/a5-a6/isolated-concurrency-setup.sql": "bae42937bfd47830b86cc0784546209b8851c8ab0c09e2f873cc45a12376dd76",
+    "scripts/a5-a6/isolated-observe-lock.sql": "a243dd3c0d0a0ae1152fcc07939c89648aa84a665341bf1a14a3cbb154b8231a",
+    "scripts/a5-a6/isolated-session-a.sql": "f6555cfd5fb2791a885e4572b311192a4d58f266fb1d17e04e3bd1b651d2df02",
+    "scripts/a5-a6/isolated-session-b.sql": "28ab12374787baa5fa255f25a54ce8be7f716fe44aca4067a28516b4789aaa5c",
+    "scripts/prepare_a5_a6_release_kit.py": "d0353c10b1e7e8a40786726da2a071820de8d9d16a193e3fd74ed0c3dadd08d5",
+    "scripts/tests/test_a5_a6_release_kit.py": "e00f656df2c31cd02a8ee54edd8c4116f5c141789a0978cc8afee1e1fad811eb",
+    "scripts/tests/test_a6_owner_probe.py": "060ba0144777bbd99886b8e39d6abf3941555f1bb8752101bb13be8cfd5c3fad",
+    "scripts/verify_a6_readonly.py": "c2b355cb47cbe984ef67168d330f0cf80a4ae1ad2a621ebbfeffcee7563c63e7"
+  },
+  "original_overlay_files": 8,
+  "original_overlay_hashes_preserved": true,
+  "backend_application_source_changed": false
+}
