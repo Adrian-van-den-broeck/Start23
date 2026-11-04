@@ -1,0 +1,410 @@
+{
+  "following_weeks": {
+    "measured": {
+      "basis": "realized_progression",
+      "count": 3,
+      "dates": [
+        "2026-11-02",
+        "2026-11-05",
+        "2026-11-06"
+      ],
+      "known_minutes": "90",
+      "outcome": "PENDING_DRAFT_ONLY",
+      "phase": "build",
+      "planned_p": "64.5",
+      "registration_reason": null,
+      "resolved_basis": "realized_progression",
+      "resolved_target": "70.950",
+      "source_ids": [
+        "TR-RUN-001",
+        "TR-BIKE-001",
+        "TR-SWIM-001"
+      ],
+      "sport_loads": {
+        "bike": "30.2",
+        "run": "17.4",
+        "swim": "16.9"
+      },
+      "sport_percentages": {
+        "bike": "46.82170542635658914728682171",
+        "run": "26.97674418604651162790697674",
+        "swim": "26.20155038759689922480620155"
+      },
+      "target": "70.950",
+      "unknown_swim_duration": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio",
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "missing": {
+      "basis": "prior_planned_hold",
+      "count": 3,
+      "dates": [
+        "2026-11-02",
+        "2026-11-05",
+        "2026-11-06"
+      ],
+      "known_minutes": "90",
+      "outcome": "PENDING_DRAFT_ONLY",
+      "phase": "build",
+      "planned_p": "64.5",
+      "registration_reason": "unknown_workout_completion",
+      "resolved_basis": "prior_planned_hold",
+      "resolved_target": "64.5",
+      "source_ids": [
+        "TR-RUN-001",
+        "TR-BIKE-001",
+        "TR-SWIM-001"
+      ],
+      "sport_loads": {
+        "bike": "30.2",
+        "run": "17.4",
+        "swim": "16.9"
+      },
+      "sport_percentages": {
+        "bike": "46.82170542635658914728682171",
+        "run": "26.97674418604651162790697674",
+        "swim": "26.20155038759689922480620155"
+      },
+      "target": "64.5",
+      "unknown_swim_duration": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio"
+      ]
+    },
+    "skipped": {
+      "code": "swipe_selection_invalid",
+      "outcome": "REJECTED",
+      "registration_reason": null,
+      "resolved_basis": "realized_baseline",
+      "resolved_target": "47.6"
+    },
+    "third_after_incomplete_second": {
+      "basis": "prior_planned_hold",
+      "count": 3,
+      "dates": [
+        "2026-11-09",
+        "2026-11-12",
+        "2026-11-13"
+      ],
+      "known_minutes": "90",
+      "outcome": "PENDING_DRAFT_ONLY",
+      "phase": "build",
+      "planned_p": "64.5",
+      "source_ids": [
+        "TR-RUN-001",
+        "TR-BIKE-001",
+        "TR-SWIM-001"
+      ],
+      "sport_loads": {
+        "bike": "30.2",
+        "run": "17.4",
+        "swim": "16.9"
+      },
+      "sport_percentages": {
+        "bike": "46.82170542635658914728682171",
+        "run": "26.97674418604651162790697674",
+        "swim": "26.20155038759689922480620155"
+      },
+      "target": "64.5",
+      "unknown_swim_duration": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio"
+      ]
+    }
+  },
+  "scenarios": {
+    "all_injured": {
+      "basis": "injury_rest_only",
+      "count": 0,
+      "dates": [],
+      "known_minutes": "0",
+      "outcome": "PENDING_DRAFT_ONLY",
+      "phase": "recovery",
+      "planned_p": "0",
+      "source_ids": [],
+      "sport_loads": {
+        "bike": "0",
+        "run": "0",
+        "swim": "0"
+      },
+      "sport_percentages": {
+        "bike": null,
+        "run": null,
+        "swim": null
+      },
+      "target": "0",
+      "unknown_swim_duration": false,
+      "warnings": [
+        "all_disciplines_blocked_rest_only"
+      ]
+    },
+    "baseline_45_automatic": {
+      "code": "catalog_capacity_unsatisfied",
+      "outcome": "REJECTED"
+    },
+    "baseline_45_explicit_three": {
+      "code": "swipe_selection_invalid",
+      "outcome": "REJECTED"
+    },
+    "build": {
+      "basis": "realized_progression",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "known_minutes": "90",
+      "outcome": "PENDING_DRAFT_ONLY",
+      "phase": "build",
+      "planned_p": "64.5",
+      "resolved_phase": "build",
+      "resolved_target": "70.950",
+      "source_ids": [
+        "TR-RUN-001",
+        "TR-BIKE-001",
+        "TR-SWIM-001"
+      ],
+      "sport_loads": {
+        "bike": "30.2",
+        "run": "17.4",
+        "swim": "16.9"
+      },
+      "sport_percentages": {
+        "bike": "46.82170542635658914728682171",
+        "run": "26.97674418604651162790697674",
+        "swim": "26.20155038759689922480620155"
+      },
+      "target": "70.950",
+      "unknown_swim_duration": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio",
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "exception_64_5": {
+      "basis": "initial_catalog_baseline",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "known_minutes": "90",
+      "outcome": "PENDING_DRAFT_ONLY",
+      "phase": "base",
+      "planned_p": "64.5",
+      "source_ids": [
+        "TR-RUN-001",
+        "TR-BIKE-001",
+        "TR-SWIM-001"
+      ],
+      "sport_loads": {
+        "bike": "30.2",
+        "run": "17.4",
+        "swim": "16.9"
+      },
+      "sport_percentages": {
+        "bike": "46.82170542635658914728682171",
+        "run": "26.97674418604651162790697674",
+        "swim": "26.20155038759689922480620155"
+      },
+      "target": "64.5",
+      "unknown_swim_duration": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio"
+      ]
+    },
+    "exception_no_dates": {
+      "code": "availability_required",
+      "outcome": "REJECTED"
+    },
+    "exception_one_date": {
+      "basis": "initial_catalog_baseline",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-26",
+        "2026-10-26"
+      ],
+      "known_minutes": "90",
+      "outcome": "PENDING_DRAFT_ONLY",
+      "phase": "base",
+      "planned_p": "64.5",
+      "source_ids": [
+        "TR-BIKE-001",
+        "TR-RUN-001",
+        "TR-SWIM-001"
+      ],
+      "sport_loads": {
+        "bike": "30.2",
+        "run": "17.4",
+        "swim": "16.9"
+      },
+      "sport_percentages": {
+        "bike": "46.82170542635658914728682171",
+        "run": "26.97674418604651162790697674",
+        "swim": "26.20155038759689922480620155"
+      },
+      "target": "64.5",
+      "unknown_swim_duration": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio",
+        "workouts_consolidated_on_available_dates"
+      ]
+    },
+    "injured_run_zero": {
+      "code": "restricted_zero_base_allocation_unavailable",
+      "outcome": "REJECTED"
+    },
+    "long_bike_only_45": {
+      "basis": "initial_catalog_baseline",
+      "count": 1,
+      "dates": [
+        "2026-10-29"
+      ],
+      "known_minutes": "420",
+      "outcome": "PENDING_DRAFT_ONLY",
+      "phase": "base",
+      "planned_p": "393.8",
+      "source_ids": [
+        "TR-BIKE-013"
+      ],
+      "sport_loads": {
+        "bike": "393.8",
+        "run": "0",
+        "swim": "0"
+      },
+      "sport_percentages": {
+        "bike": "100",
+        "run": "0E+1",
+        "swim": "0E+1"
+      },
+      "target": "45.0",
+      "unknown_swim_duration": false,
+      "warnings": [
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "missing_swim_capability": {
+      "code": "catalog_coverage_unsatisfied",
+      "outcome": "REJECTED"
+    },
+    "recovery": {
+      "code": "swipe_selection_invalid",
+      "outcome": "REJECTED",
+      "resolved_phase": "recovery",
+      "resolved_target": "38.700"
+    },
+    "single_bike_45": {
+      "basis": "initial_catalog_baseline",
+      "count": 1,
+      "dates": [
+        "2026-10-29"
+      ],
+      "known_minutes": "60",
+      "outcome": "PENDING_DRAFT_ONLY",
+      "phase": "base",
+      "planned_p": "30.2",
+      "source_ids": [
+        "TR-BIKE-001"
+      ],
+      "sport_loads": {
+        "bike": "30.2",
+        "run": "0",
+        "swim": "0"
+      },
+      "sport_percentages": {
+        "bike": "100",
+        "run": "0E+1",
+        "swim": "0E+1"
+      },
+      "target": "45.0",
+      "unknown_swim_duration": false,
+      "warnings": [
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "single_run_45": {
+      "basis": "initial_catalog_baseline",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "known_minutes": "90",
+      "outcome": "PENDING_DRAFT_ONLY",
+      "phase": "base",
+      "planned_p": "52.2",
+      "source_ids": [
+        "TR-RUN-001",
+        "TR-RUN-001",
+        "TR-RUN-001"
+      ],
+      "sport_loads": {
+        "bike": "0",
+        "run": "52.2",
+        "swim": "0"
+      },
+      "sport_percentages": {
+        "bike": "0E+1",
+        "run": "100",
+        "swim": "0E+1"
+      },
+      "target": "45.0",
+      "unknown_swim_duration": false,
+      "warnings": [
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "single_swim_45": {
+      "basis": "initial_catalog_baseline",
+      "count": 3,
+      "dates": [
+        "2026-10-26",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "known_minutes": "0",
+      "outcome": "PENDING_DRAFT_ONLY",
+      "phase": "base",
+      "planned_p": "50.7",
+      "source_ids": [
+        "TR-SWIM-001",
+        "TR-SWIM-001",
+        "TR-SWIM-001"
+      ],
+      "sport_loads": {
+        "bike": "0",
+        "run": "0",
+        "swim": "50.7"
+      },
+      "sport_percentages": {
+        "bike": "0E+1",
+        "run": "0E+1",
+        "swim": "100"
+      },
+      "target": "45.0",
+      "unknown_swim_duration": true,
+      "warnings": [
+        "distance_only_swim_excluded_from_time_ratio",
+        "target_outside_catalog_capacity"
+      ]
+    },
+    "taper": {
+      "code": "swipe_selection_invalid",
+      "outcome": "REJECTED",
+      "resolved_phase": "taper",
+      "resolved_target": "22.575"
+    },
+    "unconfirmed_swim_capability": {
+      "code": "catalog_coverage_unsatisfied",
+      "outcome": "REJECTED"
+    }
+  },
+  "schema": "joren-c2-policy-probes-1",
+  "status": "SYNTHETIC ONLY; UNAPPROVED; INACTIVE"
+}

@@ -1,5 +1,16 @@
 # C1 immutable draft source manifest
 
+> C2 intake addendum (2026-11-04): the original C1 artifact and every historical
+> source/identity below remain unchanged. A separately hashed revised swimming
+> workbook is archived as `sources/Zwemtrainingen_IF2.xlsx` (7405 bytes,
+> SHA-256 `7c2ee58f719036d41d15e4446727a7144b46b600df4a9ea26f78c82f7093f6cb`).
+> It is a prospective IF² candidate, not an active catalog. The old swim workbook
+> and PDF now serve as historical method evidence; their old calculations are
+> not reinterpreted. See [current decision evidence](JOREN_C2_UPDATED_DECISIONS.md),
+> [complete source diff](JOREN_SWIMMING_IF2_SOURCE_DIFF.md) and the separate
+> `joren_c2_draft_revision_registry_v1.json`. Six revised rows (015–020) are
+> SOURCE-CONFLICTED. All methods, release and activation remain disabled.
+
 Date: 2026-11-04, Europe/Amsterdam. Private developer evidence.
 Status: **DRAFT — SOURCE VALIDATED, METHODOLOGY NOT APPROVED**.
 
