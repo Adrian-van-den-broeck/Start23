@@ -1,5 +1,46 @@
 # C1 immutable draft source manifest
 
+## C2.1 next source intake
+
+2026-11-04: the C1 payload, original archives and C2 draft registry stay immutable.
+The IF² six-row original conflict below is historical; the separate approved
+correction overlay is [recorded here](JOREN_SWIMMING_IF2_CORRECTION_REQUEST_NL.md).
+Joren's additional lighter workouts have **not arrived**. No placeholder source,
+workout, hash, metadata approval or active entry is registered.
+
+Prepared intake path for the actual delivery:
+
+1. Archive the exact received bytes under a distinct revision filename. Record
+   filename, byte count, SHA-256, sport, real row IDs/count, sheets and owner/Joren
+   decision reference. Keep every predecessor and explicitly record any logical
+   replacements; new IDs and replacements require their own mapping approval.
+2. Use existing `SourceSpec` + `read_document(bytes, spec)` to pin and inspect the
+   new archive before XML processing. These functions already accept an explicit
+   revision specification. Register only real reviewed revisions; the existing C1
+   `build_manifest` and C2 `read_revision` continue to reject changed bytes under
+   old hashes. A differently formatted source needs inspection and a reviewed
+   adapter change, never an assumed legacy schema.
+3. Reuse `parse_events` and `normalize_row` with source-specific reviewed metadata
+   to verify full-token parsing, exact seconds/meters, stationary rest, totals,
+   every zone subtotal, formula/cache/format evidence and complete row coverage.
+   Missing selection proposals remain a blocking error. Do not copy C1 approval
+   metadata or its fixed 61-row coverage into an unknown future release.
+4. Emit a new immutable private artifact with `write_immutable`: identical retries
+   must return identical bytes, conflicting outputs reject. Retain raw cells and
+   exact derived values separately; method, precision and operational P remain
+   unapproved unless expressly accepted. The C2.1 correction job demonstrates this
+   revision path without modifying originals or the C1/C2 artifacts.
+5. Rerun arithmetic/provenance, identity collision and source-custody checks and
+   the actual 45-baseline, recovery and taper feasibility probes with the delivered
+   sessions. Evaluate the isolated per-sport active-time maximum; unknown swim
+   minutes stay UNVERIFIED. Do not infer time from CSS/distance. Beginner-readiness
+   remains open until real source tests establish coverage within existing limits.
+
+No automatic loading of unknown files or operational selection is added. This is
+intake preparation using the existing lossless pipeline, not a C3–C8 implementation.
+
+## Historical C1/C2 source inventory
+
 > C2 intake addendum (2026-11-04): the original C1 artifact and every historical
 > source/identity below remain unchanged. A separately hashed revised swimming
 > workbook is archived as `sources/Zwemtrainingen_IF2.xlsx` (7405 bytes,

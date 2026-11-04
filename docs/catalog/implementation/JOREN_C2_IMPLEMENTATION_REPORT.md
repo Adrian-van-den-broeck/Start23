@@ -1,5 +1,119 @@
 # C2 implementation and verification report
 
+## C2.1 current delivery — 2026-11-04
+
+Status: **C2.1 COMPLETE — JOREN 80/20 POLICY LOCKED, BEGINNER SOURCE PENDING**.
+
+Scope: decision consolidation and approved swimming source correction only.
+Accepted branch `feat/joren-three-sport-catalog-c2` started **clean**, at exact
+SHA `ed052211ce413dd045b2e91af0d6a8e59ee534ff`, verified against HEAD and its branch
+ref. Worktree:
+`F:\Projecten Business\Start23\Code\.worktrees\joren-three-sport-catalog-c2`.
+The initial main checkout was on `fix/pre-ui-beta-blockers` with unrelated dirty
+files; it and all other worktrees were left untouched. No branch switch, stash,
+fetch, push, merge, production/staging access or deployment occurred.
+
+Read root AGENTS.md (no nearer backend/docs instructions), current MVP roadmap,
+C2 implementation report, current decision register and complete C1–C8 sequence.
+Realized V2 and all seven A3–A9 SHAs listed in the historical report remain verified
+ancestors. The latest explicit task approvals supersede older whole-workout and
+exact-80/20 policy descriptions prospectively, without changing historical behavior.
+
+**Joren's 80/20 maximum is formally confirmed.** Policy version
+`joren-planned-active-time-maximum-1` records its evidence and existing
+`phase-3-ruleset-3` segment taxonomy (Z1/Z2 low, Z3–Z5 high). The pure isolated
+`physiology/planned_intensity_policy.py` evaluates active segment seconds for each
+sport in one explicit athlete-local Monday–Sunday week. It uses exact rational
+accounting and comparison: 0% and exactly 20% pass, above 20% fails. There is no
+high minimum for beginner, recovery or taper weeks. Stationary swim rest is
+excluded, segment intervals remain mixed, and no TSS, workout-count, distance,
+CSS or session-focus input substitutes for active time. Complete empty/zero-time
+sport/weeks are NOT APPLICABLE; missing reliable time or classification is
+UNVERIFIED with no compliance ratio. No active planner imports the helper.
+It does not approve plans or replace any existing safeguard.
+
+The proposed BIKE/RUN/SWIM 50/30/20 weekly planned-TSS allocation remains separate;
+target versus hard constraint and infeasible-allocation handling are still open.
+No automatic load increase, baseline change, arbitrary source shortening,
+progression exception or intensity-limit relaxation is introduced.
+
+C2 had **not** produced an approved corrected derivative: its source evidence and
+draft registry retained all six original conflicts. C2.1 adds the lossless revision
+`joren-swim-if2-approved-prescription-overlay-1` in
+`joren_c21_swim_corrections_v1.json`, digest
+`a850a745e2170a3024f00ca201116880f8ba66de46d73e6b40ef8dbd380a948a`.
+It records Joren's correction approval C2.1-SWIM-1, original source hash/bytes,
+all original document/cell XML and ordered events, exact six before/after strings,
+derived ordered events/guidance, aggregates and rerun arithmetic. Only N19–N24
+change the single 300m Z3 block to Z2. No original cell is rewritten.
+
+- **A — Original source:** six contradictions remain historical evidence.
+- **B — Corrected derivative:** all 20 structures pass total/zone reconciliation.
+  All six corrected rows pass IF² arithmetic with confirmed populated anchors and
+  explicit historical reference parameters: 39.88125 / 54.759375 / 69.6375, repeated
+  for 018–020, displaying 39.9 / 54.8 / 69.6. No remaining structural, arithmetic
+  or provenance failure affects those six under the verification parameters.
+- **C — Operational status:** INACTIVE. Reference paces, normalization, Z3 IF in
+  010/011/014, intermediate rounding, source precision/storage, operational P
+  authority, method/V2 compatibility, replacement identity and release approvals
+  remain outstanding. Diagnostic reconstructed rounded paces match 20/20 displays;
+  exact historical seconds with reconstructed Z3 match 16/20. Neither is approval.
+
+All 20 swims, including corrected rows, still lack prescribed active minutes:
+time-based compliance is UNVERIFIED. No minutes are inferred from reference paces,
+CSS or meters. The original workbook and five pinned source archives, all four
+historical JSON artifacts and all prior identities remain unchanged. Original
+conflict markers in old artifacts apply to their original revision only.
+
+**Beginner 45 versus 64.5 remains OPEN — ACTUAL LIGHTER SOURCES PENDING.** Joren
+will supply additional lighter workouts. The C1 manifest addendum prepares the
+existing SourceSpec/read_document/parse_events/normalize_row/immutable-output
+intake path and required provenance, arithmetic, coverage and feasibility checks
+for those real future revisions. No fabricated sessions, placeholders, new active
+entries or premature 61-row beginner-ready claim are introduced.
+
+Reproduce the corrected artifact from backend with
+`python -B -m app.jobs.joren_c2_dry_run --dry-run --approved-corrections --private-output NEW_PATH`.
+Default C1/C2 output is preserved; identical correction retries are read-only and
+conflicting existing outputs reject. Output summaries remain private-load-free.
+
+### C2.1 verification and local delivery
+
+Using the existing root `backend/.venv/Scripts/python.exe`, with this worktree's
+backend as cwd:
+
+| Check | Final result |
+| --- | --- |
+| Focused C1/C2/C2.1 tests | **269 passed**, 5.90s; 30 new C2.1 tests, no existing test weakened |
+| Full backend `python -B -m pytest -q -p no:cacheprovider` | **1,282 passed**, 149.59s; one existing Starlette/httpx deprecation warning |
+| Ruff `python -m ruff check app tests benchmarks/joren_c2.py` | Pass |
+| Formatting `python -m ruff format --check app tests benchmarks/joren_c2.py` | Pass, 166 files |
+| Strict mypy `python -m mypy app tests benchmarks/joren_c2.py` | Pass, 166 source files; repository strict=true |
+| Corrected artifact reproduction/retry | Exact canonical bytes/digest; conflicting output rejected; staged blob equals local artifact byte-for-byte |
+| Source custody | Five external originals equal pinned archives; all nine original archive/historical JSON files equal accepted C2 blobs |
+| History and isolation | All eight historical report bodies retained after marked addenda; V2 and A3–A9 ancestors verified; no active importer/entry added |
+| Diff hygiene | `git diff --check` and staged equivalent pass |
+
+Coverage includes 0%, exact 20%, strict-above-20%, all three sports independently,
+segment accounting rather than workout count/focus/load, week boundaries, missing
+swim time/classification, stationary rest, empty/zero weeks, six exact corrections,
+all 20 aggregate checks, original immutability, offline behavior, repeatability,
+caller Decimal-context independence and no activation. The full suite also covers
+OpenAPI/public contracts, recursive private-load leaks, Realized V2 and A3–A9.
+
+Exact verified implementation SHA is recorded in the C2.1 delivery addendum below.
+The following report-only commit records that immutable SHA; the final branch-tip
+SHA is supplied in the delivery response and resolves with
+`git rev-parse feat/joren-three-sport-catalog-c2`.
+
+No C3–C8 work is performed. PostgreSQL/pgTAP remains **DEFERRED BY OWNER —
+PRE-BETA**, not passed. No database, mobile, API, active-catalog, Realized V2 or
+planner implementation changes are made; no mobile checks are required for this
+offline-only change. Database, scientific, device and later integration/release
+gates stay open. No push, merge, deployment or catalog activation occurred.
+
+## Historical accepted C2 report — retained evidence
+
 2026-11-04, Europe/Amsterdam. Private developer evidence.
 Status: **PARTIAL COMPLETE — SOURCE AND BEGINNER POLICY APPROVALS PENDING**.
 

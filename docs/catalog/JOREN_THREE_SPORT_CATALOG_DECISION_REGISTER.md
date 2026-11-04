@@ -1,5 +1,30 @@
 # Joren three-sport catalog decision register
 
+## Current C2.1 decisions — 2026-11-04
+
+This entry and [current approval evidence](implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval)
+supersede the older all-open tables below. C2.1-INTENSITY-1 formally confirms
+Joren's **maximum 20% high-intensity planned active segment time per sport per
+athlete-local week**. Zero high time is valid; zero active time is NOT APPLICABLE;
+missing reliable time is UNVERIFIED. Stationary swim rest is excluded. Existing
+Z1/Z2 low and Z3–Z5 high taxonomy applies; no TSS or whole-session-focus allocation.
+Only an isolated versioned evaluator is implemented, without planner integration.
+
+C2.1-SWIM-1 confirms ordered 300m Z3 → 300m Z2 for TR-SWIM-015–020. A separate
+lossless correction manifest is structurally valid; the original remains preserved
+and conflicted. Method/precision and release approvals remain open; activation is
+disabled. See [correction record](implementation/JOREN_SWIMMING_IF2_CORRECTION_REQUEST_NL.md).
+
+C2.1-BEGINNER-1 records that Joren will supply lighter sessions. The 45 versus
+64.5 beginner conflict is **OPEN — AWAITING ACTUAL SOURCE**, with no load increase,
+arbitrary shortening, progression exception or premature beginner-readiness claim.
+The separate BIKE/RUN/SWIM 50/30/20 planned-TSS allocation still needs target/hard
+constraint and infeasibility decisions. Source paces, normalization, Z3 IF,
+rounding/storage/P authority, replacement mapping and V2 compatibility remain open.
+No C3–C8 work, operational catalog entries, activation or deployment is performed.
+
+## Historical review entries
+
 > Final review update, 2026-11-03: all three sources are now supplied. The current
 > entry below supersedes prior-stage availability statements. Historical text
 > is retained after the marked boundary; no previous source finding is discarded.

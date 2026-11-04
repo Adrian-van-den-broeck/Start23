@@ -1,5 +1,36 @@
 # Swimming IF² calculation reconciliation
 
+## C2.1 corrected derivative reconciliation
+
+2026-11-04: the original-source comparisons below remain historical evidence.
+Decision C2.1-SWIM-1 authorizes six ordered 300m Z3 → Z2 corrections, without
+changing aggregate cells or stored P. The separate lossless correction manifest
+`joren_c21_swim_corrections_v1.json` has SHA-256
+`a850a745e2170a3024f00ca201116880f8ba66de46d73e6b40ef8dbd380a948a`.
+All 20 derived ordered-zone totals equal their source aggregates and total meters.
+
+| Corrected ID | Z2/Z3 meters | Exact IF² result with confirmed populated anchors + explicit PDF seconds | Source display / result display |
+| --- | --- | --- | --- |
+| TR-SWIM-015 | 600/0 | 39.88125 | 39.9 / 39.9 |
+| TR-SWIM-016 | 600/0 | 54.759375 | 54.8 / 54.8 |
+| TR-SWIM-017 | 600/0 | 69.6375 | 69.6 / 69.6 |
+| TR-SWIM-018 | 600/0 | 39.88125 | 39.9 / 39.9 |
+| TR-SWIM-019 | 600/0 | 54.759375 | 54.8 / 54.8 |
+| TR-SWIM-020 | 600/0 | 69.6375 | 69.6 / 69.6 |
+
+Strict arithmetic now accepts all six with explicit reference parameters; no Z3
+anchor is needed for them. Across the full corrected derivative, 17 rows compute
+with confirmed populated IF anchors; 010/011/014 still reject `missing_if_anchor`.
+The RECONSTRUCTED rounded-pace diagnostic reproduces all 20 displayed values;
+exact historical seconds with reconstructed Z3 reproduce 16/20. These diagnostics
+still do not approve paces, normalization, Z3 IF, rounding/storage or operational P.
+All rational/context results and per-row display comparisons are retained.
+No arithmetic or provenance failure remains for the six authorized corrections;
+method acceptance, swim active-time coverage, V2 compatibility and catalog release
+remain open. Corrected candidate: **CONSISTENT; INACTIVE**. Original: six conflicts.
+
+## Historical original-source reconciliation
+
 Date: 2026-11-04, Europe/Amsterdam. Private developer review evidence; no activation.
 
 All 20 new source values are preserved below. Source A2 states exactly: "Z1 t/m Z5 zijn in METERS. TSS berekend door meters om te zetten naar minuten * IF^2 * 0.90." This confirms the revised IF² direction but contains neither reference pace inputs, IF table, normalization nor rounding stages. No formula cells or hidden calculation sheet supply those details.

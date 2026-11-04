@@ -1,5 +1,14 @@
 # Joren three-sport integration sequence — C1–C8
 
+> C2.1 follow-up, 2026-11-04: accepted C2 baseline
+> `ed052211ce413dd045b2e91af0d6a8e59ee534ff`. The
+> [current decisions](implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval)
+> supersede historical open intensity/six-prescription questions below. The 20%
+> per-sport/week planned active-time maximum is approved; a pure isolated helper
+> and inactive corrected swim manifest are verified. Lighter beginner sources,
+> method/precision, identity and release gates remain open. **STOP after C2.1;
+> do not execute C3–C8 or activate the catalog.** The original sequence follows.
+
 Review date: 2026-11-03, Europe/Amsterdam. REVIEW ONLY; no activation.
 Accepted engine: `feat/joren-realized-tss-v2`, exact SHA `cef4d0adfb09f5f1937528a98c594a6442816f20`.
 Reused branch `review/joren-new-workout-catalog`; worktree

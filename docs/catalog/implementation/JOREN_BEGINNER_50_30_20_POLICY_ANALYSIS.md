@@ -1,5 +1,16 @@
 # Beginner composition and sport-distribution policy analysis
 
+> C2.1 current decision, 2026-11-04: Joren confirms a **maximum**, not an exact
+> target or minimum, of 20% high-intensity active planned segment time per sport
+> per week. Thus a fully low-intensity week is valid; the older exact-80/20
+> alternatives below are historical analysis. Unknown swim time is UNVERIFIED.
+> The separate 50/30/20 planned-TSS allocation remains a proposal with enforcement
+> and infeasibility handling unresolved. Joren will supply lighter workouts;
+> **45 versus 64.5 remains OPEN — awaiting actual sources and tests**. No baseline,
+> duration, progression or intensity-limit exception is approved. See
+> [current decisions](JOREN_C2_UPDATED_DECISIONS.md#c21-approval) and
+> [prepared intake](JOREN_C1_SOURCE_MANIFEST.md#c21-next-source-intake).
+
 2026-11-04, Europe/Amsterdam. Private developer review; all loads are server-private.
 These are synthetic local planner probes and policy comparisons, not training
 advice, scientific suitability approval or activated rules.

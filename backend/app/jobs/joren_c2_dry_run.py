@@ -9,6 +9,7 @@ from pathlib import Path
 from app.jobs.joren_catalog_dry_run import write_immutable
 from app.modules.physiology.planned_source import SourceMethodError
 from app.modules.workouts.joren_c2_verification import private_evidence
+from app.modules.workouts.joren_c21_corrections import correction_evidence
 from app.modules.workouts.joren_draft import DEFAULT_SOURCES, SourceError
 
 
@@ -31,9 +32,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dry-run", required=True, action="store_true")
     parser.add_argument("--sources", type=Path, default=DEFAULT_SOURCES)
     parser.add_argument("--private-output", type=Path)
+    parser.add_argument("--approved-corrections", action="store_true")
     args = parser.parse_args(argv)
     try:
-        content = private_json(private_evidence(args.sources))
+        evidence = (
+            correction_evidence if args.approved_corrections else private_evidence
+        )
+        content = private_json(evidence(args.sources))
         if args.private_output is not None:
             write_immutable(args.private_output, content)
         print(
@@ -42,6 +47,11 @@ def main(argv: list[str] | None = None) -> int:
                     "status": "APPROVALS_PENDING",
                     "source_rows": 20,
                     "source_conflicted_rows": 6,
+                    **(
+                        {"derived_conflicted_rows": 0}
+                        if args.approved_corrections
+                        else {}
+                    ),
                     "activation_status": "INACTIVE",
                     "artifact_sha256": sha256(content.encode()).hexdigest(),
                 },

@@ -1,5 +1,71 @@
 # C2 decision evidence and outstanding approval dependencies
 
+## C2.1 approval
+
+Current intake: 2026-11-04, Europe/Amsterdam. Authority: Joren's explicit
+approvals relayed by the owner in **WOMBO C2.1 — FINAL JOREN 80/20 APPROVAL AND
+SWIMMING CORRECTION FOLLOW-UP**. Original approval dates and independent scientific
+review identifiers were not supplied. This entry supersedes the historical C2
+open questions below within its exact scope.
+
+| Decision | Confirmed scope | Implementation boundary |
+| --- | --- | --- |
+| C2.1-INTENSITY-1 | Maximum 20% high-intensity **planned active training time**, independently for RUN, BIKE and SWIM in each athlete-local Monday–Sunday week | Version `joren-planned-active-time-maximum-1`; pure isolated evaluator only; active planner unchanged |
+| C2.1-SWIM-1 | TR-SWIM-015 through TR-SWIM-020: the ordered 300m Z3 block must be 300m Z2 | Six exact N19–N24 overlays in `joren-swim-if2-approved-prescription-overlay-1`; originals retained |
+| C2.1-BEGINNER-1 | Joren will supply additional lighter sessions for easier weeks | Await actual sources and tests; beginner 45 versus 64.5 remains **OPEN** |
+
+The intensity maximum is inclusive: 0% and exactly 20% pass; any proportion above
+20% fails when coverage is complete. There is no required high-intensity minimum
+in beginner, recovery, taper or other weeks. Aggregate planned **segment**
+seconds, including low-intensity recovery blocks inside hard-focus sessions.
+Stationary swim rest contributes no active time. Do not use TSS, workout counts,
+session-focus RPE, distance or CSS as a substitute. No reference-pace minutes are
+athlete prescription minutes. The approved BR-003 segment taxonomy is Z1/Z2 low,
+Z3/Z4/Z5 high (`phase-3-ruleset-3`, `classify_segment`); Z3 classification is
+resolved even though the separate IF² **Z3 coefficient** remains missing.
+
+Complete zero-active-time sport/weeks, including absent sports, are **NOT
+APPLICABLE** with no ratio. Any missing reliable planned active segment time or
+classification makes that sport/week **UNVERIFIED**, with no compliance ratio;
+known subtotals cannot establish satisfaction. All 20 distance-only swimming
+prescriptions still lack active time, including the corrected six. The evaluator
+does not approve a plan and cannot replace injury, load, recovery, taper, spacing,
+pending-confirmation or stale/version safeguards. It is not imported by selection.
+
+The separate proposed triathlon allocation remains BIKE 50%, RUN 30%, SWIM 20%
+of weekly planned TSS. Target versus hard constraint, denominator details and
+infeasible-allocation handling remain open. No automatic increase in load is
+authorized to force those percentages. It is not an intensity rule.
+
+Swimming status has three distinct meanings:
+
+- **Original:** the pinned IF² workbook remains contradictory for the six rows;
+  original hash `7c2ee58f719036d41d15e4446727a7144b46b600df4a9ea26f78c82f7093f6cb`
+  (7405 bytes) and all source cells/XML are retained.
+- **Derived candidate:** structurally **CONSISTENT**, all 20 row totals and zone
+  aggregates agree after precisely six authorized replacements. The six IF²
+  computations reconcile with their displayed values using confirmed populated
+  anchors and explicit historical reference seconds. No structural blocker remains
+  for them; preserved contradictory originals do not invalidate the derivative.
+- **Operational:** **INACTIVE**. Approval of these prescriptions does not approve
+  exact reference paces, missing Z3 IF for 010/011/014, normalization, intermediate
+  rounding, numeric precision/storage, authoritative operational P, V2 compatibility,
+  identity/replacement mapping or catalog release.
+
+The corrected manifest retains original/derived ordered events and per-block
+guidance separately. Its digest and reconciliation are recorded in the source
+correction request and calculation report. Existing C1/C2 JSON artifacts and draft
+registry remain historical and byte-identical; their six-conflict markers describe
+the original source revision, not this corrected successor. No active entries exist
+for either. No C3–C8 work or activation is authorized here.
+
+The beginner decision is specifically **await lighter supplied sources**, not a
+baseline, duration, progression or 20% exception. No workouts or placeholders are
+invented. The intake preparation and required checks for real new revisions are
+in [the C1 manifest addendum](JOREN_C1_SOURCE_MANIFEST.md#c21-next-source-intake).
+
+## Historical C2 intake — retained evidence
+
 Intake date: 2026-11-04, Europe/Amsterdam. Developer-only evidence; activation disabled.
 Authority: owner's task “WOMBO — C1.1 / C2: JOREN APPROVAL INTAKE, SWIM IF²
 REVISION AND PLANNING POLICY VALIDATION”, supplied in this conversation. These
