@@ -112,6 +112,23 @@ planner implementation changes are made; no mobile checks are required for this
 offline-only change. Database, scientific, device and later integration/release
 gates stay open. No push, merge, deployment or catalog activation occurred.
 
+### C2.1 local delivery addendum
+
+Exact final verified C2.1 software/source/evidence SHA:
+`5b6c960cf817dfebc31cffbd6e7f6fc58f2309be`, direct child of accepted
+`ed052211ce413dd045b2e91af0d6a8e59ee534ff`. The worktree was clean after this
+commit. This following report-only commit adds its immutable reference; its own
+branch-tip SHA is recorded in the final delivery response (a commit cannot embed
+its own hash). No implementation or artifact bytes change in that final commit.
+
+All required local verification passed. Original and corrected source revisions
+retain distinct status; the six corrections are structurally valid, all planned
+swim active-time coverage stays UNVERIFIED, and catalog activation stays disabled.
+Additional lighter workouts and remaining method/precision/release decisions are
+pending. PostgreSQL/pgTAP: **DEFERRED BY OWNER — PRE-BETA**.
+
+WOMBO C2.1 COMPLETE — JOREN 80/20 POLICY LOCKED, BEGINNER SOURCE PENDING
+
 ## Historical accepted C2 report — retained evidence
 
 2026-11-04, Europe/Amsterdam. Private developer evidence.
