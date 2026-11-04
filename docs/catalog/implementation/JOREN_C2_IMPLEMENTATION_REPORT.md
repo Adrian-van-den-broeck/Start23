@@ -188,4 +188,18 @@ All six requested reports, source custody, private deterministic fixtures and
 draft registry are delivered. No activation, push, merge, deployment, staging/
 production mutation, automatic baseline increase or historical recalculation occurred.
 
+## Local delivery addendum
+
+Exact verified software/source/evidence commit:
+`e3d8ae1806e4f11a17b6f5cdeea47ee54dbdc409`, directly based on
+`e436285e9f169908a45ff8f34aeed0e003ba6bc2`. The following commit changes only
+this report to record that immutable implementation SHA. The final branch-tip
+SHA is supplied in the delivery response and resolves with
+`git rev-parse feat/joren-three-sport-catalog-c2`.
+
+All three canonical C2 JSON artifacts were compared against their staged Git
+blobs byte-for-byte before commit. The new original/custody archive was rehashed
+again after commit with the exact expected result. The implementation commit
+left the worktree clean. No push, merge, deployment or activation occurred.
+
 WOMBO C2 PARTIAL COMPLETE — SOURCE AND BEGINNER POLICY APPROVALS PENDING
