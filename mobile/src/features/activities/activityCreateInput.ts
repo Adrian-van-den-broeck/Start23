@@ -1,5 +1,6 @@
 import type { createActivity } from '../../api/client';
 import type { Discipline, PlannedExternalActivity, PlannedWorkout } from '../../api/types';
+import { realizedV2MobileEnabled } from '../../lib/releaseGates';
 
 export function newIdempotencyKey(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (value) => {
@@ -45,7 +46,7 @@ export function activityCreateInput({ discipline, duration, distance, startedAt,
     started_at: startedAt,
     timezone: athleteTimezone,
     duration_minutes: numericDuration === null ? null : String(numericDuration),
-    performed_duration_confirmed: numericDuration !== null,
+    ...(realizedV2MobileEnabled ? { performed_duration_confirmed: numericDuration !== null } : {}),
     ...(numericDistance === undefined
       ? {}
       : { distance_meters: numericDistance }),

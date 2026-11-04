@@ -16,6 +16,12 @@ export type LanguagePreference = 'system' | AppLanguage;
 const preferenceStorageKey = 'start23.language-preference';
 
 const nl = {
+  "recovery.endpoint_unavailable": "Je weekplanning kan met deze server nog niet volledig worden hersteld. Er wordt geen nieuw plan aangemaakt.",
+  "recovery.unknown": "De opgeslagen planning is nog onbekend. Probeer het herstel opnieuw voordat je een nieuw voorstel maakt.",
+  "recovery.transient": "Het herstel is tijdelijk onderbroken. Je bekende planning blijft bewaard. Controleer je verbinding en probeer opnieuw.",
+  "recovery.authentication": "Je sessie moet worden hersteld voordat je planning kan worden geladen.",
+  "recovery.authorization": "De planning kon niet met deze sessie worden geopend. Er wordt geen andere planning getoond.",
+
   'auth.recoveryTitle': 'Je sessie herstellen',
   'auth.networkRecovery': 'Je sessie kan tijdelijk niet worden vernieuwd. Je aanmeldgegevens blijven bewaard. Controleer je verbinding en probeer opnieuw.',
   'auth.storageRecovery': 'Je aanmeldgegevens konden niet veilig worden gelezen of bewaard. Probeer opnieuw.',
@@ -279,6 +285,12 @@ const nl = {
 type TranslationKey = keyof typeof nl;
 
 const en: Record<TranslationKey, string> = {
+  "recovery.endpoint_unavailable": "Your week cannot yet be fully recovered with this server. No new plan will be created.",
+  "recovery.unknown": "The stored planning state is still unknown. Retry recovery before creating a new proposal.",
+  "recovery.transient": "Recovery was temporarily interrupted. Your known plan is retained. Check your connection and retry.",
+  "recovery.authentication": "Your session must be recovered before planning can be loaded.",
+  "recovery.authorization": "Planning could not be opened with this session. No other plan will be shown.",
+
   'auth.recoveryTitle': 'Restore your session',
   'auth.networkRecovery': 'Your session could not be refreshed right now. Your sign-in credentials are preserved. Check your connection and retry.',
   'auth.storageRecovery': 'Your sign-in credentials could not be read or saved securely. Please retry.',

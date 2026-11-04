@@ -10,6 +10,7 @@ import { latestPlanIdKey, latestSwipeDraftIdKey, scopedResumeKey } from './plann
 import { activePlan, draft, onboarding, pendingPlan } from './planning.test-fixtures';
 import { approvedNext, pendingNext } from './planningTask.test-fixtures';
 import { weekHomeViewModel } from '../../ui-v2/utils/weekHomeViewModel';
+import { PlanningRecoveryEndpointUnavailableError } from '../../api/planningRecovery';
 
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: jest.fn(), deleteItemAsync: jest.fn() }));
 jest.mock('../../api/client');
@@ -110,6 +111,44 @@ test.each(['missing', 'foreign'])('definitive %s locator is removed only from th
 test('valid empty discovery permits existing empty state without creating anything', async () => {
   await render(<Host />); await ready(); expect(flow.plan).toBeNull(); expect(flow.swipeDraft).toBeNull();
   expect(api.createSwipeWeekDraft).not.toHaveBeenCalled(); expect(SecureStore.setItemAsync).not.toHaveBeenCalled();
+});
+
+test.each([false, true])('old backend retains known state=%s but cannot enable replacement generation', async known => {
+  if (known) storage.set(key(), activePlan.id);
+  jest.mocked(api.discoverPlanning).mockRejectedValue(new PlanningRecoveryEndpointUnavailableError());
+  await render(<Host />); await waitFor(() => expect(flow.resumeState).toBe('failed'));
+  expect(flow.recoveryFailure).toBe('endpoint_unavailable');
+  expect(flow.plan).toBe(known ? activePlan : null);
+  await act(() => flow.clearPlan());
+  expect(flow.plan).toBe(known ? activePlan : null);
+  if (known) expect(storage.get(key())).toBe(activePlan.id);
+  await act(() => flow.generate()); await act(() => flow.generate());
+  expect(flow.resumeState).toBe('failed');
+  expect(api.createSwipeWeekDraft).not.toHaveBeenCalled();
+  expect(api.submitSwipeWeekDraft).not.toHaveBeenCalled();
+  const model = weekHomeViewModel({ plan: flow.plan, activePlan: flow.activePlan, draft: flow.swipeDraft,
+    today: '2026-10-05', resumeState: flow.resumeState, activeReadState: flow.activeReadState });
+  expect(model.empty).not.toBe('noPlan');
+});
+
+test('unavailable recovery retains pending plan identity and restores normal A6 after retry', async () => {
+  storage.set(key(), pendingPlan.id); plans.set(pendingPlan.id, pendingPlan);
+  jest.mocked(api.discoverPlanning).mockRejectedValueOnce(new PlanningRecoveryEndpointUnavailableError());
+  await render(<Host />); await waitFor(() => expect(flow.resumeState).toBe('failed'));
+  expect(flow.plan).toBe(pendingPlan); expect(storage.get(key())).toBe(pendingPlan.id);
+  await act(() => flow.retryResume()); await ready();
+  expect(flow.recoveryFailure).toBeNull(); expect(flow.plan?.revision_id).toBe(pendingPlan.revision_id);
+  expect(api.approvePlanProposal).not.toHaveBeenCalled();
+});
+
+test('old-backend recovery state is replaced on account switch, never copied to B', async () => {
+  storage.set(key(), activePlan.id);
+  jest.mocked(api.discoverPlanning).mockRejectedValue(new PlanningRecoveryEndpointUnavailableError());
+  const view = await render(<Host />); await waitFor(() => expect(flow.resumeState).toBe('failed'));
+  expect(flow.plan).toBe(activePlan);
+  await view.rerender(<Host owner="athlete-b" />); await waitFor(() => expect(flow.resumeState).toBe('failed'));
+  expect(flow.plan).toBeNull(); expect(storage.get(key())).toBe(activePlan.id);
+  expect(api.createSwipeWeekDraft).not.toHaveBeenCalled();
 });
 
 test.each(['reinstall', 'second device', 'web/no local locator'])('%s discovers the active authoritative plan', async () => {

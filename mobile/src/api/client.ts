@@ -1,3 +1,5 @@
+import { realizedV2MobileEnabled } from '../lib/releaseGates';
+import { PlanningRecoveryEndpointUnavailableError, recoveryEndpointAbsent } from './planningRecovery';
 import type {
   CalibrationEvaluation,
   CalibrationObservation,
@@ -841,7 +843,7 @@ export function createActivity(
   return request(accessToken, '/api/v1/activities', {
     method: 'POST',
     headers: { 'Idempotency-Key': idempotencyKey },
-    body: JSON.stringify(input),
+    body: JSON.stringify(realizedV2MobileEnabled ? input : { ...input, performed_duration_confirmed: undefined }),
   }, validate.activityResponse);
 }
 
@@ -850,11 +852,13 @@ export type WorkoutRegistration = {
   registration_revision: number; status: 'unknown' | 'skipped';
 };
 export function getWorkoutRegistration(accessToken: string, workoutId: string): Promise<WorkoutRegistration> {
+  if (!realizedV2MobileEnabled) return Promise.reject(new Error('Workout registration is not available in this release.'));
   return request(accessToken, `/api/v1/planned-workouts/${workoutId}/registration`, undefined, validate.workoutRegistration);
 }
 export function confirmWorkoutRegistration(accessToken: string, workoutId: string, input: {
   plan_revision_id: string; expected_registration_revision: number; status: 'unknown' | 'skipped';
 }): Promise<WorkoutRegistration> {
+  if (!realizedV2MobileEnabled) return Promise.reject(new Error('Workout registration is not available in this release.'));
   return request(accessToken, `/api/v1/planned-workouts/${workoutId}/registration`, {
     method: 'PUT', body: JSON.stringify(input),
   }, validate.workoutRegistration);
@@ -1248,5 +1252,17 @@ export function markGoalAchieved(
 }
 
 export async function discoverPlanning(accessToken: string): Promise<PlanningRecovery> {
-  return request<PlanningRecovery>(accessToken, '/api/v1/weekly-plans/recovery', {}, validate.recoveryResponse);
+  try {
+    return await request<PlanningRecovery>(accessToken, '/api/v1/weekly-plans/recovery', {}, validate.recoveryResponse);
+  } catch (error) {
+    // Old FastAPI can route "recovery" to a UUID parameter (422). Neither
+    // validation nor a resource 404 proves absence of a capability or plan.
+    if (error instanceof ApiRequestError && [404, 405, 422].includes(error.status ?? 0)) {
+      let absent = false;
+      try { absent = recoveryEndpointAbsent(await request<unknown>(accessToken, '/openapi.json')); }
+      catch { /* Retain the original unknown result if capability evidence fails. */ }
+      if (absent) throw new PlanningRecoveryEndpointUnavailableError();
+    }
+    throw error;
+  }
 }

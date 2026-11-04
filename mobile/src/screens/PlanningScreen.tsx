@@ -892,6 +892,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
   });
   if (!active) return null;
   return <View style={{ flex: 1 }}>
+    {flow.resumeState === 'failed' && flow.recoveryFailure ? <Text accessibilityRole="alert" style={styles.error}>{t(`recovery.${flow.recoveryFailure}`)}</Text> : null}
     {flow.resumeState === 'failed' || flow.activeReadState === 'failed' ? <V2Button label={t('shell.retry')} disabled={locked} onPress={flow.retryResume} /> : null}
     {rootVersion === 'v1' && !task && flow.taskHandoff?.taskKey.startsWith('recovery:') && flow.taskHandoff.phase === 'pending' ? <V2Button label={t('week.action.review')} disabled={locked} onPress={() => action('review')} /> : null}
     {calendarOpen && calendarVersion === 'v2' ? <CalendarScreen

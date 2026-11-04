@@ -1,4 +1,5 @@
 import { localizeRecoveryMessage } from '../i18n/recoveryMessages';
+import { realizedV2MobileEnabled } from '../lib/releaseGates';
 import { useEffect, type ComponentProps } from 'react';
 import { View } from 'react-native';
 import { useActivityFlow } from '../features/activities/ActivityFlowProvider';
@@ -66,7 +67,7 @@ export function ActivityBoundary(props: ComponentProps<typeof ActivityScreen> & 
       if (!choice) flow.selectWorkout(null);
       else if (choice.kind === 'workout') { const workout = flow.workouts.find(item => item.id === choice.id); if (workout) flow.selectWorkout(workout); }
       else { const activity = flow.externalActivities.find(item => item.id === choice.id); if (activity) flow.selectExternal(activity); }
-    }} onSave={flow.save} onRegistration={flow.registerCompletion} registrationOutcome={flow.registrationOutcome} />;
+    }} onSave={flow.save} onRegistration={realizedV2MobileEnabled ? flow.registerCompletion : undefined} registrationOutcome={flow.registrationOutcome} />;
   const now = new Date();
   return <ActivitiesScreen rows={flow.activities.map(activity => {
     const match = activity.match_status === 'unmatched' && activity.processing_state === 'awaiting_rpe' ? suggestedWorkout(activity, flow.workouts) : null;

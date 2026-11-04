@@ -1,6 +1,7 @@
 import * as Haptics from 'expo-haptics';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'react-native';
+import { planningRecoveryFailure, type PlanningRecoveryFailure } from '../../api/planningRecovery';
 
 import {
   approvePlanProposal,
@@ -49,6 +50,7 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
     () => new Set(),
   );
   const [resumeState, setResumeState] = useState<'loading' | 'ready' | 'failed'>('loading');
+  const [recoveryFailure, setRecoveryFailure] = useState<PlanningRecoveryFailure | null>(null);
   const [activeSnapshot, setActiveSnapshot] = useState<WeeklyPlan | null>(null);
   const [activeReadState, setActiveReadState] = useState<'ready' | 'loading' | 'failed'>('ready');
   const [plan, setPlan] = useState<WeeklyPlan | null>(null);
@@ -106,6 +108,7 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
     const generation = planResultGeneration.current;
     const isCurrent = () => mounted && moveOwnerAlive.current && generation === planResultGeneration.current;
     setResumeState('loading');
+    setRecoveryFailure(null);
     const validatePlan = (snapshot: WeeklyPlan) => {
       if (!snapshot || typeof snapshot.id !== 'string' || typeof snapshot.week_start !== 'string' ||
         typeof snapshot.timezone !== 'string' || !Number.isInteger(snapshot.revision) ||
@@ -202,7 +205,9 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
       else if (localDraft && !restoredDraft) await rememberSwipeDraftId(null, isCurrent);
       if (isCurrent()) { setRecoveryVersion(value => value + 1); setResumeState('ready'); }
     };
-    void resume().catch(() => { if (isCurrent()) setResumeState('failed'); }).finally(() => {
+    void resume().catch((caught: unknown) => {
+      if (isCurrent()) { setRecoveryFailure(planningRecoveryFailure(caught)); setResumeState('failed'); }
+    }).finally(() => {
       if (mounted) resumeRunning.current = false;
     });
     return () => { mounted = false; resumeRunning.current = false; };
@@ -261,7 +266,7 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
     if (!moveOwnerAlive.current || mutationInFlight.current || pendingWorkouts.isLoading()) return;
     mutationInFlight.current = true;
     ++planResultGeneration.current;
-    if (currentPlan.current || swipeDraft) setResumeState('ready');
+    if ((currentPlan.current || swipeDraft) && !recoveryFailure) setResumeState('ready');
     setBusy(true);
     setError(null);
     try {
@@ -311,8 +316,12 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
     });
   };
 
-  const generate = () =>
-    run(async () => {
+  const generate = () => {
+    if (resumeState !== 'ready' || recoveryFailure !== null) {
+      setError('Herstel eerst de weekplanning voordat je een nieuw voorstel maakt.');
+      return Promise.resolve();
+    }
+    return run(async () => {
       const dates = availableDatesFor(weekStart, selectedDays);
       if (!reusePreviousWeek && dates.length === 0) {
         throw new Error('Kies minstens één beschikbare trainingsdag.');
@@ -350,13 +359,14 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
       setResumeState('ready');
       setView('deck');
     });
+  };
 
   const applyApprovedSnapshot = (updated: WeeklyPlan) => {
     ++planResultGeneration.current;
     currentPlan.current = updated;
     setPlan(updated);
     setActiveSnapshot(updated);
-    setResumeState('ready');
+    setResumeState(recoveryFailure ? 'failed' : 'ready');
     setActiveReadState('ready');
     setWeekStart(updated.week_start);
     setSelectedDays(dayOffsetsFor(updated.week_start, updated.available_dates));
@@ -372,7 +382,7 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
     if (mutationInFlight.current || pendingWorkouts.isLoading()) throw new Error('Wacht tot de huidige planningsactie klaar is.');
     mutationInFlight.current = true;
     ++planResultGeneration.current;
-    if (currentPlan.current || swipeDraft) setResumeState('ready');
+    if ((currentPlan.current || swipeDraft) && !recoveryFailure) setResumeState('ready');
     setBusy(true);
     setError(null);
     try { return await operation(); }
@@ -558,7 +568,7 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
       if (!moveOwnerAlive.current) return;
       setSwipeDraft(null);
       setPlan(result.plan);
-      setResumeState('ready');
+      setResumeState(recoveryFailure ? 'failed' : 'ready');
       setView('plan');
       void Haptics.notificationAsync(
         Haptics.NotificationFeedbackType.Success,
@@ -666,7 +676,7 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
 
   const pendingWorkouts = usePendingWorkoutActions(accessToken, plan, setPlan, setError, mutationInFlight);
   const clearPlan = () => {
-    if (!moveOwnerAlive.current) return;
+    if (!moveOwnerAlive.current || resumeState !== 'ready' || recoveryFailure !== null) return;
     ++planResultGeneration.current;
     setPlan(null);
     void rememberPlanId(null);
@@ -683,7 +693,7 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
 
   return {
     openRecoveredReview, closeRecoveredReview,
-    resumeState, retryResume, recoveryVersion, activePlan, activeReadState, taskHandoff, receiveTaskPlan, approveTaskPlan,
+    resumeState, recoveryFailure, retryResume, recoveryVersion, activePlan, activeReadState, taskHandoff, receiveTaskPlan, approveTaskPlan,
     view, setView, weekStart, setWeekStart, reusePreviousWeek, setReusePreviousWeek,
     selectedDays, injuries, crossTrainingOptIns, plan, swipeDraft, pendingMove,
     primaryGoal, maintenanceMarked, busy, error, setError, availableDates,
