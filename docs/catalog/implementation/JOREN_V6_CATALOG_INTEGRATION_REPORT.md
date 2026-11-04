@@ -183,3 +183,33 @@ and deployment preparation were not modified.
 WOMBO V6 CATALOG VALIDATION PARTIAL — SOURCE OR PLANNING GAPS REMAIN
 
 Verification and immutable delivery commits: [integration report](JOREN_V6_CATALOG_INTEGRATION_REPORT.md).
+
+## Local delivery addendum
+
+Exact verified software/source/evidence commit:
+`99adc4ef89baebfbaf28a54a193177c35a2655b8`, direct child of accepted start
+`f5831d3cbde04f60053402eb3083a1f1e6ade7a8`.
+The following documentation-only commit records that immutable implementation
+SHA; its own final branch-tip SHA is supplied in the delivery response.
+
+Final staged diff hygiene passed. All 16 newly staged reports/source archives/
+private JSON artifacts were compared to their index blobs byte-for-byte and
+matched. All 36 pre-existing catalog source/report/artifact files equal their
+accepted C2.1 worktree copies byte-for-byte; their historical Git blobs remain
+unchanged. Fresh Windows checkout line-ending differences were restored from
+those copies, with narrow LF attributes for the three accepted LF reports.
+The original correction report retains its historical mixed line endings.
+All three V6 original/custody SHA-256 values were reverified unchanged.
+
+The six reports have valid local links. Full backend: 1,378 passed; focused V6:
+96 passed; Ruff/format/strict mypy passed. The final independent 40-case planner
+repeat equals the preceding corrected fixture run exactly, including the eight
+historical and six V6 timeout slots. No timeout or safety constraint changed.
+
+The A5/A6 release worktree remains clean at
+`cd3e2dd438031cfb565858d0a5929e9963f7b31f`; backend selection and deployment
+preparation are untouched. Active application/catalog behavior remains unchanged.
+PostgreSQL/pgTAP remains owner-deferred. No push, merge, deployment, migration,
+publish, catalog activation or historical recalculation occurred.
+
+WOMBO V6 CATALOG VALIDATION PARTIAL — SOURCE OR PLANNING GAPS REMAIN
