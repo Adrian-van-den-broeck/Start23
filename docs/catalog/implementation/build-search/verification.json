@@ -1,0 +1,72 @@
+{
+  "branch": "perf/joren-v6-planner-build-search",
+  "date": "2026-11-05",
+  "forbidden_actions_performed": [],
+  "formatting": {
+    "files": 180,
+    "result": "PASS"
+  },
+  "full_backend": {
+    "passed": 2067,
+    "seconds": 156.1,
+    "warning": "existing Starlette/httpx deprecation",
+    "warnings": 1
+  },
+  "matrix": {
+    "accepted_timeouts": 14,
+    "full_reference_parity": 26,
+    "inputs_per_variant_per_mode": 40,
+    "modes": [
+      "cold",
+      "preloaded",
+      "instrumented"
+    ],
+    "optimized_fail_closed_exact": 10,
+    "optimized_pending_legacy_checked": 29,
+    "optimized_timeouts": 1
+  },
+  "new_build_cases": 560,
+  "open_gates": [
+    "current:build_4 search timeout",
+    "existing PostgreSQL/pgTAP and hosted/mobile release gates",
+    "prospective V6 policy/method/suitability/swimming-duration approvals"
+  ],
+  "outcome": "PARTIALLY_IMPROVED_REMAINING_CURRENT_BUILD_4_TIMEOUT",
+  "preserved_tips": {
+    "a5_a6": "cd3e2dd438031cfb565858d0a5929e9963f7b31f",
+    "accepted": "12fde3bd542b42e8259b130be797f673a8c2ded6"
+  },
+  "protected_diff_empty": [
+    "backend/app/modules/physiology",
+    "backend/app/modules/workouts",
+    "backend/app/modules/planning/execution.py",
+    "backend/app/modules/planning/service.py",
+    "backend/app/api",
+    "mobile",
+    "supabase",
+    "backend/railway.toml",
+    "docs/catalog/v6"
+  ],
+  "ruff": "PASS",
+  "sha256": {
+    "backend/app/modules/planning/domain.py": "b575b69e5495aa337a71b75ae5df84fa9b3fb17c212a41ed9c9d83ac8ef9b185",
+    "backend/benchmarks/build_search_report.py": "ed4b78b021ea51b9931154ece013b8ef6ebdf960b1733c02f56a41c7c80f8c30",
+    "backend/benchmarks/v6_planner_performance.py": "ccbebd3bc280b4607bd1385965cb4089589448b04004c14a6390f2f10085f0cc",
+    "backend/tests/fixtures/planner_performance/bounded_selection_12fde3b.py.txt": "597b3f2a0f4a3d66c691be96a698da489e95d871ae264aeeeb89855a38e85d8b",
+    "backend/tests/fixtures/planner_performance/v6_budget_policy.json": "accdb7c2e3eb27ba54a7b20f622274f6bb61bf1375e94560ddd44f0e3cae4f0d",
+    "backend/tests/test_build_search.py": "8b496b2ef202d16d4447521b2c71a61c7eacea78af84819b6168cc707071779e",
+    "docs/catalog/implementation/build-search/accepted_cold.json": "952b37c611b0e913e793f1ed8f6f32ba970c0be33c8acdbf5417532b25c72cfb",
+    "docs/catalog/implementation/build-search/accepted_preloaded.json": "acd9c2285a0e65f5590dc1d9f90bf016e165387d9ad19254652181037d5ee38c",
+    "docs/catalog/implementation/build-search/accepted_profile.json": "e1a45f93b3e1171a8418d2f27e88eba7d28193fab8c3249fcf6b125cbbeb5697",
+    "docs/catalog/implementation/build-search/optimized_cold.json": "aec9909e54aa524291b7b4ca53b516e6e33b0d784b993bc0b4e83c2f05a80b1a",
+    "docs/catalog/implementation/build-search/optimized_preloaded.json": "ba9f1071a3d760b76919d0831ffdbd3cf8d76a9de181538a6cddf57b4b85942b",
+    "docs/catalog/implementation/build-search/optimized_profile.json": "5c99898270670d155061a7ffbe1d8489f85506468667ba57a24a9e417c8d4da5"
+  },
+  "starting_sha": "12fde3bd542b42e8259b130be797f673a8c2ded6",
+  "strict_mypy": {
+    "files": 179,
+    "result": "PASS"
+  },
+  "timezone": "Europe/Amsterdam",
+  "verified_start_implementation_sha": "c7c1b43a5db354d2abea4e128f42ca050179d2ad"
+}

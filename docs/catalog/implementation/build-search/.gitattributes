@@ -1,0 +1,2 @@
+# Immutable diagnostic bytes must survive Windows checkout/staging unchanged.
+*.json -text

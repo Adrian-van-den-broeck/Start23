@@ -1,0 +1,3663 @@
+{
+  "bound_seconds": 8,
+  "cases": {
+    "current:build_1": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "4f55998c6a17229e100c4f5c426f3ebdfb2b453ac7caf719468b0d251bf0f82a",
+        "setup_seconds": {
+          "catalog_construction": 0.024032399999668996,
+          "python_imports": 0.35350530000005165,
+          "scenario_preparation": 0.0001343000003544148
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.5216580000001159,
+      "wall_seconds": 8.008113000000321
+    },
+    "current:build_2": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "5c2330845c714577bf6cac2c2d68b0ddd33f49a3cd3eb235268aa15157cb6538",
+        "setup_seconds": {
+          "catalog_construction": 0.024655299999722047,
+          "python_imports": 0.3740907999999763,
+          "scenario_preparation": 0.00016439999990325305
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.5506846000002952,
+      "wall_seconds": 8.007400699999835
+    },
+    "current:build_3": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "e5b0945d3edb50e89da0e21b3c48a99df1a49376d9ed56c73364a53e09d958e8",
+        "setup_seconds": {
+          "catalog_construction": 0.0230108000000655,
+          "python_imports": 0.344448199999988,
+          "scenario_preparation": 0.00013660000013260287
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.5092079999999441,
+      "wall_seconds": 8.00526149999996
+    },
+    "current:build_4": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "67133e21de867e3879229f6ce2e697f186ba634b75626a9d5c6154681c576cad",
+        "setup_seconds": {
+          "catalog_construction": 0.026048700000046665,
+          "python_imports": 0.3523533000002317,
+          "scenario_preparation": 0.00014079999982641311
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.5272673999998005,
+      "wall_seconds": 8.014429199999995
+    },
+    "historical61:build_1": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "9b67239fe6c226a065fd51ca5ca8f1154bc7d8df1b58df1305fe8b29b619bf9c",
+        "setup_seconds": {
+          "catalog_construction": 0.06716929999993226,
+          "python_imports": 0.3468858999999611,
+          "scenario_preparation": 0.00013340000032258104
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.5287028999996437,
+      "wall_seconds": 8.007410700000037
+    },
+    "historical61:build_2": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "eeb343c26112f259bef767b016f1a55aed28451475ce1d2a7f77b6e3c5800555",
+        "setup_seconds": {
+          "catalog_construction": 0.06462609999971392,
+          "python_imports": 0.3608285000000251,
+          "scenario_preparation": 0.00014320000036605052
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.5430750000000444,
+      "wall_seconds": 8.006360500000028
+    },
+    "historical61:build_3": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "ac80762da2109922e75da572aac2be7c57ccadddb38110a75d9d52dbd9a897b7",
+        "setup_seconds": {
+          "catalog_construction": 0.06476070000007894,
+          "python_imports": 0.3640283999998246,
+          "scenario_preparation": 0.0001222000000780099
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.5418902999999773,
+      "wall_seconds": 8.005736200000229
+    },
+    "historical61:build_4": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "21600",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "9000",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "UNVERIFIED"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "cf86420237da748ed5c5571ecbe801988f9a667953fd7833a6b83742e690c6be",
+      "planner_seconds": 0.22297580000031303,
+      "process_and_harness_setup_seconds": 0.11635869999963688,
+      "profile": null,
+      "ready": {
+        "input_sha256": "c1e18ac49a6ef5079d2e48c0e1be38dab1ad9cbd58fd700305b4dc7d3a972cc8",
+        "setup_seconds": {
+          "catalog_construction": 0.06312059999982012,
+          "python_imports": 0.35436040000013236,
+          "scenario_preparation": 0.00011870000025737681
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "550.0"
+          },
+          "target": {
+            "basis": "realized_progression",
+            "build_week": 4,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "build",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "550.00"
+            }
+          },
+          "total_duration_minutes": "510",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "distance_only_swim_excluded_from_time_ratio",
+              "message": "Afstandsgestuurde zwemtrainingen staan in meters in het plan; de 80/20-tijdverdeling bevat alleen trainingen met een vastgelegde duur.",
+              "rule_id": "BR-002",
+              "severity": "info"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "360",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "337.5"
+                },
+                "name": "TR-BIKE-012",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "360",
+                    "expected_rpe": 3,
+                    "instructions": "360m Z2",
+                    "is_swim_technique": false,
+                    "name": "360m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "338535da-d870-5468-8aa3-215ea36bbb20",
+                "template_key": "156c6ffd-bf84-576d-84f0-31e7cb08ecee",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": 2100,
+                "duration_minutes": null,
+                "expected_rpe_max": 10,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "high",
+                "internal_planned_load": {
+                  "value": "50.8"
+                },
+                "name": "TR-SWIM-019",
+                "segments": [
+                  {
+                    "distance_meters": 300,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": "300m Z3 ",
+                    "is_swim_technique": false,
+                    "name": "300m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 2,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 3,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 4,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 5,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 6,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 7,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 8,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 9,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 10,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 11,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 12,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 13,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 14,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 15,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 9,
+                    "instructions": " 100m Z5 | 15s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 16,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": 300,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": " 300m Z2",
+                    "is_swim_technique": false,
+                    "name": " 300m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 17,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "1364cd56-bd5c-5841-bec7-380cf977929e",
+                "template_key": "7f51a709-bacf-52f6-a13b-2ed065742510",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-30",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "150",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "161.7"
+                },
+                "name": "TR-RUN-016",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "150",
+                    "expected_rpe": 3,
+                    "instructions": "150m Z2",
+                    "is_swim_technique": false,
+                    "name": "150m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "25efc372-665d-50be-8f3e-dbe5ab069e4f",
+                "template_key": "70a65453-b074-54b7-ae96-9fa46e0d84fa",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 0.0001281999998354877,
+      "setup_wall_seconds": 0.5339583999998467,
+      "stage": "result",
+      "wall_seconds": 0.27505250000012893
+    },
+    "historical61:tri_zero": {
+      "independent_checks": null,
+      "output_sha256": "f9f1a3d0d3fce1a7bdaeda1caaa932a76fe1d83be98dc2afdba48f33259f875e",
+      "planner_seconds": 0.0019487999998091254,
+      "process_and_harness_setup_seconds": 0.11430329999984679,
+      "profile": null,
+      "ready": {
+        "input_sha256": "ace291122b4f03cef25effa491bdd033aa69cdf718ca504f660b9b447861e84d",
+        "setup_seconds": {
+          "catalog_construction": 0.06430299999965428,
+          "python_imports": 0.3674239000001762,
+          "scenario_preparation": 6.720000010318472e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "code": "catalog_capacity_unsatisfied",
+        "message": "No safe workout combination fits the current week.",
+        "outcome": "FAIL_CLOSED"
+      },
+      "serialization_seconds": 1.250000013897079e-05,
+      "setup_wall_seconds": 0.5460973999997805,
+      "stage": "result",
+      "wall_seconds": 0.04922820000001593
+    },
+    "previous61:build_1": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "d6ea795e0d9d38129df6c75ca2d1da46149a769a41dd5c5ce0d5d1b0926465de",
+        "setup_seconds": {
+          "catalog_construction": 0.0898895000000266,
+          "python_imports": 0.3944796000000679,
+          "scenario_preparation": 0.0001563999999234511
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.6058707999995931,
+      "wall_seconds": 8.006299799999852
+    },
+    "previous61:build_2": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "30ea4c683e37e472d87e35316d8d16e6b9496152321e84cf09ab304566fe0909",
+        "setup_seconds": {
+          "catalog_construction": 0.09120380000013029,
+          "python_imports": 0.3641912000002776,
+          "scenario_preparation": 0.0001428999999006919
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.5806633000001966,
+      "wall_seconds": 8.014153200000237
+    },
+    "previous61:build_3": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "ae5817c6dac4b9c54e1bc661a2fd43caac74e180f548fdcdc09fb8d10a4447f8",
+        "setup_seconds": {
+          "catalog_construction": 0.0668377000001783,
+          "python_imports": 0.3508711999998013,
+          "scenario_preparation": 0.00011670000003505265
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.5345529999999599,
+      "wall_seconds": 8.017412299999705
+    },
+    "previous61:build_4": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "1/141",
+              "known_high_seconds": "180",
+              "known_low_seconds": "25200",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "5400",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "UNVERIFIED"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "f6122fe7e6617e7554b757bc0a790d7ea6593dc9acf04f9fb79aebbefec029c3",
+      "planner_seconds": 2.888706600000205,
+      "process_and_harness_setup_seconds": 0.1144851999997627,
+      "profile": null,
+      "ready": {
+        "input_sha256": "a05007bdd2975c83a23f2cf10d3a447962657257278a9300ec783c2bac1c63c3",
+        "setup_seconds": {
+          "catalog_construction": 0.07008089999999356,
+          "python_imports": 0.3584688000000824,
+          "scenario_preparation": 0.0001231999999617983
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "18.12865497076023391812865497",
+          "low_intensity_percent": "81.87134502923976608187134503",
+          "planned_load": {
+            "value": "550.0"
+          },
+          "target": {
+            "basis": "realized_progression",
+            "build_week": 4,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "build",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "550.00"
+            }
+          },
+          "total_duration_minutes": "513",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "distance_only_swim_excluded_from_time_ratio",
+              "message": "Afstandsgestuurde zwemtrainingen staan in meters in het plan; de 80/20-tijdverdeling bevat alleen trainingen met een vastgelegde duur.",
+              "rule_id": "BR-002",
+              "severity": "info"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "330",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "309.4"
+                },
+                "name": "TR-BIKE-011",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "330",
+                    "expected_rpe": 3,
+                    "instructions": "330m Z2",
+                    "is_swim_technique": false,
+                    "name": "330m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "4971cc7a-4dfd-5c47-87ba-b5e860e5ddcd",
+                "template_key": "3c5d43bc-cf1e-57bf-942d-e7f4a0524e2f",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-27",
+              "snapshot": {
+                "distance_meters": 3500,
+                "duration_minutes": null,
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "59.1"
+                },
+                "name": "TR-SWIM-006",
+                "segments": [
+                  {
+                    "distance_meters": 3500,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "3500m Z2",
+                    "is_swim_technique": false,
+                    "name": "3500m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "2e36c911-0695-5d03-a69c-d5708f290d4a",
+                "template_key": "519e3d64-6fb3-54dd-b471-69e8ecfce9e7",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "93",
+                "expected_rpe_max": 10,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "high",
+                "internal_planned_load": {
+                  "value": "84.5"
+                },
+                "name": "TR-BIKE-020",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "30",
+                    "expected_rpe": 3,
+                    "instructions": "30m Z2 ",
+                    "is_swim_technique": false,
+                    "name": "30m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "0.5",
+                    "expected_rpe": 9,
+                    "instructions": " 30s Z5 ",
+                    "is_swim_technique": false,
+                    "name": " 30s Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 2,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 3,
+                    "instructions": " 5m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 5m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 3,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "0.5",
+                    "expected_rpe": 9,
+                    "instructions": " 30s Z5 ",
+                    "is_swim_technique": false,
+                    "name": " 30s Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 4,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 3,
+                    "instructions": " 5m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 5m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 5,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "0.5",
+                    "expected_rpe": 9,
+                    "instructions": " 30s Z5 ",
+                    "is_swim_technique": false,
+                    "name": " 30s Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 6,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 3,
+                    "instructions": " 5m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 5m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 7,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "0.5",
+                    "expected_rpe": 9,
+                    "instructions": " 30s Z5 ",
+                    "is_swim_technique": false,
+                    "name": " 30s Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 8,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 3,
+                    "instructions": " 5m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 5m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 9,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "0.5",
+                    "expected_rpe": 9,
+                    "instructions": " 30s Z5 ",
+                    "is_swim_technique": false,
+                    "name": " 30s Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 10,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 3,
+                    "instructions": " 5m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 5m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 11,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "0.5",
+                    "expected_rpe": 9,
+                    "instructions": " 30s Z5 ",
+                    "is_swim_technique": false,
+                    "name": " 30s Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 12,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 3,
+                    "instructions": " 5m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 5m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 13,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 3,
+                    "instructions": " 15m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 15m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 14,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 1,
+                    "instructions": " 15m Z1",
+                    "is_swim_technique": false,
+                    "name": " 15m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 15,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "82fa023d-42a8-56a0-80f4-e37ce83980b3",
+                "template_key": "a546b501-57f2-5d6b-84df-f59a9c69e6ea",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-30",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "90",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "97.0"
+                },
+                "name": "TR-RUN-010",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "90",
+                    "expected_rpe": 3,
+                    "instructions": "90m Z2",
+                    "is_swim_technique": false,
+                    "name": "90m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "d0661bee-1a0f-5f01-bdf9-f69a434bf237",
+                "template_key": "0af431e3-3d21-5b7a-aeb0-f1e0b64857f2",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 0.00013929999977335683,
+      "setup_wall_seconds": 0.5431580999998005,
+      "stage": "result",
+      "wall_seconds": 2.944905199999994
+    },
+    "previous61:tri_zero": {
+      "independent_checks": null,
+      "output_sha256": "f9f1a3d0d3fce1a7bdaeda1caaa932a76fe1d83be98dc2afdba48f33259f875e",
+      "planner_seconds": 0.001868900000317808,
+      "process_and_harness_setup_seconds": 0.12864519999993718,
+      "profile": null,
+      "ready": {
+        "input_sha256": "c7ca6406483c700c602e0c5280e44ccfaf58417e30d2f1e27306ca3280fe8e6c",
+        "setup_seconds": {
+          "catalog_construction": 0.08132879999993747,
+          "python_imports": 0.3729167999999845,
+          "scenario_preparation": 7.750000031592208e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "code": "catalog_capacity_unsatisfied",
+        "message": "No safe workout combination fits the current week.",
+        "outcome": "FAIL_CLOSED"
+      },
+      "serialization_seconds": 1.6700000287528383e-05,
+      "setup_wall_seconds": 0.5829683000001751,
+      "stage": "result",
+      "wall_seconds": 0.0565798999996332
+    },
+    "v6:all_easy_build": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "2400",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "1500",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "UNVERIFIED"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "efba827c48011d5c2f1305635b93daf7bad09ed3ac67144e692b57f3d6963b19",
+      "planner_seconds": 0.005282699999952456,
+      "process_and_harness_setup_seconds": 0.09847019999961049,
+      "profile": null,
+      "ready": {
+        "input_sha256": "3a0f0896ead24fd4dc51d68dd8b7f0d038fa9c232c1746ad2e16f5c4a80c5366",
+        "setup_seconds": {
+          "catalog_construction": 0.2563617000000704,
+          "python_imports": 0.3617708000001585,
+          "scenario_preparation": 0.00020009999980175053
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "43.1"
+          },
+          "target": {
+            "basis": "realized_progression",
+            "build_week": 1,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "build",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "47.410"
+            }
+          },
+          "total_duration_minutes": "65",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "distance_only_swim_excluded_from_time_ratio",
+              "message": "Afstandsgestuurde zwemtrainingen staan in meters in het plan; de 80/20-tijdverdeling bevat alleen trainingen met een vastgelegde duur.",
+              "rule_id": "BR-002",
+              "severity": "info"
+            },
+            {
+              "affected_template_id": null,
+              "code": "target_outside_catalog_capacity",
+              "message": "The reviewed workout deck does not exactly match the weekly target.",
+              "rule_id": "BR-004",
+              "severity": "warning"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "25",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "14.5"
+                },
+                "name": "TR-RUN-024",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "25",
+                    "expected_rpe": 1,
+                    "instructions": "25m Z1",
+                    "is_swim_technique": false,
+                    "name": "25m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "0008cde4-7a7d-55aa-a890-d8bbfcc34188",
+                "template_key": "891e1d72-2f42-5c47-863f-2d0b6cacf738",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "40",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "20.2"
+                },
+                "name": "TR-BIKE-023",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "40",
+                    "expected_rpe": 1,
+                    "instructions": "40m Z1",
+                    "is_swim_technique": false,
+                    "name": "40m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "14cea336-40ee-5e42-8b59-6459fc982525",
+                "template_key": "e96c9dd0-ba31-5b55-9636-632a73542312",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-30",
+              "snapshot": {
+                "distance_meters": 500,
+                "duration_minutes": null,
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "8.4"
+                },
+                "name": "TR-SWIM-021",
+                "segments": [
+                  {
+                    "distance_meters": 500,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "500m Z2",
+                    "is_swim_technique": false,
+                    "name": "500m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+                "template_key": "99fb4b6d-8199-5af2-8885-3cd160dee29a",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 6.959999973332742e-05,
+      "setup_wall_seconds": 0.7168027999996411,
+      "stage": "result",
+      "wall_seconds": 0.05930720000014844
+    },
+    "v6:all_injured": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            },
+            "run": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "4ce9d4158be3ce50f129d120d7e08ed8a85ff3baf655823fd9a54f5c1c60fc11",
+      "planner_seconds": 0.00016239999968092889,
+      "process_and_harness_setup_seconds": 0.10874330000024202,
+      "profile": null,
+      "ready": {
+        "input_sha256": "34615c5d7a2ec2af22a1f9feda215a2a33fb051a7e36c33d5d16db62f7ec6f38",
+        "setup_seconds": {
+          "catalog_construction": 0.26006859999961307,
+          "python_imports": 0.35049930000013774,
+          "scenario_preparation": 6.920000032550888e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "0",
+          "planned_load": {
+            "value": "0"
+          },
+          "target": {
+            "basis": "injury_rest_only",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "recovery",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "0"
+            }
+          },
+          "total_duration_minutes": "0",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "all_disciplines_blocked_rest_only",
+              "message": "Every goal discipline is currently blocked. This pending revision contains rest only and requires your confirmation.",
+              "rule_id": "BR-010",
+              "severity": "warning"
+            }
+          ],
+          "workouts": []
+        }
+      },
+      "serialization_seconds": 2.7600000066740904e-05,
+      "setup_wall_seconds": 0.7193804000003183,
+      "stage": "result",
+      "wall_seconds": 0.049500000000080036
+    },
+    "v6:beginner_recovery": {
+      "independent_checks": null,
+      "output_sha256": "b63388233f08fade8d15abff3cc017e5bf82dfffaf95d43e4e17cac0cd2b7dde",
+      "planner_seconds": 0.0007680999997319304,
+      "process_and_harness_setup_seconds": 0.10255180000012842,
+      "profile": null,
+      "ready": {
+        "input_sha256": "41ee288cb3249969c3c43dfc5d3732f0abdfb0433f82aa5918fca6d7e42bc930",
+        "setup_seconds": {
+          "catalog_construction": 0.25814290000016626,
+          "python_imports": 0.35897250000016356,
+          "scenario_preparation": 0.000182699999641045
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "code": "swipe_selection_invalid",
+        "message": "The selected workout combination does not fit this week.",
+        "outcome": "FAIL_CLOSED"
+      },
+      "serialization_seconds": 1.6899999991437653e-05,
+      "setup_wall_seconds": 0.7198499000000993,
+      "stage": "result",
+      "wall_seconds": 0.06227609999996275
+    },
+    "v6:beginner_taper": {
+      "independent_checks": null,
+      "output_sha256": "b63388233f08fade8d15abff3cc017e5bf82dfffaf95d43e4e17cac0cd2b7dde",
+      "planner_seconds": 0.000713999999788939,
+      "process_and_harness_setup_seconds": 0.1136913000000277,
+      "profile": null,
+      "ready": {
+        "input_sha256": "8b04b40c986c885d57412e8001d14fd6c31bca29b175b6818c8f23b2d77e6faf",
+        "setup_seconds": {
+          "catalog_construction": 0.28233449999970617,
+          "python_imports": 0.36615340000025753,
+          "scenario_preparation": 0.00017109999998865533
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "code": "swipe_selection_invalid",
+        "message": "The selected workout combination does not fit this week.",
+        "outcome": "FAIL_CLOSED"
+      },
+      "serialization_seconds": 1.5999999959603883e-05,
+      "setup_wall_seconds": 0.76235029999998,
+      "stage": "result",
+      "wall_seconds": 0.050085999999737396
+    },
+    "v6:bike_zero": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "5400",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": false
+        }
+      },
+      "output_sha256": "97cc9d449d106477131918d5bb29fdfd6a7415731cc61179a284adc2fcfd5026",
+      "planner_seconds": 0.0052031000000170025,
+      "process_and_harness_setup_seconds": 0.10342050000008385,
+      "profile": null,
+      "ready": {
+        "input_sha256": "e5beee9eed77fe3a85b578e589f7934432777b624a5593bc29b426ad8814d146",
+        "setup_seconds": {
+          "catalog_construction": 0.2433416999997462,
+          "python_imports": 0.36772880000035,
+          "scenario_preparation": 9.619999991627992e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "45.3"
+          },
+          "target": {
+            "basis": "initial_catalog_baseline",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "base",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "45.0"
+            }
+          },
+          "total_duration_minutes": "90",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "target_outside_catalog_capacity",
+              "message": "The reviewed workout deck does not exactly match the weekly target.",
+              "rule_id": "BR-004",
+              "severity": "warning"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "60",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "30.2"
+                },
+                "name": "TR-BIKE-001",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "60",
+                    "expected_rpe": 1,
+                    "instructions": "60m Z1",
+                    "is_swim_technique": false,
+                    "name": "60m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "9b80f5eb-3678-5ac9-933b-1bc5be2bf013",
+                "template_key": "b2cfa062-b8a8-51be-af35-41054fb4b2a7",
+                "template_version": 2
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "30",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "15.1"
+                },
+                "name": "TR-BIKE-022",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "30",
+                    "expected_rpe": 1,
+                    "instructions": "30m Z1",
+                    "is_swim_technique": false,
+                    "name": "30m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+                "template_key": "ed89319b-c674-5d9a-9425-9dc1392be0ed",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 5.520000013348181e-05,
+      "setup_wall_seconds": 0.7145872000000963,
+      "stage": "result",
+      "wall_seconds": 0.05648670000027778
+    },
+    "v6:build_1": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "dd0cc3885871a36dd6777c1c51debcd8de7ff84213cc5c52cb5535bbd3ae91d7",
+        "setup_seconds": {
+          "catalog_construction": 0.2654889999998886,
+          "python_imports": 0.36122830000022077,
+          "scenario_preparation": 0.00014099999998506973
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.7441808999997193,
+      "wall_seconds": 8.007483800000045
+    },
+    "v6:build_2": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "68feedeb6f2f4ec469223f98ec72a524fee3edac13bc4774b908011b79b47eff",
+        "setup_seconds": {
+          "catalog_construction": 0.25377720000005866,
+          "python_imports": 0.3516180000001441,
+          "scenario_preparation": 0.00013540000009015785
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.7085519000002023,
+      "wall_seconds": 8.00929589999987
+    },
+    "v6:build_3": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "6670c10282b9dc6da28504dbe2c58bb02699154db9bcd6ab3cb69866a0314062",
+        "setup_seconds": {
+          "catalog_construction": 0.2443951999998717,
+          "python_imports": 0.3480767000000924,
+          "scenario_preparation": 0.00012139999989813077
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.6964007000001402,
+      "wall_seconds": 8.010814100000061
+    },
+    "v6:build_4": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "5d89b830b58ecb8e8f128e0a698dfa756301f01fc57b6c72f0c3008f3c1f2e7c",
+        "setup_seconds": {
+          "catalog_construction": 0.24478610000005574,
+          "python_imports": 0.3638922000000093,
+          "scenario_preparation": 0.0001378000001750479
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.7129903000000013,
+      "wall_seconds": 8.009698299999854
+    },
+    "v6:candidate": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": true,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "2400",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "1500",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "UNVERIFIED"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "47a30f3400fdcf7c99d024397240b84bd61c69f5fe6a8e201d01021f63355072",
+      "planner_seconds": 0.005399299999680807,
+      "process_and_harness_setup_seconds": 0.11222410000027594,
+      "profile": null,
+      "ready": {
+        "input_sha256": "d99c3ab64d6bb192fb1b7a8d3fcf580cbd051bb5b99e2d4a878489515a340c9c",
+        "setup_seconds": {
+          "catalog_construction": 0.2516381000000365,
+          "python_imports": 0.37468170000011014,
+          "scenario_preparation": 8.429999979853164e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "43.1"
+          },
+          "target": {
+            "basis": "initial_catalog_baseline",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "base",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "45.0"
+            }
+          },
+          "total_duration_minutes": "65",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "distance_only_swim_excluded_from_time_ratio",
+              "message": "Afstandsgestuurde zwemtrainingen staan in meters in het plan; de 80/20-tijdverdeling bevat alleen trainingen met een vastgelegde duur.",
+              "rule_id": "BR-002",
+              "severity": "info"
+            },
+            {
+              "affected_template_id": null,
+              "code": "target_outside_catalog_capacity",
+              "message": "The reviewed workout deck does not exactly match the weekly target.",
+              "rule_id": "BR-004",
+              "severity": "warning"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "25",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "14.5"
+                },
+                "name": "TR-RUN-024",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "25",
+                    "expected_rpe": 1,
+                    "instructions": "25m Z1",
+                    "is_swim_technique": false,
+                    "name": "25m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "0008cde4-7a7d-55aa-a890-d8bbfcc34188",
+                "template_key": "891e1d72-2f42-5c47-863f-2d0b6cacf738",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "40",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "20.2"
+                },
+                "name": "TR-BIKE-023",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "40",
+                    "expected_rpe": 1,
+                    "instructions": "40m Z1",
+                    "is_swim_technique": false,
+                    "name": "40m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "14cea336-40ee-5e42-8b59-6459fc982525",
+                "template_key": "e96c9dd0-ba31-5b55-9636-632a73542312",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-30",
+              "snapshot": {
+                "distance_meters": 500,
+                "duration_minutes": null,
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "8.4"
+                },
+                "name": "TR-SWIM-021",
+                "segments": [
+                  {
+                    "distance_meters": 500,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "500m Z2",
+                    "is_swim_technique": false,
+                    "name": "500m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+                "template_key": "99fb4b6d-8199-5af2-8885-3cd160dee29a",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 7.750000031592208e-05,
+      "setup_wall_seconds": 0.7386282000002211,
+      "stage": "result",
+      "wall_seconds": 0.07075820000000022
+    },
+    "v6:candidate_no_dates": {
+      "independent_checks": null,
+      "output_sha256": "8df110adcec19e81492d5ef746b771826ceb102d194b5ae08f0708603a94ad6c",
+      "planner_seconds": 0.0006958999997550563,
+      "process_and_harness_setup_seconds": 0.10342669999999998,
+      "profile": null,
+      "ready": {
+        "input_sha256": "10865defe4e67191216fcd0b9cda38bf95985a4c6a3985cb60f9841b4f8bf553",
+        "setup_seconds": {
+          "catalog_construction": 0.26689729999998235,
+          "python_imports": 0.36480829999982234,
+          "scenario_preparation": 8.410000009462237e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "code": "availability_required",
+        "message": "At least one available date is required for auto-scheduling.",
+        "outcome": "FAIL_CLOSED"
+      },
+      "serialization_seconds": 1.4799999917158857e-05,
+      "setup_wall_seconds": 0.7352163999998993,
+      "stage": "result",
+      "wall_seconds": 0.053153800000018236
+    },
+    "v6:candidate_one_day": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": true,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "2400",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "1500",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "UNVERIFIED"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "55b68201fd2f978ec7d31d2773d856877d225e5bc04dfc272e5acc6d67c3c7d2",
+      "planner_seconds": 0.004649799999697279,
+      "process_and_harness_setup_seconds": 0.10390069999994012,
+      "profile": null,
+      "ready": {
+        "input_sha256": "4743b83410d353a008c203e124e2bc573889564e9d98e72e49db6c797f4ab67e",
+        "setup_seconds": {
+          "catalog_construction": 0.2564793000001373,
+          "python_imports": 0.3888575999999375,
+          "scenario_preparation": 9.170000021185842e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "43.1"
+          },
+          "target": {
+            "basis": "initial_catalog_baseline",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "base",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "45.0"
+            }
+          },
+          "total_duration_minutes": "65",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "distance_only_swim_excluded_from_time_ratio",
+              "message": "Afstandsgestuurde zwemtrainingen staan in meters in het plan; de 80/20-tijdverdeling bevat alleen trainingen met een vastgelegde duur.",
+              "rule_id": "BR-002",
+              "severity": "info"
+            },
+            {
+              "affected_template_id": null,
+              "code": "workouts_consolidated_on_available_dates",
+              "message": "Multiple workouts share a confirmed training date so the weekly training combination still fits your availability.",
+              "rule_id": "BR-002",
+              "severity": "warning"
+            },
+            {
+              "affected_template_id": null,
+              "code": "target_outside_catalog_capacity",
+              "message": "The reviewed workout deck does not exactly match the weekly target.",
+              "rule_id": "BR-004",
+              "severity": "warning"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "40",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "20.2"
+                },
+                "name": "TR-BIKE-023",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "40",
+                    "expected_rpe": 1,
+                    "instructions": "40m Z1",
+                    "is_swim_technique": false,
+                    "name": "40m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "14cea336-40ee-5e42-8b59-6459fc982525",
+                "template_key": "e96c9dd0-ba31-5b55-9636-632a73542312",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "25",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "14.5"
+                },
+                "name": "TR-RUN-024",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "25",
+                    "expected_rpe": 1,
+                    "instructions": "25m Z1",
+                    "is_swim_technique": false,
+                    "name": "25m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "0008cde4-7a7d-55aa-a890-d8bbfcc34188",
+                "template_key": "891e1d72-2f42-5c47-863f-2d0b6cacf738",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": 500,
+                "duration_minutes": null,
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "8.4"
+                },
+                "name": "TR-SWIM-021",
+                "segments": [
+                  {
+                    "distance_meters": 500,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "500m Z2",
+                    "is_swim_technique": false,
+                    "name": "500m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+                "template_key": "99fb4b6d-8199-5af2-8885-3cd160dee29a",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 5.850000025020563e-05,
+      "setup_wall_seconds": 0.7493293000002268,
+      "stage": "result",
+      "wall_seconds": 0.05478979999998046
+    },
+    "v6:candidate_shortage": {
+      "independent_checks": null,
+      "output_sha256": "b3b82b0a875bf3137f4092be5c7e55b0e0956dd3ce35d733fe75bf066f231133",
+      "planner_seconds": 4.059999992023222e-05,
+      "process_and_harness_setup_seconds": 0.09134649999987232,
+      "profile": null,
+      "ready": {
+        "input_sha256": "b46f1cba22bc3523f2dea264b1e6e9b25760b53371147124d4998845d381871d",
+        "setup_seconds": {
+          "catalog_construction": 0.27321789999996327,
+          "python_imports": 0.36756070000001273,
+          "scenario_preparation": 7.899999991423101e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "code": "catalog_empty",
+        "message": "No workout templates match the confirmed athlete configuration.",
+        "outcome": "FAIL_CLOSED"
+      },
+      "serialization_seconds": 1.849999989644857e-05,
+      "setup_wall_seconds": 0.7322040999997625,
+      "stage": "result",
+      "wall_seconds": 0.06296659999998155
+    },
+    "v6:injury_run": {
+      "independent_checks": null,
+      "output_sha256": "d95b02a4b709a034970b9fca49837e99554839a757c58522fa64d72f2efb2447",
+      "planner_seconds": 0.00023669999973208178,
+      "process_and_harness_setup_seconds": 0.10611550000021452,
+      "profile": null,
+      "ready": {
+        "input_sha256": "c24e5151614673ee98de4b472a8ea4d536a9b1fb834d02fe3d33b223f9b2a5a3",
+        "setup_seconds": {
+          "catalog_construction": 0.26130879999982426,
+          "python_imports": 0.3570902000001297,
+          "scenario_preparation": 7.000000005064066e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "code": "restricted_zero_base_allocation_unavailable",
+        "message": "A reviewed starting allocation is required for this restricted introduction week.",
+        "outcome": "FAIL_CLOSED"
+      },
+      "serialization_seconds": 1.6699999832781032e-05,
+      "setup_wall_seconds": 0.7245845000002191,
+      "stage": "result",
+      "wall_seconds": 0.05662059999986013
+    },
+    "v6:limited_dates": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": true,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "1800",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "1200",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "UNVERIFIED"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": false
+        }
+      },
+      "output_sha256": "3af1252f93751b29176381b991e3be10c23d824c4f4e9a2ffaf5d91f0afc4fa5",
+      "planner_seconds": 0.03194739999980811,
+      "process_and_harness_setup_seconds": 0.1057093000003988,
+      "profile": null,
+      "ready": {
+        "input_sha256": "a48f0e18c0f57015e2b53ec16811f1c36bf0215b51488601f0b69f678bce443c",
+        "setup_seconds": {
+          "catalog_construction": 0.25375819999999294,
+          "python_imports": 0.3577510000000075,
+          "scenario_preparation": 8.789999992586672e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "45.1"
+          },
+          "target": {
+            "basis": "initial_catalog_baseline",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "base",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "45.0"
+            }
+          },
+          "total_duration_minutes": "50",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "distance_only_swim_excluded_from_time_ratio",
+              "message": "Afstandsgestuurde zwemtrainingen staan in meters in het plan; de 80/20-tijdverdeling bevat alleen trainingen met een vastgelegde duur.",
+              "rule_id": "BR-002",
+              "severity": "info"
+            },
+            {
+              "affected_template_id": null,
+              "code": "target_outside_catalog_capacity",
+              "message": "The reviewed workout deck does not exactly match the weekly target.",
+              "rule_id": "BR-004",
+              "severity": "warning"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": 500,
+                "duration_minutes": null,
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "8.4"
+                },
+                "name": "TR-SWIM-021",
+                "segments": [
+                  {
+                    "distance_meters": 500,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "500m Z2",
+                    "is_swim_technique": false,
+                    "name": "500m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+                "template_key": "99fb4b6d-8199-5af2-8885-3cd160dee29a",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-28",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "30",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "15.1"
+                },
+                "name": "TR-BIKE-022",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "30",
+                    "expected_rpe": 1,
+                    "instructions": "30m Z1",
+                    "is_swim_technique": false,
+                    "name": "30m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+                "template_key": "ed89319b-c674-5d9a-9425-9dc1392be0ed",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-31",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "20",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "21.6"
+                },
+                "name": "TR-RUN-027",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "20",
+                    "expected_rpe": 3,
+                    "instructions": "20m Z2",
+                    "is_swim_technique": false,
+                    "name": "20m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "d48e9612-4d40-5298-aac8-2cf8c64f4e32",
+                "template_key": "1c73654b-b82d-5294-b26a-3be262115173",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 7.970000024215551e-05,
+      "setup_wall_seconds": 0.7173064000003251,
+      "stage": "result",
+      "wall_seconds": 0.0924459000002571
+    },
+    "v6:long_bike_only": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "25200",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": false
+        }
+      },
+      "output_sha256": "5a074b93a3d22bc2797f4989fbbc6f11b22cf05c12ca0b36b77d20fc0622b8ce",
+      "planner_seconds": 0.004673800000091433,
+      "process_and_harness_setup_seconds": 0.09234309999965262,
+      "profile": null,
+      "ready": {
+        "input_sha256": "3dd88450714e04f81685f9a25de253241d0e6ef0530933207d1b4f566d5e1ee6",
+        "setup_seconds": {
+          "catalog_construction": 0.2628727000001163,
+          "python_imports": 0.3796359000002667,
+          "scenario_preparation": 7.74000000092201e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "393.8"
+          },
+          "target": {
+            "basis": "initial_catalog_baseline",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "base",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "45.0"
+            }
+          },
+          "total_duration_minutes": "420",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "target_outside_catalog_capacity",
+              "message": "The reviewed workout deck does not exactly match the weekly target.",
+              "rule_id": "BR-004",
+              "severity": "warning"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "420",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "393.8"
+                },
+                "name": "TR-BIKE-013",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "420",
+                    "expected_rpe": 3,
+                    "instructions": "420m Z2",
+                    "is_swim_technique": false,
+                    "name": "420m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "4e407c5e-2080-5b2b-8ee3-4c3f85708fd8",
+                "template_key": "f0211507-2f6a-5213-bddb-7dce1e4394c8",
+                "template_version": 2
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 4.4999999772699084e-05,
+      "setup_wall_seconds": 0.7349291000000449,
+      "stage": "result",
+      "wall_seconds": 0.05678729999999632
+    },
+    "v6:minimum": {
+      "independent_checks": null,
+      "output_sha256": "b63388233f08fade8d15abff3cc017e5bf82dfffaf95d43e4e17cac0cd2b7dde",
+      "planner_seconds": 0.0008486000001539651,
+      "process_and_harness_setup_seconds": 0.10589979999986099,
+      "profile": null,
+      "ready": {
+        "input_sha256": "6201955b3de90577d6d6f6bde929f065fb0f7b3c6cfbc81a9d569656043342df",
+        "setup_seconds": {
+          "catalog_construction": 0.2949959000002309,
+          "python_imports": 0.3656397999998262,
+          "scenario_preparation": 9.850000014921534e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "code": "swipe_selection_invalid",
+        "message": "The selected workout combination does not fit this week.",
+        "outcome": "FAIL_CLOSED"
+      },
+      "serialization_seconds": 1.9699999938893598e-05,
+      "setup_wall_seconds": 0.7666340000000673,
+      "stage": "result",
+      "wall_seconds": 0.07402890000003026
+    },
+    "v6:missing_swim_capability": {
+      "independent_checks": null,
+      "output_sha256": "25da6b46d111bc00eda317c7da16382837a28e3cd8da84afc91cb195bf96103f",
+      "planner_seconds": 0.00021389999983512098,
+      "process_and_harness_setup_seconds": 0.10687499999994543,
+      "profile": null,
+      "ready": {
+        "input_sha256": "871592149aef65249b95fd6f4081d74210366552ba86c5772e544b9dc1dba523",
+        "setup_seconds": {
+          "catalog_construction": 0.25029129999984434,
+          "python_imports": 0.3635898000002271,
+          "scenario_preparation": 7.569999979750719e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "code": "catalog_coverage_unsatisfied",
+        "message": "The current catalog cannot cover every uninjured goal discipline.",
+        "outcome": "FAIL_CLOSED"
+      },
+      "serialization_seconds": 1.4899999769113492e-05,
+      "setup_wall_seconds": 0.7208317999998144,
+      "stage": "result",
+      "wall_seconds": 0.04912530000001425
+    },
+    "v6:recovery": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "12600",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "4800",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "UNVERIFIED"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "14200dce84b179458cb7170552fc607b7f400e344b7e0ecac5fa87d308b4019d",
+      "planner_seconds": 0.21448300000020026,
+      "process_and_harness_setup_seconds": 0.10304470000028232,
+      "profile": null,
+      "ready": {
+        "input_sha256": "8eadcc5161b3d9ac07cae680cf371e740176cbef748c41a46cfd387511e22ede",
+        "setup_seconds": {
+          "catalog_construction": 0.25814900000023044,
+          "python_imports": 0.3585512999998173,
+          "scenario_preparation": 0.0001536999998279498
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "300.0"
+          },
+          "target": {
+            "basis": "recovery_factor",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "recovery",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "300.00"
+            }
+          },
+          "total_duration_minutes": "290",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "distance_only_swim_excluded_from_time_ratio",
+              "message": "Afstandsgestuurde zwemtrainingen staan in meters in het plan; de 80/20-tijdverdeling bevat alleen trainingen met een vastgelegde duur.",
+              "rule_id": "BR-002",
+              "severity": "info"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "80",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "86.2"
+                },
+                "name": "TR-RUN-009",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "80",
+                    "expected_rpe": 3,
+                    "instructions": "80m Z2",
+                    "is_swim_technique": false,
+                    "name": "80m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "ed52a351-206d-5e60-9837-0ec5ef68e3a0",
+                "template_key": "6e651aed-e03a-5a45-ab49-a453d98128e3",
+                "template_version": 2
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "210",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "196.9"
+                },
+                "name": "TR-BIKE-008",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "210",
+                    "expected_rpe": 3,
+                    "instructions": "210m Z2",
+                    "is_swim_technique": false,
+                    "name": "210m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "ed5422e3-307b-533d-997a-0b4b066d3c16",
+                "template_key": "0a2563a7-f6a2-5a2b-a0a4-6f25947f0a2f",
+                "template_version": 2
+              }
+            },
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-30",
+              "snapshot": {
+                "distance_meters": 1000,
+                "duration_minutes": null,
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "16.9"
+                },
+                "name": "TR-SWIM-001",
+                "segments": [
+                  {
+                    "distance_meters": 1000,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "1000m Z2",
+                    "is_swim_technique": false,
+                    "name": "1000m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "11036cf4-7ea8-5335-a79e-80765fb88d9d",
+                "template_key": "9c9e54eb-b2a7-5e02-8aba-d7999909565c",
+                "template_version": 3
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 6.949999988137279e-05,
+      "setup_wall_seconds": 0.719898700000158,
+      "stage": "result",
+      "wall_seconds": 0.26791959999991377
+    },
+    "v6:repeat_bike": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "5400",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": false
+        }
+      },
+      "output_sha256": "c37b3b01fc5fef257d3efb46adca4e7ffa6b08bc0167e935f594edece1d5be95",
+      "planner_seconds": 0.004682900000261725,
+      "process_and_harness_setup_seconds": 0.08939029999964987,
+      "profile": null,
+      "ready": {
+        "input_sha256": "71f31a7e1950258b1334d3dcde8ef4b7067cc460a6d4dafbda601e7869e7744b",
+        "setup_seconds": {
+          "catalog_construction": 0.2456477000000632,
+          "python_imports": 0.35649340000009033,
+          "scenario_preparation": 7.580000010420918e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "45.3"
+          },
+          "target": {
+            "basis": "initial_catalog_baseline",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "base",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "45.0"
+            }
+          },
+          "total_duration_minutes": "90",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "target_outside_catalog_capacity",
+              "message": "The reviewed workout deck does not exactly match the weekly target.",
+              "rule_id": "BR-004",
+              "severity": "warning"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "30",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "15.1"
+                },
+                "name": "TR-BIKE-022",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "30",
+                    "expected_rpe": 1,
+                    "instructions": "30m Z1",
+                    "is_swim_technique": false,
+                    "name": "30m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+                "template_key": "ed89319b-c674-5d9a-9425-9dc1392be0ed",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "30",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "15.1"
+                },
+                "name": "TR-BIKE-022",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "30",
+                    "expected_rpe": 1,
+                    "instructions": "30m Z1",
+                    "is_swim_technique": false,
+                    "name": "30m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+                "template_key": "ed89319b-c674-5d9a-9425-9dc1392be0ed",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-30",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "30",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "15.1"
+                },
+                "name": "TR-BIKE-022",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "30",
+                    "expected_rpe": 1,
+                    "instructions": "30m Z1",
+                    "is_swim_technique": false,
+                    "name": "30m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+                "template_key": "ed89319b-c674-5d9a-9425-9dc1392be0ed",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 6.129999974291422e-05,
+      "setup_wall_seconds": 0.6916071999999076,
+      "stage": "result",
+      "wall_seconds": 0.05527810000012323
+    },
+    "v6:repeat_explicit": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "4800",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "86207d2af604b8e835368da5f0f1e5dc5763f37374ceca81b5cb1755188c9f49",
+      "planner_seconds": 0.004789999999957217,
+      "process_and_harness_setup_seconds": 0.10874920000060229,
+      "profile": null,
+      "ready": {
+        "input_sha256": "0b23abfcca3f03ca97bf16bf515d8ab4446c22e580e9f866fc00031984dd2b65",
+        "setup_seconds": {
+          "catalog_construction": 0.2630340000000615,
+          "python_imports": 0.3719458000000486,
+          "scenario_preparation": 0.00010279999969498022
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "40.4"
+          },
+          "target": {
+            "basis": "initial_catalog_baseline",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "base",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "45.0"
+            }
+          },
+          "total_duration_minutes": "80",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "target_outside_catalog_capacity",
+              "message": "The reviewed workout deck does not exactly match the weekly target.",
+              "rule_id": "BR-004",
+              "severity": "warning"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "bike",
+              "occurrence_id": "5944929d-4f8a-5270-8d32-bc5f7680cb28",
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "40",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "20.2"
+                },
+                "name": "TR-BIKE-023",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "40",
+                    "expected_rpe": 1,
+                    "instructions": "40m Z1",
+                    "is_swim_technique": false,
+                    "name": "40m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "14cea336-40ee-5e42-8b59-6459fc982525",
+                "template_key": "e96c9dd0-ba31-5b55-9636-632a73542312",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": "0354e06f-9086-594d-99bb-165d8f72b042",
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "40",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "20.2"
+                },
+                "name": "TR-BIKE-023",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "40",
+                    "expected_rpe": 1,
+                    "instructions": "40m Z1",
+                    "is_swim_technique": false,
+                    "name": "40m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "14cea336-40ee-5e42-8b59-6459fc982525",
+                "template_key": "e96c9dd0-ba31-5b55-9636-632a73542312",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 5.2600000344682485e-05,
+      "setup_wall_seconds": 0.7438318000004074,
+      "stage": "result",
+      "wall_seconds": 0.05676339999990887
+    },
+    "v6:run_zero": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            },
+            "run": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "3900",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": false
+        }
+      },
+      "output_sha256": "e8d0b9d42f7a7426b956f4af157b8d5d3e3a9299bbdc94aedd8f743fd14d42b1",
+      "planner_seconds": 0.008858499999860214,
+      "process_and_harness_setup_seconds": 0.10159569999996165,
+      "profile": null,
+      "ready": {
+        "input_sha256": "a0d73679f0e3a6ded419def7098d50a48aa309eb642adaffb1851628c29eaed1",
+        "setup_seconds": {
+          "catalog_construction": 0.29919609999979,
+          "python_imports": 0.35725630000024466,
+          "scenario_preparation": 6.940000002941815e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "45.2"
+          },
+          "target": {
+            "basis": "initial_catalog_baseline",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "base",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "45.0"
+            }
+          },
+          "total_duration_minutes": "65",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "target_outside_catalog_capacity",
+              "message": "The reviewed workout deck does not exactly match the weekly target.",
+              "rule_id": "BR-004",
+              "severity": "warning"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "50",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "29.0"
+                },
+                "name": "TR-RUN-003",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "50",
+                    "expected_rpe": 1,
+                    "instructions": "50m Z1",
+                    "is_swim_technique": false,
+                    "name": "50m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "788deb1d-6bc6-531f-b7a5-84475de2e963",
+                "template_key": "c9a0afa3-a4b4-5d26-b627-a6630afbb052",
+                "template_version": 2
+              }
+            },
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "15",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "16.2"
+                },
+                "name": "TR-RUN-026",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 3,
+                    "instructions": "15m Z2",
+                    "is_swim_technique": false,
+                    "name": "15m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "35cf4f62-e73a-594a-8a6f-72887b52ba09",
+                "template_key": "2a0f2462-6158-5787-ad1f-e1fbc11966c4",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 5.5300000440183794e-05,
+      "setup_wall_seconds": 0.7581175000000258,
+      "stage": "result",
+      "wall_seconds": 0.0690442999998595
+    },
+    "v6:swim_zero": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            },
+            "run": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "NOT_APPLICABLE"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "UNVERIFIED"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "737e3b1f56840124719070372ef448dafddb1e10ba279cac957dfadee2a25b8b",
+      "planner_seconds": 0.005149399999936577,
+      "process_and_harness_setup_seconds": 0.10254420000001119,
+      "profile": null,
+      "ready": {
+        "input_sha256": "d92693a9a9c260c78a821a303d21c21a1b557b098072ba6788903611ab225ca7",
+        "setup_seconds": {
+          "catalog_construction": 0.256168500000058,
+          "python_imports": 0.36482599999999366,
+          "scenario_preparation": 7.110000024113106e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "0",
+          "planned_load": {
+            "value": "43.9"
+          },
+          "target": {
+            "basis": "initial_catalog_baseline",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "base",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "45.0"
+            }
+          },
+          "total_duration_minutes": "0",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "distance_only_swim_excluded_from_time_ratio",
+              "message": "Afstandsgestuurde zwemtrainingen staan in meters in het plan; de 80/20-tijdverdeling bevat alleen trainingen met een vastgelegde duur.",
+              "rule_id": "BR-002",
+              "severity": "info"
+            },
+            {
+              "affected_template_id": null,
+              "code": "target_outside_catalog_capacity",
+              "message": "The reviewed workout deck does not exactly match the weekly target.",
+              "rule_id": "BR-004",
+              "severity": "warning"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": 800,
+                "duration_minutes": null,
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "13.5"
+                },
+                "name": "TR-SWIM-022",
+                "segments": [
+                  {
+                    "distance_meters": 800,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "800m Z2",
+                    "is_swim_technique": false,
+                    "name": "800m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+                "template_key": "5d29064a-c96c-5923-a537-07cc26b2bead",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": 1000,
+                "duration_minutes": null,
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "16.9"
+                },
+                "name": "TR-SWIM-001",
+                "segments": [
+                  {
+                    "distance_meters": 1000,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "1000m Z2",
+                    "is_swim_technique": false,
+                    "name": "1000m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "11036cf4-7ea8-5335-a79e-80765fb88d9d",
+                "template_key": "9c9e54eb-b2a7-5e02-8aba-d7999909565c",
+                "template_version": 3
+              }
+            },
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-30",
+              "snapshot": {
+                "distance_meters": 800,
+                "duration_minutes": null,
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "13.5"
+                },
+                "name": "TR-SWIM-022",
+                "segments": [
+                  {
+                    "distance_meters": 800,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "800m Z2",
+                    "is_swim_technique": false,
+                    "name": "800m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+                "template_key": "5d29064a-c96c-5923-a537-07cc26b2bead",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 6.00999997004692e-05,
+      "setup_wall_seconds": 0.723609800000304,
+      "stage": "result",
+      "wall_seconds": 0.05607869999994364
+    },
+    "v6:taper": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "1800",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "4200",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "UNVERIFIED"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "3f49f20c60efb342eef026830aed6f9562fbace0d556649af0a718f125e08d0d",
+      "planner_seconds": 0.12431809999998222,
+      "process_and_harness_setup_seconds": 0.10080680000055509,
+      "profile": null,
+      "ready": {
+        "input_sha256": "bbe8266614a2da6e7f9339b474b79ac2f03fd4e92defa2c1e1083afe8a2542d6",
+        "setup_seconds": {
+          "catalog_construction": 0.26014619999978095,
+          "python_imports": 0.35574069999984204,
+          "scenario_preparation": 0.0001268000000891334
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "175.0"
+          },
+          "target": {
+            "basis": "taper_factor",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "taper",
+            "replacement_disciplines": [],
+            "taper_period": "a_t_minus_1",
+            "target": {
+              "value": "175.00"
+            }
+          },
+          "total_duration_minutes": "100",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "distance_only_swim_excluded_from_time_ratio",
+              "message": "Afstandsgestuurde zwemtrainingen staan in meters in het plan; de 80/20-tijdverdeling bevat alleen trainingen met een vastgelegde duur.",
+              "rule_id": "BR-002",
+              "severity": "info"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "70",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "75.5"
+                },
+                "name": "TR-RUN-008",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "70",
+                    "expected_rpe": 3,
+                    "instructions": "70m Z2",
+                    "is_swim_technique": false,
+                    "name": "70m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "a9cfa475-00f4-5de2-bcd8-597abcc26fe6",
+                "template_key": "2fb92cf4-ab8c-5201-ad5f-5a5f66b0fab4",
+                "template_version": 2
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "30",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "15.1"
+                },
+                "name": "TR-BIKE-022",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "30",
+                    "expected_rpe": 1,
+                    "instructions": "30m Z1",
+                    "is_swim_technique": false,
+                    "name": "30m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+                "template_key": "ed89319b-c674-5d9a-9425-9dc1392be0ed",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-30",
+              "snapshot": {
+                "distance_meters": 5000,
+                "duration_minutes": null,
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "84.4"
+                },
+                "name": "TR-SWIM-009",
+                "segments": [
+                  {
+                    "distance_meters": 5000,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "5000m Z2",
+                    "is_swim_technique": false,
+                    "name": "5000m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "d9316322-3163-58ed-aa72-dd32962e1cd0",
+                "template_key": "2d60c436-4288-5ce7-8ef5-5a8216193c05",
+                "template_version": 3
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 6.500000017695129e-05,
+      "setup_wall_seconds": 0.7168205000002672,
+      "stage": "result",
+      "wall_seconds": 0.17445970000017041
+    },
+    "v6:tri_zero": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": true,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "1800",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "1200",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "UNVERIFIED"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": false
+        }
+      },
+      "output_sha256": "86deb261954303de145ca6cfbeda7147f8dc094b11d38e53b3cd2fdcce81cc50",
+      "planner_seconds": 0.045703900000262365,
+      "process_and_harness_setup_seconds": 0.10413569999991523,
+      "profile": null,
+      "ready": {
+        "input_sha256": "2b10fe2363c94f14b62696b1ca06f262b1bbf1c404f1fed6f96bb949a8ee07d0",
+        "setup_seconds": {
+          "catalog_construction": 0.2733669000003829,
+          "python_imports": 0.3549659000000247,
+          "scenario_preparation": 6.789999997636187e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "45.1"
+          },
+          "target": {
+            "basis": "initial_catalog_baseline",
+            "build_week": null,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "base",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "45.0"
+            }
+          },
+          "total_duration_minutes": "50",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "distance_only_swim_excluded_from_time_ratio",
+              "message": "Afstandsgestuurde zwemtrainingen staan in meters in het plan; de 80/20-tijdverdeling bevat alleen trainingen met een vastgelegde duur.",
+              "rule_id": "BR-002",
+              "severity": "info"
+            },
+            {
+              "affected_template_id": null,
+              "code": "target_outside_catalog_capacity",
+              "message": "The reviewed workout deck does not exactly match the weekly target.",
+              "rule_id": "BR-004",
+              "severity": "warning"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "20",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "21.6"
+                },
+                "name": "TR-RUN-027",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "20",
+                    "expected_rpe": 3,
+                    "instructions": "20m Z2",
+                    "is_swim_technique": false,
+                    "name": "20m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "d48e9612-4d40-5298-aac8-2cf8c64f4e32",
+                "template_key": "1c73654b-b82d-5294-b26a-3be262115173",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "30",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "15.1"
+                },
+                "name": "TR-BIKE-022",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "30",
+                    "expected_rpe": 1,
+                    "instructions": "30m Z1",
+                    "is_swim_technique": false,
+                    "name": "30m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+                "template_key": "ed89319b-c674-5d9a-9425-9dc1392be0ed",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-30",
+              "snapshot": {
+                "distance_meters": 500,
+                "duration_minutes": null,
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "8.4"
+                },
+                "name": "TR-SWIM-021",
+                "segments": [
+                  {
+                    "distance_meters": 500,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "500m Z2",
+                    "is_swim_technique": false,
+                    "name": "500m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+                "template_key": "99fb4b6d-8199-5af2-8885-3cd160dee29a",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 7.860000005166512e-05,
+      "setup_wall_seconds": 0.7325364000002992,
+      "stage": "result",
+      "wall_seconds": 0.10407420000001366
+    },
+    "v6:unconfirmed_swim_capability": {
+      "independent_checks": null,
+      "output_sha256": "25da6b46d111bc00eda317c7da16382837a28e3cd8da84afc91cb195bf96103f",
+      "planner_seconds": 0.0002684999999473803,
+      "process_and_harness_setup_seconds": 0.10574769999993805,
+      "profile": null,
+      "ready": {
+        "input_sha256": "6bb07ef0e419b3d1fcb1521c9a3bacd2600053cff607dcb30aba1fde5fe5aeda",
+        "setup_seconds": {
+          "catalog_construction": 0.29532800000015413,
+          "python_imports": 0.37550210000017614,
+          "scenario_preparation": 6.959999973332742e-05
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "code": "catalog_coverage_unsatisfied",
+        "message": "The current catalog cannot cover every uninjured goal discipline.",
+        "outcome": "FAIL_CLOSED"
+      },
+      "serialization_seconds": 1.6599999980826396e-05,
+      "setup_wall_seconds": 0.7766474000000017,
+      "stage": "result",
+      "wall_seconds": 0.05981599999995524
+    }
+  },
+  "instrumented": false,
+  "preloaded": true,
+  "variant": "accepted"
+}

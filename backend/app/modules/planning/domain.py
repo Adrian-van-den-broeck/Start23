@@ -1,5 +1,6 @@
 """Framework-independent deterministic weekly planning policies."""
 
+from bisect import bisect_left
 from collections.abc import Callable, Collection, Mapping
 from dataclasses import dataclass, field
 from datetime import date, datetime, time, timedelta, timezone
@@ -15,7 +16,7 @@ from decimal import (
     localcontext,
 )
 from enum import Enum
-from itertools import combinations
+from itertools import combinations, combinations_with_replacement
 from uuid import UUID
 from zoneinfo import ZoneInfo
 
@@ -778,6 +779,279 @@ def _has_zone_five(template: WorkoutTemplate) -> bool:
     )
 
 
+def _exact_selection_additions(
+    *,
+    deck: tuple[WorkoutTemplate, ...],
+    prefix: tuple[WorkoutTemplate, ...],
+    max_count: int,
+) -> bool:
+    """Conservative proof of exact nonnegative sums, including two search paths."""
+    context = getcontext()
+    if max_count > 24 or any(
+        context.traps[signal]
+        for signal in (Clamped, Inexact, Rounded, Subnormal, Underflow)
+    ):
+        return False
+    loads = tuple(require_planned_load(t).value for t in (*deck, *prefix))
+    exponents = tuple(v.as_tuple().exponent for v in loads)
+    # InternalLoad guarantees finite nonnegative values (integer exponents).
+    if not all(isinstance(e, int) for e in exponents):
+        return False
+    scale = min(0, *(int(e) for e in exponents))
+    largest_adjusted = max(v.adjusted() for v in loads)
+    # The conservative +2 covers the sum of at most 24 nonnegative operands.
+    # Include zero's exponent: even a zero addition must remain exact.
+    if (
+        scale < context.Emin
+        or largest_adjusted + 2 > context.Emax
+        or largest_adjusted - scale + 3 > context.prec
+    ):
+        return False
+    return True
+
+
+def _build_high_reachability(
+    *,
+    deck: tuple[WorkoutTemplate, ...],
+    prefix: tuple[WorkoutTemplate, ...],
+    budget: Decimal,
+    build_week: int | None,
+    high_available: bool,
+    max_count: int,
+) -> tuple[frozenset[Decimal], ...] | None:
+    """Necessary high-load reachability only; None keeps the accepted search.
+
+    Unrestricted repetitions deliberately overapproximate every athlete's legal
+    continuations. Never quantize loads or change the caller's Decimal flags.
+    Bound the optional table, not the planner's search.
+    """
+    if not budget.is_finite() or not _exact_selection_additions(
+        deck=deck, prefix=prefix, max_count=max_count
+    ):
+        return None
+    with localcontext():
+        upper = budget if build_week == 4 else budget * Decimal("0.90")
+        lower = Decimal(0) if not high_available else budget * Decimal("0.70")
+        if not high_available:
+            upper = Decimal(0)
+        elif build_week == 4:
+            lower = Decimal(0)
+        high_loads = frozenset(
+            require_planned_load(t).value
+            for t in deck
+            if t.intensity_bucket is IntensityBucket.HIGH
+        )
+        start = sum(
+            (
+                require_planned_load(t).value
+                for t in prefix
+                if t.intensity_bucket is IntensityBucket.HIGH
+            ),
+            Decimal(0),
+        )
+        remaining = max_count - len(prefix)
+        reachable = [frozenset({Decimal(0)})]
+        table_size = 1
+        for _ in range(remaining):
+            values = set(reachable[-1])
+            for value in reachable[-1]:
+                for load in high_loads:
+                    new = value + load
+                    if new <= upper:
+                        values.add(new)
+                    if len(values) + table_size > 32768:
+                        return None
+            reachable.append(frozenset(values))
+            table_size += len(values)
+        possible = frozenset(start + value for value in reachable[-1])
+        result = []
+        result_size = len(possible)
+        for increments in reachable:
+            ordered = sorted(increments)
+            allowed = set()
+            for high in possible:
+                index = bisect_left(ordered, lower, key=lambda value: high + value)
+                if index < len(ordered) and high + ordered[index] <= upper:
+                    # Week four needs strictly positive high load. Z5 is left
+                    # to the unchanged terminal check (a safe overapproximation).
+                    if (
+                        build_week != 4
+                        or not high_available
+                        or high + ordered[index] > 0
+                    ):
+                        allowed.add(high)
+                    elif (
+                        index + 1 < len(ordered) and high + ordered[index + 1] <= upper
+                    ):
+                        allowed.add(high)
+            result.append(frozenset(allowed))
+            result_size += len(allowed)
+            if result_size > 32768:
+                return None
+        return tuple(result)
+
+
+def _short_exact_build_selection(
+    *,
+    options: tuple[WorkoutTemplate, ...],
+    prefix: tuple[WorkoutTemplate, ...],
+    required_disciplines: frozenset[Discipline],
+    target: InternalLoad,
+    build_week: int | None,
+    desired_high_fraction: Fraction,
+    high_available: bool,
+    z5_available: bool,
+    minimum_load: Decimal,
+    required_count: int | None,
+    required_composition: Mapping[Discipline, int] | None,
+    maximum_uses: Mapping[UUID, int] | None,
+    feasible: Callable[[tuple[WorkoutTemplate, ...]], bool] | None,
+) -> tuple[WorkoutTemplate, ...] | None:
+    """Try short exact layers with <=6 appended occurrences, otherwise fall back.
+
+    Called only when the historical state is Markov and additions are exact.
+    Join two at-most-three-occurrence halves by exact integer load; retain the
+    historical canonical representative of EVERY matching state before calling
+    feasibility. A missing/aborted shortcut is never an infeasibility result.
+    """
+    if len(options) > 128:
+        return None
+    ordered = tuple(sorted(options, key=lambda t: str(t.id)))
+    decimals = (target.value,) + tuple(
+        require_planned_load(t).value for t in (*ordered, *prefix)
+    )
+    scale = min(int(v.as_tuple().exponent) for v in decimals)
+    if max(v.adjusted() for v in decimals) - scale > 128:
+        return None
+
+    def integer(value: Decimal) -> int:
+        parts = value.as_tuple()
+        coefficient = 0
+        for digit in parts.digits:
+            coefficient = coefficient * 10 + digit
+        return int(coefficient * 10 ** (int(parts.exponent) - scale))
+
+    loads = tuple(integer(require_planned_load(t).value) for t in ordered)
+    residual = integer(target.value) - sum(
+        integer(require_planned_load(t).value) for t in prefix
+    )
+    max_added = 6 if len(options) <= 64 else 4
+    halves: list[dict[int, list[tuple[int, ...]]]] = []
+    for size in range(max_added // 2 + 1):
+        by_load: dict[int, list[tuple[int, ...]]] = {}
+        for indices in combinations_with_replacement(range(len(ordered)), size):
+            load = sum(loads[i] for i in indices)
+            if load <= residual:
+                by_load.setdefault(load, []).append(indices)
+        halves.append(by_load)
+    sports = tuple(Discipline)
+    limited_ids = tuple(
+        sorted(
+            (
+                template_id
+                for template_id, limit in (maximum_uses or {}).items()
+                if limit < (required_count or 24)
+            ),
+            key=str,
+        )
+    )
+    attempts = 0
+    for added in range(min(max_added, (required_count or 24) - len(prefix)) + 1):
+        count = len(prefix) + added
+        if required_count is not None and count != required_count:
+            continue
+        representatives: dict[
+            tuple[int, tuple[int, ...], tuple[int, ...], tuple[int, ...], bool],
+            tuple[int, ...],
+        ] = {}
+        left = halves[added // 2]
+        right = halves[added - added // 2]
+        for load, left_paths in left.items():
+            for first in left_paths:
+                for second in right.get(residual - load, ()):
+                    attempts += 1
+                    if attempts > 200000:
+                        return None
+                    if first and second and first[-1] > second[0]:
+                        continue
+                    path = first + second
+                    selection = prefix + tuple(ordered[i] for i in path)
+                    uses = tuple(
+                        sum(t.id == template_id for t in selection)
+                        for template_id in limited_ids
+                    )
+                    if maximum_uses is not None and any(
+                        uses[i] > maximum_uses[template_id]
+                        for i, template_id in enumerate(limited_ids)
+                    ):
+                        continue
+                    counts = tuple(
+                        sum(t.discipline is sport for t in selection)
+                        for sport in sports
+                    )
+                    if any(counts[sports.index(s)] == 0 for s in required_disciplines):
+                        continue
+                    if required_composition is not None and any(
+                        counts[i] != required_composition.get(s, 0)
+                        for i, s in enumerate(sports)
+                    ):
+                        continue
+                    high_counts = tuple(
+                        sum(
+                            t.discipline is sport
+                            and t.intensity_bucket is IntensityBucket.HIGH
+                            for t in selection
+                        )
+                        for sport in sports
+                    )
+                    state = (
+                        sum(
+                            integer(require_planned_load(t).value)
+                            for t in selection
+                            if t.intensity_bucket is IntensityBucket.HIGH
+                        ),
+                        counts,
+                        high_counts,
+                        uses,
+                        any(_has_zone_five(t) for t in selection),
+                    )
+                    previous = representatives.get(state)
+                    if previous is None or path < previous:
+                        representatives[state] = path
+        best = None
+        best_key = None
+        budget = target.value * desired_high_fraction.value
+        for path in representatives.values():
+            selection = prefix + tuple(ordered[i] for i in path)
+            if not _selection_policy_valid(
+                selection,
+                target=target,
+                phase=TrainingPhase.BUILD,
+                build_week=build_week,
+                desired_high_fraction=desired_high_fraction,
+                high_available=high_available,
+                z5_available=z5_available,
+                minimum_load=minimum_load,
+            ):
+                continue
+            high = sum(
+                (
+                    require_planned_load(t).value
+                    for t in selection
+                    if t.intensity_bucket is IntensityBucket.HIGH
+                ),
+                Decimal(0),
+            )
+            key = (abs(high - budget), tuple(str(t.id) for t in selection))
+            if (best_key is None or key < best_key) and (
+                feasible is None or feasible(selection)
+            ):
+                best, best_key = selection, key
+        if best is not None:
+            return best
+    return None
+
+
 def _bounded_selection(
     *,
     deck: tuple[WorkoutTemplate, ...],
@@ -923,6 +1197,57 @@ def _bounded_selection(
         getcontext().traps[signal]
         for signal in (Clamped, Inexact, Rounded, Subnormal, Underflow)
     )
+    build_reachable = (
+        _build_high_reachability(
+            deck=deck,
+            prefix=prefix,
+            budget=budget,
+            build_week=build_week,
+            high_available=high_available,
+            max_count=max_count,
+        )
+        if phase is TrainingPhase.BUILD
+        and len(required_disciplines) > 1
+        and max_count >= len(prefix)
+        else None
+    )
+    # With exact sums and no sport caps the existing state key fully determines
+    # transition eligibility. Its lexicographically least suffix is sorted by
+    # UUID: swapping an inversion preserves every additive state component and
+    # every monotone prefix bound. Only that canonical representative can win.
+    # Sport loads are absent from the historical key, so capped searches retain
+    # the accepted transition order and merging without this optimization.
+    canonical_options = (
+        {
+            fact[5]: tuple(other for other in option_facts if other[5] >= fact[5])
+            for fact in option_facts
+        }
+        if phase is TrainingPhase.BUILD
+        and len(required_disciplines) > 1
+        and not discipline_caps
+        and len(options) <= 128
+        and len({item.id for item in deck}) == len(deck)
+        and _exact_selection_additions(deck=deck, prefix=prefix, max_count=max_count)
+        else None
+    )
+    if canonical_options is not None:
+        exact = _short_exact_build_selection(
+            options=options,
+            prefix=prefix,
+            required_disciplines=required_disciplines,
+            target=target,
+            build_week=build_week,
+            desired_high_fraction=desired_high_fraction,
+            high_available=high_available,
+            z5_available=z5_available,
+            minimum_load=minimum_load,
+            required_count=required_count,
+            required_composition=required_composition,
+            maximum_uses=maximum_uses,
+            feasible=feasible,
+        )
+        if exact is not None:
+            return exact
     for count in range(len(prefix), max_count + 1):
         for (
             total,
@@ -986,7 +1311,12 @@ def _bounded_selection(
             limited_counts,
             has_z5,
         ), (selection, selection_key) in states.items():
-            for item, item_load, is_high, index, item_z5, item_key in option_facts:
+            candidate_facts = (
+                canonical_options[selection_key[-1]]
+                if canonical_options is not None and count > len(prefix)
+                else option_facts
+            )
+            for item, item_load, is_high, index, item_z5, item_key in candidate_facts:
                 if maximum_uses is not None and sum(
                     existing.id == item.id for existing in selection
                 ) >= maximum_uses.get(item.id, 24):
@@ -1017,6 +1347,11 @@ def _bounded_selection(
                     continue
                 new_high = high + (item_load if is_high else Decimal(0))
                 if phase is TrainingPhase.BUILD and new_high > budget:
+                    continue
+                if (
+                    build_reachable is not None
+                    and new_high not in build_reachable[max_count - count - 1]
+                ):
                     continue
                 new_counts = counts[:index] + (counts[index] + 1,) + counts[index + 1 :]
                 new_high_counts = (

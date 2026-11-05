@@ -1,0 +1,1781 @@
+{
+  "bound_seconds": 8,
+  "cases": {
+    "current:build_1": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "28800",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": "1/15",
+              "known_high_seconds": "540",
+              "known_low_seconds": "7560",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": "3/5",
+              "known_high_seconds": "1800",
+              "known_low_seconds": "1200",
+              "status": "FAIL"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "b59a9ef2ffb95fc2f6219a3d63e390216369630c39487be9f56fffd1f378a4b0",
+      "planner_seconds": 2.965723399999888,
+      "process_and_harness_setup_seconds": 0.17102120000004106,
+      "profile": null,
+      "ready": {
+        "input_sha256": "4f55998c6a17229e100c4f5c426f3ebdfb2b453ac7caf719468b0d251bf0f82a",
+        "setup_seconds": {
+          "catalog_construction": 0.024473799999896073,
+          "python_imports": 0.37878599999999096,
+          "scenario_preparation": 0.0001445000000330765
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "14.28571428571428571428571429",
+          "low_intensity_percent": "85.71428571428571428571428571",
+          "planned_load": {
+            "value": "549.90"
+          },
+          "target": {
+            "basis": "realized_progression",
+            "build_week": 1,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "build",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "550.00"
+            }
+          },
+          "total_duration_minutes": "665",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "target_outside_catalog_capacity",
+              "message": "The reviewed workout deck does not exactly match the weekly target.",
+              "rule_id": "BR-004",
+              "severity": "warning"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": 2000,
+                "duration_minutes": "50",
+                "expected_rpe_max": 8,
+                "expected_rpe_min": 2,
+                "intensity_bucket": "high",
+                "internal_planned_load": {
+                  "value": "54.90"
+                },
+                "name": "Threshold repeats",
+                "segments": [
+                  {
+                    "distance_meters": 400,
+                    "duration_minutes": "10",
+                    "expected_rpe": 3,
+                    "instructions": "Complete warm-up in Zone 2.",
+                    "is_swim_technique": false,
+                    "name": "Warm-up",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": 1200,
+                    "duration_minutes": "30",
+                    "expected_rpe": 8,
+                    "instructions": "Complete threshold repeats in Zone 4.",
+                    "is_swim_technique": false,
+                    "name": "Threshold repeats",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 2,
+                    "zone_target": 4
+                  },
+                  {
+                    "distance_meters": 400,
+                    "duration_minutes": "10",
+                    "expected_rpe": 2,
+                    "instructions": "Complete cool-down in Zone 1.",
+                    "is_swim_technique": false,
+                    "name": "Cool-down",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 3,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "51000000-0000-0000-0000-000000000002",
+                "template_key": "50000000-0000-0000-0000-000000000002",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-27",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "240",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 2,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "195"
+                },
+                "name": "BIK-011 \ufffd Techniek",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 2,
+                    "instructions": "15' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 2,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 3",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 3,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 4",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 4,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 5",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 5,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 6",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 6,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 7",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 7,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 8",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 8,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 9",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 9,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 10",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 10,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 11",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 11,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 12",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 12,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 13",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 13,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 14",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 14,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 15",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 15,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 16",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 16,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 17",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 17,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 18",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 18,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 19",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 19,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 20",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 20,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "30",
+                    "expected_rpe": 2,
+                    "instructions": "30' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 21",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 21,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "57100000-0000-0000-0001-000000000011",
+                "template_key": "57000000-0000-0000-0001-000000000011",
+                "template_version": 2
+              }
+            },
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "45",
+                "expected_rpe_max": 5,
+                "expected_rpe_min": 2,
+                "intensity_bucket": "high",
+                "internal_planned_load": {
+                  "value": "41"
+                },
+                "name": "RUN-021 \ufffd Fartlek",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "3",
+                    "expected_rpe": 5,
+                    "instructions": "3' \ufffd Zone 3 \ufffd RPE 5-6",
+                    "is_swim_technique": false,
+                    "name": "Blok 2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 2,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "2",
+                    "expected_rpe": 4,
+                    "instructions": "2' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 3",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 3,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "3",
+                    "expected_rpe": 5,
+                    "instructions": "3' \ufffd Zone 3 \ufffd RPE 5-6",
+                    "is_swim_technique": false,
+                    "name": "Blok 4",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 4,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "2",
+                    "expected_rpe": 4,
+                    "instructions": "2' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 5",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 5,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "3",
+                    "expected_rpe": 5,
+                    "instructions": "3' \ufffd Zone 3 \ufffd RPE 5-6",
+                    "is_swim_technique": false,
+                    "name": "Blok 6",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 6,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "2",
+                    "expected_rpe": 4,
+                    "instructions": "2' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 7",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 7,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 2,
+                    "instructions": "15' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 8",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 8,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "57100000-0000-0000-0002-000000000021",
+                "template_key": "57000000-0000-0000-0002-000000000021",
+                "template_version": 2
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-30",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "240",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 2,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "195"
+                },
+                "name": "BIK-011 \ufffd Techniek",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 2,
+                    "instructions": "15' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 2,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 3",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 3,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 4",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 4,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 5",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 5,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 6",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 6,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 7",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 7,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 8",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 8,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 9",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 9,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 10",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 10,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 11",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 11,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 12",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 12,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 13",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 13,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 14",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 14,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 15",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 15,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 16",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 16,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 17",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 17,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 18",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 18,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 2,
+                    "instructions": "5' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 19",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 19,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 20",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 20,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "30",
+                    "expected_rpe": 2,
+                    "instructions": "30' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 21",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 21,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "57100000-0000-0000-0001-000000000011",
+                "template_key": "57000000-0000-0000-0001-000000000011",
+                "template_version": 2
+              }
+            },
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-31",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "90",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 2,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "64"
+                },
+                "name": "RUN-011 \ufffd Wisselduur",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 2,
+                    "instructions": "15' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 2,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 2,
+                    "instructions": "15' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 3",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 3,
+                    "zone_target": 1
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 4,
+                    "instructions": "15' \ufffd Zone 2 \ufffd RPE 4",
+                    "is_swim_technique": false,
+                    "name": "Blok 4",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 4,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "30",
+                    "expected_rpe": 2,
+                    "instructions": "30' \ufffd Zone 1 \ufffd RPE 2-3",
+                    "is_swim_technique": false,
+                    "name": "Blok 5",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 5,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "57100000-0000-0000-0002-000000000011",
+                "template_key": "57000000-0000-0000-0002-000000000011",
+                "template_version": 2
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 0.000266999999894324,
+      "setup_wall_seconds": 0.5744254999999612,
+      "stage": "result",
+      "wall_seconds": 3.5951233000000684
+    },
+    "previous61:build_1": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "19800",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "9600",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "UNVERIFIED"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "7e6cdac4c85204f7461263b31e9ab23242f18737c125bc1962194c7515c33f36",
+      "planner_seconds": 3.7391049000000294,
+      "process_and_harness_setup_seconds": 0.12343220000002475,
+      "profile": null,
+      "ready": {
+        "input_sha256": "d6ea795e0d9d38129df6c75ca2d1da46149a769a41dd5c5ce0d5d1b0926465de",
+        "setup_seconds": {
+          "catalog_construction": 0.06429899999989175,
+          "python_imports": 0.36970370000017283,
+          "scenario_preparation": 0.00012289999995118706
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "0",
+          "low_intensity_percent": "100",
+          "planned_load": {
+            "value": "550.0"
+          },
+          "target": {
+            "basis": "realized_progression",
+            "build_week": 1,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "build",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "550.00"
+            }
+          },
+          "total_duration_minutes": "490",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "distance_only_swim_excluded_from_time_ratio",
+              "message": "Afstandsgestuurde zwemtrainingen staan in meters in het plan; de 80/20-tijdverdeling bevat alleen trainingen met een vastgelegde duur.",
+              "rule_id": "BR-002",
+              "severity": "info"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": 1600,
+                "duration_minutes": null,
+                "expected_rpe_max": 6,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "high",
+                "internal_planned_load": {
+                  "value": "31.4"
+                },
+                "name": "TR-SWIM-010",
+                "segments": [
+                  {
+                    "distance_meters": 300,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "300m Z2 ",
+                    "is_swim_technique": false,
+                    "name": "300m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": 200,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 200m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 200m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 2,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 200,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 200m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 200m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 3,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 200,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 200m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 200m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 4,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 200,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 200m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 200m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 5,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 200,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 200m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 200m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 6,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 300,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": " 300m Z2",
+                    "is_swim_technique": false,
+                    "name": " 300m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 7,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "6d598622-d73a-5b26-b894-cc2242de9877",
+                "template_key": "ffa4c527-2068-57b2-8222-8ff142519bb4",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-27",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "50",
+                "expected_rpe_max": 2,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "29.0"
+                },
+                "name": "TR-RUN-003",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "50",
+                    "expected_rpe": 1,
+                    "instructions": "50m Z1",
+                    "is_swim_technique": false,
+                    "name": "50m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "5dcec933-c4c2-574a-84b5-d0e9d64cb3ac",
+                "template_key": "c9a0afa3-a4b4-5d26-b627-a6630afbb052",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": 3000,
+                "duration_minutes": null,
+                "expected_rpe_max": 6,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "high",
+                "internal_planned_load": {
+                  "value": "61.6"
+                },
+                "name": "TR-SWIM-014",
+                "segments": [
+                  {
+                    "distance_meters": 300,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "300m Z2 ",
+                    "is_swim_technique": false,
+                    "name": "300m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 100m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 2,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 200,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 200m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 200m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 3,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 300,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 300m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 300m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 4,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 400,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 400m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 400m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 5,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 500,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 500m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 500m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 6,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 400,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 400m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 400m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 7,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 300,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 300m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 300m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 8,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 200,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 200m Z3 | 30s Rust ",
+                    "is_swim_technique": false,
+                    "name": " 200m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 9,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 100,
+                    "duration_minutes": null,
+                    "expected_rpe": 5,
+                    "instructions": " 100m Z3 ",
+                    "is_swim_technique": false,
+                    "name": " 100m Z3 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 10,
+                    "zone_target": 3
+                  },
+                  {
+                    "distance_meters": 200,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": " 200m Z2",
+                    "is_swim_technique": false,
+                    "name": " 200m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 11,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "1f4fe951-2df1-5267-998b-691a1447bc76",
+                "template_key": "fe80e291-59bb-5c4e-ae08-46fe0ff061c6",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-30",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "330",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "309.4"
+                },
+                "name": "TR-BIKE-011",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "330",
+                    "expected_rpe": 3,
+                    "instructions": "330m Z2",
+                    "is_swim_technique": false,
+                    "name": "330m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "4971cc7a-4dfd-5c47-87ba-b5e860e5ddcd",
+                "template_key": "3c5d43bc-cf1e-57bf-942d-e7f4a0524e2f",
+                "template_version": 1
+              }
+            },
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-31",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "110",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "118.6"
+                },
+                "name": "TR-RUN-012",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "110",
+                    "expected_rpe": 3,
+                    "instructions": "110m Z2",
+                    "is_swim_technique": false,
+                    "name": "110m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "7d1f2466-d5f9-5778-95f8-804e20445e2f",
+                "template_key": "ecd4c0b6-f93b-53a5-941e-a4c651d8babb",
+                "template_version": 1
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 0.00015759999996589613,
+      "setup_wall_seconds": 0.5575578000000405,
+      "stage": "result",
+      "wall_seconds": 4.3700280000000475
+    },
+    "v6:build_1": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "dd0cc3885871a36dd6777c1c51debcd8de7ff84213cc5c52cb5535bbd3ae91d7",
+        "setup_seconds": {
+          "catalog_construction": 0.2647429999999531,
+          "python_imports": 0.3816460000000461,
+          "scenario_preparation": 0.00015819999998711864
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.7653302000001077,
+      "wall_seconds": 8.012201499999946
+    },
+    "v6:build_2": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "68feedeb6f2f4ec469223f98ec72a524fee3edac13bc4774b908011b79b47eff",
+        "setup_seconds": {
+          "catalog_construction": 0.25544319999994514,
+          "python_imports": 0.3749775999999656,
+          "scenario_preparation": 0.0001466000001073553
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.7481603000001087,
+      "wall_seconds": 8.014911499999926
+    },
+    "v6:build_3": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "6670c10282b9dc6da28504dbe2c58bb02699154db9bcd6ab3cb69866a0314062",
+        "setup_seconds": {
+          "catalog_construction": 0.2582138999998733,
+          "python_imports": 0.3720316000001276,
+          "scenario_preparation": 0.00013150000017958519
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.7441334000000097,
+      "wall_seconds": 8.01043279999999
+    },
+    "v6:build_4": {
+      "independent_checks": {
+        "errors": [],
+        "legacy_independent_constraints": "PASS",
+        "prospective_v6_diagnostics": {
+          "beginner_one_each": null,
+          "per_sport_active_time": {
+            "bike": {
+              "high_ratio": "1/141",
+              "known_high_seconds": "180",
+              "known_low_seconds": "25200",
+              "status": "PASS"
+            },
+            "run": {
+              "high_ratio": "0",
+              "known_high_seconds": "0",
+              "known_low_seconds": "5400",
+              "status": "PASS"
+            },
+            "swim": {
+              "high_ratio": null,
+              "known_high_seconds": "0",
+              "known_low_seconds": "0",
+              "status": "UNVERIFIED"
+            }
+          },
+          "policy_and_method_approval": "NOT GRANTED BY PERFORMANCE WORK",
+          "within_target_budget": true
+        }
+      },
+      "output_sha256": "cb4af3801e666c461a1662eb22a0e20c3ccf96db287eee26ba6cf968374efee3",
+      "planner_seconds": 0.014216799999985597,
+      "process_and_harness_setup_seconds": 0.11609900000007656,
+      "profile": null,
+      "ready": {
+        "input_sha256": "5d89b830b58ecb8e8f128e0a698dfa756301f01fc57b6c72f0c3008f3c1f2e7c",
+        "setup_seconds": {
+          "catalog_construction": 0.25988630000006196,
+          "python_imports": 0.3602352999998857,
+          "scenario_preparation": 0.00023000000010142685
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "PENDING_HYPOTHETICAL_PLAN",
+        "plan": {
+          "high_intensity_percent": "18.12865497076023391812865497",
+          "low_intensity_percent": "81.87134502923976608187134503",
+          "planned_load": {
+            "value": "550.0"
+          },
+          "target": {
+            "basis": "realized_progression",
+            "build_week": 4,
+            "cross_training_consent_required": false,
+            "desired_high_fraction": {
+              "value": "0.20"
+            },
+            "discipline_caps": {},
+            "injury_load_unallocated": false,
+            "manual_review_required": false,
+            "phase": "build",
+            "replacement_disciplines": [],
+            "taper_period": null,
+            "target": {
+              "value": "550.00"
+            }
+          },
+          "total_duration_minutes": "513",
+          "warnings": [
+            {
+              "affected_template_id": null,
+              "code": "distance_only_swim_excluded_from_time_ratio",
+              "message": "Afstandsgestuurde zwemtrainingen staan in meters in het plan; de 80/20-tijdverdeling bevat alleen trainingen met een vastgelegde duur.",
+              "rule_id": "BR-002",
+              "severity": "info"
+            }
+          ],
+          "workouts": [
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-26",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "330",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "309.4"
+                },
+                "name": "TR-BIKE-011",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "330",
+                    "expected_rpe": 3,
+                    "instructions": "330m Z2",
+                    "is_swim_technique": false,
+                    "name": "330m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "b7f7ba2e-d6b4-5852-b6c2-f3ff97bc153d",
+                "template_key": "3c5d43bc-cf1e-57bf-942d-e7f4a0524e2f",
+                "template_version": 2
+              }
+            },
+            {
+              "discipline": "swim",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-27",
+              "snapshot": {
+                "distance_meters": 3500,
+                "duration_minutes": null,
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "59.1"
+                },
+                "name": "TR-SWIM-006",
+                "segments": [
+                  {
+                    "distance_meters": 3500,
+                    "duration_minutes": null,
+                    "expected_rpe": 3,
+                    "instructions": "3500m Z2",
+                    "is_swim_technique": false,
+                    "name": "3500m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "5bc4384a-cbfd-5703-a278-efde3aec83d2",
+                "template_key": "519e3d64-6fb3-54dd-b471-69e8ecfce9e7",
+                "template_version": 3
+              }
+            },
+            {
+              "discipline": "bike",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-29",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "93",
+                "expected_rpe_max": 10,
+                "expected_rpe_min": 1,
+                "intensity_bucket": "high",
+                "internal_planned_load": {
+                  "value": "84.5"
+                },
+                "name": "TR-BIKE-020",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "30",
+                    "expected_rpe": 3,
+                    "instructions": "30m Z2 ",
+                    "is_swim_technique": false,
+                    "name": "30m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "0.5",
+                    "expected_rpe": 9,
+                    "instructions": " 30s Z5 ",
+                    "is_swim_technique": false,
+                    "name": " 30s Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 2,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 3,
+                    "instructions": " 5m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 5m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 3,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "0.5",
+                    "expected_rpe": 9,
+                    "instructions": " 30s Z5 ",
+                    "is_swim_technique": false,
+                    "name": " 30s Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 4,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 3,
+                    "instructions": " 5m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 5m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 5,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "0.5",
+                    "expected_rpe": 9,
+                    "instructions": " 30s Z5 ",
+                    "is_swim_technique": false,
+                    "name": " 30s Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 6,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 3,
+                    "instructions": " 5m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 5m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 7,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "0.5",
+                    "expected_rpe": 9,
+                    "instructions": " 30s Z5 ",
+                    "is_swim_technique": false,
+                    "name": " 30s Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 8,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 3,
+                    "instructions": " 5m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 5m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 9,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "0.5",
+                    "expected_rpe": 9,
+                    "instructions": " 30s Z5 ",
+                    "is_swim_technique": false,
+                    "name": " 30s Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 10,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 3,
+                    "instructions": " 5m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 5m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 11,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "0.5",
+                    "expected_rpe": 9,
+                    "instructions": " 30s Z5 ",
+                    "is_swim_technique": false,
+                    "name": " 30s Z5 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 12,
+                    "zone_target": 5
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "5",
+                    "expected_rpe": 3,
+                    "instructions": " 5m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 5m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 13,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 3,
+                    "instructions": " 15m Z2 ",
+                    "is_swim_technique": false,
+                    "name": " 15m Z2 ",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 14,
+                    "zone_target": 2
+                  },
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "15",
+                    "expected_rpe": 1,
+                    "instructions": " 15m Z1",
+                    "is_swim_technique": false,
+                    "name": " 15m Z1",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 15,
+                    "zone_target": 1
+                  }
+                ],
+                "template_id": "5c10fd38-86b7-577b-9abd-42fca0d28e43",
+                "template_key": "a546b501-57f2-5d6b-84df-f59a9c69e6ea",
+                "template_version": 2
+              }
+            },
+            {
+              "discipline": "run",
+              "occurrence_id": null,
+              "scheduled_date": "2026-10-30",
+              "snapshot": {
+                "distance_meters": null,
+                "duration_minutes": "90",
+                "expected_rpe_max": 4,
+                "expected_rpe_min": 3,
+                "intensity_bucket": "low",
+                "internal_planned_load": {
+                  "value": "97.0"
+                },
+                "name": "TR-RUN-010",
+                "segments": [
+                  {
+                    "distance_meters": null,
+                    "duration_minutes": "90",
+                    "expected_rpe": 3,
+                    "instructions": "90m Z2",
+                    "is_swim_technique": false,
+                    "name": "90m Z2",
+                    "protocol_target": null,
+                    "rpe_target": null,
+                    "sequence": 1,
+                    "zone_target": 2
+                  }
+                ],
+                "template_id": "0a351def-db80-5219-9585-a107d28959c6",
+                "template_key": "0af431e3-3d21-5b7a-aeb0-f1e0b64857f2",
+                "template_version": 2
+              }
+            }
+          ]
+        }
+      },
+      "serialization_seconds": 0.00010630000019773433,
+      "setup_wall_seconds": 0.7364506000001256,
+      "stage": "result",
+      "wall_seconds": 0.8033294000001661
+    }
+  },
+  "instrumented": false,
+  "preloaded": false,
+  "variant": "optimized"
+}

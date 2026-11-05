@@ -1,0 +1,48 @@
+{
+  "scope": "OFFLINE_SYNTHETIC_ZERO_HISTORY_TRIATHLETE_ONLY",
+  "activation": "NONE",
+  "week_start": "2026-10-26",
+  "timezone": "Europe/Amsterdam",
+  "starting_target": "45.0",
+  "load_authority": "HYPOTHETICAL_DISPLAYED_SOURCE_P_NOT_OPERATIONALLY_APPROVED",
+  "prospective_policy": {
+    "hard_budget_scope": "AWAITING_EXPLICIT_APPROVAL",
+    "planned_sport_share_targets": {"bike": "0.50", "run": "0.30", "swim": "0.20"},
+    "maximum_high_active_time_fraction_per_sport": "0.20",
+    "mandatory_high_minimum": false,
+    "swim_duration_inference": "FORBIDDEN"
+  },
+  "automatic": {
+    "classification": "LEGACY_VALID / PROSPECTIVE_BUDGET_EXCEEDED",
+    "source_ids": ["TR-BIKE-022", "TR-RUN-027", "TR-SWIM-021"],
+    "total": "45.1",
+    "legacy_selection_validity": "VALID",
+    "strict_weekly_budget_compliance": "EXCEEDED",
+    "individual_athlete_suitability": "UNAPPROVED",
+    "three_sport_coverage": true,
+    "one_session_per_sport": true,
+    "planned_sport_loads": {"bike": "15.1", "run": "21.6", "swim": "8.4"},
+    "planned_sport_shares_exact": {"bike": "151/451", "run": "216/451", "swim": "84/451"},
+    "sport_distribution_policy": "TARGET_ONLY_NOT_AN_ACTIVE_SELECTION_RULE",
+    "per_sport_intensity_time": {"bike": "PASS_ZERO_HIGH", "run": "PASS_ZERO_HIGH", "swim": "UNVERIFIED"},
+    "swimming_duration_evidence": "MISSING_UNVERIFIED",
+    "approved_beginner_training_plan": false
+  },
+  "manual_witness": {
+    "classification": "LEGACY_VALID / PROSPECTIVE_BUDGET_WITHIN / SUITABILITY_UNAPPROVED",
+    "source_ids": ["TR-BIKE-023", "TR-RUN-024", "TR-SWIM-021"],
+    "total": "43.1",
+    "legacy_selection_validity": "VALID",
+    "strict_weekly_budget_compliance": "WITHIN",
+    "individual_athlete_suitability": "UNAPPROVED",
+    "three_sport_coverage": true,
+    "one_session_per_sport": true,
+    "planned_sport_loads": {"bike": "20.2", "run": "14.5", "swim": "8.4"},
+    "planned_sport_shares_exact": {"bike": "202/431", "run": "145/431", "swim": "84/431"},
+    "sport_distribution_policy": "TARGET_ONLY_NOT_AN_ACTIVE_SELECTION_RULE",
+    "per_sport_intensity_time": {"bike": "PASS_ZERO_HIGH", "run": "PASS_ZERO_HIGH", "swim": "UNVERIFIED"},
+    "swimming_duration_evidence": "MISSING_UNVERIFIED",
+    "approved_beginner_training_plan": false,
+    "automatic_selection_requirement": "NONE_THIS_IS_A_MANUAL_WITNESS"
+  }
+}

@@ -25,7 +25,41 @@ STARTED = time.perf_counter()
 ROOT = Path(__file__).resolve().parents[1]
 REFERENCE = ROOT / "tests/fixtures/planner_performance/bounded_selection_99c03b1.py.txt"
 REFERENCE_SHA = "ebff78029d9fdad5314fb8846072fff31dd07967940c0f9de91c1f00509f8d30"
+ACCEPTED = ROOT / "tests/fixtures/planner_performance/bounded_selection_12fde3b.py.txt"
+ACCEPTED_SHA = "597b3f2a0f4a3d66c691be96a698da489e95d871ae264aeeeb89855a38e85d8b"
 BOUND = 8
+
+
+def peak_resident_bytes() -> int:
+    """Process peak working set; private diagnostic, including imports/catalog."""
+    if sys.platform == "win32":
+        import ctypes
+
+        class MemoryCounters(ctypes.Structure):
+            _fields_ = [
+                ("cb", ctypes.c_ulong),
+                ("faults", ctypes.c_ulong),
+                ("peak", ctypes.c_size_t),
+                ("working", ctypes.c_size_t),
+                ("quota_peak_paged", ctypes.c_size_t),
+                ("quota_paged", ctypes.c_size_t),
+                ("quota_peak_nonpaged", ctypes.c_size_t),
+                ("quota_nonpaged", ctypes.c_size_t),
+                ("pagefile", ctypes.c_size_t),
+                ("peak_pagefile", ctypes.c_size_t),
+            ]
+
+        memory = MemoryCounters()
+        memory.cb = ctypes.sizeof(memory)
+        if not ctypes.windll.psapi.GetProcessMemoryInfo(
+            ctypes.c_void_p(-1), ctypes.byref(memory), memory.cb
+        ):
+            raise OSError("process_memory_measurement_failed")
+        return int(memory.peak)
+    import resource
+
+    value = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return int(value if sys.platform == "darwin" else value * 1024)
 
 
 class Counters:
@@ -60,6 +94,7 @@ class Counters:
     def snapshot(self) -> dict[str, Any]:
         return {
             "counts": dict(self.counts),
+            "peak_resident_bytes": peak_resident_bytes(),
             "layers": self.layers,
             "stages": self.stages,
             "filters": self.filters,
@@ -97,8 +132,16 @@ class SearchCounters(ast.NodeTransformer):
     def visit_For(self, node: ast.For) -> ast.For:
         self.generic_visit(node)
         iterator = ast.unparse(node.iter)
-        if iterator == "option_facts":
+        if iterator in ("option_facts", "candidate_facts"):
             node.body.insert(0, _statement("_perf.transition()"))
+        elif "combinations_with_replacement" in iterator:
+            node.body.insert(0, _statement("_perf.counts['exact_half_entries'] += 1"))
+        elif iterator == "right.get(residual - load, ())":
+            node.body.insert(0, _statement("_perf.counts['exact_join_attempts'] += 1"))
+        elif iterator == "representatives.values()":
+            node.body.insert(
+                0, _statement("_perf.counts['exact_states_evaluated'] += 1")
+            )
         elif iterator == "states.items()":
             node.body.insert(0, _statement("_perf.counts['state_visits'] += 1"))
             evaluating = any(
@@ -128,6 +171,34 @@ class SearchCounters(ast.NodeTransformer):
                 node,
                 _statement("_perf.counts['repeated_states'] += previous is not None"),
             ]
+        target = ast.unparse(node.targets[0])
+        if target == "next_states[state]":
+            return [
+                node,
+                _statement(
+                    "_perf.counts['peak_dp_resident_states'] = max("
+                    "_perf.counts['peak_dp_resident_states'], "
+                    "len(states)+len(next_states))"
+                ),
+            ]
+        if target == "representatives[state]":
+            return [
+                node,
+                _statement(
+                    "_perf.counts['peak_exact_resident_states'] = max("
+                    "_perf.counts['peak_exact_resident_states'], len(representatives))"
+                ),
+            ]
+        if (
+            target == "previous"
+            and ast.unparse(node.value) == "representatives.get(state)"
+        ):
+            return [
+                node,
+                _statement(
+                    "_perf.counts['exact_repeated_states'] += previous is not None"
+                ),
+            ]
         return node
 
 
@@ -141,11 +212,25 @@ def search_variant(variant: str, counters: Counters | None = None) -> Iterator[N
         raise ValueError("reference_revision_mismatch")
     if variant == "optimized":
         source = inspect.getsource(original).encode()
+    elif variant == "accepted":
+        source = ACCEPTED.read_bytes()
+        if sha256(source).hexdigest() != ACCEPTED_SHA:
+            raise ValueError("accepted_revision_mismatch")
     namespace = dict(vars(domain))
     tree = ast.parse(source)
     if counters:
         tree = SearchCounters().visit(tree)
         namespace["_perf"] = counters
+        for helper in ("_short_exact_build_selection", "_build_high_reachability"):
+            helper_tree = SearchCounters().visit(
+                ast.parse(inspect.getsource(getattr(domain, helper)))
+            )
+            exec(
+                compile(
+                    ast.fix_missing_locations(helper_tree), "<profile-build>", "exec"
+                ),
+                namespace,
+            )
     exec(compile(ast.fix_missing_locations(tree), str(REFERENCE), "exec"), namespace)
     wrapped: dict[str, Any] = {}
     names = (
@@ -662,7 +747,7 @@ def main() -> None:
     parser.add_argument("--case")
     parser.add_argument("--mode", default="v6")
     parser.add_argument(
-        "--variant", choices=("reference", "optimized"), default="reference"
+        "--variant", choices=("reference", "accepted", "optimized"), default="reference"
     )
     parser.add_argument("--preloaded", action="store_true")
     parser.add_argument("--instrument", action="store_true")

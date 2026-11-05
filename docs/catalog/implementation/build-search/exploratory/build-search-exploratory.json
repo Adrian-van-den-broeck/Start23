@@ -1,0 +1,116 @@
+{
+  "bound_seconds": 8,
+  "cases": {
+    "current:build_1": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "4f55998c6a17229e100c4f5c426f3ebdfb2b453ac7caf719468b0d251bf0f82a",
+        "setup_seconds": {
+          "catalog_construction": 0.024255700000139768,
+          "python_imports": 0.37400909999996657,
+          "scenario_preparation": 0.0001511999998911051
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.5617127000000437,
+      "wall_seconds": 8.009680799999842
+    },
+    "previous61:build_1": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "d6ea795e0d9d38129df6c75ca2d1da46149a769a41dd5c5ce0d5d1b0926465de",
+        "setup_seconds": {
+          "catalog_construction": 0.06866310000009435,
+          "python_imports": 0.3744821000000229,
+          "scenario_preparation": 0.00013649999982590089
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.5739360000000033,
+      "wall_seconds": 8.007407600000079
+    },
+    "v6:build_1": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "dd0cc3885871a36dd6777c1c51debcd8de7ff84213cc5c52cb5535bbd3ae91d7",
+        "setup_seconds": {
+          "catalog_construction": 0.3180861000000732,
+          "python_imports": 0.40234639999994215,
+          "scenario_preparation": 0.00014309999983197486
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.8414066000000275,
+      "wall_seconds": 8.011240399999906
+    },
+    "v6:build_2": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "68feedeb6f2f4ec469223f98ec72a524fee3edac13bc4774b908011b79b47eff",
+        "setup_seconds": {
+          "catalog_construction": 0.28501679999999396,
+          "python_imports": 0.37872479999987263,
+          "scenario_preparation": 0.00014600000008613279
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.7782534999998916,
+      "wall_seconds": 8.015469400000029
+    },
+    "v6:build_3": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "6670c10282b9dc6da28504dbe2c58bb02699154db9bcd6ab3cb69866a0314062",
+        "setup_seconds": {
+          "catalog_construction": 0.265952999999854,
+          "python_imports": 0.38001900000017486,
+          "scenario_preparation": 0.00013690000014321413
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.7623724000000038,
+      "wall_seconds": 8.01560359999985
+    },
+    "v6:build_4": {
+      "bound_seconds": 8,
+      "profile": null,
+      "ready": {
+        "input_sha256": "5d89b830b58ecb8e8f128e0a698dfa756301f01fc57b6c72f0c3008f3c1f2e7c",
+        "setup_seconds": {
+          "catalog_construction": 0.2616173000001254,
+          "python_imports": 0.3812215999998898,
+          "scenario_preparation": 0.00012979999996787228
+        },
+        "stage": "ready"
+      },
+      "result": {
+        "outcome": "DIAGNOSTIC_TIMEOUT"
+      },
+      "setup_wall_seconds": 0.759259400000019,
+      "wall_seconds": 8.013562500000035
+    }
+  },
+  "instrumented": false,
+  "preloaded": false,
+  "variant": "optimized"
+}
