@@ -145,3 +145,29 @@ access, or automatic C3–C8 continuation is authorized or performed. Source cat
 A5/A6 release, and production remain untouched. PostgreSQL/pgTAP and hosted/mobile
 release verification remain their existing external gates; local backend success
 does not close them.
+
+## Immutable delivery addendum
+
+Exact verified implementation and final source/test/evidence SHA:
+**`67c293f7d395e2cb8a12911be37a925d23467aa9`**, a direct child of the accepted
+starting SHA. Its worktree was clean after commit. This following documentation-only
+delivery commit records that immutable reference; its exact final SHA is supplied
+in the delivery response and resolves at `perf/joren-v6-planner-build-search`.
+A Git commit cannot contain its own final hash.
+
+Staged diff hygiene passed across all 27 implementation paths. Every staged JSON
+and frozen oracle matched its worktree bytes exactly; the tested Python matched
+the index after normalizing Git's Windows line endings. Immutable diagnostic JSON
+has a scoped `-text` attribute so checkout/staging cannot alter its recorded hashes.
+The [verification manifest](build-search/verification.json) records worktree-byte
+source/evidence checksums, test results, protected tips, and open gates. The report
+generator also validates all six matrices and their observer transparency.
+
+Final custody checks found the accepted performance worktree and A5/A6 release
+worktree clean at their original tips. The committed diff contains no source
+catalog/workbook, physiology, mobile, SQL, execution/cancellation, persistence,
+release preparation, or production configuration change. No pre-existing
+benchmark evidence was rewritten. There was no push, merge, deploy, migration,
+activation, publication, database access, or continuation into C3–C8.
+
+WOMBO V6 BUILD SEARCH PARTIALLY IMPROVED — REMAINING TIMEOUTS DOCUMENTED
