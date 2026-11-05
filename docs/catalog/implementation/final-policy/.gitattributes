@@ -1,0 +1,2 @@
+# Canonical private evidence bytes; preserve LF independently of Windows autocrlf.
+*.json -text

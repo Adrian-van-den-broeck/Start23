@@ -1,0 +1,80 @@
+{
+  "artifact_sha256": {
+    "evidence.json": "90b35a3f99d3335bbe92f8e4f23103597bb91906b070a2353923674f9183c429",
+    "regression.json": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341"
+  },
+  "base_sha": "7dc3f22595d4b9e22e1e84abaf148d9bd791fd33",
+  "branch": "experiment/joren-v6-final-policy",
+  "commands": {
+    "focused": {
+      "command": "python -B -m pytest -q -p no:cacheprovider tests/test_v6_final_policy.py tests/test_v6_partial_approval.py tests/test_v6_policy_sandbox.py tests/test_joren_c21.py",
+      "new_cases": 28,
+      "passed": 213,
+      "seconds": 14.38
+    },
+    "format": {
+      "command": "python -m ruff format --check app tests benchmarks",
+      "files": 189,
+      "result": "PASS"
+    },
+    "full_backend": {
+      "command": "python -B -m pytest -q -p no:cacheprovider",
+      "passed": 2250,
+      "seconds": 188.08,
+      "warnings": "One existing Starlette/httpx deprecation warning"
+    },
+    "regression": {
+      "accepted_completions_preserved": 26,
+      "bound_seconds_including_imports": 8,
+      "cases": 40,
+      "command": "python -B -m benchmarks.v6_policy_sandbox --regression-output ../docs/catalog/implementation/final-policy/regression.json",
+      "host_load_controlled": false,
+      "independent_legacy_plan_checks": 29,
+      "input_fingerprints_and_full_canonical_outcomes_equal": true,
+      "outcome_counts": {
+        "DIAGNOSTIC_TIMEOUT": 1,
+        "FAIL_CLOSED": 10,
+        "PENDING_HYPOTHETICAL_PLAN": 29
+      },
+      "semantic_equality_with_prior_partial_approval": true,
+      "serial_workers": true,
+      "unchanged_timeout": "current:build_4"
+    },
+    "ruff": {
+      "command": "python -m ruff check app tests benchmarks",
+      "result": "PASS"
+    },
+    "strict_mypy": {
+      "command": "python -m mypy app tests benchmarks",
+      "result": "PASS",
+      "source_files": 188,
+      "strict": true
+    }
+  },
+  "custody": {
+    "A5_A6_release_clean_at": "cd3e2dd438031cfb565858d0a5929e9963f7b31f",
+    "application_and_production_planner_unchanged": true,
+    "build_optimizations_A3_A9_and_realized_V2_preserved": true,
+    "historical_sources_reports_fixtures_and_tests_unchanged": true,
+    "no_push_merge_deploy_migrate_activate_or_C3_C8": true,
+    "prior_tracked_files_modified": 0,
+    "source_worktree_clean_at": "7dc3f22595d4b9e22e1e84abaf148d9bd791fd33"
+  },
+  "date": "2026-11-05",
+  "mobile_typescript": "NOT_APPLICABLE_NO_MOBILE_OR_PUBLIC_CONTRACT_CHANGE",
+  "offline_task_complete_only": true,
+  "open_gates": [
+    "Full IF2 formula/normalization/rounding/storage precision",
+    "Official operational planned-P authority and Realized TSS V2 compatibility",
+    "Athlete level and workout phase/long-session/recovery/repeat suitability",
+    "Operational acceptance of estimated or uncertain swimming-time compliance",
+    "Exact safe-partial ranking, allocation metric, deterministic tie integration",
+    "Named accountable scientific review and external review record",
+    "Catalog replacement/activation and production authorization",
+    "Existing external hosted DB/pgTAP/RLS/device/release gates; not run here",
+    "Existing current:build_4 diagnostic timeout"
+  ],
+  "policy_version": "joren-v6-final-prospective-policy-1",
+  "schema": "joren-v6-final-policy-verification-1",
+  "timezone": "Europe/Amsterdam"
+}
