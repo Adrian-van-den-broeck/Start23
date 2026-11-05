@@ -1,0 +1,80 @@
+{
+  "schema": "joren-v6-policy-sandbox-verification-1",
+  "date": "2026-11-05",
+  "timezone": "Europe/Amsterdam",
+  "branch": "experiment/joren-v6-policy-sandbox",
+  "starting_delivery_sha": "86c64e6e5b5b89f4f2c8901246793afdf924dd04",
+  "starting_verified_implementation_sha": "67c293f7d395e2cb8a12911be37a925d23467aa9",
+  "required_ancestry_checks_passed": 17,
+  "tests": {
+    "full_backend": {
+      "command": "python -B -m pytest -q -p no:cacheprovider",
+      "passed": 2102,
+      "failed": 0,
+      "seconds": "165.23",
+      "warnings": "One pre-existing Starlette/httpx deprecation warning"
+    },
+    "focused_policy_and_c21": {
+      "command": "python -B -m pytest -q -p no:cacheprovider tests/test_v6_policy_sandbox.py tests/test_joren_c21.py",
+      "passed": 65,
+      "failed": 0,
+      "seconds": "7.19",
+      "new_policy_cases": 35,
+      "existing_c21_cases": 30
+    },
+    "ruff": "PASS: python -m ruff check app tests benchmarks",
+    "format": "PASS: python -m ruff format --check app tests benchmarks; 183 files",
+    "strict_mypy": "PASS: python -m mypy app tests benchmarks; strict=true; 182 files",
+    "public_privacy_realized_v2_and_a3_a9": "Included in passing unchanged full backend regression suite"
+  },
+  "regression": {
+    "cases": 40,
+    "all_input_fingerprints_equal_accepted_delivery": true,
+    "all_full_canonical_outcomes_equal_accepted_delivery": true,
+    "completed_accepted_reference_outcomes_exactly_preserved": 26,
+    "independently_checked_returned_plans": 29,
+    "fail_closed": 10,
+    "timeouts": ["current:build_4"],
+    "bound_seconds_including_imports": 8,
+    "planner_monkeypatched": false,
+    "serial_workers": true,
+    "host_load_controlled": false
+  },
+  "feasibility": {
+    "full_77_one_per_sport_space": 16632,
+    "all_easy_one_per_sport_space": 5016,
+    "within_45_count_for_both_spaces": 33,
+    "also_scalar_legacy_fit_count": 23,
+    "independent_rational_oracle_full_set_equality": true,
+    "suitability_evidence": "UNRESOLVED; no real-row eligibility assigned",
+    "recovery_25.86_and_taper_15.085": "No mathematical one-per-sport combination; complete all-77 enumeration"
+  },
+  "private_artifact_sha256": {
+    "experiments.json": "f32d419fbc2d655283dae8f2358a2c215eb3356888b621c172f702a8da02fbe9",
+    "regression.json": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341"
+  },
+  "unchanged_original_and_archived_v6_workbook_sha256": {
+    "Fietstrainingen_Definitief_v6.xlsx": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95",
+    "Looptrainingen_Definitief_v6.xlsx": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c",
+    "Zwemtrainingen_Definitief_v6.xlsx": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+  },
+  "protected_clean_worktree_tips": {
+    "perf/joren-v6-planner-build-search": "86c64e6e5b5b89f4f2c8901246793afdf924dd04",
+    "fix/wombo-a5-a6-release-20261104": "cd3e2dd438031cfb565858d0a5929e9963f7b31f"
+  },
+  "scope": "Only new offline benchmark modules, tests, reports and private evidence; no existing tracked file changed",
+  "open_operational_gates": [
+    "Source method, IF2/Z3/swim reference precision and operational planned P",
+    "Approved individual suitability evidence for the actual 77 workouts",
+    "Hard budget scope, ranking and minimum-fill/coverage/no-solution policies",
+    "Permitted consumers of UNVERIFIED swim time and actual duration evidence",
+    "Future BUILD high-load versus segment-time rule integration",
+    "Accountable scientific review and separate catalog/release approval",
+    "Existing hosted PostgreSQL/pgTAP/RLS and device/release verification",
+    "Known current:build_4 performance limitation, unchanged"
+  ],
+  "external_checks": "No database, migration, API or mobile changes; hosted/database/device checks not run and not closed",
+  "activation": "NONE",
+  "historical_recalculation": "NONE",
+  "publication_push_merge_deploy_migrate": "NONE"
+}

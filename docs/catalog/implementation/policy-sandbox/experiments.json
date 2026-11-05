@@ -1,0 +1,2014 @@
+{
+  "classification": "TESTED OFFLINE BEHAVIOR; NO OPERATIONAL APPROVAL",
+  "method": "hypothetical-v6-displayed-source-p-exact-decimal-1",
+  "results": {
+    "all77": {
+      "allocation_first": [
+        {
+          "deterministic_ids": [
+            "14cea336-40ee-5e42-8b59-6459fc982525",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+            "e97db210-1a80-5058-a87e-d29e858fc1a8"
+          ],
+          "legacy_fit": true,
+          "private_total": "40.2",
+          "share_error": "23/1005",
+          "source_ids": [
+            "TR-BIKE-023",
+            "TR-RUN-023",
+            "TR-SWIM-021"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "14cea336-40ee-5e42-8b59-6459fc982525",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+            "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+          ],
+          "legacy_fit": true,
+          "private_total": "39.4",
+          "share_error": "51/985",
+          "source_ids": [
+            "TR-BIKE-023",
+            "TR-RUN-025",
+            "TR-SWIM-021"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "0008cde4-7a7d-55aa-a890-d8bbfcc34188",
+            "14cea336-40ee-5e42-8b59-6459fc982525",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+          ],
+          "legacy_fit": true,
+          "private_total": "43.1",
+          "share_error": "157/2155",
+          "source_ids": [
+            "TR-BIKE-023",
+            "TR-RUN-024",
+            "TR-SWIM-021"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "14cea336-40ee-5e42-8b59-6459fc982525",
+            "35cf4f62-e73a-594a-8a6f-72887b52ba09",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.8",
+          "share_error": "69/560",
+          "source_ids": [
+            "TR-BIKE-023",
+            "TR-RUN-026",
+            "TR-SWIM-021"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+            "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.4",
+          "share_error": "5/37",
+          "source_ids": [
+            "TR-BIKE-024",
+            "TR-RUN-025",
+            "TR-SWIM-021"
+          ]
+        }
+      ],
+      "feasibility": {
+        "candidate_space": 16632,
+        "combinations_examined": 16632,
+        "evidence_mode": "ARITHMETIC_ONLY",
+        "scope": "exactly_one_occurrence_per_required_sport;no_scheduling_claim",
+        "status": "COMPLETE",
+        "suitability_evidence_state": "NOT_ASSESSED",
+        "within_budget": [
+          {
+            "deterministic_ids": [
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "9b80f5eb-3678-5ac9-933b-1bc5be2bf013"
+            ],
+            "legacy_fit": true,
+            "private_total": "44.4",
+            "share_error": "40/111",
+            "source_ids": [
+              "TR-BIKE-001",
+              "TR-RUN-021",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "c0b5d145-a391-51d5-ac03-3ce764cd3d67"
+            ],
+            "legacy_fit": true,
+            "private_total": "40.9",
+            "share_error": "107/409",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-001",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "11036cf4-7ea8-5335-a79e-80765fb88d9d",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0"
+            ],
+            "legacy_fit": false,
+            "private_total": "37.8",
+            "share_error": "467/945",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-021",
+              "TR-SWIM-001"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": false,
+            "private_total": "29.3",
+            "share_error": "299/1465",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-021",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0"
+            ],
+            "legacy_fit": false,
+            "private_total": "34.4",
+            "share_error": "331/860",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-021",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0cd8408e-5d19-57d9-bec3-08e1442aa86e",
+              "11036cf4-7ea8-5335-a79e-80765fb88d9d",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160"
+            ],
+            "legacy_fit": true,
+            "private_total": "40.7",
+            "share_error": "876/2035",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-022",
+              "TR-SWIM-001"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0cd8408e-5d19-57d9-bec3-08e1442aa86e",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": false,
+            "private_total": "32.2",
+            "share_error": "14/115",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-022",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0cd8408e-5d19-57d9-bec3-08e1442aa86e",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44"
+            ],
+            "legacy_fit": false,
+            "private_total": "37.3",
+            "share_error": "604/1865",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-022",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "11036cf4-7ea8-5335-a79e-80765fb88d9d",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "e97db210-1a80-5058-a87e-d29e858fc1a8"
+            ],
+            "legacy_fit": true,
+            "private_total": "43.6",
+            "share_error": "409/1090",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-023",
+              "TR-SWIM-001"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "e97db210-1a80-5058-a87e-d29e858fc1a8"
+            ],
+            "legacy_fit": false,
+            "private_total": "35.1",
+            "share_error": "49/351",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-023",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "e97db210-1a80-5058-a87e-d29e858fc1a8"
+            ],
+            "legacy_fit": true,
+            "private_total": "40.2",
+            "share_error": "91/335",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-023",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0008cde4-7a7d-55aa-a890-d8bbfcc34188",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": false,
+            "private_total": "38.0",
+            "share_error": "39/190",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-024",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0008cde4-7a7d-55aa-a890-d8bbfcc34188",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44"
+            ],
+            "legacy_fit": true,
+            "private_total": "43.1",
+            "share_error": "129/431",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-024",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "11036cf4-7ea8-5335-a79e-80765fb88d9d",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+            ],
+            "legacy_fit": true,
+            "private_total": "42.8",
+            "share_error": "417/1070",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-025",
+              "TR-SWIM-001"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+            ],
+            "legacy_fit": false,
+            "private_total": "34.3",
+            "share_error": "41/343",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-025",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+            ],
+            "legacy_fit": true,
+            "private_total": "39.4",
+            "share_error": "281/985",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-025",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "35cf4f62-e73a-594a-8a6f-72887b52ba09",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": true,
+            "private_total": "39.7",
+            "share_error": "95/397",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-026",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "35cf4f62-e73a-594a-8a6f-72887b52ba09"
+            ],
+            "legacy_fit": true,
+            "private_total": "44.8",
+            "share_error": "73/224",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-026",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "11036cf4-7ea8-5335-a79e-80765fb88d9d",
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0"
+            ],
+            "legacy_fit": true,
+            "private_total": "42.9",
+            "share_error": "64/165",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-021",
+              "TR-SWIM-001"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": false,
+            "private_total": "34.4",
+            "share_error": "113/430",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-021",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0"
+            ],
+            "legacy_fit": true,
+            "private_total": "39.5",
+            "share_error": "121/395",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-021",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0cd8408e-5d19-57d9-bec3-08e1442aa86e",
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": false,
+            "private_total": "37.3",
+            "share_error": "249/1865",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-022",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0cd8408e-5d19-57d9-bec3-08e1442aa86e",
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44"
+            ],
+            "legacy_fit": true,
+            "private_total": "42.4",
+            "share_error": "251/1060",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-022",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "e97db210-1a80-5058-a87e-d29e858fc1a8"
+            ],
+            "legacy_fit": true,
+            "private_total": "40.2",
+            "share_error": "23/1005",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-023",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0008cde4-7a7d-55aa-a890-d8bbfcc34188",
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": true,
+            "private_total": "43.1",
+            "share_error": "157/2155",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-024",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+            ],
+            "legacy_fit": true,
+            "private_total": "39.4",
+            "share_error": "51/985",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-025",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+            ],
+            "legacy_fit": true,
+            "private_total": "44.5",
+            "share_error": "92/445",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-025",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "35cf4f62-e73a-594a-8a6f-72887b52ba09",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": true,
+            "private_total": "44.8",
+            "share_error": "69/560",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-026",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": true,
+            "private_total": "39.4",
+            "share_error": "301/985",
+            "source_ids": [
+              "TR-BIKE-024",
+              "TR-RUN-021",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0"
+            ],
+            "legacy_fit": true,
+            "private_total": "44.5",
+            "share_error": "151/445",
+            "source_ids": [
+              "TR-BIKE-024",
+              "TR-RUN-021",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0cd8408e-5d19-57d9-bec3-08e1442aa86e",
+              "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": true,
+            "private_total": "42.3",
+            "share_error": "9/47",
+            "source_ids": [
+              "TR-BIKE-024",
+              "TR-RUN-022",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+            ],
+            "legacy_fit": true,
+            "private_total": "44.4",
+            "share_error": "5/37",
+            "source_ids": [
+              "TR-BIKE-024",
+              "TR-RUN-025",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0",
+              "47031a52-0d44-52bd-86d2-ea669ab76675",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": true,
+            "private_total": "42.3",
+            "share_error": "139/423",
+            "source_ids": [
+              "TR-BIKE-025",
+              "TR-RUN-021",
+              "TR-SWIM-021"
+            ]
+          }
+        ]
+      },
+      "independent_set_equality": true,
+      "legacy_fit_count": 23,
+      "utilization_first": [
+        {
+          "deterministic_ids": [
+            "14cea336-40ee-5e42-8b59-6459fc982525",
+            "35cf4f62-e73a-594a-8a6f-72887b52ba09",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.8",
+          "share_error": "69/560",
+          "source_ids": [
+            "TR-BIKE-023",
+            "TR-RUN-026",
+            "TR-SWIM-021"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+            "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+            "35cf4f62-e73a-594a-8a6f-72887b52ba09"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.8",
+          "share_error": "73/224",
+          "source_ids": [
+            "TR-BIKE-022",
+            "TR-RUN-026",
+            "TR-SWIM-022"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "14cea336-40ee-5e42-8b59-6459fc982525",
+            "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+            "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.5",
+          "share_error": "92/445",
+          "source_ids": [
+            "TR-BIKE-023",
+            "TR-RUN-025",
+            "TR-SWIM-022"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+            "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+            "3bf38beb-3554-54e5-8ef7-7130094a06f0"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.5",
+          "share_error": "151/445",
+          "source_ids": [
+            "TR-BIKE-024",
+            "TR-RUN-021",
+            "TR-SWIM-022"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+            "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.4",
+          "share_error": "5/37",
+          "source_ids": [
+            "TR-BIKE-024",
+            "TR-RUN-025",
+            "TR-SWIM-021"
+          ]
+        }
+      ]
+    },
+    "all_easy": {
+      "allocation_first": [
+        {
+          "deterministic_ids": [
+            "14cea336-40ee-5e42-8b59-6459fc982525",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+            "e97db210-1a80-5058-a87e-d29e858fc1a8"
+          ],
+          "legacy_fit": true,
+          "private_total": "40.2",
+          "share_error": "23/1005",
+          "source_ids": [
+            "TR-BIKE-023",
+            "TR-RUN-023",
+            "TR-SWIM-021"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "14cea336-40ee-5e42-8b59-6459fc982525",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+            "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+          ],
+          "legacy_fit": true,
+          "private_total": "39.4",
+          "share_error": "51/985",
+          "source_ids": [
+            "TR-BIKE-023",
+            "TR-RUN-025",
+            "TR-SWIM-021"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "0008cde4-7a7d-55aa-a890-d8bbfcc34188",
+            "14cea336-40ee-5e42-8b59-6459fc982525",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+          ],
+          "legacy_fit": true,
+          "private_total": "43.1",
+          "share_error": "157/2155",
+          "source_ids": [
+            "TR-BIKE-023",
+            "TR-RUN-024",
+            "TR-SWIM-021"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "14cea336-40ee-5e42-8b59-6459fc982525",
+            "35cf4f62-e73a-594a-8a6f-72887b52ba09",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.8",
+          "share_error": "69/560",
+          "source_ids": [
+            "TR-BIKE-023",
+            "TR-RUN-026",
+            "TR-SWIM-021"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+            "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.4",
+          "share_error": "5/37",
+          "source_ids": [
+            "TR-BIKE-024",
+            "TR-RUN-025",
+            "TR-SWIM-021"
+          ]
+        }
+      ],
+      "feasibility": {
+        "candidate_space": 5016,
+        "combinations_examined": 5016,
+        "evidence_mode": "ARITHMETIC_ONLY",
+        "scope": "exactly_one_occurrence_per_required_sport;no_scheduling_claim",
+        "status": "COMPLETE",
+        "suitability_evidence_state": "NOT_ASSESSED",
+        "within_budget": [
+          {
+            "deterministic_ids": [
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "9b80f5eb-3678-5ac9-933b-1bc5be2bf013"
+            ],
+            "legacy_fit": true,
+            "private_total": "44.4",
+            "share_error": "40/111",
+            "source_ids": [
+              "TR-BIKE-001",
+              "TR-RUN-021",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "c0b5d145-a391-51d5-ac03-3ce764cd3d67"
+            ],
+            "legacy_fit": true,
+            "private_total": "40.9",
+            "share_error": "107/409",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-001",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "11036cf4-7ea8-5335-a79e-80765fb88d9d",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0"
+            ],
+            "legacy_fit": false,
+            "private_total": "37.8",
+            "share_error": "467/945",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-021",
+              "TR-SWIM-001"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": false,
+            "private_total": "29.3",
+            "share_error": "299/1465",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-021",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0"
+            ],
+            "legacy_fit": false,
+            "private_total": "34.4",
+            "share_error": "331/860",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-021",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0cd8408e-5d19-57d9-bec3-08e1442aa86e",
+              "11036cf4-7ea8-5335-a79e-80765fb88d9d",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160"
+            ],
+            "legacy_fit": true,
+            "private_total": "40.7",
+            "share_error": "876/2035",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-022",
+              "TR-SWIM-001"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0cd8408e-5d19-57d9-bec3-08e1442aa86e",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": false,
+            "private_total": "32.2",
+            "share_error": "14/115",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-022",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0cd8408e-5d19-57d9-bec3-08e1442aa86e",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44"
+            ],
+            "legacy_fit": false,
+            "private_total": "37.3",
+            "share_error": "604/1865",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-022",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "11036cf4-7ea8-5335-a79e-80765fb88d9d",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "e97db210-1a80-5058-a87e-d29e858fc1a8"
+            ],
+            "legacy_fit": true,
+            "private_total": "43.6",
+            "share_error": "409/1090",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-023",
+              "TR-SWIM-001"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "e97db210-1a80-5058-a87e-d29e858fc1a8"
+            ],
+            "legacy_fit": false,
+            "private_total": "35.1",
+            "share_error": "49/351",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-023",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "e97db210-1a80-5058-a87e-d29e858fc1a8"
+            ],
+            "legacy_fit": true,
+            "private_total": "40.2",
+            "share_error": "91/335",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-023",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0008cde4-7a7d-55aa-a890-d8bbfcc34188",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": false,
+            "private_total": "38.0",
+            "share_error": "39/190",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-024",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0008cde4-7a7d-55aa-a890-d8bbfcc34188",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44"
+            ],
+            "legacy_fit": true,
+            "private_total": "43.1",
+            "share_error": "129/431",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-024",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "11036cf4-7ea8-5335-a79e-80765fb88d9d",
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+            ],
+            "legacy_fit": true,
+            "private_total": "42.8",
+            "share_error": "417/1070",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-025",
+              "TR-SWIM-001"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+            ],
+            "legacy_fit": false,
+            "private_total": "34.3",
+            "share_error": "41/343",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-025",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+            ],
+            "legacy_fit": true,
+            "private_total": "39.4",
+            "share_error": "281/985",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-025",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "35cf4f62-e73a-594a-8a6f-72887b52ba09",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": true,
+            "private_total": "39.7",
+            "share_error": "95/397",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-026",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "35cf4f62-e73a-594a-8a6f-72887b52ba09"
+            ],
+            "legacy_fit": true,
+            "private_total": "44.8",
+            "share_error": "73/224",
+            "source_ids": [
+              "TR-BIKE-022",
+              "TR-RUN-026",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "11036cf4-7ea8-5335-a79e-80765fb88d9d",
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0"
+            ],
+            "legacy_fit": true,
+            "private_total": "42.9",
+            "share_error": "64/165",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-021",
+              "TR-SWIM-001"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": false,
+            "private_total": "34.4",
+            "share_error": "113/430",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-021",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0"
+            ],
+            "legacy_fit": true,
+            "private_total": "39.5",
+            "share_error": "121/395",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-021",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0cd8408e-5d19-57d9-bec3-08e1442aa86e",
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": false,
+            "private_total": "37.3",
+            "share_error": "249/1865",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-022",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0cd8408e-5d19-57d9-bec3-08e1442aa86e",
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44"
+            ],
+            "legacy_fit": true,
+            "private_total": "42.4",
+            "share_error": "251/1060",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-022",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "e97db210-1a80-5058-a87e-d29e858fc1a8"
+            ],
+            "legacy_fit": true,
+            "private_total": "40.2",
+            "share_error": "23/1005",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-023",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0008cde4-7a7d-55aa-a890-d8bbfcc34188",
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": true,
+            "private_total": "43.1",
+            "share_error": "157/2155",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-024",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+            ],
+            "legacy_fit": true,
+            "private_total": "39.4",
+            "share_error": "51/985",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-025",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+            ],
+            "legacy_fit": true,
+            "private_total": "44.5",
+            "share_error": "92/445",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-025",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "14cea336-40ee-5e42-8b59-6459fc982525",
+              "35cf4f62-e73a-594a-8a6f-72887b52ba09",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": true,
+            "private_total": "44.8",
+            "share_error": "69/560",
+            "source_ids": [
+              "TR-BIKE-023",
+              "TR-RUN-026",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": true,
+            "private_total": "39.4",
+            "share_error": "301/985",
+            "source_ids": [
+              "TR-BIKE-024",
+              "TR-RUN-021",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+              "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0"
+            ],
+            "legacy_fit": true,
+            "private_total": "44.5",
+            "share_error": "151/445",
+            "source_ids": [
+              "TR-BIKE-024",
+              "TR-RUN-021",
+              "TR-SWIM-022"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0cd8408e-5d19-57d9-bec3-08e1442aa86e",
+              "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": true,
+            "private_total": "42.3",
+            "share_error": "9/47",
+            "source_ids": [
+              "TR-BIKE-024",
+              "TR-RUN-022",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+              "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+            ],
+            "legacy_fit": true,
+            "private_total": "44.4",
+            "share_error": "5/37",
+            "source_ids": [
+              "TR-BIKE-024",
+              "TR-RUN-025",
+              "TR-SWIM-021"
+            ]
+          },
+          {
+            "deterministic_ids": [
+              "3bf38beb-3554-54e5-8ef7-7130094a06f0",
+              "47031a52-0d44-52bd-86d2-ea669ab76675",
+              "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+            ],
+            "legacy_fit": true,
+            "private_total": "42.3",
+            "share_error": "139/423",
+            "source_ids": [
+              "TR-BIKE-025",
+              "TR-RUN-021",
+              "TR-SWIM-021"
+            ]
+          }
+        ]
+      },
+      "independent_set_equality": true,
+      "legacy_fit_count": 23,
+      "utilization_first": [
+        {
+          "deterministic_ids": [
+            "14cea336-40ee-5e42-8b59-6459fc982525",
+            "35cf4f62-e73a-594a-8a6f-72887b52ba09",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.8",
+          "share_error": "69/560",
+          "source_ids": [
+            "TR-BIKE-023",
+            "TR-RUN-026",
+            "TR-SWIM-021"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "1c9fb3af-2745-5870-98dc-ec83d62cf160",
+            "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+            "35cf4f62-e73a-594a-8a6f-72887b52ba09"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.8",
+          "share_error": "73/224",
+          "source_ids": [
+            "TR-BIKE-022",
+            "TR-RUN-026",
+            "TR-SWIM-022"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "14cea336-40ee-5e42-8b59-6459fc982525",
+            "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+            "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.5",
+          "share_error": "92/445",
+          "source_ids": [
+            "TR-BIKE-023",
+            "TR-RUN-025",
+            "TR-SWIM-022"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+            "2abfd4e2-6572-50ea-8766-7d6f377bcb44",
+            "3bf38beb-3554-54e5-8ef7-7130094a06f0"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.5",
+          "share_error": "151/445",
+          "source_ids": [
+            "TR-BIKE-024",
+            "TR-RUN-021",
+            "TR-SWIM-022"
+          ]
+        },
+        {
+          "deterministic_ids": [
+            "0f214135-0fc0-5b46-a3ff-8fba2b65ded0",
+            "8f9f3193-0a5a-5a7b-ab84-4c3670f4445b",
+            "d2343b12-bfa5-58de-bcdc-cc2276d6bcab"
+          ],
+          "legacy_fit": true,
+          "private_total": "44.4",
+          "share_error": "5/37",
+          "source_ids": [
+            "TR-BIKE-024",
+            "TR-RUN-025",
+            "TR-SWIM-021"
+          ]
+        }
+      ]
+    },
+    "manual_43.1": {
+      "allocation": [
+        {
+          "budget_deviation": "-3/5",
+          "budget_target": "9",
+          "private_load": "8.4",
+          "share": "84/431",
+          "share_deviation": "-11/2155",
+          "sport": "swim",
+          "target_share": "1/5"
+        },
+        {
+          "budget_deviation": "-23/10",
+          "budget_target": "45/2",
+          "private_load": "20.2",
+          "share": "202/431",
+          "share_deviation": "-27/862",
+          "sport": "bike",
+          "target_share": "1/2"
+        },
+        {
+          "budget_deviation": "1",
+          "budget_target": "27/2",
+          "private_load": "14.5",
+          "share": "145/431",
+          "share_deviation": "157/4310",
+          "sport": "run",
+          "target_share": "3/10"
+        }
+      ],
+      "findings": [
+        {
+          "reason": "OFFLINE_UNSELECTED:manual_43.1",
+          "sport": null,
+          "status": "LEGACY_NOT_EVALUATED"
+        },
+        {
+          "reason": "exact_hypothetical_decimal_total_compared_to_explicit_budget",
+          "sport": null,
+          "status": "PROSPECTIVE_BUDGET_WITHIN"
+        },
+        {
+          "reason": "hypothetical-v6-displayed-source-p-exact-decimal-1",
+          "sport": null,
+          "status": "SOURCE_METHOD_UNAPPROVED"
+        },
+        {
+          "reason": "structural_occurrence_coverage_only;individual_suitability_separate",
+          "sport": null,
+          "status": "SPORT_COVERAGE_SATISFIED"
+        },
+        {
+          "reason": "TR-BIKE-023:beginner_capability,sport_specific_experience,confirmed_training_capabilities,suitable_session_duration_distance,individual_long_session_scope,injury_restrictions,recovery_taper_suitability,repetition_weekly_frequency,phase_intensity_requirements",
+          "sport": "bike",
+          "status": "ATHLETE_SUITABILITY_UNAPPROVED"
+        },
+        {
+          "reason": "TR-BIKE-023:offline-input-missing:existing_restrictions_not_evaluated",
+          "sport": "bike",
+          "status": "RESTRICTIONS_UNVERIFIED"
+        },
+        {
+          "reason": "TR-RUN-024:beginner_capability,sport_specific_experience,confirmed_training_capabilities,suitable_session_duration_distance,individual_long_session_scope,injury_restrictions,recovery_taper_suitability,repetition_weekly_frequency,phase_intensity_requirements",
+          "sport": "run",
+          "status": "ATHLETE_SUITABILITY_UNAPPROVED"
+        },
+        {
+          "reason": "TR-RUN-024:offline-input-missing:existing_restrictions_not_evaluated",
+          "sport": "run",
+          "status": "RESTRICTIONS_UNVERIFIED"
+        },
+        {
+          "reason": "TR-SWIM-021:beginner_capability,sport_specific_experience,confirmed_training_capabilities,suitable_session_duration_distance,individual_long_session_scope,injury_restrictions,recovery_taper_suitability,repetition_weekly_frequency,phase_intensity_requirements",
+          "sport": "swim",
+          "status": "ATHLETE_SUITABILITY_UNAPPROVED"
+        },
+        {
+          "reason": "TR-SWIM-021:offline-input-missing:existing_restrictions_not_evaluated",
+          "sport": "swim",
+          "status": "RESTRICTIONS_UNVERIFIED"
+        },
+        {
+          "reason": "selected_total_denominator;budget_components_also_reported;soft_target_only",
+          "sport": null,
+          "status": "SPORT_ALLOCATION_DEVIATION"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "swim",
+          "status": "INTENSITY_TIME_UNVERIFIED"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "bike",
+          "status": "INTENSITY_TIME_COMPLIANT"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "run",
+          "status": "INTENSITY_TIME_COMPLIANT"
+        }
+      ],
+      "intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0",
+          "known_low_seconds": "0",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0",
+          "known_high_seconds": "0",
+          "known_low_seconds": "2400",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0",
+          "known_high_seconds": "0",
+          "known_low_seconds": "1500",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "legacy": {
+        "origin": "OFFLINE_UNSELECTED",
+        "outcome": "NOT_RUN",
+        "reference": "manual_43.1"
+      },
+      "policy_version": "joren-v6-prospective-policy-sandbox-1",
+      "private_budget": "45",
+      "private_budget_remaining": "1.9",
+      "private_total": "43.1",
+      "source_method": "hypothetical-v6-displayed-source-p-exact-decimal-1",
+      "suitability_contract": "joren-proposed-suitability-evidence-1",
+      "suitable_coverage": "UNRESOLVED"
+    },
+    "minimum_29.3": {
+      "allocation": [
+        {
+          "budget_deviation": "-3/5",
+          "budget_target": "9",
+          "private_load": "8.4",
+          "share": "84/293",
+          "share_deviation": "127/1465",
+          "sport": "swim",
+          "target_share": "1/5"
+        },
+        {
+          "budget_deviation": "-37/5",
+          "budget_target": "45/2",
+          "private_load": "15.1",
+          "share": "151/293",
+          "share_deviation": "9/586",
+          "sport": "bike",
+          "target_share": "1/2"
+        },
+        {
+          "budget_deviation": "-77/10",
+          "budget_target": "27/2",
+          "private_load": "5.8",
+          "share": "58/293",
+          "share_deviation": "-299/2930",
+          "sport": "run",
+          "target_share": "3/10"
+        }
+      ],
+      "findings": [
+        {
+          "reason": "OFFLINE_UNSELECTED:minimum_29.3",
+          "sport": null,
+          "status": "LEGACY_NOT_EVALUATED"
+        },
+        {
+          "reason": "exact_hypothetical_decimal_total_compared_to_explicit_budget",
+          "sport": null,
+          "status": "PROSPECTIVE_BUDGET_WITHIN"
+        },
+        {
+          "reason": "hypothetical-v6-displayed-source-p-exact-decimal-1",
+          "sport": null,
+          "status": "SOURCE_METHOD_UNAPPROVED"
+        },
+        {
+          "reason": "structural_occurrence_coverage_only;individual_suitability_separate",
+          "sport": null,
+          "status": "SPORT_COVERAGE_SATISFIED"
+        },
+        {
+          "reason": "TR-BIKE-022:beginner_capability,sport_specific_experience,confirmed_training_capabilities,suitable_session_duration_distance,individual_long_session_scope,injury_restrictions,recovery_taper_suitability,repetition_weekly_frequency,phase_intensity_requirements",
+          "sport": "bike",
+          "status": "ATHLETE_SUITABILITY_UNAPPROVED"
+        },
+        {
+          "reason": "TR-BIKE-022:offline-input-missing:existing_restrictions_not_evaluated",
+          "sport": "bike",
+          "status": "RESTRICTIONS_UNVERIFIED"
+        },
+        {
+          "reason": "TR-RUN-021:beginner_capability,sport_specific_experience,confirmed_training_capabilities,suitable_session_duration_distance,individual_long_session_scope,injury_restrictions,recovery_taper_suitability,repetition_weekly_frequency,phase_intensity_requirements",
+          "sport": "run",
+          "status": "ATHLETE_SUITABILITY_UNAPPROVED"
+        },
+        {
+          "reason": "TR-RUN-021:offline-input-missing:existing_restrictions_not_evaluated",
+          "sport": "run",
+          "status": "RESTRICTIONS_UNVERIFIED"
+        },
+        {
+          "reason": "TR-SWIM-021:beginner_capability,sport_specific_experience,confirmed_training_capabilities,suitable_session_duration_distance,individual_long_session_scope,injury_restrictions,recovery_taper_suitability,repetition_weekly_frequency,phase_intensity_requirements",
+          "sport": "swim",
+          "status": "ATHLETE_SUITABILITY_UNAPPROVED"
+        },
+        {
+          "reason": "TR-SWIM-021:offline-input-missing:existing_restrictions_not_evaluated",
+          "sport": "swim",
+          "status": "RESTRICTIONS_UNVERIFIED"
+        },
+        {
+          "reason": "selected_total_denominator;budget_components_also_reported;soft_target_only",
+          "sport": null,
+          "status": "SPORT_ALLOCATION_DEVIATION"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "swim",
+          "status": "INTENSITY_TIME_UNVERIFIED"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "bike",
+          "status": "INTENSITY_TIME_COMPLIANT"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "run",
+          "status": "INTENSITY_TIME_COMPLIANT"
+        }
+      ],
+      "intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0",
+          "known_low_seconds": "0",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0",
+          "known_high_seconds": "0",
+          "known_low_seconds": "1800",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0",
+          "known_high_seconds": "0",
+          "known_low_seconds": "600",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "legacy": {
+        "origin": "OFFLINE_UNSELECTED",
+        "outcome": "NOT_RUN",
+        "reference": "minimum_29.3"
+      },
+      "policy_version": "joren-v6-prospective-policy-sandbox-1",
+      "private_budget": "45",
+      "private_budget_remaining": "15.7",
+      "private_total": "29.3",
+      "source_method": "hypothetical-v6-displayed-source-p-exact-decimal-1",
+      "suitability_contract": "joren-proposed-suitability-evidence-1",
+      "suitable_coverage": "UNRESOLVED"
+    },
+    "mixed_bike_020": {
+      "allocation": [],
+      "findings": [
+        {
+          "reason": "OFFLINE_UNSELECTED:mixed_bike_020",
+          "sport": null,
+          "status": "LEGACY_NOT_EVALUATED"
+        },
+        {
+          "reason": "exact_hypothetical_decimal_total_compared_to_explicit_budget",
+          "sport": null,
+          "status": "PROSPECTIVE_BUDGET_EXCEEDED"
+        },
+        {
+          "reason": "hypothetical-v6-displayed-source-p-exact-decimal-1",
+          "sport": null,
+          "status": "SOURCE_METHOD_UNAPPROVED"
+        },
+        {
+          "reason": "structural_occurrence_coverage_only;individual_suitability_separate",
+          "sport": null,
+          "status": "SPORT_COVERAGE_SATISFIED"
+        },
+        {
+          "reason": "TR-BIKE-020:beginner_capability,sport_specific_experience,confirmed_training_capabilities,suitable_session_duration_distance,individual_long_session_scope,injury_restrictions,recovery_taper_suitability,repetition_weekly_frequency,phase_intensity_requirements",
+          "sport": "bike",
+          "status": "ATHLETE_SUITABILITY_UNAPPROVED"
+        },
+        {
+          "reason": "TR-BIKE-020:offline-input-missing:existing_restrictions_not_evaluated",
+          "sport": "bike",
+          "status": "RESTRICTIONS_UNVERIFIED"
+        },
+        {
+          "reason": "goal_is_not_triathlon",
+          "sport": null,
+          "status": "SPORT_ALLOCATION_NOT_APPLICABLE"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "swim",
+          "status": "INTENSITY_TIME_NOT_APPLICABLE"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "bike",
+          "status": "INTENSITY_TIME_COMPLIANT"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "run",
+          "status": "INTENSITY_TIME_NOT_APPLICABLE"
+        }
+      ],
+      "intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0",
+          "known_low_seconds": "0",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "1/31",
+          "known_high_seconds": "180",
+          "known_low_seconds": "5400",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0",
+          "known_low_seconds": "0",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "legacy": {
+        "origin": "OFFLINE_UNSELECTED",
+        "outcome": "NOT_RUN",
+        "reference": "mixed_bike_020"
+      },
+      "policy_version": "joren-v6-prospective-policy-sandbox-1",
+      "private_budget": "45",
+      "private_budget_remaining": "-39.5",
+      "private_total": "84.5",
+      "source_method": "hypothetical-v6-displayed-source-p-exact-decimal-1",
+      "suitability_contract": "joren-proposed-suitability-evidence-1",
+      "suitable_coverage": "UNRESOLVED"
+    },
+    "mixed_run_017": {
+      "allocation": [],
+      "findings": [
+        {
+          "reason": "OFFLINE_UNSELECTED:mixed_run_017",
+          "sport": null,
+          "status": "LEGACY_NOT_EVALUATED"
+        },
+        {
+          "reason": "exact_hypothetical_decimal_total_compared_to_explicit_budget",
+          "sport": null,
+          "status": "PROSPECTIVE_BUDGET_EXCEEDED"
+        },
+        {
+          "reason": "hypothetical-v6-displayed-source-p-exact-decimal-1",
+          "sport": null,
+          "status": "SOURCE_METHOD_UNAPPROVED"
+        },
+        {
+          "reason": "structural_occurrence_coverage_only;individual_suitability_separate",
+          "sport": null,
+          "status": "SPORT_COVERAGE_SATISFIED"
+        },
+        {
+          "reason": "TR-RUN-017:beginner_capability,sport_specific_experience,confirmed_training_capabilities,suitable_session_duration_distance,individual_long_session_scope,injury_restrictions,recovery_taper_suitability,repetition_weekly_frequency,phase_intensity_requirements",
+          "sport": "run",
+          "status": "ATHLETE_SUITABILITY_UNAPPROVED"
+        },
+        {
+          "reason": "TR-RUN-017:offline-input-missing:existing_restrictions_not_evaluated",
+          "sport": "run",
+          "status": "RESTRICTIONS_UNVERIFIED"
+        },
+        {
+          "reason": "goal_is_not_triathlon",
+          "sport": null,
+          "status": "SPORT_ALLOCATION_NOT_APPLICABLE"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "swim",
+          "status": "INTENSITY_TIME_NOT_APPLICABLE"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "bike",
+          "status": "INTENSITY_TIME_NOT_APPLICABLE"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "run",
+          "status": "INTENSITY_TIME_EXCEEDED"
+        }
+      ],
+      "intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0",
+          "known_low_seconds": "0",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0",
+          "known_low_seconds": "0",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "1/2",
+          "known_high_seconds": "1800",
+          "known_low_seconds": "1800",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "REJECTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "legacy": {
+        "origin": "OFFLINE_UNSELECTED",
+        "outcome": "NOT_RUN",
+        "reference": "mixed_run_017"
+      },
+      "policy_version": "joren-v6-prospective-policy-sandbox-1",
+      "private_budget": "45",
+      "private_budget_remaining": "-42.6",
+      "private_total": "87.6",
+      "source_method": "hypothetical-v6-displayed-source-p-exact-decimal-1",
+      "suitability_contract": "joren-proposed-suitability-evidence-1",
+      "suitable_coverage": "UNRESOLVED"
+    },
+    "recovery_25.86": {
+      "candidate_space": 16632,
+      "combinations_examined": 16632,
+      "evidence_mode": "ARITHMETIC_ONLY",
+      "scope": "exactly_one_occurrence_per_required_sport;no_scheduling_claim",
+      "status": "COMPLETE",
+      "suitability_evidence_state": "NOT_ASSESSED",
+      "within_budget": []
+    },
+    "supported_suitability": {
+      "candidate_space": 0,
+      "combinations_examined": 0,
+      "evidence_mode": "SUPPORTED_SUITABILITY",
+      "scope": "exactly_one_occurrence_per_required_sport;no_scheduling_claim",
+      "status": "COMPLETE",
+      "suitability_evidence_state": "UNRESOLVED",
+      "within_budget": []
+    },
+    "taper_15.085": {
+      "candidate_space": 16632,
+      "combinations_examined": 16632,
+      "evidence_mode": "ARITHMETIC_ONLY",
+      "scope": "exactly_one_occurrence_per_required_sport;no_scheduling_claim",
+      "status": "COMPLETE",
+      "suitability_evidence_state": "NOT_ASSESSED",
+      "within_budget": []
+    },
+    "unselected_allocation_40.2": {
+      "allocation": [
+        {
+          "budget_deviation": "-3/5",
+          "budget_target": "9",
+          "private_load": "8.4",
+          "share": "14/67",
+          "share_deviation": "3/335",
+          "sport": "swim",
+          "target_share": "1/5"
+        },
+        {
+          "budget_deviation": "-23/10",
+          "budget_target": "45/2",
+          "private_load": "20.2",
+          "share": "101/201",
+          "share_deviation": "1/402",
+          "sport": "bike",
+          "target_share": "1/2"
+        },
+        {
+          "budget_deviation": "-19/10",
+          "budget_target": "27/2",
+          "private_load": "11.6",
+          "share": "58/201",
+          "share_deviation": "-23/2010",
+          "sport": "run",
+          "target_share": "3/10"
+        }
+      ],
+      "findings": [
+        {
+          "reason": "OFFLINE_UNSELECTED:unselected_allocation_40.2",
+          "sport": null,
+          "status": "LEGACY_NOT_EVALUATED"
+        },
+        {
+          "reason": "exact_hypothetical_decimal_total_compared_to_explicit_budget",
+          "sport": null,
+          "status": "PROSPECTIVE_BUDGET_WITHIN"
+        },
+        {
+          "reason": "hypothetical-v6-displayed-source-p-exact-decimal-1",
+          "sport": null,
+          "status": "SOURCE_METHOD_UNAPPROVED"
+        },
+        {
+          "reason": "structural_occurrence_coverage_only;individual_suitability_separate",
+          "sport": null,
+          "status": "SPORT_COVERAGE_SATISFIED"
+        },
+        {
+          "reason": "TR-BIKE-023:beginner_capability,sport_specific_experience,confirmed_training_capabilities,suitable_session_duration_distance,individual_long_session_scope,injury_restrictions,recovery_taper_suitability,repetition_weekly_frequency,phase_intensity_requirements",
+          "sport": "bike",
+          "status": "ATHLETE_SUITABILITY_UNAPPROVED"
+        },
+        {
+          "reason": "TR-BIKE-023:offline-input-missing:existing_restrictions_not_evaluated",
+          "sport": "bike",
+          "status": "RESTRICTIONS_UNVERIFIED"
+        },
+        {
+          "reason": "TR-RUN-023:beginner_capability,sport_specific_experience,confirmed_training_capabilities,suitable_session_duration_distance,individual_long_session_scope,injury_restrictions,recovery_taper_suitability,repetition_weekly_frequency,phase_intensity_requirements",
+          "sport": "run",
+          "status": "ATHLETE_SUITABILITY_UNAPPROVED"
+        },
+        {
+          "reason": "TR-RUN-023:offline-input-missing:existing_restrictions_not_evaluated",
+          "sport": "run",
+          "status": "RESTRICTIONS_UNVERIFIED"
+        },
+        {
+          "reason": "TR-SWIM-021:beginner_capability,sport_specific_experience,confirmed_training_capabilities,suitable_session_duration_distance,individual_long_session_scope,injury_restrictions,recovery_taper_suitability,repetition_weekly_frequency,phase_intensity_requirements",
+          "sport": "swim",
+          "status": "ATHLETE_SUITABILITY_UNAPPROVED"
+        },
+        {
+          "reason": "TR-SWIM-021:offline-input-missing:existing_restrictions_not_evaluated",
+          "sport": "swim",
+          "status": "RESTRICTIONS_UNVERIFIED"
+        },
+        {
+          "reason": "selected_total_denominator;budget_components_also_reported;soft_target_only",
+          "sport": null,
+          "status": "SPORT_ALLOCATION_DEVIATION"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "swim",
+          "status": "INTENSITY_TIME_UNVERIFIED"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "bike",
+          "status": "INTENSITY_TIME_COMPLIANT"
+        },
+        {
+          "reason": "joren-planned-active-time-maximum-1:ordered_segments;no_swim_duration_inference",
+          "sport": "run",
+          "status": "INTENSITY_TIME_COMPLIANT"
+        }
+      ],
+      "intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0",
+          "known_low_seconds": "0",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0",
+          "known_high_seconds": "0",
+          "known_low_seconds": "2400",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0",
+          "known_high_seconds": "0",
+          "known_low_seconds": "1200",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "legacy": {
+        "origin": "OFFLINE_UNSELECTED",
+        "outcome": "NOT_RUN",
+        "reference": "unselected_allocation_40.2"
+      },
+      "policy_version": "joren-v6-prospective-policy-sandbox-1",
+      "private_budget": "45",
+      "private_budget_remaining": "4.8",
+      "private_total": "40.2",
+      "source_method": "hypothetical-v6-displayed-source-p-exact-decimal-1",
+      "suitability_contract": "joren-proposed-suitability-evidence-1",
+      "suitable_coverage": "UNRESOLVED"
+    }
+  },
+  "schema": "joren-v6-prospective-policy-sandbox-1"
+}
