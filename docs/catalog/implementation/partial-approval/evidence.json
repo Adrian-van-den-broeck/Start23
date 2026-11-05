@@ -1,0 +1,5933 @@
+{
+  "classification": "PRIVATE OFFLINE EVIDENCE; INACTIVE",
+  "confirmed_if": [
+    "0.55",
+    "0.75",
+    "0.88",
+    "0.98",
+    "1.15"
+  ],
+  "confirmed_reference_minutes_per_100m": [
+    "2.17",
+    "2.00",
+    "1.83",
+    "1.67",
+    "1.50"
+  ],
+  "decision_version": "joren-v6-partial-approval-1",
+  "estimator_version": "joren-v6-swim-reference-active-time-offline-1",
+  "if2_candidates": {
+    "TR-BIKE-001": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "30.25",
+      "denominator": 4,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 121,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "30.2",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-002": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "45.375",
+      "denominator": 8,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 363,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "45.4",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-003": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "60.5",
+      "denominator": 2,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 121,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "60.5",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-004": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "84.375",
+      "denominator": 8,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 675,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "84.40000000000001",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-005": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "112.5",
+      "denominator": 2,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 225,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "112.5",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-006": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "140.625",
+      "denominator": 8,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1125,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "140.6",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-007": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "168.75",
+      "denominator": 4,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 675,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "168.8",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-008": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "196.875",
+      "denominator": 8,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1575,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "196.9",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-009": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "225",
+      "denominator": 1,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 225,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "225",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-010": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "281.25",
+      "denominator": 4,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1125,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "281.2",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-011": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "309.375",
+      "denominator": 8,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 2475,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "309.4",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-012": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "337.5",
+      "denominator": 2,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 675,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "337.5",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-013": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "393.75",
+      "denominator": 4,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1575,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "393.8",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-014": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "221.80333333333333333333333333333333333333333333333",
+      "denominator": 300,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 66541,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "221.8",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-015": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "139.02666666666666666666666666666666666666666666667",
+      "denominator": 75,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 10427,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "139",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-016": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "221.80333333333333333333333333333333333333333333333",
+      "denominator": 300,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 66541,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "221.8",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-017": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "285.83",
+      "denominator": 100,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 28583,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "285.8",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-018": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "216.625",
+      "denominator": 8,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1733,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "216.6",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-019": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "134.28333333333333333333333333333333333333333333333",
+      "denominator": 60,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 8057,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "134.3",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-020": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "84.4875",
+      "denominator": 80,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 6759,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "84.5",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-021": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "96.066666666666666666666666666666666666666666666667",
+      "denominator": 15,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1441,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "96.09999999999999",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-022": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "15.125",
+      "denominator": 8,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 121,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "15.1",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-023": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "20.166666666666666666666666666666666666666666666667",
+      "denominator": 6,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 121,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "20.2",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-024": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "25.208333333333333333333333333333333333333333333333",
+      "denominator": 24,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 605,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "25.2",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-025": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "28.125",
+      "denominator": 8,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 225,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "28.1",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-026": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "37.5",
+      "denominator": 2,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 75,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "37.5",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-BIKE-027": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "46.875",
+      "denominator": 8,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 375,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "46.9",
+      "source_sha256": "e291a6e40b193d279e1371032242972f4f940454b544832e04087aec6fec4b95"
+    },
+    "TR-RUN-001": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "17.39375",
+      "denominator": 160,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 2783,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "17.4",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-002": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "23.191666666666666666666666666666666666666666666667",
+      "denominator": 120,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 2783,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "23.2",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-003": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "28.989583333333333333333333333333333333333333333333",
+      "denominator": 96,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 2783,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "29",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-004": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "32.34375",
+      "denominator": 32,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1035,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "32.3",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-005": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "43.125",
+      "denominator": 8,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 345,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "43.1",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-006": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "53.90625",
+      "denominator": 32,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1725,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "53.9",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-007": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "64.6875",
+      "denominator": 16,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1035,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "64.7",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-008": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "75.46875",
+      "denominator": 32,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 2415,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "75.5",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-009": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "86.25",
+      "denominator": 4,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 345,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "86.2",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-010": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "97.03125",
+      "denominator": 32,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 3105,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "97",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-011": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "107.8125",
+      "denominator": 16,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1725,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "107.8",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-012": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "118.59375",
+      "denominator": 32,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 3795,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "118.6",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-013": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "129.375",
+      "denominator": 8,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1035,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "129.4",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-014": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "140.15625",
+      "denominator": 32,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 4485,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "140.2",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-015": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "150.9375",
+      "denominator": 16,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 2415,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "150.9",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-016": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "161.71875",
+      "denominator": 32,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 5175,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "161.7",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-017": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "87.56675",
+      "denominator": 4000,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 350267,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "87.59999999999999",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-018": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "74.549708333333333333333333333333333333333333333333",
+      "denominator": 24000,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1789193,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "74.5",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-019": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "106.81583333333333333333333333333333333333333333333",
+      "denominator": 1200,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 128179,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "106.8",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-020": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "119.92583333333333333333333333333333333333333333333",
+      "denominator": 1200,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 143911,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "119.9",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-021": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "5.7979166666666666666666666666666666666666666666667",
+      "denominator": 480,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 2783,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "5.8",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-022": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "8.696875",
+      "denominator": 320,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 2783,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "8.699999999999999",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-023": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "11.595833333333333333333333333333333333333333333333",
+      "denominator": 240,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 2783,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "11.6",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-024": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "14.494791666666666666666666666666666666666666666667",
+      "denominator": 192,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 2783,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "14.5",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-025": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "10.78125",
+      "denominator": 32,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 345,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "10.8",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-026": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "16.171875",
+      "denominator": 64,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1035,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "16.2",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-027": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "21.5625",
+      "denominator": 16,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 345,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "21.6",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-RUN-028": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "26.953125",
+      "denominator": 64,
+      "method": "joren-timed-if2-experimental-1",
+      "numerator": 1725,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "27",
+      "source_sha256": "f9efc53405ae80ea06b7c4f45c288d77e0572aabe0309ef17d29336562a5c46c"
+    },
+    "TR-SWIM-001": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "16.875",
+      "denominator": 8,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 135,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "16.9",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-002": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "25.3125",
+      "denominator": 16,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 405,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "25.3",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-003": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "33.75",
+      "denominator": 4,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 135,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "33.8",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-004": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "42.1875",
+      "denominator": 16,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 675,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "42.2",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-005": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "50.625",
+      "denominator": 8,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 405,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "50.6",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-006": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "59.0625",
+      "denominator": 16,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 945,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "59.1",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-007": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "67.5",
+      "denominator": 2,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 135,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "67.5",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-008": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "75.9375",
+      "denominator": 16,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 1215,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "75.90000000000001",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-009": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "84.375",
+      "denominator": 8,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 675,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "84.40000000000001",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-010": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "31.38228",
+      "denominator": 25000,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 784557,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "31.4",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-011": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "52.63956",
+      "denominator": 25000,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 1315989,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "52.6",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-012": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "58.24104",
+      "denominator": 12500,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 728013,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "58.2",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-013": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "58.24104",
+      "denominator": 12500,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 728013,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "58.2",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-014": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "61.5807",
+      "denominator": 10000,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 615807,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "61.6",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-015": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "39.88125",
+      "denominator": 160,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 6381,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "39.9",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-016": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "54.759375",
+      "denominator": 320,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 17523,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "54.8",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-017": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "69.6375",
+      "denominator": 80,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 5571,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "69.59999999999999",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-018": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "39.88125",
+      "denominator": 160,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 6381,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "39.9",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-019": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "54.759375",
+      "denominator": 320,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 17523,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "54.8",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-020": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "69.6375",
+      "denominator": 80,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 5571,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "69.59999999999999",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-021": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "8.4375",
+      "denominator": 16,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 135,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "8.4",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    },
+    "TR-SWIM-022": {
+      "complete_formula_rounding_and_operational_method": "UNAPPROVED",
+      "decimal_value": "13.5",
+      "denominator": 2,
+      "method": "joren-swim-if2-experimental-1",
+      "numerator": 27,
+      "numeric_policy": "exact rational; Decimal precision 50 HALF_EVEN; no intermediate rounding",
+      "operational_value": null,
+      "parameter_status": "CONFIRMED_VALUES_ONLY",
+      "parameter_version": "joren-v6-partial-approval-1",
+      "raw_source_lexeme": "13.5",
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348"
+    }
+  },
+  "partial_plan_versus_no_plan": "CLARIFICATION_REQUIRED",
+  "prospective_selection_priorities": [
+    "Athlete safety and suitability",
+    "Injury, recovery and progression restrictions",
+    "Explicit authorized weekly budget as a maximum",
+    "One suitable session per sport where feasible",
+    "Closeness to the 50/30/20 triathlon target",
+    "Remaining budget utilization",
+    "Deterministic tie-breaks"
+  ],
+  "realized_v2_compatibility": "UNCHANGED; NOT GRANTED",
+  "sensitivity_limitation": "Illustrative +/- .005 quantization-scale scenario; no empirical pace uncertainty supplied",
+  "single_workout_swim_week_diagnostics": {
+    "TR-SWIM-001": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_COMPLIANT",
+      "estimated_high_minutes": "0",
+      "estimated_high_ratio": "0",
+      "estimated_low_minutes": "20",
+      "individual_prescribed_segment_durations": [
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "1000",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "20",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "1000",
+            "raw_token": "1000m Z2",
+            "sequence": 1,
+            "source_cell": "N5",
+            "start": 0,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "0",
+      "sensitivity_ratio_min": "0",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N5",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "1000m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N5\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>1000m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 5,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-002": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_COMPLIANT",
+      "estimated_high_minutes": "0",
+      "estimated_high_ratio": "0",
+      "estimated_low_minutes": "30",
+      "individual_prescribed_segment_durations": [
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "1500",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "30",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "1500",
+            "raw_token": "1500m Z2",
+            "sequence": 1,
+            "source_cell": "N6",
+            "start": 0,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "0",
+      "sensitivity_ratio_min": "0",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N6",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "1500m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N6\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>1500m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 6,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-003": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_COMPLIANT",
+      "estimated_high_minutes": "0",
+      "estimated_high_ratio": "0",
+      "estimated_low_minutes": "40",
+      "individual_prescribed_segment_durations": [
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "2000",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "40",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "2000",
+            "raw_token": "2000m Z2",
+            "sequence": 1,
+            "source_cell": "N7",
+            "start": 0,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "0",
+      "sensitivity_ratio_min": "0",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N7",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "2000m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N7\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>2000m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 7,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-004": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_COMPLIANT",
+      "estimated_high_minutes": "0",
+      "estimated_high_ratio": "0",
+      "estimated_low_minutes": "50",
+      "individual_prescribed_segment_durations": [
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "2500",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "50",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "2500",
+            "raw_token": "2500m Z2",
+            "sequence": 1,
+            "source_cell": "N8",
+            "start": 0,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "0",
+      "sensitivity_ratio_min": "0",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N8",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "2500m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N8\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>2500m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 8,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-005": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_COMPLIANT",
+      "estimated_high_minutes": "0",
+      "estimated_high_ratio": "0",
+      "estimated_low_minutes": "60",
+      "individual_prescribed_segment_durations": [
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "3000",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "60",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "3000",
+            "raw_token": "3000m Z2",
+            "sequence": 1,
+            "source_cell": "N9",
+            "start": 0,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "0",
+      "sensitivity_ratio_min": "0",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N9",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "3000m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N9\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>3000m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 9,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-006": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_COMPLIANT",
+      "estimated_high_minutes": "0",
+      "estimated_high_ratio": "0",
+      "estimated_low_minutes": "70",
+      "individual_prescribed_segment_durations": [
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "3500",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "70",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "3500",
+            "raw_token": "3500m Z2",
+            "sequence": 1,
+            "source_cell": "N10",
+            "start": 0,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "0",
+      "sensitivity_ratio_min": "0",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N10",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "3500m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N10\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>3500m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 10,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-007": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_COMPLIANT",
+      "estimated_high_minutes": "0",
+      "estimated_high_ratio": "0",
+      "estimated_low_minutes": "80",
+      "individual_prescribed_segment_durations": [
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "4000",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "80",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "4000",
+            "raw_token": "4000m Z2",
+            "sequence": 1,
+            "source_cell": "N11",
+            "start": 0,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "0",
+      "sensitivity_ratio_min": "0",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N11",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "4000m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N11\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>4000m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 11,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-008": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_COMPLIANT",
+      "estimated_high_minutes": "0",
+      "estimated_high_ratio": "0",
+      "estimated_low_minutes": "90",
+      "individual_prescribed_segment_durations": [
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "4500",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "90",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "4500",
+            "raw_token": "4500m Z2",
+            "sequence": 1,
+            "source_cell": "N12",
+            "start": 0,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "0",
+      "sensitivity_ratio_min": "0",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N12",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "4500m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N12\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>4500m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 12,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-009": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_COMPLIANT",
+      "estimated_high_minutes": "0",
+      "estimated_high_ratio": "0",
+      "estimated_low_minutes": "100",
+      "individual_prescribed_segment_durations": [
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "5000",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "100",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "5000",
+            "raw_token": "5000m Z2",
+            "sequence": 1,
+            "source_cell": "N13",
+            "start": 0,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "0",
+      "sensitivity_ratio_min": "0",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N13",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "5000m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N13\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>5000m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 13,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-010": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_EXCEEDED",
+      "estimated_high_minutes": "183/10",
+      "estimated_high_ratio": "61/101",
+      "estimated_low_minutes": "12",
+      "individual_prescribed_segment_durations": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "1600",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": "300m Z2 ",
+            "sequence": 1,
+            "source_cell": "N14",
+            "start": 0,
+            "zone": 2
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 18,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 2,
+            "source_cell": "N14",
+            "start": 9,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 29,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 3,
+            "source_cell": "N14",
+            "start": 19,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 39,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 4,
+            "source_cell": "N14",
+            "start": 30,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 50,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 5,
+            "source_cell": "N14",
+            "start": 40,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 60,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 6,
+            "source_cell": "N14",
+            "start": 51,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 71,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 7,
+            "source_cell": "N14",
+            "start": 61,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 81,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 8,
+            "source_cell": "N14",
+            "start": 72,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 92,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 9,
+            "source_cell": "N14",
+            "start": 82,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 102,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 10,
+            "source_cell": "N14",
+            "start": 93,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 113,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 11,
+            "source_cell": "N14",
+            "start": 103,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 122,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": " 300m Z2",
+            "sequence": 12,
+            "source_cell": "N14",
+            "start": 114,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "1835/3032",
+      "sensitivity_ratio_min": "1825/3028",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N14",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "300m Z2 | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 300m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N14\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>300m Z2 | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 300m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 14,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-011": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_EXCEEDED",
+      "estimated_high_minutes": "183/5",
+      "estimated_high_ratio": "61/81",
+      "estimated_low_minutes": "12",
+      "individual_prescribed_segment_durations": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "2600",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": "300m Z2 ",
+            "sequence": 1,
+            "source_cell": "N15",
+            "start": 0,
+            "zone": 2
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 18,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 2,
+            "source_cell": "N15",
+            "start": 9,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 29,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 3,
+            "source_cell": "N15",
+            "start": 19,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 39,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 4,
+            "source_cell": "N15",
+            "start": 30,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 50,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 5,
+            "source_cell": "N15",
+            "start": 40,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 60,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 6,
+            "source_cell": "N15",
+            "start": 51,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 71,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 7,
+            "source_cell": "N15",
+            "start": 61,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 81,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 8,
+            "source_cell": "N15",
+            "start": 72,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 92,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 9,
+            "source_cell": "N15",
+            "start": 82,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 102,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 10,
+            "source_cell": "N15",
+            "start": 93,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 113,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 11,
+            "source_cell": "N15",
+            "start": 103,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 123,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 12,
+            "source_cell": "N15",
+            "start": 114,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 134,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 13,
+            "source_cell": "N15",
+            "start": 124,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 144,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 14,
+            "source_cell": "N15",
+            "start": 135,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 155,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 15,
+            "source_cell": "N15",
+            "start": 145,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 165,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 16,
+            "source_cell": "N15",
+            "start": 156,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 176,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 17,
+            "source_cell": "N15",
+            "start": 166,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 186,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 18,
+            "source_cell": "N15",
+            "start": 177,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 197,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 19,
+            "source_cell": "N15",
+            "start": 187,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 207,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 20,
+            "source_cell": "N15",
+            "start": 198,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 218,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 21,
+            "source_cell": "N15",
+            "start": 208,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 227,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": " 300m Z2",
+            "sequence": 22,
+            "source_cell": "N15",
+            "start": 219,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "3670/4867",
+      "sensitivity_ratio_min": "3650/4853",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N15",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "300m Z2 | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 300m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N15\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>300m Z2 | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 200m Z3 | 30s Rust | 300m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 15,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-012": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_EXCEEDED",
+      "estimated_high_minutes": "167/5",
+      "estimated_high_ratio": "167/227",
+      "estimated_low_minutes": "12",
+      "individual_prescribed_segment_durations": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "2600",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": "300m Z2 ",
+            "sequence": 1,
+            "source_cell": "N16",
+            "start": 0,
+            "zone": 2
+          }
+        },
+        {
+          "estimated_active_minutes": "167/25",
+          "original": {
+            "duration_seconds": null,
+            "end": 18,
+            "kind": "swim_distance",
+            "meters": "400",
+            "raw_token": " 400m Z4 ",
+            "sequence": 2,
+            "source_cell": "N16",
+            "start": 9,
+            "zone": 4
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 29,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 60s Rust ",
+            "rpe": null,
+            "seconds": "60",
+            "sequence": 3,
+            "source_cell": "N16",
+            "start": 19,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "167/25",
+          "original": {
+            "duration_seconds": null,
+            "end": 39,
+            "kind": "swim_distance",
+            "meters": "400",
+            "raw_token": " 400m Z4 ",
+            "sequence": 4,
+            "source_cell": "N16",
+            "start": 30,
+            "zone": 4
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 50,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 60s Rust ",
+            "rpe": null,
+            "seconds": "60",
+            "sequence": 5,
+            "source_cell": "N16",
+            "start": 40,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "167/25",
+          "original": {
+            "duration_seconds": null,
+            "end": 60,
+            "kind": "swim_distance",
+            "meters": "400",
+            "raw_token": " 400m Z4 ",
+            "sequence": 6,
+            "source_cell": "N16",
+            "start": 51,
+            "zone": 4
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 71,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 60s Rust ",
+            "rpe": null,
+            "seconds": "60",
+            "sequence": 7,
+            "source_cell": "N16",
+            "start": 61,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "167/25",
+          "original": {
+            "duration_seconds": null,
+            "end": 81,
+            "kind": "swim_distance",
+            "meters": "400",
+            "raw_token": " 400m Z4 ",
+            "sequence": 8,
+            "source_cell": "N16",
+            "start": 72,
+            "zone": 4
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 92,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 60s Rust ",
+            "rpe": null,
+            "seconds": "60",
+            "sequence": 9,
+            "source_cell": "N16",
+            "start": 82,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "167/25",
+          "original": {
+            "duration_seconds": null,
+            "end": 102,
+            "kind": "swim_distance",
+            "meters": "400",
+            "raw_token": " 400m Z4 ",
+            "sequence": 10,
+            "source_cell": "N16",
+            "start": 93,
+            "zone": 4
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 113,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 60s Rust ",
+            "rpe": null,
+            "seconds": "60",
+            "sequence": 11,
+            "source_cell": "N16",
+            "start": 103,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 122,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": " 300m Z2",
+            "sequence": 12,
+            "source_cell": "N16",
+            "start": 114,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "3350/4547",
+      "sensitivity_ratio_min": "1110/1511",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N16",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "300m Z2 | 400m Z4 | 60s Rust | 400m Z4 | 60s Rust | 400m Z4 | 60s Rust | 400m Z4 | 60s Rust | 400m Z4 | 60s Rust | 300m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N16\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>300m Z2 | 400m Z4 | 60s Rust | 400m Z4 | 60s Rust | 400m Z4 | 60s Rust | 400m Z4 | 60s Rust | 400m Z4 | 60s Rust | 300m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 16,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-013": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_EXCEEDED",
+      "estimated_high_minutes": "167/5",
+      "estimated_high_ratio": "167/227",
+      "estimated_low_minutes": "12",
+      "individual_prescribed_segment_durations": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "2600",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": "300m Z2 ",
+            "sequence": 1,
+            "source_cell": "N17",
+            "start": 0,
+            "zone": 2
+          }
+        },
+        {
+          "estimated_active_minutes": "167/20",
+          "original": {
+            "duration_seconds": null,
+            "end": 18,
+            "kind": "swim_distance",
+            "meters": "500",
+            "raw_token": " 500m Z4 ",
+            "sequence": 2,
+            "source_cell": "N17",
+            "start": 9,
+            "zone": 4
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 29,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 60s Rust ",
+            "rpe": null,
+            "seconds": "60",
+            "sequence": 3,
+            "source_cell": "N17",
+            "start": 19,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "167/20",
+          "original": {
+            "duration_seconds": null,
+            "end": 39,
+            "kind": "swim_distance",
+            "meters": "500",
+            "raw_token": " 500m Z4 ",
+            "sequence": 4,
+            "source_cell": "N17",
+            "start": 30,
+            "zone": 4
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 50,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 60s Rust ",
+            "rpe": null,
+            "seconds": "60",
+            "sequence": 5,
+            "source_cell": "N17",
+            "start": 40,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "167/20",
+          "original": {
+            "duration_seconds": null,
+            "end": 60,
+            "kind": "swim_distance",
+            "meters": "500",
+            "raw_token": " 500m Z4 ",
+            "sequence": 6,
+            "source_cell": "N17",
+            "start": 51,
+            "zone": 4
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 71,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 60s Rust ",
+            "rpe": null,
+            "seconds": "60",
+            "sequence": 7,
+            "source_cell": "N17",
+            "start": 61,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "167/20",
+          "original": {
+            "duration_seconds": null,
+            "end": 81,
+            "kind": "swim_distance",
+            "meters": "500",
+            "raw_token": " 500m Z4 ",
+            "sequence": 8,
+            "source_cell": "N17",
+            "start": 72,
+            "zone": 4
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 92,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 60s Rust ",
+            "rpe": null,
+            "seconds": "60",
+            "sequence": 9,
+            "source_cell": "N17",
+            "start": 82,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 101,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": " 300m Z2",
+            "sequence": 10,
+            "source_cell": "N17",
+            "start": 93,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "3350/4547",
+      "sensitivity_ratio_min": "1110/1511",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N17",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "300m Z2 | 500m Z4 | 60s Rust | 500m Z4 | 60s Rust | 500m Z4 | 60s Rust | 500m Z4 | 60s Rust | 300m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N17\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>300m Z2 | 500m Z4 | 60s Rust | 500m Z4 | 60s Rust | 500m Z4 | 60s Rust | 500m Z4 | 60s Rust | 300m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 17,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-014": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_EXCEEDED",
+      "estimated_high_minutes": "183/4",
+      "estimated_high_ratio": "183/223",
+      "estimated_low_minutes": "10",
+      "individual_prescribed_segment_durations": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "3000",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": "300m Z2 ",
+            "sequence": 1,
+            "source_cell": "N18",
+            "start": 0,
+            "zone": 2
+          }
+        },
+        {
+          "estimated_active_minutes": "183/100",
+          "original": {
+            "duration_seconds": null,
+            "end": 18,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z3 ",
+            "sequence": 2,
+            "source_cell": "N18",
+            "start": 9,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 29,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 3,
+            "source_cell": "N18",
+            "start": 19,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 39,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 4,
+            "source_cell": "N18",
+            "start": 30,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 50,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 5,
+            "source_cell": "N18",
+            "start": 40,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "549/100",
+          "original": {
+            "duration_seconds": null,
+            "end": 60,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": " 300m Z3 ",
+            "sequence": 6,
+            "source_cell": "N18",
+            "start": 51,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 71,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 7,
+            "source_cell": "N18",
+            "start": 61,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/25",
+          "original": {
+            "duration_seconds": null,
+            "end": 81,
+            "kind": "swim_distance",
+            "meters": "400",
+            "raw_token": " 400m Z3 ",
+            "sequence": 8,
+            "source_cell": "N18",
+            "start": 72,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 92,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 9,
+            "source_cell": "N18",
+            "start": 82,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/20",
+          "original": {
+            "duration_seconds": null,
+            "end": 102,
+            "kind": "swim_distance",
+            "meters": "500",
+            "raw_token": " 500m Z3 ",
+            "sequence": 10,
+            "source_cell": "N18",
+            "start": 93,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 113,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 11,
+            "source_cell": "N18",
+            "start": 103,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/25",
+          "original": {
+            "duration_seconds": null,
+            "end": 123,
+            "kind": "swim_distance",
+            "meters": "400",
+            "raw_token": " 400m Z3 ",
+            "sequence": 12,
+            "source_cell": "N18",
+            "start": 114,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 134,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 13,
+            "source_cell": "N18",
+            "start": 124,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "549/100",
+          "original": {
+            "duration_seconds": null,
+            "end": 144,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": " 300m Z3 ",
+            "sequence": 14,
+            "source_cell": "N18",
+            "start": 135,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 155,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 15,
+            "source_cell": "N18",
+            "start": 145,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/50",
+          "original": {
+            "duration_seconds": null,
+            "end": 165,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z3 ",
+            "sequence": 16,
+            "source_cell": "N18",
+            "start": 156,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 176,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 17,
+            "source_cell": "N18",
+            "start": 166,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "183/100",
+          "original": {
+            "duration_seconds": null,
+            "end": 186,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z3 ",
+            "sequence": 18,
+            "source_cell": "N18",
+            "start": 177,
+            "zone": 3
+          }
+        },
+        {
+          "estimated_active_minutes": "4",
+          "original": {
+            "duration_seconds": null,
+            "end": 195,
+            "kind": "swim_distance",
+            "meters": "200",
+            "raw_token": " 200m Z2",
+            "sequence": 19,
+            "source_cell": "N18",
+            "start": 187,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "1835/2234",
+      "sensitivity_ratio_min": "1825/2226",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N18",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "300m Z2 | 100m Z3 | 30s Rust | 200m Z3 | 30s Rust | 300m Z3 | 30s Rust | 400m Z3 | 30s Rust | 500m Z3 | 30s Rust | 400m Z3 | 30s Rust | 300m Z3 | 30s Rust | 200m Z3 | 30s Rust | 100m Z3 | 200m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N18\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>300m Z2 | 100m Z3 | 30s Rust | 200m Z3 | 30s Rust | 300m Z3 | 30s Rust | 400m Z3 | 30s Rust | 500m Z3 | 30s Rust | 400m Z3 | 30s Rust | 300m Z3 | 30s Rust | 200m Z3 | 30s Rust | 100m Z3 | 200m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 18,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-015": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_EXCEEDED",
+      "estimated_high_minutes": "15",
+      "estimated_high_ratio": "5/9",
+      "estimated_low_minutes": "12",
+      "individual_prescribed_segment_durations": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "1600",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": "300m Z2 ",
+            "sequence": 1,
+            "source_cell": "N19",
+            "start": 0,
+            "zone": 2
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 18,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 2,
+            "source_cell": "N19",
+            "start": 9,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 29,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 3,
+            "source_cell": "N19",
+            "start": 19,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 39,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 4,
+            "source_cell": "N19",
+            "start": 30,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 50,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 5,
+            "source_cell": "N19",
+            "start": 40,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 60,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 6,
+            "source_cell": "N19",
+            "start": 51,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 71,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 7,
+            "source_cell": "N19",
+            "start": 61,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 81,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 8,
+            "source_cell": "N19",
+            "start": 72,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 92,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 9,
+            "source_cell": "N19",
+            "start": 82,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 102,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 10,
+            "source_cell": "N19",
+            "start": 93,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 113,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 11,
+            "source_cell": "N19",
+            "start": 103,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 123,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 12,
+            "source_cell": "N19",
+            "start": 114,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 134,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 13,
+            "source_cell": "N19",
+            "start": 124,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 144,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 14,
+            "source_cell": "N19",
+            "start": 135,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 155,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 15,
+            "source_cell": "N19",
+            "start": 145,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 165,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 16,
+            "source_cell": "N19",
+            "start": 156,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 176,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 17,
+            "source_cell": "N19",
+            "start": 166,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 186,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 18,
+            "source_cell": "N19",
+            "start": 177,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 197,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 19,
+            "source_cell": "N19",
+            "start": 187,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 207,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 20,
+            "source_cell": "N19",
+            "start": 198,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 218,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 21,
+            "source_cell": "N19",
+            "start": 208,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 227,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": " 300m Z2",
+            "sequence": 22,
+            "source_cell": "N19",
+            "start": 219,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "215/386",
+      "sensitivity_ratio_min": "1495/2698",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N19",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "300m Z2 | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 300m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N19\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>300m Z2 | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 300m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 19,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-016": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_EXCEEDED",
+      "estimated_high_minutes": "45/2",
+      "estimated_high_ratio": "15/23",
+      "estimated_low_minutes": "12",
+      "individual_prescribed_segment_durations": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "2100",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": "300m Z2 ",
+            "sequence": 1,
+            "source_cell": "N20",
+            "start": 0,
+            "zone": 2
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 18,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 2,
+            "source_cell": "N20",
+            "start": 9,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 29,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 3,
+            "source_cell": "N20",
+            "start": 19,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 39,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 4,
+            "source_cell": "N20",
+            "start": 30,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 50,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 5,
+            "source_cell": "N20",
+            "start": 40,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 60,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 6,
+            "source_cell": "N20",
+            "start": 51,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 71,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 7,
+            "source_cell": "N20",
+            "start": 61,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 81,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 8,
+            "source_cell": "N20",
+            "start": 72,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 92,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 9,
+            "source_cell": "N20",
+            "start": 82,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 102,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 10,
+            "source_cell": "N20",
+            "start": 93,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 113,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 11,
+            "source_cell": "N20",
+            "start": 103,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 123,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 12,
+            "source_cell": "N20",
+            "start": 114,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 134,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 13,
+            "source_cell": "N20",
+            "start": 124,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 144,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 14,
+            "source_cell": "N20",
+            "start": 135,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 155,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 15,
+            "source_cell": "N20",
+            "start": 145,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 165,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 16,
+            "source_cell": "N20",
+            "start": 156,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 176,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 17,
+            "source_cell": "N20",
+            "start": 166,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 186,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 18,
+            "source_cell": "N20",
+            "start": 177,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 197,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 19,
+            "source_cell": "N20",
+            "start": 187,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 207,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 20,
+            "source_cell": "N20",
+            "start": 198,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 218,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 21,
+            "source_cell": "N20",
+            "start": 208,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 228,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 22,
+            "source_cell": "N20",
+            "start": 219,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 239,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 23,
+            "source_cell": "N20",
+            "start": 229,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 249,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 24,
+            "source_cell": "N20",
+            "start": 240,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 260,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 25,
+            "source_cell": "N20",
+            "start": 250,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 270,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 26,
+            "source_cell": "N20",
+            "start": 261,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 281,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 27,
+            "source_cell": "N20",
+            "start": 271,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 291,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 28,
+            "source_cell": "N20",
+            "start": 282,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 302,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 29,
+            "source_cell": "N20",
+            "start": 292,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 312,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 30,
+            "source_cell": "N20",
+            "start": 303,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 323,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 31,
+            "source_cell": "N20",
+            "start": 313,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 332,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": " 300m Z2",
+            "sequence": 32,
+            "source_cell": "N20",
+            "start": 324,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "215/329",
+      "sensitivity_ratio_min": "1495/2297",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N20",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "300m Z2 | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 300m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N20\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>300m Z2 | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 300m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 20,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-017": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_EXCEEDED",
+      "estimated_high_minutes": "30",
+      "estimated_high_ratio": "5/7",
+      "estimated_low_minutes": "12",
+      "individual_prescribed_segment_durations": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "2600",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": "300m Z2 ",
+            "sequence": 1,
+            "source_cell": "N21",
+            "start": 0,
+            "zone": 2
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 18,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 2,
+            "source_cell": "N21",
+            "start": 9,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 29,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 3,
+            "source_cell": "N21",
+            "start": 19,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 39,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 4,
+            "source_cell": "N21",
+            "start": 30,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 50,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 5,
+            "source_cell": "N21",
+            "start": 40,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 60,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 6,
+            "source_cell": "N21",
+            "start": 51,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 71,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 7,
+            "source_cell": "N21",
+            "start": 61,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 81,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 8,
+            "source_cell": "N21",
+            "start": 72,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 92,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 9,
+            "source_cell": "N21",
+            "start": 82,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 102,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 10,
+            "source_cell": "N21",
+            "start": 93,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 113,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 11,
+            "source_cell": "N21",
+            "start": 103,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 123,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 12,
+            "source_cell": "N21",
+            "start": 114,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 134,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 13,
+            "source_cell": "N21",
+            "start": 124,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 144,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 14,
+            "source_cell": "N21",
+            "start": 135,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 155,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 15,
+            "source_cell": "N21",
+            "start": 145,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 165,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 16,
+            "source_cell": "N21",
+            "start": 156,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 176,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 17,
+            "source_cell": "N21",
+            "start": 166,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 186,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 18,
+            "source_cell": "N21",
+            "start": 177,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 197,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 19,
+            "source_cell": "N21",
+            "start": 187,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 207,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 20,
+            "source_cell": "N21",
+            "start": 198,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 218,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 21,
+            "source_cell": "N21",
+            "start": 208,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 228,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 22,
+            "source_cell": "N21",
+            "start": 219,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 239,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 23,
+            "source_cell": "N21",
+            "start": 229,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 249,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 24,
+            "source_cell": "N21",
+            "start": 240,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 260,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 25,
+            "source_cell": "N21",
+            "start": 250,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 270,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 26,
+            "source_cell": "N21",
+            "start": 261,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 281,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 27,
+            "source_cell": "N21",
+            "start": 271,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 291,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 28,
+            "source_cell": "N21",
+            "start": 282,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 302,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 29,
+            "source_cell": "N21",
+            "start": 292,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 312,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 30,
+            "source_cell": "N21",
+            "start": 303,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 323,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 31,
+            "source_cell": "N21",
+            "start": 313,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 333,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 32,
+            "source_cell": "N21",
+            "start": 324,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 344,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 33,
+            "source_cell": "N21",
+            "start": 334,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 354,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 34,
+            "source_cell": "N21",
+            "start": 345,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 365,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 35,
+            "source_cell": "N21",
+            "start": 355,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 375,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 36,
+            "source_cell": "N21",
+            "start": 366,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 386,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 37,
+            "source_cell": "N21",
+            "start": 376,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 396,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 38,
+            "source_cell": "N21",
+            "start": 387,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 407,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 39,
+            "source_cell": "N21",
+            "start": 397,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 417,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 40,
+            "source_cell": "N21",
+            "start": 408,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 428,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 30s Rust ",
+            "rpe": null,
+            "seconds": "30",
+            "sequence": 41,
+            "source_cell": "N21",
+            "start": 418,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 437,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": " 300m Z2",
+            "sequence": 42,
+            "source_cell": "N21",
+            "start": 429,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "430/601",
+      "sensitivity_ratio_min": "2990/4193",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N21",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "300m Z2 | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 300m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N21\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>300m Z2 | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 100m Z5 | 30s Rust | 300m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 21,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-018": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_EXCEEDED",
+      "estimated_high_minutes": "15",
+      "estimated_high_ratio": "5/9",
+      "estimated_low_minutes": "12",
+      "individual_prescribed_segment_durations": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "1600",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": "300m Z2 ",
+            "sequence": 1,
+            "source_cell": "N22",
+            "start": 0,
+            "zone": 2
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 18,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 2,
+            "source_cell": "N22",
+            "start": 9,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 29,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 3,
+            "source_cell": "N22",
+            "start": 19,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 39,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 4,
+            "source_cell": "N22",
+            "start": 30,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 50,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 5,
+            "source_cell": "N22",
+            "start": 40,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 60,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 6,
+            "source_cell": "N22",
+            "start": 51,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 71,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 7,
+            "source_cell": "N22",
+            "start": 61,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 81,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 8,
+            "source_cell": "N22",
+            "start": 72,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 92,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 9,
+            "source_cell": "N22",
+            "start": 82,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 102,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 10,
+            "source_cell": "N22",
+            "start": 93,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 113,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 11,
+            "source_cell": "N22",
+            "start": 103,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 123,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 12,
+            "source_cell": "N22",
+            "start": 114,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 134,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 13,
+            "source_cell": "N22",
+            "start": 124,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 144,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 14,
+            "source_cell": "N22",
+            "start": 135,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 155,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 15,
+            "source_cell": "N22",
+            "start": 145,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 165,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 16,
+            "source_cell": "N22",
+            "start": 156,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 176,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 17,
+            "source_cell": "N22",
+            "start": 166,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 186,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 18,
+            "source_cell": "N22",
+            "start": 177,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 197,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 19,
+            "source_cell": "N22",
+            "start": 187,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 207,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 20,
+            "source_cell": "N22",
+            "start": 198,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 218,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 21,
+            "source_cell": "N22",
+            "start": 208,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 227,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": " 300m Z2",
+            "sequence": 22,
+            "source_cell": "N22",
+            "start": 219,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "215/386",
+      "sensitivity_ratio_min": "1495/2698",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N22",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "300m Z2 | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 300m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N22\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>300m Z2 | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 300m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 22,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-019": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_EXCEEDED",
+      "estimated_high_minutes": "45/2",
+      "estimated_high_ratio": "15/23",
+      "estimated_low_minutes": "12",
+      "individual_prescribed_segment_durations": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "2100",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": "300m Z2 ",
+            "sequence": 1,
+            "source_cell": "N23",
+            "start": 0,
+            "zone": 2
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 18,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 2,
+            "source_cell": "N23",
+            "start": 9,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 29,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 3,
+            "source_cell": "N23",
+            "start": 19,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 39,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 4,
+            "source_cell": "N23",
+            "start": 30,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 50,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 5,
+            "source_cell": "N23",
+            "start": 40,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 60,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 6,
+            "source_cell": "N23",
+            "start": 51,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 71,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 7,
+            "source_cell": "N23",
+            "start": 61,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 81,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 8,
+            "source_cell": "N23",
+            "start": 72,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 92,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 9,
+            "source_cell": "N23",
+            "start": 82,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 102,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 10,
+            "source_cell": "N23",
+            "start": 93,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 113,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 11,
+            "source_cell": "N23",
+            "start": 103,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 123,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 12,
+            "source_cell": "N23",
+            "start": 114,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 134,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 13,
+            "source_cell": "N23",
+            "start": 124,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 144,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 14,
+            "source_cell": "N23",
+            "start": 135,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 155,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 15,
+            "source_cell": "N23",
+            "start": 145,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 165,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 16,
+            "source_cell": "N23",
+            "start": 156,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 176,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 17,
+            "source_cell": "N23",
+            "start": 166,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 186,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 18,
+            "source_cell": "N23",
+            "start": 177,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 197,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 19,
+            "source_cell": "N23",
+            "start": 187,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 207,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 20,
+            "source_cell": "N23",
+            "start": 198,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 218,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 21,
+            "source_cell": "N23",
+            "start": 208,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 228,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 22,
+            "source_cell": "N23",
+            "start": 219,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 239,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 23,
+            "source_cell": "N23",
+            "start": 229,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 249,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 24,
+            "source_cell": "N23",
+            "start": 240,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 260,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 25,
+            "source_cell": "N23",
+            "start": 250,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 270,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 26,
+            "source_cell": "N23",
+            "start": 261,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 281,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 27,
+            "source_cell": "N23",
+            "start": 271,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 291,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 28,
+            "source_cell": "N23",
+            "start": 282,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 302,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 29,
+            "source_cell": "N23",
+            "start": 292,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 312,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 30,
+            "source_cell": "N23",
+            "start": 303,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 323,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 31,
+            "source_cell": "N23",
+            "start": 313,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 332,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": " 300m Z2",
+            "sequence": 32,
+            "source_cell": "N23",
+            "start": 324,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "215/329",
+      "sensitivity_ratio_min": "1495/2297",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N23",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "300m Z2 | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 300m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N23\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>300m Z2 | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 300m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 23,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-020": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_EXCEEDED",
+      "estimated_high_minutes": "30",
+      "estimated_high_ratio": "5/7",
+      "estimated_low_minutes": "12",
+      "individual_prescribed_segment_durations": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "2600",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 8,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": "300m Z2 ",
+            "sequence": 1,
+            "source_cell": "N24",
+            "start": 0,
+            "zone": 2
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 18,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 2,
+            "source_cell": "N24",
+            "start": 9,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 29,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 3,
+            "source_cell": "N24",
+            "start": 19,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 39,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 4,
+            "source_cell": "N24",
+            "start": 30,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 50,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 5,
+            "source_cell": "N24",
+            "start": 40,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 60,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 6,
+            "source_cell": "N24",
+            "start": 51,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 71,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 7,
+            "source_cell": "N24",
+            "start": 61,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 81,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 8,
+            "source_cell": "N24",
+            "start": 72,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 92,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 9,
+            "source_cell": "N24",
+            "start": 82,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 102,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 10,
+            "source_cell": "N24",
+            "start": 93,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 113,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 11,
+            "source_cell": "N24",
+            "start": 103,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 123,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 12,
+            "source_cell": "N24",
+            "start": 114,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 134,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 13,
+            "source_cell": "N24",
+            "start": 124,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 144,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 14,
+            "source_cell": "N24",
+            "start": 135,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 155,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 15,
+            "source_cell": "N24",
+            "start": 145,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 165,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 16,
+            "source_cell": "N24",
+            "start": 156,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 176,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 17,
+            "source_cell": "N24",
+            "start": 166,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 186,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 18,
+            "source_cell": "N24",
+            "start": 177,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 197,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 19,
+            "source_cell": "N24",
+            "start": 187,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 207,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 20,
+            "source_cell": "N24",
+            "start": 198,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 218,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 21,
+            "source_cell": "N24",
+            "start": 208,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 228,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 22,
+            "source_cell": "N24",
+            "start": 219,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 239,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 23,
+            "source_cell": "N24",
+            "start": 229,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 249,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 24,
+            "source_cell": "N24",
+            "start": 240,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 260,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 25,
+            "source_cell": "N24",
+            "start": 250,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 270,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 26,
+            "source_cell": "N24",
+            "start": 261,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 281,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 27,
+            "source_cell": "N24",
+            "start": 271,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 291,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 28,
+            "source_cell": "N24",
+            "start": 282,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 302,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 29,
+            "source_cell": "N24",
+            "start": 292,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 312,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 30,
+            "source_cell": "N24",
+            "start": 303,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 323,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 31,
+            "source_cell": "N24",
+            "start": 313,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 333,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 32,
+            "source_cell": "N24",
+            "start": 324,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 344,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 33,
+            "source_cell": "N24",
+            "start": 334,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 354,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 34,
+            "source_cell": "N24",
+            "start": 345,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 365,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 35,
+            "source_cell": "N24",
+            "start": 355,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 375,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 36,
+            "source_cell": "N24",
+            "start": 366,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 386,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 37,
+            "source_cell": "N24",
+            "start": 376,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 396,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 38,
+            "source_cell": "N24",
+            "start": 387,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 407,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 39,
+            "source_cell": "N24",
+            "start": 397,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "3/2",
+          "original": {
+            "duration_seconds": null,
+            "end": 417,
+            "kind": "swim_distance",
+            "meters": "100",
+            "raw_token": " 100m Z5 ",
+            "sequence": 40,
+            "source_cell": "N24",
+            "start": 408,
+            "zone": 5
+          }
+        },
+        {
+          "estimated_active_minutes": "0",
+          "original": {
+            "distance_meters": null,
+            "end": 428,
+            "kind": "stationary_wall_rest",
+            "raw_token": " 15s Rust ",
+            "rpe": null,
+            "seconds": "15",
+            "sequence": 41,
+            "source_cell": "N24",
+            "start": 418,
+            "zone": null
+          }
+        },
+        {
+          "estimated_active_minutes": "6",
+          "original": {
+            "duration_seconds": null,
+            "end": 437,
+            "kind": "swim_distance",
+            "meters": "300",
+            "raw_token": " 300m Z2",
+            "sequence": 42,
+            "source_cell": "N24",
+            "start": 429,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "430/601",
+      "sensitivity_ratio_min": "2990/4193",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N24",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "300m Z2 | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 300m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N24\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>300m Z2 | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 100m Z5 | 15s Rust | 300m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 24,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 3
+    },
+    "TR-SWIM-021": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_COMPLIANT",
+      "estimated_high_minutes": "0",
+      "estimated_high_ratio": "0",
+      "estimated_low_minutes": "10",
+      "individual_prescribed_segment_durations": [
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "500",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "10",
+          "original": {
+            "duration_seconds": null,
+            "end": 7,
+            "kind": "swim_distance",
+            "meters": "500",
+            "raw_token": "500m Z2",
+            "sequence": 1,
+            "source_cell": "N25",
+            "start": 0,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "0",
+      "sensitivity_ratio_min": "0",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N25",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "500m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N25\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>500m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 25,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 1
+    },
+    "TR-SWIM-022": {
+      "authoritative_duration_compliance": "UNVERIFIED",
+      "boundary_sensitive_in_this_scenario": false,
+      "estimated_compliance": "ESTIMATED_COMPLIANT",
+      "estimated_high_minutes": "0",
+      "estimated_high_ratio": "0",
+      "estimated_low_minutes": "16",
+      "individual_prescribed_segment_durations": [
+        null
+      ],
+      "operational_safety_gate_approved": false,
+      "original_distance_meters": "800",
+      "original_prescribed_duration_seconds": null,
+      "segments": [
+        {
+          "estimated_active_minutes": "16",
+          "original": {
+            "duration_seconds": null,
+            "end": 7,
+            "kind": "swim_distance",
+            "meters": "800",
+            "raw_token": "800m Z2",
+            "sequence": 1,
+            "source_cell": "N26",
+            "start": 0,
+            "zone": 2
+          }
+        }
+      ],
+      "sensitivity_ratio_max": "0",
+      "sensitivity_ratio_min": "0",
+      "sensitivity_scenario_half_width_min_per_100m": "1/200",
+      "source_execution_cell": {
+        "cached_value": null,
+        "cell_type": "inlineStr",
+        "coordinate": "N26",
+        "formula": null,
+        "number_format": "General",
+        "numeric_lexeme": null,
+        "style_index": 9,
+        "value": "800m Z2",
+        "xml": "<ns0:c xmlns:ns0=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" r=\"N26\" s=\"9\" t=\"inlineStr\"><ns0:is><ns0:t>800m Z2</ns0:t></ns0:is></ns0:c>"
+      },
+      "source_row": 26,
+      "source_sha256": "acd05e0d02664a09320fc70a4519d518fb0103a34801823d04de1ac929c96348",
+      "status": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE",
+      "template_version": 1
+    }
+  },
+  "source_method_status": "UNAPPROVED"
+}

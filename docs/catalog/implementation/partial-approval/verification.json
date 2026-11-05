@@ -1,0 +1,79 @@
+{
+  "schema": "joren-v6-partial-approval-verification-1",
+  "date": "2026-11-05",
+  "timezone": "Europe/Amsterdam",
+  "base_sha": "4cb3a12e3f13b37a1d66c91ae265f99547370af9",
+  "branch": "experiment/joren-v6-partial-approval",
+  "commands": {
+    "focused": {
+      "command": "python -B -m pytest -q -p no:cacheprovider tests/test_v6_partial_approval.py tests/test_v6_policy_sandbox.py tests/test_joren_c21.py",
+      "passed": 185,
+      "new_cases": 120,
+      "seconds": 10.67
+    },
+    "full_backend": {
+      "command": "python -B -m pytest -q -p no:cacheprovider",
+      "passed": 2222,
+      "seconds": 162.61,
+      "warnings": "One existing Starlette/httpx deprecation warning"
+    },
+    "ruff": {
+      "command": "python -m ruff check app tests benchmarks",
+      "result": "PASS"
+    },
+    "format": {
+      "command": "python -m ruff format --check app tests benchmarks",
+      "result": "PASS",
+      "files": 186
+    },
+    "strict_mypy": {
+      "command": "python -m mypy app tests benchmarks",
+      "result": "PASS",
+      "source_files": 185,
+      "strict": true
+    },
+    "regression": {
+      "command": "python -B -m benchmarks.v6_policy_sandbox --regression-output ../docs/catalog/implementation/partial-approval/regression.json",
+      "cases": 40,
+      "full_canonical_outcomes_and_fingerprints_equal": true,
+      "accepted_completions_preserved": 26,
+      "independent_legacy_plan_checks": 29,
+      "outcome_counts": {
+        "PENDING_HYPOTHETICAL_PLAN": 29,
+        "DIAGNOSTIC_TIMEOUT": 1,
+        "FAIL_CLOSED": 10
+      },
+      "semantic_equality_with_prior_policy_sandbox": true,
+      "unchanged_timeout": "current:build_4",
+      "bound_seconds_including_imports": 8
+    }
+  },
+  "artifact_sha256": {
+    "docs/catalog/implementation/partial-approval/evidence.json": "3881b23421f5506519bea62d671902777c702cbe95d007794635228a4d8b2b66",
+    "docs/catalog/implementation/partial-approval/regression.json": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341",
+    "backend/tests/fixtures/v6_partial_approval.json": "a949508f310d713c23f563dc5689b291e78c342430a3e208a49aa1f6948a2471"
+  },
+  "custody": {
+    "ancestry_checks": 19,
+    "previous_tracked_files_modified": 0,
+    "three_v6_archives_match_originals_byte_for_byte": true,
+    "policy_sandbox_clean_at": "4cb3a12e3f13b37a1d66c91ae265f99547370af9",
+    "build_search_delivery_clean_at": "86c64e6e5b5b89f4f2c8901246793afdf924dd04",
+    "a5_a6_release_clean_at": "cd3e2dd438031cfb565858d0a5929e9963f7b31f"
+  },
+  "open_gates": [
+    "Complete IF2 formula/normalization/intermediate and final rounding/raw precision/official planned-P authority/Realized V2 compatibility",
+    "Exact recovery/taper partial-plan versus no-plan fallback",
+    "Pending Joren decisions 5 and 6: BUILD and athlete/workout suitability",
+    "Exact allocation metric, tie-break implementation and minimum-fill integration",
+    "Operational acceptance of estimated duration and uncertainty treatment",
+    "Named accountable scientific review, catalog successor/release authorization",
+    "Existing current:build_4 performance timeout",
+    "Hosted PostgreSQL/pgTAP/RLS and device/release gates not exercised by this offline task"
+  ],
+  "unchanged_boundaries": [
+    "No app/API/mobile/database/migration/planner/source workbook/historical artifact edits",
+    "No push/merge/deploy/activation/A5-A6 release change",
+    "No performed-duration/Realized TSS estimation or historical recalculation"
+  ]
+}
