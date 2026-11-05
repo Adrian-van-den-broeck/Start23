@@ -163,6 +163,23 @@ all evidence hashes, environment, exact source bytes and result counts.
 
 WOMBO V6 PHASE + TSS INTEGRATION PARTIAL â€” SPECIFIC APPROVAL GAPS DOCUMENTED
 
+## Local committed delivery
+
+Verified software/source/test/evidence commit:
+**`57ee3d12a9a48ae50a2ff11c7b391cc20c4fe57b`**, direct child of accepted
+`acdc5fbd36677680f9083a308cb1f760aa7c71eb`. The worktree was clean after that
+local commit. The following documentation-only commit records this immutable SHA
+and verification metadata; its final branch-tip SHA is supplied in the delivery
+response and resolves with `git rev-parse feat/joren-v6-phase-tss-integration`.
+A commit cannot contain its own hash. No implementation changes follow testing.
+
+The three staged workbook blobs were checked byte-for-byte against their custody
+files and originals. All recorded private artifact hashes were checked against
+local files and canonical staged blobs. `git diff --cached --check` passed before
+the software commit. The final-policy branch remains clean at its accepted SHA;
+the partial-approval worktree retains its three pre-existing untracked source
+files. No pre-existing worktree, A5/A6 branch or production system was changed.
+
 ## Immutable private evidence hashes
 
 | Artifact | SHA-256 |

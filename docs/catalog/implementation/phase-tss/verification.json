@@ -46,6 +46,7 @@
     "transcript": "pytest-full.txt",
     "warnings": 1
   },
+  "git_diff_check": "PASS",
   "historical_regression": {
     "accepted_completions": 26,
     "canonical_lf_sha256": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341",
@@ -101,6 +102,7 @@
     "status": "PASS"
   },
   "schema": "joren-v6-phase-tss-verification-1",
+  "software_source_test_evidence_commit": "57ee3d12a9a48ae50a2ff11c7b391cc20c4fe57b",
   "source_rows": 77,
   "sources": [
     {
@@ -122,6 +124,8 @@
       "sha256": "48a0f6448f003ef048f40e53fda74b5220f272ebd4300180c108777c6e0be3ba"
     }
   ],
+  "staged_artifact_canonical_byte_identity": true,
+  "staged_source_blobs_byte_identity": true,
   "strict_mypy": {
     "source_files": 194,
     "status": "PASS"
