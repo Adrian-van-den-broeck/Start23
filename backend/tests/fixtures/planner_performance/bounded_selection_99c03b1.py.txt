@@ -1,0 +1,260 @@
+def _bounded_selection(
+    *,
+    deck: tuple[WorkoutTemplate, ...],
+    prefix: tuple[WorkoutTemplate, ...],
+    required_disciplines: frozenset[Discipline],
+    target: InternalLoad,
+    phase: TrainingPhase,
+    build_week: int | None,
+    desired_high_fraction: Fraction,
+    required_count: int | None = None,
+    required_composition: Mapping[Discipline, int] | None = None,
+    maximum_uses: Mapping[UUID, int] | None = None,
+    discipline_caps: Mapping[Discipline, InternalLoad] | None = None,
+    feasible: Callable[[tuple[WorkoutTemplate, ...]], bool] | None = None,
+) -> tuple[WorkoutTemplate, ...] | None:
+    """Fit a bounded multiset by exact private load, bucket and sport counts.
+
+    Catalog rows with the same load, sport, bucket and Z5 status are equivalent
+    for composition. The smallest immutable ID represents each equivalence
+    class in the automatic prescription; the swipe deck retains every row.
+    """
+    if not deck or len(prefix) > 24:
+        return None
+    if maximum_uses is not None and any(
+        sum(item.id == template_id for item in prefix) > limit
+        for template_id, limit in maximum_uses.items()
+    ):
+        return None
+    minimum_load = min(require_planned_load(item).value for item in deck)
+    budget = target.value * desired_high_fraction.value
+    high_available = phase is TrainingPhase.BUILD and any(
+        item.intensity_bucket is IntensityBucket.HIGH
+        and require_planned_load(item).value <= budget
+        for item in deck
+    )
+    z5_available = build_week == 4 and any(
+        item.intensity_bucket is IntensityBucket.HIGH
+        and require_planned_load(item).value <= budget
+        and _has_zone_five(item)
+        for item in deck
+    )
+    groups: dict[
+        tuple[Discipline, Decimal, IntensityBucket, bool], WorkoutTemplate
+    ] = {}
+    for item in deck:
+        key = (
+            item.discipline,
+            require_planned_load(item).value,
+            item.intensity_bucket,
+            _has_zone_five(item),
+        )
+        prior = groups.get(key)
+        if prior is None or str(item.id) < str(prior.id):
+            groups[key] = item
+    options = tuple(
+        sorted(
+            deck if maximum_uses is not None else groups.values(),
+            key=lambda item: (
+                require_planned_load(item).value,
+                item.discipline.value,
+                str(item.id),
+            ),
+        )
+    )
+    sports = tuple(Discipline)
+    # Immutable per-option facts are reused across every dynamic-programming
+    # transition. Keep the original option order and canonical UUID ordering.
+    option_facts = tuple(
+        (
+            item,
+            require_planned_load(item).value,
+            item.intensity_bucket is IntensityBucket.HIGH,
+            sports.index(item.discipline),
+            _has_zone_five(item),
+            str(item.id),
+        )
+        for item in options
+    )
+    prefix_counts = tuple(
+        sum(item.discipline is sport for item in prefix) for sport in sports
+    )
+    prefix_high_counts = tuple(
+        sum(
+            item.discipline is sport and item.intensity_bucket is IntensityBucket.HIGH
+            for item in prefix
+        )
+        for sport in sports
+    )
+    limited_ids = tuple(
+        sorted(
+            (
+                template_id
+                for template_id, limit in (maximum_uses or {}).items()
+                if limit < (required_count or 24)
+            ),
+            key=str,
+        )
+    )
+    prefix_limited_counts = tuple(
+        sum(item.id == template_id for item in prefix) for template_id in limited_ids
+    )
+    prefix_total = sum(
+        (require_planned_load(item).value for item in prefix), Decimal(0)
+    )
+    prefix_high = sum(
+        (
+            require_planned_load(item).value
+            for item in prefix
+            if item.intensity_bucket is IntensityBucket.HIGH
+        ),
+        Decimal(0),
+    )
+    prefix_z5 = any(_has_zone_five(item) for item in prefix)
+    if prefix_high > budget and phase is TrainingPhase.BUILD:
+        return None
+    states: dict[
+        tuple[
+            Decimal,
+            Decimal,
+            tuple[int, ...],
+            tuple[int, ...],
+            tuple[int, ...],
+            bool,
+        ],
+        tuple[tuple[WorkoutTemplate, ...], tuple[str, ...]],
+    ] = {
+        (
+            prefix_total,
+            prefix_high,
+            prefix_counts,
+            prefix_high_counts,
+            prefix_limited_counts,
+            prefix_z5,
+        ): (prefix, tuple(str(item.id) for item in prefix))
+    }
+    best: tuple[WorkoutTemplate, ...] | None = None
+    best_key: tuple[Decimal, Decimal, int, tuple[str, ...]] | None = None
+    max_count = required_count if required_count is not None else 24
+    max_total = target.value + max(require_planned_load(item).value for item in deck)
+    for count in range(len(prefix), max_count + 1):
+        for (
+            total,
+            high,
+            counts,
+            high_counts,
+            limited_counts,
+            has_z5,
+        ), (selection, selection_key) in states.items():
+            if required_count is not None and count != required_count:
+                continue
+            if not all(
+                counts[sports.index(sport)] > 0 for sport in required_disciplines
+            ):
+                continue
+            if required_composition is not None and any(
+                counts[index] != required_composition.get(sport, 0)
+                for index, sport in enumerate(sports)
+            ):
+                continue
+            if not _selection_policy_valid(
+                selection,
+                target=target,
+                phase=phase,
+                build_week=build_week,
+                desired_high_fraction=desired_high_fraction,
+                high_available=high_available,
+                z5_available=z5_available,
+                minimum_load=minimum_load,
+                discipline_caps=discipline_caps,
+            ):
+                continue
+            score = (
+                abs(total - target.value),
+                abs(high - budget) if phase is TrainingPhase.BUILD else Decimal(0),
+                count,
+                selection_key,
+            )
+            if (best_key is None or score < best_key) and (
+                feasible is None or feasible(selection)
+            ):
+                best, best_key = selection, score
+        if count == max_count or (best_key is not None and best_key[0] == 0):
+            break
+        next_states: dict[
+            tuple[
+                Decimal,
+                Decimal,
+                tuple[int, ...],
+                tuple[int, ...],
+                tuple[int, ...],
+                bool,
+            ],
+            tuple[tuple[WorkoutTemplate, ...], tuple[str, ...]],
+        ] = {}
+        for (
+            total,
+            high,
+            counts,
+            high_counts,
+            limited_counts,
+            has_z5,
+        ), (selection, selection_key) in states.items():
+            for item, item_load, is_high, index, item_z5, item_key in option_facts:
+                if maximum_uses is not None and sum(
+                    existing.id == item.id for existing in selection
+                ) >= maximum_uses.get(item.id, 24):
+                    continue
+                new_total = total + item_load
+                if new_total > max_total:
+                    continue
+                new_high = high + (item_load if is_high else Decimal(0))
+                if phase is TrainingPhase.BUILD and new_high > budget:
+                    continue
+                new_counts = counts[:index] + (counts[index] + 1,) + counts[index + 1 :]
+                new_high_counts = (
+                    high_counts[:index]
+                    + (high_counts[index] + is_high,)
+                    + high_counts[index + 1 :]
+                )
+                if required_composition is not None and new_counts[
+                    index
+                ] > required_composition.get(item.discipline, 0):
+                    continue
+                if discipline_caps is not None and item.discipline in discipline_caps:
+                    sport_total = (
+                        sum(
+                            (
+                                require_planned_load(existing).value
+                                for existing in selection
+                                if existing.discipline is item.discipline
+                            ),
+                            Decimal(0),
+                        )
+                        + item_load
+                    )
+                    if sport_total > discipline_caps[item.discipline].value:
+                        continue
+                new_z5 = has_z5 or item_z5
+                new_limited_counts = tuple(
+                    value + (item.id == template_id)
+                    for template_id, value in zip(
+                        limited_ids, limited_counts, strict=True
+                    )
+                )
+                state = (
+                    new_total,
+                    new_high,
+                    new_counts,
+                    new_high_counts,
+                    new_limited_counts,
+                    new_z5,
+                )
+                path_key = selection_key + (item_key,)
+                previous = next_states.get(state)
+                if previous is None or path_key < previous[1]:
+                    next_states[state] = (selection + (item,), path_key)
+        states = next_states
+        if not states:
+            break
+    return best

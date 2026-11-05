@@ -3,7 +3,17 @@
 from collections.abc import Callable, Collection, Mapping
 from dataclasses import dataclass, field
 from datetime import date, datetime, time, timedelta, timezone
-from decimal import Context, Decimal, localcontext
+from decimal import (
+    Clamped,
+    Context,
+    Decimal,
+    Inexact,
+    Rounded,
+    Subnormal,
+    Underflow,
+    getcontext,
+    localcontext,
+)
 from enum import Enum
 from itertools import combinations
 from uuid import UUID
@@ -907,6 +917,12 @@ def _bounded_selection(
     best_key: tuple[Decimal, Decimal, int, tuple[str, ...]] | None = None
     max_count = required_count if required_count is not None else 24
     max_total = target.value + max(require_planned_load(item).value for item in deck)
+    # Additional bound arithmetic must not introduce exceptions in callers that
+    # trap decimal rounding/underflow. Such callers keep the original search.
+    prune_overshoots = not any(
+        getcontext().traps[signal]
+        for signal in (Clamped, Inexact, Rounded, Subnormal, Underflow)
+    )
     for count in range(len(prefix), max_count + 1):
         for (
             total,
@@ -977,6 +993,27 @@ def _bounded_selection(
                     continue
                 new_total = total + item_load
                 if new_total > max_total:
+                    continue
+                # Loads are nonnegative. Once an overshoot fails the exact
+                # terminal fit predicate, no extension can become valid. Keep
+                # the same subtraction/comparison as _selection_policy_valid
+                # rather than deriving a rounded additive upper threshold.
+                if (
+                    prune_overshoots
+                    and new_total > target.value
+                    and abs(target.value - new_total) >= minimum_load
+                ):
+                    continue
+                # A feasible incumbent is an upper bound on the first score
+                # component. Strictly worse overshoots cannot improve it as
+                # further load is added. Equality remains for every later
+                # score component and the original UUID tie-break.
+                if (
+                    prune_overshoots
+                    and best_key is not None
+                    and new_total > target.value
+                    and abs(new_total - target.value) > best_key[0]
+                ):
                     continue
                 new_high = high + (item_load if is_high else Decimal(0))
                 if phase is TrainingPhase.BUILD and new_high > budget:

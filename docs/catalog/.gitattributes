@@ -9,6 +9,7 @@
 # V6 evidence is canonical immutable UTF-8/LF, including private simulation data.
 /implementation/joren_v6*.json text eol=lf
 /implementation/JOREN_V6*.md text eol=lf
+/implementation/performance/*.json text eol=lf
 # Preserve the accepted C2/C2.1 report bytes after Windows worktree checkout.
 /implementation/JOREN_C2*.md text eol=lf
 /implementation/JOREN_BEGINNER_50_30_20_POLICY_ANALYSIS.md text eol=lf
