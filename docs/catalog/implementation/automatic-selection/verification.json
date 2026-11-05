@@ -79,6 +79,7 @@
   },
   "ruff_lint": "PASS",
   "schema": "joren-v6-automatic-verification-1",
+  "software_source_test_evidence_commit": "6cc8de1989311a52a934e38cbc715558421b695d",
   "source_revisions": [
     {
       "bytes": 11912,
@@ -99,6 +100,7 @@
       "sha256": "48a0f6448f003ef048f40e53fda74b5220f272ebd4300180c108777c6e0be3ba"
     }
   ],
+  "staged_evidence_custody": "PASS: raw staged hashes match artifact_sha256; prior phase catalog equals accepted Git blob",
   "strict_mypy": {
     "source_files": 202,
     "status": "PASS"

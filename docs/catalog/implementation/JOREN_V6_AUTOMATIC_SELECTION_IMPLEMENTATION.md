@@ -179,4 +179,16 @@ final test transcripts are private artifacts; UTF-8/LF normalization removes onl
 transcript formatting differences. No production connection, deployment, SQL,
 catalog activation or A5/A6 change occurred.
 
+## Local delivery provenance
+
+Implementation, tests and full evidence are committed as
+`6cc8de1989311a52a934e38cbc715558421b695d` on
+`feat/joren-v6-automatic-selection`, directly after accepted base
+`fc876f10b5eb779a7f3004b460744da899cc739b`. A documentation-only successor
+records this implementation SHA and the final staged-artifact custody check;
+there are no code or test changes in that successor. All staged evidence hashes
+match the ledger, and the prior phase catalog remains the exact accepted blob.
+The accepted parent worktree remains clean at its original SHA; A5/A6 remains
+at `cd3e2dd438031cfb565858d0a5929e9963f7b31f`.
+
 WOMBO V6 AUTOMATIC SELECTION + SWIPE IMPLEMENTED — ACTIVATION GATES REMAIN
