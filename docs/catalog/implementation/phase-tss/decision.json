@@ -1,0 +1,46 @@
+{
+  "allocation": "SOFT_BIKE_50_RUN_30_SWIM_20;METRIC_AND_TIES_REVIEW_GATED",
+  "athlete_experience_categories": "DEFERRED_NOT_REQUIRED_NOT_IMPLEMENTED",
+  "authority": "owner current mission and subsequent clarification; owner-relayed Joren approval",
+  "catalog_activation": false,
+  "date": "2026-11-05",
+  "eligibility": "authorized_weekly_budget_and_official_planned_load_with_existing_safeguards",
+  "exact_numerical_authority": "UNRESOLVED_EARLIER_PROPOSAL_BINDING",
+  "high_active_time": "AT_MOST_20_PERCENT_PER_SPORT_LOCAL_MONDAY_SUNDAY",
+  "high_minimum": "NONE_INCLUDING_BUILD",
+  "method_approval_fact": "OWNER_CONFIRMED_JOREN_APPROVAL_OF_EARLIER_PROPOSAL",
+  "official_method": null,
+  "official_planned_value": null,
+  "owner_followup_effect": "CONCRETE_PROPOSAL_ONLY_NO_OFFICIAL_METHOD_IMPLEMENTATION",
+  "owner_followup_exact": "Doe een voorstel zonder implenteren",
+  "partial_weeks": "PERMITTED_NO_AUTOMATIC_OMISSION_ORDER",
+  "prior_evidence": [
+    {
+      "path": "../JOREN_THREE_SPORT_FINAL_DECISION_BRIEF_NL.md",
+      "sha256": "070b6cbe50ea3e6ea1f8ce6912dfe94e43e4191f7af39d62d1b18ca7a878d17d"
+    },
+    {
+      "path": "../JOREN_THREE_SPORT_INTEGRATION_SEQUENCE.md",
+      "sha256": "07666ffb2fd73884cc8294f63f5a827dfb3d65f953d38a032654f7fc4018ca39"
+    },
+    {
+      "path": "JOREN_V6_IF2_RECONCILIATION.md",
+      "sha256": "abd63d0bb319aabc0426ba647faf66ee1de77fea28eed9b3500cc70c336b5c20"
+    },
+    {
+      "path": "JOREN_V6_PARTIAL_APPROVAL_REGISTER.md",
+      "sha256": "dbfc09e8a66dac4e3f989d6705cbf6913386f69c472db5a0fd0dbf8b8dc6cd8c"
+    },
+    {
+      "path": "JOREN_V6_FINAL_POLICY_DECISION_UPDATE.md",
+      "sha256": "72ad6d41ef6fc7ca96d5daefb173e0bb848e6ab1a96abb9342ab19411e2d0716"
+    }
+  ],
+  "proposal_status": "PROPOSED_NOT_APPROVED_NOT_IMPLEMENTED",
+  "proposed_future_method": "joren-v6-planned-if2-1",
+  "source_phase_labels": "JOREN_SUPPLIED_PINNED_SOURCE_METADATA",
+  "swim_estimate_operational_approval": false,
+  "timezone": "Europe/Amsterdam",
+  "version": "joren-v6-phase-tss-owner-intake-1",
+  "weekly_budget": "HARD_MAXIMUM"
+}

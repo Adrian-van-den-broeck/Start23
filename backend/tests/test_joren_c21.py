@@ -224,7 +224,7 @@ def test_custody_determinism_rejection_and_no_activation(
     capsys: pytest.CaptureFixture[str],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    sources = {p: p.read_bytes() for p in DEFAULT_SOURCES.iterdir()}
+    sources = {p: p.read_bytes() for p in DEFAULT_SOURCES.rglob("*") if p.is_file()}
     catalog = active_catalog(CURRENT_CATALOG)
 
     def forbidden(*args: object, **kwargs: object) -> None:
@@ -263,6 +263,8 @@ def test_isolated_modules_have_no_active_importers() -> None:
         "joren_c2_dry_run.py",
         "joren_c21_corrections.py",
         "planned_intensity_policy.py",
+        # Authorized disabled C4 review seam; no active consumer (separate test).
+        "v6_phase_review.py",
     }
     for path in (ROOT / "backend/app").rglob("*.py"):
         if path.name in allowed:

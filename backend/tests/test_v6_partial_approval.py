@@ -339,8 +339,11 @@ def test_invalid_prescriptions_fail_closed(manifest: V6Manifest) -> None:
             week(r, delta)
 
 
-def test_offline_only_no_active_import_or_infrastructure_dependency() -> None:
-    target = ROOT / "backend/benchmarks/v6_partial_approval.py"
+def test_estimator_no_active_import_or_infrastructure_dependency() -> None:
+    # The phase-intake task authorizes C5 to reuse this exact estimator in the
+    # disabled backend review seam. Its historical benchmark import is retained;
+    # the pure dependency boundary and no-active-caller requirement still apply.
+    target = ROOT / "backend/app/modules/workouts/planned_swim_estimate.py"
     tree = ast.parse(target.read_text())
     imports = [n for n in ast.walk(tree) if isinstance(n, ast.Import | ast.ImportFrom)]
     allowed = {

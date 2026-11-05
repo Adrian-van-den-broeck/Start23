@@ -1,0 +1,1776 @@
+{
+  "authority": "INACTIVE; no official method or automatic recommendation",
+  "review_cases": {
+    "40.2_allocation:base": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1200/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [
+        "source_phase_not_allowed"
+      ],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "23/1005",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "24/5",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "201/5",
+      "scope_sha256": "586dc045f50e0b05b582d74ef89c0039c9c95d5b27eb13b5caa1773932a9b67c",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "40.2_allocation:build": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1200/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [
+        "source_phase_not_allowed"
+      ],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "23/1005",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "24/5",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "201/5",
+      "scope_sha256": "62ea8b1d8a475967d387467e24531bd246fc0dfd1c926a3a788985badd3b0661",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "40.2_allocation:recovery": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1200/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "23/1005",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "24/5",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "201/5",
+      "scope_sha256": "f1593598c0006f6774cbcad99e130597cf50e8521a2db079e91a341825cfd816",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "40.2_allocation:taper": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1200/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "23/1005",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "24/5",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "201/5",
+      "scope_sha256": "d2b9bb4e12175a6462da69f54edee704df34721c1c2f675514444c89a8cc95cd",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "43.1_manual:base": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1500/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [
+        "source_phase_not_allowed"
+      ],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "157/2155",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "19/10",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "431/10",
+      "scope_sha256": "326288da1886bad362e8cd2764a6d67c0a2a44d5c56d23b84724cef6c69a800b",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "43.1_manual:build": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1500/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [
+        "source_phase_not_allowed"
+      ],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "157/2155",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "19/10",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "431/10",
+      "scope_sha256": "c3c996f854c74c66f982a76cd0bf0a1c7a36b057e6959d14f4b1cbf65850ef8e",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "43.1_manual:recovery": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1500/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "157/2155",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "19/10",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "431/10",
+      "scope_sha256": "cd81a3c1669a50d93eeae8bf7a43c977d8452db55f5c3449988fff172382ddb9",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "43.1_manual:taper": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1500/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "157/2155",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "19/10",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "431/10",
+      "scope_sha256": "01d601964a7f1698e835121fe779bc026d8889db9933550262343e9769135e03",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "44.8_utilization:base": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "900/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "69/560",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "1/5",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "224/5",
+      "scope_sha256": "0151cda42a5d2f08bde6a73ff9366ab3c93adf86b243eecf0ea80479d2e9ce6c",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "44.8_utilization:build": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "900/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "69/560",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "1/5",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "224/5",
+      "scope_sha256": "e073daf423deda50a7e143c6b5a6bfa63fb6ff0fdf944e1cebcd67048e8cbba8",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "44.8_utilization:recovery": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "900/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "69/560",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "1/5",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "224/5",
+      "scope_sha256": "ef1262330588dac0b18ec8af3b9c9a5e9fd37d0ffb61eef6b6a14876468c0c69",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "44.8_utilization:taper": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "900/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "69/560",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "1/5",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "224/5",
+      "scope_sha256": "643bc25dc116d2a4a21f974d5a99a175ab054b61235b199f1041c678171d676d",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "45.1_legacy_overshoot:base": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1800/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1200/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": false,
+      "constraint_failures": [
+        "authorized_weekly_budget_exceeded"
+      ],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "807/2255",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "-1/10",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "451/10",
+      "scope_sha256": "b6b874e97466a3f673a1d05fa68a9114111457e832eadb3700c02577f457eee1",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "45.1_legacy_overshoot:build": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1800/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1200/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": false,
+      "constraint_failures": [
+        "authorized_weekly_budget_exceeded"
+      ],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "807/2255",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "-1/10",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "451/10",
+      "scope_sha256": "77ebc199f96450f1c3a49dc4d16f99df3be2f7ae28c83006958c1890d8c8f92f",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "45.1_legacy_overshoot:recovery": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1800/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1200/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": false,
+      "constraint_failures": [
+        "authorized_weekly_budget_exceeded"
+      ],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "807/2255",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "-1/10",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "451/10",
+      "scope_sha256": "374fb2f1498ae8a06aebbeb7c2da00cc5c7a57d15c9ff185d613843a297fc02e",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "45.1_legacy_overshoot:taper": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1800/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1200/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": false,
+      "constraint_failures": [
+        "authorized_weekly_budget_exceeded"
+      ],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "807/2255",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "-1/10",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "451/10",
+      "scope_sha256": "3ac406f00a4b077bf526f1a49a6497246794ec804114bf6822b51ae5caf2679b",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [
+        "capability",
+        "duration_distance",
+        "injury",
+        "occurrence_restrictions",
+        "progression",
+        "recovery",
+        "scheduling"
+      ],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "long_duration": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "25200/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "ONE",
+      "diagnostic_allocation_l1": "1/1",
+      "estimated_swim_high_ratio": null,
+      "estimated_swim_status": "NOT_APPLICABLE",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike"
+      ],
+      "private_remaining": "531/5",
+      "private_remaining_before_additions": "500/1",
+      "private_total": "1969/5",
+      "scope_sha256": "fae010f0d0da9fa18646ff957f5753b2da0c4c717586002d91886149a7aed56e",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "mixed_zone": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "1/2",
+          "known_high_seconds": "1800/1",
+          "known_low_seconds": "1800/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "REJECTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [
+        "maximum_high_active_time_exceeded"
+      ],
+      "coverage": "ONE",
+      "diagnostic_allocation_l1": "7/5",
+      "estimated_swim_high_ratio": null,
+      "estimated_swim_status": "NOT_APPLICABLE",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "run"
+      ],
+      "private_remaining": "62/5",
+      "private_remaining_before_additions": "100/1",
+      "private_total": "438/5",
+      "scope_sha256": "62b8e97dd63e14b0ca69e6717f8f6bb7b44a9104721acb12042eb5f3258e5539",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "one_sport_taper": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "600/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "ONE",
+      "diagnostic_allocation_l1": "7/5",
+      "estimated_swim_high_ratio": null,
+      "estimated_swim_status": "NOT_APPLICABLE",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "run"
+      ],
+      "private_remaining": "1857/200",
+      "private_remaining_before_additions": "3017/200",
+      "private_total": "29/5",
+      "scope_sha256": "4af0b5cc9469085802af367846749b46b375250cd3f0e92447719b4223d5c73c",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "three_sport_build_all_easy": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts",
+        "operational_acceptance_of_estimated_swim_time"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "UNVERIFIED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "2400/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "900/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "THREE",
+      "diagnostic_allocation_l1": "69/560",
+      "estimated_swim_high_ratio": "0/1",
+      "estimated_swim_status": "ESTIMATED_COMPLIANT",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run",
+        "swim"
+      ],
+      "private_remaining": "1/5",
+      "private_remaining_before_additions": "45/1",
+      "private_total": "224/5",
+      "scope_sha256": "e073daf423deda50a7e143c6b5a6bfa63fb6ff0fdf944e1cebcd67048e8cbba8",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "two_sport_recovery": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "1800/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": "0/1",
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "600/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "ACCEPTED",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "TWO",
+      "diagnostic_allocation_l1": "93/209",
+      "estimated_swim_high_ratio": null,
+      "estimated_swim_status": "NOT_APPLICABLE",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [
+        "bike",
+        "run"
+      ],
+      "private_remaining": "124/25",
+      "private_remaining_before_additions": "1293/50",
+      "private_total": "209/10",
+      "scope_sha256": "5e510aedce1d1ebf370f2dbf034d2a52a1e906d81243a42d1e9dfc7944fdc989",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [],
+      "version": "joren-v6-phase-tss-review-1"
+    },
+    "zero_sport": {
+      "activation_gates": [
+        "official_planned_tss_authority_binding",
+        "allocation_metric_and_residual_ties",
+        "catalog_activation",
+        "durable_snapshot_and_release_contracts"
+      ],
+      "allocation_metric": "review-only-selected-total-share-l1-1",
+      "authoritative_intensity": [
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "swim",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "bike",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        },
+        {
+          "evidence_reference": "docs/catalog/implementation/JOREN_C2_UPDATED_DECISIONS.md#c21-approval",
+          "high_ratio": null,
+          "known_high_seconds": "0/1",
+          "known_low_seconds": "0/1",
+          "policy_version": "joren-planned-active-time-maximum-1",
+          "sport": "run",
+          "status": "NOT APPLICABLE",
+          "taxonomy_version": "phase-3-ruleset-3",
+          "week_start": "2026-10-26"
+        }
+      ],
+      "budget_within": true,
+      "constraint_failures": [],
+      "coverage": "ZERO",
+      "diagnostic_allocation_l1": null,
+      "estimated_swim_high_ratio": null,
+      "estimated_swim_status": "NOT_APPLICABLE",
+      "load_basis": "hypothetical-source-display-exact-rational-1",
+      "operational_approval": false,
+      "present_sports": [],
+      "private_remaining": "0/1",
+      "private_remaining_before_additions": "0/1",
+      "private_total": "0/1",
+      "scope_sha256": "986e8ea3a282bfc39391587a8e7b9fd5f46a9662175b298297c19fc1fbac3c9c",
+      "selected_recommendation": null,
+      "unresolved_safeguards": [],
+      "version": "joren-v6-phase-tss-review-1"
+    }
+  },
+  "rows": 77,
+  "schema": "joren-v6-phase-integration-simulation-1",
+  "source_only_arithmetic": {
+    "base": {
+      "authorized_budget": "45",
+      "combinations": [
+        {
+          "ids": [
+            "TR-BIKE-022",
+            "TR-RUN-001",
+            "TR-SWIM-021"
+          ],
+          "private_total": "409/10"
+        },
+        {
+          "ids": [
+            "TR-BIKE-022",
+            "TR-RUN-025",
+            "TR-SWIM-001"
+          ],
+          "private_total": "214/5"
+        },
+        {
+          "ids": [
+            "TR-BIKE-022",
+            "TR-RUN-025",
+            "TR-SWIM-021"
+          ],
+          "private_total": "343/10"
+        },
+        {
+          "ids": [
+            "TR-BIKE-022",
+            "TR-RUN-025",
+            "TR-SWIM-022"
+          ],
+          "private_total": "197/5"
+        },
+        {
+          "ids": [
+            "TR-BIKE-022",
+            "TR-RUN-026",
+            "TR-SWIM-021"
+          ],
+          "private_total": "397/10"
+        },
+        {
+          "ids": [
+            "TR-BIKE-022",
+            "TR-RUN-026",
+            "TR-SWIM-022"
+          ],
+          "private_total": "224/5"
+        },
+        {
+          "ids": [
+            "TR-BIKE-023",
+            "TR-RUN-025",
+            "TR-SWIM-021"
+          ],
+          "private_total": "197/5"
+        },
+        {
+          "ids": [
+            "TR-BIKE-023",
+            "TR-RUN-025",
+            "TR-SWIM-022"
+          ],
+          "private_total": "89/2"
+        },
+        {
+          "ids": [
+            "TR-BIKE-023",
+            "TR-RUN-026",
+            "TR-SWIM-021"
+          ],
+          "private_total": "224/5"
+        },
+        {
+          "ids": [
+            "TR-BIKE-024",
+            "TR-RUN-025",
+            "TR-SWIM-021"
+          ],
+          "private_total": "222/5"
+        }
+      ],
+      "count": 10,
+      "groups": [
+        23,
+        22,
+        16
+      ],
+      "meaning": "SOURCE_DISPLAY_ARITHMETIC_ONLY; suitability/scheduling unverified"
+    },
+    "build": {
+      "authorized_budget": "45",
+      "combinations": [
+        {
+          "ids": [
+            "TR-BIKE-022",
+            "TR-RUN-001",
+            "TR-SWIM-021"
+          ],
+          "private_total": "409/10"
+        },
+        {
+          "ids": [
+            "TR-BIKE-022",
+            "TR-RUN-025",
+            "TR-SWIM-001"
+          ],
+          "private_total": "214/5"
+        },
+        {
+          "ids": [
+            "TR-BIKE-022",
+            "TR-RUN-025",
+            "TR-SWIM-021"
+          ],
+          "private_total": "343/10"
+        },
+        {
+          "ids": [
+            "TR-BIKE-022",
+            "TR-RUN-025",
+            "TR-SWIM-022"
+          ],
+          "private_total": "197/5"
+        },
+        {
+          "ids": [
+            "TR-BIKE-022",
+            "TR-RUN-026",
+            "TR-SWIM-021"
+          ],
+          "private_total": "397/10"
+        },
+        {
+          "ids": [
+            "TR-BIKE-022",
+            "TR-RUN-026",
+            "TR-SWIM-022"
+          ],
+          "private_total": "224/5"
+        },
+        {
+          "ids": [
+            "TR-BIKE-023",
+            "TR-RUN-025",
+            "TR-SWIM-021"
+          ],
+          "private_total": "197/5"
+        },
+        {
+          "ids": [
+            "TR-BIKE-023",
+            "TR-RUN-025",
+            "TR-SWIM-022"
+          ],
+          "private_total": "89/2"
+        },
+        {
+          "ids": [
+            "TR-BIKE-023",
+            "TR-RUN-026",
+            "TR-SWIM-021"
+          ],
+          "private_total": "224/5"
+        },
+        {
+          "ids": [
+            "TR-BIKE-024",
+            "TR-RUN-025",
+            "TR-SWIM-021"
+          ],
+          "private_total": "222/5"
+        }
+      ],
+      "count": 10,
+      "groups": [
+        27,
+        22,
+        22
+      ],
+      "meaning": "SOURCE_DISPLAY_ARITHMETIC_ONLY; suitability/scheduling unverified"
+    },
+    "recovery": {
+      "authorized_budget": "25.86",
+      "combinations": [],
+      "count": 0,
+      "groups": [
+        13,
+        18,
+        8
+      ],
+      "meaning": "SOURCE_DISPLAY_ARITHMETIC_ONLY; suitability/scheduling unverified"
+    },
+    "taper": {
+      "authorized_budget": "15.085",
+      "combinations": [],
+      "count": 0,
+      "groups": [
+        19,
+        18,
+        8
+      ],
+      "meaning": "SOURCE_DISPLAY_ARITHMETIC_ONLY; suitability/scheduling unverified"
+    }
+  },
+  "source_release": "joren-v6-phase-source-release-1"
+}

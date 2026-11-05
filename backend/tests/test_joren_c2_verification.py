@@ -328,7 +328,7 @@ def test_invalid_parameters_reject(value: Decimal) -> None:
 def test_dry_run_determinism_no_activation_history_mutation_or_private_stdout(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    before = {p: p.read_bytes() for p in c1.DEFAULT_SOURCES.iterdir()}
+    before = {p: p.read_bytes() for p in c1.DEFAULT_SOURCES.rglob("*") if p.is_file()}
     historical = tuple(snapshot_template(t) for t in full_catalog())
     current = active_catalog(CURRENT_CATALOG)
 

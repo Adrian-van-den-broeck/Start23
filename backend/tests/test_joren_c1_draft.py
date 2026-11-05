@@ -313,7 +313,8 @@ def test_manifest_and_load_are_frozen_and_cannot_approve(
 def test_local_command_is_offline_private_and_preserves_bytes_and_history(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    paths = list(draft.DEFAULT_SOURCES.iterdir())
+    # Source revisions now have custody subdirectories; verify every file.
+    paths = [p for p in draft.DEFAULT_SOURCES.rglob("*") if p.is_file()]
     before = {p: p.read_bytes() for p in paths}
     historical = tuple(snapshot_template(t) for t in full_catalog())
     current = active_catalog(CURRENT_CATALOG)

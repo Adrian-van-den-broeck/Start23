@@ -1,0 +1,130 @@
+{
+  "ancestor_checks": {
+    "044ecfb59ee00afb91f35b68dc9fa4e5d3e4e9cf": 0,
+    "24b27ebd34ccfe662ca57994a736f4f853af8d0b": 0,
+    "4bb0cdea8f46242018ad8e5d22fa79a706cbf207": 0,
+    "75f172d4161f71a763247b04c027fd165901afbd": 0,
+    "7dc3f22595d4b9e22e1e84abaf148d9bd791fd33": 0,
+    "86c64e6e5b5b89f4f2c8901246793afdf924dd04": 0,
+    "b65ea78be1db886586d793f721bb2910ddbc6a41": 0,
+    "cef4d0adfb09f5f1937528a98c594a6442816f20": 0,
+    "d0e726dfd291ffde12a459ec430b11fdc5cddc7a": 0,
+    "e2d450be4a1d5ec3d65037bd6901f2f03d6b14e6": 0
+  },
+  "artifact_sha256": {
+    "catalog.json": "20d23f1ad35c65fd93a9f6a7afb95d9bcbb272f8c30a3edade7dcdcf619be1ea",
+    "decision.json": "b2365a1dab8f4383f2d490771e0194e5d43f52718f9dab390413649e7f418173",
+    "performance.json": "c9a839bc27401b87685c942c620cafc01641d4da73b24d22adc56266b9bf74c7",
+    "phase-search.json": "763a98e92b60d8f91db364a327d498c7a132fc28fbf8b8c7e76ac2e55ce9b4a8",
+    "pytest-full.txt": "034121068238d91e5897db951595e2d75a1fcfdc6b92ee59ba31e48c52725ceb",
+    "pytest-initial.txt": "b6ce64a6061322da8f74e2f699572ccc8f942afaea11a614ff12d041fed4c888",
+    "regression.json": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341",
+    "simulation.json": "ad14bdab3c4601f9c528a7fd3d9f2051093b220b7df689b5fb6d4bd6fd5823b9"
+  },
+  "base_sha": "acdc5fbd36677680f9083a308cb1f760aa7c71eb",
+  "branch": "feat/joren-v6-phase-tss-integration",
+  "catalog_active": false,
+  "database_migration_created": false,
+  "database_migration_executed": false,
+  "date": "2026-11-05",
+  "external_gates": {
+    "mobile_device_A5_A6": "OUT_OF_SCOPE_EXISTING_GATES_RETAINED",
+    "postgres_rls_grants_pgtap": "DEFERRED_NOT_VERIFIED"
+  },
+  "focused_custody_final": {
+    "passed": 408,
+    "seconds": 10.28
+  },
+  "focused_initial": {
+    "passed": 287,
+    "seconds": 11.71
+  },
+  "full_backend_pytest": {
+    "failed": 0,
+    "passed": 2389,
+    "seconds": 195.15,
+    "transcript": "pytest-full.txt",
+    "warnings": 1
+  },
+  "historical_regression": {
+    "accepted_completions": 26,
+    "canonical_lf_sha256": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341",
+    "cases": 40,
+    "outcomes": {
+      "DIAGNOSTIC_TIMEOUT": 1,
+      "FAIL_CLOSED": 10,
+      "PENDING_HYPOTHETICAL_PLAN": 29
+    },
+    "semantic_equality_to_final_policy": true
+  },
+  "initial_full_backend_pytest": {
+    "failed": 4,
+    "passed": 2385,
+    "resolution": "recursive custody files and specifically authorized disabled review seam; see integration report",
+    "seconds": 195.11,
+    "transcript": "pytest-initial.txt",
+    "transcript_format": "UTF-8 LF, trailing whitespace normalized"
+  },
+  "new_tests": 139,
+  "official_tss_proposal": "WRITTEN_NOT_IMPLEMENTED_OWNER_REQUEST",
+  "performance": {
+    "all_input_and_complete_outcome_parity": true,
+    "bound_seconds_including_imports": 8,
+    "cases": 40,
+    "host_load_controlled": false,
+    "independent_plan_checks": 29,
+    "mode": "cold",
+    "outcomes": {
+      "DIAGNOSTIC_TIMEOUT": 1,
+      "FAIL_CLOSED": 10,
+      "PENDING_HYPOTHETICAL_PLAN": 29
+    },
+    "prior_accepted_completed_outcomes_preserved": 26,
+    "samples_per_case": 1,
+    "timeouts": [
+      "current:build_4"
+    ],
+    "variant": "optimized"
+  },
+  "phase_search": {
+    "bound_seconds": 8,
+    "cases": 20,
+    "not_prospective_recommendations": true,
+    "variant": "unchanged_legacy_engine_new_phase_projection"
+  },
+  "platform": "Windows-10-10.0.19045-SP0",
+  "production_accessed": false,
+  "python": "3.10.10 (tags/v3.10.10:aad5f6a, Feb  7 2023, 17:20:36) [MSC v.1929 64 bit (AMD64)]",
+  "ruff_check": "PASS",
+  "ruff_format": {
+    "files": 195,
+    "status": "PASS"
+  },
+  "schema": "joren-v6-phase-tss-verification-1",
+  "source_rows": 77,
+  "sources": [
+    {
+      "bytes": 12772,
+      "filename": "Fietstrainingen_Definitief_v6 (1) (1).xlsx",
+      "original_byte_identity": true,
+      "sha256": "6322d7f93b3e074c77c4efa28b2a95de3f04f0f5c6af226ce50e8c2ff716ddbc"
+    },
+    {
+      "bytes": 11912,
+      "filename": "Looptrainingen_Definitief_v6 (1) (1).xlsx",
+      "original_byte_identity": true,
+      "sha256": "7380c88ef8bccb3cb35b0f6416d9debba8342b9802fc716f0a99dcfcb8626d88"
+    },
+    {
+      "bytes": 12387,
+      "filename": "Zwemtrainingen_Definitief_v6 (2) (1).xlsx",
+      "original_byte_identity": true,
+      "sha256": "48a0f6448f003ef048f40e53fda74b5220f272ebd4300180c108777c6e0be3ba"
+    }
+  ],
+  "strict_mypy": {
+    "source_files": 194,
+    "status": "PASS"
+  },
+  "timezone": "Europe/Amsterdam"
+}
