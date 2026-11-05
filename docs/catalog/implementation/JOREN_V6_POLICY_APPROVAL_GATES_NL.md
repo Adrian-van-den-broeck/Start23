@@ -65,3 +65,8 @@ vastgelegd. Database/pgTAP/RLS en device/releasepoorten blijven extern open; dez
 offline taak heeft ze niet uitgevoerd of gesloten. Geen productiebenadering,
 bronwerkboekwijziging, historische herberekening, actieve configuratie/catalogus,
 migratie, push, merge, deployment of Play Store-publicatie.
+
+Exact geverifieerde implementatie/evidence Git SHA:
+`ad8a327d0d50ddc2e2e91c48c799f2f3d27d962c`. De daaropvolgende documentatiecommit
+legt deze onveranderlijke verwijzing vast. De uiteindelijke levertip staat in het
+afleverbericht en is opvraagbaar via `git rev-parse experiment/joren-v6-policy-sandbox`.

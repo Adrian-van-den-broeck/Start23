@@ -116,3 +116,8 @@ separate [allocation tradeoff decision](JOREN_V6_SPORT_ALLOCATION_TRADEOFFS.md).
 
 Verification, exact commits and open external gates:
 [sandbox delivery report](JOREN_V6_PROSPECTIVE_POLICY_SANDBOX.md).
+
+Verified implementation/evidence Git SHA:
+`ad8a327d0d50ddc2e2e91c48c799f2f3d27d962c`. The following documentation-only
+delivery records this immutable SHA; its final tip is supplied in the delivery
+response and resolves at `experiment/joren-v6-policy-sandbox`.

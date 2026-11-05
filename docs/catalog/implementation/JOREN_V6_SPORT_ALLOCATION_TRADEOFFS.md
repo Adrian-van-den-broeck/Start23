@@ -111,3 +111,8 @@ approvals. UNAPPROVED ATHLETE METADATA applies to every real candidate here.
 ACTIVE PRODUCTION BEHAVIOR remains the historical selector. The new diagnostics
 are private, offline, and never added to athlete-facing APIs. Exact verification
 and commit references: [sandbox report](JOREN_V6_PROSPECTIVE_POLICY_SANDBOX.md).
+
+Verified implementation/evidence Git SHA:
+`ad8a327d0d50ddc2e2e91c48c799f2f3d27d962c`. The following documentation-only
+delivery records this immutable SHA; its final tip is supplied in the delivery
+response and resolves at `experiment/joren-v6-policy-sandbox`.

@@ -220,4 +220,26 @@ SHA; the final delivery tip is supplied in the final response and resolves with
 `git rev-parse experiment/joren-v6-policy-sandbox`. A commit cannot embed its own
 final hash.
 
+## Local delivery addendum
+
+Exact verified implementation, tests and private evidence SHA:
+**`ad8a327d0d50ddc2e2e91c48c799f2f3d27d962c`**, direct child of accepted delivery
+`86c64e6e5b5b89f4f2c8901246793afdf924dd04`. The implementation worktree was clean
+after commit. This subsequent documentation-only commit records that immutable
+reference; its final branch-tip SHA is supplied in the final delivery response.
+
+All 11 staged paths were new additions. Their index blobs matched tested
+worktree content after normalizing Git's Windows text line endings; all three
+private JSON files matched byte-for-byte. Immutable artifact hashes, all original
+and archived V6 workbook hashes, local report links and protected branch tips/
+clean worktree status were reverified. Staged `git diff --check` passed. No active
+application source or pre-existing test/report/artifact was modified.
+
+Final results: 2,102 full backend tests and 65 focused policy/C2.1 tests pass;
+Ruff, formatting and strict mypy pass. All 40 unchanged full regression outcomes
+and fingerprints match, including all 26 accepted reference completions. The
+existing one `current:build_4` diagnostic timeout is preserved. Operational,
+scientific, database and release gates above remain explicitly open. There was
+no push, merge, deploy, migrate, activation, publication or C3-C8 continuation.
+
 WOMBO V6 POLICY SANDBOX COMPLETE — OPERATIONAL APPROVALS STILL REQUIRED
