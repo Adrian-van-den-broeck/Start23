@@ -169,3 +169,8 @@ need a separate proof covering prefixes, limited uses, sport caps, Decimal
 arithmetic and deterministic canonical paths. It is not assumed safe here.
 
 Final verification and commit lineage: [optimization report](JOREN_V6_PLANNER_OPTIMIZATION_REPORT.md).
+
+Exact verified implementation SHA: `c7c1b43a5db354d2abea4e128f42ca050179d2ad`,
+based on accepted `99c03b10f3f373d0756ee01b0cb2ebac944fcfae`. The subsequent
+delivery commit changes documentation only; its final tip SHA is supplied in the
+delivery response and resolves with `git rev-parse perf/joren-v6-planner`.

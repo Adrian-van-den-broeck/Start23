@@ -145,3 +145,8 @@ P precision/method and source metadata remain outside active selection.
 Final backend/lint/type/custody results and exact local commits are in the
 [optimization report](JOREN_V6_PLANNER_OPTIMIZATION_REPORT.md). There is no catalog
 activation, source rewrite, historical load recalculation or production change.
+
+Exact verified implementation SHA: `c7c1b43a5db354d2abea4e128f42ca050179d2ad`,
+based on accepted `99c03b10f3f373d0756ee01b0cb2ebac944fcfae`. The subsequent
+documentation-only delivery commit records that reference; its final tip SHA is
+supplied in the delivery response and resolves with `git rev-parse perf/joren-v6-planner`.

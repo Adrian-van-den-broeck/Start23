@@ -2,6 +2,9 @@
 
 2026-11-05, Europe/Amsterdam. Local performance remediation; no release.
 
+Detailed [stage profile](JOREN_V6_PLANNER_PERFORMANCE_PROFILE.md) and
+[all 40 before/after outcomes](JOREN_V6_PLANNER_PERFORMANCE_COMPARISON.md).
+
 ## Scope and isolation
 
 Start: `99c03b10f3f373d0756ee01b0cb2ebac944fcfae` on accepted
@@ -172,9 +175,32 @@ permit changed deterministic plan fingerprints.
 
 ## Local delivery
 
-Exact verified implementation SHA will be recorded after local commit, followed
-by a documentation-only addendum commit. Its final tip SHA is supplied in the
-delivery response because a commit cannot embed its own hash. Resolve the delivered
-tip with `git rev-parse perf/joren-v6-planner`.
+Exact verified implementation/source/test/evidence SHA:
+`c7c1b43a5db354d2abea4e128f42ca050179d2ad`, a direct child of accepted start
+`99c03b10f3f373d0756ee01b0cb2ebac944fcfae`. The worktree was clean after that
+commit. This following documentation-only commit records its immutable reference;
+its own final tip SHA is supplied in the delivery response because a commit cannot
+embed its own hash. Resolve the delivered tip with `git rev-parse perf/joren-v6-planner`.
+
+Final staged diff hygiene passed. All ten staged reports/JSON evidence/frozen
+oracle files matched their index blobs byte-for-byte. No original workbook,
+immutable V6 catalog artifact, physiological calculation, mobile, SQL/database,
+Railway configuration, account/identity or release-preparation path is in the
+implementation diff. Historical catalog reports remain unchanged.
+
+| Delivered private evidence | SHA-256 |
+| --- | --- |
+| [Cold reference](performance/reference_cold_verified.json) | 397fb213bb306b256a102af720731fe61c165a7478268f1ac0ec020dab6fac91 |
+| [Cold optimized](performance/optimized_cold_verified.json) | 25fb0298642c5125afd1d58c3a6797975da7a66e0581c4ddf47fc49aadd676d4 |
+| [Preloaded reference](performance/reference_preloaded.json) | 965a72a58b9be548a939e1949e6f88ec0d3293524c6f1530618dd8dd3ef29439 |
+| [Preloaded optimized](performance/optimized_preloaded.json) | fce996cab8eecccf7dc40e17394ba58cfd4f6aace7b8c7e04326954c150566d2 |
+| [Instrumented reference](performance/reference_profile_verified.json) | 9447fb5e85d86092c3e5eee10999f86f009ac90f855330337981cb64a6f1a688 |
+| [Instrumented optimized](performance/optimized_profile_verified.json) | 7b596e48b42a098dee20a1063a41091eb2d33449b7da9d3e1d92161298f2f629 |
+
+The A5/A6 release worktree is still clean at
+`cd3e2dd438031cfb565858d0a5929e9963f7b31f`; its backend selection and deployment
+preparation were not modified. The accepted V6 branch remains at its supplied
+delivery SHA. No production or catalog activation occurred; no push, merge,
+deployment, migration, publication or C3–C8 continuation occurred.
 
 WOMBO V6 PLANNER PERFORMANCE INVESTIGATED — FURTHER WORK REQUIRED
