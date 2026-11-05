@@ -1,0 +1,253 @@
+........................................................................ [  2%]
+........................................................................ [  5%]
+........................................................................ [  8%]
+........................................................................ [ 11%]
+........................................................................ [ 14%]
+........................................................................ [ 17%]
+........................................................................ [ 20%]
+........................................................................ [ 23%]
+........................................................................ [ 26%]
+........................................................................ [ 28%]
+........................................................................ [ 31%]
+........................................................................ [ 34%]
+........................................................................ [ 37%]
+........................................................................ [ 40%]
+........................................................................ [ 43%]
+........................................................................ [ 46%]
+........................................................................ [ 49%]
+........................................................................ [ 52%]
+........................................................................ [ 55%]
+........................................................................ [ 57%]
+........................................................................ [ 60%]
+........................................................................ [ 63%]
+........................................................................ [ 66%]
+........................................................................ [ 69%]
+........................................................................ [ 72%]
+...................FF................................................... [ 75%]
+........................................................................ [ 78%]
+........................................................................ [ 81%]
+........................................................................ [ 83%]
+........................................................................ [ 86%]
+........................................................................ [ 89%]
+...............................................................F........ [ 92%]
+........................................................................ [ 95%]
+........................................................................ [ 98%]
+......................................                                   [100%]
+================================== FAILURES ===================================
+__________ test_authenticated_read_does_not_wait_for_planning_worker __________
+
+planning_client = <starlette.testclient.TestClient object at 0x000002B30D7B4940>
+
+    def test_authenticated_read_does_not_wait_for_planning_worker(
+        planning_client: TestClient,  # noqa: F811
+    ) -> None:
+        async def verify() -> None:
+            manager = Manager()
+            started, release = manager.Event(), manager.Event()
+            controlled = partial(controlled_build, started, release, os.getpid())
+            async with httpx.AsyncClient(
+                transport=httpx.ASGITransport(app=planning_client.app),
+                base_url="http://test",
+            ) as client:
+                with patch.object(service, "build_weekly_plan", controlled):
+                    task = asyncio.create_task(
+                        client.post(
+                            "/api/v1/weekly-plans/proposals",
+                            headers={"Authorization": "Bearer athlete-a"},
+                            json={
+                                "week_start": "2026-08-03",
+                                "available_dates": _availability_payload(),
+                                "confirmed_injuries": [],
+                            },
+                        )
+                    )
+                    try:
+                        assert await asyncio.to_thread(started.wait, 20)
+                        response = await asyncio.wait_for(
+                            client.get(
+                                "/api/v1/calendar?from=2026-08-03&to=2026-08-10",
+                                headers={"Authorization": "Bearer athlete-b"},
+                            ),
+                            10,
+                        )
+                        assert response.status_code == 200
+                        assert response.json()["workouts"] == []
+                        assert not task.done()
+                    finally:
+                        release.set()
+                    assert (await task).status_code == 201
+
+>       asyncio.run(verify())
+
+tests\test_planning_execution.py:87:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Python310\lib\asyncio\runners.py:44: in run
+    return loop.run_until_complete(main)
+C:\Python310\lib\asyncio\base_events.py:649: in run_until_complete
+    return future.result()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def verify() -> None:
+        manager = Manager()
+        started, release = manager.Event(), manager.Event()
+        controlled = partial(controlled_build, started, release, os.getpid())
+        async with httpx.AsyncClient(
+            transport=httpx.ASGITransport(app=planning_client.app),
+            base_url="http://test",
+        ) as client:
+            with patch.object(service, "build_weekly_plan", controlled):
+                task = asyncio.create_task(
+                    client.post(
+                        "/api/v1/weekly-plans/proposals",
+                        headers={"Authorization": "Bearer athlete-a"},
+                        json={
+                            "week_start": "2026-08-03",
+                            "available_dates": _availability_payload(),
+                            "confirmed_injuries": [],
+                        },
+                    )
+                )
+                try:
+>                   assert await asyncio.to_thread(started.wait, 20)
+E                   assert False
+
+tests\test_planning_execution.py:72: AssertionError
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": "2026-11-05T20:05:55.157421+00:00", "level": "INFO", "logger": "app.main", "message": "Application started", "event": "application_started", "environment": "test", "version": "0.1.0"}
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": "2026-11-05T20:05:55.679283+00:00", "level": "INFO", "logger": "httpx", "message": "HTTP Request: POST http://test/api/v1/weekly-plans/proposals \"HTTP/1.1 201 Created\""}
+------------------------------ Captured log call ------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://test/api/v1/weekly-plans/proposals "HTTP/1.1 201 Created"
+-------------------------- Captured stdout teardown ---------------------------
+{"timestamp": "2026-11-05T20:06:15.507839+00:00", "level": "INFO", "logger": "app.main", "message": "Application stopped", "event": "application_stopped", "environment": "test", "version": "0.1.0"}
+---------------------------- Captured log teardown ----------------------------
+INFO     app.main:main.py:102 Application stopped
+_______________ test_cancelled_owner_cannot_persist_late_result _______________
+
+planning_client = <starlette.testclient.TestClient object at 0x000002B30E988040>
+
+    def test_cancelled_owner_cannot_persist_late_result(
+        planning_client: TestClient,  # noqa: F811
+    ) -> None:
+        async def verify() -> None:
+            manager = Manager()
+            started, release = manager.Event(), manager.Event()
+            app = cast(FastAPI, planning_client.app)
+            controlled = partial(controlled_build, started, release, os.getpid())
+            async with httpx.AsyncClient(
+                transport=httpx.ASGITransport(app=planning_client.app),
+                base_url="http://test",
+            ) as client:
+                with patch.object(service, "build_weekly_plan", controlled):
+                    task = asyncio.create_task(
+                        client.post(
+                            "/api/v1/weekly-plans/proposals",
+                            headers={"Authorization": "Bearer athlete-a"},
+                            json={
+                                "week_start": "2026-08-03",
+                                "available_dates": _availability_payload(),
+                                "confirmed_injuries": [],
+                            },
+                        )
+                    )
+                    try:
+                        assert await asyncio.to_thread(started.wait, 20)
+                        task.cancel()
+                        try:
+                            await task
+                        except asyncio.CancelledError:
+                            pass
+                        assert app.state.planning_repository._plans == {}
+                        assert app.state.planning_computation._pending == 1
+                    finally:
+                        release.set()
+
+                    async def drained() -> None:
+                        while app.state.planning_computation._pending:
+                            await asyncio.sleep(0)
+
+                    await asyncio.wait_for(drained(), 10)
+                    assert app.state.planning_repository._plans == {}
+
+>       asyncio.run(verify())
+
+tests\test_planning_execution.py:133:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Python310\lib\asyncio\runners.py:44: in run
+    return loop.run_until_complete(main)
+C:\Python310\lib\asyncio\base_events.py:649: in run_until_complete
+    return future.result()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def verify() -> None:
+        manager = Manager()
+        started, release = manager.Event(), manager.Event()
+        app = cast(FastAPI, planning_client.app)
+        controlled = partial(controlled_build, started, release, os.getpid())
+        async with httpx.AsyncClient(
+            transport=httpx.ASGITransport(app=planning_client.app),
+            base_url="http://test",
+        ) as client:
+            with patch.object(service, "build_weekly_plan", controlled):
+                task = asyncio.create_task(
+                    client.post(
+                        "/api/v1/weekly-plans/proposals",
+                        headers={"Authorization": "Bearer athlete-a"},
+                        json={
+                            "week_start": "2026-08-03",
+                            "available_dates": _availability_payload(),
+                            "confirmed_injuries": [],
+                        },
+                    )
+                )
+                try:
+>                   assert await asyncio.to_thread(started.wait, 20)
+E                   assert False
+
+tests\test_planning_execution.py:115: AssertionError
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": "2026-11-05T20:06:15.569117+00:00", "level": "INFO", "logger": "app.main", "message": "Application started", "event": "application_started", "environment": "test", "version": "0.1.0"}
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": "2026-11-05T20:06:16.201895+00:00", "level": "INFO", "logger": "httpx", "message": "HTTP Request: POST http://test/api/v1/weekly-plans/proposals \"HTTP/1.1 201 Created\""}
+------------------------------ Captured log call ------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://test/api/v1/weekly-plans/proposals "HTTP/1.1 201 Created"
+-------------------------- Captured stdout teardown ---------------------------
+{"timestamp": "2026-11-05T20:06:35.737953+00:00", "level": "INFO", "logger": "app.main", "message": "Application stopped", "event": "application_stopped", "environment": "test", "version": "0.1.0"}
+---------------------------- Captured log teardown ----------------------------
+INFO     app.main:main.py:102 Application stopped
+_________________ test_artifact_reproduction_and_idempotence __________________
+
+tmp_path = WindowsPath('C:/Users/Adria/AppData/Local/Temp/pytest-of-Adria/pytest-39/test_artifact_reproduction_and0')
+capsys = <_pytest.capture.CaptureFixture object at 0x000002B30E9303A0>
+
+    def test_artifact_reproduction_and_idempotence(
+        tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        output = tmp_path / "private.json"
+        text = artifact()
+        write_immutable(output, text)
+        write_immutable(output, text)
+        assert main(["--dry-run", "--private-output", str(output)]) == 0
+        assert output.read_bytes() == text.encode()
+        assert "Validated 77 inactive" in capsys.readouterr().out
+        with pytest.raises(SourceError, match="artifact_revision_conflict"):
+            write_immutable(output, text + " ")
+        stored = ROOT / "docs/catalog/implementation/phase-tss/catalog.json"
+>       assert stored.read_bytes() == text.encode()
+E       assert b'{\r\n  "act...n  ]\r\n}\r\n' == b'{\n  "activ...  }\n  ]\n}\n'
+E
+E         At index 1 diff: b'\r' != b'\n'
+E         Use -v to get more diff
+
+tests\test_v6_phase_integration.py:442: AssertionError
+============================== warnings summary ===============================
+..\..\..\backend\.venv\lib\site-packages\fastapi\testclient.py:1
+  F:\Projecten Business\Start23\Code\backend\.venv\lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_planning_execution.py::test_authenticated_read_does_not_wait_for_planning_worker
+FAILED tests/test_planning_execution.py::test_cancelled_owner_cannot_persist_late_result
+FAILED tests/test_v6_phase_integration.py::test_artifact_reproduction_and_idempotence
+3 failed, 2483 passed, 1 warning in 222.94s (0:03:42)

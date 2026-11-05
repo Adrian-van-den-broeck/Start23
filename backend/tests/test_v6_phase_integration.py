@@ -462,6 +462,9 @@ def test_disabled_dependency_boundary() -> None:
             "v6_phase_review.py",
             "joren_v6_phase.py",
             "joren_v6_phase_intake.py",
+            # Newly authorized inactive official successor; default startup
+            # registration is independently forbidden in the V6 selector tests.
+            "joren_v6_official.py",
         }:
             continue
         tree = ast.parse(path.read_text(encoding="utf-8-sig"))

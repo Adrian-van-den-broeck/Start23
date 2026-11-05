@@ -3,7 +3,7 @@
 import hashlib
 import json
 import logging
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from decimal import Decimal
@@ -57,6 +57,7 @@ from .domain import (
     PlanningTarget,
     PlanningTargetBasis,
     PlanningWarning,
+    WeeklyPlanDraft,
     ZoneCapability,
     _bounded_selection,
     _schedule_is_feasible,
@@ -174,10 +175,16 @@ class _SwipePlanningContext:
     automatic_template_ids: tuple[UUID, ...]
     cross_training_opt_ins: frozenset[Discipline]
     context_fingerprint: str
+    plan_builder: Callable[..., WeeklyPlanDraft] = build_weekly_plan
 
 
 class PlanningService:
     """Coordinate trusted inputs, pure decisions, and typed persistence."""
+
+    _plan_builder: Callable[..., WeeklyPlanDraft] = staticmethod(build_weekly_plan)
+    _planning_policy_version = JOREN_PLANNING_RULESET_V2.version.value
+    _catalog_view = staticmethod(active_catalog)
+    _eligible_workouts = staticmethod(eligible_workouts)
 
     def __init__(
         self,
@@ -187,6 +194,7 @@ class PlanningService:
         computation: PlanningComputation,
     ) -> None:
         self._computation = computation
+        self._plan_builder = build_weekly_plan
         self._repository = repository
         self._catalog_provider = catalog_provider
         self._weekly_plan_coach = weekly_plan_coach
@@ -582,11 +590,11 @@ class PlanningService:
         timezone_name, race_date, disciplines, capabilities = self._context_values(
             snapshot
         )
-        catalog = active_catalog(await self._catalog_provider.fetch_catalog())
+        catalog = self._catalog_view(await self._catalog_provider.fetch_catalog())
         history_rows = await self._repository.fetch_load_history(athlete_id, week_start)
         prior_loads = self._load_samples(history_rows)
         automatic = await self._computation.run(
-            build_weekly_plan,
+            self._plan_builder,
             week_start=week_start,
             timezone_name=timezone_name,
             race_date=race_date,
@@ -603,7 +611,7 @@ class PlanningService:
         )
         eligible = tuple(
             template
-            for template in eligible_workouts(
+            for template in self._eligible_workouts(
                 catalog=catalog,
                 phase=automatic.target.phase,
                 goal_disciplines=(
@@ -645,7 +653,7 @@ class PlanningService:
                 item.value for item in cross_training_opt_ins
             ),
             "maintenance_active": bool(input_source.get("maintenance_active", False)),
-            "ruleset_version": JOREN_PLANNING_RULESET_V2.version.value,
+            "ruleset_version": self._planning_policy_version,
             "history": history_rows,
             "catalog": [
                 {"id": str(template.id), "version": template.version}
@@ -681,6 +689,7 @@ class PlanningService:
             ),
             cross_training_opt_ins=cross_training_opt_ins,
             context_fingerprint=context_fingerprint,
+            plan_builder=self._plan_builder,
         )
 
     @staticmethod
@@ -708,6 +717,13 @@ class PlanningService:
             raise PlanningDomainError(
                 "Stored swipe decision history is invalid."
             ) from error
+
+    @staticmethod
+    def _transition_placements(
+        row: Mapping[str, Any], selection: SwipeSelectionState
+    ) -> dict[UUID, date]:
+        """Historical transitions reset placement; successors may retain it."""
+        return {}
 
     @staticmethod
     def _selection_has_completion(
@@ -946,7 +962,7 @@ class PlanningService:
                     date.fromisoformat(str(value))
                     for value in row.get("available_dates", [])
                 )
-                preview = build_weekly_plan(
+                preview = context.plan_builder(
                     week_start=date.fromisoformat(str(row["week_start"])),
                     timezone_name=context.timezone_name,
                     race_date=context.race_date,
@@ -1210,7 +1226,7 @@ class PlanningService:
         timezone_name, race_date, disciplines, capabilities = self._context_values(
             snapshot
         )
-        catalog = active_catalog(await self._catalog_provider.fetch_catalog())
+        catalog = self._catalog_view(await self._catalog_provider.fetch_catalog())
         if selected_template_ids is not None and not allow_explicit_test_selection:
             selected_ids = set(selected_template_ids)
             if any(
@@ -1236,7 +1252,7 @@ class PlanningService:
             else None
         )
         draft = await self._computation.run(
-            build_weekly_plan,
+            self._plan_builder,
             week_start=week_start,
             timezone_name=timezone_name,
             race_date=race_date,
@@ -1604,7 +1620,7 @@ class PlanningService:
                 ),
                 "input_fingerprint": str(source["input_fingerprint"]),
                 "context_fingerprint": context.context_fingerprint,
-                "ruleset_version": JOREN_PLANNING_RULESET_V2.version.value,
+                "ruleset_version": self._planning_policy_version,
                 "target_workout_count": context.target_workout_count,
                 "target_composition": {
                     discipline.value: context.target_composition[discipline]
@@ -1682,8 +1698,6 @@ class PlanningService:
         low_only = frozenset(
             Discipline(str(value)) for value in row["low_only_disciplines"]
         )
-        placements: dict[UUID, date] = {}
-
         if request.action == "undo":
             selection = undo_last_swipe(selection)
         elif request.action == "reset_passed":
@@ -1775,7 +1789,7 @@ class PlanningService:
                 context_fingerprint=context.context_fingerprint,
                 selection=selection,
                 current_template_id=current,
-                placements=placements,
+                placements=self._transition_placements(row, selection),
                 state=next_state,
             ),
         )
@@ -1836,7 +1850,7 @@ class PlanningService:
             Discipline(str(value)) for value in row["low_only_disciplines"]
         )
         await self._computation.run(
-            build_weekly_plan,
+            self._plan_builder,
             week_start=week_start,
             timezone_name=context.timezone_name,
             race_date=context.race_date,
@@ -1960,7 +1974,7 @@ class PlanningService:
             await self._repository.fetch_plan(access_token, plan_id, revision)
         )
         final_preview = await self._computation.run(
-            build_weekly_plan,
+            self._plan_builder,
             week_start=week_start,
             timezone_name=context.timezone_name,
             race_date=context.race_date,
@@ -2095,7 +2109,7 @@ class PlanningService:
                 "test_date_unavailable",
                 "The selected test date is not an available plan date.",
             )
-        catalog = active_catalog(await self._catalog_provider.fetch_catalog())
+        catalog = self._catalog_view(await self._catalog_provider.fetch_catalog())
         test_templates = tuple(
             template
             for template in catalog
@@ -2306,8 +2320,8 @@ class PlanningService:
                 "plan_revision_stale",
                 "The plan changed after this deck request was prepared.",
             )
-        deck = eligible_workouts(
-            catalog=active_catalog(await self._catalog_provider.fetch_catalog()),
+        deck = self._eligible_workouts(
+            catalog=self._catalog_view(await self._catalog_provider.fetch_catalog()),
             phase=phase,
             goal_disciplines=disciplines,
             confirmed_injuries=injuries,
@@ -2388,8 +2402,8 @@ class PlanningService:
             raise PlanningDomainError(
                 "Stored pending plan context is invalid."
             ) from error
-        deck = eligible_workouts(
-            catalog=active_catalog(await self._catalog_provider.fetch_catalog()),
+        deck = self._eligible_workouts(
+            catalog=self._catalog_view(await self._catalog_provider.fetch_catalog()),
             phase=phase,
             goal_disciplines=disciplines,
             confirmed_injuries=injuries,
@@ -2415,11 +2429,13 @@ class PlanningService:
             )
             week_start = date.fromisoformat(str(context["week_start"]))
             await self._computation.run(
-                build_weekly_plan,
+                self._plan_builder,
                 week_start=week_start,
                 timezone_name=timezone_name,
                 race_date=race_date,
-                catalog=active_catalog(await self._catalog_provider.fetch_catalog()),
+                catalog=self._catalog_view(
+                    await self._catalog_provider.fetch_catalog()
+                ),
                 prior_loads=self._load_samples(
                     await self._repository.fetch_load_history(athlete_id, week_start)
                 ),
@@ -2479,7 +2495,7 @@ class PlanningService:
             snapshot
         )
         week_start = date.fromisoformat(str(context["week_start"]))
-        catalog = active_catalog(await self._catalog_provider.fetch_catalog())
+        catalog = self._catalog_view(await self._catalog_provider.fetch_catalog())
         prior_loads = self._load_samples(
             await self._repository.fetch_load_history(athlete_id, week_start)
         )
@@ -2496,7 +2512,7 @@ class PlanningService:
 
         def candidate_is_valid(selected_template_ids: tuple[UUID, ...]) -> bool:
             try:
-                build_weekly_plan(
+                self._plan_builder(
                     week_start=week_start,
                     timezone_name=timezone_name,
                     race_date=race_date,

@@ -1,0 +1,107 @@
+{
+  "a5_a6_changed": false,
+  "ancestor_checks": {
+    "044ecfb59ee00afb91f35b68dc9fa4e5d3e4e9cf": 0,
+    "24b27ebd34ccfe662ca57994a736f4f853af8d0b": 0,
+    "4bb0cdea8f46242018ad8e5d22fa79a706cbf207": 0,
+    "75f172d4161f71a763247b04c027fd165901afbd": 0,
+    "7dc3f22595d4b9e22e1e84abaf148d9bd791fd33": 0,
+    "86c64e6e5b5b89f4f2c8901246793afdf924dd04": 0,
+    "acdc5fbd36677680f9083a308cb1f760aa7c71eb": 0,
+    "b65ea78be1db886586d793f721bb2910ddbc6a41": 0,
+    "cef4d0adfb09f5f1937528a98c594a6442816f20": 0,
+    "d0e726dfd291ffde12a459ec430b11fdc5cddc7a": 0,
+    "e2d450be4a1d5ec3d65037bd6901f2f03d6b14e6": 0
+  },
+  "artifact_sha256": {
+    "decision.json": "8621b5322a653dfb444abc3e7f655edc6d0b7332227e135da5c5c4361ae7a0c4",
+    "evidence.json": "3af1011642d4e628e142488a8b63ced04546f5e1c0cc858789afb11f1a26c14f",
+    "pytest-full.txt": "64810411ba2eeeccda22b5eb690d3bf5e4903240ce17d57464de498f8a367afd",
+    "pytest-initial.txt": "778b3e00ae7349a128e78703c09e08c98a291411199908edf2d8dfce10e118d4",
+    "regression.json": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341"
+  },
+  "base_sha": "fc876f10b5eb779a7f3004b460744da899cc739b",
+  "branch": "feat/joren-v6-automatic-selection",
+  "catalog_activated": false,
+  "database_migration_created": false,
+  "database_migration_executed": false,
+  "date": "2026-11-05",
+  "evidence_reproduction": "EXACT_BYTES",
+  "external_gates": {
+    "estimated_swim_time_operational_acceptance": "OPEN",
+    "frozen_v6_persistence": "COMPATIBLE_IN_MEMORY_TEST_CONTRACT_ONLY; EXISTING_HOSTED_WRITER_REJECTS",
+    "long_bike_013": "EXCLUDED_WITHOUT_INDIVIDUAL_EVIDENCE",
+    "mobile_device": "NOT_RUN; EXISTING_CONTRACTS_PRESERVED",
+    "postgres_rls_grants_pgtap": "NOT_RUN_NOT_VERIFIED",
+    "realized_v2_fallback_mapping": "UNAPPROVED_FAIL_CLOSED",
+    "scientific_and_catalog_release": "SEPARATE_AUTHORIZATION_REQUIRED"
+  },
+  "focused_legacy_execution_and_v6_http_and_artifact": {
+    "passed": 11,
+    "seconds": 27.3
+  },
+  "full_backend_pytest": {
+    "failed": 0,
+    "passed": 2487,
+    "seconds": 194.64,
+    "warnings": 1
+  },
+  "historical_regression": {
+    "accepted_reference_completions_preserved": 26,
+    "canonical_lf_sha256": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341",
+    "cases": 40,
+    "deadline_seconds_including_imports": 8,
+    "full_semantic_equality_to_phase_delivery": true,
+    "input_fingerprints_and_complete_results_preserved": true,
+    "outcomes": {
+      "DIAGNOSTIC_TIMEOUT": 1,
+      "FAIL_CLOSED": 10,
+      "PENDING_HYPOTHETICAL_PLAN": 29
+    },
+    "timeout": "current:build_4"
+  },
+  "initial_full_backend_pytest": {
+    "failed": 3,
+    "passed": 2483,
+    "resolution": "preserved original legacy builder injection and restored accepted LF bytes; assertions unchanged",
+    "seconds": 222.94
+  },
+  "new_tests": 98,
+  "official_rows_independently_checked": 77,
+  "platform": "Windows-10-10.0.19045-SP0",
+  "prior_phase_catalog_exact_accepted_blob_sha256": "20d23f1ad35c65fd93a9f6a7afb95d9bcbb272f8c30a3edade7dcdcf619be1ea",
+  "production_accessed": false,
+  "public_contract_changed": false,
+  "python": "3.10.10 (tags/v3.10.10:aad5f6a, Feb  7 2023, 17:20:36) [MSC v.1929 64 bit (AMD64)]",
+  "ruff_format": {
+    "files": 203,
+    "status": "PASS"
+  },
+  "ruff_lint": "PASS",
+  "schema": "joren-v6-automatic-verification-1",
+  "source_revisions": [
+    {
+      "bytes": 11912,
+      "filename": "Looptrainingen_Definitief_v6 (1) (1).xlsx",
+      "rows": 28,
+      "sha256": "7380c88ef8bccb3cb35b0f6416d9debba8342b9802fc716f0a99dcfcb8626d88"
+    },
+    {
+      "bytes": 12772,
+      "filename": "Fietstrainingen_Definitief_v6 (1) (1).xlsx",
+      "rows": 27,
+      "sha256": "6322d7f93b3e074c77c4efa28b2a95de3f04f0f5c6af226ce50e8c2ff716ddbc"
+    },
+    {
+      "bytes": 12387,
+      "filename": "Zwemtrainingen_Definitief_v6 (2) (1).xlsx",
+      "rows": 22,
+      "sha256": "48a0f6448f003ef048f40e53fda74b5220f272ebd4300180c108777c6e0be3ba"
+    }
+  ],
+  "strict_mypy": {
+    "source_files": 202,
+    "status": "PASS"
+  },
+  "timezone": "Europe/Amsterdam"
+}

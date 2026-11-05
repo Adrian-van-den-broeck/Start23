@@ -1,0 +1,4 @@
+# Canonical immutable evidence must survive Windows worktree checkout byte-for-byte.
+docs/catalog/implementation/phase-tss/*.json text eol=lf
+docs/catalog/implementation/automatic-selection/*.json text eol=lf
+docs/catalog/implementation/automatic-selection/*.txt text eol=lf

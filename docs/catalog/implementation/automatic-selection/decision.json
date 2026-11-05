@@ -1,0 +1,25 @@
+{
+  "allocation_authority": "owner permits engineering L1 default; no independent Joren metric approval claimed",
+  "allocation_metric": "selected-total-share-l1-unrenormalized-1",
+  "authority": "product-owner explicit current mission, relaying approval; no signed Joren or external scientific record supplied",
+  "base_sha": "fc876f10b5eb779a7f3004b460744da899cc739b",
+  "date": "2026-11-05",
+  "historical_evidence_sha256": {
+    "JOREN_V6_FINAL_POLICY_DECISION_UPDATE.md": "72ad6d41ef6fc7ca96d5daefb173e0bb848e6ab1a96abb9342ab19411e2d0716",
+    "JOREN_V6_OFFICIAL_TSS_METHOD_APPROVAL.md": "1d7517a76db96ea0a488917334e05d26f180659037408cc56f820ba667e3eff0",
+    "JOREN_V6_PHASE_SOURCE_INTAKE.md": "872d210ef33086e8335566d4760c4e41394a4d393d4f78883663a67c11f07c3e"
+  },
+  "historical_recalculation": false,
+  "method": "joren-v6-planned-if2-1",
+  "no_high_minimum": true,
+  "partial_weeks": "maximize safe coverage 3/2/1/0, then L1, utilization, sorted immutable UUID tuple",
+  "precision": "exact rational intermediates; one final Decimal50 HALF_EVEN conversion; no intermediate quantization",
+  "production_activation": false,
+  "references": "joren-v6-approved-if-reference-1",
+  "selection_version": "joren-v6-automatic-selection-1",
+  "status": "ACCEPTED_PROSPECTIVE_IMPLEMENTED",
+  "swim_estimate_operational_approval": false,
+  "timezone": "Europe/Amsterdam",
+  "version": "joren-v6-official-tss-acceptance-1",
+  "weekly_aggregation": "exact sum of final official per-workout decimals; no display quantization"
+}
