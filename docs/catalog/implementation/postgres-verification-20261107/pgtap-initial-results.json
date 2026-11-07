@@ -1,0 +1,285 @@
+[
+  {
+    "assertions": 37,
+    "exit_code": 0,
+    "failures": [],
+    "file": "athlete_profiles_rls_test.sql",
+    "plan": [
+      "1..37"
+    ]
+  },
+  {
+    "assertions": 10,
+    "exit_code": 0,
+    "failures": [],
+    "file": "first_plan_approved_provenance_test.sql",
+    "plan": [
+      "1..10"
+    ]
+  },
+  {
+    "assertions": 16,
+    "exit_code": 0,
+    "failures": [],
+    "file": "joren_planning_ruleset_v2_test.sql",
+    "plan": [
+      "1..16"
+    ]
+  },
+  {
+    "assertions": 22,
+    "exit_code": 0,
+    "failures": [
+      "not ok 1 - realized_v2_calculations",
+      "not ok 2 - realized_v2_activity_inputs",
+      "not ok 11 - workout_registration_events",
+      "not ok 12 - realized_v2_plan_evidence"
+    ],
+    "file": "joren_realized_v2_test.sql",
+    "plan": [
+      "1..22"
+    ]
+  },
+  {
+    "assertions": 18,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_10_1_swipe_week_drafts_test.sql",
+    "plan": [
+      "1..18"
+    ]
+  },
+  {
+    "assertions": 6,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_10_ai_weekly_plan_explanation_test.sql",
+    "plan": [
+      "1..6"
+    ]
+  },
+  {
+    "assertions": 18,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_10_date_only_planning_test.sql",
+    "plan": [
+      "1..18"
+    ]
+  },
+  {
+    "assertions": 24,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_11_discipline_zone_profiles_test.sql",
+    "plan": [
+      "1..24"
+    ]
+  },
+  {
+    "assertions": 12,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_12_source_catalog_training_options_test.sql",
+    "plan": [
+      "1..12"
+    ]
+  },
+  {
+    "assertions": 37,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_13_14_r6_entry_audit_remediation_test.sql",
+    "plan": [
+      "1..37"
+    ]
+  },
+  {
+    "assertions": 20,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_13_calibration_lifecycle_test.sql",
+    "plan": [
+      "1..20"
+    ]
+  },
+  {
+    "assertions": 17,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_13_historical_activation_guard_test.sql",
+    "plan": [
+      "1..17"
+    ]
+  },
+  {
+    "assertions": 18,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_13_joren_ruleset_test.sql",
+    "plan": [
+      "1..18"
+    ]
+  },
+  {
+    "assertions": 15,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_14_onboarding_inputs_test.sql",
+    "plan": [
+      "1..15"
+    ]
+  },
+  {
+    "assertions": 23,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_16_pioneer_access_test.sql",
+    "plan": [
+      "1..23"
+    ]
+  },
+  {
+    "assertions": 35,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_4_onboarding_rls_test.sql",
+    "plan": [
+      "1..35"
+    ]
+  },
+  {
+    "assertions": 16,
+    "exit_code": 0,
+    "failures": [
+      "not ok 1 - the catalog retains historical versions and all source successors",
+      "not ok 2 - the current catalog resolves every logical template key",
+      "not ok 3 - the active seed is balanced across swim, bike, and run",
+      "not ok 4 - all reviewed templates pass aggregate validation"
+    ],
+    "file": "phase_5_workout_catalog_test.sql",
+    "plan": [
+      "1..16"
+    ]
+  },
+  {
+    "assertions": 30,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_6_weekly_planning_test.sql",
+    "plan": [
+      "1..30"
+    ]
+  },
+  {
+    "assertions": 22,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_7_activity_feedback_test.sql",
+    "plan": [
+      "1..22"
+    ]
+  },
+  {
+    "assertions": 9,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_8_5_9_business_decisions_test.sql",
+    "plan": [
+      "1..9"
+    ]
+  },
+  {
+    "assertions": 19,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_8_5_zone_calibration_test.sql",
+    "plan": [
+      "1..19"
+    ]
+  },
+  {
+    "assertions": 20,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_8_5_zone_model_v1_test.sql",
+    "plan": [
+      "1..20"
+    ]
+  },
+  {
+    "assertions": 24,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_8_structured_weekly_checkin_test.sql",
+    "plan": [
+      "1..24"
+    ]
+  },
+  {
+    "assertions": 23,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_9_polar_integration_test.sql",
+    "plan": [
+      "1..23"
+    ]
+  },
+  {
+    "assertions": 10,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_r1_onboarding_versioning_test.sql",
+    "plan": [
+      "1..10"
+    ]
+  },
+  {
+    "assertions": 48,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_r2_r3_identity_onboarding_calibration_test.sql",
+    "plan": [
+      "1..48"
+    ]
+  },
+  {
+    "assertions": 29,
+    "exit_code": 0,
+    "failures": [],
+    "file": "phase_r4_r5_onboarding_race_activity_test.sql",
+    "plan": [
+      "1..29"
+    ]
+  },
+  {
+    "assertions": 6,
+    "exit_code": 0,
+    "failures": [
+      "not ok 1 - MVP business conflicts never deliberately raise serialization failure",
+      "not ok 2 - all 28 inventoried MVP implementations use nonretryable HTTP 409"
+    ],
+    "file": "r6_mvp_business_conflicts_test.sql",
+    "plan": [
+      "1..6"
+    ]
+  },
+  {
+    "assertions": 21,
+    "exit_code": 0,
+    "failures": [],
+    "file": "v6_persistence_security_test.sql",
+    "plan": [
+      "1..21"
+    ]
+  },
+  {
+    "assertions": 9,
+    "exit_code": 3,
+    "failures": [
+      "not ok 6 - partial creation rolls back on attachment failure"
+    ],
+    "file": "wombo_a5_checkin_proposal_recovery_test.sql",
+    "plan": []
+  }
+]

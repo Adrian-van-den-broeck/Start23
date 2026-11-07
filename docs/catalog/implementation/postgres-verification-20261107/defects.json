@@ -1,0 +1,62 @@
+[
+  {
+    "before": "Initial V6 generated write rejected 23514; new absent-evidence unit regression failed with KeyError",
+    "fix": "V6 adapter reuses established V2 default",
+    "invariant": "Empty V2 history is explicitly frozen as []",
+    "regression": "Initial SQL lifecycle and parameterized transport regression"
+  },
+  {
+    "before": "Initial write rejected 23502 because historical trigger set segments NULL",
+    "fix": "20261107182000_v6_segment_snapshot_compatibility.sql",
+    "invariant": "Historical segment trigger must preserve V6 prescription",
+    "regression": "77-row real ordered segment-trigger probe and initial persistence"
+  },
+  {
+    "before": "First source matched, later Unicode-containing sources failed source_snapshot containment; default Windows decoding caused mojibake",
+    "fix": "Explicit encoding=utf-8 and PGCLIENTENCODING=UTF8 in psql subprocesses",
+    "invariant": "Source documents survive UTF-8 pipes exactly",
+    "regression": "UTF-8 process contract test; all 77 exact source documents and actual writes"
+  },
+  {
+    "before": "First pending edit rejected 42725 unknown-minus-unknown",
+    "fix": "20261107182500_v6_frozen_snapshot_operator_precedence.sql",
+    "invariant": "Pending revision comparison executes with JSON subtraction",
+    "regression": "Tampered input rejection and real competing pending edits"
+  },
+  {
+    "before": "Owner confirmation rejected 42501 in nested v15 history service guard",
+    "fix": "20261107183000_realized_v2_internal_approval_custody.sql",
+    "invariant": "Authorized owner can confirm with V2 evidence custody",
+    "regression": "Owner succeeds; foreign subject and direct private history access reject"
+  },
+  {
+    "before": "R6 suite found four later 40001 business guards and stale inventory",
+    "fix": "20261107183500_realized_v2_business_conflict_codes.sql",
+    "invariant": "Deterministic V2 business conflicts use nonretryable HTTP409",
+    "regression": "R6 6/6 assertions; exact inventory 36"
+  },
+  {
+    "before": "Actual authenticated SQL owner inserted an extra confirmed workout successfully in a rollback-only transaction",
+    "fix": "20261107184500_v6_insert_custody.sql",
+    "invariant": "Caller-controlled critical_write cannot manufacture V6 state or append to frozen revision",
+    "regression": "Real owner direct revision/workout inserts reject42501; administrative frozen insert rejects55000; full lifecycle remains functional"
+  },
+  {
+    "before": "Four ambiguous pgTAP overloads, inactive rows counted as historical catalog, missing V2 local extension search_path",
+    "fix": "Explicit schema/table overloads and search path; original historical expectations scoped to not inactive_v6",
+    "invariant": "Tests measure the current historical and private-table contracts",
+    "regression": "Realized22/22 and Phase5 16/16 in both main and rollback databases"
+  },
+  {
+    "before": "Ungated race could return P0002 after confirmation finished before edit context lookup",
+    "fix": "Two-party transition barriers in test runner only; conflict assertions unchanged",
+    "invariant": "Race tests must reach SQL before either transition completes",
+    "regression": "Competing swipes, duplicate-key writes and swipe-vs-confirmation each assert two barrier arrivals"
+  },
+  {
+    "before": "Hardcoded swim/bike follow-up alternatives could be empty after a valid earlier swipe winner; two final-assembly attempts aborted in test setup",
+    "fix": "Reverse the actual winning edit, then reapply it, asserting both choices are in authoritative alternatives",
+    "invariant": "Subsequent race fixtures must be valid for either first-race winner",
+    "regression": "Fresh final repeatable database lifecycle passes without changing planner behavior or conflict assertions"
+  }
+]

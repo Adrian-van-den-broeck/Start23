@@ -1,0 +1,19 @@
+{
+  "all_private_snapshot_hashes_unchanged": true,
+  "composite_ownership_fk_cases": 3,
+  "confirmed_public_snapshot_equal": true,
+  "generated_write_denied": true,
+  "historical_catalog_unchanged": true,
+  "private_hashes": {
+    "plan_revision_loads": "21c3b5416c8fea673478b6c90ca94ed7",
+    "planned_workout_loads": "73c0f624f46ac0efcf5f8e8ae312d663",
+    "realized_v2_activity_inputs": "37a6259cc0c1dae299a7866489dff0bd",
+    "realized_v2_calculations": "37a6259cc0c1dae299a7866489dff0bd",
+    "realized_v2_plan_evidence": "cdf9aa0581d2051c99d522b792fa0ce7",
+    "v6_edit_results": "d5d1fe6168459cf26f63096d183a9c69",
+    "v6_occurrence_snapshots": "28da8fa9f9fda9a17a3bc0d72bd233e1",
+    "v6_plan_snapshots": "8a0663a2d417c4d3ec000095abf87c7c",
+    "v6_source_revisions": "94dc9ff94f585561c4f438287e297f63"
+  },
+  "service_catalog_denied": true
+}

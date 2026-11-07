@@ -12,7 +12,9 @@ select is((
   select count(*)::integer from pg_proc p join pg_namespace n on n.oid=p.pronamespace
   where n.nspname in ('public','private') and p.prokind='f'
     and p.prosrc like '%errcode = ''PT409''%'
-), 28, 'all 28 inventoried MVP implementations use nonretryable HTTP 409');
+-- Original 28 plus two A5 recovery functions, two V6 functions, and four V2
+-- registration/evidence guards. No original business-conflict guard is removed.
+), 36, 'all 36 inventoried MVP/V2/V6 implementations use nonretryable HTTP 409');
 select ok((select pg_get_constraintdef(oid) like '%heart_rate_monitor%'
   and pg_get_constraintdef(oid) like '%timezone%'
   from pg_constraint where conrelid='public.onboarding_completion_records'::regclass

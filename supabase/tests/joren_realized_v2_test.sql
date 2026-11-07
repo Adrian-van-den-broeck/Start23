@@ -1,8 +1,10 @@
 -- DEFERRED BY OWNER - PRE-BETA. Run after replaying the forward chain.
 begin;
+create extension if not exists pgtap with schema extensions;
+set local search_path = public, extensions;
 select plan(22);
-select has_table('private', 'realized_v2_calculations');
-select has_table('private', 'realized_v2_activity_inputs');
+select has_table('private', 'realized_v2_calculations', 'private realized calculations exist');
+select has_table('private', 'realized_v2_activity_inputs', 'private realized inputs exist');
 select ok((select relrowsecurity and relforcerowsecurity from pg_class where oid = 'private.realized_v2_calculations'::regclass), 'private calculation RLS forced');
 select ok((select relrowsecurity and relforcerowsecurity from pg_class where oid = 'private.realized_v2_activity_inputs'::regclass), 'private input RLS forced');
 select ok(not has_table_privilege('authenticated','private.realized_v2_calculations','SELECT'), 'athlete cannot read private calculations');
@@ -11,8 +13,8 @@ select ok(not has_table_privilege('service_role','private.realized_v2_calculatio
 select ok(has_function_privilege('service_role','public.complete_activity_rpe_v2(uuid,uuid,jsonb)','EXECUTE'), 'trusted completion allowed');
 select ok(not has_function_privilege('authenticated','public.complete_activity_rpe_v2(uuid,uuid,jsonb)','EXECUTE'), 'athlete cannot submit private calculation');
 select ok(not has_function_privilege('authenticated','public.get_activity_processing_context_v2(uuid,uuid)','EXECUTE'), 'private context denied');
-select has_table('private', 'workout_registration_events');
-select has_table('private', 'realized_v2_plan_evidence');
+select has_table('private', 'workout_registration_events', 'private registration events exist');
+select has_table('private', 'realized_v2_plan_evidence', 'private planning evidence exists');
 select ok((select relrowsecurity and relforcerowsecurity from pg_class where oid = 'private.workout_registration_events'::regclass), 'registration RLS forced');
 select ok((select relrowsecurity and relforcerowsecurity from pg_class where oid = 'private.realized_v2_plan_evidence'::regclass), 'plan evidence RLS forced');
 select ok(not has_table_privilege('authenticated','private.workout_registration_events','SELECT'), 'registration ledger stays private');

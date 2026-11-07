@@ -45,7 +45,7 @@ class InactiveSupabaseV6Repository(SupabasePlanningRepository):
             service=True,
             json={
                 "p_athlete_id": str(await self._rpc_athlete_id(athlete_id)),
-                "p_payload": payload,
+                "p_payload": {"weekly_registration_evidence": [], **payload},
             },
         )
         if not isinstance(result, dict):

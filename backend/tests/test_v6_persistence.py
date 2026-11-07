@@ -204,6 +204,50 @@ def test_v6_transport_scopes_credentials_and_recreates_repository(
     assert requests
 
 
+@pytest.mark.parametrize("evidence", [None, [{"week_start": "2026-10-19"}]])
+def test_v6_write_preserves_registration_evidence_or_sends_empty_history(
+    evidence: list[dict[str, Any]] | None,
+) -> None:
+    athlete = uuid4()
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("resolve_legacy_auth_user_id"):
+            return httpx.Response(200, json=str(athlete))
+        payload = json.loads(request.content)["p_payload"]
+        assert payload["weekly_registration_evidence"] == (evidence or [])
+        return httpx.Response(200, json={"persisted": True})
+
+    async def run() -> None:
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            payload = (
+                {} if evidence is None else {"weekly_registration_evidence": evidence}
+            )
+            await InactiveSupabaseV6Repository(
+                _settings(), client=client
+            ).create_plan_proposal(athlete, payload)
+
+    asyncio.run(run())
+
+
+def test_sql_runner_uses_explicit_utf8_for_postgres_json(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from scripts import verify_v6_postgres as runner
+
+    monkeypatch.setenv(
+        "WOMBO_V6_DISPOSABLE_PG_DSN", "postgresql://postgres@127.0.0.1/disposable"
+    )
+    monkeypatch.setattr("scripts.verify_v6_postgres.shutil.which", lambda _: "psql")
+
+    def execute(*args: Any, **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        assert kwargs["encoding"] == "utf-8"
+        assert kwargs["env"]["PGCLIENTENCODING"] == "UTF8"
+        return subprocess.CompletedProcess(args, 0, '{"source":"durée · bron"}', "")
+
+    monkeypatch.setattr("scripts.verify_v6_postgres.subprocess.run", execute)
+    assert runner.LocalPostgres().execute("select source") == {"source": "durée · bron"}
+
+
 @pytest.mark.parametrize(
     "code,expected",
     [

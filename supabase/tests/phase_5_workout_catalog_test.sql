@@ -5,6 +5,8 @@ set local search_path = public, extensions;
 select plan(16);
 
 -- Joren ruleset 2 adds 154 immutable source successors to the historical 171.
+-- V6 adds a separate inactive archive. Keep the historical 325-row assertions
+-- unchanged in scope; V6 coverage and invisibility have their own security suite.
 
 create temporary table phase_5_tap_results (
   sequence bigint generated always as identity primary key,
@@ -15,7 +17,7 @@ grant usage, select on sequence phase_5_tap_results_sequence_seq
 to anon, authenticated, service_role;
 
 insert into phase_5_tap_results (result) select is(
-  (select count(*) from public.workout_templates),
+  (select count(*) from public.workout_templates where not inactive_v6),
   325::bigint,
   'the catalog retains historical versions and all source successors'
 );
@@ -24,6 +26,7 @@ insert into phase_5_tap_results (result) select is(
   (
     select count(distinct template_key)
     from public.workout_templates
+    where not inactive_v6
   ),
   165::bigint,
   'the current catalog resolves every logical template key'
@@ -35,6 +38,7 @@ insert into phase_5_tap_results (result) select results_eq(
     from (
       select distinct on (template_key) template_key, discipline
       from public.workout_templates
+      where not inactive_v6
       order by template_key, version desc
     ) latest
     group by discipline
@@ -52,6 +56,7 @@ insert into phase_5_tap_results (result) select lives_ok(
   $$
     select private.validate_workout_template(id)
     from public.workout_templates
+    where not inactive_v6
   $$,
   'all reviewed templates pass aggregate validation'
 );

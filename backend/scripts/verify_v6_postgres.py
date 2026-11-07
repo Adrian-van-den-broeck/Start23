@@ -15,6 +15,7 @@ import subprocess
 import sys
 from collections.abc import Callable, Mapping
 from copy import deepcopy
+from dataclasses import asdict
 from datetime import date, timedelta
 from decimal import Decimal
 from hashlib import sha256
@@ -27,6 +28,7 @@ import httpx
 
 from app.core.config import Settings
 from app.modules.coach.weekly_plan import DisabledWeeklyPlanCoach
+from app.modules.physiology.planned_v6 import sum_official
 from app.modules.planning.repository import (
     PlanningRepositoryConflictError,
     PlanningRepositoryNotFoundError,
@@ -41,7 +43,9 @@ from app.modules.planning.v6_repository import (
     InactiveSupabaseV6Repository,
 )
 from app.modules.planning.v6_selection import V6Controls
-from app.modules.planning.v6_service import V6PlanningService
+from app.modules.planning.v6_service import V6PlanningService, private_json
+from app.modules.workouts.joren_v6_official import official_catalog
+from app.modules.workouts.v6_storage import catalog_document, parse_catalog_document
 
 ROOT = Path(__file__).resolve().parents[2]
 USERS = (
@@ -56,6 +60,20 @@ def literal(value: Any) -> str:
     if isinstance(value, (dict, list)):
         return "'" + json.dumps(value).replace("'", "''") + "'::jsonb"
     return "'" + str(value).replace("'", "''") + "'"
+
+
+class TransitionBarrier:
+    """Both clients finish validation before either sends its competing RPC."""
+
+    def __init__(self) -> None:
+        self.arrivals = 0
+        self.ready = asyncio.Event()
+
+    async def wait(self) -> None:
+        self.arrivals += 1
+        if self.arrivals == 2:
+            self.ready.set()
+        await asyncio.wait_for(self.ready.wait(), timeout=30)
 
 
 class LocalPostgres:
@@ -110,7 +128,8 @@ class LocalPostgres:
                 self.dsn,
             ],
             input=prefix + sql + (";rollback;" if rollback else ";commit;"),
-            text=True,
+            encoding="utf-8",
+            env={**os.environ, "PGCLIENTENCODING": "UTF8"},
             capture_output=True,
             timeout=30,
         )
@@ -145,11 +164,12 @@ class SqlRepository(InactiveSupabaseV6Repository):
             raise AssertionError("Network calls are forbidden in the SQL runner")
 
         super().__init__(
-            Settings(environment="test"),
+            Settings(environment="test", _env_file=None),
             client=httpx.AsyncClient(transport=httpx.MockTransport(no_network)),
         )
         self.db = db
         self.rollback_write = False
+        self.transition_barrier: TransitionBarrier | None = None
 
     async def _rpc_athlete_id(self, athlete_id: UUID) -> UUID:
         return UUID(
@@ -173,6 +193,11 @@ class SqlRepository(InactiveSupabaseV6Repository):
         json: Any = None,
     ) -> Any:
         user = UUID(access_token) if access_token else None
+        if self.transition_barrier is not None and path in {
+            "rpc/create_v6_weekly_plan_proposal",
+            "rpc/approve_plan_proposal",
+        }:
+            await self.transition_barrier.wait()
         if method == "POST" and path.startswith("rpc/"):
             name = path.removeprefix("rpc/")
             if not re.fullmatch("[a-z_0-9]+", name):
@@ -245,7 +270,143 @@ def identity(db: LocalPostgres, user: UUID) -> UUID:
     )
 
 
+def verify_numeric_round_trips(db: LocalPostgres) -> None:
+    expected = {str(template.id): template for template in official_catalog()}
+    stored = db.execute(
+        "select jsonb_agg(to_jsonb(s) order by template_id) "
+        "from private.v6_source_revisions s"
+    )
+    assert len(stored) == len(expected) == 77
+    for row in stored:
+        template = expected[row["template_id"]]
+        assert row["official_decimal"] == str(template.official.value)
+        assert Decimal(str(row["planned_tss"])) == template.official.value
+        assert row["numerator"] == str(template.official.numerator)
+        assert row["denominator"] == str(template.official.denominator)
+        assert row["planned_method"] == template.official.method
+        assert row["reference_version"] == template.official.parameters
+        assert row["source_sha256"] == template.source_revision.source_sha256
+        assert row["activation"] == "INACTIVE"
+        assert row["source_snapshot"] == json.loads(private_json(asdict(template)))
+        assert row["public_snapshot"] == V6PlanningService._deck_item(
+            template
+        ).model_dump(mode="json")
+        assert parse_catalog_document(row["document"]) == template
+        assert row["document"] == catalog_document(template)
+    assert db.execute(
+        "select to_jsonb(sum(planned_tss)) from private.v6_source_revisions"
+    ) == sum_official(tuple(template.official.value for template in expected.values()))
+    over_budget = Decimal("45.000000000000000000000000000000000000000000000001")
+    assert db.execute(
+        "create temporary table v6_budget_numeric_probe(value numeric); "
+        "insert into v6_budget_numeric_probe values ("
+        + literal(over_budget)
+        + "::numeric); select jsonb_build_object('value',value,'within',value<=45) "
+        "from v6_budget_numeric_probe",
+        rollback=True,
+    ) == {"value": over_budget, "within": False}
+    assert (
+        db.execute(
+            "select to_jsonb(atttypmod) from pg_attribute "
+            "where attrelid='private.v6_source_revisions'::regclass "
+            "and attname='planned_tss'"
+        )
+        == -1
+    )
+    try:
+        db.execute(
+            "insert into private.v6_source_revisions select "
+            "(jsonb_populate_record(null::private.v6_source_revisions, "
+            "to_jsonb(s) || jsonb_build_object('planned_tss', s.planned_tss + "
+            "'0.000000000000000000000000000000000000000000000001'::numeric))).* "
+            "from private.v6_source_revisions s limit 1",
+            rollback=True,
+        )
+    except PlanningRepositoryConflictError as error:
+        assert error.code == "23514"
+    else:
+        raise AssertionError("Numeric equality constraint accepted a rounded value")
+    print("77 exact Decimal/rational/source/workbook round trips passed.", flush=True)
+
+
+def verify_composite_ownership(db: LocalPostgres, revision_id: UUID) -> None:
+    before = db.execute("select to_jsonb(count(*)) from public.plan_revisions")
+    for table in ("v6_plan_snapshots", "v6_occurrence_snapshots", "v6_edit_results"):
+        revision, workout = uuid4(), uuid4()
+        prefix = (
+            "set local start23.critical_write='on'; "
+            "insert into public.plan_revisions select (jsonb_populate_record("
+            "null::public.plan_revisions, to_jsonb(r) || jsonb_build_object('id',"
+            + literal(revision)
+            + ",'revision_number',1000,'generation_fingerprint',"
+            + literal(sha256(str(revision).encode()).hexdigest())
+            + ",'state','pending_approval'))).* from public.plan_revisions r where id="
+            + literal(revision_id)
+            + "; "
+        )
+        if table == "v6_plan_snapshots":
+            mutation = (
+                "insert into private.v6_plan_snapshots"
+                "(revision_id,athlete_id,payload,input_snapshot) values ("
+                + literal(revision)
+                + ","
+                + literal(USERS[1])
+                + ",'{}','{}')"
+            )
+        elif table == "v6_edit_results":
+            mutation = (
+                "insert into private.v6_edit_results"
+                "(revision_id,athlete_id,operation_key,result) values ("
+                + literal(revision)
+                + ","
+                + literal(USERS[1])
+                + ","
+                + literal(sha256(str(revision).encode()).hexdigest())
+                + ",'{}')"
+            )
+        else:
+            prefix += (
+                "insert into public.planned_workouts select (jsonb_populate_record("
+                "null::public.planned_workouts,to_jsonb(w)||jsonb_build_object('id',"
+                + literal(workout)
+                + ",'revision_id',"
+                + literal(revision)
+                + "))).* from public.planned_workouts w where revision_id="
+                + literal(revision_id)
+                + " limit 1; "
+            )
+            mutation = (
+                "insert into private.v6_occurrence_snapshots"
+                "(planned_workout_id,revision_id,athlete_id,occurrence_id,ordinal) "
+                "values ("
+                + literal(workout)
+                + ","
+                + literal(revision)
+                + ","
+                + literal(USERS[1])
+                + ","
+                + literal(uuid4())
+                + ",1)"
+            )
+        try:
+            db.execute(prefix + mutation, rollback=True)
+        except PlanningRepositoryConflictError as error:
+            assert error.code == "23503", table
+        else:
+            raise AssertionError(
+                "Composite owner FK accepted a foreign owner: " + table
+            )
+        assert (
+            db.execute("select to_jsonb(count(*)) from public.plan_revisions") == before
+        )
+    print(
+        "Three composite owner FK violations rolled back all preceding writes.",
+        flush=True,
+    )
+
+
 async def create_stage(db: LocalPostgres, output: Path) -> None:
+    verify_numeric_round_trips(db)
     repository, planner = service(db)
     start = date(2026, 10, 26)
     request = WeeklyPlanProposalRequest(
@@ -394,8 +555,12 @@ async def resume_stage(db: LocalPostgres, output: Path) -> None:
             )
         )
 
-    async def edit(item: tuple[UUID, PendingWorkoutEditRequest]) -> Any:
+    async def edit(
+        item: tuple[UUID, PendingWorkoutEditRequest],
+        barrier: TransitionBarrier | None = None,
+    ) -> Any:
         worker_repo, worker = service(db)
+        worker_repo.transition_barrier = barrier
         try:
             return await worker.edit_pending_workout(
                 str(USERS[0]), athlete, plan.id, item[0], item[1]
@@ -416,9 +581,11 @@ async def resume_stage(db: LocalPostgres, output: Path) -> None:
     assert await planner.get_plan(str(USERS[0]), plan.id, plan.revision) == plan
     await interrupted_repo._client.aclose()
 
+    swipe_barrier = TransitionBarrier()
     outcomes = await asyncio.gather(
-        *(edit(r) for r in requests), return_exceptions=True
+        *(edit(r, swipe_barrier) for r in requests), return_exceptions=True
     )
+    assert swipe_barrier.arrivals == 2
     winners = [
         i for i, result in enumerate(outcomes) if not isinstance(result, BaseException)
     ]
@@ -431,41 +598,59 @@ async def resume_stage(db: LocalPostgres, output: Path) -> None:
     assert retried == winner
     retained = {w.id: w for w in plan.workouts if w.id != requests[winners[0]][0]}
     assert all(w == retained[w.id] for w in winner.plan.workouts if w.id in retained)
+    winning_workout_id = requests[winners[0]][0]
+    original_template = next(
+        w.template_id for w in plan.workouts if w.id == winning_workout_id
+    )
     plan = winner.plan
     # Duplicate worker messages race on the same key and return one immutable result.
-    w = next(w for w in plan.workouts if w.discipline.value == "swim")
+    # Reverse the actual winner: this restores the previously validated week,
+    # regardless of which sport won or whether other sports are now exhausted.
+    w = next(w for w in plan.workouts if w.id == winning_workout_id)
+    winning_template = w.template_id
     choices = await planner.get_pending_workout_alternatives(
         str(USERS[0]), athlete, plan.id, w.id, plan.revision
     )
+    assert original_template in {choice.id for choice in choices.alternatives}
     duplicate = (
         w.id,
         PendingWorkoutEditRequest(
             expected_revision=plan.revision,
             expected_proposal_id=plan.proposal.id,
-            replacement_template_id=choices.alternatives[0].id,
+            replacement_template_id=original_template,
         ),
     )
-    first, second = await asyncio.gather(edit(duplicate), edit(duplicate))
+    duplicate_barrier = TransitionBarrier()
+    first, second = await asyncio.gather(
+        edit(duplicate, duplicate_barrier), edit(duplicate, duplicate_barrier)
+    )
+    assert duplicate_barrier.arrivals == 2
     assert first == second
     plan = first.plan
     # Confirmation races with an edit of the same exact pending proposal.
-    w = next(w for w in plan.workouts if w.discipline.value == "bike")
+    # Reapply the actual winner, again restoring a validated complete week.
+    w = next(w for w in plan.workouts if w.id == winning_workout_id)
     choices = await planner.get_pending_workout_alternatives(
         str(USERS[0]), athlete, plan.id, w.id, plan.revision
     )
+    assert winning_template in {choice.id for choice in choices.alternatives}
     competing = (
         w.id,
         PendingWorkoutEditRequest(
             expected_revision=plan.revision,
             expected_proposal_id=plan.proposal.id,
-            replacement_template_id=choices.alternatives[0].id,
+            replacement_template_id=winning_template,
         ),
     )
+    decision_barrier = TransitionBarrier()
+    repo.transition_barrier = decision_barrier
     decision_outcomes = await asyncio.gather(
-        edit(competing),
+        edit(competing, decision_barrier),
         planner.approve_plan_proposal(str(USERS[0]), plan.proposal.id, 0),
         return_exceptions=True,
     )
+    repo.transition_barrier = None
+    assert decision_barrier.arrivals == 2
     assert sum(not isinstance(r, BaseException) for r in decision_outcomes) == 1
     assert any(
         isinstance(r, PlanningRepositoryConflictError) for r in decision_outcomes
@@ -476,6 +661,7 @@ async def resume_stage(db: LocalPostgres, output: Path) -> None:
     confirmed = await planner.get_plan(str(USERS[0]), plan.id, plan.revision)
     assert confirmed.revision_state == "active"
     assert confirmed.proposal is not None
+    verify_composite_ownership(db, confirmed.revision_id)
     again = await planner.approve_plan_proposal(str(USERS[0]), confirmed.proposal.id, 0)
     assert again.state == "applied"
     for mutation in (
@@ -483,6 +669,12 @@ async def resume_stage(db: LocalPostgres, output: Path) -> None:
         "where revision_id = " + literal(confirmed.revision_id),
         "update private.plan_revision_loads set planned_tss = 0 where revision_id = "
         + literal(confirmed.revision_id),
+        "insert into public.planned_workouts select "
+        "(jsonb_populate_record(null::public.planned_workouts, to_jsonb(w) || "
+        "jsonb_build_object('id',gen_random_uuid()))).* "
+        "from public.planned_workouts w where revision_id = "
+        + literal(confirmed.revision_id)
+        + " limit 1",
     ):
         try:
             db.execute("set local start23.critical_write = 'on'; " + mutation)
@@ -491,6 +683,28 @@ async def resume_stage(db: LocalPostgres, output: Path) -> None:
         else:
             raise AssertionError("Confirmed snapshot mutation was accepted")
     assert await planner.get_plan(str(USERS[0]), plan.id, plan.revision) == confirmed
+    for mutation in (
+        "insert into public.planned_workouts select "
+        "(jsonb_populate_record(null::public.planned_workouts, to_jsonb(w) || "
+        "jsonb_build_object('id',gen_random_uuid()))).* "
+        "from public.planned_workouts w where revision_id = "
+        + literal(confirmed.revision_id)
+        + " limit 1",
+        "insert into public.plan_revisions select "
+        "(jsonb_populate_record(null::public.plan_revisions, to_jsonb(r) || "
+        "jsonb_build_object('id',gen_random_uuid(),'revision_number',1000))).* "
+        "from public.plan_revisions r where id = " + literal(confirmed.revision_id),
+    ):
+        try:
+            db.execute(
+                "set local start23.critical_write='on'; " + mutation,
+                user=USERS[0],
+                rollback=True,
+            )
+        except PlanningRepositoryConflictError as error:
+            assert error.code == "42501"
+        else:
+            raise AssertionError("Authenticated V6 insert custody was bypassed")
     assert (
         await edit(duplicate)
     ) == first  # immutable retry survives later confirmation
@@ -574,7 +788,8 @@ def main() -> None:
         result = subprocess.run(
             ["psql", "--no-psqlrc", "--set=ON_ERROR_STOP=1", "--dbname", db.dsn],
             input=fixture,
-            text=True,
+            encoding="utf-8",
+            env={**os.environ, "PGCLIENTENCODING": "UTF8"},
             capture_output=True,
             timeout=30,
         )

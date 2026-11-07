@@ -1,0 +1,54 @@
+[
+  {
+    "command": [
+      "ruff",
+      "check",
+      "app",
+      "tests",
+      "benchmarks",
+      "scripts/prepare_v6_catalog_sql.py",
+      "scripts/verify_v6_postgres.py",
+      "scripts/verify_v6_postgrest.py",
+      "scripts/verify_v6_commit_loss.py"
+    ],
+    "exit_code": 0,
+    "name": "ruff-final"
+  },
+  {
+    "command": [
+      "ruff",
+      "format",
+      "app",
+      "tests",
+      "benchmarks",
+      "scripts/prepare_v6_catalog_sql.py",
+      "scripts/verify_v6_postgres.py",
+      "scripts/verify_v6_postgrest.py",
+      "scripts/verify_v6_commit_loss.py",
+      "--check"
+    ],
+    "exit_code": 0,
+    "name": "format-final"
+  },
+  {
+    "command": [
+      "mypy",
+      "app",
+      "tests",
+      "benchmarks"
+    ],
+    "exit_code": 0,
+    "name": "mypy-final"
+  },
+  {
+    "command": [
+      "mypy",
+      "--explicit-package-bases",
+      "scripts/verify_v6_postgres.py",
+      "scripts/verify_v6_postgrest.py",
+      "scripts/verify_v6_commit_loss.py"
+    ],
+    "exit_code": 0,
+    "name": "mypy-runners-final"
+  }
+]

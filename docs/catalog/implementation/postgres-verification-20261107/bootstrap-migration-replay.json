@@ -1,0 +1,238 @@
+[
+  {
+    "exit_code": 0,
+    "file": "20260724140227_create_athlete_profiles.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260724142004_restrict_rls_auto_enable_execution.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260727132531_phase_4_onboarding_goals_zones.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260727170000_phase_5_workout_catalog.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260728133728_phase_4_5_review_hardening.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260729140000_phase_6_weekly_planning.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260809225626_phase_6_advisor_indexes.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260811103726_phase_7_activity_rpe_feedback.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260813105401_phase_8_structured_weekly_checkin.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260813170000_phase_8_5_zone_calibration.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260817105304_phase_9_polar_integration.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260824144801_phase_8_5_zone_model_v1.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260824174747_phase_10_ai_weekly_plan_explanation.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260825225207_phase_8_5_9_business_decisions.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260826085242_phase_10_date_only_planning.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260826144239_phase_11_discipline_zone_profiles.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260901054333_phase_10_1_swipe_week_drafts.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260902083241_fix_swipe_draft_service_role_permissions.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260902084055_fix_swipe_draft_placement_validation.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260902120000_mvp_rpe_zones_and_swim_catalog.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260903074359_add_source_catalog_training_options.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260910120000_phase_14_history_and_retired_inputs.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260910215947_phase_13_joren_ruleset.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260911180631_phase_r1_onboarding_versioning.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260912070000_r6_allow_opaque_owner_backfill_for_immutable_calibration.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260912072232_phase_r2_r3_identity_onboarding_calibration.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260912180000_phase_r4_r5_onboarding_race_activity.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260913130000_phase_13_14_r6_entry_audit_remediation.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914080000_close_historical_calibration_writes.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914090000_block_historical_zone_profile_activation.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914162430_r6_preserve_critical_context_for_submaximal_zone_provenance.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914162711_r6_order_plan_revision_owner_before_eligibility.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914163325_r6_restore_activity_idempotency_preflight.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914170134_r6_increment_structured_race_goal_revision.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914172000_r6_refresh_planning_snapshot_after_input_change.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914172500_r6_refresh_extended_planning_snapshot_after_input_change.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914173000_r6_refresh_planning_snapshot_after_goal_rpc.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914173500_r6_force_distinct_post_rpc_snapshot_refresh.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914174000_r6_disambiguate_activity_processing_load_source.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914175000_r6_cover_foreign_key_access_paths.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260914180000_r6_preserve_account_deletion_cascades.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260915081055_r6_mvp_nonretryable_business_conflicts.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260915082320_r6_onboarding_completion_step_vocabulary.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260915205627_r6_checkin_context_and_account_deletion.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260923063453_phase_16_pioneer_access.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20260929210000_joren_planning_ruleset_v2.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261004212750_first_plan_approved_provenance.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261026224844_wombo_a5_checkin_proposal_recovery.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261103134520_joren_realized_tss_v2_private_provenance.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261103135735_realized_v2_weekly_registration.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261103140959_realized_v2_planning_evidence_preconditions.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261103142339_realized_v2_session_rpe_guidance.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261105120000_inactive_v6_persistence.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261105120100_inactive_v6_catalog.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261107182000_v6_segment_snapshot_compatibility.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261107182500_v6_frozen_snapshot_operator_precedence.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261107183000_realized_v2_internal_approval_custody.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261107183500_realized_v2_business_conflict_codes.sql"
+  },
+  {
+    "exit_code": 0,
+    "file": "20261107184500_v6_insert_custody.sql"
+  }
+]
