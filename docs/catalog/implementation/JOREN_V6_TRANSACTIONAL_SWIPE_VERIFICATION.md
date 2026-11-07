@@ -91,3 +91,22 @@ No mobile/DTO/release configuration changed. TypeScript/device tests are not
 claimed as run for this backend/SQL change. Mobile occurrence resolution and
 device confirmation/recovery remain explicit activation gates. The A5/A6 release
 worktree remains at `cd3e2dd438031cfb565858d0a5929e9963f7b31f` and was not modified.
+
+## Local delivery provenance
+
+Verified implementation, tests, prepared SQL and evidence commit:
+`5482524f49e5c2684df0a756c60b619ba9a128ef`, directly after accepted base
+`4b3a76d9d764567e7bb438ad7493953faed6dea2`. A documentation-only successor
+records this immutable SHA; resolve the final branch tip with
+`git rev-parse feat/joren-v6-persistence-hardening`.
+
+Final backend: 2,583 passed; 96 new persistence tests included. Ruff lint/format
+and strict mypy pass. All 40 historical cases and 26 accepted reference results
+are byte-identical to the accepted corpus; canonical SHA-256
+`3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341`.
+
+PostgreSQL/RLS: **NOT EXECUTED — DATABASE ENVIRONMENT UNAVAILABLE**.
+Both new migrations are unexecuted. Default planner, production/staging and A5/A6
+remain untouched. No push, merge, deployment, activation or next release stage.
+
+**WOMBO V6 PERSISTENCE IMPLEMENTED — DATABASE VERIFICATION PENDING**

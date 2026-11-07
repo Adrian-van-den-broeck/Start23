@@ -90,3 +90,22 @@ swipes/approval/rejection; duplicate keys; connection interruption and worker
 reconciliation; persisted source/method/version consistency; source retention;
 restart/resume and immutable confirmation; complete existing pgTAP regression set;
 advisors; and a rehearsal of the forward-only rollback plan all remain open.
+
+## Local delivery provenance
+
+Verified implementation, tests, prepared SQL and evidence commit:
+`5482524f49e5c2684df0a756c60b619ba9a128ef`, directly after accepted base
+`4b3a76d9d764567e7bb438ad7493953faed6dea2`. A documentation-only successor
+records this immutable SHA; resolve the final branch tip with
+`git rev-parse feat/joren-v6-persistence-hardening`.
+
+Final backend: 2,583 passed; 96 new persistence tests included. Ruff lint/format
+and strict mypy pass. All 40 historical cases and 26 accepted reference results
+are byte-identical to the accepted corpus; canonical SHA-256
+`3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341`.
+
+PostgreSQL/RLS: **NOT EXECUTED — DATABASE ENVIRONMENT UNAVAILABLE**.
+Both new migrations are unexecuted. Default planner, production/staging and A5/A6
+remain untouched. No push, merge, deployment, activation or next release stage.
+
+**WOMBO V6 PERSISTENCE IMPLEMENTED — DATABASE VERIFICATION PENDING**
