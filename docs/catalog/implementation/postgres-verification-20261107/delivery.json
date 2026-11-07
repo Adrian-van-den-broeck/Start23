@@ -1,0 +1,13 @@
+{
+  "a5_a6_release_unchanged": true,
+  "base_sha": "45b8bb8deb6a7c30e224a9472a28345940141f35",
+  "branch": "verify/joren-v6-postgres-rls-20261107",
+  "delivery_commit": "Resolve the branch tip; this metadata is a documentation-only successor.",
+  "implementation_and_evidence_commit": "10baba179a9814613e39c18f32fd2236a51779a5",
+  "implementation_tree": "79a0f1088a2cac0c5530877a7ee2cb323aaaecd0",
+  "local_commits_only": true,
+  "production_and_staging_untouched": true,
+  "runtime_servers_stopped": true,
+  "source_worktree_unchanged": true,
+  "status": "WOMBO V6 DATABASE VERIFICATION PARTIAL ? EXACT BLOCKERS DOCUMENTED"
+}
