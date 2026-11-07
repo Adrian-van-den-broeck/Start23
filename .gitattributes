@@ -2,3 +2,6 @@
 docs/catalog/implementation/phase-tss/*.json text eol=lf
 docs/catalog/implementation/automatic-selection/*.json text eol=lf
 docs/catalog/implementation/automatic-selection/*.txt text eol=lf
+supabase/migrations/20261105120*.sql text eol=lf
+docs/catalog/implementation/persistence/*.json text eol=lf
+docs/catalog/implementation/persistence/*.txt text eol=lf

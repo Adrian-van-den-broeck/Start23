@@ -1,0 +1,179 @@
+{
+  "a5_a6": {
+    "changed": false,
+    "clean": true,
+    "sha": "cd3e2dd438031cfb565858d0a5929e9963f7b31f"
+  },
+  "ancestor_checks": {
+    "044ecfb59ee00afb91f35b68dc9fa4e5d3e4e9cf": 0,
+    "24b27ebd34ccfe662ca57994a736f4f853af8d0b": 0,
+    "4b3a76d9d764567e7bb438ad7493953faed6dea2": 0,
+    "4bb0cdea8f46242018ad8e5d22fa79a706cbf207": 0,
+    "75f172d4161f71a763247b04c027fd165901afbd": 0,
+    "7dc3f22595d4b9e22e1e84abaf148d9bd791fd33": 0,
+    "86c64e6e5b5b89f4f2c8901246793afdf924dd04": 0,
+    "acdc5fbd36677680f9083a308cb1f760aa7c71eb": 0,
+    "b65ea78be1db886586d793f721bb2910ddbc6a41": 0,
+    "cef4d0adfb09f5f1937528a98c594a6442816f20": 0,
+    "d0e726dfd291ffde12a459ec430b11fdc5cddc7a": 0,
+    "e2d450be4a1d5ec3d65037bd6901f2f03d6b14e6": 0
+  },
+  "artifacts": {
+    "format.txt": "feca25aea532c5d75686bc968f8f8cc0dac429b2ade14ae92e7fd62276ef2992",
+    "historical-regression.txt": "b1f59de722942e109c3daba5e19103c770bfef5123f3a11468a8209033563928",
+    "mypy-sql-runner.txt": "5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e",
+    "mypy.txt": "818ae3656b46f85d83b5659f47a0ceca113dd2a7f21fc13b83a23748e55da3c3",
+    "pytest-full.txt": "5344aa6c3c433fb9563645f91827127d945cfe1bf70f276d78b3a3968045d56c",
+    "regression.json": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341",
+    "ruff.txt": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "shared-service.txt": "11612a67a3898318398e41f81fb5ca321fbd5ac65817a5cf2614001bc8708f05",
+    "sql-static.txt": "b6533422d1630740f5655134f45127452989eca69913155ff0cdf6331ecfe21d"
+  },
+  "base_sha": "4b3a76d9d764567e7bb438ad7493953faed6dea2",
+  "branch": "feat/joren-v6-persistence-hardening",
+  "catalog_activated": false,
+  "date": "2026-11-07",
+  "default_planner_changed": false,
+  "format": {
+    "command": "python -m ruff format app tests benchmarks scripts/prepare_v6_catalog_sql.py scripts/verify_v6_postgres.py --check",
+    "files": 208,
+    "status": "PASS"
+  },
+  "full_pytest": {
+    "command": "python -B -m pytest -q -p no:cacheprovider",
+    "errors": 0,
+    "failed": 0,
+    "passed": 2583,
+    "seconds": 222.74,
+    "warnings": 1
+  },
+  "historical_regression": {
+    "accepted_reference_completions_preserved": 26,
+    "bound_seconds_including_imports": 8,
+    "cases": 40,
+    "command": "python -B -m benchmarks.v6_policy_sandbox --regression-output ../docs/catalog/implementation/persistence/regression.json",
+    "full_canonical_bytes_equal_to_accepted_start": true,
+    "host_load_controlled": false,
+    "outcome_counts": {
+      "DIAGNOSTIC_TIMEOUT": 1,
+      "FAIL_CLOSED": 10,
+      "PENDING_HYPOTHETICAL_PLAN": 29
+    },
+    "serial_workers": true,
+    "sha256": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341",
+    "unchanged_timeout": "current:build_4"
+  },
+  "implementation_commit": "see delivery.json after local commit",
+  "initial_full_run": {
+    "cause": "offline UUID scanner encountered intentional source/predecessor identities in the new exact inactive import; inactive codec needed the authorized boundary allowlist entry",
+    "errors": 360,
+    "failed": 5,
+    "passed": 2215,
+    "resolved_without_changing_historical_expected_outcomes": true
+  },
+  "mobile": {
+    "changed": false,
+    "reason": "no mobile, DTO, route or release configuration changes; logical occurrence consumer integration/device tests remain activation gates",
+    "tests_executed": false
+  },
+  "new_tests_collected": 96,
+  "official_method": "joren-v6-planned-if2-1",
+  "only_memory_or_mock_verified": [
+    "pending automatic selection and eligible complete-week alternatives",
+    "retained identity/date preservation",
+    "stale revisions and idempotent edit receipts",
+    "exhaustion and cancellation/worker admission",
+    "athlete confirmation behavior",
+    "account isolation",
+    "transport error sanitization and exact Decimal JSON decoding",
+    "shared-service interleaved athlete isolation"
+  ],
+  "postgres": {
+    "database_environment_unavailable": true,
+    "dependencies_installed": false,
+    "migrations_executed": false,
+    "missing_tooling": [
+      "psql",
+      "postgres",
+      "pg_ctl",
+      "docker",
+      "podman",
+      "supabase CLI"
+    ],
+    "no_execution_path_checked": true,
+    "prepared_runners": [
+      "supabase/tests/v6_persistence_security_test.sql",
+      "backend/scripts/verify_v6_postgres.py"
+    ],
+    "signed_token_postgrest_tests_executed": false,
+    "status": "NOT EXECUTED — DATABASE ENVIRONMENT UNAVAILABLE",
+    "test_dsn_configured": false,
+    "verified_real_commits": 0,
+    "verified_real_rls_cases": 0,
+    "verified_real_rollbacks": 0,
+    "verified_real_sql_transactions": 0
+  },
+  "production_access": false,
+  "production_migration": false,
+  "push_merge_deploy": false,
+  "reference": "joren-v6-approved-if-reference-1",
+  "remaining_inactive_integration_limits": [
+    "V6 check-in-driven generation explicitly fails closed; historical A5 attachment/replay unchanged",
+    "calendar/activity/registration physical-ID consumer integration must be tested before V6 mobile activation"
+  ],
+  "ruff": {
+    "command": "python -m ruff check app tests benchmarks scripts/prepare_v6_catalog_sql.py scripts/verify_v6_postgres.py",
+    "status": "PASS"
+  },
+  "separate_process_catalog_reload": {
+    "database_involved": false,
+    "rows": 77,
+    "workbook_access_prohibited": true
+  },
+  "source_branch": {
+    "changed": false,
+    "clean": true,
+    "sha": "4b3a76d9d764567e7bb438ad7493953faed6dea2"
+  },
+  "source_hashes": {
+    "BIKE": "6322d7f93b3e074c77c4efa28b2a95de3f04f0f5c6af226ce50e8c2ff716ddbc",
+    "RUN": "7380c88ef8bccb3cb35b0f6416d9debba8342b9802fc716f0a99dcfcb8626d88",
+    "SWIM": "48a0f6448f003ef048f40e53fda74b5220f272ebd4300180c108777c6e0be3ba"
+  },
+  "source_rows": 77,
+  "sql_static": {
+    "supabase/migrations/20261105120000_inactive_v6_persistence.sql": {
+      "executed": false,
+      "outer_statements_parsed": 53,
+      "sha256": "c3572d34ea784a6aba9ab7531cca34007f768ca79602b63d92dfcf0f491c8283"
+    },
+    "supabase/migrations/20261105120100_inactive_v6_catalog.sql": {
+      "executed": false,
+      "outer_statements_parsed": 4,
+      "sha256": "6e77d8d54650c7be554a90bb87cdf339b72a2db334be1a8dd98e82d6e22efe34"
+    },
+    "supabase/tests/fixtures/v6_persistence_users.sql": {
+      "executed": false,
+      "outer_statements_parsed": 5,
+      "sha256": "38087b716398ee7c944e77a836b20897cafd68e1717cde8b53f635c2f9f159cd"
+    },
+    "supabase/tests/v6_persistence_security_test.sql": {
+      "executed": false,
+      "outer_statements_parsed": 30,
+      "sha256": "934c1f582a2eca2a144103272fec6b1d968e611371bef6a553fb1ca29592563c"
+    }
+  },
+  "staging_access": false,
+  "status": "WOMBO V6 PERSISTENCE IMPLEMENTED — DATABASE VERIFICATION PENDING",
+  "strict_mypy": {
+    "command": "python -m mypy app tests benchmarks",
+    "source_files": 205,
+    "status": "PASS"
+  },
+  "strict_mypy_runner": {
+    "command": "python -m mypy scripts/verify_v6_postgres.py",
+    "source_files": 1,
+    "status": "PASS"
+  },
+  "timezone": "Europe/Amsterdam"
+}

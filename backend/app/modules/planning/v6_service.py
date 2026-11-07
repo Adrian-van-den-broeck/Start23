@@ -1,7 +1,7 @@
 """Inactive adapter to existing pending, swipe, approval and repository contracts.
 
 Never installed by application startup or settings. A repository must explicitly
-support frozen V6 snapshots; the current Supabase writer does not and rejects.
+support frozen V6 snapshots; the historical Supabase writer still rejects.
 """
 
 import hashlib
@@ -14,8 +14,9 @@ from functools import partial
 from typing import Any, Protocol
 from uuid import UUID, uuid5
 
-from app.modules.physiology.models import Discipline, InternalLoad
+from app.modules.physiology.models import Discipline, Fraction, InternalLoad
 from app.modules.physiology.planned_v6 import METHOD
+from app.modules.physiology.taper import TaperPeriod
 from app.modules.workouts.catalog import WorkoutTemplate
 from app.modules.workouts.joren_v6_official import V6Template, official_catalog
 
@@ -26,7 +27,6 @@ from .repository import (
     PlanningRepositoryUnavailableError,
 )
 from .schemas import (
-    ChangeProposalSummaryResponse,
     PendingWorkoutAlternativesResponse,
     PendingWorkoutEditRequest,
     WeeklyPlanProposalResponse,
@@ -54,6 +54,45 @@ def controls_json(controls: V6Controls) -> str:
         controls.week_scope.isoformat() if controls.week_scope else None
     )
     return private_json(data)
+
+
+def frozen_controls(data: JsonObject) -> V6Controls:
+    """Restore trusted revision-bound evidence after a worker/service restart."""
+    return V6Controls(
+        estimate_swim_for_preview=data["estimate_swim_for_preview"],
+        occurrence_namespace=UUID(data["occurrence_namespace"])
+        if data["occurrence_namespace"]
+        else None,
+        athlete_scope=UUID(data["athlete_scope"]) if data["athlete_scope"] else None,
+        week_scope=date.fromisoformat(data["week_scope"])
+        if data["week_scope"]
+        else None,
+        duration_evidence=tuple((UUID(k), v) for k, v in data["duration_evidence"]),
+        maximum_uses=tuple((UUID(k), n) for k, n in data["maximum_uses"]),
+        prescribed_swim_seconds=tuple(
+            (UUID(k), tuple(Decimal(s) for s in seconds), ref)
+            for k, seconds, ref in data["prescribed_swim_seconds"]
+        ),
+        maximum_combinations=data["maximum_combinations"],
+    )
+
+
+def effective_controls(data: JsonObject, current: V6Controls) -> V6Controls:
+    """Keep stored evidence; current restrictions may tighten, never expand it."""
+    stored = frozen_controls(data)
+    limits = dict(stored.maximum_uses)
+    for key, limit in current.maximum_uses:
+        limits[key] = min(limits.get(key, limit), limit)
+    return replace(
+        stored,
+        maximum_uses=tuple(sorted(limits.items(), key=lambda row: str(row[0]))),
+        estimate_swim_for_preview=(
+            stored.estimate_swim_for_preview and current.estimate_swim_for_preview
+        ),
+        maximum_combinations=min(
+            stored.maximum_combinations, current.maximum_combinations
+        ),
+    )
 
 
 class FrozenV6Repository(PlanningRepository, Protocol):
@@ -151,8 +190,9 @@ class V6PlanningService(PlanningService):
 
     async def _prepare_swipe_context(self, **kwargs: Any) -> _SwipePlanningContext:
         self._assert_individual_scope(kwargs["athlete_id"], kwargs["week_start"])
-        self._bind_occurrences(kwargs["athlete_id"], kwargs["week_start"])
-        context = await super()._prepare_swipe_context(**kwargs)
+        context = await PlanningService._prepare_swipe_context(
+            self._scoped_service(kwargs["athlete_id"], kwargs["week_start"]), **kwargs
+        )
         fingerprint = hashlib.sha256(
             (
                 context.context_fingerprint + controls_json(self._controls) + VERSION
@@ -174,15 +214,25 @@ class V6PlanningService(PlanningService):
 
     async def _build_and_persist(self, **kwargs: Any) -> JsonObject:
         self._assert_individual_scope(kwargs["athlete_id"], kwargs["week_start"])
-        self._bind_occurrences(kwargs["athlete_id"], kwargs["week_start"])
-        return await super()._build_and_persist(**kwargs)
+        return await PlanningService._build_and_persist(
+            self._scoped_service(kwargs["athlete_id"], kwargs["week_start"]), **kwargs
+        )
 
-    def _bind_occurrences(self, athlete_id: UUID, week_start: date) -> None:
+    def _scoped_service(
+        self, athlete_id: UUID, week_start: date
+    ) -> "V6PlanningService":
+        """Request-local adapter; never mutate a shared planner across awaits."""
         scoped = replace(
             self._controls,
             occurrence_namespace=uuid5(athlete_id, f"{VERSION}:{week_start}"),
         )
-        self._plan_builder = partial(build_v6_plan, controls=scoped)
+        return type(self)(
+            self._v6_repository,
+            self._catalog_provider,
+            self._weekly_plan_coach,
+            self._computation,
+            controls=scoped,
+        )
 
     @staticmethod
     def _selection_has_completion(
@@ -266,7 +316,9 @@ class V6PlanningService(PlanningService):
                     "planned_method": METHOD,
                     "input_fingerprint": payload["input_fingerprint"],
                     "estimated_sports": sorted(s.value for s in draft.estimated_sports),
-                    "controls": json.loads(controls_json(draft.controls)),
+                    "controls": json.loads(
+                        controls_json(replace(draft.controls, authorized_target=None))
+                    ),
                     "target": asdict(draft.target),
                     "optimality": draft.optimality,
                     "examined": draft.examined,
@@ -317,6 +369,18 @@ class V6PlanningService(PlanningService):
             basis=PlanningTargetBasis(plan.target_basis),
             target=InternalLoad(Decimal(stored["target"]["value"])),
             build_week=stored["build_week"],
+            taper_period=TaperPeriod(stored["taper_period"])
+            if stored["taper_period"]
+            else None,
+            desired_high_fraction=Fraction(
+                Decimal(stored["desired_high_fraction"]["value"])
+            ),
+            manual_review_required=stored["manual_review_required"],
+            replacement_disciplines=frozenset(
+                Discipline(s) for s in stored["replacement_disciplines"]
+            ),
+            injury_load_unallocated=stored["injury_load_unallocated"],
+            cross_training_consent_required=stored["cross_training_consent_required"],
             discipline_caps={
                 Discipline(s): InternalLoad(Decimal(v["value"]))
                 for s, v in stored["discipline_caps"].items()
@@ -324,7 +388,11 @@ class V6PlanningService(PlanningService):
         )
         timezone_name, race_date, goals, capabilities = self._context_values(snapshot)
         ids = tuple(
-            (replacement if w.id == workout_id else w.template_id)
+            (
+                replacement
+                if w.id == workout_id and replacement is not None
+                else w.template_id
+            )
             for w in plan.workouts
             if w.id != workout_id or replacement is not None
         )
@@ -336,9 +404,20 @@ class V6PlanningService(PlanningService):
             for w in plan.workouts
             if w.id != workout_id or replacement is not None
         }
+        controls = effective_controls(frozen["controls"], self._controls)
+        if (
+            controls.athlete_scope is not None
+            and controls.athlete_scope != athlete_id
+            or controls.week_scope is not None
+            and controls.week_scope != plan.week_start
+        ):
+            raise PlanningConstraintError(
+                "v6_evidence_scope_mismatch",
+                "Individual evidence belongs to another athlete or week.",
+            )
         result = await self._computation.run(
-            self._plan_builder,
-            controls=replace(self._controls, authorized_target=frozen_target),
+            build_v6_plan,
+            controls=replace(controls, authorized_target=frozen_target),
             week_start=plan.week_start,
             timezone_name=timezone_name,
             race_date=race_date,
@@ -352,6 +431,9 @@ class V6PlanningService(PlanningService):
             ),
             low_only_disciplines=frozenset(
                 Discipline(s) for s in context.get("low_only_disciplines", [])
+            ),
+            cross_training_opt_ins=frozenset(
+                Discipline(s) for s in context.get("cross_training_opt_ins", [])
             ),
             zone_capabilities=capabilities,
             available_dates=tuple(
@@ -372,7 +454,10 @@ class V6PlanningService(PlanningService):
             access_token, athlete_id, plan_id, revision
         )
         _, _, goals, capabilities = self._context_values(self._planning_input(context))
-        deck = self._eligible_workouts(
+        deck = eligible_v6(
+            controls=effective_controls(
+                context["v6_frozen_snapshot"]["controls"], self._controls
+            ),
             catalog=self._catalog_view(await self._catalog_provider.fetch_catalog()),
             phase=plan.phase,
             goal_disciplines=goals,
@@ -489,6 +574,9 @@ class V6PlanningService(PlanningService):
             availability_source=plan.availability_source,
             injuries=plan.confirmed_injuries,
             low_only_disciplines=plan.low_only_disciplines,
+            cross_training_opt_ins=frozenset(
+                Discipline(s) for s in context.get("cross_training_opt_ins", [])
+            ),
             goal_disciplines=self._context_values(self._planning_input(context))[2],
             draft=draft,
             workout_source="athlete_selected",
@@ -496,20 +584,19 @@ class V6PlanningService(PlanningService):
         payload["expected_pending_revision"] = request.expected_revision
         payload["expected_proposal_id"] = str(request.expected_proposal_id)
         payload["v6_edit_operation_key"] = operation_key
+        payload["weekly_registration_evidence"] = context.get(
+            "weekly_registration_evidence", []
+        )
         retained = {str(w.id): w for w in plan.workouts if w.id != workout_id}
         for row in payload["workouts"]:
             if row["occurrence_id"] in retained:
                 row["source"] = retained[row["occurrence_id"]].source
-        result = await self._repository.create_plan_proposal(athlete_id, payload)
-        return WeeklyPlanProposalResponse(
-            proposal=ChangeProposalSummaryResponse.model_validate(
-                await self._repository.fetch_proposal(
-                    access_token, UUID(result["proposal_id"])
-                )
-            ),
-            plan=WeeklyPlanResponse.model_validate(
-                await self._repository.fetch_plan(
-                    access_token, plan_id, int(result["revision"])
-                )
-            ),
+        await self._repository.create_plan_proposal(athlete_id, payload)
+        immutable_result = await self._v6_repository.fetch_v6_edit_retry(
+            athlete_id, operation_key
         )
+        if immutable_result is None:
+            raise PlanningRepositoryUnavailableError(
+                "The immutable edit receipt is unavailable."
+            )
+        return WeeklyPlanProposalResponse.model_validate(immutable_result)

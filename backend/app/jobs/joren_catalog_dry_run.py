@@ -23,10 +23,17 @@ def offline_reserved_ids() -> frozenset[UUID]:
     """Conservative collision check against every UUID in the offline SQL history.
 
     No SQL execution or database client. Hosted successor uniqueness is a C8 gate.
+    The exact reviewed inactive import contains these same identities and their
+    predecessor references intentionally. A byte-changed import is NOT exempt.
     """
     return frozenset(
         UUID(value)
         for path in sorted((ROOT / "supabase/migrations").glob("*.sql"))
+        if not (
+            path.name == "20261105120100_inactive_v6_catalog.sql"
+            and sha256(path.read_text(encoding="utf-8").encode()).hexdigest()
+            == "6e77d8d54650c7be554a90bb87cdf339b72a2db334be1a8dd98e82d6e22efe34"
+        )
         for value in re.findall(
             r"\b[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}\b",
             path.read_text(encoding="utf-8"),

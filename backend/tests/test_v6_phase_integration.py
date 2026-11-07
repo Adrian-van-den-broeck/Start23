@@ -465,6 +465,9 @@ def test_disabled_dependency_boundary() -> None:
             # Newly authorized inactive official successor; default startup
             # registration is independently forbidden in the V6 selector tests.
             "joren_v6_official.py",
+            # Authorized inactive durable codec must reconstruct the exact
+            # source dataclass. Runtime registration remains independently barred.
+            "v6_storage.py",
         }:
             continue
         tree = ast.parse(path.read_text(encoding="utf-8-sig"))

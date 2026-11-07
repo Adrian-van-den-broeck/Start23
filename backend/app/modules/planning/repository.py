@@ -249,6 +249,10 @@ class SupabasePlanningRepository:
             headers["Authorization"] = f"Bearer {access_token}"
         return headers
 
+    @staticmethod
+    def _response_payload(response: httpx.Response) -> Any:
+        return response.json()
+
     async def _request(
         self,
         method: str,
@@ -272,7 +276,7 @@ class SupabasePlanningRepository:
         if response.is_success:
             if response.status_code == 204 or not response.content:
                 return None
-            return response.json()
+            return self._response_payload(response)
 
         error_code: str | None = None
         error_message: str | None = None
