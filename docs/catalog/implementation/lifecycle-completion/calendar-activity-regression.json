@@ -1,0 +1,21 @@
+{
+  "evidence": "real PostgreSQL / simulated JWT claims / synthetic users",
+  "check_groups_passed": 14,
+  "calendar_identity": true,
+  "exact_mapping": true,
+  "restart_read": true,
+  "source_blocks": true,
+  "account_isolation": true,
+  "immutable_move_rejected": true,
+  "activity_exact_attachment": true,
+  "activity_retry": true,
+  "source_method_preserved": true,
+  "measured_processing": true,
+  "completed_calendar": true,
+  "activity_reload": true,
+  "unsupported_fallback_rejected": true,
+  "physical_registration_skip_undo": true,
+  "gotrue_sessions": 0,
+  "gateway_checks": 0,
+  "device_checks": 0
+}

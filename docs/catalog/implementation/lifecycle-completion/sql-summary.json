@@ -1,0 +1,361 @@
+{
+  "engine": "PostgreSQL 17.11",
+  "pgtap": "1.3.4",
+  "migrations": 61,
+  "suites": 35,
+  "assertions": 666,
+  "all_passed": true,
+  "a5_overlay_explicit": true,
+  "results": [
+    {
+      "file": "athlete_profiles_rls_test.sql",
+      "source_sha256": "41eebea591615e893bc9d2ee5d773ef9667e759fc9d78f7f29f6808019e5f949",
+      "executed_sql_sha256": "60b4a840fa016be80cf3a04090201fbbd5ea72a67e675d8f818368487ce1c904",
+      "overlay": false,
+      "assertions_executed": 37,
+      "passed": 37,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "first_plan_approved_provenance_test.sql",
+      "source_sha256": "9e1cfb8c19a1f473f0a7b7efd7bb57a012f093477fb8b23aa5d924a506d4965a",
+      "executed_sql_sha256": "31dacb9cb5c5de6b2cb1876f16ee1941d8a99f4ff2190ec555a209afb514a1e6",
+      "overlay": false,
+      "assertions_executed": 10,
+      "passed": 10,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "joren_planning_ruleset_v2_test.sql",
+      "source_sha256": "42b70370552394a84d4fb879b2fa3ed5a0a3c4236ec4a5f7a239af20a10d4d28",
+      "executed_sql_sha256": "85cd1c48d690cd75dde4ba1e041f10447a17d33b414644759497979253d04130",
+      "overlay": false,
+      "assertions_executed": 16,
+      "passed": 16,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "joren_realized_v2_test.sql",
+      "source_sha256": "9fb2f13c20ac249e56b006aed3a312f47a775daa5a63ef7f77bd452f18a0c0d7",
+      "executed_sql_sha256": "f00bbc030e60b50b76f5c97c4e4c85db1ef1115dd0ce0ec1403deef95a979c58",
+      "overlay": false,
+      "assertions_executed": 22,
+      "passed": 22,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_10_1_swipe_week_drafts_test.sql",
+      "source_sha256": "716b134993ba44bfd78574bf2f269e016444ab44f8b9b39b702e6570a9b51599",
+      "executed_sql_sha256": "9af4dcb237cb4b17a572932d58e13372ea8e8a6d1c4add7e37227b27d06ea9f6",
+      "overlay": false,
+      "assertions_executed": 18,
+      "passed": 18,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_10_ai_weekly_plan_explanation_test.sql",
+      "source_sha256": "599b3d443f095c5477933f902a39d394f06b2ceccfb07c86a2731ab0e382150f",
+      "executed_sql_sha256": "b3631a7937ffbbe638a2e6dc9292a89f5cf9156a4c82b40a743fb479ab331bf4",
+      "overlay": false,
+      "assertions_executed": 6,
+      "passed": 6,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_10_date_only_planning_test.sql",
+      "source_sha256": "ab935894fa31ac65bbbf119b6484947422618fd693c4f4d3a2e545c9dd38a45c",
+      "executed_sql_sha256": "4bd59eb3cbbebda78f51d46cc71cd45123bbf9b32a02346db6af9e93f90e4815",
+      "overlay": false,
+      "assertions_executed": 18,
+      "passed": 18,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_11_discipline_zone_profiles_test.sql",
+      "source_sha256": "3de544968e68b655ef73155c8c487351271bb8157c7c3677a94adf72834b7c03",
+      "executed_sql_sha256": "c74aa1277933e6b0f45597f8870f92b25747693463cdd7147148add847fc6b3b",
+      "overlay": false,
+      "assertions_executed": 24,
+      "passed": 24,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_12_source_catalog_training_options_test.sql",
+      "source_sha256": "b7725af66b7f7c3624a359731f50f401f9ac0fa3d35cd25088da14a77d888482",
+      "executed_sql_sha256": "bf4b0f510e130a881d76a4d526bba59bb01e20a962e9e1019b08fe6707ea4257",
+      "overlay": false,
+      "assertions_executed": 12,
+      "passed": 12,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_13_14_r6_entry_audit_remediation_test.sql",
+      "source_sha256": "a98180ab940684aeece9942b07b749c2794d102f8b5c9c4d7ac187e8f6006aab",
+      "executed_sql_sha256": "d43f11399d9a3de9f6f89009c6671c1283a107d480e60985418d953026181f65",
+      "overlay": false,
+      "assertions_executed": 37,
+      "passed": 37,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_13_calibration_lifecycle_test.sql",
+      "source_sha256": "2361377379db125604f95c72586d13381145e89dfa0ff612e2684d4525693f22",
+      "executed_sql_sha256": "4d9e01b1bfa6f1d8084a94f4e528a33607b18077ce78960524555194ca73b127",
+      "overlay": false,
+      "assertions_executed": 20,
+      "passed": 20,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_13_historical_activation_guard_test.sql",
+      "source_sha256": "b286778093c3b122139a18f365dc1ff3c146a2fe4abd2cc5efd45f68a273fdf8",
+      "executed_sql_sha256": "b46d1da875598122ba7561f09f671e2be0b6305b7b044c850ab7c807329e58bf",
+      "overlay": false,
+      "assertions_executed": 17,
+      "passed": 17,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_13_joren_ruleset_test.sql",
+      "source_sha256": "4f5896b690da17864924168b490ca9b77c7fd6fe060dfa4b634341118fa70969",
+      "executed_sql_sha256": "71af94d9ad260bb6ef1e2746e1444670d5dc470b2d0556dbcf53a614efa8f085",
+      "overlay": false,
+      "assertions_executed": 18,
+      "passed": 18,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_14_onboarding_inputs_test.sql",
+      "source_sha256": "db9313742a7e98013b487e56fad10e2826d3eacece21845b412e976a08815bc4",
+      "executed_sql_sha256": "b590d034cb29b5310d52a02cabce6896bdb8f7bfc677ef3701c5ab2ba979f309",
+      "overlay": false,
+      "assertions_executed": 15,
+      "passed": 15,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_16_pioneer_access_test.sql",
+      "source_sha256": "d2d046aeca35c936c52cf1ed912888ef4cebbbcbdf0f9db317d2690913b783d6",
+      "executed_sql_sha256": "8043363c9cbb6cc822d8887b0cbb85844e7ecdc150f93c13b76eaa56473dc785",
+      "overlay": false,
+      "assertions_executed": 23,
+      "passed": 23,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_4_onboarding_rls_test.sql",
+      "source_sha256": "1a29363002c30d718af4b827840f7d7c09fe4a81a0f1efa10257119817dcdb5f",
+      "executed_sql_sha256": "9529f45269c6dde79304c2496be5ff75c5eb4e5886a67b8519307f364ee34b01",
+      "overlay": false,
+      "assertions_executed": 35,
+      "passed": 35,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_5_workout_catalog_test.sql",
+      "source_sha256": "63951a7144385f235371d8f82fc3af08e2d893d453e51011d5385c507a5c9a31",
+      "executed_sql_sha256": "5614537cbb8256754c0100c7fec3dc61d16573f6ee6ddc8517070409bed75136",
+      "overlay": false,
+      "assertions_executed": 16,
+      "passed": 16,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_6_weekly_planning_test.sql",
+      "source_sha256": "5178b1595f3076bd410a6bb1b1e6c6636e8e9352146854ff625895bfaac7f25d",
+      "executed_sql_sha256": "d1c5bd44744c8cc0f4e2718f5b8295b6350708382c585f92dcf242c5e041602a",
+      "overlay": false,
+      "assertions_executed": 30,
+      "passed": 30,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_7_activity_feedback_test.sql",
+      "source_sha256": "6306e3ec8595f2a8515417367e9609286478c6ef12533f3d23c6faf35a6db798",
+      "executed_sql_sha256": "cc899612d441158d6b77c5c1ee243c87f77f62846165b248025d6f94df237cbf",
+      "overlay": false,
+      "assertions_executed": 22,
+      "passed": 22,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_8_5_9_business_decisions_test.sql",
+      "source_sha256": "a8cc6febc96a3f2d038ed21a9e45db57ccf5ea13ed803674ce4219206beec221",
+      "executed_sql_sha256": "68fdabade25c6a96ef436e4fc04671e91d7652df4e7e34234874928443e22769",
+      "overlay": false,
+      "assertions_executed": 9,
+      "passed": 9,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_8_5_zone_calibration_test.sql",
+      "source_sha256": "8c2ab34d64a53d7e9924f316fad44e231ba4ad6ba0f090b483ade51f27d37077",
+      "executed_sql_sha256": "fd6b8d590f7d021b9e9176761bd4ad9a4888880e1361f86eb3e7a817dccebefc",
+      "overlay": false,
+      "assertions_executed": 19,
+      "passed": 19,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_8_5_zone_model_v1_test.sql",
+      "source_sha256": "9ff74ec2764fc9a64fd57abc108a974df04c0e6af0138b27d70f29366ef15a25",
+      "executed_sql_sha256": "c2451608ed8f8f9c406fcdbedc9ec24e133aa59f8a5c4dbaf7e6b24222e4c24d",
+      "overlay": false,
+      "assertions_executed": 20,
+      "passed": 20,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_8_structured_weekly_checkin_test.sql",
+      "source_sha256": "5341b8de3ccd6658a0f31b73a6a764b16ffe4e18a580d2d43a7ba877654f0f69",
+      "executed_sql_sha256": "21387d54b259031f30d9cecfe03779d9457756e4bebf43da72c82f4f149b509b",
+      "overlay": false,
+      "assertions_executed": 24,
+      "passed": 24,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_9_polar_integration_test.sql",
+      "source_sha256": "029649689ef026b83d23c7b16859399950b5b2d1e8a46ef1e4d1ed5bdd53919c",
+      "executed_sql_sha256": "c2f0d697c526b8ce92b16ce66c3424a1b0a9194de6a94e5cf84eb0cebe4f7243",
+      "overlay": false,
+      "assertions_executed": 23,
+      "passed": 23,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_r1_onboarding_versioning_test.sql",
+      "source_sha256": "982c872c8182d1567414cae1b8cda4306b5cbe8a48f0a4063c5eced9f02e1b00",
+      "executed_sql_sha256": "e2bd0ef8b8f0692fa871825c3d598ed48569017ac51680e7fa622e9c740a472b",
+      "overlay": false,
+      "assertions_executed": 10,
+      "passed": 10,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_r2_r3_identity_onboarding_calibration_test.sql",
+      "source_sha256": "41d0ddb4509837bde9c706b3d3c00a21afb53bbf04d2894ac438a64807c6c166",
+      "executed_sql_sha256": "ecb01f8813d97112afc3e830ec2d2384445677348d614dd68523f384bf809bf2",
+      "overlay": false,
+      "assertions_executed": 48,
+      "passed": 48,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "phase_r4_r5_onboarding_race_activity_test.sql",
+      "source_sha256": "219b6cf1a4250ebee79c8f22e56fe872ea3501e9b88ef470651ac6f913287320",
+      "executed_sql_sha256": "a9b07dcd992cce9b09d1849f93ecebc40de356e94272b15214842772f55d2e61",
+      "overlay": false,
+      "assertions_executed": 29,
+      "passed": 29,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "r6_mvp_business_conflicts_test.sql",
+      "source_sha256": "69df7337e411d7a9c75fa02186374a22523317cd93cb7cf5fa6e25582ad86275",
+      "executed_sql_sha256": "69d4072a47a5db02189519f2774c8be995e7dd31a221bb92f37f5e3fe3020cd4",
+      "overlay": false,
+      "assertions_executed": 6,
+      "passed": 6,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "v6_approval_custody_test.sql",
+      "source_sha256": "1fbffd2cd90dcf62bfe8120c8be81fd8e845fbda475c4ae1cbff6d6c6ca2fb08",
+      "executed_sql_sha256": "1e63b22377a2e1840b1eb6575966557d78780c8aa7cdc6da30104bbc2de8cd5e",
+      "overlay": false,
+      "assertions_executed": 4,
+      "passed": 4,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "v6_insert_custody_test.sql",
+      "source_sha256": "77a495ed5c1bfb586197b8a11941758baed781dae8b7cef37dfd5d51bc57475b",
+      "executed_sql_sha256": "b21a69cc24a76a17ff14975b9bd925c4c1043c19fa4ddba54354286bcbb68c57",
+      "overlay": false,
+      "assertions_executed": 3,
+      "passed": 3,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "v6_lifecycle_completion_test.sql",
+      "source_sha256": "64ef20ad921a6cbbb75dfd0d3df739c3a622edafdb7a61bb5b98ba4dbddd4003",
+      "executed_sql_sha256": "8ec22ad340f61c6a5b98b317362ecaa853cef6cd9e48e3ec159e78fc350bcc1d",
+      "overlay": false,
+      "assertions_executed": 12,
+      "passed": 12,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "v6_mobile_identity_test.sql",
+      "source_sha256": "27e5003090b72783e53d63fb19828583d0693cae258c462b7a3133c81bf55d77",
+      "executed_sql_sha256": "3f7790f061272b7816475146c1258c5ae05c9a70d17fed6a185eeabe56d1a952",
+      "overlay": false,
+      "assertions_executed": 10,
+      "passed": 10,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "v6_persistence_security_test.sql",
+      "source_sha256": "17c519cc4fba8ebcea3e24272374bec48f06d6af13a8bad3124eaaf48a96cd34",
+      "executed_sql_sha256": "934c1f582a2eca2a144103272fec6b1d968e611371bef6a553fb1ca29592563c",
+      "overlay": false,
+      "assertions_executed": 21,
+      "passed": 21,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "v6_segment_snapshot_test.sql",
+      "source_sha256": "86d4df1b522b2c75cfc98aa7e5f5d8ad4c0d5faebb6792d9481b5d5686a5e2d8",
+      "executed_sql_sha256": "78763907a281ca203b4aeb5d6eb4e371d37b38ba5872e94a7696120febb0396f",
+      "overlay": false,
+      "assertions_executed": 3,
+      "passed": 3,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "file": "wombo_a5_checkin_proposal_recovery_test.sql",
+      "source_sha256": "cb6e4ffef878cb26c434250f5ec1a2524339de433d4dc82a09399875e5369b90",
+      "executed_sql_sha256": "1f6c2c1834500ae4f089c62259a91af4d816f6d4b6b9e77ecedf7c7d77174adf",
+      "overlay": true,
+      "assertions_executed": 29,
+      "passed": 29,
+      "failures": [],
+      "status": "EXECUTED / PASS"
+    }
+  ]
+}

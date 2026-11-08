@@ -1,0 +1,94 @@
+{
+  "implementation_sha": "bb4ac2c917780740551443380ef6fde7a4db4e09",
+  "line_ending_note": "Tested worktree bytes and committed Git blob bytes may differ only by configured CRLF/LF normalization.",
+  "files": {
+    "backend/app/local_v6.py": {
+      "tested_worktree_sha256": "d92c68bc6a2de48033fc1a529dc4f865088122b3c5c3e0453c25effa5b3651f9",
+      "committed_blob_sha256": "3d871b88dc2db42f3e3901ad456af87b0298c412f201c6d86b6be0e0b51feeac"
+    },
+    "backend/app/modules/physiology/planned_v6.py": {
+      "tested_worktree_sha256": "bb9bec3e50e8d9cf7555f1605252ccddc8b4102b24e80bdc7122e73b4ea6570e",
+      "committed_blob_sha256": "f6d25d479d4fe80004f1e5544541415d9293e2284316ac21ee6fad160bf44c17"
+    },
+    "backend/app/modules/physiology/realized_v2.py": {
+      "tested_worktree_sha256": "776a767dd5716e38cae7c7c7085e6be65d05cb704c43247e1ba0f806cf1e26ec",
+      "committed_blob_sha256": "a48c0cfd9f4da6c9383de7be9758acd86ca1759e44aaa4ad4ac1e5d77d5c9638"
+    },
+    "backend/app/modules/planning/service.py": {
+      "tested_worktree_sha256": "6da18afa1d0fb346a36217ae4b1d5e56491d106a2c8e1493e60502f0167b2091",
+      "committed_blob_sha256": "ebd0138cc71672dee561826f980afd52d3c9b2e25a191634466b0f94ae601205"
+    },
+    "backend/app/modules/planning/v6_repository.py": {
+      "tested_worktree_sha256": "564c4b864d0b6d8252440eac8abe0e59b7183dae1cf3fb97d83b77dec19dda71",
+      "committed_blob_sha256": "f49c30ef25642d06717dfaafca20f78ab09b4d26e663c0598b4c99209eac0b69"
+    },
+    "backend/app/modules/planning/v6_selection.py": {
+      "tested_worktree_sha256": "57bc70f1993a971f7bda171b806f800fb8d2b69eb6c95c74a206ef6731569867",
+      "committed_blob_sha256": "aa44cd4dec1901a8705799969f940b4910a0305a558f9b14227457808a63b260"
+    },
+    "backend/app/modules/planning/v6_service.py": {
+      "tested_worktree_sha256": "0205ded0bfb6f23d60e8cf505f5ac894ea88ccb09f55f48ba2fbe6ba3ec53941",
+      "committed_blob_sha256": "fcd3bb9d13a8829b656c889412345b02c5c2469609c5855a4bf74196efee4ca4"
+    },
+    "backend/app/modules/workouts/joren_v6_official.py": {
+      "tested_worktree_sha256": "f7f74c5a03bfe071e92666adf664ad2fd0fb593a35a53a4c9ec073b014d0f6b9",
+      "committed_blob_sha256": "47b82f01dcf2e93221d04692cc21d301f0cb8822eb721171a69c4b87926221e6"
+    },
+    "backend/scripts/verify_v6_lifecycle_commit_loss.py": {
+      "tested_worktree_sha256": "64be6e16c77d3e84c0fa358c8a82b1e8ccbb1bdad1cd85d2949971a60eb17e57",
+      "committed_blob_sha256": "6374d7f3c3c60ca6649b98f9e1eea80ee799ede212bb973d1f49102538965c7f"
+    },
+    "backend/scripts/verify_v6_lifecycle_completion.py": {
+      "tested_worktree_sha256": "e31f9dcb1c991a438cb64c64f47be153a2264525bfa79275e4c416237066faa2",
+      "committed_blob_sha256": "df385c237021e6609ca26f1f123d267ede0a1db2c53b810e9e63906142660bc5"
+    },
+    "backend/scripts/verify_v6_lifecycle_guards.py": {
+      "tested_worktree_sha256": "ce346b9ef723df754526968ddc3c3db580016b8bac9933e080b83ee4563a7ca9",
+      "committed_blob_sha256": "7b3b0afa8bdf4deae33161e0207211d3068fc1e2bc2bff52b102a0238e753d70"
+    },
+    "backend/scripts/verify_v6_mobile_lifecycle.py": {
+      "tested_worktree_sha256": "80385b376271e722b8496dc00ae03c1b9bfc0b5a1e7125f54a71d9d2f106a8a2",
+      "committed_blob_sha256": "a78cd0a03ee3b11a22b775cdc9303a75bfc99147655ba9ff009fb94b0874d5ae"
+    },
+    "backend/tests/test_v6_lifecycle_completion.py": {
+      "tested_worktree_sha256": "8b00fb287e70bde96b5007f6afcbe7a1a79c225d3fab3955965d2408f94dae9e",
+      "committed_blob_sha256": "65981ae74e9b21b0bbb97a79e7d446bac37b012fd7b006de5627cd71b2214d2e"
+    },
+    "backend/tests/v6_repository_fixture.py": {
+      "tested_worktree_sha256": "5fb145728ddb195a0c8cdb863e0bb8097c5782d1a6440e1240ed9aa1f020036d",
+      "committed_blob_sha256": "c8edcd1af67d11269ad933c53d5bb37f469839edd89386e3f5dade4f28753301"
+    },
+    "mobile/src/features/planning/V6Completion.test.tsx": {
+      "tested_worktree_sha256": "b4db5829e6f53bf70deb3ebd5bbf0af8e43fc413175ca8c41995681c8d0e7fd0",
+      "committed_blob_sha256": "2ecb7fafadcc53e5f9267a89db10058e2a88189aff82ecd99bc6dc7ae456b440"
+    },
+    "mobile/src/features/planning/v6-completion-http.test-fixture.json": {
+      "tested_worktree_sha256": "9fbaee9153022c2920d6c7d1aaf223d1617022672fbbdffebe7eaa288796933a",
+      "committed_blob_sha256": "77e7e408871c32225cfc08505e0c9995397ee8b91b7330d6dd21f62450341532"
+    },
+    "supabase/migrations/20261105120100_inactive_v6_catalog.sql": {
+      "tested_worktree_sha256": "6e77d8d54650c7be554a90bb87cdf339b72a2db334be1a8dd98e82d6e22efe34",
+      "committed_blob_sha256": "6e77d8d54650c7be554a90bb87cdf339b72a2db334be1a8dd98e82d6e22efe34"
+    },
+    "supabase/migrations/20261108180000_inactive_v6_lifecycle_completion.sql": {
+      "tested_worktree_sha256": "71f3b0388ac99ffae6bd76659eeba1fef84c1adecc004ebb37e8fa10010732c6",
+      "committed_blob_sha256": "6a2024a072c0b5307894011005291cae539f588dec6c72d7329cc5f3278c9288"
+    },
+    "supabase/tests/fixtures/a5_current_onboarding.sql": {
+      "tested_worktree_sha256": "c546eb1e755ad32e0eebcbd9450b41de134e83043421e8e8f8e1f18446e180d6",
+      "committed_blob_sha256": "c546eb1e755ad32e0eebcbd9450b41de134e83043421e8e8f8e1f18446e180d6"
+    },
+    "supabase/tests/r6_mvp_business_conflicts_test.sql": {
+      "tested_worktree_sha256": "69df7337e411d7a9c75fa02186374a22523317cd93cb7cf5fa6e25582ad86275",
+      "committed_blob_sha256": "69d4072a47a5db02189519f2774c8be995e7dd31a221bb92f37f5e3fe3020cd4"
+    },
+    "supabase/tests/v6_lifecycle_completion_test.sql": {
+      "tested_worktree_sha256": "64ef20ad921a6cbbb75dfd0d3df739c3a622edafdb7a61bb5b98ba4dbddd4003",
+      "committed_blob_sha256": "8ec22ad340f61c6a5b98b317362ecaa853cef6cd9e48e3ec159e78fc350bcc1d"
+    },
+    "supabase/tests/wombo_a5_checkin_proposal_recovery_test.sql": {
+      "tested_worktree_sha256": "cb6e4ffef878cb26c434250f5ec1a2524339de433d4dc82a09399875e5369b90",
+      "committed_blob_sha256": "a44cad34d74d47e8428a7ed2d2a3d71e4abcc441348e8922df96ed51f9c22901"
+    }
+  }
+}

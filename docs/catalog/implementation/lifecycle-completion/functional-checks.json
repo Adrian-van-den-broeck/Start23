@@ -1,0 +1,11 @@
+[
+  "A5 failed attachment rolls back every plan/revision/workout/snapshot",
+  "A5 lost commit acknowledgement replays one authoritative frozen proposal",
+  "explicit A5 approval activates V6 calendar; foreign attachment denied",
+  "move interruption after pointer update rolls back all writes; stale/foreign/outside week denied",
+  "confirmed move retains exact source/prescription/logical IDs; old physical rows immutable; identical replay",
+  "two concurrent date moves commit exactly one new authoritative revision; old receipt remains exact",
+  "supported measured activity binds new physical/source occurrence; completed evidence blocks further moves",
+  "move versus pending edit and confirmation is stale-safe",
+  "concurrent duplicate check-ins converge; rejection recovery preserves terminal authoritative state"
+]

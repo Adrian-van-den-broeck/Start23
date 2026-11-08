@@ -1,0 +1,10 @@
+{
+  "stale_checkin_revision": "PT409",
+  "foreign_checkin": "P0002",
+  "tampered_source": "23514",
+  "tampered_budget": "23514",
+  "all_failed_transactions_rolled_back": true,
+  "superseded_confirmation_provenance_preserved": true,
+  "new_draft_blocks_old_confirmed_context": true,
+  "valid_automatic_attachment_replayed": true
+}

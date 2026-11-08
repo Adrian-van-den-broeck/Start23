@@ -1,0 +1,20 @@
+{
+  "synthetic_only": true,
+  "plan_id": "0ed0d15a-576a-4981-9a37-79e7899457bc",
+  "checkin_proposal_id": "404c1689-7747-4486-a504-6e1d91199d2b",
+  "checkin_pending_revision": 1,
+  "confirmed_before": 1,
+  "confirmed_after_move": 2,
+  "latest_after_competing_moves": 3,
+  "logical_occurrence_id": "ebf68f5c-8dce-5afc-9226-f10e7ead387e",
+  "old_physical_workout_id": "b100bafb-7a09-4678-a610-eb5e7fe72aab",
+  "new_physical_workout_id": "5602ffaa-d9f4-42e1-944f-bb60a1c18791",
+  "old_date": "2026-10-29",
+  "new_date": "2026-11-01",
+  "source_workout_id": "TR-BIKE-023",
+  "template_id": "505a2099-92ec-529b-aaa1-7a920bb87438",
+  "template_version": 2,
+  "source_prescription_equal": true,
+  "source_prescription_sha256": "19137cae18192161e7d84dce9447d01091e05f8c917b4f0b5fe7250366b7ea86",
+  "logical_ids_retained": true
+}
