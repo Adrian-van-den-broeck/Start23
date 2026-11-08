@@ -111,6 +111,11 @@ class FrozenV6Repository(PlanningRepository, Protocol):
     ) -> JsonObject | None:
         """Owner-scoped immutable idempotent edit result, before stale checks."""
 
+    async def move_v6_workout(
+        self, athlete_id: UUID, payload: JsonObject
+    ) -> JsonObject:
+        """Atomic immutable confirmed revision move and existing edit receipt."""
+
 
 class InactiveV6CatalogProvider:
     def __init__(self) -> None:
@@ -225,17 +230,66 @@ class V6PlanningService(PlanningService):
         workout_id: UUID,
         request: PlannedWorkoutMoveRequest,
     ) -> WeeklyPlanResponse:
-        context = await self._repository.fetch_workout_context(access_token, workout_id)
-        plan = WeeklyPlanResponse.model_validate(context["plan"])
-        catalog = {t.id: t for t in await self._catalog_provider.fetch_catalog()}
-        if any(
-            isinstance(catalog.get(w.template_id), V6Template) for w in plan.workouts
+        operation_key = hashlib.sha256(
+            f"v6-move:{athlete_id}:{workout_id}:{request.expected_revision}:{request.scheduled_date}".encode()
+        ).hexdigest()
+        retry = await self._v6_repository.fetch_v6_edit_retry(athlete_id, operation_key)
+        if retry is not None:
+            plan = WeeklyPlanResponse.model_validate(retry["plan"])
+            plan.workouts = await self._present_workouts(plan.workouts)
+            return plan
+        public_context = await self._repository.fetch_workout_context(
+            access_token, workout_id
+        )
+        plan = WeeklyPlanResponse.model_validate(public_context["plan"])
+        if not any(w.physical_workout_id for w in plan.workouts):
+            return await super().move_workout(
+                access_token, athlete_id, workout_id, request
+            )
+        if (
+            plan.revision != request.expected_revision
+            or plan.active_revision != request.expected_revision
+            or plan.revision_state != "active"
         ):
             raise PlanningConstraintError(
-                "v6_active_move_requires_revision",
-                "Confirmed source snapshots cannot be moved through this operation.",
+                "plan_revision_stale", "The plan changed. Reload the training week."
             )
-        return await super().move_workout(access_token, athlete_id, workout_id, request)
+        moved = next(
+            (w for w in plan.workouts if workout_id in {w.id, w.physical_workout_id}),
+            None,
+        )
+        if moved is None or any(w.status != "scheduled" for w in plan.workouts):
+            raise PlanningConstraintError(
+                "recorded_workout_move_unsupported",
+                "Recorded training cannot be moved. Reload the training week.",
+            )
+        context = await self._repository.fetch_plan_revision_context(
+            athlete_id, plan.id, plan.revision
+        )
+        # Reuse complete-week validation with ALL source identities/dates fixed.
+        await self._replacement_plan(
+            athlete_id=athlete_id,
+            context=context,
+            plan=plan,
+            workout_id=moved.id,
+            replacement=moved.template_id,
+            moved_date=request.scheduled_date,
+        )
+        result = await self._v6_repository.move_v6_workout(
+            athlete_id,
+            {
+                "operation_key": operation_key,
+                "plan_id": str(plan.id),
+                "revision_id": str(plan.revision_id),
+                "expected_revision": request.expected_revision,
+                "occurrence_id": str(moved.id),
+                "physical_workout_id": str(moved.physical_workout_id),
+                "scheduled_date": request.scheduled_date.isoformat(),
+            },
+        )
+        plan = WeeklyPlanResponse.model_validate(result["plan"])
+        plan.workouts = await self._present_workouts(plan.workouts)
+        return plan
 
     @staticmethod
     def _transition_placements(
@@ -414,6 +468,13 @@ class V6PlanningService(PlanningService):
         if not isinstance(draft, V6Plan):
             raise ValueError("v6_snapshot_required")
         payload = PlanningService._proposal_payload(**kwargs)
+        if kwargs.get("checkin_id") is not None:
+            context = kwargs["input_source"]
+            payload["v6_checkin_context"] = {
+                "revision": context["checkin_context_revision"],
+                "fingerprint": context["checkin_context_fingerprint"],
+                "payload": context["confirmed_context"],
+            }
         payload["planning_ruleset_version"] = VERSION
         payload["v6_frozen_snapshot"] = json.loads(
             private_json(
@@ -455,6 +516,7 @@ class V6PlanningService(PlanningService):
         plan: WeeklyPlanResponse,
         workout_id: UUID,
         replacement: UUID | None,
+        moved_date: date | None = None,
     ) -> V6Plan:
         self._assert_individual_scope(athlete_id, plan.week_start)
         target = next((w for w in plan.workouts if w.id == workout_id), None)
@@ -506,7 +568,7 @@ class V6PlanningService(PlanningService):
             w.id for w in plan.workouts if w.id != workout_id or replacement is not None
         )
         fixed = {
-            w.id: w.scheduled_date
+            w.id: moved_date if w.id == workout_id and moved_date else w.scheduled_date
             for w in plan.workouts
             if w.id != workout_id or replacement is not None
         }

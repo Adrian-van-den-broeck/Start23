@@ -99,19 +99,6 @@ async def verify(snapshot: Path, output: Path) -> None:
         raise AssertionError("foreign plan was visible")
     workout = next(w for w in plan.workouts if w.discipline.value == "bike")
     assert workout.physical_workout_id is not None
-    try:
-        await planner.move_workout(
-            str(USERS[0]),
-            owner,
-            workout.physical_workout_id,
-            PlannedWorkoutMoveRequest(
-                expected_revision=plan.revision, scheduled_date=workout.scheduled_date
-            ),
-        )
-    except PlanningConstraintError as error:
-        assert error.code == "v6_active_move_requires_revision"
-    else:
-        raise AssertionError("immutable date move unexpectedly succeeded")
     activities = ActivityService(SqlActivities(repo), enable_estimates=True)
 
     def existing_key(physical: UUID | None) -> UUID:
@@ -157,6 +144,19 @@ async def verify(snapshot: Path, output: Path) -> None:
         str(USERS[0]), date(2026, 10, 26), date(2026, 11, 2)
     )
     assert next(w for w in updated.workouts if w.id == workout.id).status == "completed"
+    try:
+        await planner.move_workout(
+            str(USERS[0]),
+            owner,
+            workout.physical_workout_id,
+            PlannedWorkoutMoveRequest(
+                expected_revision=plan.revision, scheduled_date=workout.scheduled_date
+            ),
+        )
+    except PlanningConstraintError as error:
+        assert error.code == "recorded_workout_move_unsupported"
+    else:
+        raise AssertionError("completed workout date move unexpectedly succeeded")
     run = next(w for w in plan.workouts if w.discipline.value == "run")
     unsupported = await activities.create(
         str(USERS[0]),

@@ -69,6 +69,35 @@ class InactiveSupabaseV6Repository(SupabasePlanningRepository):
             raise PlanningRepositoryUnavailableError
         return dict(result) if result is not None else None
 
+    async def fetch_workout_context(
+        self, access_token: str, workout_id: UUID
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/get_v6_move_workout_context",
+            access_token=access_token,
+            json={"p_workout_id": str(workout_id)},
+        )
+        if not isinstance(result, dict):
+            raise PlanningRepositoryUnavailableError
+        return dict(result)
+
+    async def move_v6_workout(
+        self, athlete_id: UUID, payload: JsonObject
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/move_v6_planned_workout",
+            service=True,
+            json={
+                "p_athlete_id": str(await self._rpc_athlete_id(athlete_id)),
+                "p_payload": payload,
+            },
+        )
+        if not isinstance(result, dict):
+            raise PlanningRepositoryUnavailableError
+        return dict(result)
+
     async def fetch_plan(
         self, access_token: str, plan_id: UUID, revision: int | None = None
     ) -> JsonObject:

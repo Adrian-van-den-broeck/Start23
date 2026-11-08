@@ -1106,6 +1106,7 @@ class PlanningService:
     @staticmethod
     def _proposal_payload(
         *,
+        input_source: Mapping[str, Any] | None = None,
         request_id: UUID | None,
         input_fingerprint: str,
         generation_fingerprint: str,
@@ -1295,6 +1296,7 @@ class PlanningService:
         result = await self._repository.create_plan_proposal(
             athlete_id,
             self._proposal_payload(
+                input_source=input_source,
                 registration_evidence=registration_evidence,
                 request_id=request_id,
                 input_fingerprint=input_fingerprint,

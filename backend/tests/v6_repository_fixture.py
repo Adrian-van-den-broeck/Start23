@@ -38,6 +38,52 @@ class V6MemoryRepository(MemoryPlanningRepository):
     ) -> JsonObject | None:
         return deepcopy(self.edit_results.get((athlete_id, operation_key)))
 
+    async def fetch_workout_context(
+        self, access_token: str, workout_id: UUID
+    ) -> JsonObject:
+        for pid, plan in self._plans.items():
+            if self._plan_owners[pid] != self._owner(access_token):
+                continue
+            if plan["revision_state"] == "active" and any(
+                str(workout_id) in {w["id"], w["physical_workout_id"]}
+                for w in plan["workouts"]
+            ):
+                return {"plan": await self.fetch_plan(access_token, pid)}
+        raise PlanningRepositoryNotFoundError
+
+    async def move_v6_workout(
+        self, athlete_id: UUID, payload: JsonObject
+    ) -> JsonObject:
+        key = (athlete_id, payload["operation_key"])
+        if key in self.edit_results:
+            return deepcopy(self.edit_results[key])
+        pid = UUID(payload["plan_id"])
+        current = self._plans[pid]
+        if (
+            self._plan_owners[pid] != athlete_id
+            or current["active_revision"] != payload["expected_revision"]
+        ):
+            raise PlanningRepositoryConflictError("proposal_stale")
+        self.history[pid, current["revision"]] = deepcopy(current)
+        updated = deepcopy(current)
+        updated["revision"] += 1
+        updated["active_revision"] = updated["revision"]
+        updated["revision_id"] = str(uuid4())
+        updated["proposal"] = None
+        for row in updated["workouts"]:
+            row["physical_workout_id"] = str(uuid4())
+            if row["id"] == payload["occurrence_id"]:
+                row["scheduled_date"] = payload["scheduled_date"]
+        frozen = deepcopy(self.frozen_payloads[pid, current["revision"]])
+        for row in frozen["workouts"]:
+            if row["occurrence_id"] == payload["occurrence_id"]:
+                row["scheduled_date"] = payload["scheduled_date"]
+        self.frozen_payloads[pid, updated["revision"]] = frozen
+        self._plans[pid] = updated
+        public = {k: v for k, v in updated.items() if not k.startswith("_")}
+        self.edit_results[key] = {"plan": public, "proposal": None}
+        return deepcopy(self.edit_results[key])
+
     async def create_plan_proposal(
         self, athlete_id: UUID, payload: JsonObject
     ) -> JsonObject:
