@@ -27,13 +27,21 @@ from .repository import (
     PlanningRepositoryUnavailableError,
 )
 from .schemas import (
+    CalendarResponse,
     PendingWorkoutAlternativesResponse,
     PendingWorkoutEditRequest,
+    PlannedWorkoutMoveRequest,
+    PlannedWorkoutResponse,
+    SwipeDraftSubmitRequest,
+    SwipeWeekDraftResponse,
+    WeeklyPlanProposalRequest,
     WeeklyPlanProposalResponse,
     WeeklyPlanResponse,
+    WorkoutDeckItemResponse,
 )
 from .service import PlanningService, _SwipePlanningContext
 from .swipe import SwipeSelectionState
+from .v6_presentation import source_prescription
 from .v6_selection import VERSION, V6Controls, V6Plan, build_v6_plan, eligible_v6
 
 
@@ -130,6 +138,104 @@ class V6PlanningService(PlanningService):
 
     _catalog_view = staticmethod(v6_catalog_view)
     _planning_policy_version = VERSION
+
+    @staticmethod
+    def _swipe_response(
+        row: Mapping[str, Any], context: _SwipePlanningContext
+    ) -> SwipeWeekDraftResponse:
+        response = PlanningService._swipe_response(row, context)
+        catalog = {t.id: t for t in context.eligible_deck}
+        cards = response.accepted_workouts + (
+            (response.current_candidate,) if response.current_candidate else ()
+        )
+        for card in cards:
+            template = catalog[card.id]
+            if isinstance(template, V6Template):
+                card.source_prescription = source_prescription(template)
+        return response
+
+    @staticmethod
+    def _deck_item(
+        template: WorkoutTemplate, *, contributes_to_zone_calibration: bool = False
+    ) -> WorkoutDeckItemResponse:
+        item = PlanningService._deck_item(
+            template, contributes_to_zone_calibration=contributes_to_zone_calibration
+        )
+        if isinstance(template, V6Template):
+            item.source_prescription = source_prescription(template)
+        return item
+
+    async def _present_workouts(
+        self, workouts: tuple[PlannedWorkoutResponse, ...]
+    ) -> tuple[PlannedWorkoutResponse, ...]:
+        catalog = {t.id: t for t in await self._catalog_provider.fetch_catalog()}
+        for workout in workouts:
+            template = catalog.get(workout.template_id)
+            if isinstance(template, V6Template):
+                if (
+                    template.template_key != workout.template_key
+                    or template.version != workout.template_version
+                ):
+                    raise PlanningRepositoryUnavailableError(
+                        "The exact source revision is unavailable."
+                    )
+                workout.source_prescription = source_prescription(template)
+        return workouts
+
+    async def generate_initial_proposal(
+        self, access_token: str, athlete_id: UUID, request: WeeklyPlanProposalRequest
+    ) -> WeeklyPlanProposalResponse:
+        response = await super().generate_initial_proposal(
+            access_token, athlete_id, request
+        )
+        response.plan.workouts = await self._present_workouts(response.plan.workouts)
+        return response
+
+    async def submit_swipe_draft(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+        draft_id: UUID,
+        request: SwipeDraftSubmitRequest,
+    ) -> WeeklyPlanProposalResponse:
+        response = await super().submit_swipe_draft(
+            access_token, athlete_id, draft_id, request
+        )
+        response.plan.workouts = await self._present_workouts(response.plan.workouts)
+        return response
+
+    async def get_plan(
+        self, access_token: str, plan_id: UUID, revision: int | None
+    ) -> WeeklyPlanResponse:
+        plan = await super().get_plan(access_token, plan_id, revision)
+        plan.workouts = await self._present_workouts(plan.workouts)
+        return plan
+
+    async def get_calendar(
+        self, access_token: str, from_date: date, to_date: date
+    ) -> CalendarResponse:
+        calendar = await super().get_calendar(access_token, from_date, to_date)
+        calendar.workouts = await self._present_workouts(calendar.workouts)
+        return calendar
+
+    async def move_workout(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+        workout_id: UUID,
+        request: PlannedWorkoutMoveRequest,
+    ) -> WeeklyPlanResponse:
+        context = await self._repository.fetch_workout_context(access_token, workout_id)
+        plan = WeeklyPlanResponse.model_validate(context["plan"])
+        catalog = {t.id: t for t in await self._catalog_provider.fetch_catalog()}
+        if any(
+            isinstance(catalog.get(w.template_id), V6Template) for w in plan.workouts
+        ):
+            raise PlanningConstraintError(
+                "v6_active_move_requires_revision",
+                "Confirmed source snapshots cannot be moved through this operation.",
+            )
+        return await super().move_workout(access_token, athlete_id, workout_id, request)
 
     @staticmethod
     def _transition_placements(
@@ -541,7 +647,11 @@ class V6PlanningService(PlanningService):
         ).hexdigest()
         retry = await self._v6_repository.fetch_v6_edit_retry(athlete_id, operation_key)
         if retry is not None:
-            return WeeklyPlanProposalResponse.model_validate(retry)
+            response = WeeklyPlanProposalResponse.model_validate(retry)
+            response.plan.workouts = await self._present_workouts(
+                response.plan.workouts
+            )
+            return response
         context, plan, _ = await self._pending_revision_edit_state(
             access_token, athlete_id, plan_id, request.expected_revision
         )
@@ -599,4 +709,6 @@ class V6PlanningService(PlanningService):
             raise PlanningRepositoryUnavailableError(
                 "The immutable edit receipt is unavailable."
             )
-        return WeeklyPlanProposalResponse.model_validate(immutable_result)
+        response = WeeklyPlanProposalResponse.model_validate(immutable_result)
+        response.plan.workouts = await self._present_workouts(response.plan.workouts)
+        return response

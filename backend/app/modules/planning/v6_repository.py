@@ -4,6 +4,7 @@ All identity, discovery, draft CAS, confirmation and cancellation operations use
 the established repository. Only frozen V6 reads/writes use the successor RPCs.
 """
 
+from datetime import date
 from decimal import Decimal
 from typing import Any
 from uuid import UUID
@@ -57,7 +58,7 @@ class InactiveSupabaseV6Repository(SupabasePlanningRepository):
     ) -> JsonObject | None:
         result = await self._request(
             "POST",
-            "rpc/get_v6_edit_retry",
+            "rpc/get_v6_mobile_edit_retry",
             service=True,
             json={
                 "p_athlete_id": str(await self._rpc_athlete_id(athlete_id)),
@@ -73,13 +74,29 @@ class InactiveSupabaseV6Repository(SupabasePlanningRepository):
     ) -> JsonObject:
         result = await self._request(
             "POST",
-            "rpc/get_v6_weekly_plan",
+            "rpc/get_v6_mobile_weekly_plan",
             access_token=access_token,
             json={"p_plan_id": str(plan_id), "p_revision": revision},
         )
         if not isinstance(result, dict):
             raise PlanningRepositoryUnavailableError
         return dict(result)
+
+    async def fetch_calendar(
+        self, access_token: str, from_date: date, to_date: date
+    ) -> tuple[JsonObject, ...]:
+        result = await self._request(
+            "POST",
+            "rpc/get_v6_mobile_calendar",
+            access_token=access_token,
+            json={
+                "p_from_date": from_date.isoformat(),
+                "p_to_date": to_date.isoformat(),
+            },
+        )
+        if not isinstance(result, list):
+            raise PlanningRepositoryUnavailableError
+        return tuple(dict(row) for row in result)
 
     async def _v6_context(
         self, athlete_id: UUID, plan_id: UUID, revision: int | None

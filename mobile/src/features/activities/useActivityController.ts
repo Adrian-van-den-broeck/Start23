@@ -5,7 +5,7 @@ import {
   getWorkoutRegistration, confirmWorkoutRegistration,
 } from '../../api/client';
 import type { CompletedActivity, Discipline, PlannedExternalActivity, PlannedWorkout } from '../../api/types';
-import { activityCreateInput, newIdempotencyKey } from './activityCreateInput';
+import { activityCreateInput, activityWorkoutId, newIdempotencyKey } from './activityCreateInput';
 
 function isoDate(value: Date): string {
   const year = value.getFullYear();
@@ -256,7 +256,7 @@ export function useActivityController(accessToken: string) {
     setDuration('');
     if (workout) {
       setDiscipline(workout.discipline);
-      setDistance(workout.distance_meters === null ? '' : String(workout.distance_meters));
+      setDistance(workout.source_prescription || workout.distance_meters === null ? '' : String(workout.distance_meters));
     }
   };
   const selectExternal = (activity: PlannedExternalActivity) => {
@@ -273,8 +273,8 @@ export function useActivityController(accessToken: string) {
     createInFlightRef.current = true;
     setBusy(true); setError(null); setRegistrationOutcome(null);
     const access = token.current;
-    const workoutId = selectedWorkout.id;
     try {
+      const workoutId = activityWorkoutId(selectedWorkout);
       if (createAttempt.current || createdIdRef.current) {
         throw new Error('Rond eerst de opgeslagen activiteit of het eerdere opslagverzoek af.');
       }

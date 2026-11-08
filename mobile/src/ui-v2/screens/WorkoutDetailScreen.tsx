@@ -28,10 +28,19 @@ export function WorkoutDetailScreen({ workout, onClose, embedded = false, scroll
         <WorkoutSummary summary={model.summary} showDescription={false} variant="focus" />
         <Card style={styles.prescription}>
           {model.description ? <><Text>{model.description}</Text><Divider /></> : null}
-          <View style={styles.expected}>
+          {model.source ? <View style={styles.prescription}>
+            <Text variant="label">{t('detail.sessionEffort', { value: model.source.session_effort })}</Text>
+            <Text variant="label">{t('detail.originalSource')}</Text>
+            <Text>{model.source.original_text}</Text>
+            {model.source.zone_distribution.map((value, index) => <Text key={index} variant="supporting">
+              {t('detail.zone', { value: index + 1 })}: {value} {model.source!.distribution_unit === 'meters' ? 'm' : 'min'}
+            </Text>)}
+            {model.source.estimated_active_minutes !== null ? <Text>{t('detail.estimatedActive', { value: model.source.estimated_active_minutes })}</Text> : null}
+          </View> : null}
+          {model.expectedRpe ? <View style={styles.expected}>
             <IconTile name="intensity" size="field" />
             <View style={styles.expectedLabel}><RpeIndicator range={model.expectedRpe} /></View>
-          </View>
+          </View> : null}
         </Card>
         <SessionSequence segments={model.segments} />
         {model.rpeReference.length ? <Card style={styles.referenceGroup}>

@@ -6,16 +6,16 @@ from typing import Any, cast
 from uuid import UUID, uuid4
 
 import pytest
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from test_planning import PlanningTokenVerifier, ZoneRejectStub, _headers
 from v6_repository_fixture import V6MemoryRepository
 
 from app.core.config import Settings
+from app.local_v6 import install_local_v6
 from app.main import create_app
 from app.modules.physiology.models import InternalLoad
 from app.modules.planning.domain import PlanningTarget, PlanningTargetBasis
-from app.modules.planning.router import get_planning_service
 from app.modules.planning.v6_selection import V6Controls
 from app.modules.planning.v6_service import InactiveV6CatalogProvider, V6PlanningService
 from app.modules.workouts.catalog import TrainingPhase
@@ -29,23 +29,16 @@ def v6_client() -> Iterator[TestClient]:
     repository = V6MemoryRepository(owners, catalog)
     provider = InactiveV6CatalogProvider()
     app = create_app(
-        Settings(environment="test"),
+        Settings(
+            environment="test", supabase_url="http://127.0.0.1:55439", _env_file=None
+        ),
         access_token_verifier=PlanningTokenVerifier(owners),
         onboarding_repository=ZoneRejectStub(),  # type: ignore[arg-type]
         planning_repository=repository,
         planning_catalog_provider=provider,
     )
 
-    def service(request: Request) -> V6PlanningService:
-        return V6PlanningService(
-            repository,
-            provider,
-            app.state.weekly_plan_coach,
-            request.app.state.planning_computation,
-            controls=getattr(app.state, "v6_controls", V6Controls()),
-        )
-
-    app.dependency_overrides[get_planning_service] = service
+    install_local_v6(app, repository, provider)
     with TestClient(app) as client:
         yield client
 
@@ -141,7 +134,15 @@ def test_automatic_proposal_and_each_sport_swipe(v6_client: TestClient) -> None:
         retained = {w["id"]: w for w in before["workouts"] if w["id"] != current["id"]}
         for w in plan["workouts"]:
             if w["id"] in retained:
-                assert w == retained[w["id"]]
+                # Retain logical/source/date fields across immutable physical revisions.
+                assert {k: v for k, v in w.items() if k != "physical_workout_id"} == {
+                    k: v
+                    for k, v in retained[w["id"]].items()
+                    if k != "physical_workout_id"
+                }
+                assert (
+                    w["physical_workout_id"] != retained[w["id"]]["physical_workout_id"]
+                )
         assert len(retained) == 2
         retry = v6_client.post(url + "/edit-proposals", headers=_headers(), json=body)
         assert retry.status_code == 201 and retry.json() == response.json(), retry.text
@@ -461,7 +462,17 @@ def test_build_four_high_limit_and_repeated_occurrence_preservation(
         },
     )
     assert changed.status_code == 201, changed.text
-    assert (
-        next(w for w in changed.json()["plan"]["workouts"] if w["id"] == runs[1]["id"])
-        == runs[1]
+    retained_run = next(
+        w for w in changed.json()["plan"]["workouts"] if w["id"] == runs[1]["id"]
     )
+    assert {
+        k: v
+        for k, v in retained_run.items()
+        if k not in {"physical_workout_id", "source_prescription"}
+    } == {
+        k: v
+        for k, v in runs[1].items()
+        if k not in {"physical_workout_id", "source_prescription"}
+    }
+    assert retained_run["physical_workout_id"] != runs[1]["physical_workout_id"]
+    assert retained_run["source_prescription"] is not None

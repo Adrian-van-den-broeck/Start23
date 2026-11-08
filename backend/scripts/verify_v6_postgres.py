@@ -208,7 +208,12 @@ class SqlRepository(InactiveSupabaseV6Repository):
             call = "public." + name + "(" + arguments + ")"
             sql = (
                 "select coalesce(jsonb_agg(r), '[]') from " + call + " r"
-                if name == "get_plan_load_history_for_planning_v16"
+                if name
+                in {
+                    "get_plan_load_history_for_planning_v16",
+                    "get_v6_mobile_calendar",
+                    "get_calendar_rest_days",
+                }
                 else "select to_jsonb(" + call + ")"
             )
         elif (
@@ -290,7 +295,7 @@ def verify_numeric_round_trips(db: LocalPostgres) -> None:
         assert row["source_snapshot"] == json.loads(private_json(asdict(template)))
         assert row["public_snapshot"] == V6PlanningService._deck_item(
             template
-        ).model_dump(mode="json")
+        ).model_dump(mode="json", exclude={"source_prescription"})
         assert parse_catalog_document(row["document"]) == template
         assert row["document"] == catalog_document(template)
     assert db.execute(
@@ -597,7 +602,13 @@ async def resume_stage(db: LocalPostgres, output: Path) -> None:
     retried = await edit(requests[winners[0]])
     assert retried == winner
     retained = {w.id: w for w in plan.workouts if w.id != requests[winners[0]][0]}
-    assert all(w == retained[w.id] for w in winner.plan.workouts if w.id in retained)
+    assert all(
+        w.model_dump(exclude={"physical_workout_id"})
+        == retained[w.id].model_dump(exclude={"physical_workout_id"})
+        and w.physical_workout_id != retained[w.id].physical_workout_id
+        for w in winner.plan.workouts
+        if w.id in retained
+    )
     winning_workout_id = requests[winners[0]][0]
     original_template = next(
         w.template_id for w in plan.workouts if w.id == winning_workout_id

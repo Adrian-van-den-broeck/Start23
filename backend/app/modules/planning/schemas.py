@@ -12,6 +12,7 @@ from app.modules.physiology.models import Discipline, IntensityBucket
 from app.modules.workouts.catalog import TrainingPhase
 from app.modules.workouts.schemas import (
     RpeZoneResponse,
+    SourcePrescription,
     WorkoutSegmentResponse,
     rpe_zone_responses,
 )
@@ -151,6 +152,8 @@ class PlannedWorkoutResponse(PublicPlanningModel):
     """Immutable public workout snapshot within a plan revision."""
 
     id: UUID
+    physical_workout_id: UUID | None = None
+    source_prescription: SourcePrescription | None = None
     template_id: UUID
     template_key: UUID
     template_version: int = Field(ge=1)
@@ -316,6 +319,7 @@ class WorkoutDeckResponse(PublicPlanningModel):
 class WorkoutDeckItemResponse(PublicPlanningModel):
     """TSS-free eligible catalog item."""
 
+    source_prescription: SourcePrescription | None = None
     id: UUID
     template_key: UUID
     version: int = Field(ge=1)

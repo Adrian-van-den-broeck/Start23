@@ -9,6 +9,13 @@ export function newIdempotencyKey(): string {
   });
 }
 
+export function activityWorkoutId(workout: PlannedWorkout): string {
+  if (workout.source_prescription && !workout.physical_workout_id) {
+    throw new Error('De exacte opgeslagen training ontbreekt. Laad de planning opnieuw.');
+  }
+  return workout.physical_workout_id ?? workout.id;
+}
+
 export function activityCreateInput({ discipline, duration, distance, startedAt, athleteTimezone, selectedWorkout, selectedExternal }: {
   discipline: Discipline; duration: string; distance: string; startedAt: string; athleteTimezone: string;
   selectedWorkout: PlannedWorkout | null; selectedExternal: PlannedExternalActivity | null;
@@ -36,7 +43,7 @@ export function activityCreateInput({ discipline, duration, distance, startedAt,
   }
   return {
     ...(selectedWorkout
-      ? { planned_workout_id: selectedWorkout.id }
+      ? { planned_workout_id: activityWorkoutId(selectedWorkout) }
       : {}),
     ...(selectedExternal
       ? { planned_external_activity_id: selectedExternal.id }

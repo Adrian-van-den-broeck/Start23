@@ -46,7 +46,7 @@ def prepare() -> str:
                 "source_snapshot": json.loads(private_json(asdict(t))),
                 "document": document,
                 "public_snapshot": PlanningService._deck_item(t).model_dump(
-                    mode="json"
+                    mode="json", exclude={"source_prescription"}
                 ),
                 "document_sha256": sha256(
                     canonical_document(document).encode()

@@ -177,3 +177,27 @@ class WorkoutCatalogResponse(PublicWorkoutModel):
     """Current reviewed catalog versions."""
 
     templates: tuple[WorkoutTemplateResponse, ...]
+
+
+class SourceBlock(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    sequence: int
+    kind: Literal["timed_zone", "swim_distance", "stationary_wall_rest"]
+    text: str
+    zone: int | None
+    seconds: Decimal | None
+    meters: int | None
+
+
+class SourcePrescription(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    source_workout_id: str
+    source_release: str
+    session_effort: str
+    focus: str
+    original_text: str
+    zone_distribution: tuple[Decimal, ...]
+    distribution_unit: Literal["minutes", "meters"]
+    blocks: tuple[SourceBlock, ...]
+    estimated_active_minutes: Decimal | None = None
+    duration_basis: Literal["ESTIMATED_FROM_APPROVED_REFERENCE_PACE"] | None = None

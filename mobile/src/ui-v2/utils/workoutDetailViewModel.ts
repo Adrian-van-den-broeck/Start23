@@ -1,11 +1,13 @@
-import type { PlannedWorkout, WorkoutSegment } from '../../api/types';
+import type { PlannedWorkout, SourcePrescription, WorkoutSegment } from '../../api/types';
 import { workoutSummaryViewModel, type WorkoutMeasures, type WorkoutSummaryViewModel } from './workoutSummaryViewModel';
 
 export type RpeRange = Readonly<{ min: number; max: number }>;
 export type SegmentTarget =
+  | Readonly<{ kind: 'rest' }>
   | Readonly<{ kind: 'zone'; zone: number }>
   | Readonly<{ kind: 'rpe' | 'protocol' | 'expected'; range: RpeRange }>;
 export type SegmentViewModel = Readonly<{
+  durationSeconds?: string | null;
   sequence: number;
   name: string;
   instructions: string;
@@ -20,7 +22,8 @@ export type SegmentViewModel = Readonly<{
 export type WorkoutDetailViewModel = Readonly<{
   summary: WorkoutSummaryViewModel;
   description: string;
-  expectedRpe: RpeRange;
+  expectedRpe: RpeRange | null;
+  source: Readonly<{ session_effort: string; original_text: string; distribution_unit: 'minutes' | 'meters'; zone_distribution: readonly string[]; estimated_active_minutes: string | null; duration_basis: 'ESTIMATED_FROM_APPROVED_REFERENCE_PACE' | null }> | null;
   segments: readonly SegmentViewModel[];
   rpeReference: readonly Readonly<{ label: string; trainingType: string; description: string; range: RpeRange }>[];
 }>;
@@ -51,11 +54,28 @@ export function workoutDetailViewModel(workout: PlannedWorkout): WorkoutDetailVi
   return {
     summary: workoutSummaryViewModel(workout),
     description: workout.description,
-    expectedRpe: { min: workout.expected_rpe_min, max: workout.expected_rpe_max },
-    segments: workout.segments.map(segmentViewModel),
-    rpeReference: workout.rpe_zones.map((zone) => ({
+    expectedRpe: workout.source_prescription ? null : { min: workout.expected_rpe_min, max: workout.expected_rpe_max },
+    source: workout.source_prescription ? {
+      session_effort: workout.source_prescription.session_effort,
+      original_text: workout.source_prescription.original_text,
+      distribution_unit: workout.source_prescription.distribution_unit,
+      zone_distribution: [...workout.source_prescription.zone_distribution],
+      estimated_active_minutes: workout.source_prescription.estimated_active_minutes,
+      duration_basis: workout.source_prescription.duration_basis,
+    } : null,
+    segments: workout.source_prescription ? sourceBlocksViewModel(workout.source_prescription) : workout.segments.map(segmentViewModel),
+    rpeReference: (workout.source_prescription ? [] : workout.rpe_zones).map((zone) => ({
       label: zone.display_label, trainingType: zone.training_type, description: zone.description,
       range: { min: zone.target_rpe_min, max: zone.target_rpe_max },
     })),
   };
+}
+
+export function sourceBlocksViewModel(source: SourcePrescription): SegmentViewModel[] {
+  return source.blocks.map((block) => ({
+    sequence: block.sequence, name: block.text, instructions: '', durationSeconds: block.seconds,
+    measures: { durationMinutes: null, distanceMeters: block.meters },
+    target: block.kind === 'stationary_wall_rest' ? { kind: 'rest' } : { kind: 'zone', zone: block.zone! },
+    rpeTarget: null, protocolTarget: null, heartRateObservationRequired: false, optionalProtocol: false, technique: false,
+  }));
 }

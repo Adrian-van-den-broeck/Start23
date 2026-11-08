@@ -596,7 +596,7 @@ export function usePlanningController(accessToken: string, athleteIdentity: stri
     let updated: WeeklyPlan;
     try { updated = await movePlannedWorkout(
       accessToken,
-      workout.id,
+      workout.physical_workout_id ?? workout.id,
       reviewedPlan.active_revision!,
       scheduledDate,
     ); }

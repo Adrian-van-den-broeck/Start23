@@ -134,6 +134,8 @@ function deterministicErrorMessage(code: string | undefined): string | null {
     case 'swipe_draft_base_stale':
     case 'proposal_stale':
       return 'Je weekplanning is intussen gewijzigd. Vernieuw de week en probeer opnieuw.';
+    case 'v6_active_move_requires_revision':
+      return 'Deze bevestigde training kan nog niet worden verplaatst. De opgeslagen brontraining blijft behouden.';
     case 'swipe_selection_incomplete':
     case 'swipe_layout_incomplete':
       return 'Rond eerst alle trainingskeuzes en datums af.';

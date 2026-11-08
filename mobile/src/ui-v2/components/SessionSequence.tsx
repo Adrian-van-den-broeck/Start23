@@ -20,6 +20,7 @@ export function SessionSequence({ segments }: { segments: readonly SegmentViewMo
           {segment.sequence}. {segment.name}
         </Text>
         <View style={styles.measures}>
+        {segment.durationSeconds != null ? <Text variant="label">{t('detail.seconds', { value: segment.durationSeconds })}</Text> : null}
         {segment.measures.durationMinutes !== null ? <Text variant="label"
           accessibilityLabel={t('detail.minutesSpoken', { value: segment.measures.durationMinutes })}>
           {t('common.durationMinutes', { minutes: segment.measures.durationMinutes })}
@@ -30,7 +31,7 @@ export function SessionSequence({ segments }: { segments: readonly SegmentViewMo
         </Text> : null}
         </View>
         <View style={styles.targets}>
-        {segment.target.kind === 'zone' ? <ZoneBadge zone={segment.target.zone} /> :
+        {segment.target.kind === 'rest' ? <Text variant="label">{t('detail.wallRest')}</Text> : segment.target.kind === 'zone' ? <ZoneBadge zone={segment.target.zone} /> :
           <RpeIndicator range={segment.target.range} kind={segment.target.kind === 'expected' ? 'expected' : segment.target.kind} />}
         {segment.rpeTarget && segment.target.kind !== 'rpe' ? <RpeIndicator kind="rpe" range={segment.rpeTarget} /> : null}
         {segment.protocolTarget && segment.target.kind !== 'protocol' ? <RpeIndicator kind="protocol" range={segment.protocolTarget} /> : null}

@@ -85,6 +85,7 @@ class V6MemoryRepository(MemoryPlanningRepository):
             workouts.append(
                 {
                     "id": row["occurrence_id"] or str(uuid4()),
+                    "physical_workout_id": str(uuid4()),
                     "template_id": str(t.id),
                     "template_key": str(t.template_key),
                     "template_version": t.version,

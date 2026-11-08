@@ -517,7 +517,22 @@ export type PlanWarning = {
   planned_workout_id: string | null;
 };
 
+export type SourcePrescription = {
+  source_workout_id: string;
+  source_release: string;
+  session_effort: string;
+  focus: string;
+  original_text: string;
+  zone_distribution: string[];
+  distribution_unit: 'minutes' | 'meters';
+  blocks: { sequence: number; kind: 'timed_zone' | 'swim_distance' | 'stationary_wall_rest'; text: string; zone: number | null; seconds: string | null; meters: number | null }[];
+  estimated_active_minutes: string | null;
+  duration_basis: 'ESTIMATED_FROM_APPROVED_REFERENCE_PACE' | null;
+};
+
 export type PlannedWorkout = {
+  physical_workout_id?: string | null;
+  source_prescription?: SourcePrescription | null;
   id: string;
   template_id: string;
   template_key: string;
@@ -618,6 +633,7 @@ export type WeeklyPlanProposal = {
 };
 
 export type WorkoutDeckItem = {
+  source_prescription?: SourcePrescription | null;
   id: string;
   template_key: string;
   version: number;

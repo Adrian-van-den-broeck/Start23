@@ -1,7 +1,10 @@
 import { fireEvent, render } from '@testing-library/react-native';
 
 import type { PlannedWorkout } from '../api/types';
+import { LanguageProvider } from '../i18n/LanguageProvider';
 import { WorkoutDetail } from './WorkoutDetail';
+
+jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn().mockResolvedValue('nl'), setItemAsync: jest.fn() }));
 
 const swim: PlannedWorkout = {
   id: 'swim-1', template_id: 'template-1', template_key: 'swim-distance',
@@ -19,7 +22,7 @@ const swim: PlannedWorkout = {
 
 test('detail shows catalog instructions and retains swim distance without inventing duration', async () => {
   const onClose = jest.fn();
-  const screen = await render(<WorkoutDetail workout={swim} onClose={onClose} />);
+  const screen = await render(<LanguageProvider><WorkoutDetail workout={swim} onClose={onClose} /></LanguageProvider>);
   expect(screen.getByText('Afstandsgestuurde techniektraining.')).toBeTruthy();
   expect(screen.getByText('Zwem gecontroleerd met plank.')).toBeTruthy();
   expect(screen.getByText(/1200 m · afstandgestuurd/)).toBeTruthy();

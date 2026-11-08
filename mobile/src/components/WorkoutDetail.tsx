@@ -1,5 +1,6 @@
 import { Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { useLanguage } from '../i18n/LanguageProvider';
 import type { PlannedWorkout, WorkoutSegment } from '../api/types';
 import { colors, radius, spacing } from '../theme/tokens';
 import { MotionPressable as Pressable } from './MotionPressable';
@@ -20,6 +21,7 @@ export function WorkoutDetail({ workout, onClose }: {
   workout: PlannedWorkout | null;
   onClose: () => void;
 }) {
+  const { t } = useLanguage();
   return (
     <Modal animationType="slide" onRequestClose={onClose} visible={workout !== null}>
       {workout ? (
@@ -34,11 +36,22 @@ export function WorkoutDetail({ workout, onClose }: {
               {workout.duration_minutes !== null
                 ? `${Number(workout.duration_minutes)} min`
                 : `${workout.distance_meters} m · afstandgestuurd`}
-              {' · '}RPE {workout.expected_rpe_min}
-              {workout.expected_rpe_max === workout.expected_rpe_min
+              {workout.source_prescription ? '' : ` · RPE ${workout.expected_rpe_min}`}
+              {workout.source_prescription || workout.expected_rpe_max === workout.expected_rpe_min
                 ? '' : `–${workout.expected_rpe_max}`}
             </Text>
-            {workout.segments.map((segment) => (
+            {workout.source_prescription ? <>
+              <Text style={styles.meta}>{t('detail.sessionEffort', { value: workout.source_prescription.session_effort })}</Text>
+              <Text style={styles.segmentTitle}>{t('detail.originalSource')}</Text>
+              <Text style={styles.description}>{workout.source_prescription.original_text}</Text>
+              {workout.source_prescription.estimated_active_minutes !== null ? <Text style={styles.description}>{t('detail.estimatedActive', { value: workout.source_prescription.estimated_active_minutes })}</Text> : null}
+              {workout.source_prescription.blocks.map((block) => <View key={block.sequence} style={styles.segment}>
+                <Text style={styles.segmentTitle}>{block.sequence}. {block.text}</Text>
+                <Text style={styles.meta}>{block.kind === 'stationary_wall_rest' ? t('detail.wallRest') : t('detail.zone', { value: block.zone! })}</Text>
+                {block.seconds !== null ? <Text style={styles.meta}>{t('detail.seconds', { value: block.seconds })}</Text> : null}
+                {block.meters !== null ? <Text style={styles.meta}>{t('detail.meters', { value: block.meters })}</Text> : null}
+              </View>)}
+            </> : workout.segments.map((segment) => (
               <View key={segment.sequence} style={styles.segment}>
                 <Text style={styles.segmentTitle}>{segment.sequence}. {segment.name}</Text>
                 <Text style={styles.description}>{segment.instructions}</Text>

@@ -158,7 +158,7 @@ def test_v6_transport_scopes_credentials_and_recreates_repository(
             return httpx.Response(200, json=str(athlete))
         if request.url.path.endswith("get_inactive_v6_catalog_for_planning"):
             return httpx.Response(200, json=documents)
-        if request.url.path.endswith("get_v6_weekly_plan"):
+        if request.url.path.endswith("get_v6_mobile_weekly_plan"):
             assert request.headers["authorization"] == "Bearer caller-a"
             assert request.headers["apikey"] == "sb_publishable_test"
             return httpx.Response(
