@@ -1,0 +1,19 @@
+{
+  "status": "EXECUTED / PASS",
+  "tested_implementation_sha": "479709f638aa97606bd6226e7b8b44b536b8a2ee",
+  "base_sha": "798e4a00d187474cefe00e8794f04c42422cf72b",
+  "protected_sha": "cd3e2dd438031cfb565858d0a5929e9963f7b31f",
+  "protected_status": "",
+  "starting_worktree_sha": "798e4a00d187474cefe00e8794f04c42422cf72b",
+  "starting_worktree_status": "",
+  "protected_sources_diff": "",
+  "inventory": {
+    "pgtap": "1.3.4",
+    "sources": 77,
+    "active_sources": 0,
+    "listen_addresses": "127.0.0.1"
+  },
+  "production_untouched": true,
+  "staging_untouched": true,
+  "push_merge_deploy": false
+}

@@ -1,0 +1,19 @@
+--- a/supabase/tests/wombo_a5_checkin_proposal_recovery_test.sql
++++ b/supabase/tests/wombo_a5_checkin_proposal_recovery_test.sql
+@@ -27,6 +27,7 @@
+   (athlete_id, timezone, timezone_source, timezone_confirmed_at, onboarding_status)
+ values ('a0000000-0000-0000-0000-0000000000a5', 'Europe/Amsterdam',
+   'manual', statement_timestamp(), 'in_progress');
++\ir fixtures/a5_current_onboarding.sql
+ select set_config('start23.checkin_write', 'on', true);
+ insert into public.weekly_checkins (id, athlete_id, week_start, timezone) values
+   ('c0000000-0000-0000-0000-0000000000a5',
+@@ -40,7 +41,7 @@
+   'checkin_id', 'c0000000-0000-0000-0000-0000000000a5',
+   'expected_base_revision', 0, 'week_start', '2026-08-03',
+   'timezone', 'Europe/Amsterdam', 'phase', 'base', 'target_basis', 'injury_rest_only',
+-  'input_fingerprint', repeat('a', 64), 'generation_fingerprint', repeat('b', 64),
++  'input_fingerprint', repeat('a', 32), 'generation_fingerprint', repeat('b', 64),
+   'total_duration_minutes', 0, 'low_intensity_percent', 0, 'high_intensity_percent', 0,
+   'confirmed_injuries', '["run"]'::jsonb, 'low_only_disciplines', '[]'::jsonb,
+   'goal_disciplines', '["run"]'::jsonb, 'availability', '[]'::jsonb,

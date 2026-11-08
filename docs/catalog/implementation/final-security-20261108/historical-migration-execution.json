@@ -1,0 +1,262 @@
+[
+  {
+    "file": "20260724140227_create_athlete_profiles.sql",
+    "sha256": "c076334accd00b99d08e0b2485c45fd7e69c28a163366e5c8a105cba9acba3f1",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260724142004_restrict_rls_auto_enable_execution.sql",
+    "sha256": "4c7ba24a261d83dbe588f31ea5d91d70c81d7eb02614b726e188eade9d1fa8e8",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260727132531_phase_4_onboarding_goals_zones.sql",
+    "sha256": "957cc073c61dbf4c02072da9d515430376c423ee1c996a7ce7ef8c7e9f66c05e",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260727170000_phase_5_workout_catalog.sql",
+    "sha256": "10ff914077d8d4670fb9a0a6ab7c8765c4e096fcf67f92e26493023e39ad4cb6",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260728133728_phase_4_5_review_hardening.sql",
+    "sha256": "e9034fb8b43a59b9b7e851b290eb9e1d2f927bc00ada3c5e60ba3266e8c56c08",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260729140000_phase_6_weekly_planning.sql",
+    "sha256": "dd38dea5b1d27eaa56ad623c3dfdb7c24fa70bcdd797df042244b6c25ee345d7",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260809225626_phase_6_advisor_indexes.sql",
+    "sha256": "0a9a2088c96898b60175c93e5bc125a4c16d168e174b9aa55279fc452d74a537",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260811103726_phase_7_activity_rpe_feedback.sql",
+    "sha256": "281ad0cd74501b60a375d54c3da165f3d305f8eea166b0b98808a1a616879a2a",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260813105401_phase_8_structured_weekly_checkin.sql",
+    "sha256": "ad5acace89dd07d19173a5c2c75ef55dc7c2988cb9e4e8d8b3a223bc951c59d1",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260813170000_phase_8_5_zone_calibration.sql",
+    "sha256": "19268ed64e9408cfedbb8cf2f3f87acb64f7f1951e50b4a3ff96d6ced3076824",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260817105304_phase_9_polar_integration.sql",
+    "sha256": "d5604780b30b6f72be3d4245b2525b6fbc5cace5668cf409f3fc87858e83a7be",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260824144801_phase_8_5_zone_model_v1.sql",
+    "sha256": "623299a21e652dc0ffc717855d397e9af8890378c781033b12ecc5025e932be0",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260824174747_phase_10_ai_weekly_plan_explanation.sql",
+    "sha256": "9eda77f9dd6f82c6b19ce048875362000bdc528575905d563f4d226afb2bac8b",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260825225207_phase_8_5_9_business_decisions.sql",
+    "sha256": "3351437dd2f944e6097e2d10649a8e83e30d566cd6776d984efa3b1a9fe8ccb1",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260826085242_phase_10_date_only_planning.sql",
+    "sha256": "3292b95d8d74d26cc4ca68419ac1c1c2e87901d6ce5a9820ed2c28ceb4d1f525",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260826144239_phase_11_discipline_zone_profiles.sql",
+    "sha256": "b2853dd3143710d62be405f53e37300e7a4c9cf501f6b901c3edbdb29d43b024",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260901054333_phase_10_1_swipe_week_drafts.sql",
+    "sha256": "7be2ba0b07f3962aa33f020b03ed25f73d955e49b6e5b502cf4ade740e3a475c",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260902083241_fix_swipe_draft_service_role_permissions.sql",
+    "sha256": "784a1ae53cb8ae2b90200f8592d73669f098a9abbb549d33af33b67e9c1b7ce5",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260902084055_fix_swipe_draft_placement_validation.sql",
+    "sha256": "d204582e0336822c7342d37f160dcf201546aa478a27c164a5a0b81eefd029da",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260902120000_mvp_rpe_zones_and_swim_catalog.sql",
+    "sha256": "f63b61ac571dae11e90bf59b5c44b0387e5495c92d6edcf10eed7fdbe0107f5b",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260903074359_add_source_catalog_training_options.sql",
+    "sha256": "0888b5997b72d30070978ad162c346ccc1838e249fd655024c7bdd4a94317a72",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260910120000_phase_14_history_and_retired_inputs.sql",
+    "sha256": "076732bc0f1ce388190a79c62af6f1860361229d39e8dd2cbce5cca002faa3a1",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260910215947_phase_13_joren_ruleset.sql",
+    "sha256": "a3a79fbaa6b76d87c2d492c9ad647451c33b5d3ea3d592c6e5dd33daeb33bf92",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260911180631_phase_r1_onboarding_versioning.sql",
+    "sha256": "12ff2e9b0e313fd12b68cbcecd56778c28b3477570fd6c2bce2a6299437c3d83",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260912070000_r6_allow_opaque_owner_backfill_for_immutable_calibration.sql",
+    "sha256": "3c81cd85e3bc030039f78a99bc8111aa6f1a1d34304cde1694610e05b5879452",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260912072232_phase_r2_r3_identity_onboarding_calibration.sql",
+    "sha256": "e68d10f538037cfa09d0f84a33d959259e2fff57e1071f206cab1c7b13936ea4",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260912180000_phase_r4_r5_onboarding_race_activity.sql",
+    "sha256": "e5f888e93d03e823ca87b8634c9d937b081806d9e02605cc416f4459b03ae2e0",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260913130000_phase_13_14_r6_entry_audit_remediation.sql",
+    "sha256": "3f029396de239a2b679c17e7d9fb0a0e65d64b06e7eb79185d9862e502e0dc10",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914080000_close_historical_calibration_writes.sql",
+    "sha256": "56edb5b6fd08c4988094f2ac28d78a2b5d8e454931f49e9493e2cb36a844c281",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914090000_block_historical_zone_profile_activation.sql",
+    "sha256": "91953b75ac68ecf0d5ac30106149abe6a38efdd1d4a2f29d3c92ddd613fea363",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914162430_r6_preserve_critical_context_for_submaximal_zone_provenance.sql",
+    "sha256": "516914f95b5163aab7dcab1f7c00d9c2bf1fb351d4fded6357c49a8ed6fad504",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914162711_r6_order_plan_revision_owner_before_eligibility.sql",
+    "sha256": "077e40eb9c2381883356a515a67f2b6df4e2fd001f3a8580358549665a30cca9",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914163325_r6_restore_activity_idempotency_preflight.sql",
+    "sha256": "2c9144cd622f01728f01718982c2b454e78e74401912b7e98eea862dabd6989d",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914170134_r6_increment_structured_race_goal_revision.sql",
+    "sha256": "3a534c7fc184d0e0d7102a185cc8f1ee438b317935a41dca5dcc252cf6dea956",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914172000_r6_refresh_planning_snapshot_after_input_change.sql",
+    "sha256": "e7cbb092cd914c9d4054481f518c5396c557abd277cb6642eeefffe5fb888316",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914172500_r6_refresh_extended_planning_snapshot_after_input_change.sql",
+    "sha256": "ab8bc925fb3baaf5253fd9f29b798af7cef3ebdfd238119788f4896ad8bf7813",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914173000_r6_refresh_planning_snapshot_after_goal_rpc.sql",
+    "sha256": "d37fc30c6911f9ef9628c8faadabab99d59faa9956a68d175c0765a759967f22",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914173500_r6_force_distinct_post_rpc_snapshot_refresh.sql",
+    "sha256": "3d98a3801ef8a0f81cf5c519817cff3d0076e0f8913d1f2529680167dca1ed2d",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914174000_r6_disambiguate_activity_processing_load_source.sql",
+    "sha256": "2238c7757b24f6579c4e9665b9616001fe30c3810120b59286a3b9271cd59636",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914175000_r6_cover_foreign_key_access_paths.sql",
+    "sha256": "bc8335c45921818094d4bccdfa35ad4b0422b6f6a3002dad084c13fa53e26793",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260914180000_r6_preserve_account_deletion_cascades.sql",
+    "sha256": "18b42a6c0ef318e73c4a38c92dab102c3a55a3d3d5f1c49a6f31e4b60341a8fa",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260915081055_r6_mvp_nonretryable_business_conflicts.sql",
+    "sha256": "9198c3a25bac912de73015746ec26901b0a3985190f13122c523712b00c97f6a",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260915082320_r6_onboarding_completion_step_vocabulary.sql",
+    "sha256": "ad91d96a386cdbc9c9b0c3ea76aecf2a25295c142eb4fe7f731eef7a720de941",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260915205627_r6_checkin_context_and_account_deletion.sql",
+    "sha256": "5c6846107c10f0c96a071997eb4930d46ca9e9c25f066f276868ae170eac96d8",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260923063453_phase_16_pioneer_access.sql",
+    "sha256": "ae314371927f45f05bf1d06747579a51eab024cc152b8ead43abaa419eb859cb",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20260929210000_joren_planning_ruleset_v2.sql",
+    "sha256": "def8e89f459a6e0eabf9a770a00b6dbdb5d00037ecd0a4d2279e586c036fe74d",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20261004212750_first_plan_approved_provenance.sql",
+    "sha256": "6c102779574a757ea7985efc04b00eb713c24f2b18a306f2c2eb0b09f5c52665",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20261026224844_wombo_a5_checkin_proposal_recovery.sql",
+    "sha256": "605baca7b060a74dcd0804710a8547b662d76f0c5cb7c21a5aa4b72cfa305d02",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20261103134520_joren_realized_tss_v2_private_provenance.sql",
+    "sha256": "d5444ccbe28428e4101151c07c2f522ae213c2fd82190f5af8cc1ce1c2333231",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20261103135735_realized_v2_weekly_registration.sql",
+    "sha256": "2c3cd85f4ead27a37dd16330626cf8c57fe69baf44459b8fa8b9e9a92f59b346",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20261103140959_realized_v2_planning_evidence_preconditions.sql",
+    "sha256": "6358726af884ecb44e104ad9c0528d2ca7865c0dde8a37e1e8169fbd13ee896a",
+    "status": "EXECUTED / PASS"
+  },
+  {
+    "file": "20261103142339_realized_v2_session_rpe_guidance.sql",
+    "sha256": "4b3749757358d332df835b4abb945dc95769c4f7a5a14f9b3654874880d93d29",
+    "status": "EXECUTED / PASS"
+  }
+]

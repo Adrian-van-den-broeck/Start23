@@ -1,0 +1,16 @@
+{
+  "status": "EXECUTED / PASS",
+  "database": "wombo_v6_final_security_clean_20261108",
+  "runner": "backend/scripts/verify_v6_postgres.py",
+  "log_sha256": "9be2999e6dcbf0365eb5863f019fd53bbabb43efc93b193e2986a04901eeada8",
+  "completion": "Real PostgreSQL lifecycle, restart, concurrency, retry, cancellation and rollback checks passed.",
+  "official_decimal_values_verified": 77,
+  "composite_owner_fk_rollback_cases": 3,
+  "separate_create_resume_reload_processes": true,
+  "competing_swipes_barrier_arrivals": 2,
+  "duplicate_key_barrier_arrivals": 2,
+  "swipe_confirmation_barrier_arrivals": 2,
+  "private_snapshot_update_denied": true,
+  "confirmed_workout_insert_denied": true,
+  "authenticated_critical_write_spoof_denied": true
+}

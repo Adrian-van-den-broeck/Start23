@@ -1,0 +1,84 @@
+{
+  "status": "WOMBO V6 DATABASE VERIFIED — FULL AUTH STACK PENDING",
+  "date": "2026-11-08",
+  "branch": "verify/joren-v6-final-auth-security",
+  "base_sha": "798e4a00d187474cefe00e8794f04c42422cf72b",
+  "tested_implementation_sha": "479709f638aa97606bd6226e7b8b44b536b8a2ee",
+  "migration_count": 59,
+  "migrations_added_or_edited": 0,
+  "final_sql": {
+    "status": "EXECUTED / PASS",
+    "suites": 33,
+    "assertions_executed": 644,
+    "failed": 0,
+    "skipped_or_todo": 0,
+    "a5_explicit_fixture_overlay": true,
+    "original_a5_assertions_preserved": 29
+  },
+  "rollback_sql": {
+    "status": "EXECUTED / PASS",
+    "suites": 33,
+    "assertions_executed": 644,
+    "failed": 0
+  },
+  "diagnostics": {
+    "original_a5_historical": "EXECUTED / FAIL",
+    "original_a5_final": "EXECUTED / FAIL",
+    "onboarding_only_overlay": "EXECUTED / FAIL",
+    "corrected_historical_a5": "EXECUTED / PASS",
+    "raw_a5_file_still_requires_separate_proposed_patch": true
+  },
+  "direct_signed_token_postgrest": {
+    "status": "EXECUTED / PASS",
+    "checks": 38,
+    "gotrue_issued": false,
+    "gateway": false
+  },
+  "gotrue_gateway": {
+    "status": "BLOCKED — ENVIRONMENT",
+    "sessions_issued": 0,
+    "gateway_tests_executed": 0,
+    "unexecuted": [
+      "real signup/login",
+      "real user token identity through FastAPI and gateway",
+      "two genuine GoTrue accounts isolation matrix",
+      "refresh/revocation/session lifecycle",
+      "issuer/audience/JWKS",
+      "modern publishable/secret API-key routing",
+      "service-role boundaries through gateway"
+    ]
+  },
+  "backend": {
+    "status": "EXECUTED / PASS",
+    "pytest_passed": 2586,
+    "failed": 0,
+    "skipped": 0,
+    "ruff": true,
+    "format": true,
+    "strict_mypy": true
+  },
+  "historical_corpus": {
+    "status": "EXECUTED / PASS",
+    "cases": 40,
+    "accepted_reference_completions": 26,
+    "diagnostic_timeout": "current:build_4",
+    "deadline_seconds": 8
+  },
+  "historical_catalog_templates_and_loads_retained": 325,
+  "inactive_v6_source_revisions": 77,
+  "production_untouched": true,
+  "protected_a5_a6_untouched": true,
+  "mobile_implementation_started": false,
+  "push_merge_deploy": false,
+  "disposable_servers_stopped": true,
+  "private_runtime_data_retained": true,
+  "remaining_gates": [
+    "Full GoTrue and Supabase gateway",
+    "Hosted migration/advisors and full platform defaults/extensions",
+    "Mobile logical/physical occurrence, calendar, activity and registration integration",
+    "Android/iOS real-device verification",
+    "V6 check-in integration and separate A5/A6 release adoption",
+    "Accountable external physiological review and operational scientific gates",
+    "Explicit catalog activation and release approval"
+  ]
+}

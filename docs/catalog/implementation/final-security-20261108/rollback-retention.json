@@ -1,0 +1,31 @@
+{
+  "status": "EXECUTED / PASS",
+  "database": "wombo_v6_rollback_2026110801",
+  "private_hashes_before": {
+    "v6_source_revisions": "94dc9ff94f585561c4f438287e297f63",
+    "v6_plan_snapshots": "c96337d47fffe2dd286f904d88b9c6c9",
+    "v6_occurrence_snapshots": "a072c22d067a60806de42dd46b71eb1a",
+    "v6_edit_results": "bcace656676958d88c79af3b0bfadbfe",
+    "plan_revision_loads": "3faa02dc6d9f6ff4ca7c84fd60fcecde",
+    "planned_workout_loads": "07c5d9feb610ee844fa54e504f4c5e8f",
+    "realized_v2_plan_evidence": "bff3e5cece43e379d2c9386ca56ab18d",
+    "realized_v2_activity_inputs": "37a6259cc0c1dae299a7866489dff0bd",
+    "realized_v2_calculations": "37a6259cc0c1dae299a7866489dff0bd"
+  },
+  "private_hashes_after": {
+    "v6_source_revisions": "94dc9ff94f585561c4f438287e297f63",
+    "v6_plan_snapshots": "c96337d47fffe2dd286f904d88b9c6c9",
+    "v6_occurrence_snapshots": "a072c22d067a60806de42dd46b71eb1a",
+    "v6_edit_results": "bcace656676958d88c79af3b0bfadbfe",
+    "plan_revision_loads": "3faa02dc6d9f6ff4ca7c84fd60fcecde",
+    "planned_workout_loads": "07c5d9feb610ee844fa54e504f4c5e8f",
+    "realized_v2_plan_evidence": "bff3e5cece43e379d2c9386ca56ab18d",
+    "realized_v2_activity_inputs": "37a6259cc0c1dae299a7866489dff0bd",
+    "realized_v2_calculations": "37a6259cc0c1dae299a7866489dff0bd"
+  },
+  "confirmed_public_equal": true,
+  "denied_42501": {
+    "generation": true,
+    "catalog": true
+  }
+}

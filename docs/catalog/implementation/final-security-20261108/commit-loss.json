@@ -1,0 +1,6 @@
+{
+  "real_commit": true,
+  "client_acknowledgement_lost": true,
+  "same_key_receipt_recovered": true,
+  "extra_revisions": 1
+}

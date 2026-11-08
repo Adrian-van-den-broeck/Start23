@@ -1,0 +1,68 @@
+{
+  "historical-original": {
+    "active_goals": 0,
+    "active_zones": 0,
+    "history_rows": 0,
+    "satisfied_steps": [
+      "timezone"
+    ],
+    "profile_completed": false,
+    "completion_records": 0,
+    "physiology_profiles": 0,
+    "hr_monitor_confirmed": false,
+    "opaque_owner_distinct": true,
+    "current_session_request_link": 0
+  },
+  "historical-corrected": {
+    "active_goals": 1,
+    "active_zones": 1,
+    "history_rows": 3,
+    "satisfied_steps": [
+      "profile",
+      "heart_rate_monitor",
+      "timezone",
+      "history",
+      "goal",
+      "zones"
+    ],
+    "profile_completed": true,
+    "completion_records": 1,
+    "physiology_profiles": 1,
+    "hr_monitor_confirmed": true,
+    "opaque_owner_distinct": true,
+    "current_session_request_link": 1
+  },
+  "final-original": {
+    "active_goals": 0,
+    "active_zones": 0,
+    "history_rows": 0,
+    "satisfied_steps": [
+      "timezone"
+    ],
+    "profile_completed": false,
+    "completion_records": 0,
+    "physiology_profiles": 0,
+    "hr_monitor_confirmed": false,
+    "opaque_owner_distinct": true,
+    "current_session_request_link": 0
+  },
+  "final-corrected": {
+    "active_goals": 1,
+    "active_zones": 1,
+    "history_rows": 3,
+    "satisfied_steps": [
+      "profile",
+      "heart_rate_monitor",
+      "timezone",
+      "history",
+      "goal",
+      "zones"
+    ],
+    "profile_completed": true,
+    "completion_records": 1,
+    "physiology_profiles": 1,
+    "hr_monitor_confirmed": true,
+    "opaque_owner_distinct": true,
+    "current_session_request_link": 1
+  }
+}

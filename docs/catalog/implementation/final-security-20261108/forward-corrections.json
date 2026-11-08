@@ -1,0 +1,89 @@
+[
+  {
+    "migration": "20261107182000_v6_segment_snapshot_compatibility.sql",
+    "sha256": "ca38c97168eaf7d22d5b3508aa4bcdc78f4643044181bfe2ff3d5e699cf838c1",
+    "status": "EXECUTED / PASS",
+    "existing_function_authority_unchanged": true,
+    "relations_policies_roles_memberships_unchanged": {
+      "relations": true,
+      "policies": true,
+      "roles": true,
+      "memberships": true
+    },
+    "changed_definitions": [],
+    "new_private_noncallable_triggers": [
+      "private.set_v6_planned_workout_segments()"
+    ]
+  },
+  {
+    "migration": "20261107182500_v6_frozen_snapshot_operator_precedence.sql",
+    "sha256": "aab65809df7f6ebf5d2881fde680e2b169943eceb9d27e2ce53350afbf29efe8",
+    "status": "EXECUTED / PASS",
+    "existing_function_authority_unchanged": true,
+    "relations_policies_roles_memberships_unchanged": {
+      "relations": true,
+      "policies": true,
+      "roles": true,
+      "memberships": true
+    },
+    "changed_definitions": [
+      "public.create_v6_weekly_plan_proposal(uuid, jsonb)"
+    ],
+    "new_private_noncallable_triggers": []
+  },
+  {
+    "migration": "20261107183000_realized_v2_internal_approval_custody.sql",
+    "sha256": "1efa35afae3877ea80bde0edc03241e0dad1944dee7a217d40739da86fcbc93a",
+    "status": "EXECUTED / PASS",
+    "existing_function_authority_unchanged": true,
+    "relations_policies_roles_memberships_unchanged": {
+      "relations": true,
+      "policies": true,
+      "roles": true,
+      "memberships": true
+    },
+    "changed_definitions": [
+      "public.get_plan_load_history_for_planning_v13(uuid, date)",
+      "public.get_plan_load_history_for_planning_v14(uuid, date)",
+      "public.get_plan_load_history_for_planning_v15(uuid, date)"
+    ],
+    "new_private_noncallable_triggers": []
+  },
+  {
+    "migration": "20261107183500_realized_v2_business_conflict_codes.sql",
+    "sha256": "1fae47af0784194597bd783a53c22626a9951a16009e749df672b202309e4375",
+    "status": "EXECUTED / PASS",
+    "existing_function_authority_unchanged": true,
+    "relations_policies_roles_memberships_unchanged": {
+      "relations": true,
+      "policies": true,
+      "roles": true,
+      "memberships": true
+    },
+    "changed_definitions": [
+      "private.guard_skipped_workout_activity()",
+      "private.guard_realized_v2_plan_approval()",
+      "public.create_weekly_plan_proposal_v4(uuid, jsonb)",
+      "public.confirm_workout_registration(uuid, uuid, integer, text)"
+    ],
+    "new_private_noncallable_triggers": []
+  },
+  {
+    "migration": "20261107184500_v6_insert_custody.sql",
+    "sha256": "b5844a38a73da363642db6a99328e5358fd4ff72302b51434dd88333dc4a4140",
+    "status": "EXECUTED / PASS",
+    "existing_function_authority_unchanged": true,
+    "relations_policies_roles_memberships_unchanged": {
+      "relations": true,
+      "policies": true,
+      "roles": true,
+      "memberships": true
+    },
+    "changed_definitions": [
+      "private.set_v6_planned_workout_segments()"
+    ],
+    "new_private_noncallable_triggers": [
+      "private.guard_v6_generated_revision_insert()"
+    ]
+  }
+]

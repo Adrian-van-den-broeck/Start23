@@ -1,0 +1,16 @@
+{
+  "file": "wombo_a5_checkin_proposal_recovery_test.sql",
+  "source_sha256": "cb6e4ffef878cb26c434250f5ec1a2524339de433d4dc82a09399875e5369b90",
+  "executed_sql_sha256": "1f6c2c1834500ae4f089c62259a91af4d816f6d4b6b9e77ecedf7c7d77174adf",
+  "overlay": true,
+  "exit_code": 0,
+  "assertions_executed": 29,
+  "passed": 29,
+  "failures": [],
+  "plan": [
+    "29"
+  ],
+  "complete": true,
+  "status": "EXECUTED / PASS",
+  "transcript_sha256": "5feea271776d449ea3309f05800912abcf4f436b03479a5091c1f4024978419f"
+}

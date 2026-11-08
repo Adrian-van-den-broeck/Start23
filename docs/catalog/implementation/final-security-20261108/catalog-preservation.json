@@ -1,0 +1,10 @@
+{
+  "historical_equal": true,
+  "historical_templates": 325,
+  "historical_loads": 325,
+  "historical_sha256": "25ca0d6662e9b31a626d15a387281e2ac6c672d177c16052d4ef0b4af3dc4f57",
+  "v6": {
+    "active": 0,
+    "source_revisions": 77
+  }
+}

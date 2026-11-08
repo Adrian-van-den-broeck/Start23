@@ -1,0 +1,154 @@
+[
+  {
+    "case": "owner 0 reads own immutable V6 plan",
+    "status": 200
+  },
+  {
+    "case": "owner 0 confirms own exact proposal",
+    "status": 200
+  },
+  {
+    "case": "owner 0 confirmation retry preserves receipt",
+    "status": 200
+  },
+  {
+    "case": "owner 0 reloads confirmed snapshot over HTTP",
+    "status": 200
+  },
+  {
+    "case": "owner 0 cannot read foreign V6 plan",
+    "status": 500
+  },
+  {
+    "case": "owner 0 foreign weekly_plans read",
+    "status": 200
+  },
+  {
+    "case": "owner 0 foreign weekly_plans update",
+    "status": 204
+  },
+  {
+    "case": "owner 0 foreign plan_revisions read",
+    "status": 200
+  },
+  {
+    "case": "owner 0 foreign plan_revisions update",
+    "status": 204
+  },
+  {
+    "case": "owner 0 foreign planned_workouts read",
+    "status": 200
+  },
+  {
+    "case": "owner 0 foreign planned_workouts update",
+    "status": 204
+  },
+  {
+    "case": "owner 0 cannot confirm foreign proposal",
+    "status": 500
+  },
+  {
+    "case": "owner 0 cannot spoof generated-write athlete",
+    "status": 403
+  },
+  {
+    "case": "owner 0 cannot read service catalog",
+    "status": 403
+  },
+  {
+    "case": "owner 0 cannot activate catalog",
+    "status": 403
+  },
+  {
+    "case": "owner 0 inactive catalog hidden",
+    "status": 200
+  },
+  {
+    "case": "owner 0 private source schema inaccessible",
+    "status": 406
+  },
+  {
+    "case": "owner 1 reads own immutable V6 plan",
+    "status": 200
+  },
+  {
+    "case": "owner 1 confirms own exact proposal",
+    "status": 200
+  },
+  {
+    "case": "owner 1 confirmation retry preserves receipt",
+    "status": 200
+  },
+  {
+    "case": "owner 1 reloads confirmed snapshot over HTTP",
+    "status": 200
+  },
+  {
+    "case": "owner 1 cannot read foreign V6 plan",
+    "status": 500
+  },
+  {
+    "case": "owner 1 foreign weekly_plans read",
+    "status": 200
+  },
+  {
+    "case": "owner 1 foreign weekly_plans update",
+    "status": 204
+  },
+  {
+    "case": "owner 1 foreign plan_revisions read",
+    "status": 200
+  },
+  {
+    "case": "owner 1 foreign plan_revisions update",
+    "status": 204
+  },
+  {
+    "case": "owner 1 foreign planned_workouts read",
+    "status": 200
+  },
+  {
+    "case": "owner 1 foreign planned_workouts update",
+    "status": 204
+  },
+  {
+    "case": "owner 1 cannot confirm foreign proposal",
+    "status": 500
+  },
+  {
+    "case": "owner 1 cannot spoof generated-write athlete",
+    "status": 403
+  },
+  {
+    "case": "owner 1 cannot read service catalog",
+    "status": 403
+  },
+  {
+    "case": "owner 1 cannot activate catalog",
+    "status": 403
+  },
+  {
+    "case": "owner 1 inactive catalog hidden",
+    "status": 200
+  },
+  {
+    "case": "owner 1 private source schema inaccessible",
+    "status": 406
+  },
+  {
+    "case": "service catalog RPC authorized; private body retained locally",
+    "status": 200
+  },
+  {
+    "case": "missing token",
+    "status": 401
+  },
+  {
+    "case": "invalid signature",
+    "status": 401
+  },
+  {
+    "case": "expired token",
+    "status": 401
+  }
+]

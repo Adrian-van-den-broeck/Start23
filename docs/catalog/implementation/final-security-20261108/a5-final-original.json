@@ -1,0 +1,19 @@
+{
+  "file": "wombo_a5_checkin_proposal_recovery_test.sql",
+  "source_sha256": "cb6e4ffef878cb26c434250f5ec1a2524339de433d4dc82a09399875e5369b90",
+  "executed_sql_sha256": "a44cad34d74d47e8428a7ed2d2a3d71e4abcc441348e8922df96ed51f9c22901",
+  "overlay": false,
+  "exit_code": 3,
+  "assertions_executed": 9,
+  "passed": 8,
+  "failures": [
+    "not ok 6 - partial creation rolls back on attachment failure"
+  ],
+  "plan": [],
+  "complete": false,
+  "status": "EXECUTED / FAIL",
+  "transcript_sha256": "88888990c7b15fde2aff3c48f1136b8eb9fba70d5ab00f4218ff3473249a6b73",
+  "diagnostic_sqlstate": "23514",
+  "diagnostic_message_or_constraint": "current onboarding completion is required for planning",
+  "original_assertions_not_executed_after_abort": 20
+}

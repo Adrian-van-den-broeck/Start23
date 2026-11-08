@@ -1,0 +1,19 @@
+{
+  "file": "wombo_a5_checkin_proposal_recovery_test.sql",
+  "source_sha256": "cb6e4ffef878cb26c434250f5ec1a2524339de433d4dc82a09399875e5369b90",
+  "executed_sql_sha256": "d0e34fc06deece1d00bbda42a4a245d956a73f5be10a8ca5c514d7634d10db3a",
+  "overlay": true,
+  "exit_code": 3,
+  "assertions_executed": 9,
+  "passed": 8,
+  "failures": [
+    "not ok 6 - partial creation rolls back on attachment failure"
+  ],
+  "plan": [],
+  "complete": false,
+  "status": "EXECUTED / FAIL",
+  "transcript_sha256": "10b08135cd89235260d9933afc894d0701a5b140b876dc05e788f5195240bbe2",
+  "diagnostic_sqlstate": "23514",
+  "diagnostic_message_or_constraint": "plan_revisions_fingerprints_valid",
+  "original_assertions_not_executed_after_abort": 20
+}
