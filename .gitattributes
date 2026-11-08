@@ -5,3 +5,6 @@ docs/catalog/implementation/automatic-selection/*.txt text eol=lf
 supabase/migrations/20261105120*.sql text eol=lf
 docs/catalog/implementation/persistence/*.json text eol=lf
 docs/catalog/implementation/persistence/*.txt text eol=lf
+docs/catalog/implementation/final-security-20261108/** text eol=lf
+backend/scripts/verify_v6_final_sql.py text eol=lf
+supabase/tests/fixtures/a5_current_onboarding.sql text eol=lf
