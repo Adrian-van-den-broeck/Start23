@@ -1,0 +1,86 @@
+{
+  "week_start": "2026-10-26",
+  "plan_id": "300771a9-a54e-40e5-a247-405f2ada95fd",
+  "snapshots": {
+    "before": {
+      "revision": 1,
+      "workouts": [
+        {
+          "id": "264d6fa3-42df-5270-8467-665b34f7d791",
+          "physical_workout_id": "95a060a2-dab9-41c1-8c07-7521b94b01ca",
+          "discipline": "run",
+          "status": "completed",
+          "scheduled_date": "2026-10-26"
+        },
+        {
+          "id": "bf88cf97-de22-5420-88d0-0ae9f65efbc5",
+          "physical_workout_id": "bd451213-94c3-46ad-bda7-faf8f5473c64",
+          "discipline": "bike",
+          "status": "scheduled",
+          "scheduled_date": "2026-10-29"
+        },
+        {
+          "id": "cae8f5ed-5283-56da-9fae-e330c5b45698",
+          "physical_workout_id": "880fcb55-ace7-416a-aa8f-b194f14cdc32",
+          "discipline": "swim",
+          "status": "scheduled",
+          "scheduled_date": "2026-10-30"
+        }
+      ]
+    },
+    "after": {
+      "revision": 2,
+      "workouts": [
+        {
+          "id": "264d6fa3-42df-5270-8467-665b34f7d791",
+          "physical_workout_id": "95a060a2-dab9-41c1-8c07-7521b94b01ca",
+          "discipline": "run",
+          "status": "completed",
+          "scheduled_date": "2026-10-26"
+        },
+        {
+          "id": "bf88cf97-de22-5420-88d0-0ae9f65efbc5",
+          "physical_workout_id": "93981658-bdba-4d4f-946c-47d428ad2f73",
+          "discipline": "bike",
+          "status": "scheduled",
+          "scheduled_date": "2026-11-01"
+        },
+        {
+          "id": "cae8f5ed-5283-56da-9fae-e330c5b45698",
+          "physical_workout_id": "880fcb55-ace7-416a-aa8f-b194f14cdc32",
+          "discipline": "swim",
+          "status": "scheduled",
+          "scheduled_date": "2026-10-30"
+        }
+      ]
+    },
+    "multipleCompleted": {
+      "revision": 4,
+      "workouts": [
+        {
+          "id": "264d6fa3-42df-5270-8467-665b34f7d791",
+          "physical_workout_id": "95a060a2-dab9-41c1-8c07-7521b94b01ca",
+          "discipline": "run",
+          "status": "completed",
+          "scheduled_date": "2026-10-26"
+        },
+        {
+          "id": "bf88cf97-de22-5420-88d0-0ae9f65efbc5",
+          "physical_workout_id": "93981658-bdba-4d4f-946c-47d428ad2f73",
+          "discipline": "bike",
+          "status": "completed",
+          "scheduled_date": "2026-11-01"
+        },
+        {
+          "id": "cae8f5ed-5283-56da-9fae-e330c5b45698",
+          "physical_workout_id": "c9b634a7-1749-45a8-8b31-5de2014ffab8",
+          "discipline": "swim",
+          "status": "scheduled",
+          "scheduled_date": "2026-10-30"
+        }
+      ]
+    }
+  },
+  "fixture": "mobile/src/features/planning/v6-evidence-http.test-fixture.json",
+  "activity_fk_ownership": "Original physical row; no reassignment or evidence copying"
+}

@@ -1,0 +1,166 @@
+{
+  "status": "WOMBO V6 POST-ACTIVITY RESCHEDULING VERIFIED — RELEASE GATES REMAIN",
+  "delivery_review_date": "2026-11-12",
+  "timezone": "Europe/Amsterdam",
+  "execution_dates": {
+    "full_application_network_restart_android": "2026-11-08",
+    "final_migration_and_post_activity_workflow": "2026-11-12"
+  },
+  "branch": "feat/joren-v6-evidence-safe-rescheduling",
+  "accepted_base_sha": "1dbe10b1a419c689f189faf077f4178eaa4f6310",
+  "implementation_sha": "057d88bb41aa8f73c1e1e66b0e7d0059754ca527",
+  "documentation_commit": "A later documentation-only commit records this implementation and its exact evidence hashes; final HEAD is reported in the delivery response.",
+  "backend": {
+    "pytest_passed": 2675,
+    "failures": 0,
+    "skips": 0,
+    "existing_deprecation_warnings": 1,
+    "ruff": true,
+    "formatted_files": 224,
+    "strict_mypy_sources": 210,
+    "strict_mypy_verification_scripts": 5
+  },
+  "mobile": {
+    "passed": 908,
+    "suites": 86,
+    "failures": 0,
+    "skips": 0,
+    "new_component_cases": 4,
+    "strict_types": true,
+    "unused_checks": true,
+    "transport_sessions_storage": "Simulated; component tests use actual recorded SQL/FastAPI public responses",
+    "device_tests": 0
+  },
+  "postgres": {
+    "version": "17.11",
+    "pgtap": "1.3.4",
+    "postgrest": "16.5",
+    "migration_candidates_replayed": 62,
+    "sql_suites": 36,
+    "assertions": 680,
+    "failed": 0,
+    "post_activity_groups": 11,
+    "original_v6_lifecycle_groups": 9,
+    "real_tcp_disconnects": 2,
+    "process_reload": true,
+    "postgres_restart": true,
+    "identity_queries": {
+      "orphaned_activity_fks": 0,
+      "active_v6_activities_missing_membership": 0,
+      "duplicate_logical_memberships": 0,
+      "duplicate_physical_memberships": 0,
+      "duplicate_activity_attachments": 0,
+      "active_catalog_sources": 0,
+      "evidence_sha256": "c45548c14059ee7ab9892665e1072249e25d7d21597783a8415e6a43d0844ebb"
+    },
+    "disposable_loopback_only": true,
+    "services_stopped": true,
+    "a5_original_assertions": 29,
+    "a5_fixture_overlay_explicit": true,
+    "gotrue_sessions": 0,
+    "gateway_checks": 0
+  },
+  "historical_planner": {
+    "cases": 40,
+    "accepted_reference_outcomes": 26,
+    "byte_identical": true,
+    "sha256": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341",
+    "unchanged_timeout": "current:build_4",
+    "bound_seconds": 8
+  },
+  "catalog": {
+    "historical_equal": true,
+    "historical_templates": 325,
+    "historical_loads": 325,
+    "historical_sha256": "51c28a9587b830447a1530bdd3f1f77a9fdd19e868f0d35acae9bada945a44c5",
+    "v6": {
+      "active": 0,
+      "source_revisions": 77
+    }
+  },
+  "android": {
+    "debug_x86_64": true,
+    "offline": true,
+    "tasks": 497,
+    "duration": "4m59s",
+    "apk_sha256": "1808a09bc212d2151867eef3a24c5e364a9eaaebf59f2c9140ed2f69c1389215",
+    "installed": false,
+    "device_tests": 0,
+    "ios_build": false
+  },
+  "source_release_hashes": {
+    "run": "7380c88ef8bccb3cb35b0f6416d9debba8342b9802fc716f0a99dcfcb8626d88",
+    "bike": "6322d7f93b3e074c77c4efa28b2a95de3f04f0f5c6af226ce50e8c2ff716ddbc",
+    "swim": "48a0f6448f003ef048f40e53fda74b5220f272ebd4300180c108777c6e0be3ba"
+  },
+  "source_git_blob_sha256": {
+    "backend/app/modules/planning/v6_service.py": "ede7e2b0e149fecc562403347c75b1f0393fc0d4549afd75ac68897c3cf97b2a",
+    "backend/scripts/verify_v6_evidence_network.py": "782c0d06073599f5eec365e1e2e3ff6da362e3dfd4fa51e06d4cd33f62ddeb90",
+    "backend/scripts/verify_v6_evidence_rescheduling.py": "578c9f7c8f777571a741420c35d944a5d537a44618191c1d1b9df0bb291f248c",
+    "backend/scripts/verify_v6_lifecycle_completion.py": "2e20ff1059c9a8b863ccc0371d95fa5ad49e59d7c80131b10d56a1b0951c5d1e",
+    "backend/scripts/verify_v6_mobile_lifecycle.py": "e23ceebcac7bf18600359931f12fa6229aa90849c3b843f453feb8087b7c7913",
+    "backend/scripts/verify_v6_postgres.py": "e675e444284881e2af43ce5c5169d3f9db80b4ffb969e1d46e411af7de4eddd1",
+    "backend/tests/test_v6_lifecycle_completion.py": "72213478a20a58095de861c27be20a509b903dd35d92e9f466e3c8abb4d80a69",
+    "backend/tests/v6_repository_fixture.py": "ae8a92473fe4f8f34258b28242391c5f05710de79e4f200fa5166852f7dd96d3",
+    "mobile/src/features/planning/V6EvidenceRescheduling.test.tsx": "12abcb4a9e0085b14bb78d3f47a3b9cbbf276c164ade129aee3aa1c202a728bc",
+    "mobile/src/features/planning/v6-evidence-http.test-fixture.json": "458bd657904f591d06d40f32e46fb96b755d9248b77a151653379dbb80cfc957",
+    "supabase/migrations/20261108210000_inactive_v6_evidence_memberships.sql": "15392b4964f8e2a804ce312f3b0f0dd4fdb6fd733e5b088f303fa43e1589944f",
+    "supabase/tests/r6_mvp_business_conflicts_test.sql": "11eb4294138236c5175371688c26a1259e6d20ac17673a7c93b5755df7c4fd1b",
+    "supabase/tests/v6_evidence_membership_test.sql": "b6388bf89694cea22481a32d1762052731b56bfaf8d14b961077b23c28aacf87"
+  },
+  "raw_evidence_sha256": {
+    ".runtime/pytest-final.txt": "6bb8272a81e4b73aa72aaaa57a1ec6df78cfc19f76602c97723c0e5066a152e9",
+    ".runtime/jest-final.json": "8f4a65315c58a6252bec153360579e23ddbe5d41d9c6fec30d9ecf19776bf72c",
+    ".runtime/types-final.txt": "c6e00c5cb43469ecdbcd169520e39344fa6cb3f688150a9b8a988d4252de39ac",
+    ".runtime/unused-final.txt": "7f574d7365982990ef03fd76eb6ffba20c06be9c1f1b3cfc3370b2cbfb343771",
+    ".runtime/ruff-final.txt": "af352a86840ad0af3d37ea0d9197f868363a6dac6b1c2ef5d2722f6b41d2d9af",
+    ".runtime/format-final.txt": "bf3436ab2af36f92261d57b449983bda04eb78f3352e0ead1b0977efb2510af4",
+    ".runtime/mypy-final.txt": "02b3213f77cdd6ea20a8b6502561be8882cc02ccd933f44d9ea8581da4964944",
+    ".runtime/mypy-scripts.txt": "4cb3dbe6dde213a3b967fc1573586b3b13717aac380006a23cfd7705c22ea508",
+    ".runtime/sql-verified-final/pgtap-results.json": "2ae788c11bcd38bf4f718f5e959ee359742874bcb642a2f507da74eebfd0a290",
+    ".runtime/sql-verified-final/migration-ledger.json": "927793d3b17c8e9efce2f674d358ab61d56b605d3d004f36a7bc7a3fc68501e5",
+    ".runtime/sql-verified-final/catalog-preservation.json": "4963b5445601d0f9c5429465ad5ffc72a355ca1eaa06734194dc9bc9d7b8d8a9",
+    ".runtime/evidence-delivery.txt": "cd91519a9c244269cd3429c7d09b6f611fc6501ffeb7c96d057f7be48010ccf1",
+    ".runtime/evidence-delivery/checks.json": "216d90244386f90ce740102df955b75a38ef17ad0150785c9f4270d1cb0a44b6",
+    ".runtime/evidence-final/trace.json": "e8e9c31355801c43148da7fe73373457caf75c1caa9b354c2cb088876ee7beab",
+    ".runtime/legacy-lifecycle-verified.txt": "7dd19e1d4a40ef225be08bbb1ec7e4fb73f9355b464f0d2b4684ee7ecddde259",
+    ".runtime/network-final.txt": "06411d2c0b0758ad89e3d80f3bfa8cba558d0720c78d562fbc8059fd4734d09c",
+    ".runtime/network-final.json": "77e9e7d549b8dffc9dede1cb7b559bae5af47196f5795259e941af29492419f2",
+    ".runtime/a5-guards-final.json": "a08a7e18da8336e20b49c624963f226350a4d121a1f766eeda19259499f4cb33",
+    ".runtime/postgres-restart.json": "fe68e492d591e360ca10103919f92e176da1cad3b0a239e32f53806dbd0ebbd3",
+    ".runtime/restart-reload-final.txt": "f1797d5c4b122a95aa186fac903abc6f490da123a125d3f7c30770c70d04dd62",
+    ".runtime/historical-regression-final.json": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341",
+    ".runtime/pg-delivery-stop.txt": "6a184bb84561612088ae9f4b41a51ae5348f03b318eac765ad9eb747572d152b"
+  },
+  "android_build_transcript_sha256": "98395b9a6de9c21674f8a89b5a6c1ef1510ca79bb291440e56b62b65e1950838",
+  "preserved": {
+    "protected_a5_a6_sha": "cd3e2dd438031cfb565858d0a5929e9963f7b31f",
+    "protected_worktree_clean": true,
+    "accepted_base_worktree_clean": true,
+    "production_default_unchanged": true,
+    "active_v6_sources": 0,
+    "no_push_merge_deployment_hosted_connection_or_activation": true
+  },
+  "remaining_unsupported": [
+    "Completed/cancelled/activity-linked/explicitly registered targets",
+    "Cross-week, unavailable or unsafe schedules",
+    "Foreign or stale references",
+    "Moves with an incompatible pending proposal; approval discarding recorded physical members",
+    "Legacy corrective generation on active V6 without a membership writer",
+    "Automatic selection still adds at most one new workout per goal sport"
+  ],
+  "release_gates": [
+    "Scientific and operational acceptance, including swim estimates and individual long-duration suitability",
+    "Official Planned/Realized V2 fallback compatibility",
+    "GoTrue sessions and complete Supabase gateway verification",
+    "Actual Android/iOS device tests",
+    "Hosted migration/release authorization and final activation"
+  ],
+  "verification_limits": "SQL claims and local signed tokens are synthetic. No storage mocks are counted as database transactions. No physical device tests are claimed. Raw data, signing keys, database files and APK remain ignored.",
+  "migration_hashes": {
+    "file": "supabase/migrations/20261108210000_inactive_v6_evidence_memberships.sql",
+    "executed_windows_source_bytes_sha256": "957776fcbeab5f1dc7d7802122af30213f00cbede93f52343dd375844f2f73e8",
+    "executed_normalized_sql_payload_sha256": "15392b4964f8e2a804ce312f3b0f0dd4fdb6fd733e5b088f303fa43e1589944f",
+    "normalization": "The SQL replay uses read_text (universal newlines); its exact LF payload equals the committed Git blob."
+  }
+}

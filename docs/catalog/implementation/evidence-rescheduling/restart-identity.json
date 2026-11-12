@@ -1,0 +1,12 @@
+{
+  "postgres_restart": true,
+  "independent_queries": {
+    "orphaned_activity_fks": 0,
+    "active_v6_activities_missing_membership": 0,
+    "duplicate_logical_memberships": 0,
+    "duplicate_physical_memberships": 0,
+    "duplicate_activity_attachments": 0,
+    "active_catalog_sources": 0,
+    "evidence_sha256": "c45548c14059ee7ab9892665e1072249e25d7d21597783a8415e6a43d0844ebb"
+  }
+}
