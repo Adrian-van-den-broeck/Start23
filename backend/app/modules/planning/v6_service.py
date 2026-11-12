@@ -41,6 +41,7 @@ from .schemas import (
 )
 from .service import PlanningService, _SwipePlanningContext
 from .swipe import SwipeSelectionState
+from .v6_frequency import MAX_SEARCH_NODES, SessionFrequency
 from .v6_presentation import source_prescription
 from .v6_selection import VERSION, V6Controls, V6Plan, build_v6_plan, eligible_v6
 
@@ -82,6 +83,17 @@ def frozen_controls(data: JsonObject) -> V6Controls:
             for k, seconds, ref in data["prescribed_swim_seconds"]
         ),
         maximum_combinations=data["maximum_combinations"],
+        maximum_search_nodes=data.get("maximum_search_nodes", MAX_SEARCH_NODES),
+        session_frequency=tuple(
+            SessionFrequency(
+                sport=Discipline(r["sport"]),
+                maximum=r["maximum"],
+                target=r["target"],
+                reference=r["reference"],
+                status=r["status"],
+            )
+            for r in data.get("session_frequency", [])
+        ),
     )
 
 
@@ -91,6 +103,22 @@ def effective_controls(data: JsonObject, current: V6Controls) -> V6Controls:
     limits = dict(stored.maximum_uses)
     for key, limit in current.maximum_uses:
         limits[key] = min(limits.get(key, limit), limit)
+    frequencies = {r.sport: r for r in stored.session_frequency}
+    for restriction in current.session_frequency:
+        old = frequencies.get(restriction.sport)
+        if old is not None:
+            maximum = min(old.maximum, restriction.maximum)
+            frequencies[old.sport] = replace(
+                old,
+                maximum=maximum,
+                target=min(old.requested, maximum),
+            )
+        else:
+            # A newly tightened ceiling also binds older snapshots. It cannot
+            # authorize extra generation or promote a current request to a target.
+            frequencies[restriction.sport] = replace(
+                restriction, target=min(1, restriction.maximum)
+            )
     return replace(
         stored,
         maximum_uses=tuple(sorted(limits.items(), key=lambda row: str(row[0]))),
@@ -99,6 +127,12 @@ def effective_controls(data: JsonObject, current: V6Controls) -> V6Controls:
         ),
         maximum_combinations=min(
             stored.maximum_combinations, current.maximum_combinations
+        ),
+        session_frequency=tuple(frequencies.values()),
+        athlete_scope=stored.athlete_scope or current.athlete_scope,
+        week_scope=stored.week_scope or current.week_scope,
+        maximum_search_nodes=min(
+            stored.maximum_search_nodes, current.maximum_search_nodes
         ),
     )
 
@@ -307,18 +341,23 @@ class V6PlanningService(PlanningService):
         row, context = await super()._load_swipe_draft_context(
             access_token, athlete_id, draft_id
         )
-        # Retained dates are passed through the existing complete-week scheduler.
-        # Bind by template within this at-most-one-new-per-sport draft scope.
+        # Dates belong to logical occurrences, including repeated source templates.
         selection = self._swipe_history(row)
         fixed = {
-            template: date.fromisoformat(row["placements"][str(occurrence)])
-            for template, occurrence in zip(
-                selection.accepted_template_ids, selection.accepted_occurrence_ids
-            )
+            occurrence: date.fromisoformat(row["placements"][str(occurrence)])
+            for occurrence in selection.accepted_occurrence_ids
             if str(occurrence) in row.get("placements", {})
         }
         source = dict(context.source)
         source["_v6_retained_dates"] = fixed
+        identities = list(
+            zip(selection.accepted_template_ids, selection.accepted_occurrence_ids)
+        )
+        if row.get("current_template_id") and row.get("current_occurrence_id"):
+            identities.append(
+                (UUID(row["current_template_id"]), UUID(row["current_occurrence_id"]))
+            )
+        source["_v6_retained_occurrences"] = identities
         return row, replace(context, source=source)
 
     def __init__(
@@ -427,10 +466,24 @@ class V6PlanningService(PlanningService):
                 prefix=accepted_template_ids,
                 excluded=frozenset(passed_template_ids),
                 required_composition=context.target_composition,
-                fixed_template_dates={
-                    k: v
-                    for k, v in context.source.get("_v6_retained_dates", {}).items()
-                    if k in accepted_template_ids
+                prefix_occurrence_ids=tuple(
+                    occurrence
+                    for _, occurrence in context.source.get(
+                        "_v6_retained_occurrences", []
+                    )[: len(accepted_template_ids)]
+                ),
+                fixed_occurrence_dates={
+                    occurrence: day
+                    for occurrence, day in context.source.get(
+                        "_v6_retained_dates", {}
+                    ).items()
+                    if occurrence
+                    in {
+                        o
+                        for _, o in context.source.get("_v6_retained_occurrences", [])[
+                            : len(accepted_template_ids)
+                        ]
+                    }
                 },
             )
         except PlanningConstraintError as error:
@@ -489,6 +542,7 @@ class V6PlanningService(PlanningService):
                     "target": asdict(draft.target),
                     "optimality": draft.optimality,
                     "examined": draft.examined,
+                    "selection_version": draft.selection_version,
                     "templates": [asdict(t) for t in draft.templates],
                     "activation": "INACTIVE_PREVIEW",
                 }
@@ -674,7 +728,11 @@ class V6PlanningService(PlanningService):
         from .v6_selection import ranking
 
         _, _, goals, _ = self._context_values(self._planning_input(context))
-        alternatives.sort(key=lambda r: ranking(r[1].templates, goals))
+        alternatives.sort(
+            key=lambda r: ranking(
+                r[1].templates, goals, r[1].controls.session_frequency
+            )
+        )
         assert plan.proposal is not None
         try:
             await self._replacement_plan(

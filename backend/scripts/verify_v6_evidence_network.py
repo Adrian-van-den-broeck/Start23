@@ -14,11 +14,12 @@ from contextlib import ExitStack
 from datetime import date, timedelta
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from urllib.parse import urlparse
 
 import httpx
 import jwt
+from fastapi import FastAPI
 
 from app.modules.planning.repository import PlanningRepositoryUnavailableError
 from scripts.verify_v6_evidence_rescheduling import evidence, measured
@@ -33,6 +34,7 @@ def main() -> None:
     parser.add_argument("--week-start", type=date.fromisoformat, required=True)
     parser.add_argument("--signing-secret-file", type=Path, required=True)
     parser.add_argument("--private-output", type=Path, required=True)
+    parser.add_argument("--multi-session-test-only", action="store_true")
     args = parser.parse_args()
     url = urlparse(args.url)
     if (
@@ -76,6 +78,12 @@ def main() -> None:
             pass
 
     repo, client = client_for(db)
+    if args.multi_session_test_only:
+        from scripts.verify_v6_multi_session import authorization
+
+        cast(FastAPI, client.app).state.v6_controls = authorization(
+            db, args.week_start.isoformat()
+        )
     original = repo._request
     target = "rpc/create_v6_weekly_plan_proposal"
     with (
@@ -107,6 +115,8 @@ def main() -> None:
             repo._request = original  # type: ignore[method-assign]
             pending = request(client, "POST", endpoint)
             assert pending == request(client, "POST", endpoint)
+            if args.multi_session_test_only:
+                assert len(pending["plan"]["workouts"]) == 5
             request(
                 client,
                 "POST",
@@ -117,7 +127,13 @@ def main() -> None:
             sibling = next(w for w in plan["workouts"] if w["discipline"] == "run")
             measured(client, sibling)
             saved = evidence(db)
-            workout = next(w for w in plan["workouts"] if w["discipline"] == "bike")
+            workout = next(
+                w
+                for w in plan["workouts"]
+                if w["discipline"]
+                == ("run" if args.multi_session_test_only else "bike")
+                and w["id"] != sibling["id"]
+            )
             endpoint = "/planned-workouts/" + workout["physical_workout_id"]
             payload = {
                 "expected_revision": plan["revision"],
@@ -157,6 +173,7 @@ def main() -> None:
                 "plan_revision_count": 2,
                 "new_catalog_activations": 0,
                 "completed_sibling_identity_and_evidence_preserved": True,
+                "multi_session_test_only": args.multi_session_test_only,
             },
             indent=2,
         )

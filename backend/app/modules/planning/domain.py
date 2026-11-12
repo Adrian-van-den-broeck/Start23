@@ -1561,6 +1561,7 @@ def schedule_workouts(
     timezone_name: str,
     fixed_template_dates: Mapping[UUID, date] | None = None,
     fixed_occurrence_dates: Mapping[UUID, date] | None = None,
+    search_step: Callable[[], None] | None = None,
 ) -> tuple[ProposedWorkout, ...]:
     """Place deterministic snapshots on explicit athlete-local dates.
 
@@ -1650,6 +1651,8 @@ def schedule_workouts(
     usage = {scheduled_date: 0 for scheduled_date in sorted_dates}
 
     def find_schedule(index: int) -> tuple[ProposedWorkout, ...] | None:
+        if search_step is not None:
+            search_step()
         if index == len(ordered):
             if (
                 enforce_rest_limit

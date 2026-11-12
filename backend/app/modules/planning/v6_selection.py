@@ -1,8 +1,8 @@
 """Prospective, bounded exhaustive V6 selection and whole-week replacements.
 
-Initial scope: at most one new workout per goal sport; retained occurrences can
-repeat. Every finite option is examined before a globally optimal result is
-claimed. No production registration, cache, persistence, or legacy score.
+Without explicit frequency authority, at most one new workout per goal sport.
+Every competitive option is examined before an optimum is claimed. No production
+registration, cache, persistence, or legacy score.
 """
 
 from collections import Counter
@@ -48,6 +48,7 @@ from .domain import (
     resolve_target,
     schedule_workouts,
 )
+from .v6_frequency import MAX_OCCURRENCES, MAX_SEARCH_NODES, SessionFrequency
 
 VERSION = "joren-v6-automatic-selection-1"
 ALLOCATION = "selected-total-share-l1-unrenormalized-1"
@@ -73,12 +74,23 @@ class V6Controls:
     maximum_combinations: int = 20000
     # Used only by an already authorized private caller, e.g. a stored week.
     authorized_target: PlanningTarget | None = field(default=None, repr=False)
+    session_frequency: tuple[SessionFrequency, ...] = ()
+    maximum_search_nodes: int = MAX_SEARCH_NODES
 
     def __post_init__(self) -> None:
-        if (self.duration_evidence or self.prescribed_swim_seconds) and (
-            self.athlete_scope is None or self.week_scope is None
-        ):
+        if (
+            self.duration_evidence
+            or self.prescribed_swim_seconds
+            or self.session_frequency
+        ) and (self.athlete_scope is None or self.week_scope is None):
             raise ValueError("individual_evidence_requires_athlete_week_scope")
+        if (
+            type(self.maximum_search_nodes) is not int
+            or not 1 <= self.maximum_search_nodes <= MAX_SEARCH_NODES
+            or len({r.sport for r in self.session_frequency})
+            != len(self.session_frequency)
+        ):
+            raise ValueError("invalid_v6_frequency_controls")
         if self.maximum_combinations <= 0 or any(n < 0 for _, n in self.maximum_uses):
             raise ValueError("invalid_v6_computation_controls")
         for values in (
@@ -103,6 +115,7 @@ class V6Plan(WeeklyPlanDraft):
     policy_version: str = field(default=VERSION, init=False)
     allocation_version: str = field(default=ALLOCATION, init=False)
     activation_status: str = field(default="INACTIVE_PREVIEW", init=False)
+    selection_version: str = VERSION
 
 
 def eligible_v6(
@@ -254,6 +267,11 @@ def week_valid(
     if total > Fraction(target.target.value):
         return False
     uses = Counter(t.id for t in rows)
+    counts = Counter(t.discipline for t in rows)
+    if controls.session_frequency and len(rows) > MAX_OCCURRENCES:
+        return False
+    if any(counts[r.sport] > r.maximum for r in controls.session_frequency):
+        return False
     if any(uses[k] > n for k, n in controls.maximum_uses):
         return False
     for sport in Discipline:
@@ -271,8 +289,10 @@ def week_valid(
 
 
 def ranking(
-    rows: tuple[V6Template, ...], goals: frozenset[Discipline]
-) -> tuple[int, Fraction, Fraction, tuple[str, ...]]:
+    rows: tuple[V6Template, ...],
+    goals: frozenset[Discipline],
+    frequency: tuple[SessionFrequency, ...] = (),
+) -> tuple[int, int, Fraction, Fraction, tuple[str, ...]]:
     total = sum((Fraction(t.official.value) for t in rows), Fraction(0))
     shares = {
         s: sum(
@@ -287,6 +307,10 @@ def ranking(
     )
     return (
         -len({t.discipline for t in rows}),
+        -sum(
+            min(sum(t.discipline is r.sport for t in rows), r.requested)
+            for r in frequency
+        ),
         distance,
         -total,
         tuple(sorted(str(t.id) for t in rows)),
@@ -349,6 +373,7 @@ def build_v6_plan(
     prefix: tuple[UUID, ...] = (),
     excluded: frozenset[UUID] = frozenset(),
     required_composition: Mapping[Discipline, int] | None = None,
+    prefix_occurrence_ids: tuple[UUID, ...] = (),
 ) -> V6Plan:
     target = resolve_v6_target(
         week_start=week_start,
@@ -388,6 +413,8 @@ def build_v6_plan(
             desired_high_fraction=target.desired_high_fraction,
         )
     by_id = {t.id: t for t in deck}
+    if len(by_id) != len(deck):
+        raise ValueError("ambiguous_v6_catalog")
     needed = (
         tuple(selected_template_ids or ())
         if selected_template_ids is not None
@@ -398,9 +425,24 @@ def build_v6_plan(
             "template_not_eligible", "A selected workout is not eligible for this week."
         )
     combinations: tuple[tuple[V6Template, ...], ...]
+    from .v6_search import SearchWork, multi_options
+
+    work = SearchWork(controls.maximum_search_nodes)
     if selected_template_ids is not None:
         combinations = (tuple(by_id[k] for k in needed),)
         space = 1
+    elif controls.session_frequency:
+        combinations = multi_options(
+            deck=deck,
+            retained=tuple(by_id[k] for k in prefix),
+            goals=goal_disciplines,
+            excluded=excluded,
+            target=target,
+            controls=controls,
+            work=work,
+            required_composition=required_composition,
+        )
+        space = work.nodes
     else:
         retained = tuple(by_id[k] for k in prefix)
         groups = tuple(
@@ -419,19 +461,29 @@ def build_v6_plan(
             retained + tuple(t for t in combo if t is not None)
             for combo in product(*groups)
         )
-    viable = tuple(
-        rows
-        for rows in combinations
-        if week_valid(rows, target, controls)
-        and (
-            required_composition is None
-            or all(
-                sum(t.discipline is s for t in rows) == required_composition.get(s, 0)
-                for s in Discipline
+    # The canonical enumerator already proves the same complete-week predicates
+    # using cached exact loads/times; do not reparse source segments per join.
+    viable = (
+        combinations
+        if controls.session_frequency and selected_template_ids is None
+        else tuple(
+            rows
+            for rows in combinations
+            if week_valid(rows, target, controls)
+            and (
+                required_composition is None
+                or all(
+                    sum(t.discipline is s for t in rows)
+                    == required_composition.get(s, 0)
+                    for s in Discipline
+                )
             )
         )
     )
-    ordered = sorted(viable, key=lambda rows: ranking(rows, goal_disciplines))
+    ordered = sorted(
+        viable,
+        key=lambda rows: ranking(rows, goal_disciplines, controls.session_frequency),
+    )
     chosen: tuple[V6Template, ...] | None = None
     workouts: tuple[ProposedWorkout, ...] = ()
     for rows in ordered:
@@ -448,13 +500,31 @@ def build_v6_plan(
                 "invalid_occurrence_identities",
                 "Workout occurrence identities must be distinct and complete.",
             )
+        if prefix_occurrence_ids and (
+            len(prefix_occurrence_ids) != len(prefix)
+            or len(set(prefix_occurrence_ids)) != len(prefix_occurrence_ids)
+        ):
+            raise PlanningConstraintError(
+                "invalid_occurrence_identities", "Retained identities must be complete."
+            )
         ids = supplied or tuple(
-            uuid5(
-                controls.occurrence_namespace or NAMESPACE_URL,
+            prefix_occurrence_ids[i]
+            if i < len(prefix_occurrence_ids)
+            else uuid5(
+                controls.occurrence_namespace
+                or (
+                    uuid5(controls.athlete_scope, f"{VERSION}:{week_start}")
+                    if controls.athlete_scope
+                    else NAMESPACE_URL
+                ),
                 f"{VERSION}:{week_start}:{i}:{t.id}",
             )
             for i, t in enumerate(ordered_rows)
         )
+        if len(set(ids)) != len(ids):
+            raise PlanningConstraintError(
+                "invalid_occurrence_identities", "Workout identities must be distinct."
+            )
         selected = tuple(
             SelectedWorkout(t.discipline, snapshot_template(t), occurrence)
             for t, occurrence in zip(ordered_rows, ids)
@@ -468,11 +538,14 @@ def build_v6_plan(
                     timezone_name=timezone_name,
                     fixed_template_dates=fixed_template_dates,
                     fixed_occurrence_dates=fixed_occurrence_dates,
+                    search_step=work.step if controls.session_frequency else None,
                 )
                 if rows
                 else ()
             )
-        except PlanningConstraintError:
+        except PlanningConstraintError as error:
+            if error.code == "v6_search_incomplete":
+                raise
             continue
         chosen, workouts = ordered_rows, placed
         break
@@ -493,7 +566,10 @@ def build_v6_plan(
                 "info",
             )
         )
-    if len({t.discipline for t in chosen}) < len(goal_disciplines):
+    if len({t.discipline for t in chosen}) < len(goal_disciplines) or any(
+        sum(t.discipline is r.sport for t in chosen) < r.requested
+        for r in controls.session_frequency
+    ):
         warnings.append(
             PlanningWarning(
                 RuleId.SOFT_BOUNDARIES,
@@ -549,9 +625,14 @@ def build_v6_plan(
         chosen,
         estimates,
         exclusions,
-        space,
+        work.nodes if controls.session_frequency else space,
         "EXHAUSTIVE_GLOBAL_OPTIMUM"
         if selected_template_ids is None
         else "EXPLICIT_WEEK_VALIDATED",
         controls,
+        selection_version=(
+            "joren-v6-multi-session-selection-1"
+            if controls.session_frequency
+            else VERSION
+        ),
     )

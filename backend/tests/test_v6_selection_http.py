@@ -76,6 +76,121 @@ def assert_private_free(value: Any) -> None:
             assert_private_free(item)
 
 
+def test_multi_session_draft_duplicate_source_dates_undo_and_submit(
+    v6_client: TestClient,
+) -> None:
+    """TEST_ONLY frequency authority, existing real worker and route contracts."""
+    from datetime import date
+
+    from app.modules.physiology.models import Discipline
+    from app.modules.planning.v6_frequency import SessionFrequency
+
+    app = cast(FastAPI, v6_client.app)
+    repo = app.state.planning_repository
+    app.state.v6_controls = V6Controls(
+        athlete_scope=repo._token_owners["athlete-a"],
+        week_scope=date(2026, 10, 26),
+        authorized_target=PlanningTarget(
+            TrainingPhase.BASE,
+            PlanningTargetBasis.INITIAL_CATALOG_BASELINE,
+            InternalLoad(Decimal("100")),
+        ),
+        session_frequency=tuple(
+            SessionFrequency(s, n, "TEST_ONLY requested sessions", n)
+            for s, n in (
+                (Discipline.RUN, 2),
+                (Discipline.BIKE, 2),
+                (Discipline.SWIM, 1),
+            )
+        ),
+    )
+    draft = create(v6_client, True)
+    assert draft["target_workout_count"] == 5
+    url = f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}"
+
+    def accept(row: dict[str, Any]) -> dict[str, Any]:
+        candidate = row["current_candidate"]
+        response = v6_client.post(
+            url + "/transitions",
+            headers=_headers(),
+            json={
+                "expected_revision": row["revision"],
+                "action": "accept",
+                "candidate_template_id": candidate["id"],
+                "candidate_occurrence_id": candidate["occurrence_id"],
+            },
+        )
+        assert response.status_code == 200, response.text
+        return cast(dict[str, Any], response.json())
+
+    for _ in range(5):
+        draft = accept(draft)
+    runs = [w for w in draft["accepted_workouts"] if w["discipline"] == "run"]
+    assert len(runs) == 2 and runs[0]["id"] == runs[1]["id"]
+    assert runs[0]["occurrence_id"] != runs[1]["occurrence_id"]
+    dates = dict(zip((w["occurrence_id"] for w in runs), ("2026-10-26", "2026-10-31")))
+    bikes = [w for w in draft["accepted_workouts"] if w["discipline"] == "bike"]
+    dates.update(zip((w["occurrence_id"] for w in bikes), ("2026-10-26", "2026-10-28")))
+    for workout in draft["accepted_workouts"]:
+        occurrence = workout["occurrence_id"]
+        response = v6_client.put(
+            url + "/placements/" + occurrence,
+            headers=_headers(),
+            json={
+                "expected_revision": draft["revision"],
+                "scheduled_date": dates.get(occurrence, "2026-10-28"),
+            },
+        )
+        assert response.status_code == 200, response.text
+        draft = response.json()
+    undo = v6_client.post(
+        url + "/transitions",
+        headers=_headers(),
+        json={
+            "expected_revision": draft["revision"],
+            "action": "undo",
+        },
+    )
+    assert undo.status_code == 200, undo.text
+    draft = accept(undo.json())
+    for occurrence, day in dates.items():
+        assert {"occurrence_id": occurrence, "scheduled_date": day} in draft[
+            "placements"
+        ]
+    # Restore the last accepted occurrence's placement for a complete manual layout.
+    last = draft["accepted_workouts"][-1]["occurrence_id"]
+    placed = v6_client.put(
+        url + "/placements/" + last,
+        headers=_headers(),
+        json={
+            "expected_revision": draft["revision"],
+            "scheduled_date": "2026-10-28",
+        },
+    )
+    assert placed.status_code == 200, placed.text
+    draft = placed.json()
+    submitted = v6_client.post(
+        url + "/submit",
+        headers=_headers(),
+        json={
+            "expected_revision": draft["revision"],
+            "placement_mode": "manual",
+        },
+    )
+    assert submitted.status_code == 201, submitted.text
+    result = submitted.json()
+    assert len(result["plan"]["workouts"]) == 5
+    assert result["plan"]["revision_state"] == "pending_approval"
+    for occurrence, day in dates.items():
+        assert (
+            next(w for w in result["plan"]["workouts"] if w["id"] == occurrence)[
+                "scheduled_date"
+            ]
+            == day
+        )
+    assert_private_free(result)
+
+
 def test_automatic_proposal_and_each_sport_swipe(v6_client: TestClient) -> None:
     result = create(v6_client)
     plan = result["plan"]
