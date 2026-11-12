@@ -1,0 +1,226 @@
+[
+  {
+    "case": "two_run_two_bike_one_swim",
+    "test_only": true,
+    "budget": "100",
+    "requested_run_bike_swim": [
+      2,
+      2,
+      1
+    ],
+    "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+    "selection_version": "joren-v6-multi-session-selection-1",
+    "nodes_including_schedule": 21040,
+    "official_total": "70.354166666666666666666666666666666666666666666667",
+    "workouts": [
+      {
+        "source": "TR-BIKE-022",
+        "occurrence": "ead12c36-cdae-545a-aa29-fe84bcb8ac31",
+        "date": "2026-10-26",
+        "method": "joren-v6-planned-if2-1"
+      },
+      {
+        "source": "TR-RUN-025",
+        "occurrence": "3f5d8170-ee06-5724-9e86-4e71339e6d63",
+        "date": "2026-10-27",
+        "method": "joren-v6-planned-if2-1"
+      },
+      {
+        "source": "TR-BIKE-023",
+        "occurrence": "4ae80ae8-05d1-542c-a3d5-a1c563aed370",
+        "date": "2026-10-29",
+        "method": "joren-v6-planned-if2-1"
+      },
+      {
+        "source": "TR-RUN-025",
+        "occurrence": "404d203d-7d84-5924-a8e4-6d624aafb959",
+        "date": "2026-10-30",
+        "method": "joren-v6-planned-if2-1"
+      },
+      {
+        "source": "TR-SWIM-022",
+        "occurrence": "ca6782e0-34e4-53b5-987d-71fc7330bfd9",
+        "date": "2026-10-31",
+        "method": "joren-v6-planned-if2-1"
+      }
+    ],
+    "high_share_by_sport": {
+      "swim": "0",
+      "bike": "0",
+      "run": "0"
+    },
+    "estimated_sports": [
+      "swim"
+    ],
+    "warnings": [
+      "swim_time_estimated_preview"
+    ],
+    "seconds": 0.4755085000069812
+  },
+  {
+    "case": "two_run_one_bike_one_swim",
+    "test_only": true,
+    "budget": "100",
+    "requested_run_bike_swim": [
+      2,
+      1,
+      1
+    ],
+    "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+    "selection_version": "joren-v6-multi-session-selection-1",
+    "nodes_including_schedule": 7559,
+    "official_total": "89.203125",
+    "workouts": [
+      {
+        "source": "TR-RUN-026",
+        "occurrence": "dd9dc4fb-38bd-5986-a163-a96848da4fa6",
+        "date": "2026-10-26",
+        "method": "joren-v6-planned-if2-1"
+      },
+      {
+        "source": "TR-SWIM-001",
+        "occurrence": "947b0354-fbcf-59d2-a103-0381d9387487",
+        "date": "2026-10-27",
+        "method": "joren-v6-planned-if2-1"
+      },
+      {
+        "source": "TR-BIKE-002",
+        "occurrence": "8170b24c-5cd3-52e1-8b77-46c169157944",
+        "date": "2026-10-29",
+        "method": "joren-v6-planned-if2-1"
+      },
+      {
+        "source": "TR-RUN-025",
+        "occurrence": "404d203d-7d84-5924-a8e4-6d624aafb959",
+        "date": "2026-10-30",
+        "method": "joren-v6-planned-if2-1"
+      }
+    ],
+    "high_share_by_sport": {
+      "swim": "0",
+      "bike": "0",
+      "run": "0"
+    },
+    "estimated_sports": [
+      "swim"
+    ],
+    "warnings": [
+      "swim_time_estimated_preview"
+    ],
+    "seconds": 0.2167161999968812
+  },
+  {
+    "case": "single_sport_two_run",
+    "test_only": true,
+    "budget": "100",
+    "requested_run_bike_swim": [
+      2,
+      0,
+      0
+    ],
+    "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+    "selection_version": "joren-v6-multi-session-selection-1",
+    "nodes_including_schedule": 268,
+    "official_total": "98.660416666666666666666666666666666666666666666667",
+    "workouts": [
+      {
+        "source": "TR-RUN-002",
+        "occurrence": "24869693-fc87-5acd-a412-084efc5e2686",
+        "date": "2026-10-26",
+        "method": "joren-v6-planned-if2-1"
+      },
+      {
+        "source": "TR-RUN-008",
+        "occurrence": "a35bebfc-13bf-5ca9-9a28-550e782b5373",
+        "date": "2026-10-29",
+        "method": "joren-v6-planned-if2-1"
+      }
+    ],
+    "high_share_by_sport": {
+      "run": "0"
+    },
+    "estimated_sports": [],
+    "warnings": [],
+    "seconds": 0.005290100001730025
+  },
+  {
+    "case": "partial_budget",
+    "test_only": true,
+    "budget": "45",
+    "requested_run_bike_swim": [
+      2,
+      2,
+      1
+    ],
+    "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+    "selection_version": "joren-v6-multi-session-selection-1",
+    "nodes_including_schedule": 1029,
+    "official_total": "39.385416666666666666666666666666666666666666666667",
+    "workouts": [
+      {
+        "source": "TR-RUN-025",
+        "occurrence": "8870ceb9-242a-51ba-8e1a-e1a33f8c0873",
+        "date": "2026-10-26",
+        "method": "joren-v6-planned-if2-1"
+      },
+      {
+        "source": "TR-BIKE-023",
+        "occurrence": "4ae80ae8-05d1-542c-a3d5-a1c563aed370",
+        "date": "2026-10-29",
+        "method": "joren-v6-planned-if2-1"
+      },
+      {
+        "source": "TR-SWIM-021",
+        "occurrence": "4e3714f5-662d-5768-8186-dbba5dc11204",
+        "date": "2026-10-30",
+        "method": "joren-v6-planned-if2-1"
+      }
+    ],
+    "high_share_by_sport": {
+      "swim": "0",
+      "bike": "0",
+      "run": "0"
+    },
+    "estimated_sports": [
+      "swim"
+    ],
+    "warnings": [
+      "swim_time_estimated_preview",
+      "partial_week"
+    ],
+    "seconds": 0.015168099955189973
+  },
+  {
+    "case": "rest",
+    "test_only": true,
+    "budget": "0",
+    "requested_run_bike_swim": [
+      2,
+      2,
+      1
+    ],
+    "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+    "selection_version": "joren-v6-multi-session-selection-1",
+    "nodes_including_schedule": 67,
+    "official_total": "0",
+    "workouts": [],
+    "high_share_by_sport": {},
+    "estimated_sports": [],
+    "warnings": [
+      "no_feasible_workouts_rest"
+    ],
+    "seconds": 0.002442500030156225
+  },
+  {
+    "case": "bounded_exhaustion",
+    "test_only": true,
+    "budget": "300",
+    "requested_run_bike_swim": [
+      2,
+      2,
+      1
+    ],
+    "outcome": "v6_search_incomplete",
+    "seconds": 1.0944542000070214
+  }
+]

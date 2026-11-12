@@ -1,0 +1,168 @@
+{
+  "status": "WOMBO V6 MULTI-SESSION PLANNING IMPLEMENTED \u2014 RELEASE GATES REMAIN",
+  "date": "2026-11-12",
+  "timezone": "Europe/Amsterdam",
+  "branch": "feat/joren-v6-multi-session-planning",
+  "accepted_base_sha": "b87d0e4f82702e168ec16441bbe7661fd0d10cb2",
+  "implementation_sha": "3814acf530bcb379bd09ba44619ada2ad24ddc43",
+  "documentation_commit": "Subsequent documentation-only commit; final HEAD supplied in delivery.",
+  "frequency_authority": {
+    "product_resolver_approved": false,
+    "default": "one new occurrence per goal sport",
+    "examples": "TEST_ONLY athlete/week-bound soft requests; no inference from budget"
+  },
+  "backend": {
+    "pytest_passed": 2727,
+    "failures": 0,
+    "skips": 0,
+    "existing_warnings": 1,
+    "new_cases": 52,
+    "oracle_seeds": 30,
+    "ruff": true,
+    "format_files": 230,
+    "strict_mypy_sources": 214,
+    "strict_mypy_changed_scripts": 2
+  },
+  "mobile": {
+    "passed": 911,
+    "suites": 87,
+    "failures": 0,
+    "skips": 0,
+    "new_cases": 3,
+    "strict_types": true,
+    "unused_checks": true,
+    "intermediate_failure": "Existing navigation case exceeded unchanged 5000ms during Android build; final full run passed.",
+    "device_tests": 0
+  },
+  "postgres": {
+    "version": "17.11",
+    "pgtap": "1.3.4",
+    "postgrest": "16.5",
+    "migrations_replayed": 62,
+    "new_migrations": 0,
+    "sql_suites": 36,
+    "assertions": 680,
+    "failures": 0,
+    "a5_overlay_explicit": true,
+    "original_a5_assertions": 29,
+    "multi_session_lifecycle_groups": 7,
+    "concurrency_rejection_groups": 4,
+    "real_tcp_disconnects": 2,
+    "fresh_process_reload": true,
+    "restart": {
+      "postgres_restart": true,
+      "independent_queries": {
+        "orphaned_activity_fks": 0,
+        "active_v6_activities_missing_membership": 0,
+        "duplicate_logical_memberships": 0,
+        "duplicate_physical_memberships": 0,
+        "duplicate_activity_attachments": 0,
+        "active_catalog_sources": 0,
+        "evidence_sha256": "c8ddfb11b713ab633844884c5532e1aada274007be9ca4fb8c0368252f95c19f"
+      }
+    },
+    "loopback_only": true,
+    "stopped_ports": {
+      "55443": true,
+      "55444": true
+    }
+  },
+  "historical_planner": {
+    "cases": 40,
+    "same_results": true,
+    "same_inputs": true,
+    "same_independent_checks": true,
+    "known_timeout": "current:build_4",
+    "bound_seconds": 8,
+    "accepted_reference_outcomes": 26,
+    "accepted_regression_sha256": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341",
+    "note": "Existing prospective annotations are not emitted by this performance harness; no golden or policy annotation was rewritten."
+  },
+  "catalog": {
+    "historical_equal": true,
+    "historical_templates": 325,
+    "historical_loads": 325,
+    "historical_sha256": "f7fb93a4aaae3091ca07f7b89ab1f4b229c8a57fdb83379cf52a9d1846e86d52",
+    "v6": {
+      "active": 0,
+      "source_revisions": 77
+    }
+  },
+  "search": {
+    "selection_version": "joren-v6-multi-session-selection-1",
+    "legacy_combinations": 20000,
+    "maximum_occurrences": 24,
+    "maximum_shared_nodes": 200000,
+    "complete_2_2_1_nodes": 21040,
+    "budget_300": "v6_search_incomplete; no truncated optimum published"
+  },
+  "android": {
+    "debug_x86_64": true,
+    "offline": true,
+    "tasks": 692,
+    "duration": "5m02s",
+    "apk_bytes": 93337714,
+    "apk_sha256": "8ef8778ae8d184c2973373c82f09cf4bb5c93829f4142d50a0ba995517983858",
+    "build_log_sha256": "bd2dec039e9731b4ab73644bd1fb875ca615f1e7a4ea4a01d763224f2c437f7f",
+    "temporary_alias_removed": true,
+    "installed": false,
+    "device_tests": 0
+  },
+  "source_git_blob_sha256": {
+    "backend/app/modules/planning/domain.py": "f3d06f4fc129e3224d317f4050aa736fe403d276ca98542223b49b226de46a0f",
+    "backend/app/modules/planning/v6_frequency.py": "27b1ee7cda405fda0b91c0f1d54ce766086910055ab8accc77e18fd7e4e3f726",
+    "backend/app/modules/planning/v6_search.py": "772b9065b76d9782b2ca7bfd144003378c5813ea9cfef134fd2bf76c99f540d4",
+    "backend/app/modules/planning/v6_selection.py": "4ee4333484774b5dd38065f048cdf23c6fd18ed392040f259dc54854b7b7ad71",
+    "backend/app/modules/planning/v6_service.py": "a992924c5429117d1fba6209e21587a717d30659371e1ad84e14e2714b75f554",
+    "backend/benchmarks/v6_multi_session_evidence.py": "f54d853fd34e5f385128f17b5b14e1a8fb66d14c9ba1e25fbdcee7ecd7734677",
+    "backend/scripts/verify_v6_evidence_network.py": "d9eb851ea82d6219033e35770a37ec83cd1fe66c88009308b4ad0cd6821adc05",
+    "backend/scripts/verify_v6_multi_session.py": "5e39671c02930475c322350982f2f8561186c298f3ae1ff585f05142a7766dab",
+    "backend/tests/test_v6_multi_session.py": "5a00d8c08272283f3baab6fce7be9675943a9b1c14ab8684efc19707ed72d875",
+    "backend/tests/test_v6_selection_http.py": "16b6a80601c457689e60b6f0e0c95768bb9afdaceea95922481bd855b075cdc2",
+    "mobile/src/features/planning/V6MultiSession.test.tsx": "e2ea7ba9669ca91293e4ea74862ced02e6f4f85e68c44be2f0d7c8b3a1acfbc7",
+    "mobile/src/features/planning/v6-multi-session-http.test-fixture.json": "fe3caf35c1314a2fa975562195fdc23fdc8474e7b597e07882741ca9b20da9fa"
+  },
+  "raw_evidence_sha256": {
+    ".runtime/pytest-verified.txt": "6c49db391809acda1b8cda770f16cf5adcdc2c78a1266737a07c7ebc7fa70b3d",
+    ".runtime/jest-verified.json": "9033f9d0e537c7429533aba47921269e9f45f536fb6476a6b4e8c9fda6dde2c2",
+    ".runtime/types-final.txt": "c6e00c5cb43469ecdbcd169520e39344fa6cb3f688150a9b8a988d4252de39ac",
+    ".runtime/unused-final.txt": "7f574d7365982990ef03fd76eb6ffba20c06be9c1f1b3cfc3370b2cbfb343771",
+    ".runtime/ruff-verified.txt": "af352a86840ad0af3d37ea0d9197f868363a6dac6b1c2ef5d2722f6b41d2d9af",
+    ".runtime/format-verified.txt": "3bcc93fbde11a5a7b5548b39a51233fce3951ef0192f3adf748f251ccc5e880b",
+    ".runtime/mypy-verified.txt": "6da745a63caa47c82650cde4d63422d25c99e45e6b1beb86f312bfab9a1011bf",
+    ".runtime/mypy-scripts-verified.txt": "07a5ca23e5d39b2565c0c1361f0556b8c3c75484bba05841f400436d190bb660",
+    ".runtime/sql/pgtap-results.json": "a944683f86f9953586f6ae41bb940ebd15b519331a5b446a941b764e6c4de45d",
+    ".runtime/sql/migration-ledger.json": "4617fddaf6b343941ea2798fe7abda33537c09ba7e1e671687055d9f58784e3a",
+    ".runtime/sql/catalog-preservation.json": "0dbaab47459cd4587c3634c4b98847c1c4e03d461ce8ff9a2375d929b29e0f0f",
+    ".runtime/multi-postgres3.json": "38443223512768e999af905855c80a51bdb19761ceefc8301b361bea4b36899c",
+    ".runtime/multi-postgres3.txt": "c256a291397a7e0718081ef3bd5fbcf94d86b60c44bf2c0bfe7d14840c83d631",
+    ".runtime/multi-concurrency.json": "3f86b131b40f16a197c5f2f5a9432a55091b11809158dc192e4cb5a90eab5c9b",
+    ".runtime/multi-concurrency.txt": "7bb63c195d508b660404eefc393de2d68be077770fdf68a546b0d74f7d99a80e",
+    ".runtime/network.json": "9531556127e8319ccf665b4df042194894158ea9b9e2f9d5d601fc1b4330ab8e",
+    ".runtime/network.txt": "f13d733376f87c413aab217f6c3637e032d730b7415989f88b745330d4739219",
+    ".runtime/postgres-restart.json": "76cac89ec4b0bca32190c44583cd3325d46ab5fd21d2ee4cb5d65ac275e25a16",
+    ".runtime/pg-reload.txt": "c1ac41c7a21838b4313073b95d22dfaf55c191610dd59da6c4dcdb67982bd74e",
+    ".runtime/historical-corpus.json": "cdfb1c2ffc6b49e210bbe22b1553257e2258c18c6c8da80412e03e358251c4e6",
+    ".runtime/historical-regression.json": "bc28fb04081ddecbdc5e3775b8ffee0a0c51d73452e7e806f5fbb580d6576b16",
+    ".runtime/examples.json": "763f1b65e371f1c326a7f2aca282eb6fcc4f2740d5f85994deeabad1a7343d82",
+    ".runtime/pg-final-stop.txt": "6f74a3e247b91774abe24cd936203fc1647df55633b786b7b72ce4501f6b025d"
+  },
+  "preserved": {
+    "protected_a5_a6_sha": "cd3e2dd438031cfb565858d0a5929e9963f7b31f",
+    "protected_worktree_clean": true,
+    "accepted_base_worktree_clean": true,
+    "default_application_unchanged": true,
+    "active_v6_sources": 0,
+    "no_push_merge_deploy_hosted_connection_migration_or_activation": true
+  },
+  "release_gates": [
+    "Approved real-athlete frequency authority/resolver",
+    "Bounded-search exhaustion on larger envelopes",
+    "Scientific and operational swim-time/individual-duration acceptance",
+    "Official Planned IF2/Realized V2 sRPE compatibility",
+    "GoTrue sessions and full gateway isolation",
+    "Actual Android/iOS device flows",
+    "Hosted migration/release authorization and final activation"
+  ],
+  "verification_limits": "Real SQL and TCP loss; synthetic claims/signing and TEST_ONLY frequency. No GoTrue, gateway or device certification. Raw snapshots, test key, cluster and APK remain outside git."
+}

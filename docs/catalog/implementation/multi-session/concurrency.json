@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "two check-in generations converge on one five-occurrence A5 attachment",
+    "two concurrent same-sport swipes: one successor, one stale CAS; sibling preserved",
+    "move versus pending swipe and move versus confirmation retain CAS and five occurrences",
+    "rejection replay preserves exact terminal attachment; no regeneration"
+  ],
+  "active_count": 5
+}

@@ -1,10 +1,19 @@
 # V6: resterende onafhankelijke releasevoorwaarden
 
-8 november 2026, Europe/Amsterdam.
-Branch `feat/joren-v6-evidence-safe-rescheduling`; gecontroleerde basis
-`1dbe10b1a419c689f189faf077f4178eaa4f6310`.
+12 november 2026, Europe/Amsterdam.
+Branch `feat/joren-v6-multi-session-planning`; gecontroleerde basis
+`b87d0e4f82702e168ec16441bbe7661fd0d10cb2`.
 De exacte implementatie-SHA en controlehashes staan in
-[verification.json](evidence-rescheduling/verification.json).
+[verification.json](multi-session/verification.json).
+
+De inactieve planner ondersteunt nu meerdere nieuwe sessies per sport wanneer
+een expliciet, intern, atleet- en weekgebonden frequentiecontract dat vraagt.
+Zonder zo'n contract blijft maximaal één nieuwe sessie per doelsport de veilige
+standaard. Een maximum is geen doel; een zachte aanvraag is geen verplicht
+minimum. Alle nieuwe frequentievoorbeelden zijn TEST_ONLY. De huidige goedgekeurde
+onboarding verzamelt uren, geen geautoriseerde sessiefrequentie. Product moet de
+bron, meetperiode, ontbrekende gegevens, herstel-/blessurebehandeling en
+bevestiging/intrekking van frequentieautorisatie nog vastleggen.
 
 Een onvoltooide V6-training kan lokaal veilig worden verplaatst nadat een andere
 training in dezelfde bevestigde week is geregistreerd. Voltooide en gekoppelde
@@ -23,8 +32,10 @@ historische worktrees zijn niet gewijzigd.
 
 De officiële methode `joren-v6-planned-if2-1`, harde geautoriseerde weekgrens,
 zachte 50/30/20-verdeling, maximaal 20% HIGH actieve tijd per sport, afwezigheid
-van een HIGH-ondergrens, trainingsfasen, selectievolgorde en zwemreferenties zijn
-ongewijzigd. Er zijn geen ervaringscategorieën of nieuwe fysiologische regels.
+van een HIGH-ondergrens, trainingsfasen en zwemreferenties zijn ongewijzigd.
+Expliciet gevraagde sessiedekking komt na sportdekking en vóór de bestaande
+allocatie-/belastingrangschikking; zonder frequentiecontract verandert de keuze
+niet. Er zijn geen ervaringscategorieën of nieuwe fysiologische regels.
 Meetgegevens behouden prioriteit. Niet-ondersteunde Planned/Realized V2
 fallbackcombinaties blijven geblokkeerd; referentiezwemtijd wordt geen gemeten tijd.
 
@@ -46,11 +57,17 @@ Voor vrijgave blijven afzonderlijk nodig:
 - Expliciete autorisatie voor hosted migraties en release. De nieuwe forward-only
   migratiekandidaat is uitsluitend op wegwerpdatabases op localhost uitgevoerd.
 - Afzonderlijke definitieve catalogusactivatie na acceptatie van alle voorwaarden.
+- Een productbesluit over echte frequentieautorisatie voordat automatische
+  herhaalde sportsessies buiten expliciete testcontexten worden aangeboden.
+- Operationele beoordeling van de begrensde zoekruimte: maximaal 24 occurrences
+  en 200.000 gedeelde zoek-/planningsstappen. Het getoonde budget-300-geval geeft
+  eerlijk `v6_search_incomplete`; een afgekapt resultaat wordt niet opgeslagen.
 
 Resterende functionele begrenzingen:
 
-- De automatische selector maakt maximaal één nieuwe training per doelsport.
-  Uitbreiding naar meerdere nieuwe trainingen per sport vergt toekomstig werk.
+- Zonder expliciete frequentieautorisatie maakt de automatische selector maximaal
+  één nieuwe training per doelsport. De multi-sessiecapaciteit is lokaal bewezen
+  met synthetische aanvragen; uren of TSS worden niet tot frequentiebeleid verheven.
 - Een voltooid/geannuleerd doel, ieder doel met gekoppelde activiteit en ieder
   expliciet geregistreerd doel blijft onverplaatsbaar. Ook een koppeling die nog
   op RPE wacht geeft geen toestemming om het fysieke record te vervangen.
@@ -71,9 +88,11 @@ Permanente overname blijft een afzonderlijk te beoordelen voorstel.
 
 De bewijsgrenzen, werkelijk uitgevoerde SQL/HTTP-controles, mobiele resultaten en
 historische regressies staan in
-[JOREN_V6_ACTIVITY_IDENTITY_REGRESSIONS.md](JOREN_V6_ACTIVITY_IDENTITY_REGRESSIONS.md)
-en het [eigenaarschapcontract](JOREN_V6_EVIDENCE_CARRY_FORWARD_CONTRACT.md).
+[JOREN_V6_MULTI_SESSION_VERIFICATION.md](JOREN_V6_MULTI_SESSION_VERIFICATION.md),
+het [frequentiebeleid](JOREN_V6_MULTI_SESSION_POLICY.md) en het
+[eigenaarschapcontract](JOREN_V6_EVIDENCE_CARRY_FORWARD_CONTRACT.md).
 
-Implementation commit: `057d88bb41aa8f73c1e1e66b0e7d0059754ca527`.
-Evidence reviewed 2026-11-12; the documentation-only successor records the
-verification manifest and source hashes. V6 remains inactive.
+De bestaande 62 migraties zijn op een nieuwe lokale wegwerpdatabase afgespeeld;
+voor deze uitbreiding is geen nieuwe migratie nodig. De lokale implementatie-SHA
+en bewijs-hashes staan in het nieuwe verificatiemanifest. De uiteindelijke
+documentatiecommit wordt apart in de oplevering vermeld. V6 blijft inactief.

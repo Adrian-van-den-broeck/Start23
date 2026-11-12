@@ -1,0 +1,13 @@
+{
+  "postgrest_http_statuses": [
+    200,
+    200
+  ],
+  "real_tcp_disconnects": 2,
+  "a5_authoritative_attachment_recovered": true,
+  "move_original_receipt_recovered": true,
+  "plan_revision_count": 2,
+  "new_catalog_activations": 0,
+  "completed_sibling_identity_and_evidence_preserved": true,
+  "multi_session_test_only": true
+}

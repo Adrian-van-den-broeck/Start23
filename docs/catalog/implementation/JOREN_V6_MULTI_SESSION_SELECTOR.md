@@ -1,0 +1,108 @@
+# V6 multi-session selector
+
+12 November 2026. Selection provenance: `joren-v6-multi-session-selection-1`.
+The existing outer `joren-v6-automatic-selection-1` persistence/load dispatch is
+retained. The separate selection version and complete frequency references are
+frozen privately in each new snapshot. Historical snapshots are not rewritten.
+
+## Ranking across feasible session counts
+
+Only complete weeks satisfying the hard budget, frequency maxima, template-use
+limits, sport caps, exact source phase/capability/injury restrictions, 20% HIGH
+time and actual scheduling can win. Among them, minimize this tuple:
+
+1. Negative number of represented goal sports, unchanged from accepted V6.
+2. Negative sum of `min(actual_count, requested_count)` for explicit frequency
+   records. A maximum-only record requests at most the legacy one occurrence.
+3. Existing unrenormalized triathlon L1 allocation distance from BIKE .50,
+   RUN .30, SWIM .20; zero for non-triathlon goals.
+4. Negative complete-week official load within the authorized ceiling.
+5. Sorted immutable template UUID tuple, including multiplicities.
+
+Sport coverage therefore wins over a second session of an already represented
+sport. With equal sport coverage, a feasible explicit soft request wins over
+fewer requested sessions; failure to fill it still returns a partial week.
+Different configurations with the same capped requested coverage compete on the
+existing allocation/load/UUID priorities. There is no additional preference for
+more sessions, no reward beyond the requested count and no mandatory minimum.
+The schedule uses the existing deterministic placement order, with distinct IDs
+for duplicate-template occurrences. Unrelated accepted workouts are not changed
+to improve any score.
+
+With no frequency record the added score component is a constant zero, and the
+original one-per-sport enumeration, 20,000-combination guard and outputs remain.
+
+## Exact bounded enumeration and pruning proof
+
+The new `v6_search.py` enumerates a canonical nondecreasing template multiset
+separately for each sport, retaining the fixed prefix in its original order.
+It then joins all sport options under the complete-week ceiling. It does not
+merge states by total load or sport count, so template identity, repetition,
+dates and scheduling distinctions cannot disappear in a DP equivalence class.
+
+Pruning is limited to proven necessary conditions:
+
+- Official loads are nonnegative. Exceeding the total or sport cap cannot be
+  repaired by adding another workout.
+- Template uses and sport counts only increase. Exhausted ceilings cannot be
+  repaired by a continuation.
+- HIGH time is checked when a sport option is complete, **not** on an unfinished
+  prefix. LOW continuations may dilute a HIGH share. Other sports cannot repair
+  that sport's final HIGH ratio.
+- Nondecreasing appended template order removes permutations of the same
+  multiset. Prefix order is fixed, and scheduling depends on snapshots/occurrence
+  identities, not on an omitted arbitrary selection permutation.
+
+All loads are the exact final official Decimal operands, represented losslessly
+as rational values for comparisons/ranking. The returned/persisted sum uses the
+existing exact `sum_official`; no binary float, tolerance, quantization or ambient
+Decimal rounding enters a hard comparison. Active-time shares are exact fractions.
+
+At most 24 complete-week occurrences and 200,000 shared work nodes are admitted.
+A private caller may lower the node budget, never raise it beyond that ceiling.
+Nodes count sport-multiset expansion, cross-sport joins and scheduler recursion.
+The materialized option/contender sets are also bounded by visited nodes. Each
+contender contains at most 24 template references. Sorting is bounded by the
+contender count; there is no wall-clock race selecting an arbitrary incumbent.
+The original A9 process ownership, cancellation and admission control remains.
+
+All load-valid contenders are ranked; the unchanged scheduler is tried in that
+order. The first scheduled contender is optimal **within the documented
+authorized count/prefix/catalog scope**, after complete enumeration. Explicit
+selections report `EXPLICIT_WEEK_VALIDATED`, not an optimization claim.
+`EXHAUSTIVE_GLOBAL_OPTIMUM` retains its existing scoped meaning. If any shared
+work bound is exhausted, `v6_search_incomplete` propagates; no truncated winner
+is persisted and exhaustion is not reported as an infeasible/rest week.
+
+The recorded full-catalog target-5 example at budget 100 completes in 21,040
+nodes including placement. The budget-300 example reaches the 200,000-node bound
+and honestly returns incomplete, despite smaller valid configurations existing.
+Further performance work for larger candidate envelopes remains a bounded-search
+operational limitation, not grounds to increase legacy deadlines.
+
+## Reproduced examples
+
+See [exact server-private examples](multi-session/examples.json), generated by
+`python -m benchmarks.v6_multi_session_evidence --private-output <file>`.
+All frequency authorizations are TEST_ONLY; workloads are approved real sources.
+
+| Request / budget | Actual dated source selection |
+| --- | --- |
+| 2 RUN, 2 BIKE, 1 SWIM / 100 | Mon BIKE-022; Tue RUN-025; Thu BIKE-023; Fri RUN-025; Sat SWIM-022 |
+| 2 RUN, 1 BIKE, 1 SWIM / 100 | Mon RUN-026; Tue SWIM-001; Thu BIKE-002; Fri RUN-025 |
+| 2 RUN / 100 | Mon RUN-002; Thu RUN-008 |
+| Target 5 / 45 | Mon RUN-025; Thu BIKE-023; Fri SWIM-021; partial warning |
+| Target 5 / 0 | Rest-only week; no feasible workout warning |
+
+Dates refer to the week starting 2026-10-26 with all seven dates available. Source
+identifiers have the `TR-` prefix in the machine evidence. The first week totals
+70.354166… official units; the four-session example totals 89.203125. Allocation
+closeness precedes utilization, so spare budget does not justify a larger load.
+
+The independent small-space oracle covers 30 seeded catalog subsets with
+repetition ceilings, official loads, source-segment HIGH arithmetic, all count
+alternatives and independently spelled-out ranking. It does not call production
+ranking, eligibility, whole-week validation or multiset enumeration. Its at-most
+two sessions per sport and seven-date scope admits existing spacing; separate
+integration tests cover constrained placement and spacing rejection. Historical
+optimized-search/oracle tests remain unchanged.

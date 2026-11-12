@@ -1,0 +1,58 @@
+{
+  "test_only_frequency": true,
+  "synthetic_history_minutes_per_sport": 35,
+  "authorized_budget": "100.1",
+  "selection_version": "joren-v6-multi-session-selection-1",
+  "complete_week_count": 5,
+  "checks": [
+    "A5 attachment failure rolls back every multi-session row",
+    "check-in-driven 2 RUN/2 BIKE/1 SWIM; lost acknowledgement exact attachment replay; owner isolation",
+    "duplicate-template RUN-B swipe retains RUN-A/logical IDs/dates/other sources; exact retry and stale CAS",
+    "separate athlete confirmation; five durable source/method/prescription mappings",
+    "completed RUN-A/BIKE-A unchanged through unfinished same-sport sibling moves; rollback; commit loss exact receipts",
+    "real concurrent sibling moves: one commit, one stale revision; unchanged activity evidence",
+    "new Python process restores five logical/physical/date/source mappings"
+  ],
+  "physical_ids_distinct": true,
+  "completed_sibling_count": 2,
+  "public_trace_sha256": "3dbccf6a3d0590b0ea5679e65bf72ffc6238c01c423014d9d40029aa4f5d0001",
+  "persisted_edited_source_ids": [
+    "TR-BIKE-022",
+    "TR-RUN-025",
+    "TR-BIKE-023",
+    "TR-RUN-026",
+    "TR-SWIM-022"
+  ],
+  "complete_week_safety": {
+    "official_total_fraction": "75744791666666666666666666666666666666666666666667/1000000000000000000000000000000000000000000000000",
+    "authorized_budget": "1001/10",
+    "within_budget": true,
+    "sport_counts": {
+      "bike": 2,
+      "run": 2,
+      "swim": 1
+    },
+    "within_frequency_maxima": true,
+    "active_time_by_sport": {
+      "run": {
+        "low_seconds": "1500",
+        "high_seconds": "0",
+        "share": "0",
+        "within_20_percent": true
+      },
+      "bike": {
+        "low_seconds": "4200",
+        "high_seconds": "0",
+        "share": "0",
+        "within_20_percent": true
+      },
+      "swim": {
+        "low_seconds": "960",
+        "high_seconds": "0",
+        "share": "0",
+        "within_20_percent": true
+      }
+    },
+    "after_moves": "All methods, templates and evidence unchanged; only unfinished dates/target physical rows change."
+  }
+}
