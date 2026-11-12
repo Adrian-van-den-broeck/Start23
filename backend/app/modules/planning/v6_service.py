@@ -258,7 +258,7 @@ class V6PlanningService(PlanningService):
             (w for w in plan.workouts if workout_id in {w.id, w.physical_workout_id}),
             None,
         )
-        if moved is None or any(w.status != "scheduled" for w in plan.workouts):
+        if moved is None or moved.status != "scheduled":
             raise PlanningConstraintError(
                 "recorded_workout_move_unsupported",
                 "Recorded training cannot be moved. Reload the training week.",

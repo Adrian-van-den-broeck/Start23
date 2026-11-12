@@ -213,6 +213,7 @@ class SqlRepository(InactiveSupabaseV6Repository):
                     "get_plan_load_history_for_planning_v16",
                     "get_v6_mobile_calendar",
                     "get_calendar_rest_days",
+                    "list_activities",
                 }
                 else "select to_jsonb(" + call + ")"
             )

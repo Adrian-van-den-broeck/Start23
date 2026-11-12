@@ -13,7 +13,12 @@ from typing import Any
 from uuid import UUID, uuid4
 
 from app.core.config import Settings
-from app.modules.activities.repository import SupabaseActivityRepository
+from app.modules.activities.repository import (
+    ActivityRepositoryConflictError,
+    ActivityRepositoryNotFoundError,
+    ActivityRepositoryUnavailableError,
+    SupabaseActivityRepository,
+)
 from app.modules.activities.schemas import (
     ActivityRpeSubmission,
     ActivitySummaryInput,
@@ -21,7 +26,11 @@ from app.modules.activities.schemas import (
 )
 from app.modules.activities.service import ActivityService
 from app.modules.planning.domain import PlanningConstraintError
-from app.modules.planning.repository import PlanningRepositoryNotFoundError
+from app.modules.planning.repository import (
+    PlanningRepositoryConflictError,
+    PlanningRepositoryNotFoundError,
+    PlanningRepositoryUnavailableError,
+)
 from app.modules.planning.schemas import PlannedWorkoutMoveRequest
 from scripts.verify_v6_postgres import (
     USERS,
@@ -46,7 +55,17 @@ class SqlActivities(SupabaseActivityRepository):
         self.planning = repository
 
     async def _request(self, method: str, path: str, **kwargs: Any) -> Any:
-        return await self.planning._request(method, path, **kwargs)
+        # Match the activity HTTP adapter's public error categories when the
+        # real SQL transport reports a losing transaction, rather than leaking
+        # planning-adapter exceptions through an activity route.
+        try:
+            return await self.planning._request(method, path, **kwargs)
+        except PlanningRepositoryNotFoundError as error:
+            raise ActivityRepositoryNotFoundError from error
+        except PlanningRepositoryConflictError as error:
+            raise ActivityRepositoryConflictError from error
+        except PlanningRepositoryUnavailableError as error:
+            raise ActivityRepositoryUnavailableError from error
 
     async def _rpc_athlete_id(self, athlete_id: UUID) -> UUID:
         return await self.planning._rpc_athlete_id(athlete_id)

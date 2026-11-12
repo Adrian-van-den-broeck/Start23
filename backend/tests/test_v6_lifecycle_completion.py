@@ -61,7 +61,10 @@ def test_confirmed_move_replay_source_and_history(v6_client: TestClient) -> None
     assert_private_free(moved)
     for previous in plan["workouts"]:
         current = next(w for w in moved["workouts"] if w["id"] == previous["id"])
-        assert current["physical_workout_id"] != previous["physical_workout_id"]
+        if previous["id"] == workout["id"]:
+            assert current["physical_workout_id"] != previous["physical_workout_id"]
+        else:
+            assert current["physical_workout_id"] == previous["physical_workout_id"]
         assert {
             k: v
             for k, v in current.items()
@@ -181,3 +184,28 @@ def test_confirmed_move_rejects_high_spacing(v6_client: TestClient) -> None:
     )
     assert response.status_code == 409, response.text
     assert repo._plans == before
+
+
+def test_unfinished_move_retains_completed_sibling(v6_client: TestClient) -> None:
+    plan = confirmed(v6_client)
+    repo = cast(
+        V6MemoryRepository, cast(FastAPI, v6_client.app).state.planning_repository
+    )
+    pid = UUID(plan["id"])
+    sibling = next(w for w in repo._plans[pid]["workouts"] if w["discipline"] == "run")
+    sibling["status"] = "completed"
+    before_plan = v6_client.get(
+        "/api/v1/weekly-plans/" + plan["id"], headers=_headers()
+    ).json()
+    before = next(w for w in before_plan["workouts"] if w["id"] == sibling["id"])
+    target = next(w for w in plan["workouts"] if w["discipline"] == "bike")
+    response = v6_client.patch(
+        "/api/v1/planned-workouts/" + target["physical_workout_id"],
+        headers=_headers(),
+        json={"expected_revision": 1, "scheduled_date": "2026-11-01"},
+    )
+    assert response.status_code == 200, response.text
+    retained = next(w for w in response.json()["workouts"] if w["id"] == before["id"])
+    assert retained == before
+    assert retained["status"] == "completed"
+    assert retained["physical_workout_id"] == before["physical_workout_id"]

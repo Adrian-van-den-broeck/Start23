@@ -13,8 +13,8 @@ select is((
   where n.nspname in ('public','private') and p.prokind='f'
     and p.prosrc like '%errcode = ''PT409''%'
 -- Original 28 plus two A5 recovery functions, two V6 functions, and four V2
--- registration/evidence guards, plus the confirmed V6 move writer. No original business-conflict guard is removed.
-), 37, 'all 37 inventoried MVP/V2/V6 implementations use nonretryable HTTP 409');
+-- registration/evidence guards, plus the confirmed V6 move writer and evidence-preservation guard. No original business-conflict guard is removed.
+), 38, 'all 38 inventoried MVP/V2/V6 implementations use nonretryable HTTP 409');
 select ok((select pg_get_constraintdef(oid) like '%heart_rate_monitor%'
   and pg_get_constraintdef(oid) like '%timezone%'
   from pg_constraint where conrelid='public.onboarding_completion_records'::regclass

@@ -223,12 +223,15 @@ def snapshot(db: LocalPostgres, revision: str) -> Any:
     return db.execute(
         "select jsonb_build_object('revision',to_jsonb(r)-'state', 'snapshot'"
         ",to_jsonb(s),"
-        "'workouts',(select jsonb_agg(to_jsonb(w) order by id) from public.pl"
-        "anned_workouts w where revision_id=r.id),"
-        "'loads',(select jsonb_agg(to_jsonb(l) order by planned_workout_id) f"
+        "'workouts',(select jsonb_agg(to_jsonb(w) order by w.id) from public."
+        "planned_workouts w join private.v6_revision_occurrences m on "
+        "m.planned_workout_id=w.id and m.athlete_id=w.athlete_id "
+        "where m.revision_id=r.id),"
+        "'loads',(select jsonb_agg(to_jsonb(l) order by l.planned_workout_id) f"
         "rom private.planned_workout_loads l "
-        "join public.planned_workouts w on w.id=l.planned_workout_id where w."
-        "revision_id=r.id)) "
+        "join private.v6_revision_occurrences m on "
+        "m.planned_workout_id=l.planned_workout_id and m.athlete_id=l.athlete_id "
+        "where m.revision_id=r.id)) "
         "from public.plan_revisions r join private.v6_plan_snapshots s on s.r"
         "evision_id=r.id where r.id=" + literal(revision)
     )
@@ -356,7 +359,10 @@ def run(output: Path) -> None:
         }
         for previous in active["workouts"]:
             new = next(w for w in moved["workouts"] if w["id"] == previous["id"])
-            assert new["physical_workout_id"] != previous["physical_workout_id"]
+            if previous["id"] == target["id"]:
+                assert new["physical_workout_id"] != previous["physical_workout_id"]
+            else:
+                assert new["physical_workout_id"] == previous["physical_workout_id"]
             for key in previous.keys() - {"scheduled_date", "physical_workout_id"}:
                 assert previous[key] == new[key], key
             assert new["scheduled_date"] == (
@@ -613,7 +619,9 @@ def reload(output: Path) -> None:
             request(client, "GET", "/calendar?from=2026-10-26&to=2026-11-02")
             == trace["calendar"]
         )
-        old = trace["beforeMove"]["workouts"][0]
+        old = next(
+            w for w in trace["beforeMove"]["workouts"] if w["discipline"] == "bike"
+        )
         request(
             client,
             "PATCH",

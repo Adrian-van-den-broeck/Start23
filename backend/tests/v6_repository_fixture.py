@@ -71,8 +71,8 @@ class V6MemoryRepository(MemoryPlanningRepository):
         updated["revision_id"] = str(uuid4())
         updated["proposal"] = None
         for row in updated["workouts"]:
-            row["physical_workout_id"] = str(uuid4())
             if row["id"] == payload["occurrence_id"]:
+                row["physical_workout_id"] = str(uuid4())
                 row["scheduled_date"] = payload["scheduled_date"]
         frozen = deepcopy(self.frozen_payloads[pid, current["revision"]])
         for row in frozen["workouts"]:
