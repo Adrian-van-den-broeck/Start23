@@ -203,10 +203,19 @@ class ChangeProposalSummaryResponse(PublicPlanningModel):
     target_test_assignment_id: UUID | None = None
 
 
+class FrequencySummary(PublicPlanningModel):
+    sport: Discipline
+    requested: int | None = Field(ge=0, le=24)
+    proposed: int = Field(ge=0, le=24)
+
+
 class WeeklyPlanResponse(PublicPlanningModel):
     """One explicitly selected active or pending weekly plan revision."""
 
     id: UUID
+    frequency_summary: tuple[FrequencySummary, ...] = Field(
+        default=(), exclude_if=lambda value: not value
+    )
     week_start: date
     timezone: str
     state: Literal["pending_approval", "active", "superseded", "rejected", "expired"]

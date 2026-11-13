@@ -2463,3 +2463,23 @@ Every phase must:
 Target MVP adds the approved prospective duration-adjusted RPE fallback and explicit weekly registration. Phase13 calibration/baseline and planning-v2 safety coefficients are retained. Local software implementation does not close database, independent review or release gates.
 
 See the [authoritative v2 specification](../requirements/JOREN_REALIZED_TSS_V2_APPROVED_SPECIFICATION.md) and its implementation report.
+
+## V6 frequency policy approval — 13 November 2026
+
+The owner reports Joren's affirmative response to all five questions in
+`joren-v6-real-athlete-frequency-policy-1`. The immutable
+[approval successor](../catalog/decisions/JOREN_V6_REAL_ATHLETE_FREQUENCY_APPROVAL.md)
+preserves the exact historical proposal. Optional persistent athlete wishes,
+separately reviewed athlete/sport/local-week maxima, suspension and renewed
+assessment are the accepted direction. This does not identify an actual
+operator/reviewer, issue any individual maximum or approve independent release gates.
+
+The isolated implementation is documented in the
+[preference report](../catalog/implementation/JOREN_V6_FREQUENCY_PREFERENCE_IMPLEMENTATION.md),
+[authorization report](../catalog/implementation/JOREN_V6_FREQUENCY_AUTHORIZATION_AND_REVOCATION.md)
+and [verification report](../catalog/implementation/JOREN_V6_FREQUENCY_VERIFICATION.md).
+V6 remains disconnected from production startup. Search performance is the next
+independent technical priority: preserve the 200,000-node ceiling and honest
+`v6_search_incomplete`; no real-athlete multi-session activation before that
+problem and the [remaining release gates](../catalog/implementation/JOREN_V6_REMAINING_RELEASE_GATES_NL.md)
+are resolved.

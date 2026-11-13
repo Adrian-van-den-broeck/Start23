@@ -76,6 +76,7 @@ class V6Controls:
     authorized_target: PlanningTarget | None = field(default=None, repr=False)
     session_frequency: tuple[SessionFrequency, ...] = ()
     maximum_search_nodes: int = MAX_SEARCH_NODES
+    frequency_policy_context: str | None = field(default=None, repr=False)
 
     def __post_init__(self) -> None:
         if (

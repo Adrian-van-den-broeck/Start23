@@ -59,6 +59,8 @@ def test_openapi_contains_expected_foundation_paths(client: TestClient) -> None:
         "/api/v1/me/identifying-profile",
         "/api/v1/me/physiology-profile",
         "/api/v1/me/operational-profile",
+        "/api/v1/me/frequency-preferences",
+        "/api/v1/me/frequency-preferences/interruption",
         "/api/v1/onboarding",
         "/api/v1/onboarding/goal-options",
         "/api/v1/me/training-history",

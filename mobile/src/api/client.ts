@@ -15,6 +15,7 @@ import type {
   DisciplineSetupInput,
   FieldTestSchedulingResponse,
   FatigueLevel,
+  FrequencyPreferences,
   GoalPlanningOption,
   InjuryRestriction,
   OnboardingComplete,
@@ -45,6 +46,22 @@ import * as validate from './responseValidation';
 import { uncertainWriteMessage, unreadableResponseMessage } from '../i18n/recoveryMessages';
 
 export const API_DEADLINE_MS = 45_000;
+
+export function getFrequencyPreferences(accessToken: string): Promise<FrequencyPreferences> {
+  return request(accessToken, '/api/v1/me/frequency-preferences', {}, validate.frequencyPreferences);
+}
+
+export function saveFrequencyPreferences(accessToken: string, input: {
+  expected_revision: number; operation_id: string; preferences: FrequencyPreferences['preferences'];
+}): Promise<FrequencyPreferences> {
+  return request(accessToken, '/api/v1/me/frequency-preferences', { method: 'PUT', body: JSON.stringify(input) }, validate.frequencyPreferences);
+}
+
+export function reportFrequencyInterruption(accessToken: string, input: {
+  operation_id: string; reason: 'illness' | 'training_interruption' | 'injury'; sport?: Discipline;
+}): Promise<FrequencyPreferences> {
+  return request(accessToken, '/api/v1/me/frequency-preferences/interruption', { method: 'POST', body: JSON.stringify(input) }, validate.frequencyPreferences);
+}
 export const PLANNING_DEADLINE_MS = 120_000;
 
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, '');
@@ -136,6 +153,12 @@ function deterministicErrorMessage(code: string | undefined): string | null {
       return 'Je weekplanning is intussen gewijzigd. Vernieuw de week en probeer opnieuw.';
     case 'v6_active_move_requires_revision':
       return 'Deze bevestigde training kan nog niet worden verplaatst. De opgeslagen brontraining blijft behouden.';
+    case 'v6_search_incomplete':
+      return 'Het weekvoorstel kon niet volledig worden berekend. Er is geen nieuw voorstel opgeslagen. Pas je voorkeur aan of vraag ondersteuning.';
+    case 'v6_selection_invalid':
+      return 'Er is geen passend weekvoorstel binnen de huidige keuzes en trainingsvoorwaarden. Controleer je beschikbare dagen en voorkeur.';
+    case 'v6_frequency_context_stale':
+      return 'Je voorkeur of trainingsvoorwaarden zijn gewijzigd. Vernieuw de gegevens en beoordeel een nieuw voorstel.';
     case 'swipe_selection_incomplete':
     case 'swipe_layout_incomplete':
       return 'Rond eerst alle trainingskeuzes en datums af.';

@@ -13,6 +13,19 @@ const strings = (value: unknown) => array(value, text);
 const discipline = (value: unknown) => oneOf(value, ['run', 'bike', 'swim']);
 const fields = (value: ObjectValue, names: string[], check: (item: unknown) => boolean) => names.every(name => check(value[name]));
 
+export function frequencyPreferences(value: unknown): boolean {
+  return object(value) && integer(value.revision) && value.revision >= 0 &&
+    nullable(value.operation_id, id) && nullable(value.confirmed_at, id) && nullable(value.recorded_at, id) &&
+    array(value.reconfirmation_required, discipline) && object(value.preferences) &&
+    fields(value.preferences, ['run', 'bike', 'swim'], item => nullable(item, n => integer(n) && n >= 0 && n <= 24));
+}
+
+function frequencySummary(value: unknown): boolean {
+  return array(value, row => object(row) && discipline(row.sport) &&
+    nullable(row.requested, n => integer(n) && n >= 0 && n <= 24) &&
+    integer(row.proposed) && row.proposed >= 0 && row.proposed <= 24);
+}
+
 export function workoutRegistration(value: unknown): boolean {
   return object(value) && fields(value, ['planned_workout_id', 'plan_revision_id'], id) &&
     integer(value.registration_revision) && value.registration_revision >= 0 &&
@@ -74,6 +87,7 @@ function proposal(value: unknown): boolean {
     fields(value, ['decided_at', 'applied_at', 'decision_actor', 'target_plan_revision_id', 'target_zone_profile_id', 'base_zone_profile_id', 'target_test_assignment_id'], v => nullable(v, text)) && nullable(value.base_plan_revision, integer);
 }
 export function planResponse(value: unknown): boolean {
+  if (object(value) && value.frequency_summary !== undefined && !frequencySummary(value.frequency_summary)) return false;
   return object(value) && fields(value, ['id', 'revision_id', 'week_start', 'timezone'], id) && integer(value.revision) && nullable(value.active_revision, integer) &&
     oneOf(value.state, ['pending_approval', 'active', 'superseded', 'rejected', 'expired']) &&
     oneOf(value.revision_state, ['draft', 'pending_approval', 'active', 'rejected', 'superseded', 'expired']) &&
@@ -134,7 +148,7 @@ export const activityListResponse = (value: unknown): boolean => array(value, ac
 // never copy arbitrary server messages or values into a public exception.
 export function errorEnvelope(value: unknown): { error?: { code?: string; details?: { violations?: Array<{ location?: string[]; type?: string }> } } } {
   if (!object(value) || !object(value.error)) return {};
-  const code = typeof value.error.code === 'string' && /^[a-z_]{1,100}$/.test(value.error.code) ? value.error.code : undefined;
+  const code = typeof value.error.code === 'string' && /^[a-z][a-z0-9_]{0,99}$/.test(value.error.code) ? value.error.code : undefined;
   const details = value.error.details;
   const violations = object(details) && Array.isArray(details.violations) ? details.violations.filter(object).map(item => ({
     location: Array.isArray(item.location) ? item.location.filter(text) : [], type: text(item.type) ? item.type : undefined,

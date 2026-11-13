@@ -25,6 +25,81 @@ from .repository import (
 
 class InactiveSupabaseV6Repository(SupabasePlanningRepository):
     supports_frozen_v6_snapshots = True
+    supports_frequency_policy = True
+
+    async def fetch_v6_swipe_receipt(
+        self, access_token: str, draft_id: UUID
+    ) -> JsonObject | None:
+        result = await self._request(
+            "POST",
+            "rpc/get_v6_frequency_swipe_receipt",
+            access_token=access_token,
+            json={"p_draft_id": str(draft_id)},
+        )
+        if result is not None and not isinstance(result, dict):
+            raise PlanningRepositoryUnavailableError
+        return dict(result) if result is not None else None
+
+    async def fetch_frequency_context(
+        self, athlete_id: UUID, week_start: date, timezone_name: str
+    ) -> JsonObject:
+        result = await self._request(
+            "POST",
+            "rpc/get_v6_frequency_context",
+            service=True,
+            json={
+                "p_athlete_id": str(athlete_id),
+                "p_week_start": week_start.isoformat(),
+                "p_timezone": timezone_name,
+            },
+        )
+        if not isinstance(result, dict):
+            raise PlanningRepositoryUnavailableError
+        return dict(result)
+
+    async def create_swipe_draft(
+        self, athlete_id: UUID, payload: JsonObject
+    ) -> JsonObject:
+        if "v6_frequency_context" not in payload:
+            return await super().create_swipe_draft(athlete_id, payload)
+        result = await self._request(
+            "POST",
+            "rpc/create_v6_frequency_swipe_draft",
+            service=True,
+            json={
+                "p_athlete_id": str(await self._rpc_athlete_id(athlete_id)),
+                "p_payload": payload,
+            },
+        )
+        if not isinstance(result, dict):
+            raise PlanningRepositoryUnavailableError
+        return dict(result)
+
+    async def update_swipe_draft(
+        self,
+        athlete_id: UUID,
+        draft_id: UUID,
+        expected_revision: int,
+        payload: JsonObject,
+    ) -> JsonObject:
+        if "v6_frequency_context" not in payload:
+            return await super().update_swipe_draft(
+                athlete_id, draft_id, expected_revision, payload
+            )
+        result = await self._request(
+            "POST",
+            "rpc/update_v6_frequency_swipe_draft",
+            service=True,
+            json={
+                "p_athlete_id": str(await self._rpc_athlete_id(athlete_id)),
+                "p_draft_id": str(draft_id),
+                "p_expected_revision": expected_revision,
+                "p_payload": payload,
+            },
+        )
+        if not isinstance(result, dict):
+            raise PlanningRepositoryUnavailableError
+        return dict(result)
 
     def __init__(
         self, settings: Settings, *, client: httpx.AsyncClient | None = None
@@ -42,7 +117,9 @@ class InactiveSupabaseV6Repository(SupabasePlanningRepository):
     ) -> JsonObject:
         result = await self._request(
             "POST",
-            "rpc/create_v6_weekly_plan_proposal",
+            "rpc/create_v6_frequency_swipe_proposal"
+            if "v6_swipe_draft" in payload
+            else "rpc/create_v6_weekly_plan_proposal",
             service=True,
             json={
                 "p_athlete_id": str(await self._rpc_athlete_id(athlete_id)),

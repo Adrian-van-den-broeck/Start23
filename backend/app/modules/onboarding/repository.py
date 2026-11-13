@@ -137,6 +137,43 @@ class OnboardingRepository(Protocol):
 
 
 class SupabaseOnboardingRepository:
+    async def fetch_frequency_preferences(self, access_token: str) -> JsonObject:
+        return await self._frequency_rpc("get_frequency_preferences", access_token, {})
+
+    async def save_frequency_preferences(
+        self, access_token: str, values: JsonObject
+    ) -> JsonObject:
+        return await self._frequency_rpc(
+            "save_frequency_preferences",
+            access_token,
+            {
+                "p_expected_revision": values["expected_revision"],
+                "p_operation_id": values["operation_id"],
+                "p_preferences": values["preferences"],
+            },
+        )
+
+    async def report_frequency_interruption(
+        self, access_token: str, values: JsonObject
+    ) -> JsonObject:
+        return await self._frequency_rpc(
+            "report_frequency_interruption",
+            access_token,
+            {
+                "p_operation_id": values["operation_id"],
+                "p_reason": values["reason"],
+                "p_sport": values["sport"],
+            },
+        )
+
+    async def _frequency_rpc(
+        self, name: str, access_token: str, values: JsonObject
+    ) -> JsonObject:
+        result = await self._request("POST", f"rpc/{name}", access_token, json=values)
+        if not isinstance(result, dict):
+            raise RepositoryUnavailableError
+        return dict(result)
+
     """Call PostgREST with the verified user token so RLS retains auth.uid()."""
 
     def __init__(

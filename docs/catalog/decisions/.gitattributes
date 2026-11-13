@@ -1,0 +1,3 @@
+*.md text eol=lf
+# Exact original PROPOSED custody copy, including its original line endings.
+/JOREN_V6_REAL_ATHLETE_FREQUENCY_PROPOSAL_NL.md -text whitespace=cr-at-eol

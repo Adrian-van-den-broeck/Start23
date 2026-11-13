@@ -1,0 +1,79 @@
+{
+  "node_ceiling": 200000,
+  "synthetic_test_only": true,
+  "cases": [
+    {
+      "case": "base_221_100",
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "nodes": 21040
+    },
+    {
+      "case": "base_221_150",
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "nodes": 60789
+    },
+    {
+      "case": "base_221_200",
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "nodes": 117838
+    },
+    {
+      "case": "base_221_250",
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "nodes": 189609
+    },
+    {
+      "case": "base_221_300",
+      "outcome": "v6_search_incomplete"
+    },
+    {
+      "case": "base_211_300",
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "nodes": 43005
+    },
+    {
+      "case": "base_321_150",
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "nodes": 191519
+    },
+    {
+      "case": "base_222_100",
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "nodes": 79141
+    },
+    {
+      "case": "base_222_200",
+      "outcome": "v6_search_incomplete"
+    },
+    {
+      "case": "run_3_200",
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "nodes": 2800
+    },
+    {
+      "case": "run_4_300",
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "nodes": 20513
+    },
+    {
+      "case": "build4_221_100",
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "nodes": 21374
+    },
+    {
+      "case": "build4_221_150",
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "nodes": 66640
+    },
+    {
+      "case": "normal_baseline_35min",
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "nodes": 21076
+    },
+    {
+      "case": "normal_baseline_105min",
+      "outcome": "v6_search_incomplete"
+    }
+  ],
+  "release_gate": "Search performance remains independent; no raised ceiling, reduced request or unverified optimum."
+}

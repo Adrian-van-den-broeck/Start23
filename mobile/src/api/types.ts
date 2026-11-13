@@ -580,7 +580,19 @@ export type ChangeProposal = {
   target_test_assignment_id: string | null;
 };
 
+export type FrequencyPreferences = {
+  revision: number;
+  operation_id: string | null;
+  preferences: Record<Discipline, number | null>;
+  confirmed_at: string | null;
+  recorded_at: string | null;
+  reconfirmation_required: Discipline[];
+};
+
+export type FrequencySummary = { sport: Discipline; requested: number | null; proposed: number };
+
 export type WeeklyPlan = {
+  frequency_summary?: FrequencySummary[];
   id: string;
   week_start: string;
   timezone: string;

@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getOnboarding, saveProfile } from '../api/client';
-import type { AthleteProfile } from '../api/types';
+import type { AthleteProfile, Discipline } from '../api/types';
+import { FrequencyPreferenceCard } from '../features/planning/FrequencyPreferenceCard';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { ProfileForm } from '../ui-v2/components/ProfileForm';
 import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
@@ -28,6 +29,7 @@ export function ProfileScreen({
   onSignOut,
 }: Props) {
   const [profile, setProfile] = useState<AthleteProfile | null>(null);
+  const [sports, setSports] = useState<Discipline[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,13 +37,14 @@ export function ProfileScreen({
   const load = async () => {
     const onboarding = await getOnboarding(accessToken);
     setProfile(onboarding.profile);
+    setSports(onboarding.required_disciplines);
   };
 
   useEffect(() => {
     let mounted = true;
     getOnboarding(accessToken)
       .then((onboarding) => {
-        if (mounted) setProfile(onboarding.profile);
+        if (mounted) { setProfile(onboarding.profile); setSports(onboarding.required_disciplines); }
       })
       .catch((caught: unknown) => {
         if (mounted) {
@@ -82,6 +85,7 @@ export function ProfileScreen({
                 setSaving(false);
               }
             }} /> : null}
+        {!loading ? <FrequencyPreferenceCard accessToken={accessToken} sports={sports} /> : null}
         <Card elevated style={{ gap: space[16] }}>
           <View style={{ gap: space[4] }}><QuickActionRow label="Testen en kalibratie" onAction={onOpenTests} icon="document" /><Text variant="supporting" tone="textMuted">Open de huidige, uitvoerbare protocollen.</Text></View>
           <Divider />

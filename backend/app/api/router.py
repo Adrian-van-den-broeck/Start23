@@ -8,6 +8,7 @@ from app.modules.checkins.router import router as checkins_router
 from app.modules.health.router import router as health_router
 from app.modules.identity.router import router as identity_router
 from app.modules.integrations.router import router as integrations_router
+from app.modules.onboarding.frequency import router as frequency_router
 from app.modules.onboarding.router import router as onboarding_router
 from app.modules.pioneer.router import router as pioneer_router
 from app.modules.planning.router import router as planning_router
@@ -17,6 +18,7 @@ api_router = APIRouter()
 api_router.include_router(health_router)
 api_router.include_router(identity_router)
 api_router.include_router(onboarding_router)
+api_router.include_router(frequency_router)
 api_router.include_router(workouts_router)
 api_router.include_router(planning_router)
 api_router.include_router(activities_router)

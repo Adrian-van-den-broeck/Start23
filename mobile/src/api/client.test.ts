@@ -28,6 +28,36 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
+test('frequency preference transport carries exact revision and logical save without an owner override', async () => {
+  const { client, fetchMock } = loadClient();
+  const saved = { revision: 1, operation_id: 'operation-a', preferences: { run: 0, bike: 2, swim: null },
+    confirmed_at: '2026-11-13T12:00:00Z', recorded_at: '2026-11-13T12:00:00Z', reconfirmation_required: [] };
+  fetchMock.mockResolvedValueOnce(response(200, saved)).mockResolvedValueOnce(response(200, saved));
+  await expect(client.getFrequencyPreferences('athlete-token')).resolves.toEqual(saved);
+  const input = { expected_revision: 0, operation_id: 'operation-a', preferences: saved.preferences };
+  await expect(client.saveFrequencyPreferences('athlete-token', input)).resolves.toEqual(saved);
+  expect(fetchMock.mock.calls[0][0]).toBe(`${API_URL}/api/v1/me/frequency-preferences`);
+  expect(fetchMock.mock.calls[1][1]).toMatchObject({ headers, method: 'PUT', body: JSON.stringify(input) });
+});
+
+test('incomplete frequency search has different copy from an infeasible proposal and never retries automatically', async () => {
+  const { client, fetchMock } = loadClient();
+  fetchMock.mockResolvedValueOnce(response(409, { error: { code: 'v6_search_incomplete', message: 'private server diagnostic' } }));
+  await expect(client.createCheckInPlanProposal('athlete-token', 'checkin-a')).rejects.toMatchObject({
+    code: 'v6_search_incomplete', message: 'Het weekvoorstel kon niet volledig worden berekend. Er is geen nieuw voorstel opgeslagen. Pas je voorkeur aan of vraag ondersteuning.',
+  });
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+});
+
+test('an exhaustively infeasible selection does not claim an incomplete search', async () => {
+  const { client, fetchMock } = loadClient();
+  fetchMock.mockResolvedValueOnce(response(409, { error: { code: 'v6_selection_invalid' } }));
+  await expect(client.createCheckInPlanProposal('athlete-token', 'checkin-a')).rejects.toMatchObject({
+    code: 'v6_selection_invalid', message: 'Er is geen passend weekvoorstel binnen de huidige keuzes en trainingsvoorwaarden. Controleer je beschikbare dagen en voorkeur.',
+  });
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+});
+
 test('A4 check-in generation, explicit approval receipt and exact revision read preserve the public wire contracts', async () => {
   const { client, fetchMock } = loadClient();
   const receipt = { state: 'applied', plan_id: pendingNext.id, active_revision: 1 };

@@ -1,0 +1,102 @@
+{
+  "execution_dates_local": [
+    "2026-11-13",
+    "2026-11-14"
+  ],
+  "timezone": "Europe/Amsterdam",
+  "base_sha": "6745c903ae045b3c3215e928fb53c36cb119a741",
+  "branch": "feat/joren-v6-approved-frequency-policy",
+  "backend_pytest": {
+    "passed": 2759,
+    "warning_count": 1
+  },
+  "mobile_jest": {
+    "passed": 929,
+    "suites": 88
+  },
+  "strict_typescript": "PASS",
+  "typescript_unused_checks": "PASS",
+  "ruff": "PASS",
+  "format": {
+    "status": "PASS",
+    "files": 234
+  },
+  "strict_mypy": {
+    "status": "PASS",
+    "app_tests_benchmarks_files": 217,
+    "changed_scripts_files": 2
+  },
+  "postgresql": "postgresql.json",
+  "atomicity_retry_and_restart": "lifecycle.json",
+  "historical": "historical-comparison.json",
+  "search": "search-matrix.json",
+  "android_debug": {
+    "status": "BUILD SUCCESSFUL",
+    "architecture": "x86_64",
+    "offline": true,
+    "actionable_tasks": 692,
+    "apk_sha256": "a7a6541e30f75855dd79d8d9772d0e8e90c9a3791437a80957fb17c2601639f7",
+    "changed_mobile_application_sources_match_short_build_copy": true,
+    "device_install_or_execution": false
+  },
+  "source_sha256": {
+    "backend/app/api/router.py": "53f816e854376e14278ce670c1da7144bdc8d9e4176d5597f3a640ae7eb3afce",
+    "backend/app/local_v6.py": "903a57e360cb4a4762d6b444c52181b279f074b884f93125fac24a29347dd005",
+    "backend/app/modules/onboarding/frequency.py": "8f8137ba4e08fc11cc0055ca560ea7572e56f8ea6861925f7039c88601ba269a",
+    "backend/app/modules/onboarding/repository.py": "ccd5f2c35e8e7bb096f776b3f4eaf8480ab5e99f3338a371c5da6d025215290c",
+    "backend/app/modules/planning/frequency_policy.py": "df3a3aa0556c73b34f2a3e23f08cf9e8eb55b096b3728eaf58a164d2416e2136",
+    "backend/app/modules/planning/schemas.py": "ba84fbde4601a70b3307ce0d96890ad3aabfb481acb1b44fde248c567755dd79",
+    "backend/app/modules/planning/service.py": "b85ec3f2d8d3975e930da9e11e713e33d6bde4aef470af1358668ebe575208d2",
+    "backend/app/modules/planning/v6_frequency.py": "6580c1510e260e3d8181007df95fdcd0e58740aa57b33bb26784a750f70e5910",
+    "backend/app/modules/planning/v6_repository.py": "4d1294476dcbea76473ce30df17d8327739604d30013a8797c99c4536a48f313",
+    "backend/app/modules/planning/v6_selection.py": "7ee18d64ffbb64465a3558f3bd0ae656e29368caef1b582d192966611aac195a",
+    "backend/app/modules/planning/v6_service.py": "60238fcca08ce4b3dd413fe29ad1a3e016c07de6163eebe86edd27baf962526e",
+    "backend/scripts/verify_v6_evidence_network.py": "38354c944b698042b45657e46c941959fe1e8a7063567cce19b7a0d35c8c6ab7",
+    "backend/scripts/verify_v6_frequency_policy.py": "fe8f0bf453df159f33ea4670c4fa246bd6651172d1d2cbe5801dbe7e0ab590be",
+    "backend/tests/test_contracts.py": "e25fc9379287f5860ffb6689d7f8c90a5e38991ea9a8422e8659cda6d3f8caa0",
+    "backend/tests/test_frequency_policy.py": "ac66a042b72ab8dc9be1dacafa1a34a6bc8fffc3bdbe47e1a02f019329aa511f",
+    "mobile/app/(authenticated)/onboarding.tsx": "1acaec6c271bd77f4a8ce3e2b90b61bb3105f6bcee39055572121fb91a9656b1",
+    "mobile/app/(authenticated)/profile.tsx": "e7508f8606fe56f3cd11999e8358eacac62aa7130e239bf671cabb264db04728",
+    "mobile/src/api/client.test.ts": "a93f7f0201771d5ee284cc49de01eec3f0365a6e89c694408f097f72cb62d3cc",
+    "mobile/src/api/client.ts": "7fd74bf64f2e305cda1a486e1a996c0d009d548925eeea631d876882991d0457",
+    "mobile/src/api/responseValidation.ts": "0e38e6121a66165fa5f275ea4b8fb8196f08674effc271b26bd39896e20e5f57",
+    "mobile/src/api/types.ts": "e0f2af57cc98e74fa5e1367812ea44fb3422070a38e6e21f867bae249bfa0d30",
+    "mobile/src/features/planning/FrequencyPreferenceCard.test.tsx": "7690ff0ba00186887a9f15be17b7dc3dfe4c6926dd8c6692ae158a7ed3b80b0c",
+    "mobile/src/features/planning/FrequencyPreferenceCard.tsx": "b65de77d44dde9f50867071a7866f1209988a793df0c392315113c9fd9ae384a",
+    "mobile/src/features/planning/FrequencySummary.tsx": "38859b3b420efd9597cd0805fe04cb6cf900ec48fcb8dd3b268fb7a84ed323ea",
+    "mobile/src/screens/OnboardingScreen.tsx": "5eacb490ce6f94af2fc8a3538bbf66e9110e786c4e93de86b3d59f6cb07465cb",
+    "mobile/src/screens/PlanningScreen.tsx": "82cfc98e0b00d76f18444b7301372daf2c78fce4cfae0927ea902b32de5bdf34",
+    "mobile/src/screens/ProfileScreen.tsx": "516b5411bd36e1c7dc84eeb7e2f9b9e66ce39d1bca1e46a8d92625e2fb8f251a",
+    "mobile/src/ui-v2/screens/ProposalReviewScreens.tsx": "57273540273754e08d43ab42ff84f4c5f6afc78462a3fb208269e07476936961",
+    "mobile/src/ui-v2/utils/proposalReviewViewModel.ts": "70740df4753cd1abf9cc07a27ad579412d198ce701ad6b117a3a8f48150c2df9",
+    "supabase/migrations/20261113154716_inactive_v6_approved_frequency_policy.sql": "c0a43411f7db00d4d76cb8400d0b07e5081678aff280853a6a91b9b03ff6b2c4",
+    "supabase/tests/r6_mvp_business_conflicts_test.sql": "be24962854a573519dbb504ff5795ca526f329b8d890c36ae61e8c69bccd9c47",
+    "supabase/tests/v6_frequency_policy_test.sql": "c49a0d651cf28a65a0257b1ad826f1f91b0865475783d0ce0e97843cbaa32dce"
+  },
+  "private_execution_log_sha256": {
+    "pytest-delivery.txt": "7138bf20f24b9d12c072391ffd808e63418f111d4b5dc8d1f18f832a611bcddf",
+    "ruff-delivery.txt": "af352a86840ad0af3d37ea0d9197f868363a6dac6b1c2ef5d2722f6b41d2d9af",
+    "format-delivery.txt": "62eaa69312ff187556afa7336b71f2bf36d67bbce0f8372ab574bebcf658faf6",
+    "mypy-delivery.txt": "6aa88cc291c0241473cbcf7a778a13bf3a6393d6343219e38cf6b649c85232d4",
+    "mypy-scripts-delivery.txt": "07a5ca23e5d39b2565c0c1361f0556b8c3c75484bba05841f400436d190bb660",
+    "jest-verified.json": "4344e7bde409814d4dc2bb2120361398e71eb14b412865f3cfea2332604bcc57",
+    "types-final.txt": "c6e00c5cb43469ecdbcd169520e39344fa6cb3f688150a9b8a988d4252de39ac",
+    "unused-final.txt": "7f574d7365982990ef03fd76eb6ffba20c06be9c1f1b3cfc3370b2cbfb343771",
+    "android-final-debug.txt": "378ec1f7a363ab5dedcac75acb18c8936a44ea0527cda2aaab79441dc30ecfeb",
+    "restart-policy.txt": "b7c0d1fa2b0fbc88076290d3fb892e7c93924113bf9f74b7fef9c85f2e80437a",
+    "restart-multi.txt": "7f56555b0458ac425607a4ecf1a46d4cc905503a9d76f2e9e81d18d414a65da9"
+  },
+  "original_migrations_unchanged": 62,
+  "historical_proposal_sha256": "35048da20899e7ddd5c964a1392c921eaf2654b9557f4c048f6e234617891a69",
+  "historical_release_register_sha256": "598a514b040906d30c0e64dde1ef789f8271321f3f67445453616c1d998bc6d0",
+  "not_executed": [
+    "Genuine reviewed numerical authorization issuance/revocation",
+    "GoTrue/full gateway",
+    "Real Android/iOS device verification",
+    "Hosted advisors/migration parity",
+    "External scientific review"
+  ],
+  "production_v6_enabled": false,
+  "push_merge_deploy_or_hosted_connection": false,
+  "final_commit": "Exact report-inclusive SHA supplied in delivery; excluded here to avoid self-reference."
+}

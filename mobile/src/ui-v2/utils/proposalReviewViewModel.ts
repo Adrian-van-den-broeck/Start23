@@ -14,6 +14,7 @@ export function proposalReviewViewModel(plan: WeeklyPlan) {
     weekStart: plan.week_start, activeRevision: plan.active_revision,
     pending: plan.revision_state === 'pending_approval' && plan.proposal?.state === 'pending',
     state: plan.revision_state, explanation: plan.proposal?.public_explanation ?? '',
+    frequencySummary: plan.frequency_summary?.map(({ sport, requested, proposed }) => ({ sport, requested, proposed })),
     warnings: plan.warnings.map(publicWarning),
     workouts: plan.workouts.map((workout) => ({
       id: workout.id, templateId: workout.template_id, templateKey: workout.template_key,

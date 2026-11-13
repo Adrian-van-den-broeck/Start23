@@ -10,6 +10,7 @@ export default function OnboardingRoute() {
   if (!session) return null;
   return (
     <OnboardingScreen
+      key={session.user.id}
       accessToken={session.access_token}
       active={active}
       onOpenCalibration={() => router.push('/tests' as Href)}

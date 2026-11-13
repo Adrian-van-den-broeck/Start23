@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { FrequencyPreferenceCard } from '../features/planning/FrequencyPreferenceCard';
 
 import {
   approveZoneProposal,
@@ -701,6 +702,7 @@ export function OnboardingScreen({
               state={state}
             />
           ) : null}
+          {step === 'review' ? <FrequencyPreferenceCard accessToken={accessToken} sports={state.required_disciplines} /> : null}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

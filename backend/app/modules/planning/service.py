@@ -845,6 +845,10 @@ class PlanningService:
         )
 
     @staticmethod
+    def _draft_private_context(context: _SwipePlanningContext) -> JsonObject:
+        return {}
+
+    @staticmethod
     def _swipe_update_payload(
         *,
         context_fingerprint: str,
@@ -854,8 +858,10 @@ class PlanningService:
         state: str,
         plan_id: UUID | None = None,
         proposal_id: UUID | None = None,
+        private_context: JsonObject | None = None,
     ) -> JsonObject:
         return {
+            **(private_context or {}),
             "context_fingerprint": context_fingerprint,
             "accepted_template_ids": [
                 str(value) for value in selection.accepted_template_ids
@@ -1623,6 +1629,7 @@ class PlanningService:
                 "input_fingerprint": str(source["input_fingerprint"]),
                 "context_fingerprint": context.context_fingerprint,
                 "ruleset_version": self._planning_policy_version,
+                **self._draft_private_context(context),
                 "target_workout_count": context.target_workout_count,
                 "target_composition": {
                     discipline.value: context.target_composition[discipline]
@@ -1788,6 +1795,7 @@ class PlanningService:
             draft_id,
             stored_revision,
             self._swipe_update_payload(
+                private_context=self._draft_private_context(context),
                 context_fingerprint=context.context_fingerprint,
                 selection=selection,
                 current_template_id=current,
@@ -1877,6 +1885,7 @@ class PlanningService:
             draft_id,
             request.expected_revision,
             self._swipe_update_payload(
+                private_context=self._draft_private_context(context),
                 context_fingerprint=context.context_fingerprint,
                 selection=selection,
                 current_template_id=None,
@@ -2006,6 +2015,7 @@ class PlanningService:
             draft_id,
             request.expected_revision,
             self._swipe_update_payload(
+                private_context=self._draft_private_context(context),
                 context_fingerprint=context.context_fingerprint,
                 selection=selection,
                 current_template_id=None,

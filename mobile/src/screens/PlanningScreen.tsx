@@ -1,4 +1,5 @@
 import { localizeRecoveryMessage } from '../i18n/recoveryMessages';
+import { FrequencySummary } from '../features/planning/FrequencySummary';
 import { PlanningWorkoutMoveTask } from './PlanningWorkoutMoveTask';
 import {
   BottomSheetBackdrop,
@@ -1357,6 +1358,7 @@ function PlanningPresentation({
                     <Text style={styles.cardMeta}>Revisie {plan.revision}</Text>
                   </View>
                   <Text style={styles.title}>Week van {plan.week_start}</Text>
+                  <FrequencySummary rows={plan.frequency_summary} />
                   <Text style={styles.body}>
                     {Number(plan.total_duration_minutes) > 0
                       ? `${Number(plan.total_duration_minutes)} minuten met tijdsduur · `

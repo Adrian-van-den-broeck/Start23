@@ -42,6 +42,7 @@ def install_local_v6(
             app.state.weekly_plan_coach,
             request.app.state.planning_computation,
             controls=getattr(app.state, "v6_controls", controls),
+            allow_test_frequency_controls=True,
         )
 
     app.dependency_overrides[get_planning_service] = service

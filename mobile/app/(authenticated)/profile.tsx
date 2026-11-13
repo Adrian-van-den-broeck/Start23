@@ -10,6 +10,7 @@ export default function ProfileRoute() {
   if (!session) return null;
   return (
     <ProfileScreen
+      key={session.user.id}
       accessToken={session.access_token}
       onBack={() => backToPreviousOrPlanning(router)}
       onOpenPioneerAccess={() => router.push('/pioneer-access' as Href)}

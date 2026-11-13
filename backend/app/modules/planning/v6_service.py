@@ -8,10 +8,10 @@ import hashlib
 import json
 from collections.abc import Mapping
 from dataclasses import asdict, replace
-from datetime import date
+from datetime import date, datetime, timezone
 from decimal import Decimal
 from functools import partial
-from typing import Any, Protocol
+from typing import Any, Protocol, cast
 from uuid import UUID, uuid5
 
 from app.modules.physiology.models import Discipline, Fraction, InternalLoad
@@ -21,6 +21,7 @@ from app.modules.workouts.catalog import WorkoutTemplate
 from app.modules.workouts.joren_v6_official import V6Template, official_catalog
 
 from .domain import PlanningConstraintError, PlanningTarget, PlanningTargetBasis
+from .frequency_policy import resolve_frequency
 from .repository import (
     JsonObject,
     PlanningRepository,
@@ -84,6 +85,7 @@ def frozen_controls(data: JsonObject) -> V6Controls:
         ),
         maximum_combinations=data["maximum_combinations"],
         maximum_search_nodes=data.get("maximum_search_nodes", MAX_SEARCH_NODES),
+        frequency_policy_context=data.get("frequency_policy_context"),
         session_frequency=tuple(
             SessionFrequency(
                 sport=Discipline(r["sport"]),
@@ -97,9 +99,24 @@ def frozen_controls(data: JsonObject) -> V6Controls:
     )
 
 
+def frequency_evidence(raw: str | None) -> object:
+    if raw is None:
+        return None
+    data = json.loads(raw)
+    data.pop("retained_counts", None)
+    return data
+
+
 def effective_controls(data: JsonObject, current: V6Controls) -> V6Controls:
     """Keep stored evidence; current restrictions may tighten, never expand it."""
     stored = frozen_controls(data)
+    if stored.frequency_policy_context is not None and frequency_evidence(
+        stored.frequency_policy_context
+    ) != frequency_evidence(current.frequency_policy_context):
+        raise PlanningConstraintError(
+            "v6_frequency_context_stale",
+            "Training preferences or conditions changed. Review a new proposal.",
+        )
     limits = dict(stored.maximum_uses)
     for key, limit in current.maximum_uses:
         limits[key] = min(limits.get(key, limit), limit)
@@ -134,6 +151,7 @@ def effective_controls(data: JsonObject, current: V6Controls) -> V6Controls:
         maximum_search_nodes=min(
             stored.maximum_search_nodes, current.maximum_search_nodes
         ),
+        frequency_policy_context=current.frequency_policy_context,
     )
 
 
@@ -149,6 +167,16 @@ class FrozenV6Repository(PlanningRepository, Protocol):
         self, athlete_id: UUID, payload: JsonObject
     ) -> JsonObject:
         """Atomic immutable confirmed revision move and existing edit receipt."""
+
+
+class FrequencyPlanningRepository(Protocol):
+    async def fetch_v6_swipe_receipt(
+        self, access_token: str, draft_id: UUID
+    ) -> JsonObject | None: ...
+
+    async def fetch_frequency_context(
+        self, athlete_id: UUID, week_start: date, timezone_name: str
+    ) -> JsonObject: ...
 
 
 class InactiveV6CatalogProvider:
@@ -237,6 +265,16 @@ class V6PlanningService(PlanningService):
         draft_id: UUID,
         request: SwipeDraftSubmitRequest,
     ) -> WeeklyPlanProposalResponse:
+        if getattr(self._repository, "supports_frequency_policy", False):
+            retry = await cast(
+                FrequencyPlanningRepository, self._repository
+            ).fetch_v6_swipe_receipt(access_token, draft_id)
+            if retry is not None:
+                result = WeeklyPlanProposalResponse.model_validate(retry)
+                result.plan.workouts = await self._present_workouts(
+                    result.plan.workouts
+                )
+                return result
         response = await super().submit_swipe_draft(
             access_token, athlete_id, draft_id, request
         )
@@ -349,6 +387,10 @@ class V6PlanningService(PlanningService):
             if str(occurrence) in row.get("placements", {})
         }
         source = dict(context.source)
+        source["_v6_swipe_draft"] = {
+            "id": str(draft_id),
+            "revision": int(row["revision"]),
+        }
         source["_v6_retained_dates"] = fixed
         identities = list(
             zip(selection.accepted_template_ids, selection.accepted_occurrence_ids)
@@ -368,6 +410,7 @@ class V6PlanningService(PlanningService):
         computation: Any,
         *,
         controls: V6Controls = V6Controls(),
+        allow_test_frequency_controls: bool = False,
     ) -> None:
         if getattr(repository, "supports_frozen_v6_snapshots", False) is not True:
             raise PlanningRepositoryUnavailableError(
@@ -376,6 +419,7 @@ class V6PlanningService(PlanningService):
         super().__init__(repository, catalog_provider, weekly_plan_coach, computation)
         self._v6_repository = repository
         self._controls = controls
+        self._allow_test_frequency_controls = allow_test_frequency_controls
         self._plan_builder = partial(build_v6_plan, controls=controls)
         self._eligible_workouts = partial(eligible_v6, controls=controls)
 
@@ -389,15 +433,30 @@ class V6PlanningService(PlanningService):
 
     async def _prepare_swipe_context(self, **kwargs: Any) -> _SwipePlanningContext:
         self._assert_individual_scope(kwargs["athlete_id"], kwargs["week_start"])
-        context = await PlanningService._prepare_swipe_context(
-            self._scoped_service(kwargs["athlete_id"], kwargs["week_start"]), **kwargs
+        scoped = await self._frequency_scoped_service(
+            kwargs["athlete_id"],
+            kwargs["week_start"],
+            self._context_values(self._planning_input(kwargs["input_source"]))[0],
         )
+        context = await PlanningService._prepare_swipe_context(scoped, **kwargs)
         fingerprint = hashlib.sha256(
             (
-                context.context_fingerprint + controls_json(self._controls) + VERSION
+                context.context_fingerprint + controls_json(scoped._controls) + VERSION
             ).encode()
         ).hexdigest()
-        return replace(context, context_fingerprint=fingerprint)
+        return replace(
+            context,
+            context_fingerprint=fingerprint,
+            source={
+                **context.source,
+                "_v6_frequency_context": scoped._controls.frequency_policy_context,
+            },
+        )
+
+    @staticmethod
+    def _draft_private_context(context: _SwipePlanningContext) -> JsonObject:
+        raw = context.source.get("_v6_frequency_context")
+        return {"v6_frequency_context": json.loads(raw)} if raw else {}
 
     def _assert_individual_scope(self, athlete_id: UUID, week_start: date) -> None:
         if (
@@ -413,8 +472,63 @@ class V6PlanningService(PlanningService):
 
     async def _build_and_persist(self, **kwargs: Any) -> JsonObject:
         self._assert_individual_scope(kwargs["athlete_id"], kwargs["week_start"])
-        return await PlanningService._build_and_persist(
-            self._scoped_service(kwargs["athlete_id"], kwargs["week_start"]), **kwargs
+        scoped = await self._frequency_scoped_service(
+            kwargs["athlete_id"],
+            kwargs["week_start"],
+            self._context_values(self._planning_input(kwargs["input_source"]))[0],
+        )
+        return await PlanningService._build_and_persist(scoped, **kwargs)
+
+    async def _frequency_scoped_service(
+        self, athlete_id: UUID, week_start: date, timezone_name: str
+    ) -> "V6PlanningService":
+        scoped = self._scoped_service(athlete_id, week_start)
+        # Existing explicit synthetic controls are usable only in install_local_v6
+        # and the separately permissioned SQL harness, never in the real resolver.
+        synthetic = self._controls.session_frequency and all(
+            "TEST_ONLY" in f.reference.upper() for f in self._controls.session_frequency
+        )
+        if (
+            synthetic
+            and getattr(self._repository, "supports_frequency_policy", False)
+            and not self._allow_test_frequency_controls
+        ):
+            raise PlanningRepositoryUnavailableError(
+                "Real frequency authority is required."
+            )
+        if (
+            not getattr(self._repository, "supports_frequency_policy", False)
+            or synthetic
+        ):
+            return scoped
+        raw = await cast(
+            FrequencyPlanningRepository, self._repository
+        ).fetch_frequency_context(athlete_id, week_start, timezone_name)
+        try:
+            frequencies = resolve_frequency(
+                raw,
+                athlete_id=athlete_id,
+                week_start=week_start,
+                timezone_name=timezone_name,
+                now=datetime.now(timezone.utc),
+            )
+        except (KeyError, ValueError, TypeError) as error:
+            raise PlanningRepositoryUnavailableError(
+                "Frequency context is unavailable."
+            ) from error
+        return type(self)(
+            self._v6_repository,
+            self._catalog_provider,
+            self._weekly_plan_coach,
+            self._computation,
+            controls=replace(
+                scoped._controls,
+                athlete_scope=athlete_id,
+                week_scope=week_start,
+                session_frequency=frequencies,
+                frequency_policy_context=private_json(raw),
+            ),
+            allow_test_frequency_controls=self._allow_test_frequency_controls,
         )
 
     def _scoped_service(
@@ -431,6 +545,7 @@ class V6PlanningService(PlanningService):
             self._weekly_plan_coach,
             self._computation,
             controls=scoped,
+            allow_test_frequency_controls=self._allow_test_frequency_controls,
         )
 
     @staticmethod
@@ -548,6 +663,10 @@ class V6PlanningService(PlanningService):
                 }
             )
         )
+        binding = kwargs.get("input_source", {}).get("_v6_swipe_draft")
+        if binding is not None:
+            payload["v6_swipe_draft"] = binding
+            payload["v6_frozen_snapshot"]["swipe_draft"] = binding
         payload["generation_fingerprint"] = hashlib.sha256(
             (
                 payload["generation_fingerprint"]
@@ -626,7 +745,10 @@ class V6PlanningService(PlanningService):
             for w in plan.workouts
             if w.id != workout_id or replacement is not None
         }
-        controls = effective_controls(frozen["controls"], self._controls)
+        current_service = await self._frequency_scoped_service(
+            athlete_id, plan.week_start, timezone_name
+        )
+        controls = effective_controls(frozen["controls"], current_service._controls)
         if (
             controls.athlete_scope is not None
             and controls.athlete_scope != athlete_id
@@ -676,9 +798,12 @@ class V6PlanningService(PlanningService):
             access_token, athlete_id, plan_id, revision
         )
         _, _, goals, capabilities = self._context_values(self._planning_input(context))
+        current = await self._frequency_scoped_service(
+            athlete_id, plan.week_start, plan.timezone
+        )
         deck = eligible_v6(
             controls=effective_controls(
-                context["v6_frozen_snapshot"]["controls"], self._controls
+                context["v6_frozen_snapshot"]["controls"], current._controls
             ),
             catalog=self._catalog_view(await self._catalog_provider.fetch_catalog()),
             phase=plan.phase,

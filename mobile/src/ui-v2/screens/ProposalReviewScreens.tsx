@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
+import { FrequencySummary } from '../../features/planning/FrequencySummary';
 import { SportIndicator } from '../components/SportIndicator';
 import { WorkoutSummary } from '../components/WorkoutSummary';
 import { WorkoutFacts } from '../components/WorkoutFacts';
@@ -47,6 +48,7 @@ export function ProposalReviewScreen({ model, onEdit, onApprove, onReject, ...ta
     </Card>
     {model.activeRevision !== null ? <Notice title={t('common.active')}>{t('review.activeSeparate')}</Notice> : null}
     <Warnings warnings={model.warnings} />
+    <FrequencySummary rows={model.frequencySummary} />
     <Text variant="sectionTitle" accessibilityRole="header">{t('review.workouts')}</Text>
     {model.workouts.length === 0 ? <Text tone="textMuted">{t('review.empty')}</Text> : null}
     {model.workouts.map((workout, index) => <View key={workout.id} testID={`proposed-${workout.id}`}>

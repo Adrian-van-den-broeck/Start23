@@ -1,8 +1,9 @@
-"""Explicit private frequency authorization; no inference from hours or load.
+"""Private count contract after trusted, versioned frequency-policy resolution.
 
-There is no accepted product resolver for these records yet. Local synthetic
-authorizations must say test-only in their reference. Counts include retained
-and completed occurrences. Targets are soft requests, never mandatory minima.
+The approved policy separates persistent wishes from individually reviewed weekly
+maxima. This value object does not establish authority by itself. Local synthetic
+controls remain TEST_ONLY. Counts include retained/completed occurrences;
+targets are soft requests, never mandatory minima or inference from hours/load.
 """
 
 from dataclasses import dataclass

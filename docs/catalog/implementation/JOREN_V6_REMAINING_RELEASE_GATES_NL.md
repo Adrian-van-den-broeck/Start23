@@ -1,98 +1,61 @@
 # V6: resterende onafhankelijke releasevoorwaarden
 
-12 november 2026, Europe/Amsterdam.
-Branch `feat/joren-v6-multi-session-planning`; gecontroleerde basis
-`b87d0e4f82702e168ec16441bbe7661fd0d10cb2`.
-De exacte implementatie-SHA en controlehashes staan in
-[verification.json](multi-session/verification.json).
+13–14 november 2026, Europe/Amsterdam. Branch
+`feat/joren-v6-approved-frequency-policy`; basis
+`6745c903ae045b3c3215e928fb53c36cb119a741`.
 
-De inactieve planner ondersteunt nu meerdere nieuwe sessies per sport wanneer
-een expliciet, intern, atleet- en weekgebonden frequentiecontract dat vraagt.
-Zonder zo'n contract blijft maximaal één nieuwe sessie per doelsport de veilige
-standaard. Een maximum is geen doel; een zachte aanvraag is geen verplicht
-minimum. Alle nieuwe frequentievoorbeelden zijn TEST_ONLY. De huidige goedgekeurde
-onboarding verzamelt uren, geen geautoriseerde sessiefrequentie. Product moet de
-bron, meetperiode, ontbrekende gegevens, herstel-/blessurebehandeling en
-bevestiging/intrekking van frequentieautorisatie nog vastleggen.
+Het gemelde akkoord op alle vijf beleidsvragen is vastgelegd in de
+[goedkeuringsopvolger](../decisions/JOREN_V6_REAL_ATHLETE_FREQUENCY_APPROVAL.md).
+De vijf productbesluiten zijn daarmee gesloten. De oorspronkelijke PROPOSED
+tekst blijft exact behouden; het eerdere releaseregister is als
+[historisch document](frequency-policy/history/JOREN_V6_REMAINING_RELEASE_GATES_NL_20261112.md)
+bewaard. Historische passages over een nog ontbrekend productbesluit heropenen
+het nu gemelde akkoord niet.
 
-Een onvoltooide V6-training kan lokaal veilig worden verplaatst nadat een andere
-training in dezelfde bevestigde week is geregistreerd. Voltooide en gekoppelde
-trainingen behouden hun oorspronkelijke fysieke record en activiteitbewijs.
-Alleen het verplaatste, geschikte doel krijgt een nieuwe fysieke voorschriftrij.
-Een onveranderlijke lidmaatschapstabel neemt de overige oorspronkelijke records
-op in de nieuwe weekrevisie. Er wordt geen activiteitbewijs gekopieerd, verplaatst,
-losgekoppeld of opnieuw berekend. De oorspronkelijke bron en methode blijven
-leidend. Eerdere bevestigde voorschriften en bronmomentopnamen blijven intact.
+Optionele blijvende voorkeuren, afzonderlijke private weekbesluiten, schorsing,
+herbevestiging en databasebewaking zijn lokaal geïmplementeerd. Een voorkeur is
+geen maximum. Uren, belasting, beschikbare dagen en voltooide trainingen leveren
+geen nieuwe frequentietoestemming op. V6 blijft uit de productiedependency;
+alle 77 bronrevisies blijven INACTIVE. Geen bevestigde week of historische
+berekening is stil herschreven.
 
-V6 blijft uitgeschakeld voor productie. Alle 77 bronrevisies blijven INACTIVE;
-de normale applicatie kiest nog de historische implementatie. Er is geen push,
-merge, deployment, staging-/productieverbinding, hosted migratie of
-catalogusactivatie uitgevoerd. De beschermde A5/A6-releasebranch en bestaande
-historische worktrees zijn niet gewijzigd.
+| Open poort | Wat nog nodig is |
+| --- | --- |
+| **Volgende onafhankelijke technische prioriteit: zoekprestaties** | Los de aangetoonde uitval op met bewezen exacte selectie, representatieve worker/HTTP-, geheugen-, admission- en annuleringstests. Behoud alle veiligheidsvoorwaarden en onafhankelijke exhaustive-oracles. |
+| Werkelijke reviewer/operator | Benoem de daadwerkelijk aangewezen beoordelaar en database-login, leg de aanwijzings-/bevoegdheidsreferentie vast en ken pas daarna de beperkte interne registratierechten toe. De migratie maakt geen reviewer aan. |
+| Individuele numerieke maxima | Ieder maximum vraagt een echte beoordeling voor de exacte atleet, sport, lokale week en bevestigde tijdzone, met gedateerde historie, volledigheid, actuele context en reviewreferenties. Het beleidsakkoord geeft geen enkel getal af. |
+| Positieve operationele uitgifte-/intrekkingsverificatie | Voer het echte interne pad uit met die daadwerkelijke bevoegdheid en afzonderlijk beoordeelde besluiten. Hypothetische Python-invoer en TEST_ONLY-lifecycleproeven sluiten deze poort niet. Zonder die feiten blijft uitgifte onbeschikbaar. |
+| Onafhankelijke wetenschappelijke review | Een aantoonbaar bevoegde, verantwoordelijke reviewer en extern reviewrecord voor de exacte bron-, methode- en beleidsversies. Geen credentials of externe review worden uit het gemelde akkoord afgeleid. |
+| Zwemtijd en uitzonderlijke duur | Operationele acceptatie van geschatte actieve zwemtijd en het bestaande individuele duur-bewijs waar vereist. Geen nieuwe algemene duur- of veiligheidsgrenzen. |
+| Planned/Realized-compatibiliteit | Afzonderlijke officiële acceptatie van Planned IF² versus Realized V2-fallback. Meetgegevens behouden prioriteit; niet-ondersteunde combinaties blijven geblokkeerd. |
+| Echte authenticatie/gateway | GoTrue-uitgegeven sessies en volledige Supabase-gatewaytests met twee accounts, inclusief voorkeur, private autorisatie, snapshot en bevestiging. Lokale SQL-claims/HS256-tokens zijn hiervoor geen bewijs. |
+| Echte apparaten | Android- en iOS-flows voor optionele onboarding, profielwijziging, check-in, meerdere occurrences, pending review, expliciete bevestiging, activiteitkoppeling, verplaatsing, herstel, herstart en accountwisseling. De geslaagde debugbuild is geen apparaattest. |
+| Hosted migratie en release | Expliciete autorisatie, volledige Supabase-/extensie-/grant/RLS-pariteit, advisors en releaserepetitie. De kandidaat is uitsluitend op eigen wegwerpdatabases op localhost uitgevoerd. |
+| Catalogusactivatie | Afzonderlijke finale toestemming nadat alle toepasselijke poorten zijn gesloten. Geen activatie via voorkeuren of een handmatig maximum. |
 
-De officiële methode `joren-v6-planned-if2-1`, harde geautoriseerde weekgrens,
-zachte 50/30/20-verdeling, maximaal 20% HIGH actieve tijd per sport, afwezigheid
-van een HIGH-ondergrens, trainingsfasen en zwemreferenties zijn ongewijzigd.
-Expliciet gevraagde sessiedekking komt na sportdekking en vóór de bestaande
-allocatie-/belastingrangschikking; zonder frequentiecontract verandert de keuze
-niet. Er zijn geen ervaringscategorieën of nieuwe fysiologische regels.
-Meetgegevens behouden prioriteit. Niet-ondersteunde Planned/Realized V2
-fallbackcombinaties blijven geblokkeerd; referentiezwemtijd wordt geen gemeten tijd.
+De 15 oorspronkelijke synthetische zoekcontexten zijn herhaald. BASE 2/2/1 bij
+het oorspronkelijke budget-300-geval, BASE 2/2/2 bij 200 en de normale
+onboardingcontext met 105 minuten per sport blijven `v6_search_incomplete`.
+Ook gewone aanvragen kunnen dus vastlopen. Een kleiner geldig voorstel bewijst
+geen optimum voor de oorspronkelijke aanvraag.
 
-Voor vrijgave blijven afzonderlijk nodig:
+Het plafond blijft **200.000 gedeelde worknodes** en maximaal 24 occurrences.
+Geen hogere limiet/deadline, stil verlaagde wens, greedy winnaar of opgeslagen
+onbewezen optimum is toegestaan. Een nieuwe, door de atleet bewust gewijzigde
+voorkeur vormt een nieuwe context. De ongewijzigde historische corpusgrens is
+acht seconden, met het bestaande diagnostische timeoutgeval `current:build_4`.
+Dit werk bevat geen afzonderlijke grote zoekoptimalisatie.
 
-- Operationele acceptatie van geschatte actieve zwemtijd.
-- Individuele geschiktheid van uitzonderlijk lange trainingen, inclusief bestaand
-  vereist duur-bewijs. Er is geen nieuwe algemene duurgrens verzonnen.
-- Officiële compatibiliteitsbeslissing voor Planned IF² versus Realized V2
-  Session-RPE fallback. Dit werk wijzigt de fallbackdispatch niet.
-- Een aantoonbaar bevoegde, verantwoordelijke wetenschappelijke beoordelaar en
-  een extern reviewrecord voor de exacte bron-, methode- en beleidsversies.
-- GoTrue-uitgegeven sessies en volledige Supabase gateway-/accountisolatietests.
-  SQL-claims en lokaal ondertekende PostgREST-tokens vervangen die tests niet.
-- Echte Android- en iOS-apparaattests: onboarding, check-in, voorstelbeoordeling,
-  bevestiging, datumwijziging na activiteit, refresh/herstart, conflicten en
-  activiteitkoppeling. Componenttests en een APK-build zijn geen apparaattests.
-  iOS-build/signing is hier niet uitgevoerd.
-- Expliciete autorisatie voor hosted migraties en release. De nieuwe forward-only
-  migratiekandidaat is uitsluitend op wegwerpdatabases op localhost uitgevoerd.
-- Afzonderlijke definitieve catalogusactivatie na acceptatie van alle voorwaarden.
-- Een productbesluit over echte frequentieautorisatie voordat automatische
-  herhaalde sportsessies buiten expliciete testcontexten worden aangeboden.
-- Operationele beoordeling van de begrensde zoekruimte: maximaal 24 occurrences
-  en 200.000 gedeelde zoek-/planningsstappen. Het getoonde budget-300-geval geeft
-  eerlijk `v6_search_incomplete`; een afgekapt resultaat wordt niet opgeslagen.
+De bestaande TSS-, HIGH-tijd-, fase-, herstel-, blessure-, capability-,
+herhalings- en planningsvoorwaarden blijven onafhankelijk gelden. Behouden en
+voltooide occurrences tellen eenmaal. Boven een aangescherpt plafond volgt een
+conflict voor beoordeling; bewijs wordt niet verwijderd of gekloond. Ongeplande
+of onduidelijk gekoppelde activiteiten blokkeren uitbreiding tot een beoordeelde,
+ondersteunde complete-weekcontext bestaat. De ongeschikte legacy correctieve
+writer blijft geblokkeerd bij opgenomen activiteitbewijs.
 
-Resterende functionele begrenzingen:
-
-- Zonder expliciete frequentieautorisatie maakt de automatische selector maximaal
-  één nieuwe training per doelsport. De multi-sessiecapaciteit is lokaal bewezen
-  met synthetische aanvragen; uren of TSS worden niet tot frequentiebeleid verheven.
-- Een voltooid/geannuleerd doel, ieder doel met gekoppelde activiteit en ieder
-  expliciet geregistreerd doel blijft onverplaatsbaar. Ook een koppeling die nog
-  op RPE wacht geeft geen toestemming om het fysieke record te vervangen.
-- Een wijziging buiten de week, buiten bevestigde beschikbaarheid of tegen
-  bestaande herstel-/planningsregels wordt geweigerd, evenals vreemde of
-  verouderde identifiers en revisies.
-- Een pending voorstel blokkeert een actieve datumwijziging. Bevestiging van een
-  vervangend voorstel dat inmiddels geregistreerde fysieke records zou verliezen
-  wordt eveneens geweigerd. Verwerp het onverenigbare voorstel, laad opnieuw en
-  verplaats vervolgens een geschikte onvoltooide training.
-- Legacy correctieve generatie zonder een V6-lidmaatschapscontract blijft
-  geblokkeerd op een actief V6-plan. Dit werk verleent geen toestemming om
-  voltooide trainingen te herschrijven of bewijs over te dragen.
-
-De originele A5 SQL-fixture is niet aangepast. De bekende onboarding- en
-fingerprintcorrectie is alleen als expliciete geïsoleerde test-overlay gebruikt.
-Permanente overname blijft een afzonderlijk te beoordelen voorstel.
-
-De bewijsgrenzen, werkelijk uitgevoerde SQL/HTTP-controles, mobiele resultaten en
-historische regressies staan in
-[JOREN_V6_MULTI_SESSION_VERIFICATION.md](JOREN_V6_MULTI_SESSION_VERIFICATION.md),
-het [frequentiebeleid](JOREN_V6_MULTI_SESSION_POLICY.md) en het
-[eigenaarschapcontract](JOREN_V6_EVIDENCE_CARRY_FORWARD_CONTRACT.md).
-
-De bestaande 62 migraties zijn op een nieuwe lokale wegwerpdatabase afgespeeld;
-voor deze uitbreiding is geen nieuwe migratie nodig. De lokale implementatie-SHA
-en bewijs-hashes staan in het nieuwe verificatiemanifest. De uiteindelijke
-documentatiecommit wordt apart in de oplevering vermeld. V6 blijft inactief.
+De [verificatie](JOREN_V6_FREQUENCY_VERIFICATION.md) onderscheidt uitgevoerde
+lokale proeven van open poorten. De originele A5-fixture en beschermde
+A5/A6-bronnen zijn ongewijzigd; de bekende fixturecorrectie is alleen als
+expliciete geïsoleerde testoverlay uitgevoerd. Er is geen push, merge, hosted
+migratie, staging-/productieverbinding, deployment of V6-activatie uitgevoerd.
