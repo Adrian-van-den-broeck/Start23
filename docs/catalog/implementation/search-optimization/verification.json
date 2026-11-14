@@ -124,8 +124,11 @@
     "docs/catalog/implementation/search-optimization/repeat-before-cold.json": "b3a4444326613fb08481aa6b60f9f43b5cd68089bf61002283484213e51b80fc",
     "docs/catalog/implementation/search-optimization/repeat-before-warm.json": "7ce3cf5f0b45f6dee1fe19a413a7056847e6f4e45bb3fa4952402e75b89e09fd",
     "docs/catalog/implementation/search-optimization/transport-after.json": "5981291c10e15e1ecff60a1f002be1a9432a89a7c6969c405be38f530d85f755",
-    "docs/catalog/implementation/search-optimization/transport-before.json": "01059b912a371def3f0a7cdabf4223e0a00a07292ce2130bd2c4cc2aa37f1230"
+    "docs/catalog/implementation/search-optimization/transport-before.json": "01059b912a371def3f0a7cdabf4223e0a00a07292ce2130bd2c4cc2aa37f1230",
+    "docs/catalog/implementation/search-optimization/DELIVERY.md": "a63ce81505b6e2ab07bf42904db65682b7687aa1a2b53e573260af02f715e252"
   },
   "production_activated": false,
-  "push_merge_deploy_hosted_access": false
+  "push_merge_deploy_hosted_access": false,
+  "implementation_git_sha": "e4dbf7aa759dd226967228173ec904e1ade880c7",
+  "final_provenance_successor": "Documentation/ledger only; final SHA supplied in delivery response"
 }
