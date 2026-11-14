@@ -1,0 +1,1184 @@
+{
+  "machine": "Windows-10-10.0.19045-SP0",
+  "python": "3.10.10 (tags/v3.10.10:aad5f6a, Feb  7 2023, 17:20:36) [MSC v.1929 64 bit (AMD64)]",
+  "processor": "Intel64 Family 6 Model 85 Stepping 4, GenuineIntel",
+  "cases": [
+    {
+      "case": "base_332_300",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 7075,
+      "official_total": "295.547916666666666666666666666666666666666666666667",
+      "resolved_budget": "300",
+      "ranking": [
+        -3,
+        -8,
+        "67261904761904761904761904761904761904761904762/211105654761904761904761904761904761904761904761905",
+        "-295547916666666666666666666666666666666666666666667/1000000000000000000000000000000000000000000000000",
+        [
+          "07c18ca2-ce82-5ba5-8c80-85083af5e671",
+          "505a2099-92ec-529b-aaa1-7a920bb87438",
+          "81c424e0-2a04-5ddc-a97e-531783915abb",
+          "81c424e0-2a04-5ddc-a97e-531783915abb",
+          "96d07478-de1b-53c0-b07d-b87a247bf15a",
+          "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "b18f0641-740b-557e-80d5-6613a4c50cc7",
+          "e9d1ed2d-d9f0-59f4-9bc5-46dba116af95"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-022",
+          "template": "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "occurrence": "ead12c36-cdae-545a-aa29-fe84bcb8ac31",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-SWIM-001",
+          "template": "96d07478-de1b-53c0-b07d-b87a247bf15a",
+          "occurrence": "39b94ba1-4e0f-5edd-8626-c53a0ff6daf5",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-001",
+          "template": "81c424e0-2a04-5ddc-a97e-531783915abb",
+          "occurrence": "80b30e87-f3cf-5b05-bbc8-3a323fa05e59",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-RUN-006",
+          "template": "e9d1ed2d-d9f0-59f4-9bc5-46dba116af95",
+          "occurrence": "70915cb3-7bc1-50c5-bb7b-135e3562ad59",
+          "date": "2026-10-28"
+        },
+        {
+          "source": "TR-BIKE-023",
+          "template": "505a2099-92ec-529b-aaa1-7a920bb87438",
+          "occurrence": "4ae80ae8-05d1-542c-a3d5-a1c563aed370",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-BIKE-005",
+          "template": "b18f0641-740b-557e-80d5-6613a4c50cc7",
+          "occurrence": "78bf71ec-dba0-51f8-9bd8-2362c0f14be3",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-RUN-001",
+          "template": "81c424e0-2a04-5ddc-a97e-531783915abb",
+          "occurrence": "09d1d86f-4b84-5390-96da-94132c96f615",
+          "date": "2026-10-31"
+        },
+        {
+          "source": "TR-SWIM-004",
+          "template": "07c18ca2-ce82-5ba5-8c80-85083af5e671",
+          "occurrence": "69ecfa05-0524-571d-a792-f04a623c55a0",
+          "date": "2026-11-01"
+        }
+      ],
+      "wall_seconds": 0.4682065999995757,
+      "cpu_seconds": 0.46875,
+      "peak_working_set_bytes": 26030080,
+      "metrics": {
+        "steps": {
+          "extend": 3688,
+          "enqueue": 3378,
+          "find_schedule": 9
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.026845599966691225,
+        "bound_seconds": 0.28481730001203687,
+        "scheduler_seconds": 0.007597899999382207,
+        "eligible_by_sport": {
+          "swim": 16,
+          "run": 22,
+          "bike": 22
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 7075,
+        "heap_peak": 1697,
+        "sport_options": [
+          661,
+          1812,
+          82
+        ]
+      },
+      "cold_process_seconds": 1.0235460000003513
+    },
+    {
+      "case": "base_444_500",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 54421,
+      "official_total": "455.655958333333333333333333333333333333333333333333",
+      "resolved_budget": "500",
+      "ranking": [
+        -3,
+        -12,
+        "61916666666666666666666666666666666666666666666/2278279791666666666666666666666666666666666666666665",
+        "-455655958333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "81c424e0-2a04-5ddc-a97e-531783915abb",
+          "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "a2bf757d-fa64-56d2-8b91-8fdb69198c8e",
+          "a8b2d125-d991-5303-80f3-55b6aec22cfb",
+          "b869b2b1-a29b-5f9b-81b2-500236bc3b0f",
+          "be04dbbb-676a-5d5a-85a1-55de9278bd7c",
+          "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "e3f1c9d7-db7f-5bcf-b3bc-aad8ef04c785"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-002",
+          "template": "be04dbbb-676a-5d5a-85a1-55de9278bd7c",
+          "occurrence": "db1fd083-fd24-5a50-8ccb-36562c84a34d",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-BIKE-006",
+          "template": "a2bf757d-fa64-56d2-8b91-8fdb69198c8e",
+          "occurrence": "c2c04927-ab5c-5906-bbbe-ff0bdabe8b72",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-SWIM-005",
+          "template": "a8b2d125-d991-5303-80f3-55b6aec22cfb",
+          "occurrence": "25fa3d12-fe66-5e4c-a8c2-68982613736d",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "07a9a072-0993-57cc-ac03-f658667597f5",
+          "date": "2026-10-28"
+        },
+        {
+          "source": "TR-SWIM-022",
+          "template": "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "occurrence": "22b237ca-30fc-5bc6-a9bb-1bc7cf2bd869",
+          "date": "2026-10-28"
+        },
+        {
+          "source": "TR-RUN-018",
+          "template": "b869b2b1-a29b-5f9b-81b2-500236bc3b0f",
+          "occurrence": "553ee0e7-0020-542f-bfc1-5325da7c7060",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-SWIM-022",
+          "template": "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "occurrence": "9dbc4432-5758-5c8d-8e81-dfa28f58e14b",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-BIKE-022",
+          "template": "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "occurrence": "ead12c36-cdae-545a-aa29-fe84bcb8ac31",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-022",
+          "template": "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "occurrence": "fed665d5-4fed-5f88-808c-7d6329218100",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-BIKE-024",
+          "template": "e3f1c9d7-db7f-5bcf-b3bc-aad8ef04c785",
+          "occurrence": "595bca91-6275-5d19-9687-4436d30dd559",
+          "date": "2026-10-31"
+        },
+        {
+          "source": "TR-RUN-001",
+          "template": "81c424e0-2a04-5ddc-a97e-531783915abb",
+          "occurrence": "d54e0ccb-888e-5d4e-8792-199e678e01d8",
+          "date": "2026-11-01"
+        }
+      ],
+      "wall_seconds": 3.827789699999812,
+      "cpu_seconds": 3.828125,
+      "peak_working_set_bytes": 41697280,
+      "metrics": {
+        "steps": {
+          "extend": 29845,
+          "enqueue": 24563,
+          "find_schedule": 13
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.315054100049565,
+        "bound_seconds": 2.226945399885153,
+        "scheduler_seconds": 0.008554700000786397,
+        "eligible_by_sport": {
+          "swim": 16,
+          "run": 22,
+          "bike": 22
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 54421,
+        "heap_peak": 12339,
+        "sport_options": [
+          5778,
+          14072,
+          2459
+        ]
+      },
+      "cold_process_seconds": 4.352415800000017
+    },
+    {
+      "case": "base_888_1000",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "v6_search_incomplete",
+      "failure_stage": "extend",
+      "worknodes": 200001,
+      "wall_seconds": 2.9563031999996383,
+      "cpu_seconds": 2.953125,
+      "peak_working_set_bytes": 83238912,
+      "metrics": {
+        "steps": {
+          "extend": 200001
+        },
+        "scheduling_attempts": 0,
+        "materialized_combinations": 0,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.25796379998791963,
+        "bound_seconds": 0.0,
+        "scheduler_seconds": 0.0,
+        "eligible_by_sport": {
+          "swim": 16,
+          "run": 22,
+          "bike": 22
+        },
+        "last_stage": "extend",
+        "worknodes": 200001
+      },
+      "cold_process_seconds": 3.616991599999892
+    },
+    {
+      "case": "base_221_300_retained",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 296,
+      "official_total": "70.354166666666666666666666666666666666666666666667",
+      "resolved_budget": "300",
+      "ranking": [
+        -3,
+        -5,
+        "1902777777777777777777777777777777777777777777778/117256944444444444444444444444444444444444444444445",
+        "-70354166666666666666666666666666666666666666666667/1000000000000000000000000000000000000000000000000",
+        [
+          "505a2099-92ec-529b-aaa1-7a920bb87438",
+          "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "d76e3636-2a7b-51c6-9f2b-a787d0a0224f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-022",
+          "template": "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "occurrence": "19abea49-5b70-58c0-abe7-c2469452eecd",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-025",
+          "template": "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "occurrence": "00000000-0000-0000-0000-000000000065",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-023",
+          "template": "505a2099-92ec-529b-aaa1-7a920bb87438",
+          "occurrence": "c0da11f4-d9c2-5b6b-9430-d9b3cdfeed22",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-025",
+          "template": "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "occurrence": "00000000-0000-0000-0000-000000000066",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-022",
+          "template": "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "occurrence": "ca6782e0-34e4-53b5-987d-71fc7330bfd9",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.016448899999886635,
+      "cpu_seconds": 0.015625,
+      "peak_working_set_bytes": 24715264,
+      "metrics": {
+        "steps": {
+          "extend": 260,
+          "enqueue": 30,
+          "find_schedule": 6
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.0009593000122549711,
+        "bound_seconds": 0.002371500000663218,
+        "scheduler_seconds": 0.006738699999914388,
+        "eligible_by_sport": {
+          "swim": 16,
+          "run": 22,
+          "bike": 22
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 296,
+        "heap_peak": 18,
+        "sport_options": [
+          131,
+          1,
+          12
+        ]
+      },
+      "cold_process_seconds": 0.5346600000002582
+    },
+    {
+      "case": "base_221_300_two_dates",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1681,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "300",
+      "ranking": [
+        -3,
+        -5,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e7f86e67-5137-5075-b1ec-8e514170257f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-SWIM-003",
+          "template": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "occurrence": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-27"
+        }
+      ],
+      "wall_seconds": 0.15280630000052042,
+      "cpu_seconds": 0.15625,
+      "peak_working_set_bytes": 24764416,
+      "metrics": {
+        "steps": {
+          "extend": 535,
+          "enqueue": 1140,
+          "find_schedule": 6
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.0032607000011921627,
+        "bound_seconds": 0.10080069999094121,
+        "scheduler_seconds": 0.006525499999952444,
+        "eligible_by_sport": {
+          "swim": 16,
+          "run": 22,
+          "bike": 22
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 1681,
+        "heap_peak": 578,
+        "sport_options": [
+          131,
+          246,
+          12
+        ]
+      },
+      "cold_process_seconds": 0.6802800999994361
+    },
+    {
+      "case": "base_221_300_same_day",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1681,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "300",
+      "ranking": [
+        -3,
+        -5,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e7f86e67-5137-5075-b1ec-8e514170257f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-SWIM-003",
+          "template": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "occurrence": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "date": "2026-10-26"
+        }
+      ],
+      "wall_seconds": 0.14475210000000516,
+      "cpu_seconds": 0.140625,
+      "peak_working_set_bytes": 24698880,
+      "metrics": {
+        "steps": {
+          "extend": 535,
+          "enqueue": 1140,
+          "find_schedule": 6
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.0037606999967465526,
+        "bound_seconds": 0.0949057000098037,
+        "scheduler_seconds": 0.006547500000124273,
+        "eligible_by_sport": {
+          "swim": 16,
+          "run": 22,
+          "bike": 22
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 1681,
+        "heap_peak": 578,
+        "sport_options": [
+          131,
+          246,
+          12
+        ]
+      },
+      "cold_process_seconds": 0.668421500000477
+    },
+    {
+      "case": "base_221_300_repeat_limits",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1533,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "300",
+      "ranking": [
+        -3,
+        -5,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e7f86e67-5137-5075-b1ec-8e514170257f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-003",
+          "template": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "occurrence": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.13543180000033317,
+      "cpu_seconds": 0.140625,
+      "peak_working_set_bytes": 24555520,
+      "metrics": {
+        "steps": {
+          "extend": 493,
+          "enqueue": 1034,
+          "find_schedule": 6
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.0027831000052174204,
+        "bound_seconds": 0.08938289999332483,
+        "scheduler_seconds": 0.006712500000503496,
+        "eligible_by_sport": {
+          "swim": 16,
+          "run": 22,
+          "bike": 22
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 1533,
+        "heap_peak": 526,
+        "sport_options": [
+          119,
+          228,
+          12
+        ]
+      },
+      "cold_process_seconds": 0.6565231000004133
+    },
+    {
+      "case": "base_221_300_injury",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1554,
+      "official_total": "300.000",
+      "resolved_budget": "300",
+      "ranking": [
+        -2,
+        -3,
+        "3/5",
+        "-300",
+        [
+          "3bc0608b-4232-5ba4-a526-9e1da422493b",
+          "60bc9eb2-6947-5839-aabf-a6fad07ea85f",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "e4694e9f-c668-5fde-9d83-f8f998e99489",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-BIKE-007",
+          "template": "60bc9eb2-6947-5839-aabf-a6fad07ea85f",
+          "occurrence": "2b877805-b8c2-5194-982f-a709edd8afe8",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-SWIM-009",
+          "template": "3bc0608b-4232-5ba4-a526-9e1da422493b",
+          "occurrence": "0d0f7eda-a37b-599c-a4d3-a96416ece55f",
+          "date": "2026-10-30"
+        }
+      ],
+      "wall_seconds": 0.15280170000005455,
+      "cpu_seconds": 0.15625,
+      "peak_working_set_bytes": 24756224,
+      "metrics": {
+        "steps": {
+          "extend": 260,
+          "enqueue": 1290,
+          "find_schedule": 4
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.0017253999913009466,
+        "bound_seconds": 0.10822779999398335,
+        "scheduler_seconds": 0.006541599999764003,
+        "eligible_by_sport": {
+          "swim": 16,
+          "bike": 22
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 1554,
+        "heap_peak": 641,
+        "sport_options": [
+          131,
+          1,
+          12
+        ]
+      },
+      "cold_process_seconds": 0.6817313999999897
+    },
+    {
+      "case": "base_221_300_low_only",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1734,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "300",
+      "ranking": [
+        -3,
+        -5,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e7f86e67-5137-5075-b1ec-8e514170257f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-003",
+          "template": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "occurrence": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.16043590000026597,
+      "cpu_seconds": 0.171875,
+      "peak_working_set_bytes": 24707072,
+      "metrics": {
+        "steps": {
+          "extend": 410,
+          "enqueue": 1318,
+          "find_schedule": 6
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.0028557999976328574,
+        "bound_seconds": 0.10915069998191029,
+        "scheduler_seconds": 0.006695600000057311,
+        "eligible_by_sport": {
+          "swim": 16,
+          "run": 20,
+          "bike": 18
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 1734,
+        "heap_peak": 667,
+        "sport_options": [
+          126,
+          227,
+          12
+        ]
+      },
+      "cold_process_seconds": 0.6817185999998401
+    },
+    {
+      "case": "base_221_300_capability",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 6537,
+      "official_total": "299.927083333333333333333333333333333333333333333333",
+      "resolved_budget": "300",
+      "ranking": [
+        -2,
+        -4,
+        "2/5",
+        "-299927083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "60bc9eb2-6947-5839-aabf-a6fad07ea85f",
+          "afde5422-d60c-5a94-8c95-6354a7b50f2c",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-007",
+          "template": "afde5422-d60c-5a94-8c95-6354a7b50f2c",
+          "occurrence": "6bb824a9-1212-585d-9674-35920a4be17d",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-007",
+          "template": "60bc9eb2-6947-5839-aabf-a6fad07ea85f",
+          "occurrence": "2b877805-b8c2-5194-982f-a709edd8afe8",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "f9d92894-4b35-5088-b600-d82423dc56ad",
+          "date": "2026-10-30"
+        }
+      ],
+      "wall_seconds": 0.6743612000000212,
+      "cpu_seconds": 0.6875,
+      "peak_working_set_bytes": 25784320,
+      "metrics": {
+        "steps": {
+          "extend": 519,
+          "enqueue": 6013,
+          "find_schedule": 5
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.005729299988161074,
+        "bound_seconds": 0.4988907999750154,
+        "scheduler_seconds": 0.0068061000001762295,
+        "eligible_by_sport": {
+          "run": 22,
+          "bike": 22
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 6537,
+        "heap_peak": 2966,
+        "sport_options": [
+          131,
+          246,
+          1
+        ]
+      },
+      "cold_process_seconds": 1.2179190999995626
+    },
+    {
+      "case": "base_221_300_sport_caps",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 347,
+      "official_total": "61.14375",
+      "resolved_budget": "300",
+      "ranking": [
+        -3,
+        -4,
+        "226/5435",
+        "-9783/160",
+        [
+          "81c424e0-2a04-5ddc-a97e-531783915abb",
+          "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "c69d2312-a105-5ad9-8c6f-19343a1c4a55"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-022",
+          "template": "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "occurrence": "ead12c36-cdae-545a-aa29-fe84bcb8ac31",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-SWIM-022",
+          "template": "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "occurrence": "9d1c88b5-896c-562e-b0bb-cdd8f2d1c5e9",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-022",
+          "template": "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "occurrence": "11c67cc1-c6bb-5590-a1d3-8d040c32ad8e",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-001",
+          "template": "81c424e0-2a04-5ddc-a97e-531783915abb",
+          "occurrence": "21dfe23a-d81b-553c-98f5-ecc7ee86c39e",
+          "date": "2026-10-30"
+        }
+      ],
+      "wall_seconds": 0.01692179999918153,
+      "cpu_seconds": 0.015625,
+      "peak_working_set_bytes": 24555520,
+      "metrics": {
+        "steps": {
+          "extend": 310,
+          "enqueue": 32,
+          "find_schedule": 5
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.0009957999973266851,
+        "bound_seconds": 0.0023510000019086874,
+        "scheduler_seconds": 0.006511599999612372,
+        "eligible_by_sport": {
+          "swim": 16,
+          "run": 22,
+          "bike": 22
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 347,
+        "heap_peak": 22,
+        "sport_options": [
+          131,
+          4,
+          3
+        ]
+      },
+      "cold_process_seconds": 0.5415308999999979
+    },
+    {
+      "case": "build1_221_300",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1784,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "300",
+      "ranking": [
+        -3,
+        -5,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e7f86e67-5137-5075-b1ec-8e514170257f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-003",
+          "template": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "occurrence": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.16358760000002803,
+      "cpu_seconds": 0.171875,
+      "peak_working_set_bytes": 24809472,
+      "metrics": {
+        "steps": {
+          "extend": 490,
+          "enqueue": 1288,
+          "find_schedule": 6
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.0029602999984490452,
+        "bound_seconds": 0.11022630000570643,
+        "scheduler_seconds": 0.006720999999743071,
+        "eligible_by_sport": {
+          "swim": 16,
+          "run": 20,
+          "bike": 22
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 1784,
+        "heap_peak": 652,
+        "sport_options": [
+          131,
+          227,
+          12
+        ]
+      },
+      "cold_process_seconds": 0.6915530999995099
+    },
+    {
+      "case": "recovery_221_150",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1318,
+      "official_total": "125.755208333333333333333333333333333333333333333333",
+      "resolved_budget": "150",
+      "ranking": [
+        -3,
+        -5,
+        "338541666666666666666666666666666666666666666667/125755208333333333333333333333333333333333333333333",
+        "-125755208333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "824f7b1e-fb0f-5bf6-a147-f82704c6850d",
+          "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e3f1c9d7-db7f-5bcf-b3bc-aad8ef04c785"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-024",
+          "template": "e3f1c9d7-db7f-5bcf-b3bc-aad8ef04c785",
+          "occurrence": "1bf1eae2-0017-5f8d-aec4-67576af316b4",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-026",
+          "template": "824f7b1e-fb0f-5bf6-a147-f82704c6850d",
+          "occurrence": "d1799f04-a9e7-57d2-b1b3-da5225d9ce56",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "dd5dce6c-a07d-5107-935a-aefa459c36be",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-002",
+          "template": "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "occurrence": "62c86418-c267-58dd-9fff-b0b6a7573dbd",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.13710340000034194,
+      "cpu_seconds": 0.140625,
+      "peak_working_set_bytes": 24543232,
+      "metrics": {
+        "steps": {
+          "extend": 294,
+          "enqueue": 1018,
+          "find_schedule": 6
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.002430700004879327,
+        "bound_seconds": 0.09510160000354517,
+        "scheduler_seconds": 0.006544700000631565,
+        "eligible_by_sport": {
+          "swim": 8,
+          "run": 18,
+          "bike": 13
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 1318,
+        "heap_peak": 516,
+        "sport_options": [
+          73,
+          181,
+          9
+        ]
+      },
+      "cold_process_seconds": 0.6622720000004847
+    },
+    {
+      "case": "taper_221_100",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 712,
+      "official_total": "86.215625",
+      "resolved_budget": "100",
+      "ranking": [
+        -3,
+        -5,
+        "1178/137945",
+        "-27589/320",
+        [
+          "81c424e0-2a04-5ddc-a97e-531783915abb",
+          "96d07478-de1b-53c0-b07d-b87a247bf15a",
+          "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "b6149d35-432d-5cff-b32a-9587d8963458",
+          "f0691b87-89d2-56ad-b4ec-961dd8d3735c"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-025",
+          "template": "b6149d35-432d-5cff-b32a-9587d8963458",
+          "occurrence": "4062e47d-f362-57b7-bc1a-6485b28d1ecb",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-022",
+          "template": "f0691b87-89d2-56ad-b4ec-961dd8d3735c",
+          "occurrence": "258a712f-86d8-5c17-8fb7-7d4292d8b766",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-022",
+          "template": "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "occurrence": "11c67cc1-c6bb-5590-a1d3-8d040c32ad8e",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-001",
+          "template": "81c424e0-2a04-5ddc-a97e-531783915abb",
+          "occurrence": "21dfe23a-d81b-553c-98f5-ecc7ee86c39e",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-001",
+          "template": "96d07478-de1b-53c0-b07d-b87a247bf15a",
+          "occurrence": "b544891a-3dc3-5921-9eac-a7d112ff0611",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.057746700000279816,
+      "cpu_seconds": 0.0625,
+      "peak_working_set_bytes": 24702976,
+      "metrics": {
+        "steps": {
+          "extend": 302,
+          "enqueue": 404,
+          "find_schedule": 6
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "sport_sort_seconds": 0.0015146000068853027,
+        "bound_seconds": 0.033338700002786936,
+        "scheduler_seconds": 0.008416099999521975,
+        "eligible_by_sport": {
+          "swim": 8,
+          "run": 18,
+          "bike": 18
+        },
+        "last_stage": "find_schedule",
+        "worknodes": 712,
+        "heap_peak": 189,
+        "sport_options": [
+          54,
+          148,
+          9
+        ]
+      },
+      "cold_process_seconds": 0.5863501000003453
+    }
+  ],
+  "fixture_sha256": "228f41209d8ceae65eab04bfff622548d1ac2debf219a15a62abf6bd51eb923e"
+}

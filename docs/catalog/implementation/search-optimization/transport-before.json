@@ -1,0 +1,284 @@
+[
+  {
+    "worker": {
+      "case": "base_221_300",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "v6_search_incomplete",
+      "failure_stage": "join",
+      "wall_seconds": 1.3335905999997522,
+      "cpu_seconds": 1.34375,
+      "peak_working_set_bytes": 95166464,
+      "metrics": {
+        "steps": {
+          "extend": 535,
+          "join": 199466
+        },
+        "scheduling_attempts": 0,
+        "materialized_combinations": 134569,
+        "ranking_sort_seconds": 0.0,
+        "last_stage": "join",
+        "worknodes": 200001,
+        "sport_options": [
+          131,
+          246,
+          12
+        ]
+      },
+      "worker_roundtrip_seconds": 3.9846244000000297
+    },
+    "http": {
+      "case": "base_221_300",
+      "warm": false,
+      "http_status": 409,
+      "wall_seconds": 2.801574999999957,
+      "outcome": {
+        "error": {
+          "code": "v6_search_incomplete",
+          "message": "The bounded selection search did not complete; no optimum is claimed.",
+          "details": null,
+          "request_id": "bd4a20c6-5313-4213-9ddd-d6b851e2a532"
+        }
+      },
+      "workouts": [],
+      "worker_peak_working_set_bytes": 95490048,
+      "parent_peak_working_set_bytes": 100913152
+    }
+  },
+  {
+    "worker": {
+      "case": "base_221_300",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "v6_search_incomplete",
+      "failure_stage": "join",
+      "wall_seconds": 1.4048836000001756,
+      "cpu_seconds": 1.359375,
+      "peak_working_set_bytes": 95039488,
+      "metrics": {
+        "steps": {
+          "extend": 535,
+          "join": 199466
+        },
+        "scheduling_attempts": 0,
+        "materialized_combinations": 134569,
+        "ranking_sort_seconds": 0.0,
+        "last_stage": "join",
+        "worknodes": 200001,
+        "sport_options": [
+          131,
+          246,
+          12
+        ]
+      },
+      "worker_roundtrip_seconds": 1.7822338999999374
+    },
+    "http": {
+      "case": "base_221_300",
+      "warm": true,
+      "http_status": 409,
+      "wall_seconds": 1.3592164000001503,
+      "outcome": {
+        "error": {
+          "code": "v6_search_incomplete",
+          "message": "The bounded selection search did not complete; no optimum is claimed.",
+          "details": null,
+          "request_id": "7efba732-66dc-4f8c-99b2-3eecb8d6c900"
+        }
+      },
+      "workouts": [],
+      "worker_peak_working_set_bytes": 96632832,
+      "parent_peak_working_set_bytes": 106889216
+    }
+  },
+  {
+    "worker": {
+      "case": "base_222_200",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "v6_search_incomplete",
+      "failure_stage": "join",
+      "wall_seconds": 1.5620938000001843,
+      "cpu_seconds": 1.5625,
+      "peak_working_set_bytes": 89747456,
+      "metrics": {
+        "steps": {
+          "extend": 603,
+          "join": 199398
+        },
+        "scheduling_attempts": 0,
+        "materialized_combinations": 72785,
+        "ranking_sort_seconds": 0.0,
+        "last_stage": "join",
+        "worknodes": 200001,
+        "sport_options": [
+          95,
+          199,
+          82
+        ]
+      },
+      "worker_roundtrip_seconds": 3.239365099999759
+    },
+    "http": {
+      "case": "base_222_200",
+      "warm": false,
+      "http_status": 409,
+      "wall_seconds": 2.9494088999999803,
+      "outcome": {
+        "error": {
+          "code": "v6_search_incomplete",
+          "message": "The bounded selection search did not complete; no optimum is claimed.",
+          "details": null,
+          "request_id": "8f74cee4-44a0-4e14-a086-6c54229db36e"
+        }
+      },
+      "workouts": [],
+      "worker_peak_working_set_bytes": 89464832,
+      "parent_peak_working_set_bytes": 106889216
+    }
+  },
+  {
+    "worker": {
+      "case": "base_222_200",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "v6_search_incomplete",
+      "failure_stage": "join",
+      "wall_seconds": 1.5632809999997335,
+      "cpu_seconds": 1.5625,
+      "peak_working_set_bytes": 94203904,
+      "metrics": {
+        "steps": {
+          "extend": 603,
+          "join": 199398
+        },
+        "scheduling_attempts": 0,
+        "materialized_combinations": 72785,
+        "ranking_sort_seconds": 0.0,
+        "last_stage": "join",
+        "worknodes": 200001,
+        "sport_options": [
+          95,
+          199,
+          82
+        ]
+      },
+      "worker_roundtrip_seconds": 1.848273799999788
+    },
+    "http": {
+      "case": "base_222_200",
+      "warm": true,
+      "http_status": 409,
+      "wall_seconds": 1.6243513999997958,
+      "outcome": {
+        "error": {
+          "code": "v6_search_incomplete",
+          "message": "The bounded selection search did not complete; no optimum is claimed.",
+          "details": null,
+          "request_id": "904b0d74-8b67-46de-bc4f-fdd3475128d2"
+        }
+      },
+      "workouts": [],
+      "worker_peak_working_set_bytes": 91033600,
+      "parent_peak_working_set_bytes": 106889216
+    }
+  },
+  {
+    "worker": {
+      "case": "normal_baseline_105min",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "v6_search_incomplete",
+      "failure_stage": "join",
+      "wall_seconds": 1.3015300000001844,
+      "cpu_seconds": 1.296875,
+      "peak_working_set_bytes": 95428608,
+      "metrics": {
+        "steps": {
+          "extend": 535,
+          "join": 199466
+        },
+        "scheduling_attempts": 0,
+        "materialized_combinations": 134678,
+        "ranking_sort_seconds": 0.0,
+        "last_stage": "join",
+        "worknodes": 200001,
+        "sport_options": [
+          131,
+          246,
+          12
+        ]
+      },
+      "worker_roundtrip_seconds": 2.9352880999999797
+    },
+    "http": {
+      "case": "normal_baseline_105min",
+      "warm": false,
+      "http_status": 409,
+      "wall_seconds": 2.7427895999999237,
+      "outcome": {
+        "error": {
+          "code": "v6_search_incomplete",
+          "message": "The bounded selection search did not complete; no optimum is claimed.",
+          "details": null,
+          "request_id": "d50507b5-4e7e-42a5-8f9c-b519e4558231"
+        }
+      },
+      "workouts": [],
+      "worker_peak_working_set_bytes": 94691328,
+      "parent_peak_working_set_bytes": 106889216
+    }
+  },
+  {
+    "worker": {
+      "case": "normal_baseline_105min",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "v6_search_incomplete",
+      "failure_stage": "join",
+      "wall_seconds": 1.3173897000001489,
+      "cpu_seconds": 1.3125,
+      "peak_working_set_bytes": 96108544,
+      "metrics": {
+        "steps": {
+          "extend": 535,
+          "join": 199466
+        },
+        "scheduling_attempts": 0,
+        "materialized_combinations": 134678,
+        "ranking_sort_seconds": 0.0,
+        "last_stage": "join",
+        "worknodes": 200001,
+        "sport_options": [
+          131,
+          246,
+          12
+        ]
+      },
+      "worker_roundtrip_seconds": 1.674016500000107
+    },
+    "http": {
+      "case": "normal_baseline_105min",
+      "warm": true,
+      "http_status": 409,
+      "wall_seconds": 1.4726245000001654,
+      "outcome": {
+        "error": {
+          "code": "v6_search_incomplete",
+          "message": "The bounded selection search did not complete; no optimum is claimed.",
+          "details": null,
+          "request_id": "d5f97066-3550-415c-990c-ee04836cdab6"
+        }
+      },
+      "workouts": [],
+      "worker_peak_working_set_bytes": 97161216,
+      "parent_peak_working_set_bytes": 111022080
+    }
+  }
+]

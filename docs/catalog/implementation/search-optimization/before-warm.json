@@ -1,0 +1,741 @@
+{
+  "machine": "Windows-10-10.0.19045-SP0",
+  "python": "3.10.10 (tags/v3.10.10:aad5f6a, Feb  7 2023, 17:20:36) [MSC v.1929 64 bit (AMD64)]",
+  "processor": "Intel64 Family 6 Model 85 Stepping 4, GenuineIntel",
+  "cases": [
+    {
+      "case": "base_221_100",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 21040,
+      "official_total": "70.354166666666666666666666666666666666666666666667",
+      "resolved_budget": "100",
+      "ranking": [
+        -3,
+        -5,
+        "1902777777777777777777777777777777777777777777778/117256944444444444444444444444444444444444444444445",
+        "-70354166666666666666666666666666666666666666666667/1000000000000000000000000000000000000000000000000",
+        [
+          "505a2099-92ec-529b-aaa1-7a920bb87438",
+          "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "d76e3636-2a7b-51c6-9f2b-a787d0a0224f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-022",
+          "template": "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "occurrence": "ead12c36-cdae-545a-aa29-fe84bcb8ac31",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-025",
+          "template": "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "occurrence": "3f5d8170-ee06-5724-9e86-4e71339e6d63",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-023",
+          "template": "505a2099-92ec-529b-aaa1-7a920bb87438",
+          "occurrence": "4ae80ae8-05d1-542c-a3d5-a1c563aed370",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-025",
+          "template": "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "occurrence": "404d203d-7d84-5924-a8e4-6d624aafb959",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-022",
+          "template": "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "occurrence": "ca6782e0-34e4-53b5-987d-71fc7330bfd9",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.5109216000000742,
+      "cpu_seconds": 0.515625,
+      "peak_working_set_bytes": 28123136,
+      "cold_process_seconds": 1.499516400000175
+    },
+    {
+      "case": "base_221_150",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 60789,
+      "official_total": "125.755208333333333333333333333333333333333333333333",
+      "resolved_budget": "150",
+      "ranking": [
+        -3,
+        -5,
+        "338541666666666666666666666666666666666666666667/125755208333333333333333333333333333333333333333333",
+        "-125755208333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "824f7b1e-fb0f-5bf6-a147-f82704c6850d",
+          "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e3f1c9d7-db7f-5bcf-b3bc-aad8ef04c785"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-024",
+          "template": "e3f1c9d7-db7f-5bcf-b3bc-aad8ef04c785",
+          "occurrence": "1bf1eae2-0017-5f8d-aec4-67576af316b4",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-026",
+          "template": "824f7b1e-fb0f-5bf6-a147-f82704c6850d",
+          "occurrence": "d1799f04-a9e7-57d2-b1b3-da5225d9ce56",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "dd5dce6c-a07d-5107-935a-aefa459c36be",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-002",
+          "template": "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "occurrence": "62c86418-c267-58dd-9fff-b0b6a7573dbd",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 2.563543799999934,
+      "cpu_seconds": 2.53125,
+      "peak_working_set_bytes": 46338048,
+      "cold_process_seconds": 5.607265200000256
+    },
+    {
+      "case": "base_221_200",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 117838,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "200",
+      "ranking": [
+        -3,
+        -5,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e7f86e67-5137-5075-b1ec-8e514170257f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-003",
+          "template": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "occurrence": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 5.894209999999475,
+      "cpu_seconds": 5.890625,
+      "peak_working_set_bytes": 81342464,
+      "cold_process_seconds": 12.371264499999597
+    },
+    {
+      "case": "base_221_250",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 189609,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "250",
+      "ranking": [
+        -3,
+        -5,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e7f86e67-5137-5075-b1ec-8e514170257f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-003",
+          "template": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "occurrence": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 11.172594499999832,
+      "cpu_seconds": 11.140625,
+      "peak_working_set_bytes": 130945024,
+      "cold_process_seconds": 22.82829539999966
+    },
+    {
+      "case": "base_221_300",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "v6_search_incomplete",
+      "failure_stage": null,
+      "worknodes": null,
+      "wall_seconds": 1.231407900000704,
+      "cpu_seconds": 1.21875,
+      "peak_working_set_bytes": 42360832,
+      "cold_process_seconds": 2.977947999999742
+    },
+    {
+      "case": "base_211_300",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 43005,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "300",
+      "ranking": [
+        -3,
+        -4,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "fe4e5f52-41d7-5aad-a7ab-f70a67f7183a"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "0b820baa-36a9-5723-b844-ce3abb8ca249",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-SWIM-003",
+          "template": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "occurrence": "22590539-fbf9-5ff8-85ac-2cea944bfba4",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-004",
+          "template": "fe4e5f52-41d7-5aad-a7ab-f70a67f7183a",
+          "occurrence": "f89411ee-fe40-5708-b2fe-78e59b39653d",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "f9d92894-4b35-5088-b600-d82423dc56ad",
+          "date": "2026-10-30"
+        }
+      ],
+      "wall_seconds": 2.941320899999482,
+      "cpu_seconds": 2.90625,
+      "peak_working_set_bytes": 51953664,
+      "cold_process_seconds": 6.42477289999988
+    },
+    {
+      "case": "base_321_150",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 191519,
+      "official_total": "125.755208333333333333333333333333333333333333333333",
+      "resolved_budget": "150",
+      "ranking": [
+        -3,
+        -6,
+        "338541666666666666666666666666666666666666666667/125755208333333333333333333333333333333333333333333",
+        "-125755208333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "824f7b1e-fb0f-5bf6-a147-f82704c6850d",
+          "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "e3f1c9d7-db7f-5bcf-b3bc-aad8ef04c785"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-024",
+          "template": "e3f1c9d7-db7f-5bcf-b3bc-aad8ef04c785",
+          "occurrence": "1bf1eae2-0017-5f8d-aec4-67576af316b4",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-025",
+          "template": "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "occurrence": "3f5d8170-ee06-5724-9e86-4e71339e6d63",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-SWIM-002",
+          "template": "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "occurrence": "6d04d43c-481f-5f9a-bada-4d0510995b99",
+          "date": "2026-10-28"
+        },
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "dd5dce6c-a07d-5107-935a-aefa459c36be",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-026",
+          "template": "824f7b1e-fb0f-5bf6-a147-f82704c6850d",
+          "occurrence": "fd4e55dc-9231-5b59-bee2-58f16da0f204",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-RUN-025",
+          "template": "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "occurrence": "a371f90c-4848-50ee-9678-ce6a328c24d3",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 6.745922000000064,
+      "cpu_seconds": 6.6875,
+      "peak_working_set_bytes": 84303872,
+      "cold_process_seconds": 13.94194140000036
+    },
+    {
+      "case": "base_222_100",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 79141,
+      "official_total": "87.078125",
+      "resolved_budget": "100",
+      "ranking": [
+        -3,
+        -6,
+        "531/27865",
+        "-5573/64",
+        [
+          "56fae22e-3b28-5075-8aa6-519af1bb0e52",
+          "56fae22e-3b28-5075-8aa6-519af1bb0e52",
+          "824f7b1e-fb0f-5bf6-a147-f82704c6850d",
+          "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "b6149d35-432d-5cff-b32a-9587d8963458",
+          "d76e3636-2a7b-51c6-9f2b-a787d0a0224f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-025",
+          "template": "b6149d35-432d-5cff-b32a-9587d8963458",
+          "occurrence": "4062e47d-f362-57b7-bc1a-6485b28d1ecb",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-025",
+          "template": "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "occurrence": "3f5d8170-ee06-5724-9e86-4e71339e6d63",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-SWIM-021",
+          "template": "56fae22e-3b28-5075-8aa6-519af1bb0e52",
+          "occurrence": "16dffcfa-0d23-57c5-9ffa-3f1c85be4b71",
+          "date": "2026-10-28"
+        },
+        {
+          "source": "TR-BIKE-022",
+          "template": "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "occurrence": "11c67cc1-c6bb-5590-a1d3-8d040c32ad8e",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-026",
+          "template": "824f7b1e-fb0f-5bf6-a147-f82704c6850d",
+          "occurrence": "fd4e55dc-9231-5b59-bee2-58f16da0f204",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-021",
+          "template": "56fae22e-3b28-5075-8aa6-519af1bb0e52",
+          "occurrence": "073efb15-a3e9-514e-9207-090827a33d21",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 1.2485163000001194,
+      "cpu_seconds": 1.25,
+      "peak_working_set_bytes": 32092160,
+      "cold_process_seconds": 2.9843158000003314
+    },
+    {
+      "case": "base_222_200",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "v6_search_incomplete",
+      "failure_stage": null,
+      "worknodes": null,
+      "wall_seconds": 1.4485437000003003,
+      "cpu_seconds": 1.453125,
+      "peak_working_set_bytes": 35475456,
+      "cold_process_seconds": 3.449593499999537
+    },
+    {
+      "case": "run_3_200",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 2800,
+      "official_total": "199.755958333333333333333333333333333333333333333333",
+      "resolved_budget": "200",
+      "ranking": [
+        -1,
+        -3,
+        "0",
+        "-199755958333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "4ad00161-3b6f-53eb-808c-7aeb4d693c39",
+          "81c424e0-2a04-5ddc-a97e-531783915abb",
+          "b869b2b1-a29b-5f9b-81b2-500236bc3b0f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-RUN-011",
+          "template": "4ad00161-3b6f-53eb-808c-7aeb4d693c39",
+          "occurrence": "b257dce6-79d2-5a51-9cc1-ff4eef37a344",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-018",
+          "template": "b869b2b1-a29b-5f9b-81b2-500236bc3b0f",
+          "occurrence": "ac96bfd0-97f0-52cc-8bc9-40e69aa9223e",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-001",
+          "template": "81c424e0-2a04-5ddc-a97e-531783915abb",
+          "occurrence": "faef8452-8f70-5ea1-95bb-74f035769b3b",
+          "date": "2026-10-30"
+        }
+      ],
+      "wall_seconds": 0.08995540000069013,
+      "cpu_seconds": 0.09375,
+      "peak_working_set_bytes": 24571904,
+      "cold_process_seconds": 0.6922903000004226
+    },
+    {
+      "case": "run_4_300",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 20513,
+      "official_total": "299.837583333333333333333333333333333333333333333333",
+      "resolved_budget": "300",
+      "ranking": [
+        -1,
+        -4,
+        "0",
+        "-299837583333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "23498061-7952-5e5c-8deb-758adbf30a1f",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "d75e58a3-71c9-5786-866e-fa0ed742a375"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "34341058-1fd0-5239-a680-2c89d37c6dec",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "f9d92894-4b35-5088-b600-d82423dc56ad",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-RUN-017",
+          "template": "d75e58a3-71c9-5786-866e-fa0ed742a375",
+          "occurrence": "6132e6ba-c832-59aa-b84b-649c1c8daf08",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-016",
+          "template": "23498061-7952-5e5c-8deb-758adbf30a1f",
+          "occurrence": "d0c011c5-10d2-5743-b410-5e13e036ab91",
+          "date": "2026-10-30"
+        }
+      ],
+      "wall_seconds": 0.7231793999999354,
+      "cpu_seconds": 0.71875,
+      "peak_working_set_bytes": 30838784,
+      "cold_process_seconds": 1.9596357000000353
+    },
+    {
+      "case": "build4_221_100",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 21374,
+      "official_total": "70.354166666666666666666666666666666666666666666667",
+      "resolved_budget": "100",
+      "ranking": [
+        -3,
+        -5,
+        "1902777777777777777777777777777777777777777777778/117256944444444444444444444444444444444444444444445",
+        "-70354166666666666666666666666666666666666666666667/1000000000000000000000000000000000000000000000000",
+        [
+          "505a2099-92ec-529b-aaa1-7a920bb87438",
+          "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "d76e3636-2a7b-51c6-9f2b-a787d0a0224f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-022",
+          "template": "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "occurrence": "ead12c36-cdae-545a-aa29-fe84bcb8ac31",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-025",
+          "template": "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "occurrence": "3f5d8170-ee06-5724-9e86-4e71339e6d63",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-023",
+          "template": "505a2099-92ec-529b-aaa1-7a920bb87438",
+          "occurrence": "4ae80ae8-05d1-542c-a3d5-a1c563aed370",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-025",
+          "template": "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "occurrence": "404d203d-7d84-5924-a8e4-6d624aafb959",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-022",
+          "template": "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "occurrence": "ca6782e0-34e4-53b5-987d-71fc7330bfd9",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.48562740000033955,
+      "cpu_seconds": 0.484375,
+      "peak_working_set_bytes": 28180480,
+      "cold_process_seconds": 1.4639628999993874
+    },
+    {
+      "case": "build4_221_150",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 66640,
+      "official_total": "125.755208333333333333333333333333333333333333333333",
+      "resolved_budget": "150",
+      "ranking": [
+        -3,
+        -5,
+        "338541666666666666666666666666666666666666666667/125755208333333333333333333333333333333333333333333",
+        "-125755208333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "824f7b1e-fb0f-5bf6-a147-f82704c6850d",
+          "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e3f1c9d7-db7f-5bcf-b3bc-aad8ef04c785"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-024",
+          "template": "e3f1c9d7-db7f-5bcf-b3bc-aad8ef04c785",
+          "occurrence": "1bf1eae2-0017-5f8d-aec4-67576af316b4",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-026",
+          "template": "824f7b1e-fb0f-5bf6-a147-f82704c6850d",
+          "occurrence": "d1799f04-a9e7-57d2-b1b3-da5225d9ce56",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "dd5dce6c-a07d-5107-935a-aefa459c36be",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-002",
+          "template": "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "occurrence": "62c86418-c267-58dd-9fff-b0b6a7573dbd",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 2.496734700000161,
+      "cpu_seconds": 2.484375,
+      "peak_working_set_bytes": 47173632,
+      "cold_process_seconds": 5.457277399999839
+    },
+    {
+      "case": "normal_baseline_35min",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 21076,
+      "official_total": "70.354166666666666666666666666666666666666666666667",
+      "resolved_budget": "100.1",
+      "ranking": [
+        -3,
+        -5,
+        "1902777777777777777777777777777777777777777777778/117256944444444444444444444444444444444444444444445",
+        "-70354166666666666666666666666666666666666666666667/1000000000000000000000000000000000000000000000000",
+        [
+          "505a2099-92ec-529b-aaa1-7a920bb87438",
+          "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "d76e3636-2a7b-51c6-9f2b-a787d0a0224f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-022",
+          "template": "9c885d3a-4b23-59d8-90b1-72dc2255390e",
+          "occurrence": "ead12c36-cdae-545a-aa29-fe84bcb8ac31",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-025",
+          "template": "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "occurrence": "3f5d8170-ee06-5724-9e86-4e71339e6d63",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-023",
+          "template": "505a2099-92ec-529b-aaa1-7a920bb87438",
+          "occurrence": "4ae80ae8-05d1-542c-a3d5-a1c563aed370",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-025",
+          "template": "d76e3636-2a7b-51c6-9f2b-a787d0a0224f",
+          "occurrence": "404d203d-7d84-5924-a8e4-6d624aafb959",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-022",
+          "template": "c69d2312-a105-5ad9-8c6f-19343a1c4a55",
+          "occurrence": "ca6782e0-34e4-53b5-987d-71fc7330bfd9",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.5201492000005601,
+      "cpu_seconds": 0.515625,
+      "peak_working_set_bytes": 27975680,
+      "cold_process_seconds": 1.5109120999995866
+    },
+    {
+      "case": "normal_baseline_105min",
+      "test_only": true,
+      "instrumented": false,
+      "warm": true,
+      "outcome": "v6_search_incomplete",
+      "failure_stage": null,
+      "worknodes": null,
+      "wall_seconds": 1.1342038000002503,
+      "cpu_seconds": 1.125,
+      "peak_working_set_bytes": 43085824,
+      "cold_process_seconds": 2.770435599999473
+    }
+  ],
+  "fixture_sha256": "5b605682052c036dfda5dc281f7bfd4c43575be497c2e450c1c4908bdea5da71"
+}

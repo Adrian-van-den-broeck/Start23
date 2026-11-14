@@ -1,0 +1,131 @@
+{
+  "date_local": "2026-11-14",
+  "timezone": "Europe/Amsterdam",
+  "base_sha": "e85cbaa8b5e702c283186fc61fcadda74ad36faf",
+  "branch": "perf/joren-v6-exact-multi-session-search",
+  "backend_pytest": {
+    "passed": 2876,
+    "warning_count": 1,
+    "full_suite_seconds": 282.13,
+    "baseline": 2759,
+    "new": 117,
+    "final_lf_custody_focused_checks_passed": 260
+  },
+  "ruff": "PASS",
+  "format": {
+    "status": "PASS",
+    "files": 240
+  },
+  "mypy": {
+    "status": "PASS",
+    "app_tests_benchmarks_files": 222,
+    "verification_scripts": 4
+  },
+  "mobile_jest_typescript_unused_android": "NOT RUN: no mobile/shared/public contract changes; accepted 929-test evidence not relabeled as a new execution",
+  "postgresql": {
+    "migrations": 63,
+    "pgtap_assertions": 722,
+    "suites": 37,
+    "engine": "17.11"
+  },
+  "original_matrix": {
+    "cases": 15,
+    "all_completed": true,
+    "all_independent_exact_ranks": true,
+    "previously_complete_exact_plans_preserved": 12,
+    "independently_enumerated_products": 20061679
+  },
+  "node_limit": 200000,
+  "occurrence_limit": 24,
+  "original_diagnostic_bound_seconds": 8,
+  "historical": {
+    "cases": 40,
+    "input_diffs": [],
+    "outcome_diffs": [],
+    "independent_diffs": [],
+    "accepted_reference_completions": 26,
+    "accepted_regression_sha256": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341",
+    "unchanged_diagnostic_timeout": "current:build_4",
+    "bound_seconds": 8
+  },
+  "source_sha256": {
+    ".gitattributes": "7dcb506984ed7b1fe1504fc6daee962cbdc24b2043c0bb6a7528369ebb18f7cf",
+    "backend/app/modules/planning/v6_search.py": "efaf477ef038995284987b40d4b33cddece63e96285f24dc987433c6fc53458b",
+    "backend/app/modules/planning/v6_selection.py": "d2ecf026fe11b1506bc6941c18e4f324c746081c30369d1b9df5fc0d4714ba54",
+    "backend/benchmarks/v6_exact_search.py": "2bda56d7ab79f51fbb4ed822b19e003a854051d20e7f7a83550da560a747b6e7",
+    "backend/benchmarks/v6_search_oracle.py": "f87076ddb5bbf248b7c6b78f68ba46347c63f974a1f65ce1fb5fb29c82600a2c",
+    "backend/benchmarks/v6_search_transport.py": "c7467f9cd4f16c03e86afaf6a72fe2a5411c19e23cae559f7aabad6c341fb21a",
+    "backend/scripts/verify_v6_exact_search.py": "991c0805661204527765ed2b8ae3a0ab7b899e1c11b383fc468e605772beee5c",
+    "backend/tests/test_v6_exact_search.py": "a5247aecaf256da0d3ccb875cd244cac6a727275bcaac95d3721513454e55fbb",
+    "backend/tests/test_v6_exact_search_integration.py": "60e89a1d4dcfc376f8911236cbce239de605668175027a4baff909c5b1713abe"
+  },
+  "report_sha256": {
+    "docs/catalog/implementation/JOREN_V6_SEARCH_BEFORE_AFTER_BENCHMARKS.md": "9d9115bb9922caa5da9ffe2d8336859203692fc66720c95ca557bdbf3c9dc04c",
+    "docs/catalog/implementation/JOREN_V6_SEARCH_INTEGRATION_REGRESSIONS.md": "cc89ee522f148733049a2b198d6e4f8fb7cafd848b3fad436faaf97be6367496",
+    "docs/catalog/implementation/JOREN_V6_SEARCH_OPTIMALITY_PROOF.md": "499015587afdea4f562261a738badba59a0f0022a7ab401e80e909d3810d6c1f",
+    "docs/catalog/implementation/JOREN_V6_SEARCH_OPTIMIZATION_DESIGN.md": "16e65284f55ed69b2be55a00a5a03669eb2dfd31fa6252c315d6a2b1a6731f0f",
+    "docs/catalog/implementation/JOREN_V6_REMAINING_RELEASE_GATES_NL.md": "41779cc0d19158395fb1fb4c25fdbbe360e558a9048daddede08b8e08270a40e"
+  },
+  "versions": {
+    "fastapi": "0.139.2",
+    "httpx": "0.28.1",
+    "PyJWT": "2.13.0",
+    "pydantic": "2.13.4",
+    "pydantic-settings": "2.14.2",
+    "pytest": "8.4.2",
+    "mypy": "1.20.2",
+    "ruff": "0.16.0",
+    "tzdata": "2026.3"
+  },
+  "machine": "Windows-10-10.0.19045-SP0",
+  "processor": "Intel64 Family 6 Model 85 Stepping 4, GenuineIntel",
+  "python": "3.10.10",
+  "private_log_sha256": {
+    "pytest-full.txt": "29a0396ed582375d87046a32fbd538bf5a0ccb8b59e12f29d5d955a318739ced",
+    "pytest-focused-delivery.txt": "848c4c5ef370e2c46481830cc038e2a5f88cffedc78f93b33dc79adbfb861e3e",
+    "ruff-delivery.txt": "af352a86840ad0af3d37ea0d9197f868363a6dac6b1c2ef5d2722f6b41d2d9af",
+    "format-delivery.txt": "748d7dffe2fe0846f9e966a80fe96c9f700c2b0ff84778e72b5bd730d08e0eed",
+    "mypy-delivery.txt": "bab3b63330ff561160ff2f98f57e0b5ce9d87d7e3da091a606dd23592c7b1a21",
+    "mypy-scripts-delivery.txt": "9a7b872e16546a06ac5acc5ff3c02a07fe75b22d8102de9d27434123534c9400",
+    "historical.txt": "170604477ff6a18e4f88b68d2489811356847220037e5b9ad0f8efe3f97a6de5",
+    "large-sql-final.txt": "f72657ab7d85ac634d82e1f3c73630b71e1ba54dec9a1d09c79339402f6d8183",
+    "multi-verified.txt": "27da5bdde803eabafd4ac480f209f7f9941b8dbacb08a308931291cc9f5adb5f",
+    "multi-concurrency-verified.txt": "c05ba14e9ff592568e94dda14df48832ac64b247890e5e3f99dd33814256645f",
+    "policy.txt": "d72df3e08613fb2c1fe01a36da2d353ab55a213ea64baab6dd210b04be2921d0",
+    "network-large.txt": "cba48f5533e1407d8c5fb0daceb8bbdf8e0a33061c2bf4ce4cef199503391756",
+    "network-policy.txt": "85fe4b7c4e8f80564de52706b35d58c487b9024c956d9c980512aeed4d640259",
+    "restart-large.txt": "f86fb821397980e5e6099866818d02b888bd14ebc907fdf3fd3c03581c7ac4d9",
+    "restart-multi.txt": "b0ff30054897411cbd0904a4a36625814aaf492502823733a907caff9c7ee8d7",
+    "restart-policy.txt": "9417a161257bbe30f1a962378987e0cbb0bd4312bcbfe3a5bcce73a21781aec0"
+  },
+  "artifact_sha256": {
+    "docs/catalog/implementation/search-optimization/.gitattributes": "3f142fa4d164c2efd7c4a473db4bd894756df2063a4a721687383359130579de",
+    "docs/catalog/implementation/search-optimization/after-cold.json": "5b3744b4bdf5970dd192d9a6c1706615800aa0599051df14ca9c93ea3d75302d",
+    "docs/catalog/implementation/search-optimization/after-profile.json": "2040fe0cb0e92ceec2cb35e4b79126d4983c5b5a7d6f986577a132fad6bb1668",
+    "docs/catalog/implementation/search-optimization/after-warm.json": "8c315077f7a96c4f94be9fed0e776e04e77be4d8c2da6a617b1114e20e05ff2f",
+    "docs/catalog/implementation/search-optimization/before-cold.json": "89384014cdd06ba64ad50ed4e03de69992e7a21dcf3f1fbd35d8b36e84c5675e",
+    "docs/catalog/implementation/search-optimization/before-profile.json": "2b3c3de0d066ed70446d00c679132d696b12705afdc1c44d70978bad8b11e207",
+    "docs/catalog/implementation/search-optimization/before-warm.json": "93e6a80a4f9b1a27022170ae18324bae8cc83b05c0c09f7800d8d412d954c322",
+    "docs/catalog/implementation/search-optimization/database-guards.json": "817442ee000d755ea72a27218bed79727720932f92f114617f86272a2ad3782e",
+    "docs/catalog/implementation/search-optimization/distributions.json": "f51b967f20ebd5cbf2b915518fa050a28e6a76b48e98fa5363d2c4b021eea640",
+    "docs/catalog/implementation/search-optimization/extra-after.json": "282c8740a3da04f2eebd9775949ac1b819d4b45e3e58d51ce13d77f0fb7cc5d0",
+    "docs/catalog/implementation/search-optimization/extra-before.json": "3e0049a6599ffb5c52df3c1ebac621b585307684519f9d5614a65524d8b007fc",
+    "docs/catalog/implementation/search-optimization/historical-comparison.json": "f4f664e489f31b61340c65fc14e11a53e23565cdd20e3bc4398e3583ac0099cb",
+    "docs/catalog/implementation/search-optimization/historical-inputs.json": "fa15721d027764e2f43e5decb87dafcd60ddb2ec09fdcf50518e4fae6ecbfff7",
+    "docs/catalog/implementation/search-optimization/historical.json": "9d60896b6415ad1ef11f7739e5442f02f293a74f983f58cbcb00bffe4804e1d3",
+    "docs/catalog/implementation/search-optimization/history/JOREN_V6_REMAINING_RELEASE_GATES_NL_e85cbaa.md": "b5ad2533d5cc7ec0311095c55222328a2e378abc5f1e56201ebda89438185758",
+    "docs/catalog/implementation/search-optimization/lifecycle.json": "53671632c7dc71d409f76b9b1288f45992e1201824baa6bbe15538b85111cff7",
+    "docs/catalog/implementation/search-optimization/network-large.json": "9c87f526aab531e8ff7020a893bdf8b9c6f110a602c284007da27de55bc5e925",
+    "docs/catalog/implementation/search-optimization/network-policy.json": "f669e4be365570edc57cc1ca55ce8ff6f40a2229879181434428908646fbc914",
+    "docs/catalog/implementation/search-optimization/oracle.json": "9d1c2137c0e5584486c7712af395f14759555b125c92faf58e3b139646e23e3c",
+    "docs/catalog/implementation/search-optimization/postgresql.json": "607513fe729c2db90ed4477bfcd67d4928792e4c39369cd7b7430e7741e34bfa",
+    "docs/catalog/implementation/search-optimization/repeat-after-cold.json": "96f72227fed886ad5cabccab4279716bcd37a9b37f6180098c999e2db02f1d69",
+    "docs/catalog/implementation/search-optimization/repeat-after-warm.json": "5270d856acd41439741479b7210d757024b6335bd4b457e0aa840068e8362c9a",
+    "docs/catalog/implementation/search-optimization/repeat-before-cold.json": "b3a4444326613fb08481aa6b60f9f43b5cd68089bf61002283484213e51b80fc",
+    "docs/catalog/implementation/search-optimization/repeat-before-warm.json": "7ce3cf5f0b45f6dee1fe19a413a7056847e6f4e45bb3fa4952402e75b89e09fd",
+    "docs/catalog/implementation/search-optimization/transport-after.json": "5981291c10e15e1ecff60a1f002be1a9432a89a7c6969c405be38f530d85f755",
+    "docs/catalog/implementation/search-optimization/transport-before.json": "01059b912a371def3f0a7cdabf4223e0a00a07292ce2130bd2c4cc2aa37f1230"
+  },
+  "production_activated": false,
+  "push_merge_deploy_hosted_access": false
+}

@@ -1,0 +1,2766 @@
+[
+  {
+    "worker": {
+      "case": "base_221_300",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1681,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "300",
+      "ranking": [
+        -3,
+        -5,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e7f86e67-5137-5075-b1ec-8e514170257f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-003",
+          "template": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "occurrence": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.13241040000002613,
+      "cpu_seconds": 0.125,
+      "peak_working_set_bytes": 83390464,
+      "metrics": {
+        "steps": {
+          "extend": 535,
+          "enqueue": 1140,
+          "find_schedule": 6
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "last_stage": "find_schedule",
+        "worknodes": 1681,
+        "heap_peak": 578
+      },
+      "worker_roundtrip_seconds": 1.7333053999996082
+    },
+    "http": {
+      "case": "base_221_300",
+      "warm": false,
+      "http_status": 201,
+      "wall_seconds": 1.79335970000011,
+      "outcome": "pending",
+      "workouts": [
+        {
+          "id": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "physical_workout_id": "1e1c51c5-b1b2-4f0d-9490-e305e5c0d0d1",
+          "source_prescription": {
+            "source_workout_id": "TR-BIKE-026",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "40m Z2",
+            "zone_distribution": [
+              "0",
+              "40",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "40m Z2",
+                "zone": 2,
+                "seconds": "2400",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "template_key": "95316897-01c1-581e-a7dc-9d76885ad7a8",
+          "template_version": 2,
+          "discipline": "bike",
+          "name": "LSD 40 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "40",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "40m Z2",
+              "instructions": "40m Z2",
+              "duration_minutes": "40",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Basisduur",
+              "description": "Constante lichte druk; makkelijk praten."
+            }
+          ],
+          "scheduled_date": "2026-10-26",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "physical_workout_id": "81a3b2c0-6904-4069-8227-f0415105ed63",
+          "source_prescription": {
+            "source_workout_id": "TR-RUN-003",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "1, 2",
+            "focus": "Actief herstel",
+            "original_text": "50m Z1",
+            "zone_distribution": [
+              "50",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "50m Z1",
+                "zone": 1,
+                "seconds": "3000",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "template_key": "c9a0afa3-a4b4-5d26-b627-a6630afbb052",
+          "template_version": 3,
+          "discipline": "run",
+          "name": "Herstel 50 min lopen in zone 1",
+          "description": "Actief herstel",
+          "duration_minutes": "50",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 1,
+          "expected_rpe_max": 2,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "50m Z1",
+              "instructions": "50m Z1",
+              "duration_minutes": "50",
+              "distance_meters": null,
+              "zone_target": 1,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 1,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 1,
+              "target_rpe_min": 2,
+              "target_rpe_max": 3,
+              "display_label": "Zone 1 · RPE 2-3",
+              "training_type": "Herstel",
+              "description": "Heel ontspannen; moeiteloos praten en zingen."
+            }
+          ],
+          "scheduled_date": "2026-10-27",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "physical_workout_id": "ac6d2db9-9202-4c50-b2db-8c0ce945e6da",
+          "source_prescription": {
+            "source_workout_id": "TR-BIKE-027",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "50m Z2",
+            "zone_distribution": [
+              "0",
+              "50",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "50m Z2",
+                "zone": 2,
+                "seconds": "3000",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "template_key": "e59fd2f0-d2b6-5985-bd55-8703d329dde0",
+          "template_version": 2,
+          "discipline": "bike",
+          "name": "LSD 50 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "50",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "50m Z2",
+              "instructions": "50m Z2",
+              "duration_minutes": "50",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Basisduur",
+              "description": "Constante lichte druk; makkelijk praten."
+            }
+          ],
+          "scheduled_date": "2026-10-29",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "physical_workout_id": "65048061-2b9f-45e1-8532-9a44e4f503ed",
+          "source_prescription": {
+            "source_workout_id": "TR-RUN-027",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "20m Z2",
+            "zone_distribution": [
+              "0",
+              "20",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "20m Z2",
+                "zone": 2,
+                "seconds": "1200",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "template_key": "1c73654b-b82d-5294-b26a-3be262115173",
+          "template_version": 2,
+          "discipline": "run",
+          "name": "LSD 20 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "20",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "20m Z2",
+              "instructions": "20m Z2",
+              "duration_minutes": "20",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duur",
+              "description": "Comfortabel tempo; vlot babbelen in hele zinnen."
+            }
+          ],
+          "scheduled_date": "2026-10-30",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "physical_workout_id": "c4e1924b-4e45-4e61-bbbe-797f2ce800db",
+          "source_prescription": {
+            "source_workout_id": "TR-SWIM-003",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "2000m Z2",
+            "zone_distribution": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "meters",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "swim_distance",
+                "text": "2000m Z2",
+                "zone": 2,
+                "seconds": null,
+                "meters": 2000
+              }
+            ],
+            "estimated_active_minutes": "40",
+            "duration_basis": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE"
+          },
+          "template_id": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "template_key": "9e1dc788-b404-5200-9b51-6d9f0b05cba6",
+          "template_version": 4,
+          "discipline": "swim",
+          "name": "LSD 2000m",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": null,
+          "distance_meters": 2000,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "2000m Z2",
+              "instructions": "2000m Z2",
+              "duration_minutes": null,
+              "distance_meters": 2000,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duurzwemmen",
+              "description": "Gelijkmatig en beheerst ritme; goed vol te houden."
+            }
+          ],
+          "scheduled_date": "2026-10-31",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        }
+      ],
+      "worker_peak_working_set_bytes": 84156416,
+      "parent_peak_working_set_bytes": 99966976
+    }
+  },
+  {
+    "worker": {
+      "case": "base_221_300",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1681,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "300",
+      "ranking": [
+        -3,
+        -5,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e7f86e67-5137-5075-b1ec-8e514170257f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-003",
+          "template": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "occurrence": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.12961600000016915,
+      "cpu_seconds": 0.125,
+      "peak_working_set_bytes": 84234240,
+      "metrics": {
+        "steps": {
+          "extend": 535,
+          "enqueue": 1140,
+          "find_schedule": 6
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "last_stage": "find_schedule",
+        "worknodes": 1681,
+        "heap_peak": 578
+      },
+      "worker_roundtrip_seconds": 0.41889850000006845
+    },
+    "http": {
+      "case": "base_221_300",
+      "warm": true,
+      "http_status": 201,
+      "wall_seconds": 0.3265918999995847,
+      "outcome": "pending",
+      "workouts": [
+        {
+          "id": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "physical_workout_id": "1d0da4dd-6508-4c7c-bc49-a781a60edeff",
+          "source_prescription": {
+            "source_workout_id": "TR-BIKE-026",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "40m Z2",
+            "zone_distribution": [
+              "0",
+              "40",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "40m Z2",
+                "zone": 2,
+                "seconds": "2400",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "template_key": "95316897-01c1-581e-a7dc-9d76885ad7a8",
+          "template_version": 2,
+          "discipline": "bike",
+          "name": "LSD 40 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "40",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "40m Z2",
+              "instructions": "40m Z2",
+              "duration_minutes": "40",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Basisduur",
+              "description": "Constante lichte druk; makkelijk praten."
+            }
+          ],
+          "scheduled_date": "2026-10-26",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "physical_workout_id": "2c385664-bd19-46b2-8245-9b7ccb331d5a",
+          "source_prescription": {
+            "source_workout_id": "TR-RUN-003",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "1, 2",
+            "focus": "Actief herstel",
+            "original_text": "50m Z1",
+            "zone_distribution": [
+              "50",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "50m Z1",
+                "zone": 1,
+                "seconds": "3000",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "template_key": "c9a0afa3-a4b4-5d26-b627-a6630afbb052",
+          "template_version": 3,
+          "discipline": "run",
+          "name": "Herstel 50 min lopen in zone 1",
+          "description": "Actief herstel",
+          "duration_minutes": "50",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 1,
+          "expected_rpe_max": 2,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "50m Z1",
+              "instructions": "50m Z1",
+              "duration_minutes": "50",
+              "distance_meters": null,
+              "zone_target": 1,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 1,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 1,
+              "target_rpe_min": 2,
+              "target_rpe_max": 3,
+              "display_label": "Zone 1 · RPE 2-3",
+              "training_type": "Herstel",
+              "description": "Heel ontspannen; moeiteloos praten en zingen."
+            }
+          ],
+          "scheduled_date": "2026-10-27",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "physical_workout_id": "c419edb6-292e-4f5d-a629-15548845bbb7",
+          "source_prescription": {
+            "source_workout_id": "TR-BIKE-027",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "50m Z2",
+            "zone_distribution": [
+              "0",
+              "50",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "50m Z2",
+                "zone": 2,
+                "seconds": "3000",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "template_key": "e59fd2f0-d2b6-5985-bd55-8703d329dde0",
+          "template_version": 2,
+          "discipline": "bike",
+          "name": "LSD 50 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "50",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "50m Z2",
+              "instructions": "50m Z2",
+              "duration_minutes": "50",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Basisduur",
+              "description": "Constante lichte druk; makkelijk praten."
+            }
+          ],
+          "scheduled_date": "2026-10-29",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "physical_workout_id": "fb5ceaf9-2a02-44be-a032-b4787dee8208",
+          "source_prescription": {
+            "source_workout_id": "TR-RUN-027",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "20m Z2",
+            "zone_distribution": [
+              "0",
+              "20",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "20m Z2",
+                "zone": 2,
+                "seconds": "1200",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "template_key": "1c73654b-b82d-5294-b26a-3be262115173",
+          "template_version": 2,
+          "discipline": "run",
+          "name": "LSD 20 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "20",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "20m Z2",
+              "instructions": "20m Z2",
+              "duration_minutes": "20",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duur",
+              "description": "Comfortabel tempo; vlot babbelen in hele zinnen."
+            }
+          ],
+          "scheduled_date": "2026-10-30",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "physical_workout_id": "e9d4414e-adb8-471e-8773-66a26cfed991",
+          "source_prescription": {
+            "source_workout_id": "TR-SWIM-003",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "2000m Z2",
+            "zone_distribution": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "meters",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "swim_distance",
+                "text": "2000m Z2",
+                "zone": 2,
+                "seconds": null,
+                "meters": 2000
+              }
+            ],
+            "estimated_active_minutes": "40",
+            "duration_basis": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE"
+          },
+          "template_id": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "template_key": "9e1dc788-b404-5200-9b51-6d9f0b05cba6",
+          "template_version": 4,
+          "discipline": "swim",
+          "name": "LSD 2000m",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": null,
+          "distance_meters": 2000,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "2000m Z2",
+              "instructions": "2000m Z2",
+              "duration_minutes": null,
+              "distance_meters": 2000,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duurzwemmen",
+              "description": "Gelijkmatig en beheerst ritme; goed vol te houden."
+            }
+          ],
+          "scheduled_date": "2026-10-31",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        }
+      ],
+      "worker_peak_working_set_bytes": 84664320,
+      "parent_peak_working_set_bytes": 106016768
+    }
+  },
+  {
+    "worker": {
+      "case": "base_222_200",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1149,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "200",
+      "ranking": [
+        -3,
+        -6,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "56fae22e-3b28-5075-8aa6-519af1bb0e52",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-SWIM-002",
+          "template": "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "occurrence": "6d04d43c-481f-5f9a-bada-4d0510995b99",
+          "date": "2026-10-28"
+        },
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-021",
+          "template": "56fae22e-3b28-5075-8aa6-519af1bb0e52",
+          "occurrence": "073efb15-a3e9-514e-9207-090827a33d21",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.0674047000002247,
+      "cpu_seconds": 0.0625,
+      "peak_working_set_bytes": 83165184,
+      "metrics": {
+        "steps": {
+          "extend": 603,
+          "enqueue": 539,
+          "find_schedule": 7
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "last_stage": "find_schedule",
+        "worknodes": 1149,
+        "heap_peak": 280
+      },
+      "worker_roundtrip_seconds": 1.7295267999998032
+    },
+    "http": {
+      "case": "base_222_200",
+      "warm": false,
+      "http_status": 201,
+      "wall_seconds": 1.5498835000003055,
+      "outcome": "pending",
+      "workouts": [
+        {
+          "id": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "physical_workout_id": "948da9cc-60cc-439f-8f64-c28f359241ca",
+          "source_prescription": {
+            "source_workout_id": "TR-BIKE-026",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "40m Z2",
+            "zone_distribution": [
+              "0",
+              "40",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "40m Z2",
+                "zone": 2,
+                "seconds": "2400",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "template_key": "95316897-01c1-581e-a7dc-9d76885ad7a8",
+          "template_version": 2,
+          "discipline": "bike",
+          "name": "LSD 40 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "40",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "40m Z2",
+              "instructions": "40m Z2",
+              "duration_minutes": "40",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Basisduur",
+              "description": "Constante lichte druk; makkelijk praten."
+            }
+          ],
+          "scheduled_date": "2026-10-26",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "physical_workout_id": "efde5287-c9c5-496b-98b3-f51917ecb785",
+          "source_prescription": {
+            "source_workout_id": "TR-RUN-003",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "1, 2",
+            "focus": "Actief herstel",
+            "original_text": "50m Z1",
+            "zone_distribution": [
+              "50",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "50m Z1",
+                "zone": 1,
+                "seconds": "3000",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "template_key": "c9a0afa3-a4b4-5d26-b627-a6630afbb052",
+          "template_version": 3,
+          "discipline": "run",
+          "name": "Herstel 50 min lopen in zone 1",
+          "description": "Actief herstel",
+          "duration_minutes": "50",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 1,
+          "expected_rpe_max": 2,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "50m Z1",
+              "instructions": "50m Z1",
+              "duration_minutes": "50",
+              "distance_meters": null,
+              "zone_target": 1,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 1,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 1,
+              "target_rpe_min": 2,
+              "target_rpe_max": 3,
+              "display_label": "Zone 1 · RPE 2-3",
+              "training_type": "Herstel",
+              "description": "Heel ontspannen; moeiteloos praten en zingen."
+            }
+          ],
+          "scheduled_date": "2026-10-27",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "6d04d43c-481f-5f9a-bada-4d0510995b99",
+          "physical_workout_id": "19936d37-4a40-4bf1-815d-996ae00c2f65",
+          "source_prescription": {
+            "source_workout_id": "TR-SWIM-002",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "1500m Z2",
+            "zone_distribution": [
+              "0",
+              "1500",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "meters",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "swim_distance",
+                "text": "1500m Z2",
+                "zone": 2,
+                "seconds": null,
+                "meters": 1500
+              }
+            ],
+            "estimated_active_minutes": "30",
+            "duration_basis": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE"
+          },
+          "template_id": "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "template_key": "70441b5f-d30e-5438-afe9-5f966afa51a2",
+          "template_version": 4,
+          "discipline": "swim",
+          "name": "LSD 1500m",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": null,
+          "distance_meters": 1500,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "1500m Z2",
+              "instructions": "1500m Z2",
+              "duration_minutes": null,
+              "distance_meters": 1500,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duurzwemmen",
+              "description": "Gelijkmatig en beheerst ritme; goed vol te houden."
+            }
+          ],
+          "scheduled_date": "2026-10-28",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "physical_workout_id": "a89c3cf6-cfd8-496e-b238-3d8dcb7b318c",
+          "source_prescription": {
+            "source_workout_id": "TR-BIKE-027",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "50m Z2",
+            "zone_distribution": [
+              "0",
+              "50",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "50m Z2",
+                "zone": 2,
+                "seconds": "3000",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "template_key": "e59fd2f0-d2b6-5985-bd55-8703d329dde0",
+          "template_version": 2,
+          "discipline": "bike",
+          "name": "LSD 50 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "50",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "50m Z2",
+              "instructions": "50m Z2",
+              "duration_minutes": "50",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Basisduur",
+              "description": "Constante lichte druk; makkelijk praten."
+            }
+          ],
+          "scheduled_date": "2026-10-29",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "physical_workout_id": "39f98b5d-b12d-48a9-b343-759e874c815f",
+          "source_prescription": {
+            "source_workout_id": "TR-RUN-027",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "20m Z2",
+            "zone_distribution": [
+              "0",
+              "20",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "20m Z2",
+                "zone": 2,
+                "seconds": "1200",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "template_key": "1c73654b-b82d-5294-b26a-3be262115173",
+          "template_version": 2,
+          "discipline": "run",
+          "name": "LSD 20 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "20",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "20m Z2",
+              "instructions": "20m Z2",
+              "duration_minutes": "20",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duur",
+              "description": "Comfortabel tempo; vlot babbelen in hele zinnen."
+            }
+          ],
+          "scheduled_date": "2026-10-30",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "073efb15-a3e9-514e-9207-090827a33d21",
+          "physical_workout_id": "2b5bbb59-f0e8-47f8-9b07-049c9103d87d",
+          "source_prescription": {
+            "source_workout_id": "TR-SWIM-021",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "500m Z2",
+            "zone_distribution": [
+              "0",
+              "500",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "meters",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "swim_distance",
+                "text": "500m Z2",
+                "zone": 2,
+                "seconds": null,
+                "meters": 500
+              }
+            ],
+            "estimated_active_minutes": "10",
+            "duration_basis": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE"
+          },
+          "template_id": "56fae22e-3b28-5075-8aa6-519af1bb0e52",
+          "template_key": "99fb4b6d-8199-5af2-8885-3cd160dee29a",
+          "template_version": 2,
+          "discipline": "swim",
+          "name": "LSD 500m",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": null,
+          "distance_meters": 500,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "500m Z2",
+              "instructions": "500m Z2",
+              "duration_minutes": null,
+              "distance_meters": 500,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duurzwemmen",
+              "description": "Gelijkmatig en beheerst ritme; goed vol te houden."
+            }
+          ],
+          "scheduled_date": "2026-10-31",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        }
+      ],
+      "worker_peak_working_set_bytes": 84221952,
+      "parent_peak_working_set_bytes": 106016768
+    }
+  },
+  {
+    "worker": {
+      "case": "base_222_200",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1149,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "200",
+      "ranking": [
+        -3,
+        -6,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "56fae22e-3b28-5075-8aa6-519af1bb0e52",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-SWIM-002",
+          "template": "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "occurrence": "6d04d43c-481f-5f9a-bada-4d0510995b99",
+          "date": "2026-10-28"
+        },
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-021",
+          "template": "56fae22e-3b28-5075-8aa6-519af1bb0e52",
+          "occurrence": "073efb15-a3e9-514e-9207-090827a33d21",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.06452750000016749,
+      "cpu_seconds": 0.078125,
+      "peak_working_set_bytes": 83906560,
+      "metrics": {
+        "steps": {
+          "extend": 603,
+          "enqueue": 539,
+          "find_schedule": 7
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "last_stage": "find_schedule",
+        "worknodes": 1149,
+        "heap_peak": 280
+      },
+      "worker_roundtrip_seconds": 0.3434433000002173
+    },
+    "http": {
+      "case": "base_222_200",
+      "warm": true,
+      "http_status": 201,
+      "wall_seconds": 0.24049340000010488,
+      "outcome": "pending",
+      "workouts": [
+        {
+          "id": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "physical_workout_id": "5f42a5b7-0363-4eb2-b4f5-8b6bef52eca3",
+          "source_prescription": {
+            "source_workout_id": "TR-BIKE-026",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "40m Z2",
+            "zone_distribution": [
+              "0",
+              "40",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "40m Z2",
+                "zone": 2,
+                "seconds": "2400",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "template_key": "95316897-01c1-581e-a7dc-9d76885ad7a8",
+          "template_version": 2,
+          "discipline": "bike",
+          "name": "LSD 40 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "40",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "40m Z2",
+              "instructions": "40m Z2",
+              "duration_minutes": "40",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Basisduur",
+              "description": "Constante lichte druk; makkelijk praten."
+            }
+          ],
+          "scheduled_date": "2026-10-26",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "physical_workout_id": "9c3fa724-dd6a-4864-ada3-64a95a40f485",
+          "source_prescription": {
+            "source_workout_id": "TR-RUN-003",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "1, 2",
+            "focus": "Actief herstel",
+            "original_text": "50m Z1",
+            "zone_distribution": [
+              "50",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "50m Z1",
+                "zone": 1,
+                "seconds": "3000",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "template_key": "c9a0afa3-a4b4-5d26-b627-a6630afbb052",
+          "template_version": 3,
+          "discipline": "run",
+          "name": "Herstel 50 min lopen in zone 1",
+          "description": "Actief herstel",
+          "duration_minutes": "50",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 1,
+          "expected_rpe_max": 2,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "50m Z1",
+              "instructions": "50m Z1",
+              "duration_minutes": "50",
+              "distance_meters": null,
+              "zone_target": 1,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 1,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 1,
+              "target_rpe_min": 2,
+              "target_rpe_max": 3,
+              "display_label": "Zone 1 · RPE 2-3",
+              "training_type": "Herstel",
+              "description": "Heel ontspannen; moeiteloos praten en zingen."
+            }
+          ],
+          "scheduled_date": "2026-10-27",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "6d04d43c-481f-5f9a-bada-4d0510995b99",
+          "physical_workout_id": "9c1f0298-d8a7-44f5-a6bc-78c6045b0908",
+          "source_prescription": {
+            "source_workout_id": "TR-SWIM-002",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "1500m Z2",
+            "zone_distribution": [
+              "0",
+              "1500",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "meters",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "swim_distance",
+                "text": "1500m Z2",
+                "zone": 2,
+                "seconds": null,
+                "meters": 1500
+              }
+            ],
+            "estimated_active_minutes": "30",
+            "duration_basis": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE"
+          },
+          "template_id": "b3f89d70-6473-5b89-80b6-edfc2512b0f3",
+          "template_key": "70441b5f-d30e-5438-afe9-5f966afa51a2",
+          "template_version": 4,
+          "discipline": "swim",
+          "name": "LSD 1500m",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": null,
+          "distance_meters": 1500,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "1500m Z2",
+              "instructions": "1500m Z2",
+              "duration_minutes": null,
+              "distance_meters": 1500,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duurzwemmen",
+              "description": "Gelijkmatig en beheerst ritme; goed vol te houden."
+            }
+          ],
+          "scheduled_date": "2026-10-28",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "physical_workout_id": "6adc593a-d524-464e-92dd-cdc55a4a58d4",
+          "source_prescription": {
+            "source_workout_id": "TR-BIKE-027",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "50m Z2",
+            "zone_distribution": [
+              "0",
+              "50",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "50m Z2",
+                "zone": 2,
+                "seconds": "3000",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "template_key": "e59fd2f0-d2b6-5985-bd55-8703d329dde0",
+          "template_version": 2,
+          "discipline": "bike",
+          "name": "LSD 50 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "50",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "50m Z2",
+              "instructions": "50m Z2",
+              "duration_minutes": "50",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Basisduur",
+              "description": "Constante lichte druk; makkelijk praten."
+            }
+          ],
+          "scheduled_date": "2026-10-29",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "physical_workout_id": "17c72601-d3db-4cd8-b727-fa2f8430bd00",
+          "source_prescription": {
+            "source_workout_id": "TR-RUN-027",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "20m Z2",
+            "zone_distribution": [
+              "0",
+              "20",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "20m Z2",
+                "zone": 2,
+                "seconds": "1200",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "template_key": "1c73654b-b82d-5294-b26a-3be262115173",
+          "template_version": 2,
+          "discipline": "run",
+          "name": "LSD 20 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "20",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "20m Z2",
+              "instructions": "20m Z2",
+              "duration_minutes": "20",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duur",
+              "description": "Comfortabel tempo; vlot babbelen in hele zinnen."
+            }
+          ],
+          "scheduled_date": "2026-10-30",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "073efb15-a3e9-514e-9207-090827a33d21",
+          "physical_workout_id": "d93560b0-eb3a-49f0-9464-600c8ce89bea",
+          "source_prescription": {
+            "source_workout_id": "TR-SWIM-021",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "500m Z2",
+            "zone_distribution": [
+              "0",
+              "500",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "meters",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "swim_distance",
+                "text": "500m Z2",
+                "zone": 2,
+                "seconds": null,
+                "meters": 500
+              }
+            ],
+            "estimated_active_minutes": "10",
+            "duration_basis": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE"
+          },
+          "template_id": "56fae22e-3b28-5075-8aa6-519af1bb0e52",
+          "template_key": "99fb4b6d-8199-5af2-8885-3cd160dee29a",
+          "template_version": 2,
+          "discipline": "swim",
+          "name": "LSD 500m",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": null,
+          "distance_meters": 500,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "500m Z2",
+              "instructions": "500m Z2",
+              "duration_minutes": null,
+              "distance_meters": 500,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duurzwemmen",
+              "description": "Gelijkmatig en beheerst ritme; goed vol te houden."
+            }
+          ],
+          "scheduled_date": "2026-10-31",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        }
+      ],
+      "worker_peak_working_set_bytes": 84574208,
+      "parent_peak_working_set_bytes": 106016768
+    }
+  },
+  {
+    "worker": {
+      "case": "normal_baseline_105min",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1681,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "300.2",
+      "ranking": [
+        -3,
+        -5,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e7f86e67-5137-5075-b1ec-8e514170257f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-003",
+          "template": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "occurrence": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.13167969999994966,
+      "cpu_seconds": 0.125,
+      "peak_working_set_bytes": 83230720,
+      "metrics": {
+        "steps": {
+          "extend": 535,
+          "enqueue": 1140,
+          "find_schedule": 6
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "last_stage": "find_schedule",
+        "worknodes": 1681,
+        "heap_peak": 578
+      },
+      "worker_roundtrip_seconds": 1.7429653999997754
+    },
+    "http": {
+      "case": "normal_baseline_105min",
+      "warm": false,
+      "http_status": 201,
+      "wall_seconds": 1.6177044000000933,
+      "outcome": "pending",
+      "workouts": [
+        {
+          "id": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "physical_workout_id": "fa8e03fd-303a-4f1f-8118-fb6abe4d1b13",
+          "source_prescription": {
+            "source_workout_id": "TR-BIKE-026",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "40m Z2",
+            "zone_distribution": [
+              "0",
+              "40",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "40m Z2",
+                "zone": 2,
+                "seconds": "2400",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "template_key": "95316897-01c1-581e-a7dc-9d76885ad7a8",
+          "template_version": 2,
+          "discipline": "bike",
+          "name": "LSD 40 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "40",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "40m Z2",
+              "instructions": "40m Z2",
+              "duration_minutes": "40",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Basisduur",
+              "description": "Constante lichte druk; makkelijk praten."
+            }
+          ],
+          "scheduled_date": "2026-10-26",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "physical_workout_id": "909716e6-610d-4d1c-8eee-b7aa602a6a7b",
+          "source_prescription": {
+            "source_workout_id": "TR-RUN-003",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "1, 2",
+            "focus": "Actief herstel",
+            "original_text": "50m Z1",
+            "zone_distribution": [
+              "50",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "50m Z1",
+                "zone": 1,
+                "seconds": "3000",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "template_key": "c9a0afa3-a4b4-5d26-b627-a6630afbb052",
+          "template_version": 3,
+          "discipline": "run",
+          "name": "Herstel 50 min lopen in zone 1",
+          "description": "Actief herstel",
+          "duration_minutes": "50",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 1,
+          "expected_rpe_max": 2,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "50m Z1",
+              "instructions": "50m Z1",
+              "duration_minutes": "50",
+              "distance_meters": null,
+              "zone_target": 1,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 1,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 1,
+              "target_rpe_min": 2,
+              "target_rpe_max": 3,
+              "display_label": "Zone 1 · RPE 2-3",
+              "training_type": "Herstel",
+              "description": "Heel ontspannen; moeiteloos praten en zingen."
+            }
+          ],
+          "scheduled_date": "2026-10-27",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "physical_workout_id": "bea9b4cb-4c96-4a15-8c82-7635f5d8419d",
+          "source_prescription": {
+            "source_workout_id": "TR-BIKE-027",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "50m Z2",
+            "zone_distribution": [
+              "0",
+              "50",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "50m Z2",
+                "zone": 2,
+                "seconds": "3000",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "template_key": "e59fd2f0-d2b6-5985-bd55-8703d329dde0",
+          "template_version": 2,
+          "discipline": "bike",
+          "name": "LSD 50 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "50",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "50m Z2",
+              "instructions": "50m Z2",
+              "duration_minutes": "50",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Basisduur",
+              "description": "Constante lichte druk; makkelijk praten."
+            }
+          ],
+          "scheduled_date": "2026-10-29",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "physical_workout_id": "dc6a0d9c-9690-48bc-8efa-dd4d402bd4f5",
+          "source_prescription": {
+            "source_workout_id": "TR-RUN-027",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "20m Z2",
+            "zone_distribution": [
+              "0",
+              "20",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "20m Z2",
+                "zone": 2,
+                "seconds": "1200",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "template_key": "1c73654b-b82d-5294-b26a-3be262115173",
+          "template_version": 2,
+          "discipline": "run",
+          "name": "LSD 20 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "20",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "20m Z2",
+              "instructions": "20m Z2",
+              "duration_minutes": "20",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duur",
+              "description": "Comfortabel tempo; vlot babbelen in hele zinnen."
+            }
+          ],
+          "scheduled_date": "2026-10-30",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "physical_workout_id": "60803753-c658-4780-90c6-8360ca4c18a3",
+          "source_prescription": {
+            "source_workout_id": "TR-SWIM-003",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "2000m Z2",
+            "zone_distribution": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "meters",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "swim_distance",
+                "text": "2000m Z2",
+                "zone": 2,
+                "seconds": null,
+                "meters": 2000
+              }
+            ],
+            "estimated_active_minutes": "40",
+            "duration_basis": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE"
+          },
+          "template_id": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "template_key": "9e1dc788-b404-5200-9b51-6d9f0b05cba6",
+          "template_version": 4,
+          "discipline": "swim",
+          "name": "LSD 2000m",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": null,
+          "distance_meters": 2000,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "2000m Z2",
+              "instructions": "2000m Z2",
+              "duration_minutes": null,
+              "distance_meters": 2000,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duurzwemmen",
+              "description": "Gelijkmatig en beheerst ritme; goed vol te houden."
+            }
+          ],
+          "scheduled_date": "2026-10-31",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        }
+      ],
+      "worker_peak_working_set_bytes": 83869696,
+      "parent_peak_working_set_bytes": 106016768
+    }
+  },
+  {
+    "worker": {
+      "case": "normal_baseline_105min",
+      "test_only": true,
+      "instrumented": true,
+      "warm": false,
+      "outcome": "EXHAUSTIVE_GLOBAL_OPTIMUM",
+      "worknodes": 1681,
+      "official_total": "168.677083333333333333333333333333333333333333333333",
+      "resolved_budget": "300.2",
+      "ranking": [
+        -3,
+        -5,
+        "510416666666666666666666666666666666666666666669/843385416666666666666666666666666666666666666666665",
+        "-168677083333333333333333333333333333333333333333333/1000000000000000000000000000000000000000000000000",
+        [
+          "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "e7f86e67-5137-5075-b1ec-8e514170257f"
+        ]
+      ],
+      "workouts": [
+        {
+          "source": "TR-BIKE-026",
+          "template": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "occurrence": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "date": "2026-10-26"
+        },
+        {
+          "source": "TR-RUN-003",
+          "template": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "occurrence": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "date": "2026-10-27"
+        },
+        {
+          "source": "TR-BIKE-027",
+          "template": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "occurrence": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "date": "2026-10-29"
+        },
+        {
+          "source": "TR-RUN-027",
+          "template": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "occurrence": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "date": "2026-10-30"
+        },
+        {
+          "source": "TR-SWIM-003",
+          "template": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "occurrence": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "date": "2026-10-31"
+        }
+      ],
+      "wall_seconds": 0.1282837999997355,
+      "cpu_seconds": 0.125,
+      "peak_working_set_bytes": 84234240,
+      "metrics": {
+        "steps": {
+          "extend": 535,
+          "enqueue": 1140,
+          "find_schedule": 6
+        },
+        "scheduling_attempts": 1,
+        "materialized_combinations": 1,
+        "ranking_sort_seconds": 0.0,
+        "last_stage": "find_schedule",
+        "worknodes": 1681,
+        "heap_peak": 578
+      },
+      "worker_roundtrip_seconds": 0.4147689999999784
+    },
+    "http": {
+      "case": "normal_baseline_105min",
+      "warm": true,
+      "http_status": 201,
+      "wall_seconds": 0.37764030000016646,
+      "outcome": "pending",
+      "workouts": [
+        {
+          "id": "096f0e73-61a9-5caa-a859-b83ee7c3c32f",
+          "physical_workout_id": "5c5b7c2a-81d7-4121-a1e3-5e9f94bccaf9",
+          "source_prescription": {
+            "source_workout_id": "TR-BIKE-026",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "40m Z2",
+            "zone_distribution": [
+              "0",
+              "40",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "40m Z2",
+                "zone": 2,
+                "seconds": "2400",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "d5949084-9848-5fa1-a16b-1dbeaab956e2",
+          "template_key": "95316897-01c1-581e-a7dc-9d76885ad7a8",
+          "template_version": 2,
+          "discipline": "bike",
+          "name": "LSD 40 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "40",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "40m Z2",
+              "instructions": "40m Z2",
+              "duration_minutes": "40",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Basisduur",
+              "description": "Constante lichte druk; makkelijk praten."
+            }
+          ],
+          "scheduled_date": "2026-10-26",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "be41b670-8488-51b8-ba35-167046f2a4ae",
+          "physical_workout_id": "60c37c46-e248-44b9-838a-468f6ac33fbe",
+          "source_prescription": {
+            "source_workout_id": "TR-RUN-003",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "1, 2",
+            "focus": "Actief herstel",
+            "original_text": "50m Z1",
+            "zone_distribution": [
+              "50",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "50m Z1",
+                "zone": 1,
+                "seconds": "3000",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "37de32e3-05d1-5912-ab13-0ac42c763ed0",
+          "template_key": "c9a0afa3-a4b4-5d26-b627-a6630afbb052",
+          "template_version": 3,
+          "discipline": "run",
+          "name": "Herstel 50 min lopen in zone 1",
+          "description": "Actief herstel",
+          "duration_minutes": "50",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 1,
+          "expected_rpe_max": 2,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "50m Z1",
+              "instructions": "50m Z1",
+              "duration_minutes": "50",
+              "distance_meters": null,
+              "zone_target": 1,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 1,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 1,
+              "target_rpe_min": 2,
+              "target_rpe_max": 3,
+              "display_label": "Zone 1 · RPE 2-3",
+              "training_type": "Herstel",
+              "description": "Heel ontspannen; moeiteloos praten en zingen."
+            }
+          ],
+          "scheduled_date": "2026-10-27",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "9bfb9054-b476-5aa6-b3cc-aebff3ae8352",
+          "physical_workout_id": "775aee2f-c383-4a18-83a2-5beb8e9f82ec",
+          "source_prescription": {
+            "source_workout_id": "TR-BIKE-027",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "50m Z2",
+            "zone_distribution": [
+              "0",
+              "50",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "50m Z2",
+                "zone": 2,
+                "seconds": "3000",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "738fedee-ad7e-56f8-a9e5-ade50f1fef16",
+          "template_key": "e59fd2f0-d2b6-5985-bd55-8703d329dde0",
+          "template_version": 2,
+          "discipline": "bike",
+          "name": "LSD 50 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "50",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "50m Z2",
+              "instructions": "50m Z2",
+              "duration_minutes": "50",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Basisduur",
+              "description": "Constante lichte druk; makkelijk praten."
+            }
+          ],
+          "scheduled_date": "2026-10-29",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "67fad98f-2497-545f-89f8-9ff163601ff4",
+          "physical_workout_id": "f0a41b81-dd68-409c-b5f9-de9725eb1cea",
+          "source_prescription": {
+            "source_workout_id": "TR-RUN-027",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "20m Z2",
+            "zone_distribution": [
+              "0",
+              "20",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "minutes",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "timed_zone",
+                "text": "20m Z2",
+                "zone": 2,
+                "seconds": "1200",
+                "meters": null
+              }
+            ],
+            "estimated_active_minutes": null,
+            "duration_basis": null
+          },
+          "template_id": "09ff91df-4e9f-54c6-b862-04e095ba9430",
+          "template_key": "1c73654b-b82d-5294-b26a-3be262115173",
+          "template_version": 2,
+          "discipline": "run",
+          "name": "LSD 20 min",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": "20",
+          "distance_meters": null,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "20m Z2",
+              "instructions": "20m Z2",
+              "duration_minutes": "20",
+              "distance_meters": null,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duur",
+              "description": "Comfortabel tempo; vlot babbelen in hele zinnen."
+            }
+          ],
+          "scheduled_date": "2026-10-30",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        },
+        {
+          "id": "c0e94e39-b465-5d46-9d4e-ddeab7f41f29",
+          "physical_workout_id": "284590c5-7556-42e5-ab35-bb8fe7bfa458",
+          "source_prescription": {
+            "source_workout_id": "TR-SWIM-003",
+            "source_release": "joren-v6-phase-source-release-1",
+            "session_effort": "3, 4",
+            "focus": "Aerobe basis / LSD",
+            "original_text": "2000m Z2",
+            "zone_distribution": [
+              "0",
+              "2000",
+              "0",
+              "0",
+              "0"
+            ],
+            "distribution_unit": "meters",
+            "blocks": [
+              {
+                "sequence": 1,
+                "kind": "swim_distance",
+                "text": "2000m Z2",
+                "zone": 2,
+                "seconds": null,
+                "meters": 2000
+              }
+            ],
+            "estimated_active_minutes": "40",
+            "duration_basis": "ESTIMATED_FROM_APPROVED_REFERENCE_PACE"
+          },
+          "template_id": "e7f86e67-5137-5075-b1ec-8e514170257f",
+          "template_key": "9e1dc788-b404-5200-9b51-6d9f0b05cba6",
+          "template_version": 4,
+          "discipline": "swim",
+          "name": "LSD 2000m",
+          "description": "Aerobe basis / LSD",
+          "duration_minutes": null,
+          "distance_meters": 2000,
+          "intensity_bucket": "low",
+          "expected_rpe_min": 3,
+          "expected_rpe_max": 4,
+          "segments": [
+            {
+              "sequence": 1,
+              "name": "2000m Z2",
+              "instructions": "2000m Z2",
+              "duration_minutes": null,
+              "distance_meters": 2000,
+              "zone_target": 2,
+              "protocol_target": null,
+              "rpe_target": null,
+              "expected_rpe": 3,
+              "is_swim_technique": false
+            }
+          ],
+          "rpe_zones": [
+            {
+              "zone_number": 2,
+              "target_rpe_min": 4,
+              "target_rpe_max": 4,
+              "display_label": "Zone 2 · RPE 4",
+              "training_type": "Duurzwemmen",
+              "description": "Gelijkmatig en beheerst ritme; goed vol te houden."
+            }
+          ],
+          "scheduled_date": "2026-10-31",
+          "source": "auto_planned",
+          "status": "scheduled",
+          "warnings": []
+        }
+      ],
+      "worker_peak_working_set_bytes": 85127168,
+      "parent_peak_working_set_bytes": 111370240
+    }
+  }
+]

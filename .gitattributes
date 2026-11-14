@@ -8,3 +8,15 @@ docs/catalog/implementation/persistence/*.txt text eol=lf
 docs/catalog/implementation/final-security-20261108/** text eol=lf
 backend/scripts/verify_v6_final_sql.py text eol=lf
 supabase/tests/fixtures/a5_current_onboarding.sql text eol=lf
+# Exact-search verification custody across Windows checkouts.
+.gitattributes text eol=lf
+backend/app/modules/planning/v6_search.py text eol=lf
+backend/app/modules/planning/v6_selection.py text eol=lf
+backend/benchmarks/v6_exact_search.py text eol=lf
+backend/benchmarks/v6_search_oracle.py text eol=lf
+backend/benchmarks/v6_search_transport.py text eol=lf
+backend/scripts/verify_v6_exact_search.py text eol=lf
+backend/tests/test_v6_exact_search.py text eol=lf
+backend/tests/test_v6_exact_search_integration.py text eol=lf
+docs/catalog/implementation/JOREN_V6_SEARCH_*.md text eol=lf
+docs/catalog/implementation/JOREN_V6_REMAINING_RELEASE_GATES_NL.md text eol=lf

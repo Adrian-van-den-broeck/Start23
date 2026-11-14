@@ -6,7 +6,7 @@ registration, cache, persistence, or legacy score.
 """
 
 from collections import Counter
-from collections.abc import Collection, Mapping
+from collections.abc import Collection, Iterable, Mapping
 from dataclasses import dataclass, field, replace
 from datetime import date
 from decimal import Decimal
@@ -425,7 +425,7 @@ def build_v6_plan(
         raise PlanningConstraintError(
             "template_not_eligible", "A selected workout is not eligible for this week."
         )
-    combinations: tuple[tuple[V6Template, ...], ...]
+    combinations: Iterable[tuple[V6Template, ...]]
     from .v6_search import SearchWork, multi_options
 
     work = SearchWork(controls.maximum_search_nodes)
@@ -443,7 +443,7 @@ def build_v6_plan(
             work=work,
             required_composition=required_composition,
         )
-        space = work.nodes
+        space = 0  # The lazy path reports shared work only after placement.
     else:
         retained = tuple(by_id[k] for k in prefix)
         groups = tuple(
@@ -481,9 +481,15 @@ def build_v6_plan(
             )
         )
     )
-    ordered = sorted(
-        viable,
-        key=lambda rows: ranking(rows, goal_disciplines, controls.session_frequency),
+    ordered = (
+        viable
+        if controls.session_frequency and selected_template_ids is None
+        else sorted(
+            viable,
+            key=lambda rows: ranking(
+                rows, goal_disciplines, controls.session_frequency
+            ),
+        )
     )
     chosen: tuple[V6Template, ...] | None = None
     workouts: tuple[ProposedWorkout, ...] = ()
@@ -554,6 +560,10 @@ def build_v6_plan(
         raise PlanningConstraintError(
             "v6_selection_invalid",
             "No eligible complete week satisfies this selection.",
+        )
+    if controls.session_frequency and not week_valid(chosen, target, controls):
+        raise PlanningConstraintError(
+            "v6_selection_invalid", "The selected complete week failed validation."
         )
     estimates = frozenset(t.discipline for t in chosen if active_times(t, controls)[2])
     warnings = []
