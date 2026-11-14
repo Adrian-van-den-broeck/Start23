@@ -1,0 +1,661 @@
+[
+  {
+    "case": "A:onboarding_before",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:physiology",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:operational",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:history",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:goal",
+    "http_status": 201,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:setup:run",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:zones:run",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:zone_confirm:run",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:setup:bike",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:zones:bike",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:zone_confirm:bike",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:setup:swim",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:zones:swim",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:zone_confirm:swim",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:onboarding_ready",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:onboarding_complete",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:checkin_start",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:checkin_save",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:checkin_confirm",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:historical_initial_proposal",
+    "http_status": 201,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:onboarding_before",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:physiology",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:operational",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:history",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:goal",
+    "http_status": 201,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:setup:run",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:zones:run",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:zone_confirm:run",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:setup:bike",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:zones:bike",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:zone_confirm:bike",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:setup:swim",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:zones:swim",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:zone_confirm:swim",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:onboarding_ready",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:onboarding_complete",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:checkin_start",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:checkin_save",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:checkin_confirm",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:historical_initial_proposal",
+    "http_status": 201,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:foreign_plan",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "A:foreign_confirm",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "A:foreign_alternatives",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "A:foreign_move",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "A:foreign_attach",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "B:unchanged_pending_after_foreign",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:foreign_plan",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "B:foreign_confirm",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "B:foreign_alternatives",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "B:foreign_move",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "B:foreign_attach",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "A:unchanged_pending_after_foreign",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:owned_pending_alternatives",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:separate_plan_confirmation",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:active_reload",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:calendar",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:attach_owned_activity",
+    "http_status": 201,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:activity_exact_retry",
+    "http_status": 201,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:activity_before_move",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:plan_before_move",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:move_unfinished",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:stale_move",
+    "http_status": 404,
+    "foreign": false,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "A:legacy_move_activity_audit",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:legacy_move_plan_audit",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:stale_revision_current_locator",
+    "http_status": 409,
+    "foreign": false,
+    "classification": "historical_planner_only",
+    "code": "plan_revision_stale"
+  },
+  {
+    "case": "B:owned_pending_alternatives",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:separate_plan_confirmation",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:active_reload",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:calendar",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:attach_owned_activity",
+    "http_status": 201,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:activity_exact_retry",
+    "http_status": 201,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:activity_before_move",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:plan_before_move",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:move_unfinished",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:stale_move",
+    "http_status": 404,
+    "foreign": false,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "B:activity_after_move",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:foreign_activity_read",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "A:foreign_receipt_reuse",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "B:foreign_activity_read",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "B:foreign_receipt_reuse",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "B:legacy_move_activity_audit",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:legacy_move_plan_audit",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:stale_revision_current_locator",
+    "http_status": 409,
+    "foreign": false,
+    "classification": "historical_planner_only",
+    "code": "plan_revision_stale"
+  },
+  {
+    "case": "A:missing_frequency_gate",
+    "http_status": 404,
+    "foreign": false,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "A:missing_frequency_gate",
+    "http_status": 404,
+    "foreign": false,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "A:missing_a5_recovery_gate",
+    "http_status": 404,
+    "foreign": false,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "B:missing_frequency_gate",
+    "http_status": 404,
+    "foreign": false,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "B:missing_a5_recovery_gate",
+    "http_status": 404,
+    "foreign": false,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "A:historical_swipe_create",
+    "http_status": 201,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:historical_swipe_resume",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:swipe_accept:revision:1",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:swipe_accept:revision:2",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:swipe_accept:revision:3",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:swipe_accept:revision:4",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:swipe_accept:revision:5",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:historical_swipe_submit",
+    "http_status": 201,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:foreign_swipe_draft",
+    "http_status": 404,
+    "foreign": true,
+    "classification": "historical_planner_only",
+    "code": "resource_not_found"
+  },
+  {
+    "case": "A:after_login_plan_restore",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:after_login_pending_restore",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:after_login_submitted_draft",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "A:after_login_calendar",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:after_login_plan_restore",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "B:after_login_calendar",
+    "http_status": 200,
+    "foreign": false,
+    "classification": "historical_planner_only"
+  },
+  {
+    "case": "two_concurrent_owner_reads",
+    "status": "PASS",
+    "requests": 2
+  },
+  {
+    "case": "local_backend:missing",
+    "http_status": 401
+  },
+  {
+    "case": "local_backend:invalid",
+    "http_status": 401
+  },
+  {
+    "case": "local_backend:tampered_real_token",
+    "http_status": 401
+  }
+]

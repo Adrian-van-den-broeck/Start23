@@ -1,0 +1,362 @@
+[
+  {
+    "case": "A:admin_create",
+    "http_status": 200
+  },
+  {
+    "case": "B:admin_create",
+    "http_status": 200
+  },
+  {
+    "case": "A:password_login",
+    "http_status": 200
+  },
+  {
+    "case": "A:password_login",
+    "http_status": 200
+  },
+  {
+    "case": "A:password_login",
+    "http_status": 200
+  },
+  {
+    "case": "A:local_clock_wait_until_iat",
+    "seconds": 0.891
+  },
+  {
+    "case": "A:real_JWKS_ES256_issuer_audience",
+    "status": "PASS"
+  },
+  {
+    "case": "A:auth_user",
+    "http_status": 200
+  },
+  {
+    "case": "A:opaque_mapping",
+    "http_status": 200
+  },
+  {
+    "case": "B:password_login",
+    "http_status": 200
+  },
+  {
+    "case": "B:local_clock_wait_until_iat",
+    "seconds": 0.366
+  },
+  {
+    "case": "B:real_JWKS_ES256_issuer_audience",
+    "status": "PASS"
+  },
+  {
+    "case": "B:auth_user",
+    "http_status": 200
+  },
+  {
+    "case": "B:opaque_mapping",
+    "http_status": 200
+  },
+  {
+    "case": "A:wrong_issuer",
+    "status": "PASS",
+    "scope": "local_verifier_real_issued_token"
+  },
+  {
+    "case": "A:wrong_audience",
+    "status": "PASS",
+    "scope": "local_verifier_real_issued_token"
+  },
+  {
+    "case": "A:wrong_key",
+    "status": "PASS",
+    "scope": "local_verifier_real_issued_token"
+  },
+  {
+    "case": "A:tampered_token",
+    "http_status": 403
+  },
+  {
+    "case": "A:refresh",
+    "http_status": 200
+  },
+  {
+    "case": "A:refreshed_user",
+    "http_status": 200
+  },
+  {
+    "case": "A:missing_api_key",
+    "http_status": 401
+  },
+  {
+    "case": "A:invalid_api_key",
+    "http_status": 401
+  },
+  {
+    "case": "A:publishable_without_user",
+    "http_status": 401
+  },
+  {
+    "case": "A:missing_access_token",
+    "http_status": 401
+  },
+  {
+    "case": "B:wrong_issuer",
+    "status": "PASS",
+    "scope": "local_verifier_real_issued_token"
+  },
+  {
+    "case": "B:wrong_audience",
+    "status": "PASS",
+    "scope": "local_verifier_real_issued_token"
+  },
+  {
+    "case": "B:wrong_key",
+    "status": "PASS",
+    "scope": "local_verifier_real_issued_token"
+  },
+  {
+    "case": "B:tampered_token",
+    "http_status": 403
+  },
+  {
+    "case": "B:refresh",
+    "http_status": 200
+  },
+  {
+    "case": "B:refreshed_user",
+    "http_status": 200
+  },
+  {
+    "case": "B:missing_api_key",
+    "http_status": 401
+  },
+  {
+    "case": "B:invalid_api_key",
+    "http_status": 401
+  },
+  {
+    "case": "B:publishable_without_user",
+    "http_status": 401
+  },
+  {
+    "case": "B:missing_access_token",
+    "http_status": 401
+  },
+  {
+    "case": "A:gateway_foreign_weekly_plans",
+    "http_status": 200
+  },
+  {
+    "case": "A:gateway_foreign_athlete_physiology_profiles",
+    "http_status": 200
+  },
+  {
+    "case": "A:private_schema_gateway_denial",
+    "http_status": 406
+  },
+  {
+    "case": "A:athlete_cannot_call_service_generation",
+    "http_status": 403
+  },
+  {
+    "case": "A:athlete_cannot_use_auth_admin",
+    "http_status": 403
+  },
+  {
+    "case": "B:gateway_foreign_weekly_plans",
+    "http_status": 200
+  },
+  {
+    "case": "B:gateway_foreign_athlete_physiology_profiles",
+    "http_status": 200
+  },
+  {
+    "case": "B:private_schema_gateway_denial",
+    "http_status": 406
+  },
+  {
+    "case": "B:athlete_cannot_call_service_generation",
+    "http_status": 403
+  },
+  {
+    "case": "B:athlete_cannot_use_auth_admin",
+    "http_status": 403
+  },
+  {
+    "case": "A:global_logout",
+    "http_status": 204
+  },
+  {
+    "case": "A:revoked_refresh",
+    "http_status": 400
+  },
+  {
+    "case": "A:residual_access_auth",
+    "http_status": 403
+  },
+  {
+    "case": "A:residual_access_data_api",
+    "http_status": 200
+  },
+  {
+    "case": "B:global_logout",
+    "http_status": 204
+  },
+  {
+    "case": "B:revoked_refresh",
+    "http_status": 400
+  },
+  {
+    "case": "B:residual_access_auth",
+    "http_status": 403
+  },
+  {
+    "case": "B:residual_access_data_api",
+    "http_status": 200
+  },
+  {
+    "case": "A:password_login",
+    "http_status": 200
+  },
+  {
+    "case": "A:local_clock_wait_until_iat",
+    "seconds": 0.631
+  },
+  {
+    "case": "A:real_JWKS_ES256_issuer_audience",
+    "status": "PASS"
+  },
+  {
+    "case": "A:auth_user",
+    "http_status": 200
+  },
+  {
+    "case": "A:opaque_mapping",
+    "http_status": 200
+  },
+  {
+    "case": "B:password_login",
+    "http_status": 200
+  },
+  {
+    "case": "B:local_clock_wait_until_iat",
+    "seconds": 0.329
+  },
+  {
+    "case": "B:real_JWKS_ES256_issuer_audience",
+    "status": "PASS"
+  },
+  {
+    "case": "B:auth_user",
+    "http_status": 200
+  },
+  {
+    "case": "B:opaque_mapping",
+    "http_status": 200
+  },
+  {
+    "case": "A:global_logout",
+    "http_status": 204
+  },
+  {
+    "case": "A:revoked_refresh",
+    "http_status": 400
+  },
+  {
+    "case": "A:residual_access_auth",
+    "http_status": 403
+  },
+  {
+    "case": "A:residual_access_data_api",
+    "http_status": 200
+  },
+  {
+    "case": "B:global_logout",
+    "http_status": 204
+  },
+  {
+    "case": "B:revoked_refresh",
+    "http_status": 400
+  },
+  {
+    "case": "B:residual_access_auth",
+    "http_status": 403
+  },
+  {
+    "case": "B:residual_access_data_api",
+    "http_status": 200
+  },
+  {
+    "case": "A:cleanup_verify_identity",
+    "http_status": 200
+  },
+  {
+    "case": "A:cleanup_shape_review",
+    "http_status": 200
+  },
+  {
+    "case": "B:cleanup_shape_review",
+    "http_status": 200
+  },
+  {
+    "case": "A:cleanup_canonical_email_review",
+    "http_status": 200
+  },
+  {
+    "case": "B:cleanup_canonical_email_review",
+    "http_status": 200
+  },
+  {
+    "case": "A:cleanup_verify_identity",
+    "http_status": 200
+  },
+  {
+    "case": "A:delete_exact_test_user",
+    "http_status": 200
+  },
+  {
+    "case": "A:deleted_user_absent",
+    "http_status": 404
+  },
+  {
+    "case": "B:cleanup_verify_identity",
+    "http_status": 200
+  },
+  {
+    "case": "B:delete_exact_test_user",
+    "http_status": 200
+  },
+  {
+    "case": "B:deleted_user_absent",
+    "http_status": 404
+  },
+  {
+    "case": "A:genuine_expired_gateway_token",
+    "http_status": 401
+  },
+  {
+    "case": "A:genuine_expiry_unchanged_verifier",
+    "clock_or_token_patched": false,
+    "status": "PASS"
+  },
+  {
+    "case": "B:genuine_expired_gateway_token",
+    "http_status": 500
+  },
+  {
+    "case": "A:expiry_response_review",
+    "http_status": 401
+  },
+  {
+    "case": "B:expiry_response_review",
+    "http_status": 401
+  },
+  {
+    "case": "B:genuine_expired_gateway_token",
+    "http_status": 401
+  },
+  {
+    "case": "B:genuine_expiry_unchanged_verifier",
+    "clock_or_token_patched": false,
+    "status": "PASS"
+  }
+]

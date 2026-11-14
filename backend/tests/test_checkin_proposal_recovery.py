@@ -22,6 +22,7 @@ from app.modules.checkins.repository import (
 )
 from app.modules.checkins.service import CheckInService
 from app.modules.coach.context import DisabledCheckInContextCoach
+from app.modules.planning.domain import PlanningConstraintError
 from app.modules.planning.repository import PlanningRepositoryUnavailableError
 from app.modules.planning.schemas import WeeklyPlanProposalResponse
 from app.modules.planning.service import PlanningService
@@ -356,3 +357,68 @@ def test_invalid_persisted_projection_never_exposes_raw_payload(
     assert "do not disclose" not in response.text
     assert "private_internal" not in response.text
     repository.fetch_planning_context.assert_not_awaited()
+
+
+@pytest.mark.parametrize(
+    "failure,details",
+    [
+        (
+            PlanningConstraintError(
+                "v6_search_incomplete",
+                "The bounded selection search did not complete; no optimum is claimed.",
+            ),
+            {"planning_code": "v6_search_incomplete"},
+        ),
+        (PlanningConstraintError("v6_selection_invalid", "No selection."), None),
+        (ValueError("Invalid context."), None),
+    ],
+)
+def test_planning_failure_preserves_a5_envelope_and_writes_nothing(
+    planning_client: TestClient,
+    failure: ValueError,
+    details: dict[str, str] | None,
+) -> None:
+    from unittest.mock import patch
+
+    app = cast(FastAPI, planning_client.app)
+    repository = AsyncMock()
+    repository.fetch_attached_proposal.return_value = None
+    repository.fetch_planning_context.return_value = {
+        "week_start": "2026-08-03",
+        "timezone": "Europe/Amsterdam",
+        "confirmed_context": {"restrictions": []},
+    }
+    app.state.checkin_repository = repository
+    with patch.object(
+        PlanningService, "generate_checkin_proposal", side_effect=failure
+    ):
+        response = planning_client.post(
+            f"/api/v1/checkins/{uuid4()}/plan-proposals",
+            headers={"Authorization": "Bearer athlete-a"},
+        )
+    assert response.status_code == 422
+    error = response.json()["error"]
+    assert error["code"] == "validation_failed"
+    assert error["message"] == str(failure)
+    assert error["details"] == details
+    assert error["request_id"] == response.headers["X-Request-ID"]
+    assert app.state.planning_repository._plans == {}
+    repository.attach_plan_proposal.assert_not_awaited()
+
+
+def test_committed_a5_replay_does_not_enter_incomplete_search(
+    planning_client: TestClient,
+) -> None:
+    expected = _create_proposal(planning_client)
+    repository = AsyncMock()
+    repository.fetch_attached_proposal.return_value = expected
+    planner = AsyncMock()
+    planner.generate_checkin_proposal.side_effect = PlanningConstraintError(
+        "v6_search_incomplete", "Must not run after an original receipt exists."
+    )
+    service = CheckInService(repository, planner, DisabledCheckInContextCoach())
+    result = asyncio.run(service.generate_plan_proposal("athlete-a", uuid4(), uuid4()))
+    assert result.model_dump(mode="json") == expected
+    planner.generate_checkin_proposal.assert_not_awaited()
+    repository.fetch_planning_context.assert_not_awaited()
+    repository.attach_plan_proposal.assert_not_awaited()

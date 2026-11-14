@@ -1,0 +1,121 @@
+{
+  "date": "2026-11-14",
+  "timezone": "Europe/Amsterdam",
+  "base_sha": "980e015b5e6546e1259c8585c3ca42c271add9f5",
+  "branch": "verify/joren-v6-hosted-supabase-auth",
+  "completion": "WOMBO HOSTED AUTHENTICATION VERIFIED \u2014 V6 INTEGRATION GATES REMAIN",
+  "versions": {
+    "python": "3.10.10",
+    "node": "24.18.0",
+    "npm": "11.16.0",
+    "fastapi": "0.139.2",
+    "httpx": "0.28.1",
+    "PyJWT": "2.13.0",
+    "pydantic": "2.13.4",
+    "pydantic-settings": "2.14.2",
+    "pytest": "8.4.2",
+    "ruff": "0.16.0",
+    "mypy": "1.20.2",
+    "tzdata": "2026.3",
+    "typescript": "6.0.3",
+    "jest": "29.7.0",
+    "expo": "57.0.24",
+    "react_native": "0.86.3",
+    "supabase_js": "2.110.8",
+    "hosted_postgresql": "17.6",
+    "hosted_gotrue": "v2.197.0",
+    "supabase_cli": "2.76.8",
+    "managed_gateway_postgrest": "version not exposed/independently established"
+  },
+  "pytest": {
+    "passed": 2891,
+    "warnings": 1,
+    "seconds": 354.77,
+    "failed": 0
+  },
+  "final_hosted_runner_guard_tests": {
+    "passed": 11,
+    "seconds": 1.73,
+    "network": false
+  },
+  "jest": {
+    "passed": 935,
+    "suites": 89,
+    "failed": 0,
+    "seconds": 159.314
+  },
+  "ruff": "PASS",
+  "format": "PASS; 245 files formatted",
+  "strict_mypy": "PASS; 223 app/test/benchmark files and 4 explicit-package-base scripts",
+  "typescript_strict_and_no_unused": "PASS",
+  "historical": {
+    "cases": 40,
+    "bound_seconds": 8,
+    "input_diffs": [],
+    "result_diffs": [],
+    "independent_diffs": [],
+    "reference_diffs": [],
+    "accepted_reference_count": 26,
+    "timeouts": [
+      "current:build_4"
+    ]
+  },
+  "oracle": {
+    "contexts": 15,
+    "products_visited": 20061679,
+    "all_complete": true,
+    "differences_excluding_timing": []
+  },
+  "source_custody": {
+    "migration_count": 63,
+    "pgtap_suite_count": 37,
+    "migration_bytes_equal_to_preflight": true,
+    "supabase_planner_benchmarks_unchanged_from_base": true
+  },
+  "real_gotrue_accounts_created": 2,
+  "real_accounts_deleted": 2,
+  "real_gotrue_auth_case_count_including_intermediate_attempts": 88,
+  "local_backend_hosted_case_count_including_intermediate_attempts": 107,
+  "genuine_expiry_verified": true,
+  "successful_v6_specific_cases": 0,
+  "v6_gate": "BLOCKED: 16 missing migrations; production V6 disabled",
+  "historical_only_limits": [
+    "A5 recovery RPC missing",
+    "frequency RPC missing",
+    "legacy move replaces physical workout IDs",
+    "foreign swipe draft tested only B-to-A"
+  ],
+  "legacy_move_activity_evidence": {
+    "A": {
+      "activity_evidence_equal": true,
+      "physical_locator_in_active_plan": false
+    },
+    "B": {
+      "activity_evidence_equal": true,
+      "physical_locator_in_active_plan": false
+    }
+  },
+  "two_concurrent_owner_reads": "PASS; two ordinary reads once, no load test",
+  "concurrent_authorization_mutations": "NOT EXECUTED: missing schema and no designated actual reviewer; no aggressive production concurrency",
+  "hosted_pgtap_sql_fixtures": "NOT EXECUTED; prohibited",
+  "historical_local_pgtap": "722 assertions / 37 suites with existing A5 fixture overlay; original fixture 8 pass, 1 fail, 20 not executed; not new hosted evidence",
+  "a5_fix": "additive local 422/validation_failed details.planning_code; NOT DEPLOYED",
+  "schema_auth_config_metadata_unchanged": true,
+  "push_deploy_migrate_catalog_activation": false,
+  "real_reviewers_or_individual_maxima_created": 0,
+  "private_manifest": "owner/SYSTEM ACL; ignored; exact identities not committed",
+  "protected_worktrees": {
+    "wombo-a5-a6-min-backend": {
+      "head": "e2d450be4a1d5ec3d65037bd6901f2f03d6b14e6",
+      "status": "clean; unchanged"
+    },
+    "wombo-a5-a6-release": {
+      "head": "cd3e2dd438031cfb565858d0a5929e9963f7b31f",
+      "status": "clean; unchanged"
+    },
+    "joren-v6-real-supabase-auth": {
+      "head": "980e015b5e6546e1259c8585c3ca42c271add9f5",
+      "status": "clean; unchanged"
+    }
+  }
+}

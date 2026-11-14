@@ -121,6 +121,14 @@ Implemented error envelope:
 Error details must not contain TSS, credentials, raw provider payloads, or
 another athlete's identifiers.
 
+For an A5 check-in planning search that reaches the existing V6 resource limit,
+HTTP 422, `error.code=validation_failed` and the existing bounded-search message
+remain unchanged. The existing optional details map carries only
+`planning_code=v6_search_incomplete`. Clients may ignore this additive field.
+The mobile client allowlists that value for qualitative copy while preserving
+the original status/code, rejected outcome and no automatic retry. Other A5
+validation errors and the ordinary planning route's structured 409 are unchanged.
+
 Proposed status-code conventions:
 
 | Code | Meaning |

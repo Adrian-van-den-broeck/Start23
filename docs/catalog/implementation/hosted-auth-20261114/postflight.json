@@ -1,0 +1,27 @@
+{
+  "metadata_unchanged": {
+    "server": true,
+    "migrations": true,
+    "extensions": true,
+    "relations": true,
+    "triggers": true,
+    "policies": true,
+    "grants": true,
+    "rpcs": true,
+    "side_effect_relations": true,
+    "signup_function": true,
+    "foreign_keys": true,
+    "network_functions": true
+  },
+  "full_auth_configuration_unchanged": true,
+  "auth_configuration_sha256": "77497a8081e72ba468ae7edfc297a9c18d689aa335437cb14e255f11a4b7f0dc",
+  "health": {
+    "status": 200,
+    "body": {
+      "version": "v2.197.0",
+      "name": "GoTrue",
+      "description": "GoTrue is a user registration and authentication API"
+    }
+  },
+  "project_status": "ACTIVE_HEALTHY"
+}

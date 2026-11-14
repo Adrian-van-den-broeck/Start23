@@ -1,0 +1,16 @@
+{
+  ".gitattributes": "ed4da5decd3e484388346f63b3c8b9373496cb51bb3940b05da12c134a659e59",
+  "auth-results.json": "1f9a5008ee564276733b203d1117ca17d6eca42618f263ecd84ef700bd6bf671",
+  "cleanup.json": "980fa9170448b477b1a600b00bdff0ca5befaaf0ef191bd4772b004bbab2a69c",
+  "historical-comparison.json": "29af1381a7e877759ac7e24ed190f3a47c46afaaa8f74463afbadd3eb7d9b96d",
+  "historical.json": "4c245e61a744d1fafee67969beef2655d123a3ce97b12c08e4a6a05b3c768a89",
+  "history/JOREN_V6_REMAINING_RELEASE_GATES_NL_980e015.md": "2d40fbf62baae302c7f51396215bd16eb7de7b4dc70de792608b0dd73848a660",
+  "lifecycle-results.json": "850e4c338e0a2b765a77d15eb9cda65a170c23fc90fe29f2d7ad724650f0377a",
+  "oracle-comparison.json": "abde693e92a0d4e0e0e509272feece26dc805a130e9deed98ac412f7e9f2e9b2",
+  "oracle.json": "59b162f38fee4b081bd8b507449680e677f428a82f9488de1deb9440b725654c",
+  "postflight.json": "6a5af2cce1a3faa6904cc8c9991c58c938d5a7b7cd2bdbb6a13a902a7b05426d",
+  "preflight.json": "58af6c9945fcddb84ff990f875c05fe4b64de9442e12c4bd5e0f602f2bdf0ebb",
+  "README.md": "d03db4220801429f4deb6231ebc2a94b460869b5b774c0934151ade1d2a91e4e",
+  "source-custody.json": "571b31193327d0e703e494f6b17d2069eb2a216a636a0b9633c1b6d4ef4de8af",
+  "verification.json": "9f2a2fb62aedd8682963f48f35164690ae8b58fa3243b20ac40d1acfee239aa5"
+}

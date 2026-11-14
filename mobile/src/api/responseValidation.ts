@@ -146,12 +146,14 @@ export const activityListResponse = (value: unknown): boolean => array(value, ac
 
 // Error bodies are untrusted too. Retain only safe codes and field locations;
 // never copy arbitrary server messages or values into a public exception.
-export function errorEnvelope(value: unknown): { error?: { code?: string; details?: { violations?: Array<{ location?: string[]; type?: string }> } } } {
+export function errorEnvelope(value: unknown): { error?: { code?: string; details?: { planning_code?: 'v6_search_incomplete'; violations?: Array<{ location?: string[]; type?: string }> } } } {
   if (!object(value) || !object(value.error)) return {};
   const code = typeof value.error.code === 'string' && /^[a-z][a-z0-9_]{0,99}$/.test(value.error.code) ? value.error.code : undefined;
   const details = value.error.details;
   const violations = object(details) && Array.isArray(details.violations) ? details.violations.filter(object).map(item => ({
     location: Array.isArray(item.location) ? item.location.filter(text) : [], type: text(item.type) ? item.type : undefined,
   })) : [];
-  return { error: { code, details: { violations } } };
+  const planning = code === 'validation_failed' && object(details) && details.planning_code === 'v6_search_incomplete'
+    ? { planning_code: 'v6_search_incomplete' as const } : {};
+  return { error: { code, details: { violations, ...planning } } };
 }

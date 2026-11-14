@@ -1,0 +1,12 @@
+{
+  "cases": 40,
+  "bound_seconds": 8,
+  "input_diffs": [],
+  "result_diffs": [],
+  "independent_diffs": [],
+  "reference_diffs": [],
+  "accepted_reference_count": 26,
+  "timeouts": [
+    "current:build_4"
+  ]
+}

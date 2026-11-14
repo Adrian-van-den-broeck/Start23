@@ -1,0 +1,6 @@
+{
+  "migration_count": 63,
+  "pgtap_suite_count": 37,
+  "migration_bytes_equal_to_preflight": true,
+  "supabase_planner_benchmarks_unchanged_from_base": true
+}

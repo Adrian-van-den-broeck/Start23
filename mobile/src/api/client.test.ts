@@ -58,6 +58,21 @@ test('an exhaustively infeasible selection does not claim an incomplete search',
   expect(fetchMock).toHaveBeenCalledTimes(1);
 });
 
+test('A5 additive incomplete discriminator keeps the legacy rejection contract and never retries', async () => {
+  const { client, fetchMock } = loadClient();
+  fetchMock.mockResolvedValueOnce(response(422, { error: {
+    code: 'validation_failed', message: 'private diagnostic must never be shown',
+    details: { planning_code: 'v6_search_incomplete', frozen_context: 'private' },
+  } }));
+  const error = await client.createCheckInPlanProposal('athlete-token', 'checkin-a').catch(e => e);
+  expect(error).toMatchObject({ status: 422, code: 'validation_failed', outcome: 'rejected',
+    message: 'Het weekvoorstel kon niet volledig worden berekend. Er is geen nieuw voorstel opgeslagen. Pas je voorkeur aan of vraag ondersteuning.',
+    retryable: false,
+  });
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+  expect(JSON.stringify(error)).not.toContain('private');
+});
+
 test('A4 check-in generation, explicit approval receipt and exact revision read preserve the public wire contracts', async () => {
   const { client, fetchMock } = loadClient();
   const receipt = { state: 'applied', plan_id: pendingNext.id, active_revision: 1 };

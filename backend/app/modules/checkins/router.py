@@ -15,6 +15,7 @@ from app.core.errors import ErrorResponse
 from app.core.security import AuthenticatedAthlete, AuthenticatedIdentity
 from app.modules.coach.context import CheckInContextCoach
 from app.modules.coach.weekly_plan import WeeklyPlanCoach
+from app.modules.planning.domain import PlanningConstraintError
 from app.modules.planning.execution import PlanningComputationUnavailableError
 from app.modules.planning.repository import PlanningRepository, PlanningRepositoryError
 from app.modules.planning.router import raise_planning_error
@@ -113,6 +114,19 @@ def _raise_public_error(error: Exception) -> NoReturn:
         error, (PlanningRepositoryError, PlanningComputationUnavailableError)
     ):
         raise_planning_error(error)
+    if (
+        isinstance(error, PlanningConstraintError)
+        and error.code == "v6_search_incomplete"
+    ):
+        # Preserve the A5 status/code while exposing only this safe discriminator.
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail={
+                "code": "validation_failed",
+                "message": str(error),
+                "details": {"planning_code": "v6_search_incomplete"},
+            },
+        ) from error
     if isinstance(error, (CheckInDomainError, ValueError)):
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,

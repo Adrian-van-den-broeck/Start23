@@ -73,6 +73,7 @@ type ErrorEnvelope = {
     code?: string;
     message?: string;
     details?: {
+      planning_code?: 'v6_search_incomplete';
       violations?: Array<{
         location?: string[];
         type?: string;
@@ -223,6 +224,7 @@ export async function request<T>(
         const body = validate.errorEnvelope(await response.json().catch(() => null));
         const message =
           validationMessage(body) ??
+          deterministicErrorMessage(body.error?.details?.planning_code) ??
           deterministicErrorMessage(body.error?.code) ??
           (response.status === 401
             ? 'Je sessie is verlopen. Meld je opnieuw aan.'
