@@ -1,0 +1,13 @@
+{
+  "cases": 40,
+  "input_diffs": [],
+  "outcome_diffs": [],
+  "independent_diffs": [],
+  "accepted_reference_completions": 26,
+  "reference_diffs": [],
+  "timeouts": [
+    "current:build_4"
+  ],
+  "bound_seconds": 8,
+  "accepted_regression_sha256": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341"
+}

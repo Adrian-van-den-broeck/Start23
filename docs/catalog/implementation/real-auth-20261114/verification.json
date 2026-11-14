@@ -1,0 +1,129 @@
+{
+  "date_local": "2026-11-14",
+  "timezone": "Europe/Amsterdam",
+  "base_sha": "dbeb9596f42f0504e428afbf5eddc75eaa7d20da",
+  "branch": "verify/joren-v6-real-supabase-auth",
+  "completion": "WOMBO V6 AUTHENTICATION VERIFICATION BLOCKED ? EXACT ENVIRONMENT REQUIREMENTS DOCUMENTED",
+  "gotrue_accounts": 0,
+  "gotrue_sessions": 0,
+  "gateway_requests": 0,
+  "direct_signed_token_postgrest_tests_this_task": 0,
+  "host": "Windows-10-10.0.19045-SP0",
+  "versions": {
+    "python": "3.10.10",
+    "node": "24.18.0",
+    "npm": "11.16.0",
+    "fastapi": "0.139.2",
+    "httpx": "0.28.1",
+    "PyJWT": "2.13.0",
+    "pydantic": "2.13.4",
+    "pydantic-settings": "2.14.2",
+    "pytest": "8.4.2",
+    "ruff": "0.16.0",
+    "mypy": "1.20.2",
+    "tzdata": "2026.3",
+    "postgresql": "17.11",
+    "pgtap": "1.3.4",
+    "portable_postgrest_version_inspected_only": "16.5",
+    "typescript": "6.0.3",
+    "jest": "29.7.0",
+    "expo": "57.0.24",
+    "react_native": "0.86.3",
+    "supabase_js": "2.110.8"
+  },
+  "supabase_cli_gotrue_gateway_versions": "NOT AVAILABLE / NOT TESTED",
+  "pytest": {
+    "passed": 2876,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 1,
+    "seconds": 301.16,
+    "exit_code": 0
+  },
+  "jest": {
+    "passed": 929,
+    "suites": 88,
+    "failed": 0,
+    "pending": 0,
+    "todo": 0,
+    "seconds_reported": 173.533,
+    "exit_code": 0
+  },
+  "ruff": "PASS",
+  "format": {
+    "status": "PASS",
+    "files": 240
+  },
+  "strict_mypy": {
+    "status": "PASS",
+    "app_tests_benchmarks_files": 222,
+    "verification_script_files": 4
+  },
+  "typescript": "PASS",
+  "unused_typescript": "PASS",
+  "local_sql": {
+    "classification": "stock PostgreSQL plus documented Supabase SQL subset bootstrap; NOT actual Supabase",
+    "migrations": 63,
+    "suites": 37,
+    "assertions": 722,
+    "skipped_assertions": 0,
+    "all_tap_plans_complete": true,
+    "a5_overlay": "existing current-onboarding and 32-character input-fingerprint overlay; original SQL unchanged",
+    "original_a5": {
+      "status": "EXECUTED / FAIL",
+      "passed": 8,
+      "failed": 1,
+      "not_executed_after_abort": 20
+    },
+    "frequency_concurrency_groups": 9,
+    "real_reviewers": 0,
+    "real_individual_decisions": 0,
+    "active_v6": 0,
+    "v6_revisions": 77,
+    "historical_templates_preserved": 325,
+    "historical_load_rows_preserved": 325,
+    "cluster_stopped": true
+  },
+  "historical": {
+    "cases": 40,
+    "input_diffs": [],
+    "outcome_diffs": [],
+    "independent_diffs": [],
+    "accepted_reference_completions": 26,
+    "reference_diffs": [],
+    "timeouts": [
+      "current:build_4"
+    ],
+    "bound_seconds": 8,
+    "accepted_regression_sha256": "3235d89bdbd1b02dd985c79fed514f47232ad6efe5721c206d241f41ee2d0341"
+  },
+  "a5_normalization": "reviewed; additive details.planning_code proposal documented; NOT IMPLEMENTED because compatibility and real-runtime replay gate unverified",
+  "production_dependency_changed": false,
+  "protected_worktrees_modified": false,
+  "hosted_access_push_deploy_activate": false,
+  "private_log_sha256": {
+    "historical.txt": "170604477ff6a18e4f88b68d2489811356847220037e5b9ad0f8efe3f97a6de5",
+    "initdb.txt": "9ab01c9da83e188949223e9a7089663748b20cbd26b87704635d3ed861e49464",
+    "jest.txt": "112df847677613b33d2646cf2535f6b25e872d1560173153e550bd0fc84721cc",
+    "npm-ci.txt": "208353c0a3f467acb3b0daabcfdbde966b32f5cd7e272dab41b6137b568672f3",
+    "pg-start-error.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pg-start.txt": "46038efb813fbca18a92272496901190638dea3f97b51f7af0daa1ca2eb13818",
+    "policy.txt": "5a3bc541b9fbe20d83619c0bfe05af0b46cc2d15ca092e58f5648d12e523d1a4",
+    "pytest.txt": "1e69a1b906efbbdbcab44f97923cd1d1fb24f8ec509a64d885d2c6fb2832a0bc",
+    "sql.txt": "0efff5959a2d1cf46f59461579137d2cd5ca42fe11939dc08508425ca12217a3"
+  },
+  "artifact_sha256": {
+    "docs/catalog/implementation/real-auth-20261114/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "docs/catalog/implementation/real-auth-20261114/a5-final-original.json": "78a561d4d27bd1e8e9d8c81436e76ae3cbd4eea3ca043bc4453d48a7ba72e73b",
+    "docs/catalog/implementation/real-auth-20261114/catalog-preservation.json": "d710060bbb4213185e9771b99c7ba77c2fc32b939be330873ab83fc3e4d29a2b",
+    "docs/catalog/implementation/real-auth-20261114/historical-comparison.json": "52317aa6d2cf13da1a0959fe0f21885cae5233a39222008a1d91ee34ea7de389",
+    "docs/catalog/implementation/real-auth-20261114/historical.json": "4141b848e1bddb4c5871253310ce7e59efa38a600d5ef091e0f3cf5e0ff45260",
+    "docs/catalog/implementation/real-auth-20261114/history/JOREN_V6_REMAINING_RELEASE_GATES_NL_dbeb959.md": "41779cc0d19158395fb1fb4c25fdbbe360e558a9048daddede08b8e08270a40e",
+    "docs/catalog/implementation/real-auth-20261114/migration-ledger.json": "ba27810b977c98cd164eb668cc3fc7c7e79dc668b9e11bed0940c169ee8923c4",
+    "docs/catalog/implementation/real-auth-20261114/pgtap-results.json": "e8bb94d8128d769185929a4e80dfacf3b0032a4064f6e121e011234e87e0bd9a",
+    "docs/catalog/implementation/real-auth-20261114/server.json": "f7021ad17bad64053bf9f9ffa44ca0675f94c4e1d9ad516916e049ddd2cfd8e5",
+    "docs/catalog/implementation/real-auth-20261114/source-custody.json": "375de3e343afbb4989e8b4d9dfadc56c26363e967c484df9c53c12332b901919",
+    "docs/catalog/implementation/real-auth-20261114/sql-concurrency-summary.json": "a883d59cbcc2a82e190b976dea178c9dd41cce0853afcd33d95284ec98dace98",
+    "docs/catalog/implementation/real-auth-20261114/sql-permissions.json": "9cb16b39189164d40c3db2f63e744095437eb6da1ea316d925726e26dbbda01f"
+  }
+}

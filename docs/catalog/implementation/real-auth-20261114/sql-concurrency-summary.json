@@ -1,0 +1,18 @@
+{
+  "classification": "SQL role/JWT-GUC and injected ASGI identity; no GoTrue/gateway",
+  "status": "PASS",
+  "groups": [
+    "durable owner preference; no enrolled operator or issued maximum",
+    "suspension during generation prevents plan/snapshot/attachment writes",
+    "lost acknowledgement replays original A5 receipt after suspension; new confirmation denied",
+    "concurrent replacement rejects late commit; immutable attachment preserved",
+    "concurrent suspension rejects late swipe without accepting a card",
+    "final approval revalidates current frequency revisions; preference confirmation never restores authority",
+    "overlapping A5 attachment and suspension serialize; receipt is preserved and subsequent activation is denied",
+    "swipe submit atomically rolls back or commits its original locator; lost acknowledgement recovers after suspension without new generation",
+    "SQL-backed zero preference creates no new sessions; null restores the default request only"
+  ],
+  "fresh_process_reload": "PASS",
+  "real_reviewers_created": 0,
+  "individual_maxima_issued": 0
+}

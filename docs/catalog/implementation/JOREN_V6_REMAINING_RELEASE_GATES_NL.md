@@ -1,61 +1,74 @@
-# V6: resterende onafhankelijke releasevoorwaarden
+# V6: resterende releasevoorwaarden na Auth-omgevingscontrole
 
-14 november 2026, Europe/Amsterdam. Zoekoptimalisatiebranch
-`perf/joren-v6-exact-multi-session-search`, exact uitgangspunt
-`e85cbaa8b5e702c283186fc61fcadda74ad36faf`. Implementatie-SHA en bewijshashes
-staan in [het verificatieregister](search-optimization/verification.json).
+14 november 2026, Europe/Amsterdam. Geisoleerde branch
+`verify/joren-v6-real-supabase-auth`, vanaf exact
+`dbeb9596f42f0504e428afbf5eddc75eaa7d20da`.
 
-De drie bekende onvolledige zoekcontexten zijn nu exact opgelost onder de
-bestaande limiet. Alle 15 oorspronkelijke synthetische contexten zijn volledig
-gecontroleerd met een afzonderlijke exhaustive referentie die geen nieuwe
-zoekgrenzen hergebruikt. Dit sluit de aangetoonde technische fout voor die
-contexten; het geeft geen algemene garantie voor iedere frequentie of latency.
+**WOMBO V6 AUTHENTICATION VERIFICATION BLOCKED ? EXACT ENVIRONMENT REQUIREMENTS DOCUMENTED**
 
-V6 blijft buiten de productiedependency. Alle 77 revisies blijven INACTIVE.
-Het historische standaardalgoritme, de fysiologische regels, gegevenshistorie,
-frequentieautorisatie en afzonderlijke atleetbevestiging zijn ongewijzigd.
-Er is geen push, merge, hosted migratie, staging-/productieverbinding, deployment
-of activatie uitgevoerd.
+Er zijn nul echte GoTrue-accounts/sessies en nul Supabase-gatewayverzoeken
+uitgevoerd. Docker/Podman en een WSL-distributie ontbreken; een ondersteunde
+complete lokale stack is niet beschikbaar. De beschikbare portable Windows
+PostgreSQL en PostgREST sluiten deze poort niet. De
+[omgevingsvereisten en herhaalstappen](JOREN_V6_REAL_AUTH_ENVIRONMENT.md) benoemen
+het benodigde, door de eigenaar toegestane wegwerp-Linux-/containermilieu,
+GoTrue ES256/JWKS, gateway, moderne API-sleutels en volledige Supabase-schema's.
+Er is geen systeemsoftware geinstalleerd of hosted alternatief gebruikt.
 
-Het gemelde akkoord op alle vijf frequentievragen blijft vastgelegd in de
-[goedkeuringsopvolger](../decisions/JOREN_V6_REAL_ATHLETE_FREQUENCY_APPROVAL.md).
-Die beleidsbesluiten worden niet heropend. De voorgaande releasevoorwaarden zijn
-[bytegelijk gearchiveerd](search-optimization/history/JOREN_V6_REMAINING_RELEASE_GATES_NL_e85cbaa.md).
+Het [vorige releaseregister](real-auth-20261114/history/JOREN_V6_REMAINING_RELEASE_GATES_NL_dbeb959.md)
+is bytegelijk bewaard. De vijf eerder geaccepteerde frequentiebesluiten blijven
+van kracht; zij vormen geen reviewerbenoeming of individuele numerieke machtiging.
 
-| Open poort | Benodigd bewijs of besluit |
+## Nieuw uitgevoerd, met beperkte bewijskracht
+
+- Backend: **2.876 tests geslaagd**, een bestaande deprecatiewaarschuwing.
+- Mobiel: **929 tests in 88 suites geslaagd**; strict TypeScript en unused-checks slagen.
+- Ruff/formatting en strict mypy slagen.
+- Nieuwe eigen lokale PostgreSQL 17.11-cluster: **63 ongewijzigde migraties**;
+  **722 pgTAP-asserties in 37 suites** met volledige TAP-plannen en de bestaande,
+  expliciete A5-fixtureoverlay. De originele A5-fixture is afzonderlijk FAIL:
+  8 geslaagd, 1 mislukt, 20 niet uitgevoerd na afbreken. Geen constraint versoepeld.
+- Reguliere frequentie-/concurrentieproef: **9 SQL/ASGI-groepen slagen**, plus
+  herstel in een nieuw Python-proces; geen echte Auth-identiteit of gateway.
+- **Alle 40 historische gevallen** hebben gelijke invoerfingerprints, uitkomsten
+  en onafhankelijke controles. **Alle 26 geaccepteerde referentieresultaten**
+  blijven exact gelijk. `current:build_4` houdt zijn oorspronkelijke achtseconden-timeout.
+- 325 historische catalogus-/loadrecords blijven gelijk; **77 V6-revisies, nul actief**.
+  Geen reviewer of individueel besluit toegevoegd. Eigen databaseproces gestopt.
+
+Het [verificatieregister](real-auth-20261114/verification.json) bevat exacte
+resultaten, versies, bron-/artefacthashes en de grens tussen deze lokale proeven
+en niet-uitgevoerde volledige-stacktests.
+
+## Open poorten
+
+| Poort | Nog benodigd |
 | --- | --- |
-| Werkelijke reviewer/operator | De daadwerkelijk aangewezen beoordelaar en database-login, met aanwijzings- en bevoegdheidsreferentie. Geen reviewer of bevoegdheid is aangemaakt voor deze optimalisatie. |
-| Individuele numerieke maxima | Een echte beoordeling per atleet, sport, lokale week en bevestigde tijdzone, met gedateerde historie, volledigheid, actuele omstandigheden en reviewreferenties. Een voorkeur, uren, belasting of beschikbaarheid levert geen maximum op. |
-| Positieve operationele uitgifte/intrekking | Het echte interne pad uitvoeren met die werkelijke bevoegdheid en afzonderlijke individuele besluiten. Zonder deze feiten blijft positieve uitgifte onbeschikbaar. TEST_ONLY-voorbeelden sluiten deze poort niet. |
-| Onafhankelijke wetenschappelijke review | Een aantoonbaar bevoegde verantwoordelijke reviewer en extern reviewrecord voor de exacte bron-, methode- en beleidsversies. |
-| Zwemtijd en uitzonderlijke duur | Operationele acceptatie van de bestaande zwem-estimates en het bestaande individuele duur-bewijs waar vereist; geen nieuwe algemene veiligheidsgrenzen. |
-| Planned/Realized-compatibiliteit | Afzonderlijke officiële acceptatie van Planned IF² versus Realized V2-fallback. Meetgegevens houden prioriteit; niet-ondersteunde combinaties blijven geblokkeerd. |
-| Representatieve prestaties en geaccepteerde latency | Beoordeel een privacygoedgekeurde representatieve contextset, doelhardware en expliciete latency-/resourcecriteria. De gemeten lokale verdelingen zijn geen SLA. Het voorstel in het benchmarkrapport vraagt afzonderlijk akkoord en wijzigt geen timeout. |
-| Grotere zoekruimte | 3/3/2 en 4/4/4 voltooien in de extra synthetische meetset; 8/8/8 bereikt nog de bestaande nodegrens tijdens sportenumeratie. Geef nooit een afgekapt voorstel uit. Breder gebruik vraagt verdere exacte optimalisatie of expliciete beoordeling van het ondersteunde rekenbereik. |
-| Gestructureerde A5-foutcode | De bestaande check-inadapter normaliseert een geforceerde rekenlimiet naar 422 `validation_failed`, terwijl domein/worker en de gewone planningsroute `v6_search_incomplete` behouden. De melding benoemt onvolledige berekening en schrijft niets. Beoordeel de bestaande codepariteit voor release; deze optimalisatie wijzigt de adapter niet. |
-| Echte authenticatie/gateway | GoTrue-uitgegeven sessies en volledige Supabase-gatewaytests met twee accounts. Lokale JWT-GUCs en synthetisch ondertekende PostgREST-tokens bewijzen dit niet. |
-| Echte apparaten | Android- en iOS-flows met voorkeur, check-in, meerdere occurrences, pending review, bevestiging, activiteitkoppeling, verplaatsing, herstel en accountwisseling. Mobiele bestanden/contracten zijn hier niet gewijzigd; eerdere Jest/APK-evidence is geen apparaattest. |
-| Hosted migratie en release | Expliciete toestemming, Supabase-/extensie-/grant/RLS-pariteit, advisors en release-repetitie. Alleen eigen wegwerpdatabases op localhost zijn gebruikt. |
-| Catalogusactivatie | Afzonderlijke finale toestemming nadat alle toepasselijke poorten zijn gesloten. Voorkeuren, maxima en deze optimalisatie activeren niets. |
+| Werkelijke GoTrue en gateway | Ondersteunde geautoriseerde omgeving; echte signup/login, ES256/JWKS, issuer/audience/keychecks, API-keyrouting, refresh, werkelijke expiry en logout/revocation. Zie de [Auth-matrix](JOREN_V6_GOTRUE_GATEWAY_VERIFICATION.md). |
+| Twee echte accounts | De volledige aanvalsmatrix in beide richtingen via FastAPI en de echte Data API; ook activiteitkoppeling, receipts, private evidence en concurrentie. Zie [isolatie](JOREN_V6_TWO_ACCOUNT_SECURITY_RESULTS.md). |
+| Authenticated lifecycle | Alle dertien stappen met echte sessies, volledige onboarding, veilige een-per-sportstandaard, pending indiening, aparte bevestiging, kalender, activiteit, verplaatsing, herstel en stale/retry. Zie [lifecycle](JOREN_V6_AUTHENTICATED_LIFECYCLE.md). |
+| Supabase-runtimepariteit | Alle 63 migraties en volledige SQL-suite op de echte Supabase-distributie; extensies, functies, grants, servicebevoegdheden en RLS tegen de gateway controleren. De lokale SQL-subset is onvoldoende. |
+| Historische A5-testfixture | Bekende onboarding-/fingerprintcorrectie afzonderlijk door A5-eigenaar laten accepteren; originele SQL en beschermde worktrees zijn niet gewijzigd. Overlay-PASS is geen ongewijzigde-suite-PASS. |
+| A5-foutnormalisatie | Additief voorstel: bestaande 422/validation_failed behouden, alleen details.planning_code=v6_search_incomplete toevoegen. Compatibiliteit en veiligheids-/replaychecks eerst bewijzen; niet geimplementeerd. |
+| Sessierevocation | Logout maakt bestaande access-JWTs niet vanzelf onmiddellijk ongeldig. Meet refreshweigering en accessvenster apart. De huidige backend controleert geen auth.sessions per verzoek; een eis voor directe invalidatie vraagt een expliciet besluit. |
+| Werkelijke reviewer/operator | Echte aangewezen beoordelaar, database-login en benoemings-/bevoegdheidsreferentie. Er is niemand aangemaakt. |
+| Individuele numerieke maxima | Afzonderlijk werkelijk beoordeeld besluit per atleet, sport, lokale week en tijdzone met historie, volledigheid, actuele context en reviewreferenties. Geen afleiding uit voorkeur/uren/belasting/beschikbaarheid. |
+| Positieve uitgifte/intrekking | Alleen uitvoeren met die echte bevoegdheid en besluiten. Tot die tijd blijft de veilige standaard gelden. |
+| Onafhankelijke wetenschappelijke review | Aantoonbaar bevoegde verantwoordelijke reviewer en extern reviewrecord voor exacte bron-, methode- en beleidsversies. |
+| Zwemtijd/uitzonderlijke duur | Operationele acceptatie van bestaande zwem-estimates en individueel duurbewijs waar vereist; geen verzonnen algemene grenzen. |
+| Planned/Realized | Afzonderlijke acceptatie van Planned IF-squared versus Realized V2-fallback; meetgegevens houden prioriteit, niet-ondersteunde combinaties blokkeren. |
+| Prestaties en groter rekenbereik | Representatieve privacygoedgekeurde contexten, doelhardware en expliciet geaccepteerde latency/resources. Eerdere 8/8/8-context bereikt nog de nodegrens; geen algemene voltooiingsgarantie. |
+| Echte apparaten | Android/iOS met voorkeur, check-in, swipe, pending review, bevestiging, activiteit, verplaatsing, herstel en accountwisseling. Jest is geen apparaattest. |
+| Hosted migratie/release | Afzonderlijke expliciete toestemming, pariteitscontrole, advisors en release-repetitie; niet uitgevoerd. |
+| Catalogusactivatie | Afzonderlijke finale toestemming na alle toepasselijke poorten; alle 77 revisies blijven INACTIVE. |
 
-Het plafond blijft 200.000 gedeelde worknodes en maximaal 24 occurrences.
-Uitputting blijft `v6_search_incomplete`; geen kleinere wens, onbewezen winnaar
-of kunstmatige rustweek vervangt de aanvraag. De oorspronkelijke historische
-corpusgrens blijft acht seconden, met hetzelfde `current:build_4`-timeoutgeval.
+V6 blijft buiten de productiedependency. De limieten blijven **200.000 gedeelde
+worknodes**, **24 occurrences** en de oorspronkelijke historische corpusgrens
+van **acht seconden**. Exacte numerieke methoden en eerlijke
+`v6_search_incomplete` blijven behouden. Geen afgekapt voorstel, kleinere wens,
+onbewezen winnaar of kunstmatige rustweek vervangt een onvolledige berekening.
 
-Alle bestaande TSS-, HIGH-tijd-, fase-, herstel-, blessure-, capability-,
-herhalings- en plaatsingsvoorwaarden blijven gelden. Behouden/voltooide
-occurrences tellen eenmaal, met hun eigen identiteit en datum. Boven een
-aangescherpt maximum volgt een conflict; bewijs wordt niet verwijderd of
-gekloond. Ongeplande/onduidelijk gekoppelde activiteiten blijven uitbreiding
-blokkeren zonder beoordeelde, ondersteunde complete-weekcontext.
-
-De [integratieregressies](JOREN_V6_SEARCH_INTEGRATION_REGRESSIONS.md) onderscheiden
-echte lokale SQL-/worker-/TCP-/herstartproeven van open releasepoorten. De
-bestaande tijdelijke synthetische testrechten zijn na de afzonderlijke proeven
-ingetrokken; het eindaudit vindt nul reviewers, nul besluiten en nul actieve
-V6-revisies. Oorspronkelijke migraties, pgTAP-bronnen, gouden uitkomsten en
-beschermde A5/A6-worktrees zijn ongewijzigd. De bekende A5-fixturecorrectie is
-alleen als expliciete bestaande testoverlay gebruikt.
-
-WOMBO V6 EXACT SEARCH OPTIMIZATION VERIFIED — RELEASE GATES REMAIN
+Er is geen push, hosted migratie, deployment, activatie, fysiologische wijziging,
+historische herinterpretatie of wijziging in beschermde A5/A6-worktrees uitgevoerd.
+Alleen de nieuwe verificatierapporten en geclassificeerde bewijsbestanden zijn
+lokaal gecommit. De echte authenticatiepoort blijft geblokkeerd.

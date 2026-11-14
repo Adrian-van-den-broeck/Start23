@@ -1,0 +1,7 @@
+{
+  "data_directory": "F:/Projecten Business/Start23/Code/.worktrees/joren-v6-real-supabase-auth/.runtime/real-auth/pg-data",
+  "version": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35229, 64-bit",
+  "address": "127.0.0.1",
+  "port": 55564,
+  "major": 17
+}
