@@ -1,0 +1,11 @@
+{
+  "expected_permission_guard_rejected": true,
+  "schema_and_ledger_rolled_back": true,
+  "enrollment_guard_evaluated": true,
+  "final": {
+    "ledger_count": 47,
+    "a5_rpc_absent": true
+  },
+  "local_fixture_fingerprints_substituted": true,
+  "production_execution": false
+}

@@ -1,0 +1,6 @@
+{
+  "port": 55442,
+  "address": "127.0.0.1",
+  "version": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35229, 64-bit",
+  "data_directory": "F:/Projecten Business/Start23/Code/.worktrees/joren-v6-hosted-migration-readiness/.runtime/migration-readiness/pgdata"
+}

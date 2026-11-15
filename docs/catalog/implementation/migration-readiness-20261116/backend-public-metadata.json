@@ -1,0 +1,64 @@
+[
+  {
+    "url": "https://start23-production.up.railway.app",
+    "checks": {
+      "/health": {
+        "status": 200,
+        "body": {
+          "status": "ok",
+          "service": "Start23 API",
+          "version": "0.1.0",
+          "environment": "local"
+        }
+      },
+      "/ready": {
+        "status": 200,
+        "body": {
+          "status": "ready",
+          "service": "Start23 API",
+          "version": "0.1.0",
+          "environment": "local"
+        }
+      },
+      "/openapi.json": {
+        "status": 200,
+        "info": {
+          "title": "Start23 API",
+          "version": "0.1.0"
+        },
+        "path_count": 69
+      }
+    }
+  },
+  {
+    "url": "https://r6-api-r6-staging.up.railway.app",
+    "checks": {
+      "/health": {
+        "status": 200,
+        "body": {
+          "status": "ok",
+          "service": "Start23 API",
+          "version": "0.1.0",
+          "environment": "staging"
+        }
+      },
+      "/ready": {
+        "status": 200,
+        "body": {
+          "status": "ready",
+          "service": "Start23 API",
+          "version": "0.1.0",
+          "environment": "staging"
+        }
+      },
+      "/openapi.json": {
+        "status": 200,
+        "info": {
+          "title": "Start23 API",
+          "version": "0.1.0"
+        },
+        "path_count": 69
+      }
+    }
+  }
+]

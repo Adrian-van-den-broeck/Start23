@@ -1,0 +1,15 @@
+{
+  "cases": 40,
+  "bound_seconds": 8,
+  "diffs": {
+    "result": [],
+    "independent_checks": [],
+    "output_sha256": []
+  },
+  "timeouts": [
+    "current:build_4"
+  ],
+  "accepted_reference_count": 26,
+  "reference_result_diffs": [],
+  "reference_hash_diffs": []
+}

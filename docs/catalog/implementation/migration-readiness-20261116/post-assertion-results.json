@@ -1,0 +1,6 @@
+{
+  "all_boolean_assertions_true": true,
+  "local_synthetic_63_version_ledger": true,
+  "production_execution": false,
+  "remaining_output": "RLS/ACL/function metadata reviewed against local-effective-permissions.json"
+}

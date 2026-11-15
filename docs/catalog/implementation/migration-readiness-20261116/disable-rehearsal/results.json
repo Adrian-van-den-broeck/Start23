@@ -1,0 +1,19 @@
+{
+  "synthetic_only": true,
+  "all_data_hashes_equal": true,
+  "confirmed_public_read_equal": true,
+  "table_count": 64,
+  "denials": {
+    "v6_writer": "42501",
+    "frequency_writer": "42501",
+    "move_writer": "42501",
+    "catalog": "42501",
+    "shared_dispatch_persistence_guard": "PT409"
+  },
+  "old_fixture_scope_limitation": {
+    "shared_A5_writer_stays_executable": true,
+    "old_fixture_leaves_frequency_writer": true
+  },
+  "historical_smokes_pass": true,
+  "actual_backup_restoration": false
+}

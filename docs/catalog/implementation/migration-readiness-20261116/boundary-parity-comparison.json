@@ -1,0 +1,418 @@
+{
+  "source_normalized_md5_differences": [],
+  "security_definer_differences": [],
+  "result_differences": [],
+  "proconfig_differences": [],
+  "acl_differences": [],
+  "policies": {
+    "hosted_only": [],
+    "local_only": []
+  },
+  "ddl": {
+    "hosted_only": [],
+    "local_only": []
+  },
+  "normalization": "PostgREST name[] strings normalized to arrays; function source removes whitespace only",
+  "information_schema_grants_warning": "Hosted Management read-only role sees no role_table_grants rows. Empty result is NOT proof of no grants. Effective pg_catalog privileges below are authoritative.",
+  "effective_table_privilege_differences": [
+    {
+      "key": [
+        "public",
+        "workout_template_zone_requirements",
+        "anon"
+      ],
+      "local": {
+        "acl": "{postgres=arwdDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "name": "workout_template_zone_requirements",
+        "schema": "public",
+        "force_rls": true,
+        "role_name": "anon",
+        "can_delete": false,
+        "can_insert": false,
+        "can_select": false,
+        "can_update": false,
+        "schema_usage": true
+      },
+      "hosted": {
+        "schema": "public",
+        "name": "workout_template_zone_requirements",
+        "acl": "{postgres=arwdDxtm/postgres,service_role=Dxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "force_rls": true,
+        "role_name": "anon",
+        "schema_usage": true,
+        "can_select": false,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    },
+    {
+      "key": [
+        "public",
+        "workout_templates",
+        "service_role"
+      ],
+      "local": {
+        "acl": "{postgres=arwdDxtm/postgres,authenticated=r/postgres,service_role=r/postgres}",
+        "rls": true,
+        "name": "workout_templates",
+        "schema": "public",
+        "force_rls": true,
+        "role_name": "service_role",
+        "can_delete": false,
+        "can_insert": false,
+        "can_select": true,
+        "can_update": false,
+        "schema_usage": true
+      },
+      "hosted": {
+        "schema": "public",
+        "name": "workout_templates",
+        "acl": "{postgres=arwdDxtm/postgres,service_role=rDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "force_rls": true,
+        "role_name": "service_role",
+        "schema_usage": true,
+        "can_select": true,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    },
+    {
+      "key": [
+        "public",
+        "workout_template_phase_tags",
+        "anon"
+      ],
+      "local": {
+        "acl": "{postgres=arwdDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "name": "workout_template_phase_tags",
+        "schema": "public",
+        "force_rls": true,
+        "role_name": "anon",
+        "can_delete": false,
+        "can_insert": false,
+        "can_select": false,
+        "can_update": false,
+        "schema_usage": true
+      },
+      "hosted": {
+        "schema": "public",
+        "name": "workout_template_phase_tags",
+        "acl": "{postgres=arwdDxtm/postgres,service_role=Dxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "force_rls": true,
+        "role_name": "anon",
+        "schema_usage": true,
+        "can_select": false,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    },
+    {
+      "key": [
+        "public",
+        "workout_templates",
+        "authenticated"
+      ],
+      "local": {
+        "acl": "{postgres=arwdDxtm/postgres,authenticated=r/postgres,service_role=r/postgres}",
+        "rls": true,
+        "name": "workout_templates",
+        "schema": "public",
+        "force_rls": true,
+        "role_name": "authenticated",
+        "can_delete": false,
+        "can_insert": false,
+        "can_select": true,
+        "can_update": false,
+        "schema_usage": true
+      },
+      "hosted": {
+        "schema": "public",
+        "name": "workout_templates",
+        "acl": "{postgres=arwdDxtm/postgres,service_role=rDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "force_rls": true,
+        "role_name": "authenticated",
+        "schema_usage": true,
+        "can_select": true,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    },
+    {
+      "key": [
+        "public",
+        "workout_segments",
+        "anon"
+      ],
+      "local": {
+        "acl": "{postgres=arwdDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "name": "workout_segments",
+        "schema": "public",
+        "force_rls": true,
+        "role_name": "anon",
+        "can_delete": false,
+        "can_insert": false,
+        "can_select": false,
+        "can_update": false,
+        "schema_usage": true
+      },
+      "hosted": {
+        "schema": "public",
+        "name": "workout_segments",
+        "acl": "{postgres=arwdDxtm/postgres,service_role=Dxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "force_rls": true,
+        "role_name": "anon",
+        "schema_usage": true,
+        "can_select": false,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    },
+    {
+      "key": [
+        "public",
+        "workout_template_phase_tags",
+        "authenticated"
+      ],
+      "local": {
+        "acl": "{postgres=arwdDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "name": "workout_template_phase_tags",
+        "schema": "public",
+        "force_rls": true,
+        "role_name": "authenticated",
+        "can_delete": false,
+        "can_insert": false,
+        "can_select": true,
+        "can_update": false,
+        "schema_usage": true
+      },
+      "hosted": {
+        "schema": "public",
+        "name": "workout_template_phase_tags",
+        "acl": "{postgres=arwdDxtm/postgres,service_role=Dxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "force_rls": true,
+        "role_name": "authenticated",
+        "schema_usage": true,
+        "can_select": true,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    },
+    {
+      "key": [
+        "public",
+        "workout_segments",
+        "service_role"
+      ],
+      "local": {
+        "acl": "{postgres=arwdDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "name": "workout_segments",
+        "schema": "public",
+        "force_rls": true,
+        "role_name": "service_role",
+        "can_delete": false,
+        "can_insert": false,
+        "can_select": false,
+        "can_update": false,
+        "schema_usage": true
+      },
+      "hosted": {
+        "schema": "public",
+        "name": "workout_segments",
+        "acl": "{postgres=arwdDxtm/postgres,service_role=Dxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "force_rls": true,
+        "role_name": "service_role",
+        "schema_usage": true,
+        "can_select": false,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    },
+    {
+      "key": [
+        "public",
+        "workout_segments",
+        "authenticated"
+      ],
+      "local": {
+        "acl": "{postgres=arwdDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "name": "workout_segments",
+        "schema": "public",
+        "force_rls": true,
+        "role_name": "authenticated",
+        "can_delete": false,
+        "can_insert": false,
+        "can_select": true,
+        "can_update": false,
+        "schema_usage": true
+      },
+      "hosted": {
+        "schema": "public",
+        "name": "workout_segments",
+        "acl": "{postgres=arwdDxtm/postgres,service_role=Dxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "force_rls": true,
+        "role_name": "authenticated",
+        "schema_usage": true,
+        "can_select": true,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    },
+    {
+      "key": [
+        "public",
+        "workout_template_zone_requirements",
+        "service_role"
+      ],
+      "local": {
+        "acl": "{postgres=arwdDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "name": "workout_template_zone_requirements",
+        "schema": "public",
+        "force_rls": true,
+        "role_name": "service_role",
+        "can_delete": false,
+        "can_insert": false,
+        "can_select": false,
+        "can_update": false,
+        "schema_usage": true
+      },
+      "hosted": {
+        "schema": "public",
+        "name": "workout_template_zone_requirements",
+        "acl": "{postgres=arwdDxtm/postgres,service_role=Dxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "force_rls": true,
+        "role_name": "service_role",
+        "schema_usage": true,
+        "can_select": false,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    },
+    {
+      "key": [
+        "public",
+        "workout_template_phase_tags",
+        "service_role"
+      ],
+      "local": {
+        "acl": "{postgres=arwdDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "name": "workout_template_phase_tags",
+        "schema": "public",
+        "force_rls": true,
+        "role_name": "service_role",
+        "can_delete": false,
+        "can_insert": false,
+        "can_select": false,
+        "can_update": false,
+        "schema_usage": true
+      },
+      "hosted": {
+        "schema": "public",
+        "name": "workout_template_phase_tags",
+        "acl": "{postgres=arwdDxtm/postgres,service_role=Dxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "force_rls": true,
+        "role_name": "service_role",
+        "schema_usage": true,
+        "can_select": false,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    },
+    {
+      "key": [
+        "public",
+        "workout_template_zone_requirements",
+        "authenticated"
+      ],
+      "local": {
+        "acl": "{postgres=arwdDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "name": "workout_template_zone_requirements",
+        "schema": "public",
+        "force_rls": true,
+        "role_name": "authenticated",
+        "can_delete": false,
+        "can_insert": false,
+        "can_select": true,
+        "can_update": false,
+        "schema_usage": true
+      },
+      "hosted": {
+        "schema": "public",
+        "name": "workout_template_zone_requirements",
+        "acl": "{postgres=arwdDxtm/postgres,service_role=Dxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "force_rls": true,
+        "role_name": "authenticated",
+        "schema_usage": true,
+        "can_select": true,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    },
+    {
+      "key": [
+        "public",
+        "workout_templates",
+        "anon"
+      ],
+      "local": {
+        "acl": "{postgres=arwdDxtm/postgres,authenticated=r/postgres,service_role=r/postgres}",
+        "rls": true,
+        "name": "workout_templates",
+        "schema": "public",
+        "force_rls": true,
+        "role_name": "anon",
+        "can_delete": false,
+        "can_insert": false,
+        "can_select": false,
+        "can_update": false,
+        "schema_usage": true
+      },
+      "hosted": {
+        "schema": "public",
+        "name": "workout_templates",
+        "acl": "{postgres=arwdDxtm/postgres,service_role=rDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "force_rls": true,
+        "role_name": "anon",
+        "schema_usage": true,
+        "can_select": false,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    }
+  ],
+  "effective_table_rows_local": 153,
+  "effective_table_rows_hosted": 153,
+  "crud_rls_schema_usage_differences": []
+}

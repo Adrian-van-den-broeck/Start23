@@ -1,0 +1,16 @@
+{
+  "historical_model_commit": "5d71c688deb610bf5ec79c0f6fac77c835be6b51",
+  "deployed_sha_known": false,
+  "observed_production_contract_has_additional_properties_false": true,
+  "legacy_projection_validates": true,
+  "migrated_projection": "REJECTED",
+  "validation_errors": [
+    {
+      "type": "extra_forbidden",
+      "location": [
+        "session_rpe_version"
+      ]
+    }
+  ],
+  "synthetic_database_only": true
+}

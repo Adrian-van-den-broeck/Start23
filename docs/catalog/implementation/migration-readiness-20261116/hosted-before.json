@@ -1,0 +1,5256 @@
+{
+  "project_ref": "isfumhgqphieoayqahjv",
+  "endpoint": "https://isfumhgqphieoayqahjv.supabase.co",
+  "hosted_data_writes": 0,
+  "synthetic_accounts_created": 0,
+  "metadata": {
+    "server": [
+      {
+        "version": "PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+        "database": "postgres"
+      }
+    ],
+    "migrations": [
+      {
+        "version": "20260724140227",
+        "name": "create_athlete_profiles",
+        "statements_md5": "2fd20e53303ab517a53b6403557a35dc"
+      },
+      {
+        "version": "20260724142004",
+        "name": "restrict_rls_auto_enable_execution",
+        "statements_md5": "0bcc7f506cf2ce93c3147d6dcfd450f7"
+      },
+      {
+        "version": "20260727132531",
+        "name": "phase_4_onboarding_goals_zones",
+        "statements_md5": "c085390922460fe77bcfa2a373b6a5b2"
+      },
+      {
+        "version": "20260727170000",
+        "name": "phase_5_workout_catalog",
+        "statements_md5": "eb7e11fd64d9e1c2c67d38b96eb71d1b"
+      },
+      {
+        "version": "20260728133728",
+        "name": "phase_4_5_review_hardening",
+        "statements_md5": "491be87e470d27bcd5bde20d89a6ffd7"
+      },
+      {
+        "version": "20260729140000",
+        "name": "phase_6_weekly_planning",
+        "statements_md5": "4db245dce3506b5e44cac6f16427858e"
+      },
+      {
+        "version": "20260809225626",
+        "name": "phase_6_advisor_indexes",
+        "statements_md5": "3a0d4c6674aa462ec36727b7203bb57c"
+      },
+      {
+        "version": "20260811103726",
+        "name": "phase_7_activity_rpe_feedback",
+        "statements_md5": "5009fd65a12b1b99d06832a25c3e64b4"
+      },
+      {
+        "version": "20260813105401",
+        "name": "phase_8_structured_weekly_checkin",
+        "statements_md5": "c0948824c6f924079949eb012aa0cf02"
+      },
+      {
+        "version": "20260813170000",
+        "name": "phase_8_5_zone_calibration",
+        "statements_md5": "9fa55ceeb6cd783fdc0d4276e26a3228"
+      },
+      {
+        "version": "20260817105304",
+        "name": "phase_9_polar_integration",
+        "statements_md5": "9a51296ea1c119fc62be007d1feade89"
+      },
+      {
+        "version": "20260824144801",
+        "name": "phase_8_5_zone_model_v1",
+        "statements_md5": "0b2ce9594006036aeda8adb561a8537c"
+      },
+      {
+        "version": "20260824174747",
+        "name": "phase_10_ai_weekly_plan_explanation",
+        "statements_md5": "f1fa7a418a27d3eb3f9b9e1e89f26ea9"
+      },
+      {
+        "version": "20260825225207",
+        "name": "phase_8_5_9_business_decisions",
+        "statements_md5": "1061db686571c3e82d942527373981c7"
+      },
+      {
+        "version": "20260826085242",
+        "name": "phase_10_date_only_planning",
+        "statements_md5": "fac4f8c928ea53db0b235795225f24ff"
+      },
+      {
+        "version": "20260826144239",
+        "name": "phase_11_discipline_zone_profiles",
+        "statements_md5": "af27efe87c779e4d05c3bce88229a57a"
+      },
+      {
+        "version": "20260901054333",
+        "name": "phase_10_1_swipe_week_drafts",
+        "statements_md5": "137c2295ff157b343fc5b89630d3111f"
+      },
+      {
+        "version": "20260902083241",
+        "name": "fix_swipe_draft_service_role_permissions",
+        "statements_md5": "b541d28d076d6f1222b18d2587a770d7"
+      },
+      {
+        "version": "20260902084055",
+        "name": "fix_swipe_draft_placement_validation",
+        "statements_md5": "fbaae06d228d567a47b89b79f7a5e162"
+      },
+      {
+        "version": "20260902120000",
+        "name": "mvp_rpe_zones_and_swim_catalog",
+        "statements_md5": "50c10e23affdd3e86b53de8b221dabcb"
+      },
+      {
+        "version": "20260903074359",
+        "name": "add_source_catalog_training_options",
+        "statements_md5": "04ba39af46386a53c9e187905c567dd3"
+      },
+      {
+        "version": "20260910120000",
+        "name": "phase_14_history_and_retired_inputs",
+        "statements_md5": "d58d468c622603ceeb01e3a81c8c4f2f"
+      },
+      {
+        "version": "20260910215947",
+        "name": "phase_13_joren_ruleset",
+        "statements_md5": "28461ca1955dced0d7205961de5f1f1a"
+      },
+      {
+        "version": "20260911180631",
+        "name": "phase_r1_onboarding_versioning",
+        "statements_md5": "59d29e5edc5a0284e31f61048ed1bcda"
+      },
+      {
+        "version": "20260912070000",
+        "name": "r6_allow_opaque_owner_backfill_for_immutable_calibration",
+        "statements_md5": "ff897ee850dfdf427e9546af2b372017"
+      },
+      {
+        "version": "20260912072232",
+        "name": "phase_r2_r3_identity_onboarding_calibration",
+        "statements_md5": "0236f6cb0d05c8154ed6fedeeaa4c35d"
+      },
+      {
+        "version": "20260912180000",
+        "name": "phase_r4_r5_onboarding_race_activity",
+        "statements_md5": "3e7d22483372c3d27c9edcb178af8f96"
+      },
+      {
+        "version": "20260913130000",
+        "name": "phase_13_14_r6_entry_audit_remediation",
+        "statements_md5": "8156fbc5073d3995c1079a27d5cd224b"
+      },
+      {
+        "version": "20260914080000",
+        "name": "close_historical_calibration_writes",
+        "statements_md5": "5eeeca771066625532667c33c4947994"
+      },
+      {
+        "version": "20260914090000",
+        "name": "block_historical_zone_profile_activation",
+        "statements_md5": "7a6c415e311aabcaec5994579842e297"
+      },
+      {
+        "version": "20260914162430",
+        "name": "r6_preserve_critical_context_for_submaximal_zone_provenance",
+        "statements_md5": "1954d7a16ba2e57cd728e486ee34b461"
+      },
+      {
+        "version": "20260914162711",
+        "name": "r6_order_plan_revision_owner_before_eligibility",
+        "statements_md5": "de325608b8c6ff6577e1c74cf1df2e4f"
+      },
+      {
+        "version": "20260914163325",
+        "name": "r6_restore_activity_idempotency_preflight",
+        "statements_md5": "972d2021c95a01a2e5bed34e2fcdfd9f"
+      },
+      {
+        "version": "20260914170134",
+        "name": "r6_increment_structured_race_goal_revision",
+        "statements_md5": "4f440d4355fbf191b8e4b835b6c89d53"
+      },
+      {
+        "version": "20260914172000",
+        "name": "r6_refresh_planning_snapshot_after_input_change",
+        "statements_md5": "873d0fdf5d36d877fe4409913b72aa4b"
+      },
+      {
+        "version": "20260914172500",
+        "name": "r6_refresh_extended_planning_snapshot_after_input_change",
+        "statements_md5": "5feccdf277ae836d0d502237a2199581"
+      },
+      {
+        "version": "20260914173000",
+        "name": "r6_refresh_planning_snapshot_after_goal_rpc",
+        "statements_md5": "7496fe2f1f88778520fca9b618bd1eaf"
+      },
+      {
+        "version": "20260914173500",
+        "name": "r6_force_distinct_post_rpc_snapshot_refresh",
+        "statements_md5": "9a16943e64addb6bab5ab5123798bbcc"
+      },
+      {
+        "version": "20260914174000",
+        "name": "r6_disambiguate_activity_processing_load_source",
+        "statements_md5": "08e5cd223c78e6c0acbea54471c2e58b"
+      },
+      {
+        "version": "20260914175000",
+        "name": "r6_cover_foreign_key_access_paths",
+        "statements_md5": "18f2a461604abf5b29b96ab6bea94ebd"
+      },
+      {
+        "version": "20260914180000",
+        "name": "r6_preserve_account_deletion_cascades",
+        "statements_md5": "f690e6a645f4747d4445b737b7b33ad4"
+      },
+      {
+        "version": "20260915081055",
+        "name": "r6_mvp_nonretryable_business_conflicts",
+        "statements_md5": "bb4115183c6d1d451d9004c1f5026fcc"
+      },
+      {
+        "version": "20260915082320",
+        "name": "r6_onboarding_completion_step_vocabulary",
+        "statements_md5": "8a116cf2f284db0dd431527920f57171"
+      },
+      {
+        "version": "20260915205627",
+        "name": "r6_checkin_context_and_account_deletion",
+        "statements_md5": "3f96fec29ce92d4ed6c64b1aa2b396f9"
+      },
+      {
+        "version": "20260923063453",
+        "name": "phase_16_pioneer_access",
+        "statements_md5": "d92737e4aa26a7da0b6ead3a70275d49"
+      },
+      {
+        "version": "20260929210000",
+        "name": "joren_planning_ruleset_v2",
+        "statements_md5": "574a90b7e867c8fa82b99bf609833b1a"
+      },
+      {
+        "version": "20261004212750",
+        "name": "first_plan_approved_provenance",
+        "statements_md5": "e4b50a2c693de3af665d5e402337a4c5"
+      }
+    ],
+    "extensions": [
+      {
+        "extname": "pg_stat_statements",
+        "extversion": "1.11"
+      },
+      {
+        "extname": "pgcrypto",
+        "extversion": "1.3"
+      },
+      {
+        "extname": "plpgsql",
+        "extversion": "1.0"
+      },
+      {
+        "extname": "supabase_vault",
+        "extversion": "0.3.1"
+      },
+      {
+        "extname": "uuid-ossp",
+        "extversion": "1.1"
+      }
+    ],
+    "relations": [
+      {
+        "schema": "auth",
+        "name": "audit_log_entries",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "custom_oauth_providers",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "flow_state",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "identities",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "instances",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "mfa_amr_claims",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "mfa_challenges",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "mfa_factors",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "mfa_recovery_code_sets",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "mfa_recovery_codes",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "oauth_authorizations",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "oauth_client_states",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "oauth_clients",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "oauth_consents",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "one_time_tokens",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "refresh_tokens",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "saml_providers",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "saml_relay_states",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "schema_migrations",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "scim_tokens",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "scim_users",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "sessions",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "sso_domains",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "sso_providers",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "users",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "webauthn_challenges",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "auth",
+        "name": "webauthn_credentials",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "private",
+        "name": "activity_loads",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "private",
+        "name": "athlete_identity_map",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "private",
+        "name": "calibration_protocol_lifecycle",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "private",
+        "name": "integration_oauth_states",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "private",
+        "name": "phase_13_activity_load_history",
+        "kind": "r",
+        "rls": true,
+        "force_rls": false
+      },
+      {
+        "schema": "private",
+        "name": "pioneer_access_attempts",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "private",
+        "name": "pioneer_access_codes",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "private",
+        "name": "plan_revision_loads",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "private",
+        "name": "planned_workout_loads",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "private",
+        "name": "provider_activity_imports",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "private",
+        "name": "provider_tokens",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "private",
+        "name": "webhook_receipts",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "private",
+        "name": "workout_template_loads",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false
+      },
+      {
+        "schema": "public",
+        "name": "activities",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "activity_files",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "activity_metrics",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "activity_rpe_revisions",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "athlete_identifying_profiles",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "athlete_physiology_profiles",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "athlete_profiles",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "calibration_evaluations",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "calibration_observations",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "calibration_threshold_decisions",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "change_proposals",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "discipline_test_assignments",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "discipline_zone_setups",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "goal_maintenance_states",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "goals",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "import_runs",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "initial_plan_requests",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "injury_restrictions",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "onboarding_completion_records",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "onboarding_sessions",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "pioneer_access_redemptions",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "plan_revisions",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "plan_warnings",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "planned_external_activities",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "planned_workouts",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "provider_connections",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "swipe_week_drafts",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "training_history_entries",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "weekly_checkin_contexts",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "weekly_checkins",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "weekly_plans",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "workout_segments",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "workout_template_phase_tags",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "workout_template_zone_requirements",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "workout_templates",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "zone_boundaries",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "zone_metrics",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      },
+      {
+        "schema": "public",
+        "name": "zone_profile_versions",
+        "kind": "r",
+        "rls": true,
+        "force_rls": true
+      }
+    ],
+    "triggers": [
+      {
+        "schema": "auth",
+        "table": "users",
+        "name": "start23_create_opaque_athlete_identity",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "ensure_athlete_identity_map"
+      },
+      {
+        "schema": "private",
+        "table": "activity_loads",
+        "name": "phase_13_activity_load_revision",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "audit_phase_13_load_revision"
+      },
+      {
+        "schema": "private",
+        "table": "activity_loads",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "private",
+        "table": "integration_oauth_states",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "private",
+        "table": "phase_13_activity_load_history",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "private",
+        "table": "plan_revision_loads",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "private",
+        "table": "planned_workout_loads",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "private",
+        "table": "provider_activity_imports",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "private",
+        "table": "provider_tokens",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "private",
+        "table": "webhook_receipts",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "private",
+        "table": "workout_template_loads",
+        "name": "workout_loads_are_immutable",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "reject_catalog_mutation"
+      },
+      {
+        "schema": "public",
+        "table": "activities",
+        "name": "activities_r4_10_require_confirmed_timezone",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_confirmed_activity_timezone"
+      },
+      {
+        "schema": "public",
+        "table": "activities",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "activity_files",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "activity_metrics",
+        "name": "activity_metrics_phase_13_zone_minutes",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "validate_phase_13_zone_minutes"
+      },
+      {
+        "schema": "public",
+        "table": "activity_metrics",
+        "name": "activity_metrics_r5_protect_average_hr",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "protect_phase_13_average_hr_observation"
+      },
+      {
+        "schema": "public",
+        "table": "activity_metrics",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "activity_rpe_revisions",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_identifying_profiles",
+        "name": "athlete_identifying_profiles_00_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_split_profile_rpc"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_identifying_profiles",
+        "name": "athlete_identifying_profiles_10_metadata",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "set_split_profile_metadata"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_physiology_profiles",
+        "name": "athlete_physiology_profiles_00_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_split_profile_rpc"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_physiology_profiles",
+        "name": "athlete_physiology_profiles_10_metadata",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "set_split_profile_metadata"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_profiles",
+        "name": "athlete_profiles_preserve_phase_14_retired_values",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "preserve_phase_14_retired_values"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_profiles",
+        "name": "athlete_profiles_protect_completion",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "protect_onboarding_completion"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_profiles",
+        "name": "athlete_profiles_refresh_pending_planning_input",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "refresh_pending_planning_input"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_profiles",
+        "name": "athlete_profiles_set_update_metadata",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "set_athlete_profile_update_metadata"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_profiles",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_evaluations",
+        "name": "calibration_evaluations_are_immutable",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "reject_calibration_record_mutation"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_evaluations",
+        "name": "calibration_evaluations_r6_entry_current_protocol",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_current_calibration_evaluation"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_evaluations",
+        "name": "calibration_evaluations_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_evaluations",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_observations",
+        "name": "calibration_observations_are_immutable",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "reject_calibration_record_mutation"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_observations",
+        "name": "calibration_observations_r2_10_current_contract",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_current_calibration_observation_contract"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_observations",
+        "name": "calibration_observations_r6_entry_current_protocol",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_current_calibration_observation"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_observations",
+        "name": "calibration_observations_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_observations",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_threshold_decisions",
+        "name": "calibration_threshold_decisions_are_immutable",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "reject_calibration_record_mutation"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_threshold_decisions",
+        "name": "calibration_threshold_decisions_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_threshold_decisions",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "change_proposals",
+        "name": "change_proposals_require_integrated_test_assignment",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_integrated_test_assignment_before_plan_apply"
+      },
+      {
+        "schema": "public",
+        "table": "change_proposals",
+        "name": "change_proposals_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "change_proposals",
+        "name": "change_proposals_sync_integrated_test_assignment",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_integrated_test_assignment_state"
+      },
+      {
+        "schema": "public",
+        "table": "change_proposals",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_test_assignments",
+        "name": "discipline_test_assignments_r6_entry_current_protocol",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_current_validation_test_assignment"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_test_assignments",
+        "name": "discipline_test_assignments_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_test_assignments",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_zone_setups",
+        "name": "discipline_zone_setups_r6_entry_current_protocol",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_current_calibration_setup"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_zone_setups",
+        "name": "discipline_zone_setups_refresh_pending_planning_input",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "refresh_pending_planning_input"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_zone_setups",
+        "name": "discipline_zone_setups_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_zone_setups",
+        "name": "discipline_zone_setups_set_metadata",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "set_discipline_zone_setup_metadata"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_zone_setups",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "goal_maintenance_states",
+        "name": "goal_maintenance_states_rpc_writes",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_phase_8_rpc_writes"
+      },
+      {
+        "schema": "public",
+        "table": "goal_maintenance_states",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "goals",
+        "name": "goals_preserve_phase_14_retired_values",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "preserve_phase_14_retired_values"
+      },
+      {
+        "schema": "public",
+        "table": "goals",
+        "name": "goals_r6_entry_validate_current_race",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_current_structured_race_goal"
+      },
+      {
+        "schema": "public",
+        "table": "goals",
+        "name": "goals_refresh_pending_planning_input",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "refresh_pending_planning_input"
+      },
+      {
+        "schema": "public",
+        "table": "goals",
+        "name": "goals_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "goals",
+        "name": "goals_set_update_metadata",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "set_phase_4_update_metadata"
+      },
+      {
+        "schema": "public",
+        "table": "goals",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "import_runs",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "initial_plan_requests",
+        "name": "initial_plan_requests_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "initial_plan_requests",
+        "name": "initial_plan_requests_set_input_snapshot",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "set_initial_plan_input_snapshot"
+      },
+      {
+        "schema": "public",
+        "table": "initial_plan_requests",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "injury_restrictions",
+        "name": "injury_restrictions_rpc_writes",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_phase_8_rpc_writes"
+      },
+      {
+        "schema": "public",
+        "table": "injury_restrictions",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "onboarding_completion_records",
+        "name": "onboarding_completion_records_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "onboarding_completion_records",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "onboarding_sessions",
+        "name": "onboarding_sessions_protect_completion",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "protect_onboarding_completion"
+      },
+      {
+        "schema": "public",
+        "table": "onboarding_sessions",
+        "name": "onboarding_sessions_protect_completion_versions",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "protect_onboarding_completion_versions"
+      },
+      {
+        "schema": "public",
+        "table": "onboarding_sessions",
+        "name": "onboarding_sessions_set_update_metadata",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "set_phase_4_update_metadata"
+      },
+      {
+        "schema": "public",
+        "table": "onboarding_sessions",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "plan_revisions",
+        "name": "plan_revisions_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "plan_revisions",
+        "name": "plan_revisions_set_phase_10_dates",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "set_phase_10_plan_revision_dates"
+      },
+      {
+        "schema": "public",
+        "table": "plan_revisions",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "plan_revisions",
+        "name": "r3_10_require_current_onboarding",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_current_planning_eligibility"
+      },
+      {
+        "schema": "public",
+        "table": "plan_warnings",
+        "name": "plan_warnings_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "plan_warnings",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "planned_external_activities",
+        "name": "planned_external_activities_rpc_writes",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_phase_8_rpc_writes"
+      },
+      {
+        "schema": "public",
+        "table": "planned_external_activities",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "planned_workouts",
+        "name": "planned_workouts_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "planned_workouts",
+        "name": "planned_workouts_set_phase_10_date",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "set_phase_10_planned_workout_date"
+      },
+      {
+        "schema": "public",
+        "table": "planned_workouts",
+        "name": "planned_workouts_set_segment_targets",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "set_planned_workout_segment_targets"
+      },
+      {
+        "schema": "public",
+        "table": "planned_workouts",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "provider_connections",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "swipe_week_drafts",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "swipe_week_drafts",
+        "name": "swipe_week_drafts_r3_10_require_current_onboarding",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_current_planning_eligibility"
+      },
+      {
+        "schema": "public",
+        "table": "swipe_week_drafts",
+        "name": "swipe_week_drafts_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "swipe_week_drafts",
+        "name": "swipe_week_drafts_validate",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "validate_swipe_week_draft"
+      },
+      {
+        "schema": "public",
+        "table": "swipe_week_drafts",
+        "name": "swipe_week_drafts_validate_v2",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "validate_swipe_week_draft_v2"
+      },
+      {
+        "schema": "public",
+        "table": "training_history_entries",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "training_history_entries",
+        "name": "training_history_preserve_phase_14_retired_values",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "preserve_phase_14_retired_values"
+      },
+      {
+        "schema": "public",
+        "table": "training_history_entries",
+        "name": "training_history_refresh_pending_planning_input",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "refresh_pending_planning_input"
+      },
+      {
+        "schema": "public",
+        "table": "training_history_entries",
+        "name": "training_history_set_update_metadata",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "set_phase_4_update_metadata"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_checkin_contexts",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_checkin_contexts",
+        "name": "weekly_checkin_contexts_rpc_writes",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_phase_8_rpc_writes"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_checkins",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_checkins",
+        "name": "weekly_checkins_rpc_writes",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_phase_8_rpc_writes"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_plans",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_plans",
+        "name": "weekly_plans_r3_10_require_current_onboarding",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_current_planning_eligibility"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_plans",
+        "name": "weekly_plans_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_plans",
+        "name": "weekly_plans_set_update_metadata",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "set_phase_6_update_metadata"
+      },
+      {
+        "schema": "public",
+        "table": "workout_segments",
+        "name": "workout_segments_are_immutable",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "reject_catalog_mutation"
+      },
+      {
+        "schema": "public",
+        "table": "workout_template_phase_tags",
+        "name": "workout_phase_tags_are_immutable",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "reject_catalog_mutation"
+      },
+      {
+        "schema": "public",
+        "table": "workout_template_zone_requirements",
+        "name": "workout_zone_requirements_are_immutable",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "reject_catalog_mutation"
+      },
+      {
+        "schema": "public",
+        "table": "workout_templates",
+        "name": "workout_templates_are_immutable",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "reject_catalog_mutation"
+      },
+      {
+        "schema": "public",
+        "table": "zone_boundaries",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "zone_boundaries",
+        "name": "zone_boundaries_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "zone_metrics",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "zone_metrics",
+        "name": "zone_metrics_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "zone_profile_versions",
+        "name": "r3_00_sync_opaque_athlete_owner",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "sync_dual_athlete_owner_keys"
+      },
+      {
+        "schema": "public",
+        "table": "zone_profile_versions",
+        "name": "zone_profile_versions_r6_entry_current_activation",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_current_calibration_zone_activation"
+      },
+      {
+        "schema": "public",
+        "table": "zone_profile_versions",
+        "name": "zone_profile_versions_r6_entry_current_calibration",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "enforce_current_calibration_zone_profile"
+      },
+      {
+        "schema": "public",
+        "table": "zone_profile_versions",
+        "name": "zone_profiles_refresh_pending_planning_input",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "refresh_pending_planning_input"
+      },
+      {
+        "schema": "public",
+        "table": "zone_profile_versions",
+        "name": "zone_profiles_require_rpc",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_critical_write_context"
+      },
+      {
+        "schema": "public",
+        "table": "zone_profile_versions",
+        "name": "zone_profiles_require_trusted_metadata",
+        "enabled": "O",
+        "function_schema": "private",
+        "function": "require_trusted_zone_metadata"
+      }
+    ],
+    "policies": [
+      {
+        "schemaname": "public",
+        "tablename": "activities",
+        "policyname": "activities_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "activities",
+        "policyname": "activities_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "activity_files",
+        "policyname": "activity_files_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "activity_files",
+        "policyname": "activity_files_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "activity_metrics",
+        "policyname": "activity_metrics_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "activity_metrics",
+        "policyname": "activity_metrics_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "activity_rpe_revisions",
+        "policyname": "activity_rpe_revisions_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "activity_rpe_revisions",
+        "policyname": "activity_rpe_revisions_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "athlete_identifying_profiles",
+        "policyname": "athlete_identifying_profiles_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "athlete_identifying_profiles",
+        "policyname": "athlete_identifying_profiles_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "(athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "athlete_identifying_profiles",
+        "policyname": "athlete_identifying_profiles_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "(athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "athlete_physiology_profiles",
+        "policyname": "athlete_physiology_profiles_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "athlete_physiology_profiles",
+        "policyname": "athlete_physiology_profiles_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "(athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "athlete_physiology_profiles",
+        "policyname": "athlete_physiology_profiles_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "(athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "athlete_profiles",
+        "policyname": "athlete_profiles_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "athlete_profiles",
+        "policyname": "athlete_profiles_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "athlete_profiles",
+        "policyname": "athlete_profiles_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "athlete_profiles",
+        "policyname": "athlete_profiles_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "calibration_evaluations",
+        "policyname": "calibration_evaluations_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "calibration_evaluations",
+        "policyname": "calibration_evaluations_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "calibration_observations",
+        "policyname": "calibration_observations_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "calibration_observations",
+        "policyname": "calibration_observations_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "calibration_observations",
+        "policyname": "calibration_observations_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "calibration_threshold_decisions",
+        "policyname": "calibration_threshold_decisions_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "calibration_threshold_decisions",
+        "policyname": "calibration_threshold_decisions_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "change_proposals",
+        "policyname": "change_proposals_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "change_proposals",
+        "policyname": "change_proposals_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "change_proposals",
+        "policyname": "change_proposals_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "change_proposals",
+        "policyname": "change_proposals_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "discipline_test_assignments",
+        "policyname": "discipline_test_assignments_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "discipline_test_assignments",
+        "policyname": "discipline_test_assignments_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "discipline_test_assignments",
+        "policyname": "discipline_test_assignments_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "discipline_test_assignments",
+        "policyname": "discipline_test_assignments_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "discipline_zone_setups",
+        "policyname": "discipline_zone_setups_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "discipline_zone_setups",
+        "policyname": "discipline_zone_setups_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "discipline_zone_setups",
+        "policyname": "discipline_zone_setups_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "discipline_zone_setups",
+        "policyname": "discipline_zone_setups_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "goal_maintenance_states",
+        "policyname": "goal_maintenance_states_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(( SELECT auth.uid() AS uid) = athlete_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "goal_maintenance_states",
+        "policyname": "goal_maintenance_states_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "goal_maintenance_states",
+        "policyname": "goal_maintenance_states_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "goal_maintenance_states",
+        "policyname": "goal_maintenance_states_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": "(( SELECT auth.uid() AS uid) = athlete_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "goals",
+        "policyname": "goals_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "goals",
+        "policyname": "goals_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "goals",
+        "policyname": "goals_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "goals",
+        "policyname": "goals_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "import_runs",
+        "policyname": "import_runs_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "import_runs",
+        "policyname": "import_runs_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "initial_plan_requests",
+        "policyname": "initial_plan_requests_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "initial_plan_requests",
+        "policyname": "initial_plan_requests_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "initial_plan_requests",
+        "policyname": "initial_plan_requests_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "injury_restrictions",
+        "policyname": "injury_restrictions_delete_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "DELETE",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "injury_restrictions",
+        "policyname": "injury_restrictions_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(( SELECT auth.uid() AS uid) = athlete_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "injury_restrictions",
+        "policyname": "injury_restrictions_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "injury_restrictions",
+        "policyname": "injury_restrictions_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "injury_restrictions",
+        "policyname": "injury_restrictions_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": "(( SELECT auth.uid() AS uid) = athlete_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "onboarding_completion_records",
+        "policyname": "onboarding_completion_records_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "onboarding_completion_records",
+        "policyname": "onboarding_completion_records_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "onboarding_completion_records",
+        "policyname": "onboarding_completion_records_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "onboarding_sessions",
+        "policyname": "onboarding_sessions_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "onboarding_sessions",
+        "policyname": "onboarding_sessions_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "onboarding_sessions",
+        "policyname": "onboarding_sessions_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "onboarding_sessions",
+        "policyname": "onboarding_sessions_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "pioneer_access_redemptions",
+        "policyname": "pioneer_access_redemptions_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "(athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "plan_revisions",
+        "policyname": "plan_revisions_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "plan_revisions",
+        "policyname": "plan_revisions_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "plan_revisions",
+        "policyname": "plan_revisions_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "plan_revisions",
+        "policyname": "plan_revisions_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "plan_warnings",
+        "policyname": "plan_warnings_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "plan_warnings",
+        "policyname": "plan_warnings_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "plan_warnings",
+        "policyname": "plan_warnings_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "planned_external_activities",
+        "policyname": "planned_external_activities_delete_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "DELETE",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "planned_external_activities",
+        "policyname": "planned_external_activities_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(( SELECT auth.uid() AS uid) = athlete_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "planned_external_activities",
+        "policyname": "planned_external_activities_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "planned_external_activities",
+        "policyname": "planned_external_activities_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "planned_external_activities",
+        "policyname": "planned_external_activities_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": "(( SELECT auth.uid() AS uid) = athlete_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "planned_workouts",
+        "policyname": "planned_workouts_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "planned_workouts",
+        "policyname": "planned_workouts_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "planned_workouts",
+        "policyname": "planned_workouts_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "planned_workouts",
+        "policyname": "planned_workouts_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "provider_connections",
+        "policyname": "provider_connections_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "provider_connections",
+        "policyname": "provider_connections_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "swipe_week_drafts",
+        "policyname": "swipe_week_drafts_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "swipe_week_drafts",
+        "policyname": "swipe_week_drafts_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "training_history_entries",
+        "policyname": "training_history_delete_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "DELETE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "training_history_entries",
+        "policyname": "training_history_entries_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "training_history_entries",
+        "policyname": "training_history_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "training_history_entries",
+        "policyname": "training_history_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "training_history_entries",
+        "policyname": "training_history_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_checkin_contexts",
+        "policyname": "weekly_checkin_contexts_delete_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "DELETE",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_checkin_contexts",
+        "policyname": "weekly_checkin_contexts_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(( SELECT auth.uid() AS uid) = athlete_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_checkin_contexts",
+        "policyname": "weekly_checkin_contexts_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_checkin_contexts",
+        "policyname": "weekly_checkin_contexts_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_checkin_contexts",
+        "policyname": "weekly_checkin_contexts_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": "(( SELECT auth.uid() AS uid) = athlete_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_checkins",
+        "policyname": "weekly_checkins_delete_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "DELETE",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_checkins",
+        "policyname": "weekly_checkins_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(( SELECT auth.uid() AS uid) = athlete_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_checkins",
+        "policyname": "weekly_checkins_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_checkins",
+        "policyname": "weekly_checkins_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_checkins",
+        "policyname": "weekly_checkins_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "(( SELECT auth.uid() AS uid) = athlete_id)",
+        "with_check": "(( SELECT auth.uid() AS uid) = athlete_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_plans",
+        "policyname": "weekly_plans_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_plans",
+        "policyname": "weekly_plans_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_plans",
+        "policyname": "weekly_plans_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "weekly_plans",
+        "policyname": "weekly_plans_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "workout_segments",
+        "policyname": "workout_segments_authenticated_read",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "true",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "workout_template_phase_tags",
+        "policyname": "workout_phase_tags_authenticated_read",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "true",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "workout_template_zone_requirements",
+        "policyname": "workout_zone_requirements_authenticated_read",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "true",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "workout_templates",
+        "policyname": "workout_templates_authenticated_read",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "true",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "zone_boundaries",
+        "policyname": "zone_boundaries_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "zone_boundaries",
+        "policyname": "zone_boundaries_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "zone_boundaries",
+        "policyname": "zone_boundaries_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "zone_boundaries",
+        "policyname": "zone_boundaries_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "zone_metrics",
+        "policyname": "zone_metrics_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "zone_metrics",
+        "policyname": "zone_metrics_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "zone_metrics",
+        "policyname": "zone_metrics_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "zone_metrics",
+        "policyname": "zone_metrics_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "zone_profile_versions",
+        "policyname": "zone_profile_versions_opaque_owner_restrict",
+        "permissive": "RESTRICTIVE",
+        "roles": "{authenticated}",
+        "cmd": "ALL",
+        "qual": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))",
+        "with_check": "(internal_athlete_id = ( SELECT private.current_athlete_id() AS current_athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "zone_profile_versions",
+        "policyname": "zone_profiles_insert_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "zone_profile_versions",
+        "policyname": "zone_profiles_select_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "zone_profile_versions",
+        "policyname": "zone_profiles_update_own",
+        "permissive": "PERMISSIVE",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))",
+        "with_check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND (( SELECT auth.uid() AS uid) = athlete_id))"
+      }
+    ],
+    "grants": [],
+    "rpcs": [
+      {
+        "schema": "private",
+        "name": "activity_public_json",
+        "arguments": "p_activity_id uuid, p_athlete_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "assert_current_planning_eligibility",
+        "arguments": "p_athlete_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "audit_phase_13_load_revision",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "backfill_athlete_identity_maps",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "backfill_split_athlete_profiles",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "build_legacy_planning_input_snapshot",
+        "arguments": "p_athlete_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "build_phase_8_5_planning_input_snapshot",
+        "arguments": "p_athlete_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "build_planning_input_snapshot",
+        "arguments": "p_athlete_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "build_planning_input_snapshot_r3",
+        "arguments": "p_athlete_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "current_athlete_id",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "current_onboarding_satisfied_steps",
+        "arguments": "p_athlete_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "enforce_confirmed_activity_timezone",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "enforce_current_calibration_evaluation",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "enforce_current_calibration_observation",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "enforce_current_calibration_observation_contract",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "enforce_current_calibration_setup",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "enforce_current_calibration_zone_activation",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "enforce_current_calibration_zone_profile",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "enforce_current_planning_eligibility",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "enforce_current_structured_race_goal",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "enforce_current_validation_test_assignment",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "enforce_phase_8_rpc_writes",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "ensure_athlete_identity_map",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "import_run_public_json",
+        "arguments": "p_import_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "is_current_calibration_protocol",
+        "arguments": "p_protocol_id text, p_discipline text, p_protocol_type text",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "phase_11_test_protocol_matches",
+        "arguments": "p_discipline text, p_protocol_id text",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "phase_9_require_service_role",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "preserve_phase_14_retired_values",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "protect_onboarding_completion",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "protect_onboarding_completion_versions",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "protect_phase_13_average_hr_observation",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "provider_connection_public_json",
+        "arguments": "p_connection_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "refresh_authenticated_planning_input_after_rpc",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "refresh_pending_planning_input",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "reject_calibration_record_mutation",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "reject_catalog_mutation",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "require_critical_write_context",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "require_integrated_test_assignment_before_plan_apply",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "require_split_profile_rpc",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "require_trusted_zone_metadata",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "required_disciplines_for_race_type",
+        "arguments": "p_race_type text",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "resolve_opaque_athlete_id",
+        "arguments": "p_identifier uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "set_athlete_profile_update_metadata",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "set_discipline_zone_setup_metadata",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "set_initial_plan_input_snapshot",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "set_phase_10_plan_revision_dates",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "set_phase_10_planned_workout_date",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "set_phase_4_update_metadata",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "set_phase_6_update_metadata",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "set_planned_workout_segment_targets",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "set_split_profile_metadata",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "sync_dual_athlete_owner_keys",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "sync_integrated_test_assignment_state",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "validate_phase_13_zone_minutes",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "validate_swipe_week_draft",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "validate_swipe_week_draft_v2",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "private",
+        "name": "validate_workout_template",
+        "arguments": "p_template_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "approve_plan_proposal",
+        "arguments": "p_proposal_id uuid, p_expected_base_revision integer",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "approve_validation_test_proposal",
+        "arguments": "p_proposal_id uuid, p_expected_revision bigint",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "approve_zone_proposal",
+        "arguments": "p_proposal_id uuid, p_expected_base_zone_profile_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "attach_checkin_plan_proposal",
+        "arguments": "p_athlete_id uuid, p_checkin_id uuid, p_proposal_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "claim_due_polar_import_retries",
+        "arguments": "p_limit integer",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "complete_activity_rpe",
+        "arguments": "p_athlete_id uuid, p_activity_id uuid, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "complete_current_onboarding",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "complete_current_onboarding",
+        "arguments": "p_expected_session_revision bigint",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "complete_onboarding",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "confirm_activity_planned_workout_match",
+        "arguments": "p_activity_id uuid, p_planned_workout_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "confirm_weekly_checkin_context",
+        "arguments": "p_checkin_id uuid, p_expected_revision integer, p_fingerprint text",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "consume_polar_oauth_state",
+        "arguments": "p_state_hash text",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "create_activity_summary",
+        "arguments": "p_idempotency_key uuid, p_request_fingerprint text, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "create_activity_summary_r6_pre_idempotency",
+        "arguments": "p_idempotency_key uuid, p_request_fingerprint text, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "create_external_activity_summary",
+        "arguments": "p_external_activity_id uuid, p_idempotency_key uuid, p_request_fingerprint text, p_payload jsonb",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "create_swipe_week_draft",
+        "arguments": "p_athlete_id uuid, p_payload jsonb",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "create_swipe_week_draft_v2",
+        "arguments": "p_athlete_id uuid, p_payload jsonb",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "create_validation_test_proposal",
+        "arguments": "p_assignment jsonb",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "create_weekly_plan_proposal",
+        "arguments": "p_athlete_id uuid, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "create_weekly_plan_proposal_v2",
+        "arguments": "p_athlete_id uuid, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "create_weekly_plan_proposal_v2_legacy",
+        "arguments": "p_athlete_id uuid, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "create_weekly_plan_proposal_v3",
+        "arguments": "p_athlete_id uuid, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "disconnect_polar_connection",
+        "arguments": "p_athlete_id uuid, p_status text",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "finish_polar_import",
+        "arguments": "p_athlete_id uuid, p_import_id uuid, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "finish_polar_webhook",
+        "arguments": "p_receipt_id uuid, p_status text, p_failure_code text",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_activity",
+        "arguments": "p_activity_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_activity_processing_context",
+        "arguments": "p_athlete_id uuid, p_activity_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_calendar",
+        "arguments": "p_from date, p_to date",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_calendar_rest_days",
+        "arguments": "p_from date, p_to date",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_checkin_context_for_planning",
+        "arguments": "p_athlete_id uuid, p_checkin_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_current_athlete_id",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_current_planning_eligibility_context",
+        "arguments": "p_athlete_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_operational_athlete_profile",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_plan_context_for_planning",
+        "arguments": "p_athlete_id uuid, p_plan_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_plan_load_history_for_planning",
+        "arguments": "p_athlete_id uuid, p_before_week date",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_plan_load_history_for_planning_v13",
+        "arguments": "p_athlete_id uuid, p_before_week date",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_plan_load_history_for_planning_v14",
+        "arguments": "p_athlete_id uuid, p_before_week date",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_plan_load_history_for_planning_v15",
+        "arguments": "p_athlete_id uuid, p_before_week date",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_plan_revision_context_for_planning",
+        "arguments": "p_athlete_id uuid, p_plan_id uuid, p_revision integer",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_planned_workout_context",
+        "arguments": "p_workout_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_polar_connection",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_polar_credentials",
+        "arguments": "p_athlete_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_polar_import_retry_context",
+        "arguments": "p_athlete_id uuid, p_import_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_polar_webhook_context",
+        "arguments": "p_receipt_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_previous_week_available_dates",
+        "arguments": "p_athlete_id uuid, p_week_start date",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_weekly_checkin",
+        "arguments": "p_checkin_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_weekly_plan",
+        "arguments": "p_plan_id uuid, p_revision integer",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "get_workout_catalog_for_planning",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "import_polar_activity",
+        "arguments": "p_athlete_id uuid, p_import_id uuid, p_provider_entity_id text, p_idempotency_key uuid, p_request_fingerprint text, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "list_activities",
+        "arguments": "p_pending_rpe boolean",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "list_polar_imports",
+        "arguments": "",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "mark_goal_achieved",
+        "arguments": "p_goal_id uuid, p_achieved_at date",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "move_planned_workout",
+        "arguments": "p_athlete_id uuid, p_workout_id uuid, p_expected_revision integer, p_scheduled_date date, p_warnings jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "move_planned_workout_legacy",
+        "arguments": "p_athlete_id uuid, p_workout_id uuid, p_expected_revision integer, p_scheduled_at timestamp with time zone, p_warnings jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "open_due_weekly_checkins",
+        "arguments": "p_instant timestamp with time zone",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "prepare_polar_import_retry",
+        "arguments": "p_athlete_id uuid, p_import_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "record_polar_webhook",
+        "arguments": "p_event_key text, p_payload_fingerprint text, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "redeem_pioneer_access_code",
+        "arguments": "p_athlete_id uuid, p_code_digest text, p_idempotency_key uuid, p_request_fingerprint text",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "reject_calibration_threshold",
+        "arguments": "p_athlete_id uuid, p_evaluation_id uuid",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "reject_plan_proposal",
+        "arguments": "p_proposal_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "reject_validation_test_proposal",
+        "arguments": "p_proposal_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "reject_zone_proposal",
+        "arguments": "p_proposal_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "replace_training_history",
+        "arguments": "p_entries jsonb",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "resolve_legacy_auth_user_id",
+        "arguments": "p_athlete_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "resolve_opaque_athlete_id_for_auth_user",
+        "arguments": "p_auth_user_id uuid",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "revise_activity_rpe",
+        "arguments": "p_athlete_id uuid, p_activity_id uuid, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "revise_activity_rpe_r5_base",
+        "arguments": "p_athlete_id uuid, p_activity_id uuid, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "rls_auto_enable",
+        "arguments": "",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_calculated_zone_profile",
+        "arguments": "p_athlete_id uuid, p_profile jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_calculated_zone_profile_r5",
+        "arguments": "p_athlete_id uuid, p_profile jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_calibration_evaluation",
+        "arguments": "p_athlete_id uuid, p_evaluation jsonb, p_fingerprint text",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_calibration_observation",
+        "arguments": "p_observation jsonb, p_fingerprint text",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_discipline_zone_setup",
+        "arguments": "p_setup jsonb",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_fallback_zone_profile",
+        "arguments": "p_athlete_id uuid, p_discipline text, p_boundaries jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_identifying_profile",
+        "arguments": "p_profile jsonb",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_integrated_test_assignment",
+        "arguments": "p_assignment jsonb",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_measured_calculated_zone_profile",
+        "arguments": "p_athlete_id uuid, p_profile jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_operational_athlete_profile",
+        "arguments": "p_profile jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_physiology_profile",
+        "arguments": "p_profile jsonb",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_polar_activity_file",
+        "arguments": "p_athlete_id uuid, p_activity_id uuid, p_object_name text, p_checksum text, p_size_bytes integer",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_polar_connection",
+        "arguments": "p_athlete_id uuid, p_provider_user_id text, p_access_token text, p_token_expires_at timestamp with time zone",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_primary_race_goal",
+        "arguments": "p_goal_id uuid, p_title text, p_specific_description text, p_measurable_outcome text, p_feasibility_score smallint, p_target_date date, p_race_discipline_profile text[]",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_primary_race_goal",
+        "arguments": "p_goal_id uuid, p_title text, p_specific_description text, p_measurable_outcome text, p_target_date date, p_race_discipline_profile text[]",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_primary_race_goal",
+        "arguments": "p_goal_id uuid, p_race_type text, p_race_name text, p_race_date date, p_swim_distance_meters integer, p_bike_distance_meters integer, p_run_distance_meters integer, p_total_target_time_seconds integer, p_swim_target_time_seconds integer, p_bike_target_time_seconds integer, p_run_target_time_seconds integer, p_specific_focus text",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_rpe_heart_rate_observation",
+        "arguments": "p_athlete_id uuid, p_activity_id uuid, p_average_heart_rate_bpm smallint",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_weekly_checkin_context",
+        "arguments": "p_checkin_id uuid, p_expected_revision integer, p_fingerprint text, p_payload jsonb",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "save_zone_profile",
+        "arguments": "p_discipline text, p_setup_method text, p_metric_kind text, p_metric_value numeric, p_boundaries jsonb, p_requires_review boolean, p_review_reason text, p_ruleset_version text",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "set_weekly_plan_proposal_explanation",
+        "arguments": "p_athlete_id uuid, p_proposal_id uuid, p_explanation text",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "start_polar_import",
+        "arguments": "p_athlete_id uuid, p_idempotency_key uuid, p_payload jsonb",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "start_polar_oauth",
+        "arguments": "p_state_hash text, p_expires_at timestamp with time zone",
+        "security_definer": true,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "start_weekly_checkin",
+        "arguments": "p_week_start date",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+      },
+      {
+        "schema": "public",
+        "name": "update_swipe_week_draft",
+        "arguments": "p_athlete_id uuid, p_draft_id uuid, p_expected_revision bigint, p_payload jsonb",
+        "security_definer": false,
+        "acl": "{postgres=X/postgres,service_role=X/postgres}"
+      }
+    ],
+    "side_effect_relations": [],
+    "signup_function": [
+      {
+        "definition": "CREATE OR REPLACE FUNCTION private.ensure_athlete_identity_map()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\r\nbegin\r\n  insert into private.athlete_identity_map (\r\n    auth_user_id,\r\n    creation_source\r\n  )\r\n  values (new.id, 'auth_user_trigger')\r\n  on conflict (auth_user_id) do nothing;\r\n  return new;\r\nend;\r\n$function$\n"
+      }
+    ],
+    "foreign_keys": [
+      {
+        "schema": "auth",
+        "table": "identities",
+        "name": "identities_user_id_fkey",
+        "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "mfa_amr_claims",
+        "name": "mfa_amr_claims_session_id_fkey",
+        "definition": "FOREIGN KEY (session_id) REFERENCES auth.sessions(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "mfa_challenges",
+        "name": "mfa_challenges_auth_factor_id_fkey",
+        "definition": "FOREIGN KEY (factor_id) REFERENCES auth.mfa_factors(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "mfa_factors",
+        "name": "mfa_factors_user_id_fkey",
+        "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "mfa_recovery_code_sets",
+        "name": "mfa_recovery_code_sets_mfa_factor_id_fkey",
+        "definition": "FOREIGN KEY (mfa_factor_id) REFERENCES auth.mfa_factors(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "mfa_recovery_code_sets",
+        "name": "mfa_recovery_code_sets_user_id_fkey",
+        "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "mfa_recovery_codes",
+        "name": "mfa_recovery_codes_mfa_recovery_code_set_id_fkey",
+        "definition": "FOREIGN KEY (mfa_recovery_code_set_id) REFERENCES auth.mfa_recovery_code_sets(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "oauth_authorizations",
+        "name": "oauth_authorizations_client_id_fkey",
+        "definition": "FOREIGN KEY (client_id) REFERENCES auth.oauth_clients(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "oauth_authorizations",
+        "name": "oauth_authorizations_user_id_fkey",
+        "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "oauth_consents",
+        "name": "oauth_consents_client_id_fkey",
+        "definition": "FOREIGN KEY (client_id) REFERENCES auth.oauth_clients(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "oauth_consents",
+        "name": "oauth_consents_user_id_fkey",
+        "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "one_time_tokens",
+        "name": "one_time_tokens_user_id_fkey",
+        "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "refresh_tokens",
+        "name": "refresh_tokens_session_id_fkey",
+        "definition": "FOREIGN KEY (session_id) REFERENCES auth.sessions(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "saml_providers",
+        "name": "saml_providers_sso_provider_id_fkey",
+        "definition": "FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "saml_relay_states",
+        "name": "saml_relay_states_flow_state_id_fkey",
+        "definition": "FOREIGN KEY (flow_state_id) REFERENCES auth.flow_state(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "saml_relay_states",
+        "name": "saml_relay_states_sso_provider_id_fkey",
+        "definition": "FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "scim_tokens",
+        "name": "scim_tokens_sso_provider_id_fkey",
+        "definition": "FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "scim_users",
+        "name": "scim_users_sso_provider_id_fkey",
+        "definition": "FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "scim_users",
+        "name": "scim_users_user_id_fkey",
+        "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL"
+      },
+      {
+        "schema": "auth",
+        "table": "sessions",
+        "name": "sessions_oauth_client_id_fkey",
+        "definition": "FOREIGN KEY (oauth_client_id) REFERENCES auth.oauth_clients(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "sessions",
+        "name": "sessions_user_id_fkey",
+        "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "sso_domains",
+        "name": "sso_domains_sso_provider_id_fkey",
+        "definition": "FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "webauthn_challenges",
+        "name": "webauthn_challenges_user_id_fkey",
+        "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "auth",
+        "table": "webauthn_credentials",
+        "name": "webauthn_credentials_user_id_fkey",
+        "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "activity_loads",
+        "name": "activity_loads_activity_id_fkey",
+        "definition": "FOREIGN KEY (activity_id) REFERENCES activities(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "activity_loads",
+        "name": "activity_loads_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "activity_loads",
+        "name": "activity_loads_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "activity_loads",
+        "name": "activity_loads_zone_profile_owner",
+        "definition": "FOREIGN KEY (zone_profile_id, athlete_id) REFERENCES zone_profile_versions(id, athlete_id)"
+      },
+      {
+        "schema": "private",
+        "table": "athlete_identity_map",
+        "name": "athlete_identity_map_auth_user_id_fkey",
+        "definition": "FOREIGN KEY (auth_user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "integration_oauth_states",
+        "name": "integration_oauth_states_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "integration_oauth_states",
+        "name": "integration_oauth_states_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "phase_13_activity_load_history",
+        "name": "phase_13_activity_load_history_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "pioneer_access_attempts",
+        "name": "pioneer_access_attempts_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "pioneer_access_attempts",
+        "name": "pioneer_access_attempts_redemption_id_fkey",
+        "definition": "FOREIGN KEY (redemption_id) REFERENCES pioneer_access_redemptions(id) ON DELETE SET NULL"
+      },
+      {
+        "schema": "private",
+        "table": "pioneer_access_codes",
+        "name": "pioneer_access_codes_intended_athlete_id_fkey",
+        "definition": "FOREIGN KEY (intended_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "pioneer_access_codes",
+        "name": "pioneer_access_codes_redeemed_by_athlete_id_fkey",
+        "definition": "FOREIGN KEY (redeemed_by_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE SET NULL"
+      },
+      {
+        "schema": "private",
+        "table": "pioneer_access_codes",
+        "name": "pioneer_access_codes_redemption_fk",
+        "definition": "FOREIGN KEY (redemption_id) REFERENCES pioneer_access_redemptions(id) ON DELETE RESTRICT"
+      },
+      {
+        "schema": "private",
+        "table": "plan_revision_loads",
+        "name": "plan_revision_loads_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "plan_revision_loads",
+        "name": "plan_revision_loads_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "plan_revision_loads",
+        "name": "plan_revision_loads_revision_id_fkey",
+        "definition": "FOREIGN KEY (revision_id) REFERENCES plan_revisions(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "planned_workout_loads",
+        "name": "planned_workout_loads_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "planned_workout_loads",
+        "name": "planned_workout_loads_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "planned_workout_loads",
+        "name": "planned_workout_loads_planned_workout_id_fkey",
+        "definition": "FOREIGN KEY (planned_workout_id) REFERENCES planned_workouts(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "provider_activity_imports",
+        "name": "provider_activity_imports_activity_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (activity_id, athlete_id) REFERENCES activities(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "provider_activity_imports",
+        "name": "provider_activity_imports_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "provider_activity_imports",
+        "name": "provider_activity_imports_import_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (import_id, athlete_id) REFERENCES import_runs(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "provider_activity_imports",
+        "name": "provider_activity_imports_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "provider_tokens",
+        "name": "provider_tokens_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "provider_tokens",
+        "name": "provider_tokens_connection_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (connection_id, athlete_id) REFERENCES provider_connections(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "provider_tokens",
+        "name": "provider_tokens_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "webhook_receipts",
+        "name": "webhook_receipts_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "webhook_receipts",
+        "name": "webhook_receipts_import_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (import_id, athlete_id) REFERENCES import_runs(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "webhook_receipts",
+        "name": "webhook_receipts_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "private",
+        "table": "workout_template_loads",
+        "name": "workout_template_loads_template_id_fkey",
+        "definition": "FOREIGN KEY (template_id) REFERENCES workout_templates(id)"
+      },
+      {
+        "schema": "public",
+        "table": "activities",
+        "name": "activities_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "activities",
+        "name": "activities_correction_proposal_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (correction_proposal_id, athlete_id) REFERENCES change_proposals(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "activities",
+        "name": "activities_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "activities",
+        "name": "activities_planned_workout_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (planned_workout_id, athlete_id) REFERENCES planned_workouts(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "activity_files",
+        "name": "activity_files_activity_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (activity_id, athlete_id) REFERENCES activities(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "activity_files",
+        "name": "activity_files_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "activity_files",
+        "name": "activity_files_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "activity_metrics",
+        "name": "activity_metrics_activity_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (activity_id, athlete_id) REFERENCES activities(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "activity_metrics",
+        "name": "activity_metrics_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "activity_rpe_revisions",
+        "name": "activity_rpe_revisions_activity_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (activity_id, athlete_id) REFERENCES activities(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "activity_rpe_revisions",
+        "name": "activity_rpe_revisions_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_identifying_profiles",
+        "name": "athlete_identifying_profiles_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_physiology_profiles",
+        "name": "athlete_physiology_profiles_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_profiles",
+        "name": "athlete_profiles_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "athlete_profiles",
+        "name": "athlete_profiles_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_evaluations",
+        "name": "calibration_evaluations_activity_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (activity_id, athlete_id) REFERENCES activities(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_evaluations",
+        "name": "calibration_evaluations_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_evaluations",
+        "name": "calibration_evaluations_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_observations",
+        "name": "calibration_observations_activity_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (activity_id, athlete_id) REFERENCES activities(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_observations",
+        "name": "calibration_observations_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_observations",
+        "name": "calibration_observations_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_observations",
+        "name": "calibration_observations_planned_workout_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (planned_workout_id, athlete_id) REFERENCES planned_workouts(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_threshold_decisions",
+        "name": "calibration_threshold_decisio_base_zone_profile_id_athlete_fkey",
+        "definition": "FOREIGN KEY (base_zone_profile_id, athlete_id) REFERENCES zone_profile_versions(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_threshold_decisions",
+        "name": "calibration_threshold_decisions_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_threshold_decisions",
+        "name": "calibration_threshold_decisions_evaluation_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (evaluation_id, athlete_id) REFERENCES calibration_evaluations(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_threshold_decisions",
+        "name": "calibration_threshold_decisions_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_threshold_decisions",
+        "name": "calibration_threshold_decisions_zone_profile_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (zone_profile_id, athlete_id) REFERENCES zone_profile_versions(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "calibration_threshold_decisions",
+        "name": "calibration_threshold_decisions_zone_proposal_id_fkey",
+        "definition": "FOREIGN KEY (zone_proposal_id) REFERENCES change_proposals(id)"
+      },
+      {
+        "schema": "public",
+        "table": "change_proposals",
+        "name": "change_proposals_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "change_proposals",
+        "name": "change_proposals_base_zone_profile_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (base_zone_profile_id, athlete_id) REFERENCES zone_profile_versions(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "change_proposals",
+        "name": "change_proposals_decision_actor_fkey",
+        "definition": "FOREIGN KEY (decision_actor) REFERENCES auth.users(id)"
+      },
+      {
+        "schema": "public",
+        "table": "change_proposals",
+        "name": "change_proposals_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "change_proposals",
+        "name": "change_proposals_target_plan_revision_fkey",
+        "definition": "FOREIGN KEY (target_plan_revision_id, athlete_id) REFERENCES plan_revisions(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "change_proposals",
+        "name": "change_proposals_target_test_assignment_fkey",
+        "definition": "FOREIGN KEY (target_test_assignment_id, athlete_id) REFERENCES discipline_test_assignments(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "change_proposals",
+        "name": "change_proposals_target_zone_profile_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (target_zone_profile_id, athlete_id) REFERENCES zone_profile_versions(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_test_assignments",
+        "name": "discipline_test_assignments_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_test_assignments",
+        "name": "discipline_test_assignments_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_test_assignments",
+        "name": "discipline_test_assignments_plan_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (plan_id, athlete_id) REFERENCES weekly_plans(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_test_assignments",
+        "name": "discipline_test_assignments_plan_proposal_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (plan_proposal_id, athlete_id) REFERENCES change_proposals(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_test_assignments",
+        "name": "discipline_test_assignments_target_plan_revision_id_athlet_fkey",
+        "definition": "FOREIGN KEY (target_plan_revision_id, athlete_id) REFERENCES plan_revisions(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_zone_setups",
+        "name": "discipline_zone_setups_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "discipline_zone_setups",
+        "name": "discipline_zone_setups_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "goal_maintenance_states",
+        "name": "goal_maintenance_states_goal_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (goal_id, athlete_id) REFERENCES goals(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "goal_maintenance_states",
+        "name": "goal_maintenance_states_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "goals",
+        "name": "goals_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "goals",
+        "name": "goals_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "import_runs",
+        "name": "import_runs_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "import_runs",
+        "name": "import_runs_connection_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (connection_id, athlete_id) REFERENCES provider_connections(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "import_runs",
+        "name": "import_runs_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "initial_plan_requests",
+        "name": "initial_plan_requests_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "initial_plan_requests",
+        "name": "initial_plan_requests_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "injury_restrictions",
+        "name": "injury_restrictions_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "injury_restrictions",
+        "name": "injury_restrictions_context_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (context_id, athlete_id) REFERENCES weekly_checkin_contexts(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "injury_restrictions",
+        "name": "injury_restrictions_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "onboarding_completion_records",
+        "name": "onboarding_completion_records_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "onboarding_completion_records",
+        "name": "onboarding_completion_records_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "onboarding_completion_records",
+        "name": "onboarding_completion_records_request_fkey",
+        "definition": "FOREIGN KEY (initial_plan_request_id, athlete_id) REFERENCES initial_plan_requests(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "onboarding_sessions",
+        "name": "onboarding_sessions_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "onboarding_sessions",
+        "name": "onboarding_sessions_initial_plan_request_fkey",
+        "definition": "FOREIGN KEY (initial_plan_request_id, athlete_id) REFERENCES initial_plan_requests(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "onboarding_sessions",
+        "name": "onboarding_sessions_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "pioneer_access_redemptions",
+        "name": "pioneer_access_redemptions_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "plan_revisions",
+        "name": "plan_revisions_checkin_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (checkin_id, athlete_id) REFERENCES weekly_checkins(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "plan_revisions",
+        "name": "plan_revisions_initial_plan_request_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (initial_plan_request_id, athlete_id) REFERENCES initial_plan_requests(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "plan_revisions",
+        "name": "plan_revisions_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "plan_revisions",
+        "name": "plan_revisions_plan_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (plan_id, athlete_id) REFERENCES weekly_plans(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "plan_warnings",
+        "name": "plan_warnings_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "plan_warnings",
+        "name": "plan_warnings_planned_workout_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (planned_workout_id, athlete_id) REFERENCES planned_workouts(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "plan_warnings",
+        "name": "plan_warnings_revision_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (revision_id, athlete_id) REFERENCES plan_revisions(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "planned_external_activities",
+        "name": "planned_external_activities_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "planned_external_activities",
+        "name": "planned_external_activities_completed_activity_id_athlete__fkey",
+        "definition": "FOREIGN KEY (completed_activity_id, athlete_id) REFERENCES activities(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "planned_external_activities",
+        "name": "planned_external_activities_context_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (context_id, athlete_id) REFERENCES weekly_checkin_contexts(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "planned_external_activities",
+        "name": "planned_external_activities_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "planned_workouts",
+        "name": "planned_workouts_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "planned_workouts",
+        "name": "planned_workouts_plan_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (plan_id, athlete_id) REFERENCES weekly_plans(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "planned_workouts",
+        "name": "planned_workouts_revision_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (revision_id, athlete_id) REFERENCES plan_revisions(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "planned_workouts",
+        "name": "planned_workouts_template_id_fkey",
+        "definition": "FOREIGN KEY (template_id) REFERENCES workout_templates(id)"
+      },
+      {
+        "schema": "public",
+        "table": "provider_connections",
+        "name": "provider_connections_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "provider_connections",
+        "name": "provider_connections_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "swipe_week_drafts",
+        "name": "swipe_week_drafts_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "swipe_week_drafts",
+        "name": "swipe_week_drafts_current_template_id_fkey",
+        "definition": "FOREIGN KEY (current_template_id) REFERENCES workout_templates(id)"
+      },
+      {
+        "schema": "public",
+        "table": "swipe_week_drafts",
+        "name": "swipe_week_drafts_initial_plan_request_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (initial_plan_request_id, athlete_id) REFERENCES initial_plan_requests(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "swipe_week_drafts",
+        "name": "swipe_week_drafts_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "swipe_week_drafts",
+        "name": "swipe_week_drafts_plan_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (plan_id, athlete_id) REFERENCES weekly_plans(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "swipe_week_drafts",
+        "name": "swipe_week_drafts_proposal_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (proposal_id, athlete_id) REFERENCES change_proposals(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "training_history_entries",
+        "name": "training_history_entries_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "training_history_entries",
+        "name": "training_history_entries_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_checkin_contexts",
+        "name": "weekly_checkin_contexts_checkin_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (checkin_id, athlete_id) REFERENCES weekly_checkins(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_checkin_contexts",
+        "name": "weekly_checkin_contexts_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_checkins",
+        "name": "weekly_checkins_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_checkins",
+        "name": "weekly_checkins_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_checkins",
+        "name": "weekly_checkins_plan_proposal_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (plan_proposal_id, athlete_id) REFERENCES change_proposals(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_plans",
+        "name": "weekly_plans_active_revision_fkey",
+        "definition": "FOREIGN KEY (id, active_revision, athlete_id) REFERENCES plan_revisions(plan_id, revision_number, athlete_id) DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_plans",
+        "name": "weekly_plans_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "weekly_plans",
+        "name": "weekly_plans_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "workout_segments",
+        "name": "workout_segments_template_id_fkey",
+        "definition": "FOREIGN KEY (template_id) REFERENCES workout_templates(id)"
+      },
+      {
+        "schema": "public",
+        "table": "workout_template_phase_tags",
+        "name": "workout_template_phase_tags_template_id_fkey",
+        "definition": "FOREIGN KEY (template_id) REFERENCES workout_templates(id)"
+      },
+      {
+        "schema": "public",
+        "table": "workout_template_zone_requirements",
+        "name": "workout_template_zone_requirements_template_id_fkey",
+        "definition": "FOREIGN KEY (template_id) REFERENCES workout_templates(id)"
+      },
+      {
+        "schema": "public",
+        "table": "zone_boundaries",
+        "name": "zone_boundaries_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "zone_boundaries",
+        "name": "zone_boundaries_zone_profile_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (zone_profile_id, athlete_id) REFERENCES zone_profile_versions(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "zone_metrics",
+        "name": "zone_metrics_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "zone_metrics",
+        "name": "zone_metrics_zone_profile_id_athlete_id_fkey",
+        "definition": "FOREIGN KEY (zone_profile_id, athlete_id) REFERENCES zone_profile_versions(id, athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "zone_profile_versions",
+        "name": "zone_profile_calibration_evaluation_fkey",
+        "definition": "FOREIGN KEY (calibration_evaluation_id, athlete_id) REFERENCES calibration_evaluations(id, athlete_id)"
+      },
+      {
+        "schema": "public",
+        "table": "zone_profile_versions",
+        "name": "zone_profile_versions_athlete_id_fkey",
+        "definition": "FOREIGN KEY (athlete_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "public",
+        "table": "zone_profile_versions",
+        "name": "zone_profile_versions_opaque_athlete_fkey",
+        "definition": "FOREIGN KEY (internal_athlete_id) REFERENCES private.athlete_identity_map(athlete_id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "storage",
+        "table": "bucket_lifecycle_states",
+        "name": "bucket_lifecycle_states_bucket_id_fkey",
+        "definition": "FOREIGN KEY (bucket_id) REFERENCES storage.buckets(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "storage",
+        "table": "objects",
+        "name": "objects_bucketId_fkey",
+        "definition": "FOREIGN KEY (bucket_id) REFERENCES storage.buckets(id)"
+      },
+      {
+        "schema": "storage",
+        "table": "s3_multipart_uploads",
+        "name": "s3_multipart_uploads_bucket_id_fkey",
+        "definition": "FOREIGN KEY (bucket_id) REFERENCES storage.buckets(id)"
+      },
+      {
+        "schema": "storage",
+        "table": "s3_multipart_uploads_parts",
+        "name": "s3_multipart_uploads_parts_bucket_id_fkey",
+        "definition": "FOREIGN KEY (bucket_id) REFERENCES storage.buckets(id)"
+      },
+      {
+        "schema": "storage",
+        "table": "s3_multipart_uploads_parts",
+        "name": "s3_multipart_uploads_parts_upload_id_fkey",
+        "definition": "FOREIGN KEY (upload_id) REFERENCES storage.s3_multipart_uploads(id) ON DELETE CASCADE"
+      },
+      {
+        "schema": "storage",
+        "table": "vector_indexes",
+        "name": "vector_indexes_bucket_id_fkey",
+        "definition": "FOREIGN KEY (bucket_id) REFERENCES storage.buckets_vectors(id)"
+      }
+    ],
+    "network_functions": []
+  },
+  "checks": [
+    {
+      "case": "project_identity",
+      "http_status": 200
+    },
+    {
+      "case": "auth_config",
+      "http_status": 200
+    },
+    {
+      "case": "branch_list",
+      "http_status": 200
+    },
+    {
+      "case": "log_drains",
+      "http_status": 200
+    },
+    {
+      "case": "project_webhooks",
+      "http_status": 403
+    },
+    {
+      "case": "security_advisors",
+      "http_status": 200
+    },
+    {
+      "case": "server",
+      "http_status": 201
+    },
+    {
+      "case": "migrations",
+      "http_status": 201
+    },
+    {
+      "case": "extensions",
+      "http_status": 201
+    },
+    {
+      "case": "relations",
+      "http_status": 201
+    },
+    {
+      "case": "triggers",
+      "http_status": 201
+    },
+    {
+      "case": "policies",
+      "http_status": 201
+    },
+    {
+      "case": "grants",
+      "http_status": 201
+    },
+    {
+      "case": "rpcs",
+      "http_status": 201
+    },
+    {
+      "case": "side_effect_relations",
+      "http_status": 201
+    },
+    {
+      "case": "signup_function",
+      "http_status": 201
+    },
+    {
+      "case": "foreign_keys",
+      "http_status": 201
+    },
+    {
+      "case": "network_functions",
+      "http_status": 201
+    }
+  ],
+  "project": {
+    "id": "isfumhgqphieoayqahjv",
+    "name": "start23-dev",
+    "region": "eu-west-1",
+    "status": "ACTIVE_HEALTHY"
+  },
+  "auth": {
+    "disable_signup": false,
+    "external_email_enabled": true,
+    "hook_custom_access_token_enabled": false,
+    "hook_mfa_verification_attempt_enabled": false,
+    "hook_password_verification_attempt_enabled": false,
+    "hook_send_sms_enabled": false,
+    "hook_send_email_enabled": false,
+    "hook_before_user_created_enabled": false,
+    "hook_after_user_created_enabled": false,
+    "jwt_exp": 3600,
+    "mailer_autoconfirm": true,
+    "password_min_length": 6,
+    "refresh_token_rotation_enabled": true,
+    "security_refresh_token_reuse_interval": 10,
+    "sessions_inactivity_timeout": 0,
+    "sessions_timebox": 0,
+    "mailer_notifications_password_changed_enabled": false,
+    "mailer_notifications_email_changed_enabled": false,
+    "mailer_notifications_phone_changed_enabled": false,
+    "mailer_notifications_mfa_factor_enrolled_enabled": false,
+    "mailer_notifications_mfa_factor_unenrolled_enabled": false,
+    "mailer_notifications_identity_linked_enabled": false,
+    "mailer_notifications_identity_unlinked_enabled": false
+  },
+  "branch_count": 0,
+  "log_drains": {
+    "http_status": 200,
+    "entry_count": 0
+  },
+  "project_webhooks": {
+    "http_status": 403,
+    "entry_count": null
+  },
+  "security_advisors": {
+    "http_status": 200,
+    "entry_count": 12,
+    "findings": [
+      {
+        "name": "rls_enabled_no_policy",
+        "level": "INFO",
+        "categories": [
+          "SECURITY"
+        ]
+      },
+      {
+        "name": "rls_enabled_no_policy",
+        "level": "INFO",
+        "categories": [
+          "SECURITY"
+        ]
+      },
+      {
+        "name": "rls_enabled_no_policy",
+        "level": "INFO",
+        "categories": [
+          "SECURITY"
+        ]
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "categories": [
+          "SECURITY"
+        ]
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "categories": [
+          "SECURITY"
+        ]
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "categories": [
+          "SECURITY"
+        ]
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "categories": [
+          "SECURITY"
+        ]
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "categories": [
+          "SECURITY"
+        ]
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "categories": [
+          "SECURITY"
+        ]
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "categories": [
+          "SECURITY"
+        ]
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "categories": [
+          "SECURITY"
+        ]
+      },
+      {
+        "name": "auth_leaked_password_protection",
+        "level": "WARN",
+        "categories": [
+          "SECURITY"
+        ]
+      }
+    ]
+  },
+  "migration_comparison": {
+    "accepted_count": 63,
+    "hosted_count": 47,
+    "missing": [
+      "20261026224844_wombo_a5_checkin_proposal_recovery.sql",
+      "20261103134520_joren_realized_tss_v2_private_provenance.sql",
+      "20261103135735_realized_v2_weekly_registration.sql",
+      "20261103140959_realized_v2_planning_evidence_preconditions.sql",
+      "20261103142339_realized_v2_session_rpe_guidance.sql",
+      "20261105120000_inactive_v6_persistence.sql",
+      "20261105120100_inactive_v6_catalog.sql",
+      "20261107182000_v6_segment_snapshot_compatibility.sql",
+      "20261107182500_v6_frozen_snapshot_operator_precedence.sql",
+      "20261107183000_realized_v2_internal_approval_custody.sql",
+      "20261107183500_realized_v2_business_conflict_codes.sql",
+      "20261107184500_v6_insert_custody.sql",
+      "20261108142454_inactive_v6_mobile_identity.sql",
+      "20261108180000_inactive_v6_lifecycle_completion.sql",
+      "20261108210000_inactive_v6_evidence_memberships.sql",
+      "20261113154716_inactive_v6_approved_frequency_policy.sql"
+    ],
+    "hosted_extra_versions": [],
+    "accepted_sha256": {
+      "20260724140227_create_athlete_profiles.sql": "c076334accd00b99d08e0b2485c45fd7e69c28a163366e5c8a105cba9acba3f1",
+      "20260724142004_restrict_rls_auto_enable_execution.sql": "4c7ba24a261d83dbe588f31ea5d91d70c81d7eb02614b726e188eade9d1fa8e8",
+      "20260727132531_phase_4_onboarding_goals_zones.sql": "957cc073c61dbf4c02072da9d515430376c423ee1c996a7ce7ef8c7e9f66c05e",
+      "20260727170000_phase_5_workout_catalog.sql": "10ff914077d8d4670fb9a0a6ab7c8765c4e096fcf67f92e26493023e39ad4cb6",
+      "20260728133728_phase_4_5_review_hardening.sql": "e9034fb8b43a59b9b7e851b290eb9e1d2f927bc00ada3c5e60ba3266e8c56c08",
+      "20260729140000_phase_6_weekly_planning.sql": "dd38dea5b1d27eaa56ad623c3dfdb7c24fa70bcdd797df042244b6c25ee345d7",
+      "20260809225626_phase_6_advisor_indexes.sql": "0a9a2088c96898b60175c93e5bc125a4c16d168e174b9aa55279fc452d74a537",
+      "20260811103726_phase_7_activity_rpe_feedback.sql": "281ad0cd74501b60a375d54c3da165f3d305f8eea166b0b98808a1a616879a2a",
+      "20260813105401_phase_8_structured_weekly_checkin.sql": "ad5acace89dd07d19173a5c2c75ef55dc7c2988cb9e4e8d8b3a223bc951c59d1",
+      "20260813170000_phase_8_5_zone_calibration.sql": "19268ed64e9408cfedbb8cf2f3f87acb64f7f1951e50b4a3ff96d6ced3076824",
+      "20260817105304_phase_9_polar_integration.sql": "d5604780b30b6f72be3d4245b2525b6fbc5cace5668cf409f3fc87858e83a7be",
+      "20260824144801_phase_8_5_zone_model_v1.sql": "623299a21e652dc0ffc717855d397e9af8890378c781033b12ecc5025e932be0",
+      "20260824174747_phase_10_ai_weekly_plan_explanation.sql": "9eda77f9dd6f82c6b19ce048875362000bdc528575905d563f4d226afb2bac8b",
+      "20260825225207_phase_8_5_9_business_decisions.sql": "3351437dd2f944e6097e2d10649a8e83e30d566cd6776d984efa3b1a9fe8ccb1",
+      "20260826085242_phase_10_date_only_planning.sql": "3292b95d8d74d26cc4ca68419ac1c1c2e87901d6ce5a9820ed2c28ceb4d1f525",
+      "20260826144239_phase_11_discipline_zone_profiles.sql": "b2853dd3143710d62be405f53e37300e7a4c9cf501f6b901c3edbdb29d43b024",
+      "20260901054333_phase_10_1_swipe_week_drafts.sql": "7be2ba0b07f3962aa33f020b03ed25f73d955e49b6e5b502cf4ade740e3a475c",
+      "20260902083241_fix_swipe_draft_service_role_permissions.sql": "784a1ae53cb8ae2b90200f8592d73669f098a9abbb549d33af33b67e9c1b7ce5",
+      "20260902084055_fix_swipe_draft_placement_validation.sql": "d204582e0336822c7342d37f160dcf201546aa478a27c164a5a0b81eefd029da",
+      "20260902120000_mvp_rpe_zones_and_swim_catalog.sql": "f63b61ac571dae11e90bf59b5c44b0387e5495c92d6edcf10eed7fdbe0107f5b",
+      "20260903074359_add_source_catalog_training_options.sql": "0888b5997b72d30070978ad162c346ccc1838e249fd655024c7bdd4a94317a72",
+      "20260910120000_phase_14_history_and_retired_inputs.sql": "076732bc0f1ce388190a79c62af6f1860361229d39e8dd2cbce5cca002faa3a1",
+      "20260910215947_phase_13_joren_ruleset.sql": "a3a79fbaa6b76d87c2d492c9ad647451c33b5d3ea3d592c6e5dd33daeb33bf92",
+      "20260911180631_phase_r1_onboarding_versioning.sql": "12ff2e9b0e313fd12b68cbcecd56778c28b3477570fd6c2bce2a6299437c3d83",
+      "20260912070000_r6_allow_opaque_owner_backfill_for_immutable_calibration.sql": "3c81cd85e3bc030039f78a99bc8111aa6f1a1d34304cde1694610e05b5879452",
+      "20260912072232_phase_r2_r3_identity_onboarding_calibration.sql": "e68d10f538037cfa09d0f84a33d959259e2fff57e1071f206cab1c7b13936ea4",
+      "20260912180000_phase_r4_r5_onboarding_race_activity.sql": "e5f888e93d03e823ca87b8634c9d937b081806d9e02605cc416f4459b03ae2e0",
+      "20260913130000_phase_13_14_r6_entry_audit_remediation.sql": "3f029396de239a2b679c17e7d9fb0a0e65d64b06e7eb79185d9862e502e0dc10",
+      "20260914080000_close_historical_calibration_writes.sql": "56edb5b6fd08c4988094f2ac28d78a2b5d8e454931f49e9493e2cb36a844c281",
+      "20260914090000_block_historical_zone_profile_activation.sql": "91953b75ac68ecf0d5ac30106149abe6a38efdd1d4a2f29d3c92ddd613fea363",
+      "20260914162430_r6_preserve_critical_context_for_submaximal_zone_provenance.sql": "516914f95b5163aab7dcab1f7c00d9c2bf1fb351d4fded6357c49a8ed6fad504",
+      "20260914162711_r6_order_plan_revision_owner_before_eligibility.sql": "077e40eb9c2381883356a515a67f2b6df4e2fd001f3a8580358549665a30cca9",
+      "20260914163325_r6_restore_activity_idempotency_preflight.sql": "2c9144cd622f01728f01718982c2b454e78e74401912b7e98eea862dabd6989d",
+      "20260914170134_r6_increment_structured_race_goal_revision.sql": "3a534c7fc184d0e0d7102a185cc8f1ee438b317935a41dca5dcc252cf6dea956",
+      "20260914172000_r6_refresh_planning_snapshot_after_input_change.sql": "e7cbb092cd914c9d4054481f518c5396c557abd277cb6642eeefffe5fb888316",
+      "20260914172500_r6_refresh_extended_planning_snapshot_after_input_change.sql": "ab8bc925fb3baaf5253fd9f29b798af7cef3ebdfd238119788f4896ad8bf7813",
+      "20260914173000_r6_refresh_planning_snapshot_after_goal_rpc.sql": "d37fc30c6911f9ef9628c8faadabab99d59faa9956a68d175c0765a759967f22",
+      "20260914173500_r6_force_distinct_post_rpc_snapshot_refresh.sql": "3d98a3801ef8a0f81cf5c519817cff3d0076e0f8913d1f2529680167dca1ed2d",
+      "20260914174000_r6_disambiguate_activity_processing_load_source.sql": "2238c7757b24f6579c4e9665b9616001fe30c3810120b59286a3b9271cd59636",
+      "20260914175000_r6_cover_foreign_key_access_paths.sql": "bc8335c45921818094d4bccdfa35ad4b0422b6f6a3002dad084c13fa53e26793",
+      "20260914180000_r6_preserve_account_deletion_cascades.sql": "18b42a6c0ef318e73c4a38c92dab102c3a55a3d3d5f1c49a6f31e4b60341a8fa",
+      "20260915081055_r6_mvp_nonretryable_business_conflicts.sql": "9198c3a25bac912de73015746ec26901b0a3985190f13122c523712b00c97f6a",
+      "20260915082320_r6_onboarding_completion_step_vocabulary.sql": "ad91d96a386cdbc9c9b0c3ea76aecf2a25295c142eb4fe7f731eef7a720de941",
+      "20260915205627_r6_checkin_context_and_account_deletion.sql": "5c6846107c10f0c96a071997eb4930d46ca9e9c25f066f276868ae170eac96d8",
+      "20260923063453_phase_16_pioneer_access.sql": "ae314371927f45f05bf1d06747579a51eab024cc152b8ead43abaa419eb859cb",
+      "20260929210000_joren_planning_ruleset_v2.sql": "def8e89f459a6e0eabf9a770a00b6dbdb5d00037ecd0a4d2279e586c036fe74d",
+      "20261004212750_first_plan_approved_provenance.sql": "6c102779574a757ea7985efc04b00eb713c24f2b18a306f2c2eb0b09f5c52665",
+      "20261026224844_wombo_a5_checkin_proposal_recovery.sql": "605baca7b060a74dcd0804710a8547b662d76f0c5cb7c21a5aa4b72cfa305d02",
+      "20261103134520_joren_realized_tss_v2_private_provenance.sql": "d5444ccbe28428e4101151c07c2f522ae213c2fd82190f5af8cc1ce1c2333231",
+      "20261103135735_realized_v2_weekly_registration.sql": "2c3cd85f4ead27a37dd16330626cf8c57fe69baf44459b8fa8b9e9a92f59b346",
+      "20261103140959_realized_v2_planning_evidence_preconditions.sql": "6358726af884ecb44e104ad9c0528d2ca7865c0dde8a37e1e8169fbd13ee896a",
+      "20261103142339_realized_v2_session_rpe_guidance.sql": "4b3749757358d332df835b4abb945dc95769c4f7a5a14f9b3654874880d93d29",
+      "20261105120000_inactive_v6_persistence.sql": "c3572d34ea784a6aba9ab7531cca34007f768ca79602b63d92dfcf0f491c8283",
+      "20261105120100_inactive_v6_catalog.sql": "6e77d8d54650c7be554a90bb87cdf339b72a2db334be1a8dd98e82d6e22efe34",
+      "20261107182000_v6_segment_snapshot_compatibility.sql": "ca38c97168eaf7d22d5b3508aa4bcdc78f4643044181bfe2ff3d5e699cf838c1",
+      "20261107182500_v6_frozen_snapshot_operator_precedence.sql": "aab65809df7f6ebf5d2881fde680e2b169943eceb9d27e2ce53350afbf29efe8",
+      "20261107183000_realized_v2_internal_approval_custody.sql": "1efa35afae3877ea80bde0edc03241e0dad1944dee7a217d40739da86fcbc93a",
+      "20261107183500_realized_v2_business_conflict_codes.sql": "1fae47af0784194597bd783a53c22626a9951a16009e749df672b202309e4375",
+      "20261107184500_v6_insert_custody.sql": "b5844a38a73da363642db6a99328e5358fd4ff72302b51434dd88333dc4a4140",
+      "20261108142454_inactive_v6_mobile_identity.sql": "767e7c0f7badbebee9701b546f4666c8f0f72843334f5f8b0f3f7ab313c81008",
+      "20261108180000_inactive_v6_lifecycle_completion.sql": "71f3b0388ac99ffae6bd76659eeba1fef84c1adecc004ebb37e8fa10010732c6",
+      "20261108210000_inactive_v6_evidence_memberships.sql": "8428f54223108265c20ec87890b651aca4129ca1b5910c75439f6b691eeffb25",
+      "20261113154716_inactive_v6_approved_frequency_policy.sql": "c0a43411f7db00d4d76cb8400d0b07e5081678aff280853a6a91b9b03ff6b2c4"
+    }
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "assessment_dates_local": [
+    "2026-11-15",
+    "2026-11-16"
+  ],
+  "timezone": "Europe/Amsterdam",
+  "base_sha": "289280a5bddf6f0cc65eca1f562561e7df9a603c",
+  "branch": "release/joren-v6-hosted-migration-readiness",
+  "completion": "WOMBO V6 PRODUCTION MIGRATION READINESS PARTIAL - EXACT RISKS DOCUMENTED",
+  "hosted": {
+    "project_ref": "isfumhgqphieoayqahjv",
+    "migration_count": 47,
+    "accepted_count": 63,
+    "missing_count": 16,
+    "extra_versions": [],
+    "metadata_and_auth_before_after_equal": true,
+    "mutations": 0,
+    "athlete_rows_downloaded": 0,
+    "backup_list_count": 0,
+    "pitr_enabled": false,
+    "walg_enabled": true,
+    "restoration_verified": false,
+    "railway_deployed_commit": "UNVERIFIED - existing session unauthorized"
+  },
+  "backend": {
+    "command": "python -m pytest -q",
+    "passed": 2891,
+    "failed": 0,
+    "warnings": 1,
+    "seconds": 281.15
+  },
+  "mobile": {
+    "command": "node node_modules/jest/bin/jest.js --runInBand --cacheDirectory ../.runtime/migration-readiness/jest-cache --json --outputFile ../.runtime/migration-readiness/jest.json",
+    "passed": 935,
+    "suites": 89,
+    "seconds": 152.822
+  },
+  "typing_and_style": {
+    "ruff": "PASS",
+    "ruff_format_files": 248,
+    "mypy_app_tests_benchmarks_sources": 223,
+    "mypy_new_scripts_sources": 3,
+    "typescript_strict_unused": "PASS"
+  },
+  "postgres": {
+    "portable_version": "17.11 Windows",
+    "hosted_version": "17.6 Linux",
+    "complete_hosted_parity": false,
+    "clean_boundary": {
+      "files_replayed": 63,
+      "missing_exact_files_executed": 16,
+      "groups": [
+        1,
+        11,
+        4
+      ],
+      "suites": 37,
+      "assertions": 722,
+      "a5_overlay": true,
+      "original_a5_pass": 8,
+      "original_a5_fail": 1,
+      "original_a5_not_executed": 20,
+      "preexisting_tables_hash_equal": 51,
+      "historical_template_rows": 325,
+      "historical_load_rows": 325
+    },
+    "observed_body_drift_boundary": {
+      "suites": 37,
+      "assertions": 722,
+      "preexisting_tables_hash_equal": 51,
+      "a5_overlay": true
+    },
+    "historical_group_smoke_suites": 6,
+    "pre_boundary_attempts": {
+      "suites": 27,
+      "passing": 25,
+      "unavailable_final_schema_tests": [
+        "phase_5_workout_catalog_test.sql",
+        "r6_mvp_business_conflicts_test.sql"
+      ]
+    },
+    "lifecycle_groups": 9,
+    "evidence_rescheduling_groups": 11,
+    "frequency_groups": 9,
+    "disable_preserved_tables": 64,
+    "atomic_group_2_precommit_rollback": "PASS",
+    "strict_bundle_acl_refusal": "PASS",
+    "readonly_post_assertions": "PASS"
+  },
+  "historical_benchmark": {
+    "cases": 40,
+    "bound_seconds": 8,
+    "diffs": {
+      "result": [],
+      "independent_checks": [],
+      "output_sha256": []
+    },
+    "timeouts": [
+      "current:build_4"
+    ],
+    "accepted_reference_count": 26,
+    "reference_result_diffs": [],
+    "reference_hash_diffs": []
+  },
+  "search_oracle": {
+    "contexts": 15,
+    "products_visited": 20061679,
+    "all_non_timing_fields_equal": true
+  },
+  "known_blockers": [
+    "No available hosted backup/recovery checkpoint; PITR disabled",
+    "Shared activity projection rejected by historical strict model; deployed SHA unknown",
+    "13 new authenticated EXECUTE signatures conflict with strict inactive-rollout instruction",
+    "Existing body/catalog ACL/default ACL drift needs disposition; portable hosted parity incomplete",
+    "Hosted V6 adapter absent; official isolated runtime and genuine two-account V6 lifecycle not executed",
+    "Independent reviewer/maxima/scientific/device/deployment gates remain"
+  ],
+  "initial_harness_failures": [
+    "Default system Python lacked pydantic-settings: collection stopped; full suite rerun with existing backend venv passed",
+    "First local seed used wrong approval RPC name, then empty metric object; corrected harness used supported existing RPC and valid synthetic metric; fresh databases used for evidence",
+    "Observed-drift replay initially omitted separator after pg_get_functiondef output; corrected semicolon delimiter, fresh full replay passed",
+    "Windows sandbox blocked pg_ctl restricted token; new isolated cluster started with reviewed escalation; no protected cluster used"
+  ],
+  "app_and_accepted_migration_changes": 0,
+  "protected_worktree_changes": 0,
+  "pushes": 0,
+  "deployments": 0,
+  "catalog_activations": 0
+}

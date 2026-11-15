@@ -1,0 +1,41 @@
+--- accepted local
++++ hosted
+@@ -24,12 +24,6 @@
+       raise exception 'manual zones require a metric'
+         using errcode = '23514';
+     end if;
+-    if p_requires_review is distinct from true
+-       or p_review_reason <> 'soft_range_not_configured'
+-       or p_ruleset_version <> 'phase-3-ruleset-2' then
+-      raise exception 'manual zone review metadata is server-controlled'
+-        using errcode = '23514';
+-    end if;
+     if not (
+       (p_discipline = 'swim' and p_metric_kind = 'swim_css_seconds_per_100m')
+       or (
+@@ -51,20 +45,10 @@
+         using errcode = '23514';
+     end if;
+   elsif p_setup_method = 'fallback' then
+-    if current_setting('start23.trusted_fallback', true) is distinct from 'on' then
+-      raise exception 'fallback zones require the trusted backend RPC'
+-        using errcode = '42501';
+-    end if;
+     if p_discipline = 'swim'
+        or p_metric_kind is not null
+        or p_metric_value is not null then
+       raise exception 'fallback is heart-rate-only for bike or run'
+-        using errcode = '23514';
+-    end if;
+-    if p_requires_review is distinct from true
+-       or p_review_reason <> 'fallback_unvalidated'
+-       or p_ruleset_version <> 'phase-3-ruleset-2' then
+-      raise exception 'fallback review metadata is server-controlled'
+         using errcode = '23514';
+     end if;
+   else
+@@ -249,4 +233,3 @@
+   );
+ end;
+ $function$
+-

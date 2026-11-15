@@ -1,0 +1,8 @@
+{
+  "group": 2,
+  "all_11_exact_migrations_executed_before_injected_failure": true,
+  "failure_before_commit": "P0001",
+  "new_connection_schema_equal": true,
+  "new_connection_data_equal": true,
+  "hosted_execution": false
+}

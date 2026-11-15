@@ -1,0 +1,671 @@
+[
+  {
+    "ordinal": 1,
+    "file": "20261026224844_wombo_a5_checkin_proposal_recovery.sql",
+    "sha256": "605baca7b060a74dcd0804710a8547b662d76f0c5cb7c21a5aa4b72cfa305d02",
+    "created_tables": [],
+    "altered_tables": [],
+    "declared_functions": [
+      "public.get_checkin_plan_proposal",
+      "public.create_weekly_plan_proposal_v3"
+    ],
+    "created_views": [],
+    "created_triggers": [],
+    "created_policies": [],
+    "grant_statements": [
+      "grant execute on function public.get_checkin_plan_proposal(uuid) to authenticated;",
+      "grant execute on function public.create_weekly_plan_proposal_v3(uuid, jsonb) to service_role;"
+    ],
+    "revoke_statements": [
+      "revoke all on function public.get_checkin_plan_proposal(uuid) from public, anon, authenticated, service_role;",
+      "revoke all on function public.create_weekly_plan_proposal_v3(uuid, jsonb) from public, anon, authenticated, service_role;"
+    ],
+    "trigger_targets": []
+  },
+  {
+    "ordinal": 2,
+    "file": "20261103134520_joren_realized_tss_v2_private_provenance.sql",
+    "sha256": "d5444ccbe28428e4101151c07c2f522ae213c2fd82190f5af8cc1ce1c2333231",
+    "created_tables": [
+      "private.realized_v2_activity_inputs",
+      "private.realized_v2_calculations"
+    ],
+    "altered_tables": [
+      "private.realized_v2_activity_inputs",
+      "private.realized_v2_calculations"
+    ],
+    "declared_functions": [
+      "private.realized_v2_immutable",
+      "public.create_activity_summary_v2",
+      "public.get_activity_processing_context_v2",
+      "public.complete_activity_rpe_v2"
+    ],
+    "created_views": [],
+    "created_triggers": [
+      "r3_00_sync_opaque_athlete_owner",
+      "realized_v2_input_immutable",
+      "realized_v2_calculation_immutable"
+    ],
+    "created_policies": [],
+    "grant_statements": [
+      "grant select, insert on private.realized_v2_activity_inputs, private.realized_v2_calculations to service_role;",
+      "grant execute on function public.create_activity_summary_v2(uuid, text, jsonb) to authenticated;",
+      "grant execute on function public.get_activity_processing_context_v2(uuid, uuid) to service_role;",
+      "grant execute on function public.complete_activity_rpe_v2(uuid, uuid, jsonb) to service_role;"
+    ],
+    "revoke_statements": [
+      "revoke all on private.realized_v2_activity_inputs, private.realized_v2_calculations from public, anon, authenticated, service_role;",
+      "revoke all on function private.realized_v2_immutable() from public, anon, authenticated, service_role;",
+      "revoke all on function public.create_activity_summary_v2(uuid, text, jsonb) from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_activity_processing_context_v2(uuid, uuid) from public, anon, authenticated, service_role;",
+      "revoke all on function public.complete_activity_rpe_v2(uuid, uuid, jsonb) from public, anon, authenticated, service_role;"
+    ],
+    "trigger_targets": [
+      {
+        "trigger": "r3_00_sync_opaque_athlete_owner",
+        "table": "private.realized_v2_activity_inputs"
+      },
+      {
+        "trigger": "r3_00_sync_opaque_athlete_owner",
+        "table": "private.realized_v2_calculations"
+      },
+      {
+        "trigger": "realized_v2_input_immutable",
+        "table": "private.realized_v2_activity_inputs"
+      },
+      {
+        "trigger": "realized_v2_calculation_immutable",
+        "table": "private.realized_v2_calculations"
+      }
+    ]
+  },
+  {
+    "ordinal": 3,
+    "file": "20261103135735_realized_v2_weekly_registration.sql",
+    "sha256": "2c3cd85f4ead27a37dd16330626cf8c57fe69baf44459b8fa8b9e9a92f59b346",
+    "created_tables": [
+      "private.workout_registration_events"
+    ],
+    "altered_tables": [
+      "private.workout_registration_events"
+    ],
+    "declared_functions": [
+      "public.get_workout_registration",
+      "public.confirm_workout_registration",
+      "private.guard_skipped_workout_activity",
+      "public.get_plan_load_history_for_planning_v16"
+    ],
+    "created_views": [],
+    "created_triggers": [
+      "r3_00_sync_opaque_athlete_owner",
+      "workout_registration_immutable",
+      "realized_v2_guard_skipped_activity"
+    ],
+    "created_policies": [],
+    "grant_statements": [
+      "grant select, insert on private.workout_registration_events to service_role;",
+      "grant execute on function public.get_workout_registration(uuid) to authenticated;",
+      "grant execute on function public.confirm_workout_registration(uuid, uuid, integer, text) to authenticated;",
+      "grant execute on function public.get_plan_load_history_for_planning_v16(uuid, date) to service_role;"
+    ],
+    "revoke_statements": [
+      "revoke all on private.workout_registration_events from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_workout_registration(uuid) from public, anon, authenticated, service_role;",
+      "revoke all on function public.confirm_workout_registration(uuid, uuid, integer, text) from public, anon, authenticated, service_role;",
+      "revoke all on function private.guard_skipped_workout_activity() from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_plan_load_history_for_planning_v16(uuid, date) from public, anon, authenticated, service_role;"
+    ],
+    "trigger_targets": [
+      {
+        "trigger": "r3_00_sync_opaque_athlete_owner",
+        "table": "private.workout_registration_events"
+      },
+      {
+        "trigger": "workout_registration_immutable",
+        "table": "private.workout_registration_events"
+      },
+      {
+        "trigger": "realized_v2_guard_skipped_activity",
+        "table": "public.activities"
+      }
+    ]
+  },
+  {
+    "ordinal": 4,
+    "file": "20261103140959_realized_v2_planning_evidence_preconditions.sql",
+    "sha256": "6358726af884ecb44e104ad9c0528d2ca7865c0dde8a37e1e8169fbd13ee896a",
+    "created_tables": [
+      "private.realized_v2_plan_evidence"
+    ],
+    "altered_tables": [
+      "private.realized_v2_plan_evidence"
+    ],
+    "declared_functions": [
+      "private.realized_v2_history_evidence",
+      "public.create_weekly_plan_proposal_v4",
+      "private.guard_realized_v2_plan_approval"
+    ],
+    "created_views": [],
+    "created_triggers": [
+      "r3_00_sync_opaque_athlete_owner",
+      "realized_v2_plan_evidence_immutable",
+      "realized_v2_guard_plan_approval"
+    ],
+    "created_policies": [],
+    "grant_statements": [
+      "grant select, insert on private.realized_v2_plan_evidence to service_role;",
+      "grant execute on function public.create_weekly_plan_proposal_v4(uuid, jsonb) to service_role;"
+    ],
+    "revoke_statements": [
+      "revoke all on private.realized_v2_plan_evidence from public, anon, authenticated, service_role;",
+      "revoke all on function private.realized_v2_history_evidence(uuid, date) from public, anon, authenticated, service_role;",
+      "revoke all on function public.create_weekly_plan_proposal_v4(uuid, jsonb) from public, anon, authenticated, service_role;",
+      "revoke all on function private.guard_realized_v2_plan_approval() from public, anon, authenticated, service_role;"
+    ],
+    "trigger_targets": [
+      {
+        "trigger": "r3_00_sync_opaque_athlete_owner",
+        "table": "private.realized_v2_plan_evidence"
+      },
+      {
+        "trigger": "realized_v2_plan_evidence_immutable",
+        "table": "private.realized_v2_plan_evidence"
+      },
+      {
+        "trigger": "realized_v2_guard_plan_approval",
+        "table": "public.plan_revisions"
+      }
+    ]
+  },
+  {
+    "ordinal": 5,
+    "file": "20261103142339_realized_v2_session_rpe_guidance.sql",
+    "sha256": "4b3749757358d332df835b4abb945dc95769c4f7a5a14f9b3654874880d93d29",
+    "created_tables": [],
+    "altered_tables": [],
+    "declared_functions": [
+      "private.activity_public_json"
+    ],
+    "created_views": [],
+    "created_triggers": [],
+    "created_policies": [],
+    "grant_statements": [],
+    "revoke_statements": [
+      "revoke all on function private.activity_public_json(uuid, uuid) from public, anon, authenticated, service_role;"
+    ],
+    "trigger_targets": []
+  },
+  {
+    "ordinal": 6,
+    "file": "20261105120000_inactive_v6_persistence.sql",
+    "sha256": "c3572d34ea784a6aba9ab7531cca34007f768ca79602b63d92dfcf0f491c8283",
+    "created_tables": [
+      "private.v6_source_revisions",
+      "private.v6_plan_snapshots",
+      "private.v6_occurrence_snapshots",
+      "private.v6_edit_results"
+    ],
+    "altered_tables": [
+      "public.workout_templates",
+      "public.swipe_week_drafts",
+      "private.v6_source_revisions",
+      "public.plan_revisions"
+    ],
+    "declared_functions": [
+      "public.get_inactive_v6_catalog_for_planning",
+      "private.v6_public_plan",
+      "public.get_v6_weekly_plan",
+      "public.get_v6_edit_retry",
+      "public.get_v6_plan_context_for_planning",
+      "public.create_v6_weekly_plan_proposal",
+      "private.guard_v6_plan_approval",
+      "private.guard_v6_frozen_snapshot_mutation"
+    ],
+    "created_views": [],
+    "created_triggers": [
+      "swipe_week_drafts_validate",
+      "swipe_week_drafts_validate_v2",
+      "v6_source_revisions_immutable",
+      "v6_guard_plan_approval",
+      "v6_frozen_snapshot_immutable"
+    ],
+    "created_policies": [
+      "workout_templates_hide_inactive_v6"
+    ],
+    "grant_statements": [
+      "grant execute on function public.get_inactive_v6_catalog_for_planning() to service_role;",
+      "grant execute on function public.get_v6_weekly_plan(uuid, integer) to authenticated;",
+      "grant execute on function public.get_v6_edit_retry(uuid, text) to service_role;",
+      "grant execute on function public.get_v6_plan_context_for_planning(uuid, uuid, integer) to service_role;",
+      "grant execute on function public.create_v6_weekly_plan_proposal(uuid, jsonb) to service_role;"
+    ],
+    "revoke_statements": [
+      "revoke all on private.v6_source_revisions from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_inactive_v6_catalog_for_planning() from public, anon, authenticated, service_role;",
+      "revoke all on function private.v6_public_plan(uuid, uuid, integer) from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_v6_weekly_plan(uuid, integer) from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_v6_edit_retry(uuid, text) from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_v6_plan_context_for_planning(uuid, uuid, integer) from public, anon, authenticated, service_role;",
+      "revoke all on function public.create_v6_weekly_plan_proposal(uuid, jsonb) from public, anon, authenticated, service_role;",
+      "revoke all on function private.guard_v6_plan_approval() from public, anon, authenticated, service_role;",
+      "revoke all on function private.guard_v6_frozen_snapshot_mutation() from public, anon, authenticated, service_role;"
+    ],
+    "trigger_targets": [
+      {
+        "trigger": "swipe_week_drafts_validate",
+        "table": "public.swipe_week_drafts"
+      },
+      {
+        "trigger": "swipe_week_drafts_validate_v2",
+        "table": "public.swipe_week_drafts"
+      },
+      {
+        "trigger": "v6_source_revisions_immutable",
+        "table": "private.v6_source_revisions"
+      },
+      {
+        "trigger": "v6_guard_plan_approval",
+        "table": "public.plan_revisions"
+      },
+      {
+        "trigger": "v6_frozen_snapshot_immutable",
+        "table": "public.planned_workouts"
+      },
+      {
+        "trigger": "v6_frozen_snapshot_immutable",
+        "table": "public.plan_revisions"
+      },
+      {
+        "trigger": "v6_frozen_snapshot_immutable",
+        "table": "private.planned_workout_loads"
+      },
+      {
+        "trigger": "v6_frozen_snapshot_immutable",
+        "table": "private.plan_revision_loads"
+      }
+    ],
+    "dynamic_effects": [
+      "Forced RLS/revokes, r3_00_sync_opaque_athlete_owner and v6_snapshot_immutable on v6_plan_snapshots, v6_occurrence_snapshots, v6_edit_results"
+    ]
+  },
+  {
+    "ordinal": 7,
+    "file": "20261105120100_inactive_v6_catalog.sql",
+    "sha256": "6e77d8d54650c7be554a90bb87cdf339b72a2db334be1a8dd98e82d6e22efe34",
+    "created_tables": [],
+    "altered_tables": [],
+    "declared_functions": [],
+    "created_views": [],
+    "created_triggers": [],
+    "created_policies": [],
+    "grant_statements": [],
+    "revoke_statements": [],
+    "trigger_targets": []
+  },
+  {
+    "ordinal": 8,
+    "file": "20261107182000_v6_segment_snapshot_compatibility.sql",
+    "sha256": "ca38c97168eaf7d22d5b3508aa4bcdc78f4643044181bfe2ff3d5e699cf838c1",
+    "created_tables": [],
+    "altered_tables": [],
+    "declared_functions": [
+      "private.set_v6_planned_workout_segments"
+    ],
+    "created_views": [],
+    "created_triggers": [
+      "v6_set_planned_workout_segments"
+    ],
+    "created_policies": [],
+    "grant_statements": [],
+    "revoke_statements": [
+      "revoke all on function private.set_v6_planned_workout_segments() from public, anon, authenticated, service_role;"
+    ],
+    "trigger_targets": [
+      {
+        "trigger": "v6_set_planned_workout_segments",
+        "table": "public.planned_workouts"
+      }
+    ]
+  },
+  {
+    "ordinal": 9,
+    "file": "20261107182500_v6_frozen_snapshot_operator_precedence.sql",
+    "sha256": "aab65809df7f6ebf5d2881fde680e2b169943eceb9d27e2ce53350afbf29efe8",
+    "created_tables": [],
+    "altered_tables": [],
+    "declared_functions": [],
+    "created_views": [],
+    "created_triggers": [],
+    "created_policies": [],
+    "grant_statements": [],
+    "revoke_statements": [],
+    "trigger_targets": []
+  },
+  {
+    "ordinal": 10,
+    "file": "20261107183000_realized_v2_internal_approval_custody.sql",
+    "sha256": "1efa35afae3877ea80bde0edc03241e0dad1944dee7a217d40739da86fcbc93a",
+    "created_tables": [],
+    "altered_tables": [],
+    "declared_functions": [],
+    "created_views": [],
+    "created_triggers": [],
+    "created_policies": [],
+    "grant_statements": [],
+    "revoke_statements": [],
+    "trigger_targets": []
+  },
+  {
+    "ordinal": 11,
+    "file": "20261107183500_realized_v2_business_conflict_codes.sql",
+    "sha256": "1fae47af0784194597bd783a53c22626a9951a16009e749df672b202309e4375",
+    "created_tables": [],
+    "altered_tables": [],
+    "declared_functions": [],
+    "created_views": [],
+    "created_triggers": [],
+    "created_policies": [],
+    "grant_statements": [],
+    "revoke_statements": [],
+    "trigger_targets": []
+  },
+  {
+    "ordinal": 12,
+    "file": "20261107184500_v6_insert_custody.sql",
+    "sha256": "b5844a38a73da363642db6a99328e5358fd4ff72302b51434dd88333dc4a4140",
+    "created_tables": [],
+    "altered_tables": [],
+    "declared_functions": [
+      "private.guard_v6_generated_revision_insert",
+      "private.set_v6_planned_workout_segments"
+    ],
+    "created_views": [],
+    "created_triggers": [
+      "v6_generated_revision_insert"
+    ],
+    "created_policies": [],
+    "grant_statements": [],
+    "revoke_statements": [
+      "revoke all on function private.guard_v6_generated_revision_insert() from public, anon, authenticated, service_role;",
+      "revoke all on function private.set_v6_planned_workout_segments() from public, anon, authenticated, service_role;"
+    ],
+    "trigger_targets": [
+      {
+        "trigger": "v6_generated_revision_insert",
+        "table": "public.plan_revisions"
+      }
+    ]
+  },
+  {
+    "ordinal": 13,
+    "file": "20261108142454_inactive_v6_mobile_identity.sql",
+    "sha256": "767e7c0f7badbebee9701b546f4666c8f0f72843334f5f8b0f3f7ab313c81008",
+    "created_tables": [],
+    "altered_tables": [],
+    "declared_functions": [
+      "private.v6_mobile_workout",
+      "private.v6_mobile_plan",
+      "public.get_v6_mobile_weekly_plan",
+      "public.get_v6_mobile_calendar",
+      "public.get_v6_mobile_edit_retry"
+    ],
+    "created_views": [],
+    "created_triggers": [],
+    "created_policies": [],
+    "grant_statements": [
+      "grant execute on function public.get_v6_mobile_weekly_plan(uuid, integer) to authenticated;",
+      "grant execute on function public.get_v6_mobile_calendar(date, date) to authenticated;",
+      "grant execute on function public.get_v6_mobile_edit_retry(uuid, text) to service_role;"
+    ],
+    "revoke_statements": [
+      "revoke all on function private.v6_mobile_workout(uuid, jsonb, uuid) from public, anon, authenticated, service_role;",
+      "revoke all on function private.v6_mobile_plan(uuid, jsonb) from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_v6_mobile_weekly_plan(uuid, integer) from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_v6_mobile_calendar(date, date) from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_v6_mobile_edit_retry(uuid, text) from public, anon, authenticated, service_role;"
+    ],
+    "trigger_targets": []
+  },
+  {
+    "ordinal": 14,
+    "file": "20261108180000_inactive_v6_lifecycle_completion.sql",
+    "sha256": "71f3b0388ac99ffae6bd76659eeba1fef84c1adecc004ebb37e8fa10010732c6",
+    "created_tables": [],
+    "altered_tables": [
+      "public.weekly_checkin_contexts"
+    ],
+    "declared_functions": [
+      "public.get_checkin_context_for_planning",
+      "private.write_v6_weekly_plan_proposal",
+      "public.create_weekly_plan_proposal_v3",
+      "public.create_v6_weekly_plan_proposal",
+      "public.get_checkin_plan_proposal",
+      "public.get_v6_move_workout_context",
+      "public.move_v6_planned_workout",
+      "public.get_v6_plan_context_for_planning"
+    ],
+    "created_views": [],
+    "created_triggers": [],
+    "created_policies": [],
+    "grant_statements": [
+      "grant execute on function public.get_checkin_context_for_planning(uuid, uuid) to service_role;",
+      "grant execute on function public.create_weekly_plan_proposal_v3(uuid, jsonb) to service_role;",
+      "grant execute on function public.create_v6_weekly_plan_proposal(uuid,jsonb) to service_role;",
+      "grant execute on function public.get_checkin_plan_proposal(uuid) to authenticated;",
+      "grant execute on function public.get_v6_move_workout_context(uuid) to authenticated;",
+      "grant execute on function public.move_v6_planned_workout(uuid,jsonb) to service_role;",
+      "grant execute on function public.get_v6_plan_context_for_planning(uuid, uuid, integer) to service_role;"
+    ],
+    "revoke_statements": [
+      "revoke all on function public.get_checkin_context_for_planning(uuid, uuid) from public, anon, authenticated, service_role;",
+      "revoke all on function public.create_weekly_plan_proposal_v3(uuid, jsonb) from public, anon, authenticated, service_role;",
+      "revoke all on function private.write_v6_weekly_plan_proposal(uuid,jsonb) from public, anon, authenticated, service_role;",
+      "revoke all on function public.create_v6_weekly_plan_proposal(uuid,jsonb) from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_checkin_plan_proposal(uuid) from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_v6_move_workout_context(uuid) from public, anon, authenticated, service_role;",
+      "revoke all on function public.move_v6_planned_workout(uuid,jsonb) from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_v6_plan_context_for_planning(uuid, uuid, integer) from public, anon, authenticated, service_role;"
+    ],
+    "trigger_targets": []
+  },
+  {
+    "ordinal": 15,
+    "file": "20261108210000_inactive_v6_evidence_memberships.sql",
+    "sha256": "8428f54223108265c20ec87890b651aca4129ca1b5910c75439f6b691eeffb25",
+    "created_tables": [
+      "private.v6_revision_memberships"
+    ],
+    "altered_tables": [
+      "private.v6_revision_memberships"
+    ],
+    "declared_functions": [
+      "private.guard_v6_membership_scope",
+      "private.guard_v6_native_membership",
+      "private.v6_revision_workouts",
+      "private.v6_active_workout_member",
+      "private.guard_v6_evidence_preservation",
+      "public.get_weekly_plan",
+      "public.get_calendar",
+      "public.get_calendar_rest_days",
+      "public.get_plan_load_history_for_planning_v14",
+      "public.get_plan_load_history_for_planning_v16",
+      "public.get_v6_move_workout_context",
+      "private.v6_public_plan",
+      "private.v6_mobile_workout",
+      "public.create_activity_summary_r6_pre_idempotency",
+      "public.confirm_activity_planned_workout_match",
+      "public.get_workout_registration",
+      "private.guard_skipped_workout_activity",
+      "public.move_v6_planned_workout",
+      "public.get_plan_load_history_for_planning_v13"
+    ],
+    "created_views": [
+      "private.v6_revision_occurrences"
+    ],
+    "created_triggers": [
+      "r3_00_sync_opaque_athlete_owner",
+      "v6_membership_immutable",
+      "v6_membership_scope",
+      "v6_native_membership_scope",
+      "v6_evidence_preservation"
+    ],
+    "created_policies": [],
+    "grant_statements": [
+      "grant execute on function private.v6_revision_workouts(uuid) to authenticated, service_role;"
+    ],
+    "revoke_statements": [
+      "revoke all on private.v6_revision_memberships from public, anon, authenticated, service_role;",
+      "revoke all on private.v6_revision_occurrences from public, anon, authenticated, service_role;",
+      "revoke all on function private.guard_v6_membership_scope() from public, anon, authenticated, service_role;",
+      "revoke all on function private.guard_v6_native_membership() from public, anon, authenticated, service_role;",
+      "revoke all on function private.v6_revision_workouts(uuid) from public, anon, authenticated, service_role;",
+      "revoke all on function private.v6_active_workout_member(uuid,uuid) from public, anon, authenticated, service_role;",
+      "revoke all on function private.guard_v6_evidence_preservation() from public, anon, authenticated, service_role;",
+      "revoke all on function private.v6_public_plan(uuid, uuid, integer) from public, anon, authenticated, service_role;"
+    ],
+    "trigger_targets": [
+      {
+        "trigger": "r3_00_sync_opaque_athlete_owner",
+        "table": "private.v6_revision_memberships"
+      },
+      {
+        "trigger": "v6_membership_immutable",
+        "table": "private.v6_revision_memberships"
+      },
+      {
+        "trigger": "v6_membership_scope",
+        "table": "private.v6_revision_memberships"
+      },
+      {
+        "trigger": "v6_native_membership_scope",
+        "table": "private.v6_occurrence_snapshots"
+      },
+      {
+        "trigger": "v6_evidence_preservation",
+        "table": "public.plan_revisions"
+      }
+    ]
+  },
+  {
+    "ordinal": 16,
+    "file": "20261113154716_inactive_v6_approved_frequency_policy.sql",
+    "sha256": "c0a43411f7db00d4d76cb8400d0b07e5081678aff280853a6a91b9b03ff6b2c4",
+    "created_tables": [
+      "private.frequency_reviewers",
+      "private.frequency_preferences",
+      "private.frequency_decisions",
+      "private.frequency_draft_contexts"
+    ],
+    "altered_tables": [
+      "private.frequency_draft_contexts"
+    ],
+    "declared_functions": [
+      "private.lock_frequency",
+      "private.frequency_preference",
+      "public.get_frequency_preferences",
+      "public.save_frequency_preferences",
+      "private.frequency_basis",
+      "private.invalidate_frequency",
+      "public.report_frequency_interruption",
+      "private.register_frequency_decision",
+      "private.frequency_context",
+      "public.get_v6_frequency_context",
+      "private.assert_frequency_context",
+      "private.frequency_test_caller",
+      "private.guard_frequency_snapshot",
+      "private.guard_frequency_approval",
+      "private.frequency_checkin_invalidation",
+      "private.guard_frequency_draft",
+      "public.create_v6_frequency_swipe_draft",
+      "public.update_v6_frequency_swipe_draft",
+      "public.create_v6_frequency_swipe_proposal",
+      "private.frequency_source_invalidation",
+      "private.frequency_reviewer_invalidation",
+      "private.v6_public_plan",
+      "public.get_v6_frequency_swipe_receipt"
+    ],
+    "created_views": [],
+    "created_triggers": [
+      "v6_frequency_snapshot_guard",
+      "frequency_approval_guard",
+      "frequency_checkin_invalidation",
+      "frequency_draft_immutable",
+      "v6_frequency_draft_guard",
+      "frequency_restriction_invalidation",
+      "frequency_goal_invalidation",
+      "frequency_zone_invalidation",
+      "frequency_profile_invalidation",
+      "frequency_reviewer_invalidation"
+    ],
+    "created_policies": [],
+    "grant_statements": [
+      "grant execute on function public.get_v6_frequency_swipe_receipt(uuid) to authenticated;",
+      "grant execute on function public.get_frequency_preferences(), public.save_frequency_preferences(integer,uuid,jsonb), public.report_frequency_interruption(uuid,text,text) to authenticated;",
+      "grant execute on function public.get_v6_frequency_context(uuid,date,text) to service_role;",
+      "grant execute on function public.create_v6_frequency_swipe_draft(uuid,jsonb), public.update_v6_frequency_swipe_draft(uuid,uuid,integer,jsonb) to service_role;",
+      "grant execute on function public.create_v6_frequency_swipe_proposal(uuid,jsonb) to service_role;",
+      "grant usage on schema private to v6_frequency_registrar;",
+      "grant execute on function private.register_frequency_decision(integer,jsonb) to v6_frequency_registrar;"
+    ],
+    "revoke_statements": [
+      "revoke all on private.frequency_draft_contexts from public,anon,authenticated,service_role;",
+      "revoke all on function public.get_v6_frequency_swipe_receipt(uuid) from public,anon,authenticated,service_role;",
+      "revoke all on function public.get_frequency_preferences() from public, anon, authenticated, service_role;",
+      "revoke all on function public.save_frequency_preferences(integer,uuid,jsonb) from public, anon, authenticated, service_role;",
+      "revoke all on function public.report_frequency_interruption(uuid,text,text) from public, anon, authenticated, service_role;",
+      "revoke all on function public.get_v6_frequency_context(uuid,date,text) from public, anon, authenticated, service_role;",
+      "revoke all on function public.create_v6_frequency_swipe_draft(uuid,jsonb), public.update_v6_frequency_swipe_draft(uuid,uuid,integer,jsonb) from public,anon,authenticated,service_role;",
+      "revoke all on function public.create_v6_frequency_swipe_proposal(uuid,jsonb) from public,anon,authenticated,service_role;",
+      "revoke all on function private.v6_public_plan(uuid,uuid,integer) from public,anon,authenticated,service_role;"
+    ],
+    "trigger_targets": [
+      {
+        "trigger": "v6_frequency_snapshot_guard",
+        "table": "private.v6_plan_snapshots"
+      },
+      {
+        "trigger": "frequency_approval_guard",
+        "table": "public.plan_revisions"
+      },
+      {
+        "trigger": "frequency_checkin_invalidation",
+        "table": "public.weekly_checkin_contexts"
+      },
+      {
+        "trigger": "frequency_draft_immutable",
+        "table": "private.frequency_draft_contexts"
+      },
+      {
+        "trigger": "v6_frequency_draft_guard",
+        "table": "public.swipe_week_drafts"
+      },
+      {
+        "trigger": "frequency_restriction_invalidation",
+        "table": "public.injury_restrictions"
+      },
+      {
+        "trigger": "frequency_goal_invalidation",
+        "table": "public.goals"
+      },
+      {
+        "trigger": "frequency_zone_invalidation",
+        "table": "public.zone_profile_versions"
+      },
+      {
+        "trigger": "frequency_profile_invalidation",
+        "table": "public.athlete_profiles"
+      },
+      {
+        "trigger": "frequency_reviewer_invalidation",
+        "table": "private.frequency_reviewers"
+      }
+    ],
+    "created_roles": [
+      "v6_frequency_registrar",
+      "v6_frequency_test_executor"
+    ],
+    "dynamic_effects": [
+      "Forced RLS/revokes on frequency_reviewers/preferences/decisions; frequency_immutable on preferences/decisions; private helper execution revocations; v6_public_plan helper rename"
+    ]
+  }
+]

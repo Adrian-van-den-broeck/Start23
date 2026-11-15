@@ -1,0 +1,258 @@
+{
+  "private.activity_loads": {
+    "md5": "29d171e5bc7ca4d5d6c1d6a3bcd1656e",
+    "rows": 4
+  },
+  "private.athlete_identity_map": {
+    "md5": "e9d4867458052ece37ffe2246c8b525d",
+    "rows": 2
+  },
+  "private.calibration_protocol_lifecycle": {
+    "md5": "38afde7cdfde6be599e67cf6a67317cb",
+    "rows": 7
+  },
+  "private.frequency_decisions": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "private.frequency_draft_contexts": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "private.frequency_preferences": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "private.frequency_reviewers": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "private.integration_oauth_states": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "private.phase_13_activity_load_history": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "private.pioneer_access_attempts": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "private.pioneer_access_codes": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "private.plan_revision_loads": {
+    "md5": "527eeaa7a2d4d505202c8b9a2066eff9",
+    "rows": 14
+  },
+  "private.planned_workout_loads": {
+    "md5": "1ef0158f3ac2ba0da57ae9911a59d971",
+    "rows": 24
+  },
+  "private.provider_activity_imports": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "private.provider_tokens": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "private.realized_v2_activity_inputs": {
+    "md5": "5f75a89d8e579c8c9bb0c4bc5d6d26c6",
+    "rows": 5
+  },
+  "private.realized_v2_calculations": {
+    "md5": "b0da5523c5eda0eda5bb2fc2f23889bb",
+    "rows": 4
+  },
+  "private.realized_v2_plan_evidence": {
+    "md5": "4c35defb6fc19a1a78bba9da94fe39fa",
+    "rows": 14
+  },
+  "private.v6_edit_results": {
+    "md5": "4b1e61de8223f470c1ab40c5b128c621",
+    "rows": 9
+  },
+  "private.v6_occurrence_snapshots": {
+    "md5": "de98c3729e7b666d3f914cbdb8543a6c",
+    "rows": 24
+  },
+  "private.v6_plan_snapshots": {
+    "md5": "6d0c951fe662aaee44fcd7958614f2c7",
+    "rows": 14
+  },
+  "private.v6_revision_memberships": {
+    "md5": "048a09f7e7730d85066124f90f5790da",
+    "rows": 18
+  },
+  "private.v6_source_revisions": {
+    "md5": "caca68d57d30a36d694f5810f26cb527",
+    "rows": 77
+  },
+  "private.webhook_receipts": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "private.workout_registration_events": {
+    "md5": "f31c3a701378632620dcb239a0bd34ab",
+    "rows": 2
+  },
+  "private.workout_template_loads": {
+    "md5": "1733d81a2d551a5f7521c559074c3257",
+    "rows": 325
+  },
+  "public.activities": {
+    "md5": "20981dc8d12ba208a61ee39e0a9c26c1",
+    "rows": 5
+  },
+  "public.activity_files": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.activity_metrics": {
+    "md5": "1feaf5f70c24db2b2898db19bd366a8f",
+    "rows": 5
+  },
+  "public.activity_rpe_revisions": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.athlete_identifying_profiles": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.athlete_physiology_profiles": {
+    "md5": "ca5ea00295dcdc1d9e69cc91ddc5ef2c",
+    "rows": 2
+  },
+  "public.athlete_profiles": {
+    "md5": "5dccec1951dbb5ee203a3366fe6315a4",
+    "rows": 2
+  },
+  "public.calibration_evaluations": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.calibration_observations": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.calibration_threshold_decisions": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.change_proposals": {
+    "md5": "8a808be3ae2743065d6e7bd67f6d488e",
+    "rows": 5
+  },
+  "public.discipline_test_assignments": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.discipline_zone_setups": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.goal_maintenance_states": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.goals": {
+    "md5": "61ec8ba5675288a08f7a5704569f6c4a",
+    "rows": 2
+  },
+  "public.import_runs": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.initial_plan_requests": {
+    "md5": "ad2ff35c3ec899a0b8cdba7d39c1bfe0",
+    "rows": 2
+  },
+  "public.injury_restrictions": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.onboarding_completion_records": {
+    "md5": "8af7b652def36b506addc1aa983afeac",
+    "rows": 2
+  },
+  "public.onboarding_sessions": {
+    "md5": "e2cb16dedca809e2380590f535be4045",
+    "rows": 2
+  },
+  "public.pioneer_access_redemptions": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.plan_revisions": {
+    "md5": "71103be6c9b9f53fd0db034b67ccc730",
+    "rows": 14
+  },
+  "public.plan_warnings": {
+    "md5": "bf04b581c75cb147cecebfab8e734b56",
+    "rows": 14
+  },
+  "public.planned_external_activities": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.planned_workouts": {
+    "md5": "bd449731f501a666f70309f9b63f96e0",
+    "rows": 24
+  },
+  "public.provider_connections": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.swipe_week_drafts": {
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "rows": 0
+  },
+  "public.training_history_entries": {
+    "md5": "17037c0a09a820965de9b48121f5c936",
+    "rows": 6
+  },
+  "public.weekly_checkin_contexts": {
+    "md5": "cfeb9f6c5e91ff890806974caeb0b316",
+    "rows": 2
+  },
+  "public.weekly_checkins": {
+    "md5": "5b1d07b8c266739b48551231b8bccd8f",
+    "rows": 2
+  },
+  "public.weekly_plans": {
+    "md5": "a013f02277a77370e91c1257ad9980c7",
+    "rows": 3
+  },
+  "public.workout_segments": {
+    "md5": "7b324cba16a80097306fc39fc67c912b",
+    "rows": 3157
+  },
+  "public.workout_template_phase_tags": {
+    "md5": "a64269531a5d601f07b93a61920607cd",
+    "rows": 763
+  },
+  "public.workout_template_zone_requirements": {
+    "md5": "3125c85130cafd21e415689e7500eb08",
+    "rows": 9
+  },
+  "public.workout_templates": {
+    "md5": "899bfabb5c51b5cdd37136c9c6ac125a",
+    "rows": 325
+  },
+  "public.zone_boundaries": {
+    "md5": "0916f7d193914e267ac494311e5c6dff",
+    "rows": 30
+  },
+  "public.zone_metrics": {
+    "md5": "257f442751c56438d42ce6981395838c",
+    "rows": 6
+  },
+  "public.zone_profile_versions": {
+    "md5": "14ee17168c1cb517bf8420cfa5699ae8",
+    "rows": 6
+  }
+}

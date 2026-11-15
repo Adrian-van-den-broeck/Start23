@@ -1,0 +1,1020 @@
+[
+  {
+    "file": "phase_6_weekly_planning_test.sql",
+    "source_sha256": "5178b1595f3076bd410a6bb1b1e6c6636e8e9352146854ff625895bfaac7f25d",
+    "executed_sql_sha256": "d1c5bd44744c8cc0f4e2718f5b8295b6350708382c585f92dcf242c5e041602a",
+    "overlay": false,
+    "exit_code": 0,
+    "assertions_executed": 30,
+    "assertions": [
+      {
+        "number": 1,
+        "description": "weekly_plans exists",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 2,
+        "description": "plan_revisions exists",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 3,
+        "description": "planned_workouts exists",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 4,
+        "description": "plan_warnings exists",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 5,
+        "description": "private.planned_workout_loads exists",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 6,
+        "description": "private.plan_revision_loads exists",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 7,
+        "description": "RLS is enabled and forced on every public Phase 6 table",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 8,
+        "description": "anonymous clients cannot read Phase 6 planning tables",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 9,
+        "description": "function-scoped private schema usage grants no direct load-table access",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 10,
+        "description": "only the trusted backend can persist a generated plan proposal",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 11,
+        "description": "owner decisions use narrowly granted security-invoker RPCs",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 12,
+        "description": "generation is idempotent before evaluating a changed retry payload",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 13,
+        "description": "the owner sees one pending stable weekly plan",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 14,
+        "description": "the generated revision remains pending approval",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 15,
+        "description": "the pending revision snapshots all three selected workouts",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 16,
+        "description": "the public weekly-plan RPC contains no TSS key",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 17,
+        "description": "approval rejects a mismatched expected base revision",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 18,
+        "description": "another athlete cannot approve the pending proposal",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 19,
+        "description": "the authenticated owner can atomically approve the current revision",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 20,
+        "description": "repeating the same approval returns the already-applied result",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 21,
+        "description": "approval activates exactly revision one",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 22,
+        "description": "proposal application commits with active-plan promotion",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 23,
+        "description": "the atomic decision records the authenticated athlete actor",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 24,
+        "description": "an athlete cannot bypass the backend direct-move warning path",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 25,
+        "description": "the trusted backend persists an explicit owner move as a new revision",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 26,
+        "description": "the owner can reject a replacement plan revision",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 27,
+        "description": "repeating the same rejection returns the already-rejected result",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 28,
+        "description": "a direct move advances optimistic concurrency to revision two",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 29,
+        "description": "only one revision remains active after the direct move",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 30,
+        "description": "the direct move preserves immutable workout snapshots",
+        "status": "EXECUTED / PASS"
+      }
+    ],
+    "passed": 30,
+    "failures": [],
+    "plan": [
+      "30"
+    ],
+    "complete": true,
+    "status": "EXECUTED / PASS",
+    "transcript_sha256": "7bac19073439be45a834f51daa8fae4028a7f5bd8b1bbf1aa115c24b5f626ace"
+  },
+  {
+    "file": "phase_7_activity_feedback_test.sql",
+    "source_sha256": "6306e3ec8595f2a8515417367e9609286478c6ef12533f3d23c6faf35a6db798",
+    "executed_sql_sha256": "cc899612d441158d6b77c5c1ee243c87f77f62846165b248025d6f94df237cbf",
+    "overlay": false,
+    "exit_code": 0,
+    "assertions_executed": 22,
+    "assertions": [
+      {
+        "number": 1,
+        "description": "activities exists",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 2,
+        "description": "activity_metrics exists",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 3,
+        "description": "private activity loads exist",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 4,
+        "description": "RLS is enabled and forced on every public Phase 7 table",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 5,
+        "description": "Data API grants expose only owner-filtered activity reads",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 6,
+        "description": "hidden realized load is reachable only through the narrow backend RPC",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 7,
+        "description": "the same activity idempotency key and fingerprint replays the original row",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 8,
+        "description": "an idempotency key cannot be reused for a different summary",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 9,
+        "description": "the public activity response contains no TSS key",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 10,
+        "description": "another athlete cannot list the owner activity",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 11,
+        "description": "another athlete cannot read the owner activity RPC",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 12,
+        "description": "the persistence boundary rejects a mismatched result and correction reason",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 13,
+        "description": "the trusted backend atomically completes RPE and creates a correction",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 14,
+        "description": "a later RPE score cannot rewrite completed physiological history",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 15,
+        "description": "the owner receives only the qualitative hidden-fatigue result",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 16,
+        "description": "the correction remains a pending proposal",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 17,
+        "description": "RPE completion does not apply the correction automatically",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 18,
+        "description": "the typed pending revision cancels the qualifying future hard workout",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 19,
+        "description": "the owner can explicitly approve the typed correction revision",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 20,
+        "description": "explicit approval, not RPE submission, activates the correction",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 21,
+        "description": "the planning service receives canonical realized weekly load privately",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 22,
+        "description": "planning receives separate classified coverage without treating unknown time as low",
+        "status": "EXECUTED / PASS"
+      }
+    ],
+    "passed": 22,
+    "failures": [],
+    "plan": [
+      "22"
+    ],
+    "complete": true,
+    "status": "EXECUTED / PASS",
+    "transcript_sha256": "3a3c872c09137ff20a78d5f129fc3a5a5a57a05dc7a2c4fd80f77650fbd9937d"
+  },
+  {
+    "file": "phase_8_structured_weekly_checkin_test.sql",
+    "source_sha256": "5341b8de3ccd6658a0f31b73a6a764b16ffe4e18a580d2d43a7ba877654f0f69",
+    "executed_sql_sha256": "21387d54b259031f30d9cecfe03779d9457756e4bebf43da72c82f4f149b509b",
+    "overlay": false,
+    "exit_code": 0,
+    "assertions_executed": 24,
+    "assertions": [
+      {
+        "number": 1,
+        "description": "weekly check-ins exist",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 2,
+        "description": "check-in contexts exist",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 3,
+        "description": "injury restrictions exist",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 4,
+        "description": "planned external activities exist",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 5,
+        "description": "goal maintenance states exist",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 6,
+        "description": "RPE correction audit exists",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 7,
+        "description": "RLS is enabled and forced on every public Phase 8 table",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 8,
+        "description": "explicit Data API grants expose owner reads only to authenticated athletes",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 9,
+        "description": "athlete and backend RPC privileges remain separated",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 10,
+        "description": "the same instant opens Monday only in the athlete timezone where it is Monday",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 11,
+        "description": "the athlete-local Monday entrypoint is retry-idempotent",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 12,
+        "description": "the athlete-local week start is idempotent",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 13,
+        "description": "direct context writes are rejected even for the owner",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 14,
+        "description": "structured context can be saved as a revisioned draft",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 15,
+        "description": "the athlete explicitly confirms the exact fingerprinted context",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 16,
+        "description": "all three reviewed restrictions remain active until an explicit later review",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 17,
+        "description": "confirmed outside sport is persisted as a planned activity",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 18,
+        "description": "a planned outside activity accepts actual duration and enters the RPE flow",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 19,
+        "description": "the outside activity is atomically linked to its canonical completion",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 20,
+        "description": "another athlete cannot discover the check-in",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 21,
+        "description": "all blocked goal disciplines create a pending rest-only revision",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 22,
+        "description": "rest-only private planned load is exactly zero",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 23,
+        "description": "the athlete, not the generator, activates the rest-only plan",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 24,
+        "description": "the approved empty plan keeps the completed outside-activity day non-rest",
+        "status": "EXECUTED / PASS"
+      }
+    ],
+    "passed": 24,
+    "failures": [],
+    "plan": [
+      "24"
+    ],
+    "complete": true,
+    "status": "EXECUTED / PASS",
+    "transcript_sha256": "60804bb31d685f5d691aaa8d7613106a8144e5f4749a619100075cf9475d2331"
+  },
+  {
+    "file": "phase_r2_r3_identity_onboarding_calibration_test.sql",
+    "source_sha256": "41d0ddb4509837bde9c706b3d3c00a21afb53bbf04d2894ac438a64807c6c166",
+    "executed_sql_sha256": "ecb01f8813d97112afc3e830ec2d2384445677348d614dd68523f384bf809bf2",
+    "overlay": false,
+    "exit_code": 0,
+    "assertions_executed": 48,
+    "assertions": [
+      {
+        "number": 1,
+        "description": "opaque identity map exists",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 2,
+        "description": "opaque athlete id is the map PK",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 3,
+        "description": "legacy operational profile has opaque owner",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 4,
+        "description": "identifying profile is separate",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 5,
+        "description": "physiology profile is separate",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 6,
+        "description": "identifying record owns first name",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 7,
+        "description": "physiology record owns resting HR",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 8,
+        "description": "planning request records onboarding version",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 9,
+        "description": "activity-file paths preserve old owners and accept opaque owners",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 10,
+        "description": "nullable PING receipts preserve paired owner absence",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 11,
+        "description": "identifying profile forces RLS",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 12,
+        "description": "physiology profile forces RLS",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 13,
+        "description": "anonymous cannot read identifying data",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 14,
+        "description": "anonymous cannot read physiology data",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 15,
+        "description": "athletes cannot enumerate identity mappings",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 16,
+        "description": "backfill provenance is not in the athlete table grant",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 17,
+        "description": "legacy physiology provenance is not in the athlete table grant",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 18,
+        "description": "athlete can resolve only own opaque id",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 19,
+        "description": "legacy adapter is service-only",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 20,
+        "description": "planning eligibility context is service-only",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 21,
+        "description": "trusted backend can read planning eligibility context",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 22,
+        "description": "unversioned completion bypass is revoked",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 23,
+        "description": "temporary R1 completion bypass is revoked",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 24,
+        "description": "stale-safe completion is callable",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 25,
+        "description": "weekly plan writes enforce current onboarding",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 26,
+        "description": "plan revision writes enforce current onboarding",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 27,
+        "description": "direct swipe writes enforce current onboarding",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 28,
+        "description": "current calibration inputs are enforced at persistence",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 29,
+        "description": "direct persistence cannot omit current run/bike average HR",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 30,
+        "description": "fresh auth users receive exactly one opaque identity each",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 31,
+        "description": "different auth users cannot share an athlete identity",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 32,
+        "description": "identity backfill is idempotent",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 33,
+        "description": "DOB is copied exactly without reinterpretation",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 34,
+        "description": "resting HR is copied exactly without recalculation",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 35,
+        "description": "repeated split-profile backfill does not duplicate an athlete",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 36,
+        "description": "owner can read only own physiology row",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 37,
+        "description": "direct identifying write is denied",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 38,
+        "description": "owner can use identifying RPC",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 39,
+        "description": "owner can use physiology RPC",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 40,
+        "description": "identifying RPC excludes migration provenance",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 41,
+        "description": "physiology RPC excludes legacy provenance",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 42,
+        "description": "cross-athlete physiology write is denied",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 43,
+        "description": "direct plan write cannot bypass current onboarding eligibility",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 44,
+        "description": "representative active domains have no orphan opaque owners",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 45,
+        "description": "nullable webhook ownership cannot be half-mapped",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 46,
+        "description": "Auth account deletion can cascade through protected owner tables",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 47,
+        "description": "account deletion removes the opaque identity mapping",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 48,
+        "description": "account deletion removes legacy-owned business rows",
+        "status": "EXECUTED / PASS"
+      }
+    ],
+    "passed": 48,
+    "failures": [],
+    "plan": [
+      "48"
+    ],
+    "complete": true,
+    "status": "EXECUTED / PASS",
+    "transcript_sha256": "085dc8d950fa1848725f1f7cfc6743feed5bb133cfbfb4833e7bce42ee01fa01"
+  },
+  {
+    "file": "phase_r4_r5_onboarding_race_activity_test.sql",
+    "source_sha256": "219b6cf1a4250ebee79c8f22e56fe872ea3501e9b88ef470651ac6f913287320",
+    "executed_sql_sha256": "a9b07dcd992cce9b09d1849f93ecebc40de356e94272b15214842772f55d2e61",
+    "overlay": false,
+    "exit_code": 0,
+    "assertions_executed": 29,
+    "assertions": [
+      {
+        "number": 1,
+        "description": "timezone source is persisted",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 2,
+        "description": "timezone confirmation is persisted",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 3,
+        "description": "HR-monitor confirmation is persisted",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 4,
+        "description": "structured race type is persisted",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 5,
+        "description": "race name is retained",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 6,
+        "description": "total target time is persisted",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 7,
+        "description": "Phase 13 HR observation has a persistence guard",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 8,
+        "description": "activity writes use the confirmed profile timezone",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 9,
+        "description": "athlete can explicitly confirm operational prerequisites",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 10,
+        "description": "obsolete generic goal RPC is no longer callable",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 11,
+        "description": "structured race RPC is callable",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 12,
+        "description": "athlete cannot call private-load correction directly",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 13,
+        "description": "trusted backend can call correction RPC",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 14,
+        "description": "free-text timezone is rejected",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 15,
+        "description": "HR-monitor access can be confirmed without naming a provider",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 16,
+        "description": "valid IANA timezone requires explicit confirmation",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 17,
+        "description": "owner can persist a valid structured run race",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 18,
+        "description": "race-specific distance constraint rejects the wrong discipline",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 19,
+        "description": "direct activity writes cannot bypass the persisted confirmed timezone",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 20,
+        "description": "average HR may still be corrected before Phase 13 load exists",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 21,
+        "description": "direct metric update cannot diverge from Phase 13 provenance",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 22,
+        "description": "rejected HR correction leaves the source observation unchanged",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 23,
+        "description": "ordinary correction rejects a changed HR before any RPE mutation",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 24,
+        "description": "exact duplicate correction is idempotent",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 25,
+        "description": "duplicate correction creates no audit revision",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 26,
+        "description": "matching stale precondition permits atomic RPE-only correction",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 27,
+        "description": "successful correction appends one audit revision",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 28,
+        "description": "stale correction is rejected",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 29,
+        "description": "stale rejection preserves the accepted RPE",
+        "status": "EXECUTED / PASS"
+      }
+    ],
+    "passed": 29,
+    "failures": [],
+    "plan": [
+      "29"
+    ],
+    "complete": true,
+    "status": "EXECUTED / PASS",
+    "transcript_sha256": "52dc9cd5bdc3abde45a1feba6fcdd16128434a9d5290d3889c9b70e38c0fc49e"
+  },
+  {
+    "file": "wombo_a5_checkin_proposal_recovery_test.sql",
+    "source_sha256": "cb6e4ffef878cb26c434250f5ec1a2524339de433d4dc82a09399875e5369b90",
+    "executed_sql_sha256": "1f6c2c1834500ae4f089c62259a91af4d816f6d4b6b9e77ecedf7c7d77174adf",
+    "overlay": true,
+    "exit_code": 0,
+    "assertions_executed": 29,
+    "assertions": [
+      {
+        "number": 1,
+        "description": "replay uses the authenticated caller, not a service credential",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 2,
+        "description": "replay preserves invoker RLS",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 3,
+        "description": "generation remains service only",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 4,
+        "description": "generation acquires a check-in row lock (structural assertion, not a race test)",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 5,
+        "description": "an open ungenerated check-in permits generation",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 6,
+        "description": "partial creation rolls back on attachment failure",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 7,
+        "description": "failed atomic operation left no revision",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 8,
+        "description": "failed atomic operation left no plan",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 9,
+        "description": "failed attachment left check-in open",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 10,
+        "description": "repeated create returns identical persisted locator",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 11,
+        "description": "one authoritative revision exists",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 12,
+        "description": "creation attached atomically",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 13,
+        "description": "exact proposal identity is attached",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 14,
+        "description": "retry retains complete snapshot including warnings and base revision",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 15,
+        "description": "recovery does not approve",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 16,
+        "description": "active revision remains unchanged",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 17,
+        "description": "existing warning survives",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 18,
+        "description": "missing check-in is 404",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 19,
+        "description": "rejected attachment stays rejected",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 20,
+        "description": "terminal replay keeps exact proposal ID",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 21,
+        "description": "foreign check-in and proposal identities remain undiscoverable",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 22,
+        "description": "terminal create replay does not create a replacement",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 23,
+        "description": "terminal replay left historical revision count unchanged",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 24,
+        "description": "legacy persistence can precede attachment",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 25,
+        "description": "legacy orphan is attached without replacement",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 26,
+        "description": "orphan recovery preserves the revision",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 27,
+        "description": "approved attachment replays applied",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 28,
+        "description": "approved attachment returns actual active revision",
+        "status": "EXECUTED / PASS"
+      },
+      {
+        "number": 29,
+        "description": "approval preserves attached proposal ID",
+        "status": "EXECUTED / PASS"
+      }
+    ],
+    "passed": 29,
+    "failures": [],
+    "plan": [
+      "29"
+    ],
+    "complete": true,
+    "status": "EXECUTED / PASS",
+    "transcript_sha256": "baa669b8a3520a2fd2bfdc098f2943268165755f2d1647b06b421220796958f1"
+  }
+]
