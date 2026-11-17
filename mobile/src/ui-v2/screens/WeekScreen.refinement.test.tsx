@@ -51,14 +51,14 @@ describe.each(['nl', 'en'] as const)('%s approved state compositions', (language
   });
 });
 
-test('pending warning is next to the task; neutral pending is not amber or an active schedule', async () => {
+test('pending warning follows week navigation; neutral pending is not amber or an active schedule', async () => {
   const view = await render(screen(cases[3].model));
   expect(view.queryByTestId('week-session-hero')).toBeNull();
   const task = view.getByTestId('week-task-card');
   expect(StyleSheet.flatten(task.props.style).backgroundColor).toBe(colors.surface);
   expect(StyleSheet.flatten(view.getByTestId('week-attention-warnings').props.style).backgroundColor).toBe(colors.warningSoft);
   const labels = view.getAllByRole('button').map((button) => button.props.accessibilityLabel);
-  expect(labels.indexOf('Review attention items')).toBeLessThan(labels.indexOf('View week'));
+  expect(labels.indexOf('Review attention items')).toBeGreaterThan(labels.indexOf('View week'));
 });
 
 test('active plus draft and pending preserves draft priority when no future session exists', async () => {
@@ -111,7 +111,7 @@ test('non-development rendering reserves no footer or comparison controls', asyn
 test('200% header and full Profile target grow without vertical flex shrinking', async () => {
   jest.spyOn(Native, 'useWindowDimensions').mockReturnValue({ width: 320, height: 800, fontScale: 2, scale: 1 });
   const view = await render(screen(cases[1].model));
-  expect(StyleSheet.flatten(view.getByTestId('week-header-title').props.style)).toMatchObject({ width: '100%', flexGrow: 0, flexShrink: 0 });
+  expect(StyleSheet.flatten(view.getByTestId('week-header-title').props.style)).toMatchObject({ width: '100%', flexGrow: 0, flexShrink: 0, flexBasis: 'auto' });
   expect(StyleSheet.flatten(view.getByRole('button', { name: 'Profile' }).props.style)).toMatchObject({ alignSelf: 'stretch', minHeight: 48 });
 });
 
@@ -130,7 +130,7 @@ test('no future session remains a truthful quiet empty message and literal singl
   expect(view.getByText('0 of 1 planned workout completed')).toBeTruthy();
 });
 
-test('same-day siblings remain flat, preserve all source fields and have independent occurrence actions', async () => {
+test('same-day siblings use complete summaries, preserve all source fields and have independent occurrence actions', async () => {
   const second = { ...activePlan.workouts[0], id: 'second-occurrence', name: 'Long exact source name '.repeat(6) };
   const plan = { ...activePlan, workouts: [activePlan.workouts[0], second] };
   const model = weekHomeViewModel({ ...base, plan, activePlan: plan });
@@ -139,10 +139,38 @@ test('same-day siblings remain flat, preserve all source fields and have indepen
   const sibling = within(view.getByTestId('week-session-sibling'));
   expect(sibling.getByText(second.name)).toBeTruthy();
   expect(sibling.getByText('30.5 min')).toBeTruthy();
-  expect(sibling.getByText('1,200 m')).toBeTruthy();
-  expect(sibling.getByText('Easy · Scheduled')).toBeTruthy();
+  expect(sibling.getByText('1200 m')).toBeTruthy();
+  expect(sibling.getByText('Easy')).toBeTruthy();
+  expect(sibling.getByText('Scheduled')).toBeTruthy();
   expect(sibling.getByText(model.sessions[1].summary.description!)).toBeTruthy();
   await fireEvent.press(sibling.getByRole('button', { name: `View workout · ${second.name}` }));
   expect(actions.onOpenWorkout).toHaveBeenCalledWith('second-occurrence');
   expect(view.getByText('Today · 2 workouts')).toBeTruthy();
+});
+
+test('dual-state cards expose only active occurrences and a separate pending review callback', async () => {
+  const proposal = { ...pendingPlan, workouts: [{ ...activePlan.workouts[0], id: 'pending-only', name: 'Pending-only occurrence' }] };
+  const model = weekHomeViewModel({ ...base, plan: proposal, activePlan });
+  const view = await render(screen(model));
+  expect(view.queryByText('Pending-only occurrence')).toBeNull();
+  expect(view.queryByTestId('week-task-card')).toBeNull();
+  const active = within(view.getByTestId('week-session-hero'));
+  expect(active.getByText(activePlan.workouts[0].name)).toBeTruthy();
+  await fireEvent.press(active.getByRole('button'));
+  expect(actions.onOpenWorkout).toHaveBeenCalledWith(activePlan.workouts[0].id);
+  const pending = within(view.getByTestId('week-attention-proposal'));
+  await fireEvent.press(pending.getByRole('button', { name: 'Review proposal' }));
+  expect(actions.onAction).toHaveBeenCalledWith('review');
+  expect(view.getByText('0 of 1 planned workout completed')).toBeTruthy();
+});
+
+test('sparse Week summary omits absent measures and description while keeping status and detail', async () => {
+  const plan = { ...activePlan, workouts: [{ ...activePlan.workouts[0], duration_minutes: null, distance_meters: null, description: '' }] };
+  const view = await render(screen(weekHomeViewModel({ ...base, plan, activePlan: plan })));
+  const active = within(view.getByTestId('week-session-hero'));
+  expect(active.queryByText(/\bmin\b|\bm\b/)).toBeNull();
+  expect(active.getByText('Easy')).toBeTruthy();
+  expect(active.getByText('Scheduled')).toBeTruthy();
+  await fireEvent.press(active.getByRole('button'));
+  expect(actions.onOpenWorkout).toHaveBeenCalledWith(plan.workouts[0].id);
 });

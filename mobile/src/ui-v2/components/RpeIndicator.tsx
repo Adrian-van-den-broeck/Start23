@@ -7,5 +7,5 @@ export function RpeIndicator({ range, kind = 'expected' }: {
 }) {
   const { t } = useLanguage();
   const value = range.min === range.max ? String(range.min) : `${range.min}–${range.max}`;
-  return <Text variant="supporting">{t(`detail.${kind}Rpe`, { value })}</Text>;
+  return <Text variant="label">{t(`detail.${kind}Rpe`, { value })}</Text>;
 }

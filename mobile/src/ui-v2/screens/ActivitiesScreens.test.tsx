@@ -1,4 +1,4 @@
-import { fireEvent, render, within } from '@testing-library/react-native';
+import { act, fireEvent, render, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import type { ReactNode } from 'react';
@@ -109,4 +109,33 @@ test('Dutch critical actions localized while canonical sport descriptions remain
   const view = await render(host(<ActivityFeedbackScreen activity={pending} heartRate="" busy={false} error={null} controls={null} onHeartRate={jest.fn()} onSelect={jest.fn()} onBack={jest.fn()} />));
   await view.findByText('Activiteitfeedback'); expect(view.getByText('Kies je gevoel om op te slaan. Je keuze wordt direct opgeslagen.')).toBeTruthy();
   expect(view.getByRole('radio', { name: 'RPE opslaan · Focus nodig, praten in zinnen. (RPE 4)' })).toBeTruthy();
+});
+
+test('a choice saves immediately once while unresolved, retains authoritative selection, and requires no extra Save', async () => {
+  let acknowledge!: () => void;
+  const onSelect = jest.fn(() => new Promise<void>(resolve => { acknowledge = resolve; }));
+  const view = await render(host(<ActivityFeedbackScreen activity={complete} heartRate="151" busy={false} error={null}
+    controls={null} onHeartRate={jest.fn()} onSelect={onSelect} onBack={jest.fn()} />));
+  await view.findByText('Activity feedback');
+  const choice = view.getByRole('radio', { name: `Save RPE · ${rpeChoices('run')[3].description} (RPE 4)` });
+  await fireEvent.press(choice); await fireEvent.press(choice);
+  expect(onSelect).toHaveBeenCalledTimes(1); expect(onSelect).toHaveBeenCalledWith(4);
+  expect(choice).toBeDisabled(); expect(choice.props.accessibilityState.busy).toBe(true);
+  expect(view.getAllByRole('radio')[6]).toBeChecked(); expect(choice).not.toBeChecked();
+  expect(view.queryByRole('button', { name: /Save/ })).toBeNull();
+  await act(() => acknowledge());
+  expect(view.getAllByRole('radio')[6]).toBeChecked(); expect(choice).not.toBeDisabled();
+});
+
+test('history omits absent HR and correction capability while retaining every supplied notice and measure', async () => {
+  const activity = { ...complete, averageHeartRate: null, durationMinutes: null, distanceMeters: 1500,
+    distanceOnly: true, partialCoverage: true, correctionProposal: true,
+    publicMessage: 'Exact public source explanation '.repeat(12) };
+  const view = await render(host(<ActivitiesScreen {...base} rows={[{ activity, canCorrect: false, match: null }]} pending={null} />));
+  const scope = within(await view.findByTestId(`activity-row-${activity.id}`));
+  expect(scope.getByText(activity.publicMessage)).toBeTruthy(); expect(scope.getByLabelText('1500 meters')).toBeTruthy();
+  expect(scope.getByText('Distance recorded. Duration and time in zone were not measured and are not inferred.')).toBeTruthy();
+  expect(scope.getByText('Partial sensor coverage: only observed zone time was used; missing minutes were not estimated.')).toBeTruthy();
+  expect(scope.getByText('A separate correction proposal is ready. Nothing was adjusted automatically.')).toBeTruthy();
+  expect(scope.queryByText(/Average heart rate/)).toBeNull(); expect(scope.queryByRole('button')).toBeNull();
 });

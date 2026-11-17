@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, within } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import type { ReactNode } from 'react';
 import { LanguageProvider } from '../../i18n/LanguageProvider';
@@ -52,4 +52,48 @@ test('loading and safe error are announced; all alternatives/actions stay locked
   const view = await render(host(<ProposalAlternativesScreen {...task} {...alternativeActions} busy loading error="Safe stale edit" model={model} workout={model.workouts[0]} options={options} selectedId={occurrence.id} />));
   expect(view.getByRole('alert')).toBeTruthy(); for (const button of view.getAllByRole('button')) expect(button).toBeDisabled();
   expect(view.getByRole('radio')).toBeDisabled();
+});
+
+test.each(['approve', 'reject'] as const)('pending and active context coexist; %s requires its explicit button', async (decision) => {
+  const view = await render(host(<ProposalReviewScreen {...task} {...actions} model={model} />));
+  expect(view.getByText('Your approved plan remains active until you approve this proposal.')).toBeTruthy();
+  expect(view.getByText('Proposed revision 3')).toBeTruthy();
+  expect(actions.onApprove).not.toHaveBeenCalled();
+  expect(actions.onReject).not.toHaveBeenCalled();
+  await fireEvent.press(view.getByRole('button', { name: decision === 'approve' ? 'Approve week' : 'Reject proposal' }));
+  expect(decision === 'approve' ? actions.onApprove : actions.onReject).toHaveBeenCalledTimes(1);
+  expect(decision === 'approve' ? actions.onReject : actions.onApprove).not.toHaveBeenCalled();
+});
+
+test('removal remains capability gated and stale alternatives cannot select or replace', async () => {
+  const view = await render(host(<ProposalAlternativesScreen {...task} {...alternativeActions} model={{ ...model, pending: false }}
+    workout={model.workouts[0]} options={{ ...options, canRemove: false }} selectedId={occurrence.id} loading={false} />));
+  expect(view.queryByRole('button', { name: 'Remove workout from proposal' })).toBeNull();
+  expect(view.getByRole('radio')).toBeDisabled();
+  expect(view.getByRole('button', { name: 'Replace workout in proposal' })).toBeDisabled();
+  await fireEvent.press(view.getByRole('radio'));
+  expect(alternativeActions.onSelect).not.toHaveBeenCalled();
+});
+
+test('keeping or selecting an alternative cancels only the local remove confirmation', async () => {
+  const view = await render(host(<ProposalAlternativesScreen {...task} {...alternativeActions} model={model}
+    workout={model.workouts[0]} options={options} selectedId={null} loading={false} />));
+  await fireEvent.press(view.getByRole('button', { name: 'Remove workout from proposal' }));
+  await fireEvent.press(view.getByRole('button', { name: 'Keep workout' }));
+  expect(view.queryByRole('button', { name: 'Confirm removal from proposal' })).toBeNull();
+  await fireEvent.press(view.getByRole('button', { name: 'Remove workout from proposal' }));
+  await fireEvent.press(view.getByRole('radio'));
+  expect(view.queryByRole('button', { name: 'Confirm removal from proposal' })).toBeNull();
+  expect(alternativeActions.onRemove).not.toHaveBeenCalled();
+  expect(alternativeActions.onReplace).not.toHaveBeenCalled();
+});
+
+test('stale message keeps proposed occurrence identity, warnings and Back without a decision', async () => {
+  const view = await render(host(<ProposalReviewScreen {...task} {...actions} error="Refresh required" model={{ ...model, pending: false }} />));
+  expect(view.getByRole('alert', { name: 'Refresh required' })).toBeTruthy();
+  expect(within(view.getByTestId(`proposed-${workout.id}`)).getByText(workout.name)).toBeTruthy();
+  expect(view.getByText(model.warnings[0].message)).toBeTruthy();
+  await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
+  expect(task.onBack).toHaveBeenCalledTimes(1);
+  expect(actions.onApprove).not.toHaveBeenCalled();
 });

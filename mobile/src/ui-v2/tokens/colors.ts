@@ -1,18 +1,21 @@
+const primary = '#124D43';
+const primarySoft = '#E7EFE8';
+
 export const colors = {
-  background: '#F4F2EC',
+  background: '#FAFAF6',
   surface: '#FFFEFA',
   surfaceElevated: '#FFFFFF',
   surfaceSubtle: '#E9EEE8',
-  primary: '#123F39',
+  primary,
   primaryPressed: '#082E2A',
-  primarySoft: '#DCEBE3',
-  secondary: '#DCEBE3',
-  text: '#102B28',
-  textMuted: '#5D706B',
+  primarySoft,
+  secondary: primarySoft,
+  text: '#071E22',
+  textMuted: '#526874',
   textInverse: '#FFFEFA',
-  border: '#D9E0DA',
+  border: '#DFE6E1',
   borderControl: '#70837D',
-  focus: '#123F39',
+  focus: primary,
   success: '#2D6A52',
   successSoft: '#E4F0E8',
   warning: '#79520E',
@@ -25,4 +28,5 @@ export const colors = {
     swim: { text: '#285E70', soft: '#E2EDF0' },
   },
   scrim: 'rgba(16,43,40,0.28)',
+  landscape: { sage: '#76A396', sun: '#FFE3A6' },
 } as const;

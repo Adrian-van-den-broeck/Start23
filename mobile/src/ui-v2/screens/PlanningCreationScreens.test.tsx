@@ -146,3 +146,56 @@ test('busy placement locks date, mode, submit and navigation actions while keepi
   for (const radio of view.getAllByRole('radio')) expect(radio).toBeDisabled();
   for (const button of view.getAllByRole('button')) expect(button).toBeDisabled();
 });
+
+test('placement mode changes and return to selection are explicit callbacks with no submit', async () => {
+  const view = await render(host(<PlacementScreen {...task} {...placementActions}
+    model={planningCreationViewModel(placed)} mode="manual" />));
+  await fireEvent.press(view.getByRole('radio', { name: 'Automatic placement' }));
+  expect(placementActions.onMode).toHaveBeenCalledWith('automatic');
+  await fireEvent.press(view.getByRole('button', { name: 'Inspect workout choices' }));
+  expect(placementActions.onSelection).toHaveBeenCalledTimes(1);
+  expect(placementActions.onSubmit).not.toHaveBeenCalled();
+});
+
+test('incomplete placement retains the exact chosen occurrence and readable submit reason', async () => {
+  const view = await render(host(<PlacementScreen {...task} {...placementActions} mode="manual"
+    model={planningCreationViewModel({ ...placed, placements: [{ occurrence_id: occurrence.occurrence_id, scheduled_date: '2026-10-05' }] })} />));
+  expect(view.getByRole('radio', { name: `Choice 1 · ${occurrence.name} · Monday, 5 October 2026` })).toBeChecked();
+  expect(view.getByRole('radio', { name: `Choice 2 · ${occurrence.name} · Monday, 5 October 2026` })).not.toBeChecked();
+  expect(view.getByText('Choose a date for every workout.')).toBeTruthy();
+  await fireEvent.press(view.getByRole('button', { name: 'Submit manual placement as proposal' }));
+  expect(placementActions.onSubmit).not.toHaveBeenCalled();
+});
+
+// Final Batch 6 preserves mechanical inputs and source occurrence data.
+test('one selected day creates once without a locally inferred frequency', async () => {
+  const view = await render(host(<AvailabilityScreen {...availability} selectedDays={new Set([2])} />));
+  await view.findByText('When can you train?');
+  await fireEvent.press(view.getByRole('button', { name: 'Start choosing workouts' }));
+  expect(availability.onCreate).toHaveBeenCalledTimes(1);
+});
+test('distance-only candidate omits invented time and default RPE description', async () => {
+  const view = await render(host(<SelectionScreen {...task} model={planningCreationViewModel({ ...draft,
+    current_candidate: { ...occurrence, duration_minutes: null, distance_meters: 2500, description: 'RPE 2-3' }
+  })} onTransition={jest.fn()} onContinue={jest.fn()} />));
+  await view.findByText('Choose your workouts');
+  const candidate = within(view.getByTestId('selection-candidate'));
+  expect(candidate.getByText('2500 m')).toBeTruthy();
+  expect(candidate.queryByText(/ min$/)).toBeNull();
+  expect(candidate.queryByText('RPE 2-3')).toBeNull();
+});
+test('loading with no candidate keeps source unavailability and all busy locks', async () => {
+  const view = await render(host(<SelectionScreen {...task} busy model={planningCreationViewModel({ ...draft, current_candidate: null })}
+    onTransition={jest.fn()} onContinue={jest.fn()} />));
+  await view.findByText('Saving action\u2026');
+  expect(view.getByTestId('selection-empty')).toBeTruthy();
+  expect(view.queryByTestId('selection-candidate')).toBeNull();
+  for (const button of view.getAllByRole('button')) expect(button).toBeDisabled();
+});
+test('placement-ready selection continues only through the existing callback', async () => {
+  const onContinue = jest.fn();
+  const view = await render(host(<SelectionScreen {...task} model={planningCreationViewModel(placed)} onTransition={jest.fn()} onContinue={onContinue} />));
+  await view.findByText('Choose your workouts');
+  await fireEvent.press(view.getByRole('button', { name: 'Continue to placement' }));
+  expect(onContinue).toHaveBeenCalledTimes(1);
+});

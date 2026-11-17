@@ -1,5 +1,6 @@
 import { fireEvent, render } from '@testing-library/react-native';
 import * as SecureStore from 'expo-secure-store';
+import { StyleSheet } from 'react-native';
 import { LanguageProvider } from '../../i18n/LanguageProvider';
 import { sourceSegment, sourceWorkout } from '../utils/workout.test-fixtures';
 import { WorkoutDetailScreen } from './WorkoutDetailScreen';
@@ -57,4 +58,27 @@ test('recursive extra private fields cannot reach rendered text or accessibility
 test('null detail is invisible', async () => {
   const view = await render(<LanguageProvider><WorkoutDetailScreen workout={null} onClose={jest.fn()} /></LanguageProvider>);
   expect(view.queryByText('Session sequence')).toBeNull();
+});
+
+test('RPE reference retains expanded state and a growing accessible secondary target', async () => {
+  const view = await render(<LanguageProvider><WorkoutDetailScreen workout={sourceWorkout} onClose={jest.fn()} /></LanguageProvider>);
+  const toggle = view.getByRole('button', { name: 'RPE reference', expanded: false });
+  expect(StyleSheet.flatten(toggle.props.style).minHeight).toBe(52);
+  await fireEvent.press(toggle);
+  expect(view.getByRole('button', { name: 'RPE reference', expanded: true })).toBeTruthy();
+  expect(view.getByText('Exact reference description.')).toBeTruthy();
+  await fireEvent.press(toggle);
+  expect(view.queryByText('Exact reference description.')).toBeNull();
+});
+
+test('optional protocol, technique and required heart-rate observation survive their visual grouping', async () => {
+  const view = await render(<LanguageProvider><WorkoutDetailScreen workout={{
+    ...sourceWorkout, segments: [{ ...sourceSegment, is_swim_technique: true,
+      protocol_target: { ...sourceSegment.protocol_target!, optional: true } }],
+  }} onClose={jest.fn()} /></LanguageProvider>);
+  expect(view.getByText('Optional protocol target')).toBeTruthy();
+  expect(view.getByText('Technique')).toBeTruthy();
+  expect(view.getByText('Heart-rate observation required')).toBeTruthy();
+  expect(view.getByText(sourceSegment.instructions)).toBeTruthy();
+  expect(view.queryByText(/Start workout|Begin training/i)).toBeNull();
 });

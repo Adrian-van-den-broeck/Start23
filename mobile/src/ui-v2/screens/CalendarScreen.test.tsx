@@ -30,7 +30,7 @@ test.each(['en', 'nl'] as const)('Week renders seven complete date sections, sou
   for (const date of visibleCalendarDates('2026-10-07', 'week')) expect(view.getByTestId(`calendar-day-${date}`)).toBeTruthy();
   const day = within(view.getByTestId('calendar-day-2026-10-07'));
   expect(day.getByText(workout.name)).toBeTruthy(); expect(day.getByText('Exact second occurrence')).toBeTruthy();
-  expect(day.getAllByText('30.5 min')).toHaveLength(2); expect(day.getAllByText(language === 'en' ? '1,200 m' : '1.200 m')).toHaveLength(2);
+  expect(day.getAllByText('30.5 min')).toHaveLength(2); expect(day.getAllByText('1200 m')).toHaveLength(2);
   expect(day.getByText(language === 'en' ? 'Rest day' : 'Rustdag')).toBeTruthy();
   expect(day.getByText(language === 'en' ? 'Rest due to a confirmed restriction.' : 'Rust vanwege een bevestigde beperking.')).toBeTruthy();
   const buttons = day.getAllByRole('button'); for (const button of buttons) await fireEvent.press(button);
@@ -52,7 +52,7 @@ test.each(['2026-10-06', '2026-10-07'])('Month selected date %s keeps empty/popu
   await fireEvent.press(selected.getByRole('button', { name: 'View this date’s week' }));
   expect(callbacks.onModeChange).toHaveBeenCalledWith('week');
 });
-test.each([[320, 1], [412, 2]])('Month uses nonoverlapping natural-height >=48 date targets at width %s/font %s', async (width, fontScale) => {
+test.each([[320, 1], [360, 1], [320, 2], [360, 2], [393, 2], [412, 2]])('Month uses nonoverlapping natural-height >=48 date targets at width %s/font %s', async (width, fontScale) => {
   dimensions(width, fontScale);
   const view = await render(screen('month'));
   const list = within(view.getByTestId('calendar-month-day-list'));
@@ -103,4 +103,31 @@ test('a returned rest-only date is prescribed rest and never displayed as an emp
   expect(day.getByText('Rest day')).toBeTruthy();
   expect(day.queryByText('No workout planned.')).toBeNull();
   expect(day.queryAllByRole('button')).toHaveLength(0);
+});
+
+// Accepted summary anatomy supplies the same literal distance as the detail card.
+test.each([393, 412])('Month keeps >=48 grid targets at default text/%sdp, with explicit count/rest meaning and distinct today/selected fills', async width => {
+  dimensions(width, 1);
+  const view = await render(screen('month'));
+  expect(view.getByTestId('calendar-month-grid')).toBeTruthy();
+  expect(view.getByText('Number = workout count')).toBeTruthy();
+  const selected = view.getByTestId('calendar-date-2026-10-07');
+  const today = view.getByTestId('calendar-date-2026-10-05');
+  expect(Native.StyleSheet.flatten(selected.props.style)).toMatchObject({ minWidth: 48, minHeight: 64, backgroundColor: '#E7EFE8', borderColor: '#124D43' });
+  expect(Native.StyleSheet.flatten(today.props.style)).toMatchObject({ backgroundColor: '#F8EED6' });
+  expect(selected.props.accessibilityLabel).toContain('Rest day');
+  expect(today.props.accessibilityState.selected).toBe(false);
+});
+
+test('each sibling retains independent detail and permitted move entry; unsupported siblings have no move action', async () => {
+  const move = jest.fn();
+  const view = await render(<LanguageProvider><CalendarScreen {...callbacks} mode="week" anchor="2026-10-07" model={makeModel('week')} loading={false} error={null}
+    onMoveWorkout={id => id === workout.id ? move : undefined} /></LanguageProvider>);
+  const first = within(view.getByTestId(`calendar-workout-${workout.id}`));
+  const second = within(view.getByTestId('calendar-workout-second'));
+  await fireEvent.press(first.getByRole('button', { name: 'Move ' + workout.name }));
+  expect(move).toHaveBeenCalledTimes(1);
+  expect(second.queryByRole('button', { name: /Move / })).toBeNull();
+  await fireEvent.press(second.getByRole('button', { name: 'View workout \u00b7 Exact second occurrence' }));
+  expect(callbacks.onOpenWorkout).toHaveBeenCalledWith('second');
 });

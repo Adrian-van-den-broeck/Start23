@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Text } from '../primitives/Text';
-import { colors, layout, space } from '../tokens';
+import { Icon } from '../primitives/Icon';
+import { IconTile } from '../primitives/IconTile';
+import { colors, layout, radius, space } from '../tokens';
 
 export function GoalSummaryRow({ label, name, accessibilityLabel, onAction, disabled = false }: {
   label: string; name: string; accessibilityLabel: string; onAction: () => void; disabled?: boolean;
@@ -13,17 +15,18 @@ export function GoalSummaryRow({ label, name, accessibilityLabel, onAction, disa
     onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
     onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)}
     style={[styles.row, pressed && styles.pressed, disabled && styles.disabled, focused && styles.focused]}>
+    <IconTile name="goal" />
     <View style={styles.copy} accessible={false} importantForAccessibility="no-hide-descendants">
       <Text variant="supporting" tone={disabled ? 'text' : 'textMuted'}>{label}</Text>
       <Text variant="cardTitle">{name}</Text>
     </View>
-    <Text accessible={false} importantForAccessibility="no">›</Text>
+    <Icon name="chevron" color={colors.textMuted} />
   </Pressable>;
 }
 const styles = StyleSheet.create({
   row: {
     minHeight: layout.touch, flexDirection: 'row', alignItems: 'center', gap: space[12],
-    paddingVertical: space[12], borderWidth: layout.focusOutline, borderColor: 'transparent'
+    paddingVertical: space[12], borderRadius: radius.control, borderWidth: layout.focusOutline, borderColor: 'transparent'
   },
   copy: { flex: 1, gap: space[4] },
   pressed: { backgroundColor: colors.primarySoft },

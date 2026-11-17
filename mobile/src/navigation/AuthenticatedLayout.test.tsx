@@ -3,6 +3,7 @@ import type { PropsWithChildren } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { listActivities } from '../api/client';
 import { LanguageProvider } from '../i18n/LanguageProvider';
+import { UiVersionProvider } from '../ui/UiVersionProvider';
 import AuthenticatedLayout from '../../app/(authenticated)/_layout';
 
 const mockPush = jest.fn();
@@ -24,9 +25,10 @@ jest.mock('react-native-safe-area-context', () => {
 });
 beforeEach(() => { jest.clearAllMocks(); jest.mocked(SecureStore.getItemAsync).mockResolvedValue('en'); });
 
+// Match the actual root UI provider; default V1 still exercises the legacy reminder.
 test.each([1, 2])('shell-owned reminder keeps exact count %s and destination, below a top safe area', async (count) => {
   jest.mocked(listActivities).mockResolvedValue(Array.from({ length: count }, () => ({})) as Awaited<ReturnType<typeof listActivities>>);
-  const view = await render(<LanguageProvider><AuthenticatedLayout /></LanguageProvider>);
+  const view = await render(<LanguageProvider><UiVersionProvider><AuthenticatedLayout /></UiVersionProvider></LanguageProvider>);
   const text = `${count} workout${count === 1 ? '' : 's'} waiting for RPE · open Training & RPE`;
   await view.findByText(text);
   expect(view.getByTestId('reminder-safe-area').props.edges).toEqual(['top']);
@@ -34,12 +36,12 @@ test.each([1, 2])('shell-owned reminder keeps exact count %s and destination, be
   expect(listActivities).toHaveBeenCalledWith('verified-test-token', true);
   await fireEvent.press(view.getByRole('button'));
   expect(mockPush).toHaveBeenCalledWith('/activities');
-  await view.rerender(<LanguageProvider><AuthenticatedLayout /></LanguageProvider>);
+  await view.rerender(<LanguageProvider><UiVersionProvider><AuthenticatedLayout /></UiVersionProvider></LanguageProvider>);
   expect(listActivities).toHaveBeenCalledTimes(1);
 });
 
 test('no reminder reserves no shell inset or additional container', async () => {
   jest.mocked(listActivities).mockResolvedValue([]);
-  const view = await render(<LanguageProvider><AuthenticatedLayout /></LanguageProvider>);
+  const view = await render(<LanguageProvider><UiVersionProvider><AuthenticatedLayout /></UiVersionProvider></LanguageProvider>);
   expect(view.queryByTestId('reminder-safe-area')).toBeNull();
 });

@@ -3,6 +3,8 @@ import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import type { Discipline } from '../../api/types';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { Button } from '../primitives/Button';
+import { Card } from '../primitives/Card';
+import { ChoiceRow } from '../primitives/ChoiceRow';
 import { Divider } from '../primitives/Divider';
 import { Input } from '../primitives/Input';
 import { Screen } from '../primitives/Screen';
@@ -22,39 +24,44 @@ export function ActivityEntryScreen(props: {
   const { t } = useLanguage();
   const [choosing, setChoosing] = useState(false);
   return <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-    <Screen title={t('activity.register')} onBack={props.onBack} backLabel={t('activities.return')} backDisabled={props.busy}
+    <Screen title={t('activity.register')} landscape="ridges" titleVariant="display" onBack={props.onBack} backLabel={t('activities.return')} backDisabled={props.busy}
       scrollProps={{ keyboardShouldPersistTaps: 'handled', testID: 'activity-entry-scroll' }}>
-      {props.controls}
       <ActivityStatus busy={props.busy} error={props.error} />
       <Text>{t('activity.registerHint')}</Text>
-      <Text variant="sectionTitle">{props.selectedName ?? t('activity.unplanned')}</Text>
-      <Button label={t('activities.chooseContext')} variant="secondary" disabled={props.busy}
-        accessibilityState={{ expanded: choosing }} onPress={() => setChoosing(value => !value)} />
-      {choosing ? <View style={styles.stack} accessibilityRole="radiogroup" accessibilityLabel={t('activities.chooseContext')}>
-        <Button label={t('activity.unplanned')} accessibilityRole="radio" accessibilityState={{ checked: props.selectedId === null }}
-          variant="secondary" disabled={props.busy} onPress={() => { props.onChoose(null); setChoosing(false); }} />
-        {props.choices.map(choice => <Button key={`${choice.kind}:${choice.id}`}
-          label={`${choice.name} · ${t(`common.${choice.discipline}`)} · ${choice.date}${choice.kind === 'external' ? ` · ${t('activity.external')}` : ''}`}
-          accessibilityRole="radio" accessibilityState={{ checked: props.selectedId === choice.id }}
-          variant="secondary" disabled={props.busy} onPress={() => { props.onChoose(choice); setChoosing(false); }} />)}
-      </View> : null}
-      {props.selectedId === null ? <View style={styles.stack} accessibilityRole="radiogroup" accessibilityLabel={t('activities.sport')}>
-        {(['swim', 'bike', 'run'] as const).map(sport => <Button key={sport}
-          label={t(`common.${sport}`)} accessibilityRole="radio" accessibilityState={{ checked: props.discipline === sport }}
-          variant="secondary" disabled={props.busy} onPress={() => props.onDiscipline(sport)} />)}
-      </View> : null}
-      <Divider />
-      <Input label={t('activity.startedAt')} value={props.startedAt} onChangeText={props.onStartedAt}
-        autoCapitalize="none" disabled={props.busy} />
-      <Text>{`${t('activity.timezone')}: ${props.timezone || t('activities.timezoneMissing')}`}</Text>
-      <Input label={props.discipline === 'swim' ? t('activities.swimDuration') : t('activity.duration')}
-        inputMode="decimal" value={props.duration} onChangeText={props.onDuration} disabled={props.busy} />
-      <Input label={t('activity.distance')} inputMode="numeric" value={props.distance}
-        onChangeText={props.onDistance} disabled={props.busy} />
-      <Button label={t('activity.save')} busy={props.busy} disabled={!props.timezone || props.blocked}
-        disabledReason={props.blocked ? t('activities.blocked') : !props.timezone ? t('activities.timezoneMissing') : undefined}
-        onPress={props.onSave} />
+      <Card elevated padding="form" style={styles.stack}>
+        <Text variant="sectionTitle" accessibilityRole="header">{props.selectedName ?? t('activity.unplanned')}</Text>
+        <Button label={t('activities.chooseContext')} variant="secondary" trailingIcon="chevron" disabled={props.busy}
+          accessibilityState={{ expanded: choosing }} onPress={() => setChoosing(value => !value)} />
+        {choosing ? <View style={styles.stack} accessibilityRole="radiogroup" accessibilityLabel={t('activities.chooseContext')}>
+          <ChoiceRow label={t('activity.unplanned')} selected={props.selectedId === null}
+            disabled={props.busy} onPress={() => { props.onChoose(null); setChoosing(false); }} />
+          {props.choices.map(choice => <ChoiceRow key={`${choice.kind}:${choice.id}`}
+            label={`${choice.name} · ${t(`common.${choice.discipline}`)} · ${choice.date}${choice.kind === 'external' ? ` · ${t('activity.external')}` : ''}`}
+            selected={props.selectedId === choice.id}
+            disabled={props.busy} onPress={() => { props.onChoose(choice); setChoosing(false); }} />)}
+        </View> : null}
+        {props.selectedId === null ? <View style={styles.stack} accessibilityRole="radiogroup" accessibilityLabel={t('activities.sport')}>
+          <Text variant="label">{t('activities.sport')}</Text>
+          {(['swim', 'bike', 'run'] as const).map(sport => <ChoiceRow key={sport}
+            label={t(`common.${sport}`)} selected={props.discipline === sport}
+            disabled={props.busy} onPress={() => props.onDiscipline(sport)} />)}
+        </View> : null}
+      </Card>
+      <Card elevated padding="form" style={styles.fields}>
+        <Input label={t('activity.startedAt')} value={props.startedAt} onChangeText={props.onStartedAt}
+          icon="calendar" autoCapitalize="none" disabled={props.busy} />
+        <Text variant="supporting" tone="textMuted">{`${t('activity.timezone')}: ${props.timezone || t('activities.timezoneMissing')}`}</Text>
+        <Input label={props.discipline === 'swim' ? t('activities.swimDuration') : t('activity.duration')}
+          icon="clock" inputMode="decimal" value={props.duration} onChangeText={props.onDuration} disabled={props.busy} />
+        <Input label={t('activity.distance')} icon="location" inputMode="numeric" value={props.distance}
+          onChangeText={props.onDistance} disabled={props.busy} />
+        <Divider />
+        <Button label={t('activity.save')} trailingIcon="forward" busy={props.busy} disabled={!props.timezone || props.blocked}
+          disabledReason={props.blocked ? t('activities.blocked') : !props.timezone ? t('activities.timezoneMissing') : undefined}
+          onPress={props.onSave} />
+      </Card>
+      {props.controls}
     </Screen>
   </KeyboardAvoidingView>;
 }
-const styles = StyleSheet.create({ stack: { gap: space[12] } });
+const styles = StyleSheet.create({ stack: { gap: space[16] }, fields: { gap: space[24] } });

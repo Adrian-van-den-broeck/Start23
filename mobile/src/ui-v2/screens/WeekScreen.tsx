@@ -1,6 +1,7 @@
 import { useRef, useState, type ReactNode } from 'react';
-import { AccessibilityInfo, ScrollView, StyleSheet, View, useWindowDimensions, type ScrollViewProps } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { AccessibilityInfo, ScrollView, StyleSheet, View, type ScrollViewProps } from 'react-native';
+import { ShellSafeArea } from '../components/ShellInsets';
+import { WeekHeader } from '../components/WeekHeader';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { AttentionRow } from '../components/AttentionRow';
 import { NextSession } from '../components/NextSession';
@@ -21,7 +22,6 @@ export function WeekScreen({ model, error, busy, onAction, onOpenWorkout, onProf
   onProfile: () => void; onActivities: () => void; onCheckIn: () => void; onZones: () => void; goalName: string | null; onGoal: () => void; controls: ReactNode; scrollProps?: ScrollViewProps;
 }) {
   const { t } = useLanguage();
-  const { fontScale } = useWindowDimensions();
   const [allAttention, setAllAttention] = useState(false);
   const heading = useRef<View>(null);
   const focused = useRef(false);
@@ -40,15 +40,12 @@ export function WeekScreen({ model, error, busy, onAction, onOpenWorkout, onProf
     {(allAttention ? attention : attention.slice(0, 2)).map((item) => <AttentionRow key={item.kind} item={item} disabled={busy} onAction={onAction} />)}
     {attention.length > 2 ? <Button variant="tertiary" label={t(allAttention ? 'week.lessAttention' : 'week.allAttention')} onPress={() => setAllAttention((value) => !value)} /> : null}
   </View> : null;
-  const attentionByTask = task && !model.sessions.length;
-  return <SafeAreaView edges={['top', 'bottom']} style={styles.frame}>
-    <ScrollView testID="week-home-scroll" {...scrollProps} style={styles.scroll} contentContainerStyle={styles.content}>
-      <View style={[styles.header, fontScale >= 1.5 && styles.stackedHeader]}>
-        <View testID="week-header-title" style={[styles.title, fontScale >= 1.5 && styles.stackedTitle]} ref={heading} accessible accessibilityRole="header" accessibilityLabel={t('planning.week')} onLayout={() => {
+  return <ShellSafeArea style={styles.frame}>
+    <ScrollView testID="week-home-scroll" {...scrollProps} contentContainerStyle={styles.content}>
+      <WeekHeader title={t('planning.week')} onProfile={onProfile} profileLabel={t('planning.profile')}
+        disabled={busy} titleRef={heading} onTitleLayout={() => {
           if (!focused.current && heading.current) { focused.current = true; AccessibilityInfo.sendAccessibilityEvent(heading.current, 'focus'); }
-        }}><Text variant="screenTitle" accessible={false}>Wombo · {t('planning.week')}</Text></View>
-        <QuickActionRow label={t('planning.profile')} onAction={onProfile} disabled={busy} style={[styles.profile, fontScale >= 1.5 && styles.stackedProfile]} />
-      </View>
+        }} />
       <View style={styles.context}><WeekContext model={model} showStatus={!task || model.state === 'active' || model.state === 'activePending'} /></View>
       {initialLoading ? <><Text accessibilityLiveRegion="polite">{t('common.loading')}</Text><Skeleton /></> : <ContentTransition>
         <View style={styles.sections}>
@@ -58,43 +55,38 @@ export function WeekScreen({ model, error, busy, onAction, onOpenWorkout, onProf
           <NextSession model={model} onOpenWorkout={onOpenWorkout} />
           {model.empty && model.empty !== 'noPlan' ? model.sessions.length || task
             ? <Text variant="supporting" tone="textMuted">{t(`week.empty.${model.empty}`)}</Text>
-            : <Card><Text variant="body">{t(`week.empty.${model.empty}`)}</Text></Card> : null}
-          {task && action ? <WeekTaskCard {...task} actionLabel={t(`week.action.${action}`)} disabled={busy} onAction={() => onAction(action)} /> : null}
-          {attentionByTask ? attentionGroup : null}
+            : <Card padding="focus" elevated><Text variant="body">{t(`week.empty.${model.empty}`)}</Text></Card> : null}
+          {task && action ? <WeekTaskCard {...task} icon={action === 'review' ? 'document' : action === 'draft' ? 'list' : 'week'} actionLabel={t(`week.action.${action}`)} disabled={busy} onAction={() => onAction(action)} /> : null}
           <View style={styles.navigation}>
             {model.progress ? <Text variant="supporting" tone="textMuted">{t(model.progress.planned === 1 ? 'week.progress.one' : 'week.progress', model.progress)}</Text> : null}
-            <QuickActionRow label={t('week.action.calendar')} disabled={busy} onAction={() => onAction('calendar')} />
+            <QuickActionRow icon="calendar" label={t('week.action.calendar')} disabled={busy} onAction={() => onAction('calendar')} />
           </View>
-          {!attentionByTask ? attentionGroup : null}
+          {attentionGroup}
           <View style={styles.tools} testID="week-training-tools">
             <Text variant="sectionTitle" accessibilityRole="header">{t('week.tools')}</Text>
-            <View>
-              <QuickActionRow label={t('week.activities')} disabled={busy} onAction={onActivities} />
-              <Divider />
-              <QuickActionRow label={t('week.checkIn')} disabled={busy} onAction={onCheckIn} />
-              <Divider />
-              <QuickActionRow label={t('planning.myZones')} disabled={busy} onAction={onZones} />
-              {model.mainAction !== 'prepare' ? <><Divider /><QuickActionRow label={t('week.action.prepare')} disabled={busy} onAction={() => onAction('prepare')} /></> : null}
-            </View>
+            <Card elevated>
+              <QuickActionRow icon="activities" label={t('week.activities')} disabled={busy} onAction={onActivities} />
+              <View style={styles.rowDivider}><Divider /></View>
+              <QuickActionRow icon="document" label={t('week.checkIn')} disabled={busy} onAction={onCheckIn} />
+              <View style={styles.rowDivider}><Divider /></View>
+              <QuickActionRow icon="intensity" label={t('planning.myZones')} disabled={busy} onAction={onZones} />
+              {model.mainAction !== 'prepare' ? <><View style={styles.rowDivider}><Divider /></View><QuickActionRow icon="week" label={t('week.action.prepare')} disabled={busy} onAction={() => onAction('prepare')} /></> : null}
+            </Card>
           </View>
-          {goalName ? <View style={styles.goal}><Divider /><GoalSummaryRow label={t('week.goalLabel')} name={goalName}
-            accessibilityLabel={t('week.goal', { name: goalName })} disabled={busy} onAction={onGoal} /></View> : null}
+          {goalName ? <Card elevated style={styles.goal}><GoalSummaryRow label={t('week.goalLabel')} name={goalName}
+            accessibilityLabel={t('week.goal', { name: goalName })} disabled={busy} onAction={onGoal} /></Card> : null}
         </View>
       </ContentTransition>}
       {__DEV__ && controls ? <View testID="week-development-footer" style={styles.development}><Divider /><View style={styles.developmentControls}>{controls}</View></View> : null}
     </ScrollView>
-  </SafeAreaView>;
+  </ShellSafeArea>;
 }
 const styles = StyleSheet.create({
   frame: { flex: 1, backgroundColor: colors.background },
-  scroll: { overflow: 'hidden' },
   content: { padding: layout.phoneGutter, width: '100%', maxWidth: layout.readingWidth, alignSelf: 'center' },
-  header: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space[8] },
-  stackedHeader: { flexDirection: 'column', flexWrap: 'nowrap', alignItems: 'stretch' },
-  stackedTitle: { flexGrow: 0, flexShrink: 0, width: '100%' }, stackedProfile: { alignSelf: 'stretch' },
-  title: { flexGrow: 1, flexShrink: 1 }, profile: { flexGrow: 0, flexShrink: 0, minWidth: space[48] * 2, alignSelf: 'flex-end' },
   context: { marginTop: space[12], marginBottom: space[16] },
-  sections: { gap: space[12] }, navigation: { gap: space[4] }, attention: { gap: space[12] },
-  tools: { marginTop: space[12], gap: space[8] }, goal: { marginTop: space[4] },
+  sections: { gap: space[12] }, navigation: { gap: space[4] }, attention: { marginTop: space[12], gap: space[12] },
+  tools: { marginTop: space[12], gap: space[12] }, goal: { marginTop: space[12] },
+  rowDivider: { marginLeft: layout.iconDisc.row + space[12] + layout.focusOutline },
   development: { marginTop: space[24] }, developmentControls: { paddingTop: space[24] },
 });
