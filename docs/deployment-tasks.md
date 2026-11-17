@@ -2,6 +2,34 @@
 
 Run the Wombo tasks from **Terminal > Run Task** in VS Code.
 
+## Run on an Android emulator
+
+Run `Wombo: Run Android app` and accept or enter an AVD name (default:
+`Pixel_4_API_35_2`). The task reuses the selected
+emulator or boots the selected AVD, waits for Android, configures the localhost
+bridges, builds and installs the development APK, then starts Metro and opens
+the app. The first native build takes longer; later builds reuse Gradle caches.
+
+The app uses the backend URL already configured in `mobile/.env`. For local
+mode, start `Wombo: Start backend` separately before using API features. The
+Android task can also use the existing production backend directly.
+
+On Windows, the script temporarily maps this checkout to a free drive letter
+and places CMake build files in `.runtime/android-native` through that short
+path. CMake hashes long object paths to stay below Ninja's path limit. This
+also supports worktrees with a shared `mobile/node_modules` junction. The
+mapping is removed when the task exits; no repository move is required.
+
+Run the same flow directly from the repository root:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run-start23-android.ps1
+```
+
+Use `-BuildOnly` to verify the x86_64 development build without starting an
+emulator or Metro. `npm run android` only starts Metro and requires a development
+app already installed on the emulator.
+
 ## Select the backend target
 
 - `Wombo: Switch to local mode` sets `mobile/.env` to

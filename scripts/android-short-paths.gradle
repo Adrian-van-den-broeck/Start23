@@ -1,0 +1,12 @@
+// Applied only by the local emulator task, including to native dependencies.
+gradle.beforeProject { project ->
+    def configureNativePaths = {
+        def android = project.extensions.getByName('android')
+        android.externalNativeBuild.cmake.buildStagingDirectory =
+            new File(System.getProperty('start23.nativeRoot'), project.name)
+        // Hash long source paths, including node_modules shared by worktrees.
+        android.defaultConfig.externalNativeBuild.cmake.arguments.add('-DCMAKE_OBJECT_PATH_MAX=200')
+    }
+    project.plugins.withId('com.android.application') { configureNativePaths() }
+    project.plugins.withId('com.android.library') { configureNativePaths() }
+}
