@@ -7,3 +7,7 @@
 .railway/
 tmp/
 mobile/dist/
+
+# Python caches from standalone verification scripts
+__pycache__/
+*.py[cod]
