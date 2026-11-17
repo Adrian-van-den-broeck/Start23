@@ -1,0 +1,48 @@
+[
+  {
+    "outcome": "generated_pending_input",
+    "workout_count": 2,
+    "phase": "base",
+    "case": "run_zero",
+    "seconds": 0.0065
+  },
+  {
+    "outcome": "fail_closed",
+    "code": "catalog_capacity_unsatisfied",
+    "case": "tri_zero",
+    "seconds": 19.4607
+  },
+  {
+    "outcome": "fail_closed",
+    "code": "zero_history_discipline_baseline_unavailable",
+    "case": "tri_one_sport_history",
+    "seconds": 0.0
+  },
+  {
+    "outcome": "generated_pending_input",
+    "workout_count": 7,
+    "phase": "base",
+    "case": "tri_balanced",
+    "seconds": 15.8413
+  },
+  {
+    "outcome": "generated_pending_input",
+    "workout_count": 4,
+    "phase": "base",
+    "case": "duathlon",
+    "seconds": 0.4167
+  },
+  {
+    "outcome": "generated_pending_input",
+    "workout_count": 4,
+    "phase": "base",
+    "case": "swim_history",
+    "seconds": 0.0065
+  },
+  {
+    "outcome": "fail_closed",
+    "code": "availability_required",
+    "case": "run_no_days",
+    "seconds": 0.5113
+  }
+]

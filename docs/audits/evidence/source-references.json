@@ -1,0 +1,191 @@
+{
+  "backend/app/core/config.py": {
+    "def require_production_physiology_governance": [
+      101
+    ],
+    "physiology_review_ruleset_version:": [
+      39
+    ],
+    "environment: Environment": [
+      24
+    ]
+  },
+  "backend/app/modules/planning/service.py": {
+    "async def _prepare_swipe_context": [
+      544
+    ],
+    "async def create_swipe_draft": [
+      1460
+    ],
+    "async def validate_layout": [
+      2522
+    ],
+    "async def move_workout": [
+      2572
+    ],
+    "async def _build_and_persist": [
+      1159
+    ]
+  },
+  "backend/app/modules/planning/domain.py": {
+    "def _bounded_selection": [
+      722
+    ],
+    "def schedule_workouts": [
+      1132
+    ],
+    "def validate_manual_schedule": [
+      1792
+    ],
+    "def resolve_target": [
+      211
+    ]
+  },
+  "mobile/src/screens/CheckInScreen.tsx": {
+    "const [restrictions": [
+      178
+    ],
+    "const begin": [
+      224
+    ],
+    "const save =": [
+      299
+    ],
+    "const makeProposal": [
+      334
+    ],
+    "const approve =": [
+      351
+    ]
+  },
+  "mobile/src/features/planning/usePlanningController.ts": {
+    "SecureStore.getItemAsync(latestSwipeDraftIdKey)": [
+      83
+    ],
+    "await rememberSwipeDraftId(null)": [
+      119
+    ],
+    "await rememberPlanId(null)": [
+      142
+    ],
+    "const generate =": [
+      246
+    ],
+    "const approve =": [
+      272
+    ]
+  },
+  "mobile/src/features/planning/planningResume.ts": {
+    "export const latestPlanIdKey": [
+      4
+    ],
+    "export const latestSwipeDraftIdKey": [
+      5
+    ]
+  },
+  "mobile/src/features/activities/useActivityController.ts": {
+    "const historyLoaded": [
+      46
+    ],
+    "const ensureActivitiesLoaded": [
+      86
+    ],
+    "const refreshPendingRpe": [
+      101
+    ],
+    "const activity = activities.find": [
+      178
+    ]
+  },
+  "mobile/src/auth/AuthProvider.tsx": {
+    "const bootstrap": [
+      61
+    ],
+    "if (error)": [
+      68,
+      119
+    ],
+    "scope:": [
+      118
+    ]
+  },
+  "mobile/src/api/client.ts": {
+    "async function request": [
+      135
+    ],
+    "return (await response.json())": [
+      180
+    ],
+    "const writes": [
+      231
+    ],
+    "export async function submitActivityRpeWithRefresh": [
+      821
+    ]
+  },
+  "supabase/migrations/20260915205627_r6_checkin_context_and_account_deletion.sql": {
+    "create or replace function public.get_checkin_context_for_planning": [
+      11
+    ],
+    "and checkin.status = 'open'": [
+      67
+    ]
+  },
+  "supabase/migrations/20260811103726_phase_7_activity_rpe_feedback.sql": {
+    "create function public.list_activities": [
+      456
+    ]
+  },
+  "supabase/migrations/20260910215947_phase_13_joren_ruleset.sql": {
+    "create or replace function public.get_plan_load_history_for_planning_v13": [
+      1623
+    ],
+    "sum(activity_load.realized_tss)": [
+      1719
+    ],
+    "sum(activity.duration_minutes) filter": [
+      1723
+    ]
+  },
+  "backend/app/modules/health/service.py": {
+    "def build_readiness_response": [
+      16
+    ]
+  },
+  "backend/app/modules/integrations/polar.py": {
+    "async def get_fit": [
+      37,
+      178
+    ],
+    "len(response.content)": [
+      192
+    ]
+  },
+  "mobile/src/ui-v2/components/ProfileForm.tsx": {
+    "firstName.trim()": [
+      84
+    ]
+  },
+  "mobile/src/screens/PlanningProposalBoundary.test.tsx": {
+    "test.each(['approve', 'reject'] as const)('distinct": [
+      183
+    ]
+  },
+  "scripts/start-start23-backend.ps1": {
+    "Applying pending": [
+      34
+    ],
+    "Checking": [
+      49
+    ]
+  },
+  ".github/workflows/backend-ci.yml": {
+    "paths:": [
+      5,
+      11
+    ],
+    "Test": [
+      68
+    ]
+  }
+}

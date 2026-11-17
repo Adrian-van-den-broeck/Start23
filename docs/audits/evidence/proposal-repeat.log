@@ -1,0 +1,1472 @@
+node :   console.error
+At line:2 char:17
++ ... :CI='true'; node node_modules/jest/bin/jest.js src/screens/PlanningPr ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (  console.error:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before makin
+g a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+  console.error
+    You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before makin
+g a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+  console.error
+    You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before makin
+g a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+  console.error
+    You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before makin
+g a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+  console.error
+    You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before makin
+g a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+  console.error
+    You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before makin
+g a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+FAIL src/screens/PlanningProposalBoundary.test.tsx (8.573 s)
+  √ review and Back preserve pending snapshot, all occurrences/warnings and active schedule without fetching editors or
+ deciding (903 ms)
+  √ alternatives load only on open with exact revision; rerender/rapid opening does not duplicate; Back retains proposa
+l (401 ms)
+  √ replacement awaits acknowledgment, retains exact returned options transaction and returns to updated pending review
+ (461 ms)
+  √ server-enabled removal requires a separate confirmation and uses null replacement only in pending context (330 ms)
+  √ remove capability false never exposes a functional removal control (303 ms)
+  √ remove capability undefined never exposes a functional removal control (280 ms)
+  √ empty alternatives and safe error remain reviewable; explicit retry does not approve or recreate (226 ms)
+  √ approve is explicit once with exact ID and preserved follow-up read; returns to authoritative Week (178 ms)
+  √ reject is explicit once with exact ID and preserved follow-up read; returns to authoritative Week (312 ms)
+  √ stale decision keeps the same reviewed warning/snapshot and never silently reads, retries or transfers intent (351 
+ms)
+  × distinct active and pending schedules stay separate before and after explicit approve (1210 ms)
+  × distinct active and pending schedules stay separate before and after explicit reject (1258 ms)
+
+  ● distinct active and pending schedules stay separate before and after explicit approve
+
+    Unable to find an element with text: Approved source workout
+
+    [36m<RNCSafeAreaProvider>[39m
+      [36m<View>[39m
+        [36m<RNCSafeAreaView>[39m
+          [36m<RCTScrollView[39m
+            [33mtestID[39m=[32m"week-home-scroll"[39m
+          [36m>[39m
+            [36m<View>[39m
+              [36m<View>[39m
+                [36m<View[39m
+                  [33mpointerEvents[39m=[32m"none"[39m
+                [36m>[39m
+                  [36m<View[39m
+                    [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                    [33maccessible[39m=[32m{false}[39m
+                    [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                    [33mpointerEvents[39m=[32m"none"[39m
+                    [33mtestID[39m=[32m"header-landscape"[39m
+                  [36m>[39m
+                    [36m<RNSVGSvgView[39m
+                      [33maccessible[39m=[32m{false}[39m
+                    [36m>[39m
+                      [36m<RNSVGGroup>[39m
+                        [36m<RNSVGDefs>[39m
+                          [36m<RNSVGRadialGradient />[39m
+                          [36m<RNSVGLinearGradient />[39m
+                          [36m<RNSVGLinearGradient />[39m
+                          [36m<RNSVGLinearGradient />[39m
+                        [36m</RNSVGDefs>[39m
+                        [36m<RNSVGCircle />[39m
+                        [36m<RNSVGGroup>[39m
+                          [36m<RNSVGPath />[39m
+                          [36m<RNSVGPath />[39m
+                          [36m<RNSVGPath />[39m
+                          [36m<RNSVGPath />[39m
+                        [36m</RNSVGGroup>[39m
+                        [36m<RNSVGRect />[39m
+                        [36m<RNSVGRect />[39m
+                      [36m</RNSVGGroup>[39m
+                    [36m</RNSVGSvgView>[39m
+                  [36m</View>[39m
+                [36m</View>[39m
+                [36m<View>[39m
+                  [36m<View[39m
+                    [33maccessibilityLabel[39m=[32m"Week"[39m
+                    [33maccessibilityRole[39m=[32m"header"[39m
+                    [33maccessible[39m=[32m{true}[39m
+                    [33mtestID[39m=[32m"week-header-title"[39m
+                  [36m>[39m
+                    [36m<Text[39m
+                      [33maccessible[39m=[32m{false}[39m
+                    [36m>[39m
+                      [0mWeek[0m
+                    [36m</Text>[39m
+                  [36m</View>[39m
+                  [36m<View[39m
+                    [33maccessibilityLabel[39m=[32m"Profile"[39m
+                    [33maccessibilityRole[39m=[32m"button"[39m
+                    [33maccessibilityState[39m=[32m{
+                      {
+                        "disabled": false,
+                      }
+                    }[39m
+                    [33maccessible[39m=[32m{true}[39m
+                  [36m>[39m
+                    [36m<View[39m
+                      [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                      [33maccessible[39m=[32m{false}[39m
+                      [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                      [33mpointerEvents[39m=[32m"none"[39m
+                    [36m>[39m
+                      [36m<RNSVGSvgView[39m
+                        [33maccessible[39m=[32m{false}[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [36m<RNSVGGroup>[39m
+                          [36m<RNSVGCircle />[39m
+                          [36m<RNSVGPath />[39m
+                        [36m</RNSVGGroup>[39m
+                      [36m</RNSVGSvgView>[39m
+                    [36m</View>[39m
+                    [36m<Text[39m
+                      [33maccessible[39m=[32m{false}[39m
+                    [36m>[39m
+                      [0mProfile[0m
+                    [36m</Text>[39m
+                    [36m<View[39m
+                      [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                      [33maccessible[39m=[32m{false}[39m
+                      [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                      [33mpointerEvents[39m=[32m"none"[39m
+                    [36m>[39m
+                      [36m<RNSVGSvgView[39m
+                        [33maccessible[39m=[32m{false}[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [36m<RNSVGGroup>[39m
+                          [36m<RNSVGPath />[39m
+                        [36m</RNSVGGroup>[39m
+                      [36m</RNSVGSvgView>[39m
+                    [36m</View>[39m
+                  [36m</View>[39m
+                [36m</View>[39m
+              [36m</View>[39m
+              [36m<View>[39m
+                [36m<View>[39m
+                  [36m<Text[39m
+                    [33maccessibilityLabel[39m=[32m"Monday, 5 October 2026 – Sunday, 11 October 2026"[39m
+                    [33mtestID[39m=[32m"week-range"[39m
+                  [36m>[39m
+                    [0m5–11 Oct 2026[0m
+                  [36m</Text>[39m
+                  [36m<Text>[39m
+                    [0mApproved · new proposal awaiting review[0m
+                  [36m</Text>[39m
+                [36m</View>[39m
+              [36m</View>[39m
+              [36m<View[39m
+                [33mstyle[39m=[32m{
+                  {
+                    "opacity": 0,
+                  }
+                }[39m
+              [36m>[39m
+                [36m<View>[39m
+                  [36m<Text>[39m
+                    [0mNo upcoming workout planned in this week[0m
+                  [36m</Text>[39m
+                  [36m<View[39m
+                    [33mtestID[39m=[32m"week-task-card"[39m
+                  [36m>[39m
+                    [36m<View>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                        [36m<Text>[39m
+                          [0mProposal awaiting review[0m
+                        [36m</Text>[39m
+                      [36m</View>[39m
+                      [36m<Text[39m
+                        [33maccessibilityRole[39m=[32m"header"[39m
+                      [36m>[39m
+                        [0mReview your week[0m
+                      [36m</Text>[39m
+                      [36m<Text>[39m
+                        [0mA weekly proposal awaits your confirmation[0m
+                      [36m</Text>[39m
+                    [36m</View>[39m
+                    [36m<View>[39m
+                      [36m<View[39m
+                        [33maccessibilityLabel[39m=[32m"Review proposal"[39m
+                        [33maccessibilityRole[39m=[32m"button"[39m
+                        [33maccessibilityState[39m=[32m{
+                          {
+                            "busy": false,
+                            "disabled": false,
+                          }
+                        }[39m
+                        [33maccessible[39m=[32m{true}[39m
+                      [36m>[39m
+                        [36m<Text[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no"[39m
+                        [36m>[39m
+                          [0mReview proposal[0m
+                        [36m</Text>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                    [36m</View>[39m
+                  [36m</View>[39m
+                  [36m<View>[39m
+                    [36m<Text>[39m
+                      [0m0 of 1 planned workout completed[0m
+                    [36m</Text>[39m
+                    [36m<View[39m
+                      [33maccessibilityLabel[39m=[32m"View week"[39m
+                      [33maccessibilityRole[39m=[32m"button"[39m
+                      [33maccessibilityState[39m=[32m{
+                        {
+                          "busy": false,
+                          "disabled": false,
+                        }
+                      }[39m
+                      [33maccessible[39m=[32m{true}[39m
+                    [36m>[39m
+                      [36m<View[39m
+                        [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                        [33maccessible[39m=[32m{false}[39m
+                        [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                        [33mpointerEvents[39m=[32m"none"[39m
+                      [36m>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGRect />[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                      [36m<Text[39m
+                        [33maccessible[39m=[32m{false}[39m
+                        [33mimportantForAccessibility[39m=[32m"no"[39m
+                      [36m>[39m
+                        [0mView week[0m
+                      [36m</Text>[39m
+                      [36m<View[39m
+                        [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                        [33maccessible[39m=[32m{false}[39m
+                        [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                        [33mpointerEvents[39m=[32m"none"[39m
+                      [36m>[39m
+                        [36m<RNSVGSvgView[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                        [36m>[39m
+                          [36m<RNSVGGroup>[39m
+                            [36m<RNSVGPath />[39m
+                          [36m</RNSVGGroup>[39m
+                        [36m</RNSVGSvgView>[39m
+                      [36m</View>[39m
+                    [36m</View>[39m
+                  [36m</View>[39m
+                  [36m<View>[39m
+                    [36m<Text[39m
+                      [33maccessibilityRole[39m=[32m"header"[39m
+                    [36m>[39m
+                      [0mAttention · 1[0m
+                    [36m</Text>[39m
+                    [36m<View[39m
+                      [33mtestID[39m=[32m"week-attention-warnings"[39m
+                    [36m>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                        [36m<Text>[39m
+                          [0mWeek needs attention[0m
+                        [36m</Text>[39m
+                      [36m</View>[39m
+                      [36m<View[39m
+                        [33maccessibilityLabel[39m=[32m"Review attention items"[39m
+                        [33maccessibilityRole[39m=[32m"button"[39m
+                        [33maccessibilityState[39m=[32m{
+                          {
+                            "busy": false,
+                            "disabled": false,
+                          }
+                        }[39m
+                        [33maccessible[39m=[32m{true}[39m
+                      [36m>[39m
+                        [36m<Text[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no"[39m
+                        [36m>[39m
+                          [0mReview attention items[0m
+                        [36m</Text>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                    [36m</View>[39m
+                  [36m</View>[39m
+                  [36m<View[39m
+                    [33mtestID[39m=[32m"week-training-tools"[39m
+                  [36m>[39m
+                    [36m<Text[39m
+                      [33maccessibilityRole[39m=[32m"header"[39m
+                    [36m>[39m
+                      [0mTraining tools[0m
+                    [36m</Text>[39m
+                    [36m<View>[39m
+                      [36m<View[39m
+                        [33maccessibilityLabel[39m=[32m"Activities and RPE"[39m
+                        [33maccessibilityRole[39m=[32m"button"[39m
+                        [33maccessibilityState[39m=[32m{
+                          {
+                            "busy": false,
+                            "disabled": false,
+                          }
+                        }[39m
+                        [33maccessible[39m=[32m{true}[39m
+                      [36m>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<View[39m
+                            [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                            [33mpointerEvents[39m=[32m"none"[39m
+                          [36m>[39m
+                            [36m<RNSVGSvgView[39m
+                              [33maccessible[39m=[32m{false}[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                            [36m>[39m
+                              [36m<RNSVGGroup>[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                              [36m</RNSVGGroup>[39m
+                            [36m</RNSVGSvgView>[39m
+                          [36m</View>[39m
+                        [36m</View>[39m
+                        [36m<Text[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no"[39m
+                        [36m>[39m
+                          [0mActivities and RPE[0m
+                        [36m</Text>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                        [36m/>[39m
+                      [36m</View>[39m
+                      [36m<View[39m
+                        [33maccessibilityLabel[39m=[32m"Check-in"[39m
+                        [33maccessibilityRole[39m=[32m"button"[39m
+                        [33maccessibilityState[39m=[32m{
+                          {
+                            "busy": false,
+                            "disabled": false,
+                          }
+                        }[39m
+                        [33maccessible[39m=[32m{true}[39m
+                      [36m>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<View[39m
+                            [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                            [33mpointerEvents[39m=[32m"none"[39m
+                          [36m>[39m
+                            [36m<RNSVGSvgView[39m
+                              [33maccessible[39m=[32m{false}[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                            [36m>[39m
+                              [36m<RNSVGGroup>[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                              [36m</RNSVGGroup>[39m
+                            [36m</RNSVGSvgView>[39m
+                          [36m</View>[39m
+                        [36m</View>[39m
+                        [36m<Text[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no"[39m
+                        [36m>[39m
+                          [0mCheck-in[0m
+                        [36m</Text>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                        [36m/>[39m
+                      [36m</View>[39m
+                      [36m<View[39m
+                        [33maccessibilityLabel[39m=[32m"My zones"[39m
+                        [33maccessibilityRole[39m=[32m"button"[39m
+                        [33maccessibilityState[39m=[32m{
+                          {
+                            "busy": false,
+                            "disabled": false,
+                          }
+                        }[39m
+                        [33maccessible[39m=[32m{true}[39m
+                      [36m>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<View[39m
+                            [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                            [33mpointerEvents[39m=[32m"none"[39m
+                          [36m>[39m
+                            [36m<RNSVGSvgView[39m
+                              [33maccessible[39m=[32m{false}[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                            [36m>[39m
+                              [36m<RNSVGGroup>[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                              [36m</RNSVGGroup>[39m
+                            [36m</RNSVGSvgView>[39m
+                          [36m</View>[39m
+                        [36m</View>[39m
+                        [36m<Text[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no"[39m
+                        [36m>[39m
+                          [0mMy zones[0m
+                        [36m</Text>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                        [36m/>[39m
+                      [36m</View>[39m
+                      [36m<View[39m
+                        [33maccessibilityLabel[39m=[32m"Prepare week"[39m
+                        [33maccessibilityRole[39m=[32m"button"[39m
+                        [33maccessibilityState[39m=[32m{
+                          {
+                            "busy": false,
+                            "disabled": false,
+                          }
+                        }[39m
+                        [33maccessible[39m=[32m{true}[39m
+                      [36m>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<View[39m
+                            [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                            [33mpointerEvents[39m=[32m"none"[39m
+                          [36m>[39m
+                            [36m<RNSVGSvgView[39m
+                              [33maccessible[39m=[32m{false}[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                            [36m>[39m
+                              [36m<RNSVGGroup>[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGRect />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                              [36m</RNSVGGroup>[39m
+                            [36m</RNSVGSvgView>[39m
+                          [36m</View>[39m
+                        [36m</View>[39m
+                        [36m<Text[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no"[39m
+                        [36m>[39m
+                          [0mPrepare week[0m
+                        [36m</Text>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                    [36m</View>[39m
+                  [36m</View>[39m
+                [36m</View>[39m
+              [36m</View>[39m
+              [36m<View[39m
+                [33mtestID[39m=[32m"week-version-controls"[39m
+              [36m>[39m
+                [36m<View[39m
+                  [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                  [33maccessible[39m=[32m{false}[39m
+                  [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                [36m/>[39m
+                [36m<View>[39m
+                  [36m<View>[39m
+                    [36m<Text>[39m
+                      [0mInterface · UI V2[0m
+                    [36m</Text>[39m
+                    [36m<View>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityLabel[39m=[32m"UI V1"[39m
+                          [33maccessibilityRole[39m=[32m"button"[39m
+                          [33maccessibilityState[39m=[32m{
+                            {
+                              "busy": false,
+                              "disabled": false,
+                              "selected": false,
+                            }
+                          }[39m
+                          [33maccessible[39m=[32m{true}[39m
+                        [36m>[39m
+                          [36m<Text[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no"[39m
+                          [36m>[39m
+                            [0mUI V1[0m
+                          [36m</Text>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityLabel[39m=[32m"UI V2"[39m
+                          [33maccessibilityRole[39m=[32m"button"[39m
+                          [33maccessibilityState[39m=[32m{
+                            {
+                              "busy": false,
+                              "disabled": false,
+                              "selected": true,
+                            }
+                          }[39m
+                          [33maccessible[39m=[32m{true}[39m
+                        [36m>[39m
+                          [36m<View[39m
+                            [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                            [33mpointerEvents[39m=[32m"none"[39m
+                          [36m>[39m
+                            [36m<RNSVGSvgView[39m
+                              [33maccessible[39m=[32m{false}[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                            [36m>[39m
+                              [36m<RNSVGGroup>[39m
+                                [36m<RNSVGPath />[39m
+                              [36m</RNSVGGroup>[39m
+                            [36m</RNSVGSvgView>[39m
+                          [36m</View>[39m
+                          [36m<Text[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no"[39m
+                          [36m>[39m
+                            [0mUI V2[0m
+                          [36m</Text>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                    [36m</View>[39m
+                  [36m</View>[39m
+                [36m</View>[39m
+              [36m</View>[39m
+            [36m</View>[39m
+          [36m</RCTScrollView>[39m
+        [36m</RNCSafeAreaView>[39m
+      [36m</View>[39m
+    [36m</RNCSafeAreaProvider>[39m
+
+      189 |   expect(view.queryByText('Approved source workout')).toBeNull();
+      190 |   await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
+    > 191 |   await view.findByText('Approved source workout');
+          |              ^
+      192 |   expect(view.queryByText('Proposed source workout')).toBeNull();
+      193 |   expect(flow.activePlan).toBe(approved);
+      194 |   expect(api.approvePlanProposal).not.toHaveBeenCalled(); expect(api.rejectPlanProposal).not.toHaveBeenCall
+ed();
+
+      at findByText (src/screens/PlanningProposalBoundary.test.tsx:191:14)
+      at asyncGeneratorStep (../../wombo-ui-v2-activities/mobile/node_modules/@babel/runtime/helpers/asyncToGenerator.j
+s:3:17)
+      at _next (../../wombo-ui-v2-activities/mobile/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● distinct active and pending schedules stay separate before and after explicit reject
+
+    Unable to find an element with text: Approved source workout
+
+    [36m<RNCSafeAreaProvider>[39m
+      [36m<View>[39m
+        [36m<RNCSafeAreaView>[39m
+          [36m<RCTScrollView[39m
+            [33mtestID[39m=[32m"week-home-scroll"[39m
+          [36m>[39m
+            [36m<View>[39m
+              [36m<View>[39m
+                [36m<View[39m
+                  [33mpointerEvents[39m=[32m"none"[39m
+                [36m>[39m
+                  [36m<View[39m
+                    [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                    [33maccessible[39m=[32m{false}[39m
+                    [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                    [33mpointerEvents[39m=[32m"none"[39m
+                    [33mtestID[39m=[32m"header-landscape"[39m
+                  [36m>[39m
+                    [36m<RNSVGSvgView[39m
+                      [33maccessible[39m=[32m{false}[39m
+                    [36m>[39m
+                      [36m<RNSVGGroup>[39m
+                        [36m<RNSVGDefs>[39m
+                          [36m<RNSVGRadialGradient />[39m
+                          [36m<RNSVGLinearGradient />[39m
+                          [36m<RNSVGLinearGradient />[39m
+                          [36m<RNSVGLinearGradient />[39m
+                        [36m</RNSVGDefs>[39m
+                        [36m<RNSVGCircle />[39m
+                        [36m<RNSVGGroup>[39m
+                          [36m<RNSVGPath />[39m
+                          [36m<RNSVGPath />[39m
+                          [36m<RNSVGPath />[39m
+                          [36m<RNSVGPath />[39m
+                        [36m</RNSVGGroup>[39m
+                        [36m<RNSVGRect />[39m
+                        [36m<RNSVGRect />[39m
+                      [36m</RNSVGGroup>[39m
+                    [36m</RNSVGSvgView>[39m
+                  [36m</View>[39m
+                [36m</View>[39m
+                [36m<View>[39m
+                  [36m<View[39m
+                    [33maccessibilityLabel[39m=[32m"Week"[39m
+                    [33maccessibilityRole[39m=[32m"header"[39m
+                    [33maccessible[39m=[32m{true}[39m
+                    [33mtestID[39m=[32m"week-header-title"[39m
+                  [36m>[39m
+                    [36m<Text[39m
+                      [33maccessible[39m=[32m{false}[39m
+                    [36m>[39m
+                      [0mWeek[0m
+                    [36m</Text>[39m
+                  [36m</View>[39m
+                  [36m<View[39m
+                    [33maccessibilityLabel[39m=[32m"Profile"[39m
+                    [33maccessibilityRole[39m=[32m"button"[39m
+                    [33maccessibilityState[39m=[32m{
+                      {
+                        "disabled": false,
+                      }
+                    }[39m
+                    [33maccessible[39m=[32m{true}[39m
+                  [36m>[39m
+                    [36m<View[39m
+                      [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                      [33maccessible[39m=[32m{false}[39m
+                      [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                      [33mpointerEvents[39m=[32m"none"[39m
+                    [36m>[39m
+                      [36m<RNSVGSvgView[39m
+                        [33maccessible[39m=[32m{false}[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [36m<RNSVGGroup>[39m
+                          [36m<RNSVGCircle />[39m
+                          [36m<RNSVGPath />[39m
+                        [36m</RNSVGGroup>[39m
+                      [36m</RNSVGSvgView>[39m
+                    [36m</View>[39m
+                    [36m<Text[39m
+                      [33maccessible[39m=[32m{false}[39m
+                    [36m>[39m
+                      [0mProfile[0m
+                    [36m</Text>[39m
+                    [36m<View[39m
+                      [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                      [33maccessible[39m=[32m{false}[39m
+                      [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                      [33mpointerEvents[39m=[32m"none"[39m
+                    [36m>[39m
+                      [36m<RNSVGSvgView[39m
+                        [33maccessible[39m=[32m{false}[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [36m<RNSVGGroup>[39m
+                          [36m<RNSVGPath />[39m
+                        [36m</RNSVGGroup>[39m
+                      [36m</RNSVGSvgView>[39m
+                    [36m</View>[39m
+                  [36m</View>[39m
+                [36m</View>[39m
+              [36m</View>[39m
+              [36m<View>[39m
+                [36m<View>[39m
+                  [36m<Text[39m
+                    [33maccessibilityLabel[39m=[32m"Monday, 5 October 2026 – Sunday, 11 October 2026"[39m
+                    [33mtestID[39m=[32m"week-range"[39m
+                  [36m>[39m
+                    [0m5–11 Oct 2026[0m
+                  [36m</Text>[39m
+                  [36m<Text>[39m
+                    [0mApproved · new proposal awaiting review[0m
+                  [36m</Text>[39m
+                [36m</View>[39m
+              [36m</View>[39m
+              [36m<View[39m
+                [33mstyle[39m=[32m{
+                  {
+                    "opacity": 0,
+                  }
+                }[39m
+              [36m>[39m
+                [36m<View>[39m
+                  [36m<Text>[39m
+                    [0mNo upcoming workout planned in this week[0m
+                  [36m</Text>[39m
+                  [36m<View[39m
+                    [33mtestID[39m=[32m"week-task-card"[39m
+                  [36m>[39m
+                    [36m<View>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                        [36m<Text>[39m
+                          [0mProposal awaiting review[0m
+                        [36m</Text>[39m
+                      [36m</View>[39m
+                      [36m<Text[39m
+                        [33maccessibilityRole[39m=[32m"header"[39m
+                      [36m>[39m
+                        [0mReview your week[0m
+                      [36m</Text>[39m
+                      [36m<Text>[39m
+                        [0mA weekly proposal awaits your confirmation[0m
+                      [36m</Text>[39m
+                    [36m</View>[39m
+                    [36m<View>[39m
+                      [36m<View[39m
+                        [33maccessibilityLabel[39m=[32m"Review proposal"[39m
+                        [33maccessibilityRole[39m=[32m"button"[39m
+                        [33maccessibilityState[39m=[32m{
+                          {
+                            "busy": false,
+                            "disabled": false,
+                          }
+                        }[39m
+                        [33maccessible[39m=[32m{true}[39m
+                      [36m>[39m
+                        [36m<Text[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no"[39m
+                        [36m>[39m
+                          [0mReview proposal[0m
+                        [36m</Text>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                    [36m</View>[39m
+                  [36m</View>[39m
+                  [36m<View>[39m
+                    [36m<Text>[39m
+                      [0m0 of 1 planned workout completed[0m
+                    [36m</Text>[39m
+                    [36m<View[39m
+                      [33maccessibilityLabel[39m=[32m"View week"[39m
+                      [33maccessibilityRole[39m=[32m"button"[39m
+                      [33maccessibilityState[39m=[32m{
+                        {
+                          "busy": false,
+                          "disabled": false,
+                        }
+                      }[39m
+                      [33maccessible[39m=[32m{true}[39m
+                    [36m>[39m
+                      [36m<View[39m
+                        [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                        [33maccessible[39m=[32m{false}[39m
+                        [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                        [33mpointerEvents[39m=[32m"none"[39m
+                      [36m>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGRect />[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                      [36m<Text[39m
+                        [33maccessible[39m=[32m{false}[39m
+                        [33mimportantForAccessibility[39m=[32m"no"[39m
+                      [36m>[39m
+                        [0mView week[0m
+                      [36m</Text>[39m
+                      [36m<View[39m
+                        [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                        [33maccessible[39m=[32m{false}[39m
+                        [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                        [33mpointerEvents[39m=[32m"none"[39m
+                      [36m>[39m
+                        [36m<RNSVGSvgView[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                        [36m>[39m
+                          [36m<RNSVGGroup>[39m
+                            [36m<RNSVGPath />[39m
+                          [36m</RNSVGGroup>[39m
+                        [36m</RNSVGSvgView>[39m
+                      [36m</View>[39m
+                    [36m</View>[39m
+                  [36m</View>[39m
+                  [36m<View>[39m
+                    [36m<Text[39m
+                      [33maccessibilityRole[39m=[32m"header"[39m
+                    [36m>[39m
+                      [0mAttention · 1[0m
+                    [36m</Text>[39m
+                    [36m<View[39m
+                      [33mtestID[39m=[32m"week-attention-warnings"[39m
+                    [36m>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                        [36m<Text>[39m
+                          [0mWeek needs attention[0m
+                        [36m</Text>[39m
+                      [36m</View>[39m
+                      [36m<View[39m
+                        [33maccessibilityLabel[39m=[32m"Review attention items"[39m
+                        [33maccessibilityRole[39m=[32m"button"[39m
+                        [33maccessibilityState[39m=[32m{
+                          {
+                            "busy": false,
+                            "disabled": false,
+                          }
+                        }[39m
+                        [33maccessible[39m=[32m{true}[39m
+                      [36m>[39m
+                        [36m<Text[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no"[39m
+                        [36m>[39m
+                          [0mReview attention items[0m
+                        [36m</Text>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                    [36m</View>[39m
+                  [36m</View>[39m
+                  [36m<View[39m
+                    [33mtestID[39m=[32m"week-training-tools"[39m
+                  [36m>[39m
+                    [36m<Text[39m
+                      [33maccessibilityRole[39m=[32m"header"[39m
+                    [36m>[39m
+                      [0mTraining tools[0m
+                    [36m</Text>[39m
+                    [36m<View>[39m
+                      [36m<View[39m
+                        [33maccessibilityLabel[39m=[32m"Activities and RPE"[39m
+                        [33maccessibilityRole[39m=[32m"button"[39m
+                        [33maccessibilityState[39m=[32m{
+                          {
+                            "busy": false,
+                            "disabled": false,
+                          }
+                        }[39m
+                        [33maccessible[39m=[32m{true}[39m
+                      [36m>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<View[39m
+                            [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                            [33mpointerEvents[39m=[32m"none"[39m
+                          [36m>[39m
+                            [36m<RNSVGSvgView[39m
+                              [33maccessible[39m=[32m{false}[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                            [36m>[39m
+                              [36m<RNSVGGroup>[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                              [36m</RNSVGGroup>[39m
+                            [36m</RNSVGSvgView>[39m
+                          [36m</View>[39m
+                        [36m</View>[39m
+                        [36m<Text[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no"[39m
+                        [36m>[39m
+                          [0mActivities and RPE[0m
+                        [36m</Text>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                        [36m/>[39m
+                      [36m</View>[39m
+                      [36m<View[39m
+                        [33maccessibilityLabel[39m=[32m"Check-in"[39m
+                        [33maccessibilityRole[39m=[32m"button"[39m
+                        [33maccessibilityState[39m=[32m{
+                          {
+                            "busy": false,
+                            "disabled": false,
+                          }
+                        }[39m
+                        [33maccessible[39m=[32m{true}[39m
+                      [36m>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<View[39m
+                            [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                            [33mpointerEvents[39m=[32m"none"[39m
+                          [36m>[39m
+                            [36m<RNSVGSvgView[39m
+                              [33maccessible[39m=[32m{false}[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                            [36m>[39m
+                              [36m<RNSVGGroup>[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                              [36m</RNSVGGroup>[39m
+                            [36m</RNSVGSvgView>[39m
+                          [36m</View>[39m
+                        [36m</View>[39m
+                        [36m<Text[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no"[39m
+                        [36m>[39m
+                          [0mCheck-in[0m
+                        [36m</Text>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                        [36m/>[39m
+                      [36m</View>[39m
+                      [36m<View[39m
+                        [33maccessibilityLabel[39m=[32m"My zones"[39m
+                        [33maccessibilityRole[39m=[32m"button"[39m
+                        [33maccessibilityState[39m=[32m{
+                          {
+                            "busy": false,
+                            "disabled": false,
+                          }
+                        }[39m
+                        [33maccessible[39m=[32m{true}[39m
+                      [36m>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<View[39m
+                            [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                            [33mpointerEvents[39m=[32m"none"[39m
+                          [36m>[39m
+                            [36m<RNSVGSvgView[39m
+                              [33maccessible[39m=[32m{false}[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                            [36m>[39m
+                              [36m<RNSVGGroup>[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                              [36m</RNSVGGroup>[39m
+                            [36m</RNSVGSvgView>[39m
+                          [36m</View>[39m
+                        [36m</View>[39m
+                        [36m<Text[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no"[39m
+                        [36m>[39m
+                          [0mMy zones[0m
+                        [36m</Text>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                        [36m/>[39m
+                      [36m</View>[39m
+                      [36m<View[39m
+                        [33maccessibilityLabel[39m=[32m"Prepare week"[39m
+                        [33maccessibilityRole[39m=[32m"button"[39m
+                        [33maccessibilityState[39m=[32m{
+                          {
+                            "busy": false,
+                            "disabled": false,
+                          }
+                        }[39m
+                        [33maccessible[39m=[32m{true}[39m
+                      [36m>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<View[39m
+                            [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                            [33mpointerEvents[39m=[32m"none"[39m
+                          [36m>[39m
+                            [36m<RNSVGSvgView[39m
+                              [33maccessible[39m=[32m{false}[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                            [36m>[39m
+                              [36m<RNSVGGroup>[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGRect />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                                [36m<RNSVGPath />[39m
+                              [36m</RNSVGGroup>[39m
+                            [36m</RNSVGSvgView>[39m
+                          [36m</View>[39m
+                        [36m</View>[39m
+                        [36m<Text[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no"[39m
+                        [36m>[39m
+                          [0mPrepare week[0m
+                        [36m</Text>[39m
+                        [36m<View[39m
+                          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                          [33maccessible[39m=[32m{false}[39m
+                          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                          [33mpointerEvents[39m=[32m"none"[39m
+                        [36m>[39m
+                          [36m<RNSVGSvgView[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33maria-hidden[39m=[32m"true"[39m
+                          [36m>[39m
+                            [36m<RNSVGGroup>[39m
+                              [36m<RNSVGPath />[39m
+                            [36m</RNSVGGroup>[39m
+                          [36m</RNSVGSvgView>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                    [36m</View>[39m
+                  [36m</View>[39m
+                [36m</View>[39m
+              [36m</View>[39m
+              [36m<View[39m
+                [33mtestID[39m=[32m"week-version-controls"[39m
+              [36m>[39m
+                [36m<View[39m
+                  [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                  [33maccessible[39m=[32m{false}[39m
+                  [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                [36m/>[39m
+                [36m<View>[39m
+                  [36m<View>[39m
+                    [36m<Text>[39m
+                      [0mInterface · UI V2[0m
+                    [36m</Text>[39m
+                    [36m<View>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityLabel[39m=[32m"UI V1"[39m
+                          [33maccessibilityRole[39m=[32m"button"[39m
+                          [33maccessibilityState[39m=[32m{
+                            {
+                              "busy": false,
+                              "disabled": false,
+                              "selected": false,
+                            }
+                          }[39m
+                          [33maccessible[39m=[32m{true}[39m
+                        [36m>[39m
+                          [36m<Text[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no"[39m
+                          [36m>[39m
+                            [0mUI V1[0m
+                          [36m</Text>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                      [36m<View>[39m
+                        [36m<View[39m
+                          [33maccessibilityLabel[39m=[32m"UI V2"[39m
+                          [33maccessibilityRole[39m=[32m"button"[39m
+                          [33maccessibilityState[39m=[32m{
+                            {
+                              "busy": false,
+                              "disabled": false,
+                              "selected": true,
+                            }
+                          }[39m
+                          [33maccessible[39m=[32m{true}[39m
+                        [36m>[39m
+                          [36m<View[39m
+                            [33maccessibilityElementsHidden[39m=[32m{true}[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+                            [33mpointerEvents[39m=[32m"none"[39m
+                          [36m>[39m
+                            [36m<RNSVGSvgView[39m
+                              [33maccessible[39m=[32m{false}[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                            [36m>[39m
+                              [36m<RNSVGGroup>[39m
+                                [36m<RNSVGPath />[39m
+                              [36m</RNSVGGroup>[39m
+                            [36m</RNSVGSvgView>[39m
+                          [36m</View>[39m
+                          [36m<Text[39m
+                            [33maccessible[39m=[32m{false}[39m
+                            [33mimportantForAccessibility[39m=[32m"no"[39m
+                          [36m>[39m
+                            [0mUI V2[0m
+                          [36m</Text>[39m
+                        [36m</View>[39m
+                      [36m</View>[39m
+                    [36m</View>[39m
+                  [36m</View>[39m
+                [36m</View>[39m
+              [36m</View>[39m
+            [36m</View>[39m
+          [36m</RCTScrollView>[39m
+        [36m</RNCSafeAreaView>[39m
+      [36m</View>[39m
+    [36m</RNCSafeAreaProvider>[39m
+
+      189 |   expect(view.queryByText('Approved source workout')).toBeNull();
+      190 |   await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
+    > 191 |   await view.findByText('Approved source workout');
+          |              ^
+      192 |   expect(view.queryByText('Proposed source workout')).toBeNull();
+      193 |   expect(flow.activePlan).toBe(approved);
+      194 |   expect(api.approvePlanProposal).not.toHaveBeenCalled(); expect(api.rejectPlanProposal).not.toHaveBeenCall
+ed();
+
+      at findByText (src/screens/PlanningProposalBoundary.test.tsx:191:14)
+      at asyncGeneratorStep (../../wombo-ui-v2-activities/mobile/node_modules/@babel/runtime/helpers/asyncToGenerator.j
+s:3:17)
+      at _next (../../wombo-ui-v2-activities/mobile/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 10 passed, 12 total
+Snapshots:   0 total
+Time:        8.914 s
+Ran all test suites matching /src\\screens\\PlanningProposalBoundary.test.tsx/i.
+Test results written to: ..\docs\audits\evidence\proposal-repeat-results.json

@@ -1,0 +1,9 @@
+============================= test session starts =============================
+platform win32 -- Python 3.10.10, pytest-8.4.2, pluggy-1.6.0
+rootdir: F:\Projecten Business\Start23\Code\.worktrees\audit-wombo-full-system-review
+plugins: anyio-4.14.2
+collected 5 items
+
+..\docs\audits\evidence\test_audit_backend.py .....                      [100%]
+
+============================== 5 passed in 0.48s ==============================

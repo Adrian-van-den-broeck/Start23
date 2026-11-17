@@ -1,0 +1,46 @@
+{
+  "production": {
+    "paths_equal": true,
+    "components_equal": false,
+    "local_only_paths": [],
+    "remote_only_paths": [],
+    "changed_components": [
+      "CalculatedZoneBoundaryResponse",
+      "PlannedWorkoutResponse",
+      "WorkoutTemplateResponse",
+      "ExternalActivityInput-Output",
+      "CalculatedZoneMetricProfileResponse",
+      "CalibrationObservationCreate",
+      "ExternalActivityInput-Input",
+      "ActivityResponse",
+      "WorkoutDeckItemResponse",
+      "CalibrationObservationResponse",
+      "ThresholdEstimateResponse",
+      "ManualZoneSubmission",
+      "SwimRepetitionInput-Input",
+      "KnownThresholdInput-Input",
+      "WeeklyPlanResponse",
+      "KnownBoundaryInput-Output",
+      "WorkoutSegmentResponse",
+      "ActivityMetricInput",
+      "ZoneBoundaryInput",
+      "TrainingHistoryEntryResponse",
+      "KnownBoundaryInput-Input",
+      "SwipeWorkoutOccurrenceResponse",
+      "PlannedExternalActivityResponse",
+      "ZoneMetricResponse",
+      "ActivityMetricResponse",
+      "TrainingHistoryEntryInput",
+      "ActivitySummaryInput",
+      "SwimRepetitionInput-Output",
+      "KnownThresholdInput-Output"
+    ]
+  },
+  "staging": {
+    "paths_equal": true,
+    "components_equal": true,
+    "local_only_paths": [],
+    "remote_only_paths": [],
+    "changed_components": []
+  }
+}
