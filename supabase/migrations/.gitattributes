@@ -1,0 +1,3 @@
+# Keep only these new reviewed correction hashes stable across checkouts.
+20261116231106_v6_activity_projection_compatibility.sql text eol=lf
+20261116231107_v6_reviewed_privilege_closure.sql text eol=lf

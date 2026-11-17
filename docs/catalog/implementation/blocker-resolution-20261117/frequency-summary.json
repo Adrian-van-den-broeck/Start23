@@ -1,0 +1,10 @@
+{
+  "status": "EXECUTED / PASS",
+  "groups": 9,
+  "fresh_process_receipt_check": true,
+  "hosted_execution": false,
+  "raw_trace_retained_locally": true,
+  "raw_trace_sha256": "c47f52071280c9f7ef465e2c651f157d604d394884aaaa6d1a02d1bd81052cdd",
+  "runner_output_sha256": "f4440376444b1e157f130188a0933fdbe3490e5d82479b380d34cf899b3a1978",
+  "private_frozen_context_not_copied": true
+}

@@ -1,0 +1,11 @@
+{
+  "hosted_execution": false,
+  "tables_preserved": 64,
+  "all_table_hashes_equal": true,
+  "owner_projection_equal": true,
+  "owner_projection_sha256": "cd440a448fb83018487dfd480775ec8ce9271fe0b4c6b2f533317d210774eea6",
+  "direct_service_rpc_denials": 3,
+  "private_A5_dispatch_persistence_guard": "PT409",
+  "historical_smokes_pass": 4,
+  "backup_restore": false
+}

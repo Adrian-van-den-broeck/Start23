@@ -1,0 +1,22 @@
+{
+  "starting_sha": "0fa6509190d292d0c83e3076cda68c55624c202e",
+  "baseline": {
+    "sha256": "d3df7ecba2363fca0ffc71ce3d2ea3ad8a1a08e528c642843bf74d3326de3148",
+    "paths": 73,
+    "verification_imported": false,
+    "overrides": 0,
+    "historical_repository": "SupabasePlanningRepository",
+    "realized_v2_storage_ready": false,
+    "realized_v2_selection_enabled": false
+  },
+  "candidate": {
+    "sha256": "d3df7ecba2363fca0ffc71ce3d2ea3ad8a1a08e528c642843bf74d3326de3148",
+    "paths": 73,
+    "verification_imported": false,
+    "overrides": 0,
+    "historical_repository": "SupabasePlanningRepository",
+    "realized_v2_storage_ready": false,
+    "realized_v2_selection_enabled": false
+  },
+  "equal": true
+}

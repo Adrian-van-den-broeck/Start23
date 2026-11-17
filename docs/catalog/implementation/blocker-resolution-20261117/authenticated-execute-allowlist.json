@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "status": "PROPOSED_REQUIRES_OWNER_APPROVAL",
+  "production_execution_approved": false,
+  "exceptions": [
+    {
+      "role": "authenticated",
+      "signature": "public.get_checkin_plan_proposal(uuid)",
+      "introduced_in_group": 1
+    },
+    {
+      "role": "authenticated",
+      "signature": "public.create_activity_summary_v2(uuid,text,jsonb)",
+      "introduced_in_group": 2
+    },
+    {
+      "role": "authenticated",
+      "signature": "public.get_workout_registration(uuid)",
+      "introduced_in_group": 2
+    },
+    {
+      "role": "authenticated",
+      "signature": "public.confirm_workout_registration(uuid,uuid,integer,text)",
+      "introduced_in_group": 2
+    },
+    {
+      "role": "authenticated",
+      "signature": "public.get_v6_weekly_plan(uuid,integer)",
+      "introduced_in_group": 2
+    },
+    {
+      "role": "authenticated",
+      "signature": "public.get_v6_mobile_weekly_plan(uuid,integer)",
+      "introduced_in_group": 3
+    },
+    {
+      "role": "authenticated",
+      "signature": "public.get_v6_mobile_calendar(date,date)",
+      "introduced_in_group": 3
+    },
+    {
+      "role": "authenticated",
+      "signature": "public.get_v6_move_workout_context(uuid)",
+      "introduced_in_group": 3
+    },
+    {
+      "role": "authenticated",
+      "signature": "private.v6_revision_workouts(uuid)",
+      "introduced_in_group": 3
+    },
+    {
+      "role": "authenticated",
+      "signature": "public.get_frequency_preferences()",
+      "introduced_in_group": 3
+    },
+    {
+      "role": "authenticated",
+      "signature": "public.save_frequency_preferences(integer,uuid,jsonb)",
+      "introduced_in_group": 3
+    },
+    {
+      "role": "authenticated",
+      "signature": "public.report_frequency_interruption(uuid,text,text)",
+      "introduced_in_group": 3
+    },
+    {
+      "role": "authenticated",
+      "signature": "public.get_v6_frequency_swipe_receipt(uuid)",
+      "introduced_in_group": 3
+    }
+  ]
+}

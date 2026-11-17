@@ -1,0 +1,13 @@
+[
+  "failure after target/membership/pointer writes rolls back every change and retains evidence",
+  "direct lineage updates, deletion and late mapping insertion reject and roll back",
+  "one completed sibling retains exact original physical FK, prescription, date, measurement and source basis",
+  "multiple completed siblings survive successive moves; later activity uses original source and measured-data priority",
+  "weekly registration expected IDs include original evidence exactly once; completed/stale/foreign/cross-week moves rejected",
+  "incompatible pending confirmation cannot drop recorded evidence; rejection restores permitted sibling rescheduling",
+  "two competing post-activity moves commit only one authoritative revision",
+  "duplicate concurrent operation keys recover one exact committed response",
+  "move versus target registration serializes and preserves the winning physical evidence",
+  "move versus pending creation is CAS-safe; incompatible confirmation and move both reject without losing evidence",
+  "move versus actual activity attachment has one winner; linked but unfinished targets remain protected"
+]

@@ -14,6 +14,7 @@ from typing import Any
 from uuid import NAMESPACE_URL, uuid5
 
 from scripts.assess_v6_hosted_migrations import QUERIES
+from scripts.v6_rollout_policy import CORRECTIONS
 from scripts.verify_v6_final_sql import A5, ROOT, Replay
 from scripts.verify_v6_hosted_auth import QUERIES as BASE_QUERIES
 
@@ -89,6 +90,8 @@ def run(args: argparse.Namespace) -> None:
     observed = json.loads(args.hosted_preflight.read_text(encoding="utf-8"))
     expected = observed["migration_comparison"]
     files = sorted((ROOT / "supabase/migrations").glob("*.sql"))
+    if args.with_blocker_corrections:
+        files = [f for f in files if f.name not in CORRECTIONS]
     hashes = {f.name: hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
     if hashes != expected["accepted_sha256"] or expected["hosted_extra_versions"]:
         raise RuntimeError("Accepted chain changed or hosted contains extra versions")
@@ -126,6 +129,10 @@ def run(args: argparse.Namespace) -> None:
             db,
             "observed-hosted-drift-local-only",
         )
+        if args.with_blocker_corrections:
+            from scripts.verify_v6_blocker_sql import reproduce_hosted_acls
+
+            reproduce_hosted_acls(replay, db, details)
     metadata(replay, db, "boundary")
     # Persist ordinary synthetic onboarding and a historical confirmed rest plan.
     seed = (ROOT / "supabase/tests/fixtures/v6_persistence_users.sql").read_text()
@@ -224,6 +231,10 @@ def run(args: argparse.Namespace) -> None:
         },
     )
     before = snapshots(replay, db, "before")
+    if args.with_blocker_corrections:
+        from scripts.verify_v6_blocker_sql import activity_probe
+
+        activity_probe(replay, db, "boundary-47", versioned=False)
     # Run all historical suites available at the observed boundary.
     final_only = {A5, "joren_realized_v2_test.sql"}
     historical_tests = [
@@ -241,6 +252,8 @@ def run(args: argparse.Namespace) -> None:
     timings = []
     for group, count in enumerate(GROUPS, 1):
         members = missing[cursor : cursor + count]
+        if args.with_blocker_corrections and group in (2, 3):
+            members += [ROOT / "supabase/migrations" / CORRECTIONS[group - 2]]
         sql = (
             "begin; set local lock_timeout='5s'; set local statement_timeout='120s';\n"
         )
@@ -278,6 +291,8 @@ def run(args: argparse.Namespace) -> None:
         replay.save("group-" + str(group) + "-smokes.json", smokes)
         if any(result["status"] != "EXECUTED / PASS" for result in smokes):
             raise RuntimeError("Historical group smoke failed")
+        if args.with_blocker_corrections and group in (2, 3):
+            activity_probe(replay, db, "group-" + str(group), versioned=True)
     replay.save("a5-final-original.json", replay.tap(ROOT / "supabase/tests" / A5, db))
     results = []
     for file in sorted((ROOT / "supabase/tests").glob("*.sql")):
@@ -305,6 +320,7 @@ def main() -> None:
     parser.add_argument("--database", required=True)
     parser.add_argument("--hosted-preflight", type=Path, required=True)
     parser.add_argument("--reproduce-hosted-drift", type=Path)
+    parser.add_argument("--with-blocker-corrections", action="store_true")
     parser.add_argument("--private-output", type=Path, required=True)
     args = parser.parse_args()
     if not args.execute_disposable_local_only or not re.fullmatch(

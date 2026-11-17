@@ -1,0 +1,27 @@
+{
+  "historical_source_sha": "5d71c688deb610bf5ec79c0f6fac77c835be6b51",
+  "historical_file_sha256": {
+    "schemas": "46f6588e990fa4af11ca77bcbe3957a96ac99a392cf410bd04656419c6bd5cc3",
+    "service": "52dace3a501a7f1a339b8c29f65fffacce519c0c8f16f871f3006fe7741bc173"
+  },
+  "postgres_generated": true,
+  "hosted_execution": false,
+  "outcomes": [
+    {
+      "activity_id": "174b4d16-2783-4413-b105-d35ebac1fd46",
+      "historical_model": "PASS",
+      "historical_response_method": "PASS",
+      "current_model": "PASS",
+      "owner_list": "PASS",
+      "versioned_metadata": false
+    },
+    {
+      "activity_id": "2f3f50ff-6811-4bad-ab64-dc29dd8f9c5c",
+      "historical_model": "PASS",
+      "historical_response_method": "PASS",
+      "current_model": "PASS",
+      "owner_list": "PASS",
+      "versioned_metadata": false
+    }
+  ]
+}

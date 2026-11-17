@@ -1,0 +1,134 @@
+{
+  "starting_sha": "0fa6509190d292d0c83e3076cda68c55624c202e",
+  "branch": "release/joren-v6-migration-blocker-resolution",
+  "scope": "Local implemented candidate; portable PostgreSQL 17.11; no hosted V6 execution",
+  "production_mutations": 0,
+  "production_execution_approved": false,
+  "targeted": {
+    "status": "PASS",
+    "tests": 49,
+    "evidence": "targeted-final.txt"
+  },
+  "backend": {
+    "status": "PASS",
+    "tests": 2940,
+    "warnings": 1,
+    "seconds": 274.46,
+    "evidence": "pytest-final.txt"
+  },
+  "mobile": {
+    "status": "PASS",
+    "tests": 935,
+    "suites": 89,
+    "typescript_strict_no_unused": "PASS",
+    "evidence": "mobile-jest-summary.json"
+  },
+  "static": {
+    "ruff": "PASS entire backend",
+    "format": "PASS entire backend; 258 files already formatted",
+    "mypy_app_tests_benchmarks_files": 226,
+    "mypy_explicit_scripts_files": 9
+  },
+  "postgres": {
+    "clean_47_to_65": {
+      "assertions": 752,
+      "suites": 38,
+      "status": "PASS"
+    },
+    "reproduced_actual_hosted_47_to_65": {
+      "assertions": 752,
+      "suites": 38,
+      "status": "PASS",
+      "scope": "Observed two bodies, all default ACL metadata and four service ACL differences; not managed-provider parity"
+    },
+    "empty_to_65": {
+      "assertions": 752,
+      "suites": 38,
+      "status": "PASS"
+    },
+    "historical_tables_equal_each_group": 51,
+    "historical_smokes_each_group_each_boundary": 6,
+    "targeted_permission_assertions": 30,
+    "activity_47_historical_and_current": "PASS",
+    "activity_uncorrected_63_historical": "EXPECTED extra_forbidden(session_rpe_version)",
+    "activity_corrected_65_historical_current_and_v2": "PASS",
+    "activity_correction_tables_preserved": 64,
+    "bundle_guards_cases_per_boundary": 14,
+    "bundle_fixture_note": "Original ledger statement fingerprints and provider metadata use explicit locally reproduced fixture fingerprints; exact accepted/new migration bodies remain unchanged."
+  },
+  "a5_original": {
+    "passed": 8,
+    "failed": 1,
+    "aborted_before_remaining": 20,
+    "adopted_patch": false,
+    "status": "KNOWN ORIGINAL FAILURE"
+  },
+  "a5_corrected_overlay": {
+    "passed": 29,
+    "status": "PASS",
+    "original_fixture_claimed_pass": false
+  },
+  "lifecycle": {
+    "groups": 9,
+    "status": "PASS",
+    "fresh_process": true
+  },
+  "evidence_rescheduling": {
+    "groups": 11,
+    "status": "PASS",
+    "fresh_process": true
+  },
+  "frequency": {
+    "groups": 9,
+    "status": "PASS",
+    "fresh_process": true,
+    "test_authority_not_production_authority": true
+  },
+  "historical_planner": {
+    "cases": 40,
+    "accepted_references": 26,
+    "exact_output_and_independent_checks_equal": true,
+    "bound_seconds": 8,
+    "retained_timeout": "current:build_4"
+  },
+  "multi_session_oracle": {
+    "contexts": 15,
+    "products": 20061679,
+    "non_timing_content_equal": true,
+    "node_ceiling": 200000
+  },
+  "disable_rehearsal": {
+    "status": "PASS",
+    "tables_preserved": 64,
+    "confirmed_projection_equal": true,
+    "service_rpc_denials": 3,
+    "private_a5_denial": "PT409",
+    "historical_smokes": 4,
+    "production_disable_executed": false,
+    "backup_restore": false
+  },
+  "normal_startup": {
+    "status": "UNCHANGED",
+    "openapi_paths": 73,
+    "verification_imported": false,
+    "dependency_overrides": 0,
+    "v2_flags": false,
+    "evidence": "startup-public-contract.json"
+  },
+  "initial_harness_issues": [
+    "Initial mobile node_modules pointed at older root dependencies: 47/89 suites failed with missing modules. Only this successor junction was corrected to the accepted readiness dependency tree; final 89 suites pass. No dependency upgrades or protected writes.",
+    "Combined explicit-package-bases mypy invocation was inappropriate for historical bare test imports; standard app/tests/benchmarks and explicit scripts were checked separately.",
+    "Frequency attempt after long session pause found the local cluster stopped; only this isolated cluster was restarted and final nine groups pass.",
+    "Final Ruff caught one 89-character test SQL literal; wrapped without changing SQL and reran checks."
+  ],
+  "not_executed": [
+    "Production migration/deployment/activation",
+    "Genuine hosted V6 GoTrue/PostgREST adapter execution",
+    "Production backup export or restore",
+    "Billable infrastructure or account configuration changes",
+    "Hosted synthetic account creation/cleanup",
+    "Railway deployment identity after successful login",
+    "Physical Android/iOS and store release routing verification"
+  ],
+  "remaining_gates_document": "../JOREN_V6_REMAINING_RELEASE_GATES_NL.md"
+}

@@ -1,0 +1,63 @@
+{
+  "file": "wombo_a5_checkin_proposal_recovery_test.sql",
+  "source_sha256": "cb6e4ffef878cb26c434250f5ec1a2524339de433d4dc82a09399875e5369b90",
+  "executed_sql_sha256": "a44cad34d74d47e8428a7ed2d2a3d71e4abcc441348e8922df96ed51f9c22901",
+  "overlay": false,
+  "exit_code": 3,
+  "assertions_executed": 9,
+  "assertions": [
+    {
+      "number": 1,
+      "description": "replay uses the authenticated caller, not a service credential",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 2,
+      "description": "replay preserves invoker RLS",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 3,
+      "description": "generation remains service only",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 4,
+      "description": "generation acquires a check-in row lock (structural assertion, not a race test)",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 5,
+      "description": "an open ungenerated check-in permits generation",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 6,
+      "description": "partial creation rolls back on attachment failure",
+      "status": "EXECUTED / FAIL"
+    },
+    {
+      "number": 7,
+      "description": "failed atomic operation left no revision",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 8,
+      "description": "failed atomic operation left no plan",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 9,
+      "description": "failed attachment left check-in open",
+      "status": "EXECUTED / PASS"
+    }
+  ],
+  "passed": 8,
+  "failures": [
+    "not ok 6 - partial creation rolls back on attachment failure"
+  ],
+  "plan": [],
+  "complete": false,
+  "status": "EXECUTED / FAIL",
+  "transcript_sha256": "6c5148cd38e62a1b661b2e263b6ae974416856c6ceeabd340558425702bf208e"
+}

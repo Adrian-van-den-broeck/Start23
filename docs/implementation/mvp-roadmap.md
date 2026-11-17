@@ -2483,3 +2483,23 @@ independent technical priority: preserve the 200,000-node ceiling and honest
 `v6_search_incomplete`; no real-athlete multi-session activation before that
 problem and the [remaining release gates](../catalog/implementation/JOREN_V6_REMAINING_RELEASE_GATES_NL.md)
 are resolved.
+
+## V6 migration blocker resolution — 17 November 2026
+
+The isolated successor implements a forward-only historical activity projection
+correction, an exact proposed authenticated EXECUTE allowlist with fail-closed
+offline bundles, justified application ACL/default corrections and a separate
+restricted hosted verification factory. A NULL frequency-preference revision
+precondition bypass is closed without changing frequency policy. Clean and
+reproduced-hosted PostgreSQL boundaries and the final backend/mobile regressions
+pass; the original A5 fixture failure remains explicit beside its corrected overlay.
+
+This is local technical implementation, not production execution or hosted V6
+verification. All 77 revisions remain inactive and normal startup remains
+historical. Actual deployed runtime identity, a verified production recovery
+checkpoint/restore, isolated genuine hosted execution, exact permission approval
+and separate production execution approval remain required. Scientific reviewer,
+individual frequency authorization and physical-device activation gates remain
+independent. See the updated
+[owner decisions](../catalog/implementation/JOREN_V6_REMAINING_RELEASE_GATES_NL.md)
+and [atomic rollout plan](../catalog/implementation/JOREN_V6_INACTIVE_PRODUCTION_ROLLOUT_PLAN.md).

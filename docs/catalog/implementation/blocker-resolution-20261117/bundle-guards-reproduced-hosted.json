@@ -1,0 +1,93 @@
+{
+  "hosted_execution": false,
+  "fixture_fingerprint_substitution": true,
+  "exact_bodies": true,
+  "final_ledger_count": 65,
+  "cases": [
+    {
+      "case": "default-no-exceptions",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "22195599477c77c8eb2554f7baf3b7bb97ff9d8b76d7edb887f8e1531882e700"
+    },
+    {
+      "case": "unexpected-grant-option",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "98fccb6a4b85a51d8b752c8479c0cc838d6140ce04bc6ba7a8607f2c492002c9"
+    },
+    {
+      "case": "unexpected-rls-bypass",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "24b275fb0f2e123ea2a56657132e7d88b4412d15d51b430e96ab82ea19ce1308"
+    },
+    {
+      "case": "unexpected-role-membership",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "24b275fb0f2e123ea2a56657132e7d88b4412d15d51b430e96ab82ea19ce1308"
+    },
+    {
+      "case": "unexpected-schema-authority",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "70804ba5b3f8825292c1286000db2e0b776cd605c33638fb798c96139bfe87bc"
+    },
+    {
+      "case": "unexpected-anonymous-execute",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "22195599477c77c8eb2554f7baf3b7bb97ff9d8b76d7edb887f8e1531882e700"
+    },
+    {
+      "case": "unexpected-authenticated-writer",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "22195599477c77c8eb2554f7baf3b7bb97ff9d8b76d7edb887f8e1531882e700"
+    },
+    {
+      "case": "unexpected-overload",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "22195599477c77c8eb2554f7baf3b7bb97ff9d8b76d7edb887f8e1531882e700"
+    },
+    {
+      "case": "unexpected-private-table",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "fdacfee7bc38b40930ca99652494980487cb917009728b07d8d3b90ed3346c96"
+    },
+    {
+      "case": "unexpected-server-function",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "b41fc6f3459bcdf89db3578b952ed03d602144ec229e703c3e583906c66b9c44"
+    },
+    {
+      "case": "unexpected-default-acl",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "df309f9fdad4a7121e7388eaca9e3f7e63e8e190d12124d955d11199a5ba804f"
+    },
+    {
+      "case": "atomic-g2-injected-failure",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "0884545f46ba259350ae032bcdd21620ac4de4782e3e5e37a79429cb39e34a9c"
+    },
+    {
+      "case": "missing-private-invoker-dependency",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "22195599477c77c8eb2554f7baf3b7bb97ff9d8b76d7edb887f8e1531882e700"
+    },
+    {
+      "case": "unknown-commit-repeat-stops",
+      "status": "PASS",
+      "ledger_unchanged": true,
+      "error_sha256": "44d46dca197d9f62e28b430a7c0da7eeaa50fd23ce1aa7bdcda166798df9513c"
+    }
+  ],
+  "all_three_groups_committed": true
+}

@@ -1,0 +1,19 @@
+{
+  "http_status": 200,
+  "organization_id": "dhgozxsnsszssxkwjewa",
+  "mutations": 0,
+  "projects": [
+    {
+      "id": null,
+      "ref": "isfumhgqphieoayqahjv",
+      "name": "start23-dev",
+      "status": "ACTIVE_HEALTHY",
+      "region": "eu-west-1"
+    }
+  ],
+  "pagination": {
+    "count": 1,
+    "limit": 100,
+    "offset": 0
+  }
+}

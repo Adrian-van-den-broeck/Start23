@@ -1,0 +1,5 @@
+*.json -text
+*.txt -text
+history/* -text
+README.md -text
+.gitattributes -text

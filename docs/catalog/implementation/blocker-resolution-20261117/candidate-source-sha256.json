@@ -1,0 +1,18 @@
+{
+  "backend/app/modules/activities/repository.py": "e69b3ac01827aad1da768ac9ae3548273f1dd2f919c3ccf3fd0c7174cbed2720",
+  "backend/app/verification_v6.py": "51b5725f077eeccfbfdacfc125345f6b1a85a25044eb0348c77058a2ced8bec1",
+  "backend/scripts/prepare_v6_rollout_bundles.py": "02af3355c962b58a843eae7691d3205294647b1975a5de19ae5dd606c77be6cb",
+  "backend/scripts/rehearse_v6_migration_boundary.py": "c801f5c2f3cce7ee09b2e0d9b06df56659b36cd806de70e43ee44ea64ca009e1",
+  "backend/scripts/cleanup_v6_verification_subjects.py": "cfcf87b3dd05928f29f4a2f904eb50d25a3d3e7dea5b3716eec0c15684da2049",
+  "backend/scripts/inspect_v6_recovery_options.py": "170b90993bd67e7399e886d69daeba33bbbff3139b3edc8c3974389796c91f1a",
+  "backend/scripts/run_v6_hosted_verification_adapter.py": "1c4cc1aa6c1cc63791fd8807bc81fff043e13d187a714abd66edf28d399fb837",
+  "backend/scripts/v6_rollout_policy.py": "0464d39867a863bd4a7ab96576693629af8e791abd35685f3e3a9353982ae3d2",
+  "backend/scripts/verify_v6_activity_boundaries.py": "5df4fc636cefd240770cf54132f80f25f61eda016ba1473b7c612e830638ff90",
+  "backend/scripts/verify_v6_blocker_sql.py": "6d70a5c265d71010529111971288701b51a161a9927fcf07e9c6e794cc4268c9",
+  "backend/scripts/verify_v6_rollout_bundle_guards.py": "5b93d55ddf4f2158b2c169b7f22b9571cbb5179ddcdae3b018a9ffe4faa56f08",
+  "backend/tests/test_activity_projection_compatibility.py": "be0685487a4ccaba50be48d69eb7088a166fad296b06219d1baf3e2159ec122b",
+  "backend/tests/test_v6_hosted_verification_adapter.py": "14197a825798c543fae407a46d19f0cc7785403aaaa6e6a07435319e5b8e4dc9",
+  "supabase/migrations/20261116231106_v6_activity_projection_compatibility.sql": "d0fba80a54cd263ae9ef4b5bf2efd48b8a6375507c0e1763c12bf9c8a8af73bb",
+  "supabase/migrations/20261116231107_v6_reviewed_privilege_closure.sql": "e37c3c09bf71c1373de8c924c5dbdcb63094f4b445a7cd485f44056d65c72a98",
+  "supabase/tests/v6_migration_blocker_permissions_test.sql": "df139888ee734e8c440e24c71c3f98706a225b1a97d34901ecd197f903721f6b"
+}

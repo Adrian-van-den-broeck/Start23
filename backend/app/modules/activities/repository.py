@@ -233,7 +233,34 @@ class SupabaseActivityRepository:
         )
         if not isinstance(result, dict):
             raise ActivityRepositoryUnavailableError
-        return dict(result)
+        return await self._presentation(result)
+
+    async def _presentation(self, result: JsonObject) -> JsonObject:
+        """Opt in to versioned metadata only after a successful owner operation.
+
+        Historical RPCs keep their strict response contract. The metadata RPC is
+        service-only and returns no load/evidence; its input comes from the trusted
+        operation result, never a separate client-supplied activity identifier.
+        """
+        if not self._v2_ready:
+            return dict(result)
+        try:
+            activity_id = UUID(str(result["id"]))
+        except (KeyError, ValueError, TypeError) as error:
+            raise ActivityRepositoryUnavailableError from error
+        metadata = await self._request(
+            "POST",
+            "rpc/get_activity_presentation_v2",
+            service=True,
+            json={"p_activity_id": str(activity_id)},
+        )
+        if (
+            not isinstance(metadata, dict)
+            or set(metadata) != {"session_rpe_version"}
+            or metadata["session_rpe_version"] not in ("legacy", "2")
+        ):
+            raise ActivityRepositoryUnavailableError
+        return {**result, **metadata}
 
     async def save_rpe_heart_rate_observation(
         self,
@@ -262,7 +289,7 @@ class SupabaseActivityRepository:
         )
         if not isinstance(result, dict):
             raise ActivityRepositoryNotFoundError
-        return dict(result)
+        return await self._presentation(result)
 
     async def list_activities(
         self,
@@ -278,7 +305,9 @@ class SupabaseActivityRepository:
         )
         if not isinstance(result, list):
             raise ActivityRepositoryUnavailableError
-        return tuple(dict(row) for row in result if isinstance(row, dict))
+        return tuple(
+            [await self._presentation(row) for row in result if isinstance(row, dict)]
+        )
 
     async def fetch_processing_context(
         self,
@@ -322,7 +351,7 @@ class SupabaseActivityRepository:
         )
         if not isinstance(result, dict):
             raise ActivityRepositoryUnavailableError
-        return dict(result)
+        return await self._presentation(result)
 
     async def revise_activity_rpe(
         self,
@@ -345,7 +374,7 @@ class SupabaseActivityRepository:
         )
         if not isinstance(result, dict):
             raise ActivityRepositoryUnavailableError
-        return dict(result)
+        return await self._presentation(result)
 
     async def confirm_planned_workout_match(
         self,
@@ -364,7 +393,7 @@ class SupabaseActivityRepository:
         )
         if not isinstance(result, dict):
             raise ActivityRepositoryUnavailableError
-        return dict(result)
+        return await self._presentation(result)
 
     async def aclose(self) -> None:
         if self._owns_client:

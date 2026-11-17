@@ -1,0 +1,21 @@
+{
+  "railway_authentication": "Unauthorized; repeated after resume",
+  "minimal_owner_login": "npx --yes @railway/cli login",
+  "production_deployed_source_sha_known": false,
+  "actual_railway_service_environment_api_url_independently_verified": false,
+  "runtime_flags_jobs_external_integrations_independently_verified": false,
+  "local_mobile_api_url": "https://r6-api-r6-staging.up.railway.app",
+  "local_modefile_api_url": "https://start23-production.up.railway.app",
+  "compiled_mobile_api_url_verified": false,
+  "eas_latest_android": {
+    "id": "0b1a3606-7476-4607-b4c7-a37e763249c0",
+    "version": "1.0.0",
+    "build": "22",
+    "git_metadata": "ee229a9ac2b8de56a6b5bf69026921eab0ab5b56",
+    "actual_store_release_verified": false
+  },
+  "ios_eas_result": [],
+  "non_eas_ios_release_ruled_out": false,
+  "adb_attached_devices": 0,
+  "hosted_mutations": 0
+}

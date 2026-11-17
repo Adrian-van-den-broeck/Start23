@@ -1,0 +1,122 @@
+[
+  {
+    "id": "0b1a3606-7476-4607-b4c7-a37e763249c0",
+    "platform": "ANDROID",
+    "status": "FINISHED",
+    "distribution": "STORE",
+    "buildProfile": "wombo",
+    "appVersion": "1.0.0",
+    "appBuildVersion": "22",
+    "gitCommitHash": "ee229a9ac2b8de56a6b5bf69026921eab0ab5b56",
+    "createdAt": "2026-10-01T09:26:34.803Z",
+    "completedAt": "2026-10-01T09:44:41.146Z"
+  },
+  {
+    "id": "a2700f1b-3ec6-4986-8497-b15fc124cac3",
+    "platform": "ANDROID",
+    "status": "FINISHED",
+    "distribution": "STORE",
+    "buildProfile": "wombo",
+    "appVersion": "1.0.0",
+    "appBuildVersion": "21",
+    "gitCommitHash": "20d40b2cf22377cd780e8b8b0b7de1792cc92749",
+    "createdAt": "2026-10-01T07:43:23.274Z",
+    "completedAt": "2026-10-01T07:55:58.216Z"
+  },
+  {
+    "id": "bd8b79ad-0fbb-4162-adcc-d8719787a6e9",
+    "platform": "ANDROID",
+    "status": "FINISHED",
+    "distribution": "STORE",
+    "buildProfile": "wombo",
+    "appVersion": "1.0.0",
+    "appBuildVersion": "20",
+    "gitCommitHash": "3f351468e5c30277e9ce5091491c20522088c90f",
+    "createdAt": "2026-09-23T22:59:12.694Z",
+    "completedAt": "2026-09-23T23:12:21.769Z"
+  },
+  {
+    "id": "defbfc80-9ae4-4853-92f8-b13d203b0685",
+    "platform": "ANDROID",
+    "status": "CANCELED",
+    "distribution": "STORE",
+    "buildProfile": "wombo",
+    "appVersion": "1.0.0",
+    "appBuildVersion": "19",
+    "gitCommitHash": "124a0a8e740e10deb069b29c4aba2add32754941",
+    "createdAt": "2026-09-23T22:51:00.925Z",
+    "completedAt": "2026-09-23T22:57:20.424Z"
+  },
+  {
+    "id": "5b7b0c9c-0492-4711-8254-2c9071894a2a",
+    "platform": "ANDROID",
+    "status": "FINISHED",
+    "distribution": "STORE",
+    "buildProfile": "wombo",
+    "appVersion": "1.0.0",
+    "appBuildVersion": "18",
+    "gitCommitHash": "124a0a8e740e10deb069b29c4aba2add32754941",
+    "createdAt": "2026-09-23T20:37:20.676Z",
+    "completedAt": "2026-09-23T21:41:11.670Z"
+  },
+  {
+    "id": "9f888335-fe7d-4c0b-ad58-a705fa184459",
+    "platform": "ANDROID",
+    "status": "FINISHED",
+    "distribution": "STORE",
+    "buildProfile": "wombo",
+    "appVersion": "1.0.0",
+    "appBuildVersion": "17",
+    "gitCommitHash": "534e73ca5c4b7b16e9b08be8edd6df26f8a0c465",
+    "createdAt": "2026-09-23T08:24:58.350Z",
+    "completedAt": "2026-09-23T08:39:10.049Z"
+  },
+  {
+    "id": "a692f4c4-0c3b-46cf-afdc-09da75acc66d",
+    "platform": "ANDROID",
+    "status": "FINISHED",
+    "distribution": "STORE",
+    "buildProfile": "wombo",
+    "appVersion": "1.0.0",
+    "appBuildVersion": "16",
+    "gitCommitHash": "11f40ec46be8e9ddee14e1eea7a9273a3e0202b5",
+    "createdAt": "2026-09-11T22:05:45.525Z",
+    "completedAt": "2026-09-11T22:19:30.477Z"
+  },
+  {
+    "id": "51a625b3-e1e4-4147-af89-14712cb22e7f",
+    "platform": "ANDROID",
+    "status": "FINISHED",
+    "distribution": "STORE",
+    "buildProfile": "wombo",
+    "appVersion": "1.0.0",
+    "appBuildVersion": "15",
+    "gitCommitHash": "11f40ec46be8e9ddee14e1eea7a9273a3e0202b5",
+    "createdAt": "2026-09-11T12:33:44.046Z",
+    "completedAt": "2026-09-11T12:56:27.338Z"
+  },
+  {
+    "id": "afaa4be8-c736-4e8f-801f-691a3cd5ef1a",
+    "platform": "ANDROID",
+    "status": "FINISHED",
+    "distribution": "STORE",
+    "buildProfile": "wombo",
+    "appVersion": "1.0.0",
+    "appBuildVersion": "14",
+    "gitCommitHash": "16f745fb864fd0c0feaa34330adfd762a1911e41",
+    "createdAt": "2026-09-10T15:03:34.876Z",
+    "completedAt": "2026-09-10T16:26:35.589Z"
+  },
+  {
+    "id": "d8ed2810-3e25-4241-b943-74ee8bb9a639",
+    "platform": "ANDROID",
+    "status": "FINISHED",
+    "distribution": "STORE",
+    "buildProfile": "wombo",
+    "appVersion": "1.0.0",
+    "appBuildVersion": "13",
+    "gitCommitHash": "8ae6257ec38b18cf4a5e270c55cfc328a4d00cfa",
+    "createdAt": "2026-09-02T13:57:59.160Z",
+    "completedAt": "2026-09-02T15:10:39.948Z"
+  }
+]

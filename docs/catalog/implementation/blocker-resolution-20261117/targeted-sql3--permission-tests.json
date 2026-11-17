@@ -1,0 +1,168 @@
+{
+  "file": "v6_migration_blocker_permissions_test.sql",
+  "source_sha256": "df139888ee734e8c440e24c71c3f98706a225b1a97d34901ecd197f903721f6b",
+  "executed_sql_sha256": "df139888ee734e8c440e24c71c3f98706a225b1a97d34901ecd197f903721f6b",
+  "overlay": false,
+  "exit_code": 0,
+  "assertions_executed": 30,
+  "assertions": [
+    {
+      "number": 1,
+      "description": "public.get_checkin_plan_proposal(uuid) exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 2,
+      "description": "public.create_activity_summary_v2(uuid,text,jsonb) exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 3,
+      "description": "public.get_workout_registration(uuid) exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 4,
+      "description": "public.confirm_workout_registration(uuid,uuid,integer,text) exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 5,
+      "description": "public.get_v6_weekly_plan(uuid,integer) exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 6,
+      "description": "public.get_v6_mobile_weekly_plan(uuid,integer) exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 7,
+      "description": "public.get_v6_mobile_calendar(date,date) exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 8,
+      "description": "public.get_v6_move_workout_context(uuid) exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 9,
+      "description": "private.v6_revision_workouts(uuid) exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 10,
+      "description": "public.get_frequency_preferences() exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 11,
+      "description": "public.save_frequency_preferences(integer,uuid,jsonb) exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 12,
+      "description": "public.report_frequency_interruption(uuid,text,text) exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 13,
+      "description": "public.get_v6_frequency_swipe_receipt(uuid) exact authenticated exception",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 14,
+      "description": "no anonymous V6 execute",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 15,
+      "description": "generated writer remains server-only",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 16,
+      "description": "metadata cannot be enumerated by athletes",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 17,
+      "description": "anonymous metadata denied",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 18,
+      "description": "versioned metadata available to server",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 19,
+      "description": "internal projection remains ungranted",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 20,
+      "description": "no test or registrar membership",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 21,
+      "description": "no reviewer enrolled",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 22,
+      "description": "no frequency authority issued",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 23,
+      "description": "unnecessary historical catalog service authority removed",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 24,
+      "description": "new app tables inherit no Dxtm client/service authority",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 25,
+      "description": "private helper rejects foreign owner",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 26,
+      "description": "private helper preserves same-owner historical invoker dependency",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 27,
+      "description": "SQL NULL cannot bypass preference CAS",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 28,
+      "description": "valid owner preference save still works",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 29,
+      "description": "exact preference retry remains stable",
+      "status": "EXECUTED / PASS"
+    },
+    {
+      "number": 30,
+      "description": "stale preference CAS remains closed",
+      "status": "EXECUTED / PASS"
+    }
+  ],
+  "passed": 30,
+  "failures": [],
+  "plan": [
+    "30"
+  ],
+  "complete": true,
+  "status": "EXECUTED / PASS",
+  "transcript_sha256": "89cba96de5dc7d6f4b82b508e6adfa3fd42964a8110e36b075f79d22e43130e0"
+}

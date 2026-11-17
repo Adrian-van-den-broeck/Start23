@@ -1,0 +1,17 @@
+{
+  "starting_sha": "0fa6509190d292d0c83e3076cda68c55624c202e",
+  "readiness_reports_reviewed": {
+    "JOREN_V6_HOSTED_MIGRATION_GAP_ANALYSIS.md": "96b96466876ba06099f9467d178cf4a224b74fd3e735fa4152587ab923f90cd9",
+    "JOREN_V6_PRODUCTION_COMPATIBILITY_MATRIX.md": "f29c6a5e54b27d858e32fb3d39180d0960f4e25864305d33b3f63b7790398bbc",
+    "JOREN_V6_INACTIVE_PRODUCTION_ROLLOUT_PLAN.md": "14660c2c51d87e45debce9ebdae0239edaff54dcd1e99e4fbe1c952e1a411445",
+    "JOREN_V6_BACKUP_AND_RECOVERY_READINESS.md": "df8d2f15b4392847f26aedc3b4bbb1f13d3e4489c12d167308068ab09b12137e",
+    "JOREN_V6_HOSTED_POST_MIGRATION_VERIFICATION_PLAN.md": "a6c04ed0c35538d9d60a57c7c77821904244b333fc685e227eac332771467dca",
+    "JOREN_V6_REMAINING_RELEASE_GATES_NL.md": "005970aa75944d684e8cbf981f2dfde7bf84b009735994982114e221da54aa6e",
+    "JOREN_V6_HOSTED_MIGRATION_READINESS.md": "e5feba8b526dc48027f1a3c381a99d8203a57618043b0b22f1947fdc8c9e2237"
+  },
+  "machine_readiness_files_reviewed": 77,
+  "accepted_migration_files_verified_unchanged": 63,
+  "normal_startup_and_local_v6_helper_unchanged": true,
+  "mobile_source_unchanged": true,
+  "roadmap_update_scope": "Append implemented local technical status and remaining release gates only"
+}

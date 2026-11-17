@@ -1,73 +1,54 @@
-# WOMBO V6: migratiegereedheid en resterende besluiten
+# WOMBO V6 — technische oplossingen en eigenaarbesluiten
 
-16 november 2026, Europe/Amsterdam. Branch `release/joren-v6-hosted-migration-readiness`, vanaf exact **289280a5bddf6f0cc65eca1f562561e7df9a603c**. De definitieve commit staat in Git en het opleverbericht; deze tekst claimt geen zelfrefererende commit-SHA.
+**WOMBO V6 TECHNICAL MIGRATION BLOCKERS RESOLVED — OWNER INFRASTRUCTURE AND EXECUTION APPROVAL REQUIRED**
 
-**WOMBO V6 PRODUCTION MIGRATION READINESS PARTIAL — EXACT RISKS DOCUMENTED**
+17 november 2026. Branch `release/joren-v6-migration-blocker-resolution`, vanaf exact `0fa6509190d292d0c83e3076cda68c55624c202e`; volledige eind-SHA in Git en opleverbericht. Geen push, deployment, productiemigratie, activatie, billingwijziging, hosted accountcreatie of beschermde A5/A6-wijziging.
 
-## Bestuurlijke samenvatting
+## Geïmplementeerd en lokaal bewezen
 
-De hosted database bevat opnieuw bevestigd **47 van 63 geaccepteerde migraties**: precies 16 ontbreken, zonder extra of conflicterende versienummers. Alle bestandschecksums staan in de [migratieanalyse](JOREN_V6_HOSTED_MIGRATION_GAP_ANALYSIS.md). De huidige ledger en Auth-/schemametadata zijn voor en na deze beoordeling gelijk. Er zijn geen productiemigraties, deployments, activaties, roltoekenningen of echte-atleetmutaties uitgevoerd.
+- **Activiteitcompatibiliteit:** forward C1 herstelt exacte historische projectie; versiegebonden V2-metadata is alleen server-side. Werkelijke PostgreSQL-responses slagen voor echte historische strikte model-/responsecode op 47 en gecorrigeerd 65; de oorspronkelijke 63-fout `extra_forbidden` blijft bewezen. Bestaande consumenten en optionele V2-presentatie zijn getest. Geen brede V6-deploy nodig voor deze incompatibiliteit. [Implementatie](JOREN_V6_ACTIVITY_COMPATIBILITY_IMPLEMENTATION.md).
+- **Rechten:** exact 13 owner-scoped authenticated EXECUTE-signatures afzonderlijk gereviewd; machineallowlist en fail-closed offline generator. De private membership-helper blijft voor invoker-reads. Geen anonymous authority, athlete service writers, reviewer of test-executor. C2 sluit tevens een gereproduceerde NULL-revision-bypass bij voorkeuren. [Review en lijst](JOREN_V6_AUTHENTICATED_EXECUTE_ALLOWLIST.md).
+- **Drift:** C2 verwijdert onnodige Dxtm-serviceprivileges op vier catalogustabellen en toepasselijke `postgres/public` defaults. `save_zone_profile` conditioneel geaccepteerd door actieve downstream guard; provider `rls_auto_enable` blijft ongewijzigd in afwachting van platformbewijs. Geen providernormalisatie of ledgerreparatie. [Disposition](JOREN_V6_HOSTED_DRIFT_DISPOSITION.md).
+- **Adapter:** aparte factory/launcher, exact geïsoleerd target, twee gemanifesteerde subjects, echte JWT-verificatie, actuele owner-map, bestaande typed services, transportallowlist, redactie, mutatiejournal/reconciliatie en onafhankelijke kill switch. Geen productie-import, test-frequentiebypass of fake reviewer. Cleanup uitsluitend voor gemanifesteerde subjects na aparte toestemming. [Adapter](JOREN_V6_HOSTED_VERIFICATION_ADAPTER.md).
 
-De zestien wijzigingen zijn concreet:
+Finale regressie: **2.940 backendtests**, **935 mobiele tests/89 suites**, strict TypeScript, Ruff/format en strict mypy slagen. Beide echte PostgreSQL-upgrades (historisch schoon en gereproduceerde hosted drift) geven elk **752/752 assertions/38 suites**, met alle 51 historische tabelhashes gelijk na iedere groep. Beide bundelrepetities slagen in 14 guardgevallen. Negen lifecycle-, elf evidence- en negen frequentiegroepen slagen, inclusief nieuwe processen. De 40 historische planneruitkomsten, 26 referentiecompletions en multisessie-oracle (15 contexten, 20.061.679 combinaties) blijven exact. [Volledig bewijs](blocker-resolution-20261117/verification.json).
 
-| # | Wijziging |
-| --- | --- |
-| 1 | A5: atomair aanmaken/koppelen en exact terughalen van een bestaand check-invoorstel |
-| 2 | Private, prospectieve Realized V2-invoer en berekeningsprovenance |
-| 3 | Expliciete registratie overgeslagen/onbekend, wekelijkse evidence en activiteitbewaking |
-| 4 | Bevroren planevidence en controle bij aparte bevestiging |
-| 5 | Nieuw Session-RPE-versieveld in de gedeelde activiteitprojectie |
-| 6 | Inactieve V6-opslag, afgeschermde catalogus, snapshots, receipts en versiegebonden constraints |
-| 7 | Exact 77 INACTIVE bron-/catalogusrevisies met officiële waarden; geen historische loadimport |
-| 8 | Correcte V6-segmenten na de historische insert-trigger |
-| 9 | Correctie van JSON-operatorvolgorde bij bewerken |
-| 10 | Ownercontrole in de interne V2-goedkeuringsketen; directe history-RPC's blijven service-only |
-| 11 | Bestaande zakelijke conflictsituaties terug naar niet automatisch herhaalbare PT409 |
-| 12 | Bescherming tegen zelfgemaakte V6-revisies en wijzigingen aan bevroren snapshots |
-| 13 | Mobiele logische/fysieke workoutidentiteit en leesprojecties |
-| 14 | V6 binnen A5-koppeling/replay, verplaatsing en behoud van check-inbevestigingsprovenance |
-| 15 | Append-only lidmaatschappen houden originele voltooide activiteit-/registratie-evidence in opvolgrevisies |
-| 16 | Optionele frequentievoorkeuren, afzonderlijke bevoegdheid, intrekking/herbeoordeling en bewaakte swipe; niemand wordt aangesteld |
+Oorspronkelijke A5-fixture: **8 pass/1 fail/abort vóór 20**. Alleen expliciete overlay 29/29; test-only patch niet overgenomen. Bekende achtseconden-timeout `current:build_4`, nodegrens en eerlijke incomplete-search blijven. Geen nieuwe fysiologische regel of workout.
 
-**Bestaande gebruikers kunnen worden geraakt terwijl V6 uitstaat.** Vooral activiteitprojectie, check-inherbevestiging, goedkeurings- en activiteittriggers worden gedeeld. Het historische strikte backendmodel weigert het nieuwe `session_rpe_version` met `extra_forbidden`; de publieke productiecontracten kennen dit veld nog niet. De exacte gedeployde commit en mobiele build zijn niet vastgesteld: Railway wijst de bestaande sessie af. De twee geconfigureerde backend-URL's zijn gezond, maar de lokale routing verschilt en één noemt zijn omgeving `local`. Gezondheid is geen compatibiliteitsbewijs.
+## Minimale eigenaaracties
 
-**Alle zestien ongewijzigd veilig installeren is nu niet aangetoond.** De catalogus blijft technisch inactief en de historische planner blijft standaard, maar de keten verleent ook **13 nieuwe authenticated EXECUTE-signatures**. Dit voldoet niet aan de letterlijke eis dat gewone clients geen nieuwe uitvoerrechten krijgen. Owner-scoped lezen/voorkeuren is geen generatiebevoegdheid; toch wordt geen uitzondering aangenomen. De voorbereide uitvoerbundels blokkeren daarom commit op deze rechtenwijziging. Een algemene revoke van de private membership-helper zou historische leesfuncties breken.
+| Besluit | Actie |
+|---|---|
+| Exacte rechten/correcties | Review en keur uitsluitend [13-signature voorstel](blocker-resolution-20261117/authenticated-execute-allowlist.json), C1/C2 en driftkeuzes goed; dit is geen SQL-uitvoeringstoestemming |
+| Railway/runtime | `npx --yes @railway/cli login` en browserlogin; daarna read-only werkelijke service/omgeving/URL, commit/artifact, flags, jobs en integraties vaststellen |
+| Herstel/kosten | Vraag actuele Pro-/restore-/branchquote, kies RPO/RTO/operator; pas na aparte toestemming checkpoint en bewezen geïsoleerd herstel regelen |
+| Hosted verificatie | Keur onafhankelijk synthetisch target en precies twee accounts, custody/cleanup goed; voer daarna genuine GoTrue/PostgREST/V6-verificatie uit |
+| Productie-uitvoering | Na poorten: exacte bundelhashes beoordelen en apart operator/venster goedkeuren. G1=1; G2=2–12+C1 atomair; G3=13–16+C2 atomair; geen db push/auto-migrate-deploy |
 
-**Herstel is nog niet productiegereed.** De echte backup-API geeft een lege backuplijst, lege recoverymetadata, `pitr_enabled=false` en `walg_enabled=true`. Er is geen beschikbaar herstelpunt of uitgevoerde hosted restoreproef aangetoond. Wel zijn lokaal een volledige G2-transactierollback en een uitgebreider forward-disablepad getest, met gelijkblijvende data. Dat vervangt geen backuprestore. [Herstelrapport](JOREN_V6_BACKUP_AND_RECOVERY_READINESS.md).
+[Backupopties/accountvoorwaarden](JOREN_V6_REMOTE_BACKUP_AND_RECOVERY_OPTIONS_NL.md): huidig Free heeft geen beschikbare backups/PITR. Eenvoudigste goedkope beheerde route: Pro vanaf USD25/maand plus afzonderlijk gequote tijdelijke restore en korte data-arme Micro-branch (USD0,01344/uur compute plus gebruik). Bestaande vertrouwde remote runner kan goedkoper zijn maar heeft nog geen custody/offerte/herstelbewijs. Schema-only is geen backup. Niets betaald of aangemaakt.
 
-Aanbevolen volgorde, pas na het sluiten van de harde poorten: **G1 = 1; G2 = 2–12 atomair; G3 = 13–16 atomair**. G2 mag geen tussenstatus blootstellen waarin V2-goedkeuring/conflictclassificatie of V6-custody onvolledig is. G3 sluit lifecycle, fysieke evidence en frequentiebevoegdheid samen. Zie het [voorwaardelijke uitvoerplan](JOREN_V6_INACTIVE_PRODUCTION_ROLLOUT_PLAN.md); het is niet uitgevoerd en nog niet goedgekeurd.
+## Werkelijke artifacts: bewijs en ontbrekende identiteit
 
-## Nieuw geverifieerd lokaal bewijs
+Railway CLI 5.63.1 geeft opnieuw Unauthorized. Lokale metadata noemt project `c0cf7bc7-abe8-4db5-857a-85cc39850640`, service `start23`, omgeving `production`; dit is geen onafhankelijk vastgesteld deploydoel. URL's `https://start23-production.up.railway.app` en `https://r6-api-r6-staging.up.railway.app` bewijzen geen SHA; eerste health noemde `local`. Gepubliceerde OpenAPI heeft 69 paden; readiness-bron en huidige normale startup hebben een identieke hash voor 73 paden. Geen deployed-runtimecompatibiliteit claimen.
 
-- **2.891 backendtests** geslaagd; één bestaande Starlette/httpx-deprecatiewaarschuwing. **935 mobiele tests in 89 suites** geslaagd. Ruff/format, strict mypy en strict TypeScript/unused-controles slagen; exacte resultaten staan in het [verificatieregister](migration-readiness-20261116/verification.json).
-- Zowel de schone geaccepteerde 47-migratiegrens als een aparte grens met de twee werkelijk afwijkende hosted functiedefinities zijn met exact dezelfde zestien bestanden bijgewerkt: **722/722 pgTAP-asserties in 37 suites**, steeds met de expliciete A5-overlay. Alle 51 bestaande tabellen behouden na iedere groep dezelfde rijhashes, inclusief historische bron-, plan-, activiteit- en private evidence. Zes historische/A5-smokes slagen per groep.
-- De **ongewijzigde A5-fixture faalt nog steeds**: acht assertions geslaagd, één gefaald, daarna abort vóór twintig resterende assertions. De onboarding-/fingerprintoverlay slaagt 29/29; dit is geen PASS van het origineel. De twee huidige final-schema-tests die vóór installatie niet uitvoerbaar zijn, blijven afzonderlijk gerapporteerd.
-- **40/40 historische uitkomsten**, **26/26 geaccepteerde referentieresultaten** en volledige uitkomsthashes blijven gelijk. De bekende `current:build_4` achtseconden-timeout blijft bestaan. De exacte zoek-oracle blijft gelijk voor 15 contexten en **20.061.679** combinaties. Geen fysiologische regel of resourcegrens is verruimd.
-- Echte portable SQL-lifecycle: negen A5/lifecyclegroepen, elf evidence-reschedulinggroepen en negen frequentiebeleidscontroles slagen, met procesherstart/nieuwe verbindingen. Dit gebruikt synthetische SQL-claims, **geen nieuwe GoTrue-/gateway- of apparaattest**.
-- Het uitgebreidere lokale uitschakelpad bewaart alle 64 eindtabellen en bevestigde reads. Het eerdere vier-RPC-fixture dekt de latere frequentiewrappers en gedeelde A5-dispatch onvoldoende af. Ook de nieuwe fixture is uitsluitend lokaal; productieherstel vereist een afzonderlijk goedgekeurde forward migration.
+Lokale `mobile/.env` wijst naar staging; lokale modefile noemt productie. Compiled API-configuratie is niet bewezen. Read-only EAS toont nieuwste FINISHED STORE Android **22**, app **1.0.0**, ID `0b1a3606-7476-4607-b4c7-a37e763249c0`, Git-metadata `ee229a9ac2b8de56a6b5bf69026921eab0ab5b56`, voltooid op 1 oktober 2026. Package `com.adrivdbs.wombo`; bronconfiguratie remote versioning/wombo-production autoIncrement. Geconfigureerde Play-track `internal` bewijst geen release. iOS EAS-query leeg sluit andere pipelines niet uit. Geen ADB-device aangesloten. [Geschoonde EAS-identiteit](blocker-resolution-20261117/eas-build-identities.json).
 
-## Exacte eigenaarbesluiten en open releasepoorten
+Eigenaar bevestigt in Play Console/App Store Connect actieve track/release/build, compiled routing en fysieke devices. Railway-flags, scheduled processes, Polar/providerconfiguratie en externe webhooks blijven onbekend; source-defaults bewijzen runtime niet. Eerdere webhookinventaris gaf 403. Bron bevat optionele Polar-retryjob en lokale maandagcheck-in; geen productieactiviteit daaruit afleiden.
 
-| Besluit / poort | Nodige concrete sluiting |
-| --- | --- |
-| Backup en herstel | Werkelijk beschikbaar checkpoint; toegestane hosted herstelomgeving; geslaagde restoreproef; gemeten uitval/dataverlies; operator, kosten en retentie |
-| Activiteitcompatibiliteit | Werkelijke deployed SHA vaststellen; compatibele backendbrug of nieuwe versiegebonden DB-projectie kiezen, afzonderlijk reviewen en repeteren vóór G2 |
-| Geen nieuwe clientuitvoerrechten | Eis handhaven met een geteste forward ACL-/helperarchitectuur, of expliciet afzonderlijk de exacte owner-scoped uitzonderingen goedkeuren. Geen impliciete uitzondering of brede revoke |
-| Bestaande drift | Twee functiedefinities, vier catalogus-service-ACL's en hosted default privileges beoordelen; geen ledgerreparatie. De downstream zone-trigger behoudt de relevante checks |
-| Productiedoel en artifacts | Werkelijke service/omgeving/URL, backendcommit, Android/iOS-builds, flags, providers en geplande jobs vaststellen; Railway-sessie is nu ontoereikend |
-| Hosted verificatie | Afzonderlijke officiële, geïsoleerde Supabase-omgeving met exact dezelfde keten en echte A/B-sessies; actuele ACL's/defaults en runtimepariteit aantonen |
-| Verificatieadapter | Afzonderlijk de begrensde architectuur/code goedkeuren; bestaande local-only helper niet omzeilen. [Exact testplan](JOREN_V6_HOSTED_POST_MIGRATION_VERIFICATION_PLAN.md) |
-| A5-foutnormalisatie | Alleen lokaal aangetoond; deployed foutgedrag/artefact afzonderlijk verifiëren. Geen migratiebewijs van deployment |
-| Oorspronkelijke A5-fixture | Bestaande testcorrectie door A5-eigenaar accepteren; overlay-PASS gescheiden houden |
-| Echte reviewer/operator | Benoemde bevoegde persoon, aanwijzings-/reviewreferentie en gecontroleerde databasebevoegdheid; niemand automatisch aanstellen |
-| Individuele frequentiemaxima | Echt besluit per atleet, sport, lokale week en tijdzone; geen afleiding uit voorkeur, uren of belasting; geen synthetische REAL-autorisatie |
-| Positieve multisessie | Blijft geblokkeerd zonder echte aanwijzing en individueel maximum; test-executor krijgt nooit productielidmaatschap |
-| Wetenschappelijke verantwoordelijkheid | Onafhankelijke bevoegde reviewer met identificeerbaar record voor exacte bron-, fysiologie-, Planned IF²-, Realized V2- en beleidsversies. Productfrequentieakkoord vervangt dit niet |
-| Zwemtijd / uitzonderlijke duur | Operationele acceptatie van bestaande estimates en vereist individueel bewijs; geen verzonnen algemene grens |
-| Prestaties / hardware | Representatieve goedgekeurde contexten op doelhardware; bestaande grenzen en eerlijke `v6_search_incomplete` behouden |
-| Security advisors / webhooks | Bestaande drie INFO en negen WARN inhoudelijk beoordelen; projectwebhookinventaris 403, Railway-jobs onbekend; geen ongeautoriseerde herstelwijziging |
-| Sessierevocation | Bestaande uitgegeven JWT kan tot expiry geaccepteerd blijven; onmiddellijke universele intrekking is geen bewezen huidig contract |
-| Echte apparaten | Android/iOS volledige flow, accountwissel, herstel en fysieke identiteit; Jest is geen apparaattest |
-| Uitvoering / activatie | Pas na toepasselijke poorten afzonderlijk eigenaarakkoord voor migratievenster en operator. Catalogusactivatie, deployment en echte-atleetrelease blijven afzonderlijk |
+## Onafhankelijke activatiepoorten
 
-De [vorige releasevoorwaarden](migration-readiness-20261116/history/JOREN_V6_REMAINING_RELEASE_GATES_NL_289280a5.md) zijn ongewijzigd bewaard. Alle 77 geaccepteerde bronnen blijven INACTIVE; hosted zijn ze nog niet geïnstalleerd. De historische default, bestaande bevestigde plannen en officiële berekeningsversies zijn niet gewijzigd. Er is niet gepusht of gedeployed en geen beschermde worktree is aangepast.
+| Poort | Vereist |
+|---|---|
+| Wetenschappelijke verantwoordelijkheid | Benoemde bevoegde onafhankelijke reviewer en identificeerbaar record voor exacte bron-, Planned IF²-, Realized V2-, regels-/beleidsversies; productfrequentieakkoord vervangt dit niet |
+| Reviewer/operator | Expliciete aanstelling/reviewreferentie en minimale bevoegdheid; niemand automatisch inschrijven |
+| Individuele frequentie | Echt besluit per atleet/sport/lokale week/tijdzone, intrekking/herbeoordeling; voorkeuren/uren/load geven geen maxima of autorisatie |
+| Positieve multisessie | Geen echte-atleetactivatie zonder aanstelling en individueel maximum; nooit productie-test-executor |
+| Zwemtijd/uitzonderlijke duur | Operationele acceptatie bestaande estimates en individueel bewijs; geen verzonnen algemene grens |
+| Hardware/prestaties | Representatieve goedgekeurde contexten op doelhardware met achtseconden-/200.000-nodegrenzen en eerlijke `v6_search_incomplete` |
+| Security/integraties | Bestaande advisorbevindingen, providerobjecten, jobs/webhooks inhoudelijk beoordelen |
+| Sessies/cleanup | JWT kan tot expiry geldig blijven; genuine hosted revocation, descendants en cleanup bewijzen |
+| Apparaten | Android/iOS volledige flow, accountwissel, retry/herstel en logische/fysieke workoutidentiteit; Jest is geen apparaattest |
+| A5-fixture | Alleen aparte goedkeuring kan oorspronkelijke test vervangen; overlaybewijs gescheiden |
+| Activering | Aparte deployment-, generatie- en echte-atleetreleasegoedkeuring; 77 INACTIVE en historische default behouden |
+
+[Oude voorwaarden](blocker-resolution-20261117/history/JOREN_V6_REMAINING_RELEASE_GATES_NL_0fa65091.md) blijven bewaard. [Uitvoerplan](JOREN_V6_INACTIVE_PRODUCTION_ROLLOUT_PLAN.md) bevat bestanden/hashes, grenzen, stopvoorwaarden en unknown-commitreconciliatie. Lokale technische oplossingen zijn geverifieerd; echte hosted V6-uitvoering, backuprestore en deployed-runtimecompatibiliteit blijven open.

@@ -1,0 +1,6 @@
+{
+  "historical_null_cas_bypass_reproduced": true,
+  "corrected_permissions_assertions": 30,
+  "activity_models_and_v2_projection": "PASS",
+  "hosted_execution": false
+}

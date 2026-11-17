@@ -1,0 +1,35 @@
+{
+  "historical_source_sha": "5d71c688deb610bf5ec79c0f6fac77c835be6b51",
+  "historical_file_sha256": {
+    "schemas": "46f6588e990fa4af11ca77bcbe3957a96ac99a392cf410bd04656419c6bd5cc3",
+    "service": "52dace3a501a7f1a339b8c29f65fffacce519c0c8f16f871f3006fe7741bc173"
+  },
+  "postgres_generated": true,
+  "hosted_execution": false,
+  "outcomes": [
+    {
+      "activity_id": "cae3f396-c00d-4ebc-9fea-3c6e1dcc6a4d",
+      "historical_model": "PASS",
+      "historical_response_method": "PASS",
+      "current_model": "PASS",
+      "owner_list": "PASS",
+      "versioned_metadata": true
+    },
+    {
+      "activity_id": "d7f1c0aa-8f96-4d59-9bd3-a41569e4ac3b",
+      "historical_model": "PASS",
+      "historical_response_method": "PASS",
+      "current_model": "PASS",
+      "owner_list": "PASS",
+      "versioned_metadata": true
+    },
+    {
+      "case": "new_v2_activity",
+      "historical_projection": "PASS",
+      "explicit_v2_projection": "PASS",
+      "new_guidance": 10,
+      "historical_model_remains_strict": true,
+      "transaction": "rolled_back"
+    }
+  ]
+}

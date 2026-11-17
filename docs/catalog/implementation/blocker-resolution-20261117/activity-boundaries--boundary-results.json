@@ -1,0 +1,17 @@
+{
+  "hosted_execution": false,
+  "historical_source_sha256": {
+    "schemas": "46f6588e990fa4af11ca77bcbe3957a96ac99a392cf410bd04656419c6bd5cc3",
+    "service": "52dace3a501a7f1a339b8c29f65fffacce519c0c8f16f871f3006fe7741bc173"
+  },
+  "actual_63_projection": {
+    "historical_model": "EXPECTED extra_forbidden(session_rpe_version)",
+    "current_model": "PASS"
+  },
+  "corrected_65_projection": {
+    "historical_model": "PASS",
+    "current_model": "PASS",
+    "explicit_v2": "PASS"
+  },
+  "preserved_tables": 64
+}
