@@ -1,0 +1,114 @@
+{
+  "checks": [
+    {
+      "capture": "detail-week-return",
+      "selected": "Week",
+      "pass": true
+    },
+    {
+      "capture": "detail-calendar-return",
+      "selected": "Calendar",
+      "pass": true
+    },
+    {
+      "capture": "profile-return-calendar",
+      "selected": "Calendar",
+      "pass": true
+    },
+    {
+      "capture": "activity-task-return",
+      "selected": "Activities",
+      "pass": true
+    },
+    {
+      "capture": "activity-task-320-font-2-return",
+      "selected": "Activities",
+      "pass": true
+    },
+    {
+      "capture": "pending-rpe-return-activities",
+      "selected": "Activities",
+      "pass": true
+    },
+    {
+      "capture": "detail-week-open",
+      "interactiveRootDestinations": 0,
+      "pass": true
+    },
+    {
+      "capture": "detail-calendar-open",
+      "interactiveRootDestinations": 0,
+      "pass": true
+    },
+    {
+      "capture": "profile-from-calendar",
+      "interactiveRootDestinations": 0,
+      "pass": true
+    },
+    {
+      "capture": "onboarding-gate-calendar-deep-entry",
+      "interactiveRootDestinations": 0,
+      "pass": true
+    },
+    {
+      "capture": "onboarding-gate-activities-deep-entry",
+      "interactiveRootDestinations": 0,
+      "pass": true
+    },
+    {
+      "capture": "pending-rpe-week",
+      "bannerAboveScrollingContent": true,
+      "pass": true
+    },
+    {
+      "capture": "pending-rpe-calendar",
+      "bannerAboveScrollingContent": true,
+      "pass": true
+    },
+    {
+      "capture": "pending-rpe-activities",
+      "bannerAboveScrollingContent": true,
+      "pass": true
+    },
+    {
+      "capture": "pending-rpe-320-font-2-nl-week",
+      "bannerAboveScrollingContent": true,
+      "pass": true
+    },
+    {
+      "capture": "pending-rpe-320-font-2-nl-calendar",
+      "bannerAboveScrollingContent": true,
+      "pass": true
+    },
+    {
+      "capture": "pending-rpe-320-font-2-nl-activities",
+      "bannerAboveScrollingContent": true,
+      "pass": true
+    },
+    {
+      "capture": "keyboard-reference",
+      "keyboardOpen": true,
+      "lowerCtaReachable": false,
+      "pass": true
+    },
+    {
+      "capture": "keyboard-reference-lower",
+      "keyboardOpen": true,
+      "lowerCtaReachable": true,
+      "pass": true
+    },
+    {
+      "capture": "keyboard-320-font-2",
+      "keyboardOpen": true,
+      "lowerCtaReachable": false,
+      "pass": true
+    },
+    {
+      "capture": "keyboard-320-font-2-lower",
+      "keyboardOpen": true,
+      "lowerCtaReachable": true,
+      "pass": true
+    }
+  ],
+  "failures": []
+}

@@ -1,0 +1,28 @@
+{
+  "result": "PASS",
+  "scope": "Android visual, native semantics, keyboard and reduced-motion review; does not close physical TalkBack release gate",
+  "reviewedImages": [
+    "keyboard-rpe-focus.png",
+    "keyboard-immediate-feedback-return.png",
+    "keyboard-entry-distance.png",
+    "keyboard-entry-save-reachable.png",
+    "keyboard-feedback-heart-rate.png",
+    "keyboard-feedback-choice-reachable.png",
+    "reduced-motion-rpe.png",
+    "talkback-entry-touch-focus.png",
+    "talkback-rpe-touch-focus.png"
+  ],
+  "canonicalSemantics": "native-state-audit.json verifies ten exact radio labels, checked 7, disabled/busy state and no added Save",
+  "keyboard": "Actual focused RPE 4 outline; Tab/Enter immediate exact save and return; entry Save and RPE 4 fully reachable above visible numeric IME",
+  "reducedMotion": "Actual capture with all three Android motion scales at zero; settings restored",
+  "talkBack": {
+    "entryFocusObserved": true,
+    "entryObservation": "Green accessibility focus rectangle on editable Distance 5000 and visible numeric IME",
+    "rpeChoiceFocusObserved": false,
+    "rpeObservation": "Injected stationary touch returned to the public Activities fixture with RPE 7; green accessibility rectangle is on Activities heading, not the intended RPE radio. This does not prove TalkBack focus or double-tap activation.",
+    "announcementsVerified": false,
+    "physicalDeviceNavigationAndActivationVerified": false
+  },
+  "openReleaseGate": "Full physical-device TalkBack focus order, announcements and activation remain outside this Android visual batch",
+  "backendWrites": false
+}

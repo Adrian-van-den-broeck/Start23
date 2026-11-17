@@ -1,0 +1,62 @@
+// TEMPORARY read-only Batch 5 review; removed after native evidence.
+import { Redirect, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useLanguage } from '@/i18n/LanguageProvider';
+import { workout } from '@/features/planning/planning.test-fixtures';
+import { useCalendarNavigation } from '@/features/calendar/useCalendarNavigation';
+import { isoDate } from '@/features/planning/planningDates';
+import { BottomNavigation, NavigationFooter } from '@/ui-v2/components/BottomNavigation';
+import { ShellInsets } from '@/ui-v2/components/ShellInsets';
+import { CalendarScreen } from '@/ui-v2/screens/CalendarScreen';
+import { WorkoutDetailScreen } from '@/ui-v2/screens/WorkoutDetailScreen';
+import { calendarViewModel } from '@/ui-v2/utils/calendarViewModel';
+import { colors } from '@/ui-v2/tokens';
+import type { PlannedWorkout } from '@/api/types';
+
+function Review({ state }: { state: string }) {
+  const { t } = useLanguage();
+  const insets = useSafeAreaInsets();
+  const nav = useCalendarNavigation(state === 'empty' ? '2026-10-07' : state === 'retained' ? '2026-11-04' : '2026-10-14');
+  const [detail, setDetail] = useState<PlannedWorkout | null>(null);
+  const [moveEntry, setMoveEntry] = useState<string | null>(null);
+  useEffect(() => {
+    if (state === 'month' || state === 'selected') {
+      nav.changeMode('month'); nav.selectDate(state === 'selected' ? '2026-10-18' : '2026-10-12');
+    }
+    // Initialize the fixture once; subsequent navigation uses the existing owner.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const movement = ['moveEntry', 'cancelReturn', 'afterMove', 'calendarAfterMove'].includes(state);
+  const scheduled = movement ? (state === 'cancelReturn' || state === 'afterMove' ? '2026-10-15' : '2026-10-14') : '2026-10-18';
+  const first = { ...workout, scheduled_date: scheduled };
+  const second = { ...first, id: 'second-occurrence', name: state === 'long' ? 'Long exact source name '.repeat(6) : 'Second exact source workout', discipline: 'bike' as const, status: 'completed' as const };
+  const workouts = state === 'empty' || state === 'loading' || state === 'failed' ? [] : movement ? [first] : state === 'sparse' ? [{ ...first, duration_minutes: null, distance_meters: null, description: '' }] : [first, second];
+  const rests = state === 'empty' || state === 'loading' || state === 'failed' ? [] : ['2026-10-12', '2026-10-13', '2026-10-14', '2026-10-15', '2026-10-16', '2026-10-17'].filter(date => date !== scheduled).map(date => ({ date, reason: 'planned_rest' as const }));
+  const loadedRange = state === 'loading' || state === 'failed' ? null : state === 'retained' ? { fromDate: '2026-10-12', toDate: '2026-10-19' } : nav.range;
+  const model = calendarViewModel({ dates: nav.dates, anchor: nav.anchor, selectedDate: nav.selectedDate, today: isoDate(new Date()), workouts, restDays: rests, loadedRange });
+  return <View testID={`batch-5-fixture-${state}`} collapsable={false} style={{ flex: 1, backgroundColor: colors.background }}>
+    <View testID={`batch-5-context-${nav.mode}-${nav.anchor}-${nav.selectedDate}`} collapsable={false} style={{ position: 'absolute', width: 1, height: 1 }} />
+    {moveEntry ? <View testID={`batch-5-move-entry-${moveEntry}`} collapsable={false} style={{ position: 'absolute', width: 1, height: 1 }} /> : null}
+    <ShellInsets top={false} bottom>
+      <CalendarScreen model={model} mode={nav.mode} anchor={nav.anchor} loading={state === 'loading'} error={state === 'failed' || state === 'retained' ? 'Safe fixture range error' : null}
+        onModeChange={nav.changeMode} onMove={nav.move} onToday={nav.goToday} onSelectDate={nav.selectDate} onRetry={() => undefined}
+        onBack={() => undefined} onProfile={() => undefined} onOpenWorkout={id => setDetail(workouts.find(item => item.id === id) ?? null)}
+        onMoveWorkout={id => movement && id === first.id ? () => setMoveEntry(id) : undefined} />
+    </ShellInsets>
+    <NavigationFooter bottomInset={insets.bottom}>
+      <View pointerEvents={detail ? 'none' : 'auto'} accessibilityElementsHidden={!!detail} importantForAccessibility={detail ? 'no-hide-descendants' : 'auto'}>
+        <BottomNavigation selectedKey="calendar" onSelect={() => undefined} destinations={(['week', 'calendar', 'activities'] as const).map(icon => ({ key: icon, icon, label: t(`shell.${icon}`) }))} />
+      </View>
+    </NavigationFooter>
+    <WorkoutDetailScreen workout={detail} onClose={() => setDetail(null)} />
+  </View>;
+}
+export default function DevCalendarReview() {
+  const { state = 'week', language, review } = useLocalSearchParams<{ state?: string; language?: string; review?: string }>();
+  const { setPreference } = useLanguage();
+  useEffect(() => { void setPreference(language === 'en' ? 'en' : 'nl'); }, [language, setPreference]);
+  if (!__DEV__) return <Redirect href="/" />;
+  return <Review key={review} state={state} />;
+}

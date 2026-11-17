@@ -1,0 +1,233 @@
+{
+  "result": "PASS",
+  "cases": 101,
+  "checks": [
+    {
+      "case": "320-font-1-nl-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "320-font-1-en-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "320-font-2-nl-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "320-font-2-en-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "360-font-1-nl-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "360-font-1-en-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "360-font-2-nl-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "360-font-2-en-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "393-font-1-nl-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "393-font-1-en-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "393-font-2-nl-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "393-font-2-en-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "412-font-1-nl-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "412-font-1-en-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "412-font-2-nl-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "412-font-2-en-rpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "393-font-1-nl-pending",
+      "pendingBeforeBlockedAdd": true,
+      "disabledAdd": true
+    },
+    {
+      "case": "393-font-1-nl-blocked",
+      "pendingBeforeBlockedAdd": true,
+      "disabledAdd": true
+    },
+    {
+      "case": "393-font-1-nl-selected",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": 7,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "393-font-1-nl-after",
+      "suppliedCompletedHistory": true,
+      "allowedAddEnabled": true
+    },
+    {
+      "case": "393-font-1-nl-reminderDestination",
+      "pendingBeforeBlockedAdd": true,
+      "disabledAdd": true
+    },
+    {
+      "case": "393-font-1-nl-reminderFeedback",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "393-font-1-nl-bikeRpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "393-font-1-nl-swimRpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "393-font-1-nl-busyRpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": true,
+      "noAddedSave": true
+    },
+    {
+      "case": "393-font-1-nl-rpeError",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "393-font-1-nl-longHistory",
+      "fullUnshortenedSourceExplanation": true
+    },
+    {
+      "case": "393-font-1-nl-rpeHR",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "393-font-1-nl-rpeNoHR",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "320-font-2-en-selected",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": 7,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "320-font-2-en-pending",
+      "pendingBeforeBlockedAdd": true,
+      "disabledAdd": true
+    },
+    {
+      "case": "320-font-2-en-longHistory",
+      "existingEnglishMapperFallbackRetained": true
+    },
+    {
+      "case": "320-font-2-en-swimRpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "320-font-2-en-bikeRpe",
+      "tenExactCanonicalRadioLabelsFullyVisible": true,
+      "selectedValue": null,
+      "disabled": false,
+      "noAddedSave": true
+    },
+    {
+      "case": "320-font-2-nl-longHistory",
+      "fullUnshortenedSourceExplanation": true
+    }
+  ],
+  "rpeDataSource": "unchanged src/lib/rpe.ts"
+}

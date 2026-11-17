@@ -1,0 +1,3591 @@
+{
+  "scope": "Batch 11 Zones/calibration controls and shared header",
+  "minimumDp": 48,
+  "nativePixelToleranceDp": 0.5,
+  "fullyVisibleControls": 597,
+  "failures": [],
+  "targets": [
+    {
+      "file": "393-font-1-empty-page-0.xml",
+      "label": "Terug",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-empty-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-empty-page-0.xml",
+      "label": "Terug naar intake",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-choice-page-0.xml",
+      "label": "Week",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-choice-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-choice-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 361.54897494305243,
+      "heightDp": 112.25512528473804
+    },
+    {
+      "file": "393-font-1-choice-page-0.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 361.54897494305243,
+      "heightDp": 152.34624145785878
+    },
+    {
+      "file": "393-font-1-choice-page-1.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 361.54897494305243,
+      "heightDp": 112.25512528473804
+    },
+    {
+      "file": "393-font-1-choice-page-1.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 361.54897494305243,
+      "heightDp": 152.34624145785878
+    },
+    {
+      "file": "393-font-1-choice-page-1.xml",
+      "label": "Hartslag",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-choice-page-2.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 361.54897494305243,
+      "heightDp": 112.25512528473804
+    },
+    {
+      "file": "393-font-1-choice-page-2.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 361.54897494305243,
+      "heightDp": 152.34624145785878
+    },
+    {
+      "file": "393-font-1-choice-page-2.xml",
+      "label": "Hartslag",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-choice-page-2.xml",
+      "label": "Week-1-kalibratie kiezen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-result-page-0.xml",
+      "label": "Terug",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-result-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-result-page-0.xml",
+      "label": "Hardlopen",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-result-page-1.xml",
+      "label": "Drempel bevestigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-result-page-1.xml",
+      "label": "Drempel afwijzen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-result-page-1.xml",
+      "label": "Nieuwe uitvoering",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-result-page-1.xml",
+      "label": "Terug",
+      "widthDp": 327.28929384965835,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "320-font-1-empty-page-0.xml",
+      "label": "Terug",
+      "widthDp": 105.77777777777777,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-empty-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.88888888888889,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-empty-page-1.xml",
+      "label": "Terug",
+      "widthDp": 105.77777777777777,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-empty-page-1.xml",
+      "label": "Afmelden",
+      "widthDp": 88.88888888888889,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-empty-page-1.xml",
+      "label": "Terug naar intake",
+      "widthDp": 254.22222222222223,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-choice-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 288.0,
+      "heightDp": 152.88888888888889
+    },
+    {
+      "file": "320-font-1-choice-page-0.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 288.0,
+      "heightDp": 195.25925925925927
+    },
+    {
+      "file": "320-font-1-choice-page-1.xml",
+      "label": "Hartslag",
+      "widthDp": 254.22222222222223,
+      "heightDp": 49.77777777777778
+    },
+    {
+      "file": "320-font-1-choice-page-1.xml",
+      "label": "Week-1-kalibratie kiezen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 82.07407407407408
+    },
+    {
+      "file": "360-font-2-known-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 328.0,
+      "heightDp": 337.0
+    },
+    {
+      "file": "360-font-2-known-page-2.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 328.0,
+      "heightDp": 475.0
+    },
+    {
+      "file": "360-font-2-known-page-4.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 294.0,
+      "heightDp": 96.0
+    },
+    {
+      "file": "360-font-2-known-page-5.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 294.0,
+      "heightDp": 96.0
+    },
+    {
+      "file": "360-font-2-known-page-5.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 294.0,
+      "heightDp": 96.0
+    },
+    {
+      "file": "360-font-2-known-page-6.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 294.0,
+      "heightDp": 96.0
+    },
+    {
+      "file": "360-font-2-known-page-6.xml",
+      "label": "Bekende waarden bewaren",
+      "widthDp": 294.0,
+      "heightDp": 142.0
+    },
+    {
+      "file": "393-font-2-known-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 361.54897494305243,
+      "heightDp": 271.1617312072893
+    },
+    {
+      "file": "393-font-2-known-page-1.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 361.54897494305243,
+      "heightDp": 271.1617312072893
+    },
+    {
+      "file": "393-font-2-known-page-2.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 361.54897494305243,
+      "heightDp": 409.29384965831434
+    },
+    {
+      "file": "393-font-2-known-page-3.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 327.28929384965835,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "file": "393-font-2-known-page-4.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 327.28929384965835,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "file": "393-font-2-known-page-4.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 327.28929384965835,
+      "heightDp": 96.94760820045559
+    },
+    {
+      "file": "393-font-2-known-page-5.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 327.28929384965835,
+      "heightDp": 96.94760820045559
+    },
+    {
+      "file": "393-font-2-known-page-6.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 96.58314350797266
+    },
+    {
+      "file": "393-font-2-known-page-6.xml",
+      "label": "Bekende waarden bewaren",
+      "widthDp": 327.28929384965835,
+      "heightDp": 106.05922551252847
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-0.xml",
+      "label": "Terug",
+      "widthDp": 137.1851851851852,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-0.xml",
+      "label": "Zwemmen",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-1.xml",
+      "label": "Zwemmen",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-13.xml",
+      "label": "Gevoelloos door het water glijden. (RPE 1)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-13.xml",
+      "label": "Ontspannen slag, rustige ademhaling. (RPE 2)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-14.xml",
+      "label": "Doorzwemmen, gecontroleerde ademhaling. (RPE 4)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-14.xml",
+      "label": "Doelgericht tempo. (RPE 5)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-15.xml",
+      "label": "Verzuring begint, moeite met techniek. (RPE 7)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 131.55555555555554
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-15.xml",
+      "label": "Net onder sprintniveau. (RPE 8)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-16.xml",
+      "label": "Net onder sprintniveau. (RPE 8)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-16.xml",
+      "label": "Snelle verzuring, techniek brokkelt af. (RPE 9)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-16.xml",
+      "label": "All-out sprint. (RPE 10)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-17.xml",
+      "label": "All-out sprint. (RPE 10)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-17.xml",
+      "label": "25 m-bad, vrije slag en zonder paddles/vliezen/pull buoy",
+      "widthDp": 254.22222222222223,
+      "heightDp": 202.37037037037038
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-18.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-18.xml",
+      "label": "Onderbroken",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-19.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-19.xml",
+      "label": "Onderbroken",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-19.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-20.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-20.xml",
+      "label": "Onderbroken",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-21.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-21.xml",
+      "label": "Onderbroken",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-21.xml",
+      "label": "Gevoelloos door het water glijden. (RPE 1)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 202.37037037037038
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-22.xml",
+      "label": "Gevoelloos door het water glijden. (RPE 1)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 202.37037037037038
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-22.xml",
+      "label": "Ontspannen slag, rustige ademhaling. (RPE 2)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 166.8148148148148
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-23.xml",
+      "label": "Vlotte, ritmische slag. (RPE 3)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-23.xml",
+      "label": "Doorzwemmen, gecontroleerde ademhaling. (RPE 4)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-24.xml",
+      "label": "Doorzwemmen, gecontroleerde ademhaling. (RPE 4)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-24.xml",
+      "label": "Doelgericht tempo. (RPE 5)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-25.xml",
+      "label": "Hard werken, snakken naar adem op keerpunt. (RPE 6)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 237.33333333333334
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-26.xml",
+      "label": "Verzuring begint, moeite met techniek. (RPE 7)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 202.37037037037038
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-26.xml",
+      "label": "Net onder sprintniveau. (RPE 8)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-27.xml",
+      "label": "Net onder sprintniveau. (RPE 8)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-27.xml",
+      "label": "Snelle verzuring, techniek brokkelt af. (RPE 9)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-28.xml",
+      "label": "All-out sprint. (RPE 10)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-31.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-31.xml",
+      "label": "Onderbroken",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-32.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-32.xml",
+      "label": "Onderbroken",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-32.xml",
+      "label": "Gevoelloos door het water glijden. (RPE 1)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 202.37037037037038
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-33.xml",
+      "label": "Gevoelloos door het water glijden. (RPE 1)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 202.37037037037038
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-33.xml",
+      "label": "Ontspannen slag, rustige ademhaling. (RPE 2)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-34.xml",
+      "label": "Ontspannen slag, rustige ademhaling. (RPE 2)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-34.xml",
+      "label": "Vlotte, ritmische slag. (RPE 3)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-35.xml",
+      "label": "Vlotte, ritmische slag. (RPE 3)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-35.xml",
+      "label": "Doorzwemmen, gecontroleerde ademhaling. (RPE 4)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 166.8148148148148
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-35.xml",
+      "label": "Doelgericht tempo. (RPE 5)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-36.xml",
+      "label": "Doelgericht tempo. (RPE 5)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-36.xml",
+      "label": "Hard werken, snakken naar adem op keerpunt. (RPE 6)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 237.62962962962962
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-37.xml",
+      "label": "Verzuring begint, moeite met techniek. (RPE 7)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 202.37037037037038
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-38.xml",
+      "label": "Net onder sprintniveau. (RPE 8)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 131.55555555555554
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-38.xml",
+      "label": "Snelle verzuring, techniek brokkelt af. (RPE 9)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-39.xml",
+      "label": "Snelle verzuring, techniek brokkelt af. (RPE 9)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-39.xml",
+      "label": "All-out sprint. (RPE 10)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-41.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-42.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-42.xml",
+      "label": "Onderbroken",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-43.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-43.xml",
+      "label": "Onderbroken",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-protocol-swim-page-43.xml",
+      "label": "Opslaan en deterministisch evalueren",
+      "widthDp": 254.22222222222223,
+      "heightDp": 178.66666666666666
+    },
+    {
+      "file": "360-font-2-overview-page-0.xml",
+      "label": "Week",
+      "widthDp": 133.33333333333334,
+      "heightDp": 70.0
+    },
+    {
+      "file": "360-font-2-overview-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 103.66666666666667,
+      "heightDp": 70.0
+    },
+    {
+      "file": "360-font-2-overview-page-11.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 294.0,
+      "heightDp": 106.0
+    },
+    {
+      "file": "360-font-2-overview-page-4.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 294.0,
+      "heightDp": 106.0
+    },
+    {
+      "file": "360-font-2-overview-page-5.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 294.0,
+      "heightDp": 106.0
+    },
+    {
+      "file": "360-font-2-overview-page-7.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 294.0,
+      "heightDp": 106.0
+    },
+    {
+      "file": "320-font-2-known-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 288.0,
+      "heightDp": 407.1111111111111
+    },
+    {
+      "file": "320-font-2-known-page-3.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 254.22222222222223,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-known-page-3.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 254.22222222222223,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-known-page-5.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-known-page-5.xml",
+      "label": "Bekende waarden bewaren",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "393-font-1-incomplete-page-0.xml",
+      "label": "Terug",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-incomplete-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-incomplete-page-0.xml",
+      "label": "Hardlopen",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-incomplete-page-0.xml",
+      "label": "Nieuwe uitvoering",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-incomplete-page-1.xml",
+      "label": "Hardlopen",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-incomplete-page-1.xml",
+      "label": "Nieuwe uitvoering",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-incomplete-page-1.xml",
+      "label": "Terug",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-2-overview-page-0.xml",
+      "label": "Week",
+      "widthDp": 133.39407744874717,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "file": "393-font-2-overview-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 103.87243735763099,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "file": "393-font-2-overview-page-3.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 106.05922551252847
+    },
+    {
+      "file": "393-font-2-overview-page-4.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 106.05922551252847
+    },
+    {
+      "file": "393-font-2-overview-page-5.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 106.05922551252847
+    },
+    {
+      "file": "393-font-2-overview-page-9.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 106.4236902050114
+    },
+    {
+      "file": "320-font-2-feedback-page-0.xml",
+      "label": "Terug",
+      "widthDp": 137.1851851851852,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-feedback-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-feedback-page-0.xml",
+      "label": "Hardlopen",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-feedback-page-1.xml",
+      "label": "Hardlopen",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-feedback-page-11.xml",
+      "label": "Zeer ontspannen, eindeloos kletsen. (RPE 2)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-feedback-page-11.xml",
+      "label": "Vlot duurlooptempo, neusademhaling. (RPE 3)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-feedback-page-12.xml",
+      "label": "Vlot duurlooptempo, neusademhaling. (RPE 3)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-feedback-page-12.xml",
+      "label": "Focus nodig, praten in zinnen. (RPE 4)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-feedback-page-12.xml",
+      "label": "'Sweet spot', comfortabel oncomfortabel. (RPE 5)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 166.8148148148148
+    },
+    {
+      "file": "320-font-2-feedback-page-13.xml",
+      "label": "'Sweet spot', comfortabel oncomfortabel. (RPE 5)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 166.8148148148148
+    },
+    {
+      "file": "320-font-2-feedback-page-13.xml",
+      "label": "Zwaar, net niet in het rood. (RPE 6)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-feedback-page-14.xml",
+      "label": "Zwaar, net niet in het rood. (RPE 6)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-feedback-page-14.xml",
+      "label": "Diepe ademhaling (10k wedstrijdtempo). (RPE 7)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-feedback-page-14.xml",
+      "label": "Tegen verzuring aan (5k tempo). (RPE 8)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-feedback-page-15.xml",
+      "label": "Tegen verzuring aan (5k tempo). (RPE 8)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-feedback-page-15.xml",
+      "label": "Naar adem happen, zware benen. (RPE 9)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 131.55555555555554
+    },
+    {
+      "file": "320-font-2-feedback-page-16.xml",
+      "label": "Naar adem happen, zware benen. (RPE 9)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 131.55555555555554
+    },
+    {
+      "file": "320-font-2-feedback-page-16.xml",
+      "label": "Volle sprint, snel moeten stoppen. (RPE 10)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-feedback-page-16.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-feedback-page-17.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-feedback-page-17.xml",
+      "label": "Onderbroken",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-feedback-page-18.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-feedback-page-18.xml",
+      "label": "Onderbroken",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-feedback-page-19.xml",
+      "label": "Wandelen of extreem traag joggen. (RPE 1)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 202.37037037037038
+    },
+    {
+      "file": "320-font-2-feedback-page-19.xml",
+      "label": "Zeer ontspannen, eindeloos kletsen. (RPE 2)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-feedback-page-20.xml",
+      "label": "Zeer ontspannen, eindeloos kletsen. (RPE 2)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-feedback-page-20.xml",
+      "label": "Vlot duurlooptempo, neusademhaling. (RPE 3)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 166.8148148148148
+    },
+    {
+      "file": "320-font-2-feedback-page-21.xml",
+      "label": "Focus nodig, praten in zinnen. (RPE 4)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-feedback-page-22.xml",
+      "label": "'Sweet spot', comfortabel oncomfortabel. (RPE 5)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 202.37037037037038
+    },
+    {
+      "file": "320-font-2-feedback-page-22.xml",
+      "label": "Zwaar, net niet in het rood. (RPE 6)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-feedback-page-23.xml",
+      "label": "Zwaar, net niet in het rood. (RPE 6)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 131.85185185185185
+    },
+    {
+      "file": "320-font-2-feedback-page-23.xml",
+      "label": "Diepe ademhaling (10k wedstrijdtempo). (RPE 7)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 166.8148148148148
+    },
+    {
+      "file": "320-font-2-feedback-page-24.xml",
+      "label": "Naar adem happen, zware benen. (RPE 9)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 202.37037037037038
+    },
+    {
+      "file": "320-font-2-feedback-page-25.xml",
+      "label": "Volle sprint, snel moeten stoppen. (RPE 10)",
+      "widthDp": 219.85185185185185,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "file": "320-font-2-feedback-page-27.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-feedback-page-27.xml",
+      "label": "Onderbroken",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-feedback-page-28.xml",
+      "label": "Voltooid",
+      "widthDp": 219.85185185185185,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-feedback-page-28.xml",
+      "label": "Onderbroken",
+      "widthDp": 219.85185185185185,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-feedback-page-28.xml",
+      "label": "Opslaan en deterministisch evalueren",
+      "widthDp": 254.22222222222223,
+      "heightDp": 178.37037037037038
+    },
+    {
+      "file": "320-font-2-incomplete-page-0.xml",
+      "label": "Terug",
+      "widthDp": 137.1851851851852,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-incomplete-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-incomplete-page-0.xml",
+      "label": "Hardlopen",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-incomplete-page-1.xml",
+      "label": "Hardlopen",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-incomplete-page-2.xml",
+      "label": "Nieuwe uitvoering",
+      "widthDp": 254.22222222222223,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-incomplete-page-2.xml",
+      "label": "Terug",
+      "widthDp": 254.22222222222223,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-incomplete-page-3.xml",
+      "label": "Nieuwe uitvoering",
+      "widthDp": 254.22222222222223,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-incomplete-page-3.xml",
+      "label": "Terug",
+      "widthDp": 254.22222222222223,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-0.xml",
+      "label": "Terug",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-0.xml",
+      "label": "Zwemmen",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-10.xml",
+      "label": "Verzuring begint, moeite met techniek. (RPE 7)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-10.xml",
+      "label": "Net onder sprintniveau. (RPE 8)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-10.xml",
+      "label": "Snelle verzuring, techniek brokkelt af. (RPE 9)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-10.xml",
+      "label": "All-out sprint. (RPE 10)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-11.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-11.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-11.xml",
+      "label": "Gevoelloos door het water glijden. (RPE 1)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-12.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-12.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-12.xml",
+      "label": "Gevoelloos door het water glijden. (RPE 1)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-12.xml",
+      "label": "Ontspannen slag, rustige ademhaling. (RPE 2)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-12.xml",
+      "label": "Vlotte, ritmische slag. (RPE 3)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-12.xml",
+      "label": "Doorzwemmen, gecontroleerde ademhaling. (RPE 4)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-12.xml",
+      "label": "Doelgericht tempo. (RPE 5)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-12.xml",
+      "label": "Hard werken, snakken naar adem op keerpunt. (RPE 6)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-13.xml",
+      "label": "Verzuring begint, moeite met techniek. (RPE 7)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-13.xml",
+      "label": "Net onder sprintniveau. (RPE 8)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-13.xml",
+      "label": "Snelle verzuring, techniek brokkelt af. (RPE 9)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-13.xml",
+      "label": "All-out sprint. (RPE 10)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-14.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-14.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-14.xml",
+      "label": "Opslaan en deterministisch evalueren",
+      "widthDp": 327.28929384965835,
+      "heightDp": 82.00455580865604
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-4.xml",
+      "label": "Gevoelloos door het water glijden. (RPE 1)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-4.xml",
+      "label": "Ontspannen slag, rustige ademhaling. (RPE 2)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-4.xml",
+      "label": "Vlotte, ritmische slag. (RPE 3)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-4.xml",
+      "label": "Doorzwemmen, gecontroleerde ademhaling. (RPE 4)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-4.xml",
+      "label": "Doelgericht tempo. (RPE 5)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-5.xml",
+      "label": "Ontspannen slag, rustige ademhaling. (RPE 2)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-5.xml",
+      "label": "Vlotte, ritmische slag. (RPE 3)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-5.xml",
+      "label": "Doorzwemmen, gecontroleerde ademhaling. (RPE 4)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-5.xml",
+      "label": "Doelgericht tempo. (RPE 5)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-5.xml",
+      "label": "Hard werken, snakken naar adem op keerpunt. (RPE 6)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-5.xml",
+      "label": "Verzuring begint, moeite met techniek. (RPE 7)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-5.xml",
+      "label": "Net onder sprintniveau. (RPE 8)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-5.xml",
+      "label": "Snelle verzuring, techniek brokkelt af. (RPE 9)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-5.xml",
+      "label": "All-out sprint. (RPE 10)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-6.xml",
+      "label": "Hard werken, snakken naar adem op keerpunt. (RPE 6)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-6.xml",
+      "label": "Verzuring begint, moeite met techniek. (RPE 7)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-6.xml",
+      "label": "Net onder sprintniveau. (RPE 8)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-6.xml",
+      "label": "Snelle verzuring, techniek brokkelt af. (RPE 9)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-6.xml",
+      "label": "All-out sprint. (RPE 10)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-6.xml",
+      "label": "25 m-bad, vrije slag en zonder paddles/vliezen/pull buoy",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-6.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-6.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-7.xml",
+      "label": "25 m-bad, vrije slag en zonder paddles/vliezen/pull buoy",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-7.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-7.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-7.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-7.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-7.xml",
+      "label": "Gevoelloos door het water glijden. (RPE 1)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-8.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-8.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-8.xml",
+      "label": "Gevoelloos door het water glijden. (RPE 1)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-8.xml",
+      "label": "Ontspannen slag, rustige ademhaling. (RPE 2)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-8.xml",
+      "label": "Vlotte, ritmische slag. (RPE 3)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-8.xml",
+      "label": "Doorzwemmen, gecontroleerde ademhaling. (RPE 4)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-8.xml",
+      "label": "Doelgericht tempo. (RPE 5)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-9.xml",
+      "label": "Ontspannen slag, rustige ademhaling. (RPE 2)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-9.xml",
+      "label": "Vlotte, ritmische slag. (RPE 3)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-9.xml",
+      "label": "Doorzwemmen, gecontroleerde ademhaling. (RPE 4)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-9.xml",
+      "label": "Doelgericht tempo. (RPE 5)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-9.xml",
+      "label": "Hard werken, snakken naar adem op keerpunt. (RPE 6)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-9.xml",
+      "label": "Verzuring begint, moeite met techniek. (RPE 7)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-9.xml",
+      "label": "Net onder sprintniveau. (RPE 8)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-9.xml",
+      "label": "Snelle verzuring, techniek brokkelt af. (RPE 9)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-swim-page-9.xml",
+      "label": "All-out sprint. (RPE 10)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "320-font-2-overview-page-0.xml",
+      "label": "Week",
+      "widthDp": 133.62962962962962,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-overview-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-overview-page-5.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "320-font-2-overview-page-9.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.22222222222223
+    },
+    {
+      "file": "412-font-1-empty-page-0.xml",
+      "label": "Terug",
+      "widthDp": 121.43198090692124,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-empty-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 89.35560859188544,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-empty-page-0.xml",
+      "label": "Terug naar intake",
+      "widthDp": 346.7303102625298,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-choice-page-0.xml",
+      "label": "Week",
+      "widthDp": 121.43198090692124,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-choice-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 89.35560859188544,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-choice-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 380.33412887828166,
+      "heightDp": 113.0310262529833
+    },
+    {
+      "file": "412-font-1-choice-page-0.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 380.33412887828166,
+      "heightDp": 132.88782816229119
+    },
+    {
+      "file": "412-font-1-choice-page-1.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 380.33412887828166,
+      "heightDp": 113.0310262529833
+    },
+    {
+      "file": "412-font-1-choice-page-1.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 380.33412887828166,
+      "heightDp": 132.88782816229119
+    },
+    {
+      "file": "412-font-1-choice-page-1.xml",
+      "label": "Hartslag",
+      "widthDp": 346.7303102625298,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-choice-page-1.xml",
+      "label": "Week-1-kalibratie kiezen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-0.xml",
+      "label": "Terug",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-0.xml",
+      "label": "Fietsen",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-3.xml",
+      "label": "Geen druk op de pedalen. (RPE 1)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-3.xml",
+      "label": "Zeer licht trappen, uren vol te houden. (RPE 2)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-3.xml",
+      "label": "Comfortabel duurtempo. (RPE 3)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-3.xml",
+      "label": "Druk op de pedalen, zweet breekt uit. (RPE 4)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-4.xml",
+      "label": "Geen druk op de pedalen. (RPE 1)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-4.xml",
+      "label": "Zeer licht trappen, uren vol te houden. (RPE 2)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-4.xml",
+      "label": "Comfortabel duurtempo. (RPE 3)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-4.xml",
+      "label": "Druk op de pedalen, zweet breekt uit. (RPE 4)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-4.xml",
+      "label": "Ademhaling aanwezig, korte zinnen. (RPE 5)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-4.xml",
+      "label": "Branderig gevoel bouwt op. (RPE 6)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-4.xml",
+      "label": "Benen lopen vol, weinig praten. (RPE 7)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-4.xml",
+      "label": "Op de limiet, net niet volledig verzuren. (RPE 8)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-4.xml",
+      "label": "Extreem zwaar, korte intervallen. (RPE 9)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-5.xml",
+      "label": "Volle sprint, maximale kracht. (RPE 10)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-5.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-5.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-5.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-5.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-5.xml",
+      "label": "Geen druk op de pedalen. (RPE 1)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-5.xml",
+      "label": "Zeer licht trappen, uren vol te houden. (RPE 2)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-6.xml",
+      "label": "Comfortabel duurtempo. (RPE 3)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-6.xml",
+      "label": "Druk op de pedalen, zweet breekt uit. (RPE 4)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-6.xml",
+      "label": "Ademhaling aanwezig, korte zinnen. (RPE 5)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-6.xml",
+      "label": "Branderig gevoel bouwt op. (RPE 6)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-6.xml",
+      "label": "Benen lopen vol, weinig praten. (RPE 7)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-6.xml",
+      "label": "Op de limiet, net niet volledig verzuren. (RPE 8)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-6.xml",
+      "label": "Extreem zwaar, korte intervallen. (RPE 9)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-6.xml",
+      "label": "Volle sprint, maximale kracht. (RPE 10)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-7.xml",
+      "label": "Benen lopen vol, weinig praten. (RPE 7)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-7.xml",
+      "label": "Op de limiet, net niet volledig verzuren. (RPE 8)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-7.xml",
+      "label": "Extreem zwaar, korte intervallen. (RPE 9)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-7.xml",
+      "label": "Volle sprint, maximale kracht. (RPE 10)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-7.xml",
+      "label": "Optioneel blok uitgevoerd",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-8.xml",
+      "label": "Optioneel blok uitgevoerd",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-8.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-8.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-bike-page-8.xml",
+      "label": "Opslaan en deterministisch evalueren",
+      "widthDp": 327.28929384965835,
+      "heightDp": 82.00455580865604
+    },
+    {
+      "file": "393-font-1-feedback-page-0.xml",
+      "label": "Terug",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-feedback-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-feedback-page-0.xml",
+      "label": "Hardlopen",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-10.xml",
+      "label": "Naar adem happen, zware benen. (RPE 9)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-10.xml",
+      "label": "Volle sprint, snel moeten stoppen. (RPE 10)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-feedback-page-10.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-10.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-10.xml",
+      "label": "Opslaan en deterministisch evalueren",
+      "widthDp": 327.28929384965835,
+      "heightDp": 82.36902050113895
+    },
+    {
+      "file": "393-font-1-feedback-page-3.xml",
+      "label": "Wandelen of extreem traag joggen. (RPE 1)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-feedback-page-3.xml",
+      "label": "Zeer ontspannen, eindeloos kletsen. (RPE 2)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-4.xml",
+      "label": "Wandelen of extreem traag joggen. (RPE 1)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-feedback-page-4.xml",
+      "label": "Zeer ontspannen, eindeloos kletsen. (RPE 2)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-4.xml",
+      "label": "Vlot duurlooptempo, neusademhaling. (RPE 3)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-4.xml",
+      "label": "Focus nodig, praten in zinnen. (RPE 4)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-4.xml",
+      "label": "'Sweet spot', comfortabel oncomfortabel. (RPE 5)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-4.xml",
+      "label": "Zwaar, net niet in het rood. (RPE 6)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-feedback-page-5.xml",
+      "label": "Vlot duurlooptempo, neusademhaling. (RPE 3)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-5.xml",
+      "label": "Focus nodig, praten in zinnen. (RPE 4)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-5.xml",
+      "label": "'Sweet spot', comfortabel oncomfortabel. (RPE 5)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-5.xml",
+      "label": "Zwaar, net niet in het rood. (RPE 6)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-feedback-page-5.xml",
+      "label": "Diepe ademhaling (10k wedstrijdtempo). (RPE 7)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-5.xml",
+      "label": "Tegen verzuring aan (5k tempo). (RPE 8)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-5.xml",
+      "label": "Naar adem happen, zware benen. (RPE 9)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-5.xml",
+      "label": "Volle sprint, snel moeten stoppen. (RPE 10)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-6.xml",
+      "label": "Tegen verzuring aan (5k tempo). (RPE 8)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-6.xml",
+      "label": "Naar adem happen, zware benen. (RPE 9)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-6.xml",
+      "label": "Volle sprint, snel moeten stoppen. (RPE 10)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-6.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-6.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-6.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-6.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-7.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-7.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-feedback-page-7.xml",
+      "label": "Wandelen of extreem traag joggen. (RPE 1)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-7.xml",
+      "label": "Zeer ontspannen, eindeloos kletsen. (RPE 2)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-feedback-page-7.xml",
+      "label": "Vlot duurlooptempo, neusademhaling. (RPE 3)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-7.xml",
+      "label": "Focus nodig, praten in zinnen. (RPE 4)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-7.xml",
+      "label": "'Sweet spot', comfortabel oncomfortabel. (RPE 5)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-8.xml",
+      "label": "Zeer ontspannen, eindeloos kletsen. (RPE 2)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-feedback-page-8.xml",
+      "label": "Vlot duurlooptempo, neusademhaling. (RPE 3)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-8.xml",
+      "label": "Focus nodig, praten in zinnen. (RPE 4)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-8.xml",
+      "label": "'Sweet spot', comfortabel oncomfortabel. (RPE 5)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-8.xml",
+      "label": "Zwaar, net niet in het rood. (RPE 6)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-feedback-page-8.xml",
+      "label": "Diepe ademhaling (10k wedstrijdtempo). (RPE 7)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-feedback-page-8.xml",
+      "label": "Tegen verzuring aan (5k tempo). (RPE 8)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-8.xml",
+      "label": "Naar adem happen, zware benen. (RPE 9)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-9.xml",
+      "label": "Zwaar, net niet in het rood. (RPE 6)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-feedback-page-9.xml",
+      "label": "Diepe ademhaling (10k wedstrijdtempo). (RPE 7)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-feedback-page-9.xml",
+      "label": "Tegen verzuring aan (5k tempo). (RPE 8)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-9.xml",
+      "label": "Naar adem happen, zware benen. (RPE 9)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-feedback-page-9.xml",
+      "label": "Volle sprint, snel moeten stoppen. (RPE 10)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "360-font-1-known-page-0.xml",
+      "label": "Week",
+      "widthDp": 103.66666666666667,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-known-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.66666666666667,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-known-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 328.0,
+      "heightDp": 132.0
+    },
+    {
+      "file": "360-font-1-known-page-1.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 328.0,
+      "heightDp": 132.0
+    },
+    {
+      "file": "360-font-1-known-page-1.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 328.0,
+      "heightDp": 174.0
+    },
+    {
+      "file": "360-font-1-known-page-2.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 294.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-known-page-2.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 294.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-known-page-2.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 294.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-known-page-3.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 294.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-known-page-3.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 294.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-known-page-3.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 294.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-known-page-3.xml",
+      "label": "Bekende waarden bewaren",
+      "widthDp": 294.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "393-font-1-known-page-0.xml",
+      "label": "Week",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-known-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-known-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 361.54897494305243,
+      "heightDp": 112.25512528473804
+    },
+    {
+      "file": "393-font-1-known-page-0.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 361.54897494305243,
+      "heightDp": 152.34624145785878
+    },
+    {
+      "file": "393-font-1-known-page-1.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 361.54897494305243,
+      "heightDp": 112.25512528473804
+    },
+    {
+      "file": "393-font-1-known-page-1.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 361.54897494305243,
+      "heightDp": 152.34624145785878
+    },
+    {
+      "file": "393-font-1-known-page-1.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-known-page-2.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-known-page-2.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-known-page-3.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-known-page-3.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-known-page-3.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-known-page-3.xml",
+      "label": "Bekende waarden bewaren",
+      "widthDp": 327.28929384965835,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "320-font-2-pending-page-0.xml",
+      "label": "Week",
+      "widthDp": 133.62962962962962,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-pending-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-pending-page-11.xml",
+      "label": "Zones goedkeuren",
+      "widthDp": 222.22222222222223,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-pending-page-12.xml",
+      "label": "Zones goedkeuren",
+      "widthDp": 222.22222222222223,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-pending-page-12.xml",
+      "label": "Afwijzen",
+      "widthDp": 222.22222222222223,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-pending-page-12.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "320-font-2-pending-page-5.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "412-font-2-known-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 380.33412887828166,
+      "heightDp": 271.50357995226733
+    },
+    {
+      "file": "412-font-2-known-page-1.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 380.33412887828166,
+      "heightDp": 375.3699284009547
+    },
+    {
+      "file": "412-font-2-known-page-2.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 346.7303102625298,
+      "heightDp": 61.09785202863962
+    },
+    {
+      "file": "412-font-2-known-page-2.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 346.7303102625298,
+      "heightDp": 96.2291169451074
+    },
+    {
+      "file": "412-font-2-known-page-3.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 346.7303102625298,
+      "heightDp": 61.09785202863962
+    },
+    {
+      "file": "412-font-2-known-page-3.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 346.7303102625298,
+      "heightDp": 96.2291169451074
+    },
+    {
+      "file": "412-font-2-known-page-4.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 96.2291169451074
+    },
+    {
+      "file": "412-font-2-known-page-5.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 96.2291169451074
+    },
+    {
+      "file": "412-font-2-known-page-5.xml",
+      "label": "Bekende waarden bewaren",
+      "widthDp": 346.7303102625298,
+      "heightDp": 106.53937947494033
+    },
+    {
+      "file": "360-font-1-overview-page-0.xml",
+      "label": "Week",
+      "widthDp": 103.66666666666667,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-overview-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.66666666666667,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-overview-page-3.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 294.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-overview-page-4.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 294.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-overview-page-5.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 294.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-overview-page-7.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 294.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "393-font-1-overview-page-0.xml",
+      "label": "Week",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-overview-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-overview-page-1.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-overview-page-1.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-overview-page-2.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-overview-page-3.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-1-known-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 288.0,
+      "heightDp": 152.88888888888889
+    },
+    {
+      "file": "320-font-1-known-page-0.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 288.0,
+      "heightDp": 195.25925925925927
+    },
+    {
+      "file": "320-font-1-known-page-1.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 254.22222222222223,
+      "heightDp": 49.77777777777778
+    },
+    {
+      "file": "320-font-1-known-page-1.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 254.22222222222223,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "file": "320-font-1-known-page-2.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-1-known-page-2.xml",
+      "label": "Bekende waarden bewaren",
+      "widthDp": 254.22222222222223,
+      "heightDp": 82.07407407407408
+    },
+    {
+      "file": "320-font-1-known-page-3.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-1-known-page-3.xml",
+      "label": "Bekende waarden bewaren",
+      "widthDp": 254.22222222222223,
+      "heightDp": 82.07407407407408
+    },
+    {
+      "file": "360-font-2-choice-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 328.0,
+      "heightDp": 337.0
+    },
+    {
+      "file": "360-font-2-choice-page-1.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 328.0,
+      "heightDp": 475.0
+    },
+    {
+      "file": "360-font-2-choice-page-3.xml",
+      "label": "Hartslag",
+      "widthDp": 294.0,
+      "heightDp": 61.0
+    },
+    {
+      "file": "360-font-2-choice-page-4.xml",
+      "label": "Hartslag",
+      "widthDp": 294.0,
+      "heightDp": 61.0
+    },
+    {
+      "file": "360-font-2-choice-page-4.xml",
+      "label": "Week-1-kalibratie kiezen",
+      "widthDp": 294.0,
+      "heightDp": 142.0
+    },
+    {
+      "file": "412-font-2-overview-page-0.xml",
+      "label": "Week",
+      "widthDp": 134.03341288782818,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "412-font-2-overview-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 103.86634844868736,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "412-font-2-overview-page-3.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 106.53937947494033
+    },
+    {
+      "file": "412-font-2-overview-page-4.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 106.53937947494033
+    },
+    {
+      "file": "412-font-2-overview-page-5.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 106.53937947494033
+    },
+    {
+      "file": "412-font-2-overview-page-8.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 106.53937947494033
+    },
+    {
+      "file": "320-font-2-hidden-page-0.xml",
+      "label": "Week",
+      "widthDp": 133.62962962962962,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-hidden-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-hidden-page-10.xml",
+      "label": "Zones goedkeuren",
+      "widthDp": 222.22222222222223,
+      "heightDp": 106.07407407407408
+    },
+    {
+      "file": "320-font-2-hidden-page-10.xml",
+      "label": "Afwijzen",
+      "widthDp": 222.22222222222223,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-hidden-page-11.xml",
+      "label": "Zones goedkeuren",
+      "widthDp": 222.22222222222223,
+      "heightDp": 106.07407407407408
+    },
+    {
+      "file": "320-font-2-hidden-page-11.xml",
+      "label": "Afwijzen",
+      "widthDp": 222.22222222222223,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-hidden-page-11.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.22222222222223
+    },
+    {
+      "file": "320-font-2-hidden-page-4.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "320-font-1-overview-page-0.xml",
+      "label": "Week",
+      "widthDp": 103.70370370370371,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-overview-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.88888888888889,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-overview-page-3.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 82.07407407407408
+    },
+    {
+      "file": "320-font-1-overview-page-4.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 82.07407407407408
+    },
+    {
+      "file": "320-font-1-overview-page-5.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 81.77777777777777
+    },
+    {
+      "file": "320-font-1-overview-page-6.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 81.77777777777777
+    },
+    {
+      "file": "320-font-1-overview-page-9.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 82.07407407407408
+    },
+    {
+      "file": "393-font-2-empty-page-0.xml",
+      "label": "Terug",
+      "widthDp": 137.03872437357631,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "file": "393-font-2-empty-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 103.87243735763099,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "file": "393-font-2-empty-page-1.xml",
+      "label": "Terug naar intake",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-history-page-0.xml",
+      "label": "Week",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-history-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-history-page-1.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-history-page-1.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-history-page-3.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-boundaries-page-0.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-boundaries-page-1.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-boundaries-page-10.xml",
+      "label": "Bekende waarden bewaren",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "320-font-2-boundaries-page-11.xml",
+      "label": "Bekende waarden bewaren",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "393-font-1-pending-page-0.xml",
+      "label": "Week",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-pending-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-pending-page-1.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-pending-page-1.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-pending-page-3.xml",
+      "label": "Zones goedkeuren",
+      "widthDp": 295.94533029612757,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-pending-page-3.xml",
+      "label": "Afwijzen",
+      "widthDp": 295.94533029612757,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-pending-page-3.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-pending-page-4.xml",
+      "label": "Zones goedkeuren",
+      "widthDp": 295.94533029612757,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-pending-page-4.xml",
+      "label": "Afwijzen",
+      "widthDp": 295.94533029612757,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-pending-page-4.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "360-font-2-empty-page-0.xml",
+      "label": "Terug",
+      "widthDp": 136.66666666666666,
+      "heightDp": 70.0
+    },
+    {
+      "file": "360-font-2-empty-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 103.66666666666667,
+      "heightDp": 70.0
+    },
+    {
+      "file": "360-font-2-empty-page-1.xml",
+      "label": "Terug naar intake",
+      "widthDp": 294.0,
+      "heightDp": 106.0
+    },
+    {
+      "file": "393-font-2-choice-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 361.54897494305243,
+      "heightDp": 271.1617312072893
+    },
+    {
+      "file": "393-font-2-choice-page-1.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 361.54897494305243,
+      "heightDp": 271.1617312072893
+    },
+    {
+      "file": "393-font-2-choice-page-3.xml",
+      "label": "Hartslag",
+      "widthDp": 327.28929384965835,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "file": "393-font-2-choice-page-3.xml",
+      "label": "Week-1-kalibratie kiezen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 106.05922551252847
+    },
+    {
+      "file": "393-font-2-choice-page-4.xml",
+      "label": "Hartslag",
+      "widthDp": 327.28929384965835,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "file": "393-font-2-choice-page-4.xml",
+      "label": "Week-1-kalibratie kiezen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 106.05922551252847
+    },
+    {
+      "file": "393-font-1-hidden-page-0.xml",
+      "label": "Week",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-hidden-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-hidden-page-1.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-hidden-page-1.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-hidden-page-3.xml",
+      "label": "Zones goedkeuren",
+      "widthDp": 295.94533029612757,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-hidden-page-3.xml",
+      "label": "Afwijzen",
+      "widthDp": 295.94533029612757,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-hidden-page-3.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 327.28929384965835,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-history-page-0.xml",
+      "label": "Week",
+      "widthDp": 133.62962962962962,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-history-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-history-page-11.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "320-font-2-history-page-12.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "320-font-2-history-page-5.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "320-font-2-onboarding-page-0.xml",
+      "label": "Testen",
+      "widthDp": 126.51851851851852,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-onboarding-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-onboarding-page-4.xml",
+      "label": "Zones run bevestigen",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-onboarding-page-4.xml",
+      "label": "Zonevoorstel run afwijzen",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-onboarding-page-5.xml",
+      "label": "Zones run bevestigen",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-onboarding-page-5.xml",
+      "label": "Zonevoorstel run afwijzen",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "412-font-1-known-page-0.xml",
+      "label": "Week",
+      "widthDp": 121.43198090692124,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-known-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 89.35560859188544,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-known-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 380.33412887828166,
+      "heightDp": 113.0310262529833
+    },
+    {
+      "file": "412-font-1-known-page-0.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 380.33412887828166,
+      "heightDp": 132.88782816229119
+    },
+    {
+      "file": "412-font-1-known-page-1.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 380.33412887828166,
+      "heightDp": 113.0310262529833
+    },
+    {
+      "file": "412-font-1-known-page-1.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 380.33412887828166,
+      "heightDp": 132.88782816229119
+    },
+    {
+      "file": "412-font-1-known-page-1.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 346.7303102625298,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-known-page-1.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 346.7303102625298,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-known-page-2.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 346.7303102625298,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-known-page-2.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 346.7303102625298,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-known-page-2.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-known-page-2.xml",
+      "label": "Bekende waarden bewaren",
+      "widthDp": 346.7303102625298,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-known-page-3.xml",
+      "label": "Zelf bekende waarde",
+      "widthDp": 346.7303102625298,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-known-page-3.xml",
+      "label": "Gemeten door arts/lab",
+      "widthDp": 346.7303102625298,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-known-page-3.xml",
+      "label": "Ik ken ook vijf zonegrenzen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-known-page-3.xml",
+      "label": "Bekende waarden bewaren",
+      "widthDp": 346.7303102625298,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "320-font-2-choice-page-5.xml",
+      "label": "Hartslag",
+      "widthDp": 254.22222222222223,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-choice-page-5.xml",
+      "label": "Week-1-kalibratie kiezen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "320-font-2-empty-page-0.xml",
+      "label": "Terug",
+      "widthDp": 137.1851851851852,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-empty-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-empty-page-2.xml",
+      "label": "Terug naar intake",
+      "widthDp": 254.22222222222223,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "412-font-1-overview-page-0.xml",
+      "label": "Week",
+      "widthDp": 121.43198090692124,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-overview-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 89.35560859188544,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-overview-page-1.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-overview-page-2.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-overview-page-2.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 58.424821002386636
+    },
+    {
+      "file": "412-font-1-overview-page-3.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 58.424821002386636
+    },
+    {
+      "file": "412-font-1-overview-page-4.xml",
+      "label": "Waarden of route wijzigen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "393-font-1-onboarding-page-0.xml",
+      "label": "Testen",
+      "widthDp": 89.65831435079727,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-onboarding-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-onboarding-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 361.54897494305243,
+      "heightDp": 112.25512528473804
+    },
+    {
+      "file": "393-font-1-onboarding-page-1.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 361.54897494305243,
+      "heightDp": 112.25512528473804
+    },
+    {
+      "file": "393-font-1-onboarding-page-1.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 361.54897494305243,
+      "heightDp": 152.34624145785878
+    },
+    {
+      "file": "393-font-1-onboarding-page-1.xml",
+      "label": "Zones run bevestigen",
+      "widthDp": 329.4760820045558,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-onboarding-page-1.xml",
+      "label": "Zonevoorstel run afwijzen",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "360-font-1-choice-page-0.xml",
+      "label": "Week",
+      "widthDp": 103.66666666666667,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-choice-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.66666666666667,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-choice-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 328.0,
+      "heightDp": 132.0
+    },
+    {
+      "file": "360-font-1-choice-page-1.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 328.0,
+      "heightDp": 132.0
+    },
+    {
+      "file": "360-font-1-choice-page-1.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 328.0,
+      "heightDp": 174.0
+    },
+    {
+      "file": "360-font-1-choice-page-2.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 328.0,
+      "heightDp": 174.0
+    },
+    {
+      "file": "360-font-1-choice-page-2.xml",
+      "label": "Hartslag",
+      "widthDp": 294.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-choice-page-2.xml",
+      "label": "Week-1-kalibratie kiezen",
+      "widthDp": 294.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "393-font-1-protocol-run-page-0.xml",
+      "label": "Terug",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-protocol-run-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-protocol-run-page-0.xml",
+      "label": "Hardlopen",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-run-page-3.xml",
+      "label": "Wandelen of extreem traag joggen. (RPE 1)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-3.xml",
+      "label": "Zeer ontspannen, eindeloos kletsen. (RPE 2)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-run-page-4.xml",
+      "label": "Focus nodig, praten in zinnen. (RPE 4)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-run-page-4.xml",
+      "label": "'Sweet spot', comfortabel oncomfortabel. (RPE 5)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-4.xml",
+      "label": "Zwaar, net niet in het rood. (RPE 6)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-run-page-4.xml",
+      "label": "Diepe ademhaling (10k wedstrijdtempo). (RPE 7)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-run-page-4.xml",
+      "label": "Tegen verzuring aan (5k tempo). (RPE 8)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-run-page-4.xml",
+      "label": "Naar adem happen, zware benen. (RPE 9)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-run-page-4.xml",
+      "label": "Volle sprint, snel moeten stoppen. (RPE 10)",
+      "widthDp": 327.28929384965835,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-4.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-run-page-5.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-run-page-5.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-run-page-5.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-run-page-5.xml",
+      "label": "Wandelen of extreem traag joggen. (RPE 1)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-5.xml",
+      "label": "Zeer ontspannen, eindeloos kletsen. (RPE 2)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-5.xml",
+      "label": "Vlot duurlooptempo, neusademhaling. (RPE 3)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-run-page-5.xml",
+      "label": "Focus nodig, praten in zinnen. (RPE 4)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-6.xml",
+      "label": "Zeer ontspannen, eindeloos kletsen. (RPE 2)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-6.xml",
+      "label": "Vlot duurlooptempo, neusademhaling. (RPE 3)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-run-page-6.xml",
+      "label": "Focus nodig, praten in zinnen. (RPE 4)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-6.xml",
+      "label": "'Sweet spot', comfortabel oncomfortabel. (RPE 5)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-6.xml",
+      "label": "Zwaar, net niet in het rood. (RPE 6)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-run-page-6.xml",
+      "label": "Diepe ademhaling (10k wedstrijdtempo). (RPE 7)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-run-page-6.xml",
+      "label": "Tegen verzuring aan (5k tempo). (RPE 8)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-run-page-6.xml",
+      "label": "Naar adem happen, zware benen. (RPE 9)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-7.xml",
+      "label": "Zwaar, net niet in het rood. (RPE 6)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-run-page-7.xml",
+      "label": "Diepe ademhaling (10k wedstrijdtempo). (RPE 7)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-run-page-7.xml",
+      "label": "Tegen verzuring aan (5k tempo). (RPE 8)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.70615034168566
+    },
+    {
+      "file": "393-font-1-protocol-run-page-7.xml",
+      "label": "Naar adem happen, zware benen. (RPE 9)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-7.xml",
+      "label": "Volle sprint, snel moeten stoppen. (RPE 10)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-8.xml",
+      "label": "Volle sprint, snel moeten stoppen. (RPE 10)",
+      "widthDp": 293.75854214123007,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "file": "393-font-1-protocol-run-page-8.xml",
+      "label": "Optioneel blok uitgevoerd",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-run-page-8.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-run-page-8.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-run-page-9.xml",
+      "label": "Optioneel blok uitgevoerd",
+      "widthDp": 293.75854214123007,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-protocol-run-page-9.xml",
+      "label": "Voltooid",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-run-page-9.xml",
+      "label": "Onderbroken",
+      "widthDp": 293.75854214123007,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-protocol-run-page-9.xml",
+      "label": "Opslaan en deterministisch evalueren",
+      "widthDp": 327.28929384965835,
+      "heightDp": 82.00455580865604
+    },
+    {
+      "file": "320-font-2-result-page-0.xml",
+      "label": "Terug",
+      "widthDp": 137.1851851851852,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-result-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-result-page-0.xml",
+      "label": "Hardlopen",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-result-page-3.xml",
+      "label": "Drempel bevestigen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-result-page-3.xml",
+      "label": "Drempel afwijzen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-result-page-4.xml",
+      "label": "Drempel afwijzen",
+      "widthDp": 254.22222222222223,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-result-page-4.xml",
+      "label": "Nieuwe uitvoering",
+      "widthDp": 254.22222222222223,
+      "heightDp": 106.07407407407408
+    },
+    {
+      "file": "320-font-2-result-page-4.xml",
+      "label": "Terug",
+      "widthDp": 254.22222222222223,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "412-font-2-empty-page-0.xml",
+      "label": "Terug",
+      "widthDp": 137.47016706443915,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "412-font-2-empty-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 103.86634844868736,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "412-font-2-empty-page-1.xml",
+      "label": "Terug",
+      "widthDp": 137.47016706443915,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "412-font-2-empty-page-1.xml",
+      "label": "Afmelden",
+      "widthDp": 103.86634844868736,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "412-font-2-empty-page-1.xml",
+      "label": "Terug naar intake",
+      "widthDp": 346.7303102625298,
+      "heightDp": 70.26252983293557
+    },
+    {
+      "file": "412-font-2-choice-page-0.xml",
+      "label": "Ik ken mijn waarden",
+      "widthDp": 380.33412887828166,
+      "heightDp": 271.50357995226733
+    },
+    {
+      "file": "412-font-2-choice-page-1.xml",
+      "label": "Ik wil rustig beginnen en laten kalibreren",
+      "widthDp": 380.33412887828166,
+      "heightDp": 375.3699284009547
+    },
+    {
+      "file": "412-font-2-choice-page-3.xml",
+      "label": "Hartslag",
+      "widthDp": 346.7303102625298,
+      "heightDp": 61.09785202863962
+    },
+    {
+      "file": "412-font-2-choice-page-3.xml",
+      "label": "Week-1-kalibratie kiezen",
+      "widthDp": 346.7303102625298,
+      "heightDp": 106.53937947494033
+    },
+    {
+      "file": "360-font-1-empty-page-0.xml",
+      "label": "Terug",
+      "widthDp": 105.66666666666667,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-empty-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.66666666666667,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-empty-page-0.xml",
+      "label": "Terug naar intake",
+      "widthDp": 294.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-empty-page-1.xml",
+      "label": "Terug",
+      "widthDp": 105.66666666666667,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-empty-page-1.xml",
+      "label": "Afmelden",
+      "widthDp": 88.66666666666667,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-empty-page-1.xml",
+      "label": "Terug naar intake",
+      "widthDp": 294.0,
+      "heightDp": 58.0
+    }
+  ]
+}

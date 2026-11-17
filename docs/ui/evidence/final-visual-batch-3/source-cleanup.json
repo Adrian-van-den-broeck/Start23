@@ -1,0 +1,8 @@
+{
+  "temporaryFilesRemoved": [
+    "app/dev-workout-review.tsx",
+    "src/ui-v2/dev/WorkoutReviewBootstrap.ts"
+  ],
+  "rootLayoutByteIdenticalToBatch2": true,
+  "acceptedEarlierDevHostsRetained": true
+}

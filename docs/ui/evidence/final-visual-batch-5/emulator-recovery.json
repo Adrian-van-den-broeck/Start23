@@ -1,0 +1,11 @@
+{
+  "localAdbServerRestarted": true,
+  "metroRestartedOnOriginalPort": 8081,
+  "metroIpv4LoopbackBindingCorrected": true,
+  "inGuestRebootCommandTimedOut": true,
+  "emulatorConsoleRestartStalledBeforeTransportOpened": true,
+  "sameStoredAvdRestartedWithDocumentedSoftwareRenderer": true,
+  "renderer": "swiftshader_indirect",
+  "appDataReset": false,
+  "bootCompleted": true
+}

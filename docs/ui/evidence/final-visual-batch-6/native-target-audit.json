@@ -1,0 +1,635 @@
+{
+  "cases": 57,
+  "controlsReviewed": 522,
+  "matrixAndStateContentPass": true,
+  "targetsAtLeast48DpWithinPixelQuantization": true,
+  "results": [
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "availability"
+      },
+      "pages": 4,
+      "controls": 14,
+      "minimumObservedDp": 48.0
+    },
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "selection"
+      },
+      "pages": 3,
+      "controls": 6,
+      "minimumObservedDp": 48.0
+    },
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 1,
+        "language": "en",
+        "state": "availability"
+      },
+      "pages": 5,
+      "controls": 14,
+      "minimumObservedDp": 48.0
+    },
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 1,
+        "language": "en",
+        "state": "selection"
+      },
+      "pages": 4,
+      "controls": 6,
+      "minimumObservedDp": 48.0
+    },
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 2,
+        "language": "nl",
+        "state": "availability"
+      },
+      "pages": 7,
+      "controls": 14,
+      "minimumObservedDp": 59.25925925925926
+    },
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 2,
+        "language": "nl",
+        "state": "selection"
+      },
+      "pages": 5,
+      "controls": 6,
+      "minimumObservedDp": 59.25925925925926
+    },
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 2,
+        "language": "en",
+        "state": "availability"
+      },
+      "pages": 8,
+      "controls": 14,
+      "minimumObservedDp": 59.25925925925926
+    },
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 2,
+        "language": "en",
+        "state": "selection"
+      },
+      "pages": 4,
+      "controls": 6,
+      "minimumObservedDp": 59.25925925925926
+    },
+    {
+      "case": {
+        "width": 360,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "availability"
+      },
+      "pages": 4,
+      "controls": 14,
+      "minimumObservedDp": 48.0
+    },
+    {
+      "case": {
+        "width": 360,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "selection"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.0
+    },
+    {
+      "case": {
+        "width": 360,
+        "fontScale": 1,
+        "language": "en",
+        "state": "availability"
+      },
+      "pages": 4,
+      "controls": 14,
+      "minimumObservedDp": 48.0
+    },
+    {
+      "case": {
+        "width": 360,
+        "fontScale": 1,
+        "language": "en",
+        "state": "selection"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.0
+    },
+    {
+      "case": {
+        "width": 360,
+        "fontScale": 2,
+        "language": "nl",
+        "state": "availability"
+      },
+      "pages": 5,
+      "controls": 14,
+      "minimumObservedDp": 59.0
+    },
+    {
+      "case": {
+        "width": 360,
+        "fontScale": 2,
+        "language": "nl",
+        "state": "selection"
+      },
+      "pages": 3,
+      "controls": 6,
+      "minimumObservedDp": 59.0
+    },
+    {
+      "case": {
+        "width": 360,
+        "fontScale": 2,
+        "language": "en",
+        "state": "availability"
+      },
+      "pages": 5,
+      "controls": 14,
+      "minimumObservedDp": 59.0
+    },
+    {
+      "case": {
+        "width": 360,
+        "fontScale": 2,
+        "language": "en",
+        "state": "selection"
+      },
+      "pages": 3,
+      "controls": 6,
+      "minimumObservedDp": 59.0
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "availability"
+      },
+      "pages": 3,
+      "controls": 14,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "selection"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "en",
+        "state": "availability"
+      },
+      "pages": 3,
+      "controls": 14,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "en",
+        "state": "selection"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 2,
+        "language": "nl",
+        "state": "availability"
+      },
+      "pages": 4,
+      "controls": 14,
+      "minimumObservedDp": 59.40774487471526
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 2,
+        "language": "nl",
+        "state": "selection"
+      },
+      "pages": 3,
+      "controls": 6,
+      "minimumObservedDp": 59.40774487471526
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 2,
+        "language": "en",
+        "state": "availability"
+      },
+      "pages": 4,
+      "controls": 14,
+      "minimumObservedDp": 59.40774487471526
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 2,
+        "language": "en",
+        "state": "selection"
+      },
+      "pages": 3,
+      "controls": 6,
+      "minimumObservedDp": 59.40774487471526
+    },
+    {
+      "case": {
+        "width": 412,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "availability"
+      },
+      "pages": 3,
+      "controls": 14,
+      "minimumObservedDp": 48.1145584725537
+    },
+    {
+      "case": {
+        "width": 412,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "selection"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.1145584725537
+    },
+    {
+      "case": {
+        "width": 412,
+        "fontScale": 1,
+        "language": "en",
+        "state": "availability"
+      },
+      "pages": 3,
+      "controls": 14,
+      "minimumObservedDp": 48.1145584725537
+    },
+    {
+      "case": {
+        "width": 412,
+        "fontScale": 1,
+        "language": "en",
+        "state": "selection"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.1145584725537
+    },
+    {
+      "case": {
+        "width": 412,
+        "fontScale": 2,
+        "language": "nl",
+        "state": "availability"
+      },
+      "pages": 4,
+      "controls": 14,
+      "minimumObservedDp": 59.18854415274463
+    },
+    {
+      "case": {
+        "width": 412,
+        "fontScale": 2,
+        "language": "nl",
+        "state": "selection"
+      },
+      "pages": 3,
+      "controls": 6,
+      "minimumObservedDp": 59.18854415274463
+    },
+    {
+      "case": {
+        "width": 412,
+        "fontScale": 2,
+        "language": "en",
+        "state": "availability"
+      },
+      "pages": 4,
+      "controls": 14,
+      "minimumObservedDp": 59.18854415274463
+    },
+    {
+      "case": {
+        "width": 412,
+        "fontScale": 2,
+        "language": "en",
+        "state": "selection"
+      },
+      "pages": 3,
+      "controls": 6,
+      "minimumObservedDp": 59.18854415274463
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "none"
+      },
+      "pages": 3,
+      "controls": 14,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "oneDay"
+      },
+      "pages": 3,
+      "controls": 14,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "reuse"
+      },
+      "pages": 3,
+      "controls": 14,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "restrictions"
+      },
+      "pages": 4,
+      "controls": 16,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "availabilityBusy"
+      },
+      "pages": 3,
+      "controls": 14,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "incomplete"
+      },
+      "pages": 3,
+      "controls": 14,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "loading"
+      },
+      "pages": 2,
+      "controls": 4,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "unavailable"
+      },
+      "pages": 2,
+      "controls": 4,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "exhausted"
+      },
+      "pages": 2,
+      "controls": 4,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "stale"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "busy"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "skipped"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "accepted"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "repeated"
+      },
+      "pages": 3,
+      "controls": 6,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "placement"
+      },
+      "pages": 2,
+      "controls": 4,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "warning"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "distance"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "sparse"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "long"
+      },
+      "pages": 3,
+      "controls": 6,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 393,
+        "fontScale": 1,
+        "language": "nl",
+        "state": "rpe"
+      },
+      "pages": 2,
+      "controls": 6,
+      "minimumObservedDp": 48.109339407744876
+    },
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 2,
+        "language": "en",
+        "state": "restrictions"
+      },
+      "pages": 8,
+      "controls": 16,
+      "minimumObservedDp": 59.25925925925926
+    },
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 2,
+        "language": "en",
+        "state": "repeated"
+      },
+      "pages": 7,
+      "controls": 6,
+      "minimumObservedDp": 59.25925925925926
+    },
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 2,
+        "language": "en",
+        "state": "long"
+      },
+      "pages": 7,
+      "controls": 6,
+      "minimumObservedDp": 59.25925925925926
+    },
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 2,
+        "language": "en",
+        "state": "distance"
+      },
+      "pages": 4,
+      "controls": 6,
+      "minimumObservedDp": 59.25925925925926
+    },
+    {
+      "case": {
+        "width": 320,
+        "fontScale": 2,
+        "language": "en",
+        "state": "stale"
+      },
+      "pages": 4,
+      "controls": 6,
+      "minimumObservedDp": 59.25925925925926
+    }
+  ]
+}

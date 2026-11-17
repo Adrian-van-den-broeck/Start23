@@ -1,0 +1,23 @@
+{
+  "batch": 6,
+  "pass": true,
+  "mobileTests": 551,
+  "testSuites": 62,
+  "nativeCases": 57,
+  "nativePngs": 212,
+  "nativeControls": 522,
+  "visualQualityGate": true,
+  "mappedFamily": [
+    "S039",
+    "S040",
+    "S091"
+  ],
+  "temporaryGalleryAndDeviceDataRemoved": true,
+  "checks": {
+    "jest": 0,
+    "typecheck": 0,
+    "unused": 0
+  },
+  "sourceScopeProtected": true,
+  "physicalDeviceOrReleaseApprovalClaimed": false
+}

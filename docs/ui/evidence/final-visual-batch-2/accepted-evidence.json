@@ -1,0 +1,1356 @@
+{
+  "runtime": ".worktrees/wombo-ui-v2-activities",
+  "branch": "feat/wombo-ui-v2-activities",
+  "baseHead": "19c23d58f0b71aea01478df2306e2492a515e36e",
+  "sourceSha256": {
+    "src/navigation/AuthenticatedLayout.test.tsx": "fa68fef6c87d2cc14429f6b1d657607e00858507d790d4199d75ab197bae35ca",
+    "src/navigation/TrainingLayout.tsx": "5475c79f4c754e9fb029e2f534c14bca34fb75f81a44fd55be4e871f36eb7d8e",
+    "src/screens/PlanningWorkoutMoveBoundary.test.tsx": "4d2e0a21a9d67c57df426059b5e03f6020051250b8ffe4819d7e5d06edf7b87d",
+    "src/ui-v2/primitives/Screen.tsx": "102764dd4338239e932b377da5fb81b4da9889050d96e9800573433a716fbdf3",
+    "src/ui-v2/screens/ActivitiesScreen.tsx": "174f77df45b00c043a5e9a912a8c071b22b542d335850610c67b443871a2ddf0",
+    "src/ui-v2/screens/CalendarScreen.tsx": "4d8038b333a2cf6561a227b0f3ed1d8509a8c08f16a87e8393b413b45dd53ddd",
+    "src/ui-v2/screens/WeekScreen.tsx": "7d9f2f69ef3f79f0fdc70d8e0f72e29b6de9d5493d4c2ba4f195709382d998b5",
+    "app/(authenticated)/_layout.tsx": "f5c31781c4a9026fcac7f3504b004570fe8187851e4677e9b04f15c57b7deb9d",
+    "src/ui-v2/components/AppHeader.tsx": "83badb629200cb89745e787366b1431dc0cbf88a580d218ceabcdf370ab73e95",
+    "src/ui-v2/components/BottomNavigation.tsx": "1fdb5599cc8293cace98b152240a998d06cc9a500934c5d68a061d1d96df3096",
+    "src/ui-v2/components/PendingRpeBanner.tsx": "4179d87ab591b2fd6ce5cb0ce6b2d7ccf8157c5b1ed012ccf00bfc521bab3eb3",
+    "src/ui-v2/components/Shell.test.tsx": "2ee87bf3086ae0dc3e40295d05865038ea86621ab742e88817a3e4e75fd3201d",
+    "src/ui-v2/components/ShellInsets.tsx": "c1a2d81ef81ea24b60b3ba3a858c5e07f769271e33c8d7140d04dd5f2bd42aeb"
+  },
+  "acceptedNativeCaptures": 114,
+  "artifacts": [
+    {
+      "path": "320-font-1-en-activities.png",
+      "sha256": "6c943b7a7773a083cfa5cf09e036504f71e36bdd2d46bd617422a610c9bbbdd7"
+    },
+    {
+      "path": "320-font-1-en-activities.json",
+      "sha256": "3b9646621a370ac0bf9463f1de54a98890854602f49b11a984079c6fe56534f3"
+    },
+    {
+      "path": "320-font-1-en-activities.xml",
+      "sha256": "8b488c0124dabb77aa5ef7706360d817f784f64295720099eef321a1cceb79ae"
+    },
+    {
+      "path": "320-font-1-en-calendar.png",
+      "sha256": "0b60f09e93ed2c01136accb8f91c710e9897af4d1f277d710804fce43f77238a"
+    },
+    {
+      "path": "320-font-1-en-calendar.json",
+      "sha256": "555fdeecaf5b1b7fe34bf543a50ffc101cac21eee5af3b0bfd2aacfaace21d89"
+    },
+    {
+      "path": "320-font-1-en-calendar.xml",
+      "sha256": "403988412fa39c359ea66c7151449fe345fb97e42af77192b8adefc45421b6da"
+    },
+    {
+      "path": "320-font-1-en-long-labels.png",
+      "sha256": "a84a666dbd6499ba534c2e0509a662f6747915b0d60e1ce5f557de5ebdf08c19"
+    },
+    {
+      "path": "320-font-1-en-long-labels.json",
+      "sha256": "3007cdcaaa17d28bd32153f984e97983f40ce50f1b1537422402801cd755bd1b"
+    },
+    {
+      "path": "320-font-1-en-long-labels.xml",
+      "sha256": "fbf1b8abd07092ebdf8bce6c1e6af7f2be95e3bcbe017c2335bb5185120e000a"
+    },
+    {
+      "path": "320-font-1-en-week.png",
+      "sha256": "ca632ff27723f415e34a0a83e0357febba345b65848f550097121e3a40ab3f95"
+    },
+    {
+      "path": "320-font-1-en-week.json",
+      "sha256": "a03eb872b150fc7724088b00b1853e969dce78177d9fa88e96041f6648643776"
+    },
+    {
+      "path": "320-font-1-en-week.xml",
+      "sha256": "8d4f860e098d0774d4014973dbd7864f5bfea9bab23557be71aa358617eefec8"
+    },
+    {
+      "path": "320-font-1-nl-activities.png",
+      "sha256": "b0586425cab4649a8634f3b7a23dea53350d2213570da3b2259beb803f266351"
+    },
+    {
+      "path": "320-font-1-nl-activities.json",
+      "sha256": "f0e49cfe1b4c5bea290ffc1e82a7632ba47f7f18007989cc1296a0f32af67cd8"
+    },
+    {
+      "path": "320-font-1-nl-activities.xml",
+      "sha256": "090d7014450f7364f43004d3c8cad4ebf07d370359c12d9eb323cfb2b206cccd"
+    },
+    {
+      "path": "320-font-1-nl-calendar.png",
+      "sha256": "4cb0855e5689a1e75017ebe5afdb5662f84ef212a541a33d9af654b0f2cfdc49"
+    },
+    {
+      "path": "320-font-1-nl-calendar.json",
+      "sha256": "e87881c8b336310459499954c2ea0671f1a7a368630edd63f3028013777365c4"
+    },
+    {
+      "path": "320-font-1-nl-calendar.xml",
+      "sha256": "d108cdae2d6bc7a5d17ceada3d9d8be2e05f9c0cff1ea0f105628e1dd9e58d1a"
+    },
+    {
+      "path": "320-font-1-nl-long-labels.png",
+      "sha256": "d9815e15dd48a065bf562e2a0b21b0071a2aa1625060b08c09de49969430add9"
+    },
+    {
+      "path": "320-font-1-nl-long-labels.json",
+      "sha256": "a14872eb3dc83b9bc6e1780d696fd99d7e0601963a1789a824f8e164eacc698c"
+    },
+    {
+      "path": "320-font-1-nl-long-labels.xml",
+      "sha256": "58d5cee95a61548a1c963a1662bb6b1d21f1ace04b1759ccc3cd3b771b4b29a9"
+    },
+    {
+      "path": "320-font-1-nl-week.png",
+      "sha256": "8b922d6a35209e0994f448a04436bb76a3b8d7bd9f8a28086403802a49fee729"
+    },
+    {
+      "path": "320-font-1-nl-week.json",
+      "sha256": "e43fa75795c32614cd30be737420d48ef8d6842df432929b1ab5f203b5464dbd"
+    },
+    {
+      "path": "320-font-1-nl-week.xml",
+      "sha256": "f9a923e4783d69e4ef2b37a361f2a338527d55d40d59acc3ea86e55cf415224b"
+    },
+    {
+      "path": "320-font-2-en-activities.png",
+      "sha256": "e5e19fc70814f85728ac8db05665803941c710c5af37554278f9b7ea1947eeed"
+    },
+    {
+      "path": "320-font-2-en-activities.json",
+      "sha256": "eb396805c25b17543f543fbc70f5a1fa052b75a936d1e2d21f25d0e8eaa7f68a"
+    },
+    {
+      "path": "320-font-2-en-activities.xml",
+      "sha256": "3765ec6c8d38f9e3f4470f09ddb6ab2dd4c4d99f9f0b5e4533a854299aefb679"
+    },
+    {
+      "path": "320-font-2-en-calendar.png",
+      "sha256": "64ef9000914df8438fda86c72a500b10a45969cf229e8213a32936b17291562a"
+    },
+    {
+      "path": "320-font-2-en-calendar.json",
+      "sha256": "c8ae663c2a0e869d9a84a34935f818b11466dd75329543a4d01985395492b869"
+    },
+    {
+      "path": "320-font-2-en-calendar.xml",
+      "sha256": "bca17735039018ea572dd9bfc8160a238b2e8639d3cfe0ff90de564c741f5e1b"
+    },
+    {
+      "path": "320-font-2-en-long-labels.png",
+      "sha256": "861e74e884c90514176175642c78d9b70d5634db08f1526c838f141bc59b42fe"
+    },
+    {
+      "path": "320-font-2-en-long-labels.json",
+      "sha256": "67051112e143efa4eba9a2003e8626a50a5169f058bab696b12ace98ceec0ca4"
+    },
+    {
+      "path": "320-font-2-en-long-labels.xml",
+      "sha256": "c35ea70d4a8c739706906f50977e622debee1b473a8beadfa1ad717d08c92cb1"
+    },
+    {
+      "path": "320-font-2-en-long-lower-1.png",
+      "sha256": "b77f242f54024dbc96bc950252226a46532e36c82c57013ca373d888b89ff2ec"
+    },
+    {
+      "path": "320-font-2-en-long-lower-1.json",
+      "sha256": "fa5319ed061e289090b11a63b7dc33eea651d9df46f94dbb3a81d6e151813092"
+    },
+    {
+      "path": "320-font-2-en-long-lower-1.xml",
+      "sha256": "df4876395cb883eed9f42635f32e03caabfe51fe802b28be2b8a9f4bf569c2ba"
+    },
+    {
+      "path": "320-font-2-en-long-lower-2.png",
+      "sha256": "6c69a81a8ce47f382bf2b1d8e16741245bb514bf8faabf85b1c8d1ecd9cfb4e4"
+    },
+    {
+      "path": "320-font-2-en-long-lower-2.json",
+      "sha256": "ccb232fa840a405496dc9bb27c0869a61b1abe6abb8f179d964a4424df3d3fe4"
+    },
+    {
+      "path": "320-font-2-en-long-lower-2.xml",
+      "sha256": "7aa24ecac6474bfb96aa42bc246e9236312183d1010e9e4f067709aa524ce24f"
+    },
+    {
+      "path": "320-font-2-en-week.png",
+      "sha256": "89ca1f77cc0f731a3cda170e1bab5f859d0de1c51e8ae3579f07a45dedca44fe"
+    },
+    {
+      "path": "320-font-2-en-week.json",
+      "sha256": "f3e5f4b5a8ff1fd443d948cb192c6f7ed2e5d17fd50815a88da47c4bc9b42d04"
+    },
+    {
+      "path": "320-font-2-en-week.xml",
+      "sha256": "e0c371ea8cc54bf64b0ecf1d7b04aec4e698df9fc13122d4eb6a0438dd63f187"
+    },
+    {
+      "path": "320-font-2-nl-activities.png",
+      "sha256": "7a3ab170a4f8233991e2899154661c5253b0cd4b65992d6a5a56b3ae5c3be915"
+    },
+    {
+      "path": "320-font-2-nl-activities.json",
+      "sha256": "692ee54429cd474f6ce52408ca4a8b3a0f08cedba5b173f0d2604f5164e36d95"
+    },
+    {
+      "path": "320-font-2-nl-activities.xml",
+      "sha256": "6fd9188b5affb2c1a610009523ed21ab4e1d30df2f5319ffdc9a50ae711ce008"
+    },
+    {
+      "path": "320-font-2-nl-calendar.png",
+      "sha256": "38c94a82766a644006a8fd48fc7aaeba118e6cd193f5df0758473b70a4cf69c3"
+    },
+    {
+      "path": "320-font-2-nl-calendar.json",
+      "sha256": "338cdceb9e5a8b16ae7db228a3cb40aa2cf81cd3915b3ead8c6a612990e5a17b"
+    },
+    {
+      "path": "320-font-2-nl-calendar.xml",
+      "sha256": "99c47b7f0e7894cf8dc208732fcd407496b5fcf99cb6c8ad6aedaa1ad0741e44"
+    },
+    {
+      "path": "320-font-2-nl-long-labels.png",
+      "sha256": "4a7a991652d472290746902c4874abe1c0c717a237d4833f86fc7840a33d2f6c"
+    },
+    {
+      "path": "320-font-2-nl-long-labels.json",
+      "sha256": "6dce032218a022b5cbc5e9f8e14e0811d9abd0f826bcb77dce2681558695a70d"
+    },
+    {
+      "path": "320-font-2-nl-long-labels.xml",
+      "sha256": "484eb02c069720159895f38daeff986391693ef7a4e331416e8add976bc183d5"
+    },
+    {
+      "path": "320-font-2-nl-long-lower-1.png",
+      "sha256": "69b47861f3485f5cfa4749090346afb141a76ed090f7a9397ecc38e589f1d65f"
+    },
+    {
+      "path": "320-font-2-nl-long-lower-1.json",
+      "sha256": "44664cd0755ad0157be4a8df0cd6a7ebf52e3ef97fb7a41306e95907059655c3"
+    },
+    {
+      "path": "320-font-2-nl-long-lower-1.xml",
+      "sha256": "4a549e719e7461d2c89c58ef4c178b5099fcebda4d2e071300614b18b3f0c6d9"
+    },
+    {
+      "path": "320-font-2-nl-long-lower-2.png",
+      "sha256": "b7e9656984f7fc7759e8b1d99263c2b2363703a8cc3a9bd840a687332c4b86d8"
+    },
+    {
+      "path": "320-font-2-nl-long-lower-2.json",
+      "sha256": "9a2dda1db77b913f530cfab132efabdb0a1b0ae07e236ec92224f2fab70ca88c"
+    },
+    {
+      "path": "320-font-2-nl-long-lower-2.xml",
+      "sha256": "d8faadc827a21ca19f6f29661f8d7a52c6092c8d38e3d167866f0c5d3b5f8c25"
+    },
+    {
+      "path": "320-font-2-nl-week.png",
+      "sha256": "e1a257e406f275aaf1277548243daa2b69ad769b73fda628345550abb0dcd086"
+    },
+    {
+      "path": "320-font-2-nl-week.json",
+      "sha256": "3b68b764f6eb239136d626e326514fe1073e3393282f04197802d338a8f35760"
+    },
+    {
+      "path": "320-font-2-nl-week.xml",
+      "sha256": "dae23802a4a9f9a04309c45a5406325b3cf804f6a9bd60ac26b2b7b37d2fefda"
+    },
+    {
+      "path": "360-font-1-en-activities.png",
+      "sha256": "9781715fbacef6b674f30a07ea2f68c4b0df5c3391d26807e861139a8b48df24"
+    },
+    {
+      "path": "360-font-1-en-activities.json",
+      "sha256": "082e0a14d0402c9c85ebe5bd68a81315835c307fdb935e40bf7a78f2155771b7"
+    },
+    {
+      "path": "360-font-1-en-activities.xml",
+      "sha256": "0d2ad1d957f6908760acd78c11980096d90caf4e2a2e9511a54162705f0f6ca5"
+    },
+    {
+      "path": "360-font-1-en-calendar.png",
+      "sha256": "3cebd653129087d7c47ad979d5325cc23fa51601ed8a5d2a149fadf7e65026ee"
+    },
+    {
+      "path": "360-font-1-en-calendar.json",
+      "sha256": "33baabe4dd140bada6c198942dcb77904294e3defc423dd6a43bd7475e0a3b90"
+    },
+    {
+      "path": "360-font-1-en-calendar.xml",
+      "sha256": "9d3bca13d5a5f2254af84941ac10908034f6591e1d302ad903976b81bb6f73b5"
+    },
+    {
+      "path": "360-font-1-en-long-labels.png",
+      "sha256": "228467852c88a313993aecaee698f65715e6272f0d1e751b6165ad2e06474a02"
+    },
+    {
+      "path": "360-font-1-en-long-labels.json",
+      "sha256": "15bd6fa9924f9db1b9314d1cd4d013eebc437d70c97bcddb0c9f6f3a8fe7d0ae"
+    },
+    {
+      "path": "360-font-1-en-long-labels.xml",
+      "sha256": "9fa83d495f39a34f443f0e3778e83edab3efaabf1efb69f407991b52ef52258a"
+    },
+    {
+      "path": "360-font-1-en-week.png",
+      "sha256": "b715f17d1d98f159a69fc6e546b2c700a1a67b2f883607adc5464c88d479c233"
+    },
+    {
+      "path": "360-font-1-en-week.json",
+      "sha256": "05c066ce525c029c6d83718f4b4e0d3a96305f8eaaf65cecf12ae1f7bd17d9a0"
+    },
+    {
+      "path": "360-font-1-en-week.xml",
+      "sha256": "f8cdcbba9a2b656c30779b7ae429b5df418b26a14b8e557163b500f11ae8dd72"
+    },
+    {
+      "path": "360-font-1-nl-activities.png",
+      "sha256": "f132795b0bc2b652631f06c0df09b5a1dc13875369fb1cbc2cadd239b8bd29f8"
+    },
+    {
+      "path": "360-font-1-nl-activities.json",
+      "sha256": "2c61b4a05f33a4d168b92ecc27747857143c4efbf3e6a76a47a128a94556115b"
+    },
+    {
+      "path": "360-font-1-nl-activities.xml",
+      "sha256": "c4a39af5cc75c6d7425aab00dde504cda0b1587caefeec98239c626ed80af0b6"
+    },
+    {
+      "path": "360-font-1-nl-calendar.png",
+      "sha256": "ebcf3b98b21ebe29f171fa04befcf9095f92fb04919a00d5f61b7c3a9f1617b3"
+    },
+    {
+      "path": "360-font-1-nl-calendar.json",
+      "sha256": "5c7266056b21d48bc048a4d007641be7619dd047987c182ededb808d979b7207"
+    },
+    {
+      "path": "360-font-1-nl-calendar.xml",
+      "sha256": "004435e34d9d9597b0dcbfc31fd4b3661f55b85dff06dfb9d682cfccb167a712"
+    },
+    {
+      "path": "360-font-1-nl-long-labels.png",
+      "sha256": "5d13e33f6cb75a053f6f598165e5b24c6defdad2f558808a595a56a888c4dc3d"
+    },
+    {
+      "path": "360-font-1-nl-long-labels.json",
+      "sha256": "64192fdb5195570b3ec4b668f00c8eff15e3548a21d08506c101da9b0cb6dac5"
+    },
+    {
+      "path": "360-font-1-nl-long-labels.xml",
+      "sha256": "1e002d578bc5c86b5aff109f21643e2974d2b817576373af9d6e29fea839eeed"
+    },
+    {
+      "path": "360-font-1-nl-week.png",
+      "sha256": "2f69f0a893affaf4095f66778363e91be8d08b28df798eb9dc7e34df947df94d"
+    },
+    {
+      "path": "360-font-1-nl-week.json",
+      "sha256": "37cb46a4645999f7637ea6f56a509c74796c18565d14953fb878b9e41c728af4"
+    },
+    {
+      "path": "360-font-1-nl-week.xml",
+      "sha256": "c48671397f7bfa303dded029a374204a170fff66030e6b47d0287332254a43e0"
+    },
+    {
+      "path": "360-font-2-en-activities.png",
+      "sha256": "1526597924bb32d8b39397c3718a8ccaa18f2c189abcb6e9f1dc39988ed1ffb9"
+    },
+    {
+      "path": "360-font-2-en-activities.json",
+      "sha256": "320b9d6598e0a4a30d4da65742af21b44190f685ef57881577191e0b0e18f745"
+    },
+    {
+      "path": "360-font-2-en-activities.xml",
+      "sha256": "7edc924db34090478ced892bdcd0b64f70dbeba86bbb0da912f998bb3a49aadd"
+    },
+    {
+      "path": "360-font-2-en-calendar.png",
+      "sha256": "eb78643f497d5396caf1e048806148c9931a5cf7b1c531797ed5f714df83e065"
+    },
+    {
+      "path": "360-font-2-en-calendar.json",
+      "sha256": "827836033ea90fc64a0343d3c613773478b7e2a7d6983922f423c46b580da84c"
+    },
+    {
+      "path": "360-font-2-en-calendar.xml",
+      "sha256": "dbecc0bc926f963b0d79160a8f1afcb844fa475690b513967b6b70bc915fdf6a"
+    },
+    {
+      "path": "360-font-2-en-long-labels.png",
+      "sha256": "d60ebb102dbe8693f6be6d046276396efb75e7d10083d7c2ab396ebf03b7ef65"
+    },
+    {
+      "path": "360-font-2-en-long-labels.json",
+      "sha256": "6be6ad0dfb7eba2c3e12245430c727afb8f103a73db127e419b283b231a082b1"
+    },
+    {
+      "path": "360-font-2-en-long-labels.xml",
+      "sha256": "caf8a196f9c84ad81cb1f40550a1f46ffa7e72dd133ceb9e41252ce1f1527385"
+    },
+    {
+      "path": "360-font-2-en-long-lower-1.png",
+      "sha256": "c303eed7d24cfe420c2d5dcff985febced5bc16a1f8434788159085bb257d7b6"
+    },
+    {
+      "path": "360-font-2-en-long-lower-1.json",
+      "sha256": "88fc8dca1067616e7c90e8649d7430c5d722695bb0655a06e4ffb33be647fd72"
+    },
+    {
+      "path": "360-font-2-en-long-lower-1.xml",
+      "sha256": "2b4cadea87b834bb73d5a46ef5f3c6852198db013a1a19b4c6c39210cd47333c"
+    },
+    {
+      "path": "360-font-2-en-long-lower-2.png",
+      "sha256": "468ea4d83a4de580d249f87da335a0c23ecd513e0f88d5b752278196a361e1e0"
+    },
+    {
+      "path": "360-font-2-en-long-lower-2.json",
+      "sha256": "1e191e9f2ed8700b628d47db8a4ff183f49823d011235ecc7be6154196ed4a3b"
+    },
+    {
+      "path": "360-font-2-en-long-lower-2.xml",
+      "sha256": "2b4cadea87b834bb73d5a46ef5f3c6852198db013a1a19b4c6c39210cd47333c"
+    },
+    {
+      "path": "360-font-2-en-week.png",
+      "sha256": "d4dcb6a70ecbbcdef75a8ce6bce6e64591aad64b6e2a668dfde9e9b3ce5e3e99"
+    },
+    {
+      "path": "360-font-2-en-week.json",
+      "sha256": "8623ce9d3702e172639cdcf5715394a7abf0b2c5d3d769084e3a7be2f5ae47a9"
+    },
+    {
+      "path": "360-font-2-en-week.xml",
+      "sha256": "90810973c0c70e11402a8f5436d92144d5ad1845f0c61e4d27da0c201f055033"
+    },
+    {
+      "path": "360-font-2-nl-activities.png",
+      "sha256": "0f0fa498f7409a101460f483418fc423576d1de78001d78569748e9cfebd8f82"
+    },
+    {
+      "path": "360-font-2-nl-activities.json",
+      "sha256": "d516f39b02f962ab0e60a029a72bc2c517e70f8548349e89140543f748f4958b"
+    },
+    {
+      "path": "360-font-2-nl-activities.xml",
+      "sha256": "e278099c9ab75a9f03374165b8236ee86b9c86133e903a34f2af4e85857ba68b"
+    },
+    {
+      "path": "360-font-2-nl-calendar.png",
+      "sha256": "0310b5e4fb0d62ee6bbe988723d30efff854558f986b69ead8e6ca918eeec108"
+    },
+    {
+      "path": "360-font-2-nl-calendar.json",
+      "sha256": "7eae5bd5c4c5b5b0b898ba93e5fffa9e3895e2316651e2c087d5b0e25e6f9f92"
+    },
+    {
+      "path": "360-font-2-nl-calendar.xml",
+      "sha256": "2c6d1da2d33ef07d3907f16f784fcb660c1bccf4052bc787cfd253d30e5a6cde"
+    },
+    {
+      "path": "360-font-2-nl-long-labels.png",
+      "sha256": "883f9b4e261725fee1241523a9d27aafb675689a42c95218d272862aebc6f18f"
+    },
+    {
+      "path": "360-font-2-nl-long-labels.json",
+      "sha256": "53eb8e4f8f512c9121515149eea78fadf960c202e58033424977f614627c300f"
+    },
+    {
+      "path": "360-font-2-nl-long-labels.xml",
+      "sha256": "2c3f5396c411bf93c028bad3abf03ab12a8e2192ad24d31245a63f097f66435c"
+    },
+    {
+      "path": "360-font-2-nl-long-lower-1.png",
+      "sha256": "87021ec5e41da785f0ce336805ffeba8d8ccc17d877d474cc53ef6b1e8efc1b7"
+    },
+    {
+      "path": "360-font-2-nl-long-lower-1.json",
+      "sha256": "c41f362c9a26101379a6115d1d0817b35554137f7ceeafba88106a56a64ab0e6"
+    },
+    {
+      "path": "360-font-2-nl-long-lower-1.xml",
+      "sha256": "2ac1bd737baf88802255dc3901caa7b49275d3e3c74fbec90419e51ad03622bc"
+    },
+    {
+      "path": "360-font-2-nl-long-lower-2.png",
+      "sha256": "78328853d4974199c69f8b8700112820ec021e11c1cee6443e4a35a499101f65"
+    },
+    {
+      "path": "360-font-2-nl-long-lower-2.json",
+      "sha256": "3005a3e56757c1176ff9059d5d0b843b8c798c2e6f79fca0a23b155366186f3d"
+    },
+    {
+      "path": "360-font-2-nl-long-lower-2.xml",
+      "sha256": "9cbf5254f3b4d57987bc82376a6c08d91596ef4c4b4a8aef75f98b2881e81831"
+    },
+    {
+      "path": "360-font-2-nl-week.png",
+      "sha256": "680794a9fee4f6ad8326cdc73fa09456d5b1f1aa61edda2b0d52818d3ee0228f"
+    },
+    {
+      "path": "360-font-2-nl-week.json",
+      "sha256": "e733c92be3c72711d21a5e06b86cc8ede707ee837004fc8e861ca2359c4189fa"
+    },
+    {
+      "path": "360-font-2-nl-week.xml",
+      "sha256": "c475b0c439c9188d2f4b5d5517b8cd041de5f16707f404d50ddd597cb5c34263"
+    },
+    {
+      "path": "393-font-1-en-activities.png",
+      "sha256": "44703dd83ace4bf5d75267b7ed68da89c969e6e728cf6454db071f12e1c527e0"
+    },
+    {
+      "path": "393-font-1-en-activities.json",
+      "sha256": "5cfb7f42f3d92f16e515c7400418a538849569f9f66442d0252963597f6a3bb0"
+    },
+    {
+      "path": "393-font-1-en-activities.xml",
+      "sha256": "a66e176efbac7c11720e8102a2431ebd633786405752bd52233d8d6584329f5d"
+    },
+    {
+      "path": "393-font-1-en-calendar.png",
+      "sha256": "7b1b47d7a454afd91b4b6d6b1893f871103f7f9e3c86600c7374de66559a932e"
+    },
+    {
+      "path": "393-font-1-en-calendar.json",
+      "sha256": "1fba30d0d358f4d03e797b1d19f35fbe3530fec8cbe1fd357df9b658c42a0370"
+    },
+    {
+      "path": "393-font-1-en-calendar.xml",
+      "sha256": "d31ed588571125701bcdf24b10b7a6d018c2a03f2b637452d640f2692bab931f"
+    },
+    {
+      "path": "393-font-1-en-long-labels.png",
+      "sha256": "210fe45e86919f2e928d45eda2864a94b94d693ee99725ff02bdb0a74a42f7b4"
+    },
+    {
+      "path": "393-font-1-en-long-labels.json",
+      "sha256": "07b99732465ced2d77b34b3168a8c6843b5c27359c8373791ecfbcc8f5bd7043"
+    },
+    {
+      "path": "393-font-1-en-long-labels.xml",
+      "sha256": "c1774422aa3ad8ad79cce1071c88448e18ec976240eaf485da056d51cb060e0e"
+    },
+    {
+      "path": "393-font-1-en-week.png",
+      "sha256": "956c04c8bd3b70806c4004d3717225b7dc7b03b1e457778edf23e9f4ddffbb61"
+    },
+    {
+      "path": "393-font-1-en-week.json",
+      "sha256": "82fc89e6b582c436b020a7891da883267775cd928384f9dc9758d83fe908a57a"
+    },
+    {
+      "path": "393-font-1-en-week.xml",
+      "sha256": "ff382087588f1a225f98d7183fec1327023de2767d343ccc4f54bbb87d83364b"
+    },
+    {
+      "path": "393-font-1-nl-activities.png",
+      "sha256": "e0741cf74950f527b12d39698b2a8187a5db7aa3d84da7945c94f59aa1b31569"
+    },
+    {
+      "path": "393-font-1-nl-activities.json",
+      "sha256": "299f92e8d6f1285da449106e0fd84bc719418d325fe60d450b78c6cf3e8218c3"
+    },
+    {
+      "path": "393-font-1-nl-activities.xml",
+      "sha256": "9b9db9aa990cd5cd63955a4e8b4ecf6ff5c4fab3111df520801293604ed35cdf"
+    },
+    {
+      "path": "393-font-1-nl-calendar.png",
+      "sha256": "897c64c15b8d28c8cb6f6cd36617147c209134cb783d6f150b2be871f3ef6071"
+    },
+    {
+      "path": "393-font-1-nl-calendar.json",
+      "sha256": "174b6d8045d160bfc4c31a51144ad4b9416ecae5c2654b7fe46116ec370b6029"
+    },
+    {
+      "path": "393-font-1-nl-calendar.xml",
+      "sha256": "5fbb0f1c27d1cdc34d128019db367f2c9260b38c2c38e70909ccd41f359a64bc"
+    },
+    {
+      "path": "393-font-1-nl-long-labels.png",
+      "sha256": "a32376018480dd1c9270a7fe10641f299d17ec5e1de9dac3159e6acbf64b2ce8"
+    },
+    {
+      "path": "393-font-1-nl-long-labels.json",
+      "sha256": "4839a159a17566bcc1e94da2cdd34ba889c1715013ac662be138c5075e2ea107"
+    },
+    {
+      "path": "393-font-1-nl-long-labels.xml",
+      "sha256": "aa5eb5fc2f782f1ce5491df37f802f0f734824ca6e2c081f3d76be0d5990be78"
+    },
+    {
+      "path": "393-font-1-nl-week.png",
+      "sha256": "694d372bcdfae3513e20fb68728d28937b297100aaac2ee5cf417ad55c1aa914"
+    },
+    {
+      "path": "393-font-1-nl-week.json",
+      "sha256": "986e7daf23616b9fcfa9b3836aa9de7503fb6b129452fe5c458c32c81925c801"
+    },
+    {
+      "path": "393-font-1-nl-week.xml",
+      "sha256": "4089cbbffab07762988c6f8c7a6fb97bd7a263e4ae0b3efb2610350f6457a253"
+    },
+    {
+      "path": "393-font-2-en-activities.png",
+      "sha256": "c694183f470bd4faa1a869a62475a41f973f6f044055d526d71ebf063db902a5"
+    },
+    {
+      "path": "393-font-2-en-activities.json",
+      "sha256": "e619e825dbb4b6375aadef6f9b94334b3656518f6d239e78167c76c627b2312a"
+    },
+    {
+      "path": "393-font-2-en-activities.xml",
+      "sha256": "1f195498fbdc8d74cf75d1182fe7e7611ed455f35079c70a93a3b9d251ce4bce"
+    },
+    {
+      "path": "393-font-2-en-calendar.png",
+      "sha256": "8f176eee8bcccf9508bea4b44791cde9f41d14827659f06f5ac49a90cdee0333"
+    },
+    {
+      "path": "393-font-2-en-calendar.json",
+      "sha256": "b1883512a54d5b58d97fcb7cc5e5881d9dacc03a3b0a20c70904f3157d569aaf"
+    },
+    {
+      "path": "393-font-2-en-calendar.xml",
+      "sha256": "1ae618596ee1f1c62cd3a5d7b61c02d60dd69692d20aec765a26548553051396"
+    },
+    {
+      "path": "393-font-2-en-long-labels.png",
+      "sha256": "40aee574e111fab0c64539c6a404d20e099071973e2d68011e60d457b5b0024b"
+    },
+    {
+      "path": "393-font-2-en-long-labels.json",
+      "sha256": "90435dadc0cba70300f99bb873148b085c2444b30b47b923a5ece2d8802fb97e"
+    },
+    {
+      "path": "393-font-2-en-long-labels.xml",
+      "sha256": "0216f15d7e2ac3246b572a1be25902cac6c1f7b55fa77c03aae8afe22d2d9772"
+    },
+    {
+      "path": "393-font-2-en-long-lower-1.png",
+      "sha256": "7ef1d1154dcafea1214a0b52e4ea88f924dd713c9c498cdf841c8fd48b2e9398"
+    },
+    {
+      "path": "393-font-2-en-long-lower-1.json",
+      "sha256": "b098def8700e19edd083894ea458a56f13a545e0a59231851e43df4782ac1b7d"
+    },
+    {
+      "path": "393-font-2-en-long-lower-1.xml",
+      "sha256": "a83318d15476d62480da07c99afd075637875978edd0357d2f37c3632d0c3ec0"
+    },
+    {
+      "path": "393-font-2-en-long-lower-2.png",
+      "sha256": "7ef1d1154dcafea1214a0b52e4ea88f924dd713c9c498cdf841c8fd48b2e9398"
+    },
+    {
+      "path": "393-font-2-en-long-lower-2.json",
+      "sha256": "86856a9be0973d682634b0e21e221d67467b42fd2b4091ad8da2cc2d2a0f3366"
+    },
+    {
+      "path": "393-font-2-en-long-lower-2.xml",
+      "sha256": "a83318d15476d62480da07c99afd075637875978edd0357d2f37c3632d0c3ec0"
+    },
+    {
+      "path": "393-font-2-en-week.png",
+      "sha256": "a1b85e991d4b0dc100d80bd5d4a7a76fc0f723571e311db17d25ee4e89d2df36"
+    },
+    {
+      "path": "393-font-2-en-week.json",
+      "sha256": "40fb92623df1fa2b4dca96ebf210888982b933b7b65720e0bfa87f2dd036ecb9"
+    },
+    {
+      "path": "393-font-2-en-week.xml",
+      "sha256": "d61daaa50471741d1479eef78d37102387acf1c3ee7c466768146f5e729dbc87"
+    },
+    {
+      "path": "393-font-2-nl-activities.png",
+      "sha256": "5c38dff69c226e70b7fe95c757d3a9b2b5a2f87ba41c902519cf612309de12d0"
+    },
+    {
+      "path": "393-font-2-nl-activities.json",
+      "sha256": "066c2934dd08d4bc8b7ae808eb94720376c12a54ae0c9c0d76b43c4c308d5dcb"
+    },
+    {
+      "path": "393-font-2-nl-activities.xml",
+      "sha256": "755c98beb07537764e65c398882ca1fde674a2170b7d6d0b71cac859118ca7ea"
+    },
+    {
+      "path": "393-font-2-nl-calendar.png",
+      "sha256": "7d178e8503e20631d4f6c40c657ddf08c93b0dfc8241d7e865655042e2adba9a"
+    },
+    {
+      "path": "393-font-2-nl-calendar.json",
+      "sha256": "1f897d2c60450a04593a6906170a77949feef6287b9beea67073b40c4632e3c1"
+    },
+    {
+      "path": "393-font-2-nl-calendar.xml",
+      "sha256": "5b9a68570a2bad46c7179aec3ca9afc20663271c25dfaccf4fa9f675d0b9e6c7"
+    },
+    {
+      "path": "393-font-2-nl-long-labels.png",
+      "sha256": "b1456000d0137b774e99cc565f5ca06ef454c4c7f210c8fc087c536150f9252a"
+    },
+    {
+      "path": "393-font-2-nl-long-labels.json",
+      "sha256": "82083962aa9dbe52afdd494d928d3ae6a3075a21d67f6c47c7254fc3a4489b3f"
+    },
+    {
+      "path": "393-font-2-nl-long-labels.xml",
+      "sha256": "78d9cd2a4c7e7067356bead799b44561d07531b41c5b3c2f962ca6e4b6d37835"
+    },
+    {
+      "path": "393-font-2-nl-long-lower-1.png",
+      "sha256": "65a02f49e0735647d3070cd9b0fea3032d1213f8136266963bb28a91c655cfc8"
+    },
+    {
+      "path": "393-font-2-nl-long-lower-1.json",
+      "sha256": "70cc71de700aecc8ea628df3929f5c5c4fc7bff73165c1f550940a92a2294ed5"
+    },
+    {
+      "path": "393-font-2-nl-long-lower-1.xml",
+      "sha256": "b756f1f9a4cd637ceff5a9afeaaf94682a1b021af8ff0b3a00a9655f20845827"
+    },
+    {
+      "path": "393-font-2-nl-long-lower-2.png",
+      "sha256": "1157d1eaa75e223562f5a518377b5ec81e1a356a2bb43cc3b7da2a66d75543a1"
+    },
+    {
+      "path": "393-font-2-nl-long-lower-2.json",
+      "sha256": "75c6538ce61391002b641d4c799df5a257b60f17b3e19f721c85fba009536550"
+    },
+    {
+      "path": "393-font-2-nl-long-lower-2.xml",
+      "sha256": "f90f97c5f27fa88f3fa09042c47ec71a10b336f068e9577250588acbadc529f9"
+    },
+    {
+      "path": "393-font-2-nl-week.png",
+      "sha256": "0fcf4a5007f8143ade9537758ae73590bc71ab8beb80894ea6891dc610a3e2f5"
+    },
+    {
+      "path": "393-font-2-nl-week.json",
+      "sha256": "327c9e3cb5329972be0a7c5630db8c344f2b3751cdcd560b4ed8f60fb2195af1"
+    },
+    {
+      "path": "393-font-2-nl-week.xml",
+      "sha256": "89d871c6fc11baa06bd341cb9ff87b070ba9db74bb8465f8b7d0873ca7d6f4ed"
+    },
+    {
+      "path": "412-font-1-en-activities.png",
+      "sha256": "18a81416d942e63d67e6600df714637de5c25398c4fabf3420338f35b0036a9f"
+    },
+    {
+      "path": "412-font-1-en-activities.json",
+      "sha256": "f1afb43d0ebe1fc51af15b10328b6fe4488922b1c69d86afc441375cd8f0e42d"
+    },
+    {
+      "path": "412-font-1-en-activities.xml",
+      "sha256": "b593d11c12da8050bccea6b316b3bea982cdf16a02b5adc62431d6cc0ae27fed"
+    },
+    {
+      "path": "412-font-1-en-calendar.png",
+      "sha256": "e8343f3f134696bbfe7edcc72257840d6a83015480502dc8c21b5d44c4e9b2da"
+    },
+    {
+      "path": "412-font-1-en-calendar.json",
+      "sha256": "e98f4b5851d813f1fd699149e29068391d1174271732fc43d76a798f67559a77"
+    },
+    {
+      "path": "412-font-1-en-calendar.xml",
+      "sha256": "8851e321c04e670957399c07f9aa021a235ef5386a325c3ea7ba16af1623d46f"
+    },
+    {
+      "path": "412-font-1-en-long-labels.png",
+      "sha256": "12d829b52a1b127d6aae5962a3a131adfa8a476eb7a8b7716bcd9862b1a4981e"
+    },
+    {
+      "path": "412-font-1-en-long-labels.json",
+      "sha256": "7905af6d1c95e32c583a14fdee695929ffc5677a75dc3abf26a085b8f791c29b"
+    },
+    {
+      "path": "412-font-1-en-long-labels.xml",
+      "sha256": "e937d6d4a668a68bc582a8cf425f9a287d8b4cca1c2b55f12499755bcf7e34a0"
+    },
+    {
+      "path": "412-font-1-en-week.png",
+      "sha256": "34229930555ffaea69525fdc2a0b289a55432be6e641d8a7560f2c7636ce78e1"
+    },
+    {
+      "path": "412-font-1-en-week.json",
+      "sha256": "6038a6b32ad19c4f43542cdadfbf4d920ea1cf0d0ac2e753709387313398a47b"
+    },
+    {
+      "path": "412-font-1-en-week.xml",
+      "sha256": "ff379fd4d591744a5ee1a212ad9b7fc5e59f4caf0719b7624b9f925cd109abc3"
+    },
+    {
+      "path": "412-font-1-nl-activities.png",
+      "sha256": "546ff6d2becfc755d92eef4531d7d7f3a8da313b2feaad7ee294e63419fb64e7"
+    },
+    {
+      "path": "412-font-1-nl-activities.json",
+      "sha256": "9ea2c00f5ccdfd95c572df1c3145e0c4e693a77fffd1a7df5bea0d344d039bf1"
+    },
+    {
+      "path": "412-font-1-nl-activities.xml",
+      "sha256": "89a0c0009c45029920f8ad1f6ae4a7722daf959b35f4b28327b31a4d1d88b09d"
+    },
+    {
+      "path": "412-font-1-nl-calendar.png",
+      "sha256": "a449ff5c49cc67c12018735b7004faab2f4efb96ee55cdcc75b5b1f0e77d7ee4"
+    },
+    {
+      "path": "412-font-1-nl-calendar.json",
+      "sha256": "c8c6f408ab451528d4172cb7e5a33f5d21b9ef04f846487f9ba9e4c4b2b583e4"
+    },
+    {
+      "path": "412-font-1-nl-calendar.xml",
+      "sha256": "e65da6223cc22d6a47967406fb1ead0ddd4465334a63506293bb2acd1322df9f"
+    },
+    {
+      "path": "412-font-1-nl-long-labels.png",
+      "sha256": "7c99761ae94c9cb8c117d0d50b2e50506929893e61b2923b0aa6d0ebd52de709"
+    },
+    {
+      "path": "412-font-1-nl-long-labels.json",
+      "sha256": "b2ea4a316aa0591dcafbfcc13e4a9d13e4775183621387aaae033f902b3f7375"
+    },
+    {
+      "path": "412-font-1-nl-long-labels.xml",
+      "sha256": "79890678af5b5c9ad8fd119b62d73b269953bc4a130a5fb88b4f1cb747f99023"
+    },
+    {
+      "path": "412-font-1-nl-week.png",
+      "sha256": "9964d109bea48cc6d0969212ea6442f53547359fd5564d3ee3a8565320c33dbd"
+    },
+    {
+      "path": "412-font-1-nl-week.json",
+      "sha256": "47cc2c7e0663b4b5ae602368ef594ecd7d52b14785cb61530353c8f515f5b388"
+    },
+    {
+      "path": "412-font-1-nl-week.xml",
+      "sha256": "e6e8d318d93f8f013bdb86fb9cdac5828abef6cb8089264e87e1317c29b24516"
+    },
+    {
+      "path": "412-font-2-en-activities.png",
+      "sha256": "5bb08576441f0d9d28b312a40b4fe84d432438cf9143c561c7c0ddc604eb64c8"
+    },
+    {
+      "path": "412-font-2-en-activities.json",
+      "sha256": "48b5739d094f3ab0f46d59d19f765f55ba6fb65c64363a2bd5bd6ed0607748f2"
+    },
+    {
+      "path": "412-font-2-en-activities.xml",
+      "sha256": "9be448312767f8bb981ec9b1df1ce45a23fb04bde4a99dc37be21953c122eec3"
+    },
+    {
+      "path": "412-font-2-en-calendar.png",
+      "sha256": "9885e1c1e9571d21f3d2715ba303442868553ba6aa5d30795b0660caa1b41848"
+    },
+    {
+      "path": "412-font-2-en-calendar.json",
+      "sha256": "23c037d8297488af842ba10aba9247f585eabbb1c3ab6f5d4c9b9f86ee6753e8"
+    },
+    {
+      "path": "412-font-2-en-calendar.xml",
+      "sha256": "c8f1f25e84f1437fed2f5afedd733d81fd6c95da8b9170f206a018746d40560a"
+    },
+    {
+      "path": "412-font-2-en-long-labels.png",
+      "sha256": "cc87c9ed3e0d83846ee53c7684555f90987fe1c6d808ff1f1b563e6928560967"
+    },
+    {
+      "path": "412-font-2-en-long-labels.json",
+      "sha256": "de86feec34d3565a7f5bbdddd7d32e8cab1ee3c48ca8e577f7a18ea9313bbe8e"
+    },
+    {
+      "path": "412-font-2-en-long-labels.xml",
+      "sha256": "80d1e9078a224f37e5db133a8cf95bd31e402544b5e505767aa35a762b5a412b"
+    },
+    {
+      "path": "412-font-2-en-long-lower-1.png",
+      "sha256": "e924bd892b1eb95e854108be457eb93c6b5898e027d8258582f530003ad2109e"
+    },
+    {
+      "path": "412-font-2-en-long-lower-1.json",
+      "sha256": "1ab784373e5800ee16e6ac1dd8cf4520971d6c8b78a76aad877f2171f8b4dab9"
+    },
+    {
+      "path": "412-font-2-en-long-lower-1.xml",
+      "sha256": "80d1e9078a224f37e5db133a8cf95bd31e402544b5e505767aa35a762b5a412b"
+    },
+    {
+      "path": "412-font-2-en-long-lower-2.png",
+      "sha256": "e924bd892b1eb95e854108be457eb93c6b5898e027d8258582f530003ad2109e"
+    },
+    {
+      "path": "412-font-2-en-long-lower-2.json",
+      "sha256": "776b8e5c130bcd340316b09c0627c0abbbe0292654afc13a7965f20159d34a0d"
+    },
+    {
+      "path": "412-font-2-en-long-lower-2.xml",
+      "sha256": "80d1e9078a224f37e5db133a8cf95bd31e402544b5e505767aa35a762b5a412b"
+    },
+    {
+      "path": "412-font-2-en-week.png",
+      "sha256": "c107086cd2a82372fc8e011a206baf5f153d14d5e50a9b9ac545d9896483e611"
+    },
+    {
+      "path": "412-font-2-en-week.json",
+      "sha256": "af5f834769926b71a47e13e4641c3b1aa2a2094477712989fc128e66efccbe45"
+    },
+    {
+      "path": "412-font-2-en-week.xml",
+      "sha256": "1ed393953b9dc4a769dc8b91e15ba5dff4324843183ab4b5bdad1dc39f4774b3"
+    },
+    {
+      "path": "412-font-2-nl-activities.png",
+      "sha256": "e63a6b1038b1c5eeb162b86e9540478ee8f357f6e053ed31b477429c8dc9dbbb"
+    },
+    {
+      "path": "412-font-2-nl-activities.json",
+      "sha256": "e3340f06edbbd17481ff430c3f929c506f20d2ba28c488ca5f51111a48660e93"
+    },
+    {
+      "path": "412-font-2-nl-activities.xml",
+      "sha256": "3470dd22c8d94543512ccefca324869d851c95f52ad9d816d306b5b90166a95c"
+    },
+    {
+      "path": "412-font-2-nl-calendar.png",
+      "sha256": "f0940b0786578064b0bbaca8a5ae42777d077bbe5c093370bb6392d89244662a"
+    },
+    {
+      "path": "412-font-2-nl-calendar.json",
+      "sha256": "e16809cfb82b3b9f303c3c642cdab450e9cb6af12459b819f81575ac5cb9f8ba"
+    },
+    {
+      "path": "412-font-2-nl-calendar.xml",
+      "sha256": "fd698700a284125f6c02052934b640951f8e47cb51eaa9d253880f05bc28b76a"
+    },
+    {
+      "path": "412-font-2-nl-long-labels.png",
+      "sha256": "e4506528477ac581c66233d402ba8938a7f2f0bc4ef03729054b84fc83645556"
+    },
+    {
+      "path": "412-font-2-nl-long-labels.json",
+      "sha256": "7514d1a0a26bad0f29150a9d37c065df78e7310805a54d7c265807f11218f331"
+    },
+    {
+      "path": "412-font-2-nl-long-labels.xml",
+      "sha256": "f81c0c1200ffeec32ddd0e4d6ea1312310898449b74dcfebec70a8d06ba96181"
+    },
+    {
+      "path": "412-font-2-nl-long-lower-1.png",
+      "sha256": "c7a4e65e83c2923925ef96f26c9801557a0cf2485052ddf99f5829fad53de55e"
+    },
+    {
+      "path": "412-font-2-nl-long-lower-1.json",
+      "sha256": "310b94dfb69f2d9f2bd5dff12f771b4643e1596b3613e9b7fb230af36bfefaa9"
+    },
+    {
+      "path": "412-font-2-nl-long-lower-1.xml",
+      "sha256": "f81c0c1200ffeec32ddd0e4d6ea1312310898449b74dcfebec70a8d06ba96181"
+    },
+    {
+      "path": "412-font-2-nl-long-lower-2.png",
+      "sha256": "c7a4e65e83c2923925ef96f26c9801557a0cf2485052ddf99f5829fad53de55e"
+    },
+    {
+      "path": "412-font-2-nl-long-lower-2.json",
+      "sha256": "17dfcdc375bdca01b3128cddcfcd13a54f0603f51756877abc37245f4bd69960"
+    },
+    {
+      "path": "412-font-2-nl-long-lower-2.xml",
+      "sha256": "f81c0c1200ffeec32ddd0e4d6ea1312310898449b74dcfebec70a8d06ba96181"
+    },
+    {
+      "path": "412-font-2-nl-week.png",
+      "sha256": "6908265849bd57a962bf70add4298b5d36671ee12bfefae8ace58d425c0d7f69"
+    },
+    {
+      "path": "412-font-2-nl-week.json",
+      "sha256": "d90b505649a05b92082a601b0aedd8668c5c49d300ee4350ea7be0e113f91a0c"
+    },
+    {
+      "path": "412-font-2-nl-week.xml",
+      "sha256": "c1ebcb9cc8d52f2e85c8d5cbd39aea8a70861a8b63ae11e2e280c1f2c104d893"
+    },
+    {
+      "path": "accepted-talkback-activities-activated.png",
+      "sha256": "3ceb9f437db3ec12e25d54cbfd32ef86dc904938e3ada70655701aa55c4d0bd3"
+    },
+    {
+      "path": "accepted-talkback-activities-activated.json",
+      "sha256": "a6e06f6ab17462df2d991a7122d8f9e903fb5d9a23e1626342e6aa0f10e87f9a"
+    },
+    {
+      "path": "accepted-talkback-activities-focus.png",
+      "sha256": "c01acccd29659f90c016cf242121251a04f10d9aad7f9433148b2db3da5b6537"
+    },
+    {
+      "path": "accepted-talkback-activities-focus.json",
+      "sha256": "ad2c079c5afe095ce9fb4e06bac5d858062d4f53e45513d428a30bdaa8f84589"
+    },
+    {
+      "path": "accepted-talkback-calendar-activated.png",
+      "sha256": "92218ed8dabaf56dc5d69ac7e586f380c813f92c7e838108ab33c6098e7e3f19"
+    },
+    {
+      "path": "accepted-talkback-calendar-activated.json",
+      "sha256": "06e0f3845d69fa3af56666d610a3c34af01e825419755948396b79ad6412ab96"
+    },
+    {
+      "path": "accepted-talkback-calendar-focus.png",
+      "sha256": "9db1e0d6abb478e3e73b6fc4b09dc800ad08bd1d991f3dd3744df08fe93d4b5a"
+    },
+    {
+      "path": "accepted-talkback-calendar-focus.json",
+      "sha256": "e8989f1e010c6ec9527e8cce8a85f34e4bda7ac8d9b3655c9a54b5d0a959f3e2"
+    },
+    {
+      "path": "accepted-talkback-heading-focus.png",
+      "sha256": "5d6caad003adc42ce9a5ddbd1134883f7e85336da0f53a8b6d71d647bec00e77"
+    },
+    {
+      "path": "accepted-talkback-heading-focus.json",
+      "sha256": "8e3a2916f3aa798e05a441deaf136394b8cbd6673b51afed5f4736abab4e41f5"
+    },
+    {
+      "path": "accepted-talkback-profile-activated.png",
+      "sha256": "a9b6cadbb4a770af59b93a8f50451f1c9a679985a0b100bfaa55732f8d9c4371"
+    },
+    {
+      "path": "accepted-talkback-profile-activated.json",
+      "sha256": "90295b8e097860df3ca80cb8323a6a5bf561f2c6c1f56a1422e1f416c3a41ef5"
+    },
+    {
+      "path": "accepted-talkback-profile-focus.png",
+      "sha256": "b900d59853321efcecd057d7f99402f7d8459506991632bb345b427f9dadaa29"
+    },
+    {
+      "path": "accepted-talkback-profile-focus.json",
+      "sha256": "75891eea0377021d46286323374f11914dd4e3531b21421546895cd925c6a297"
+    },
+    {
+      "path": "accepted-talkback-week-activated.png",
+      "sha256": "c5e731f0795d019be60f9aa23c448a91797ab2d031adf0693f550777e17442c3"
+    },
+    {
+      "path": "accepted-talkback-week-activated.json",
+      "sha256": "86c45aa916359a009acdfdab81a9f58eaf9113210e7d67a0882d305ef101b732"
+    },
+    {
+      "path": "accepted-talkback-week-focus.png",
+      "sha256": "c885003473e9db0214effc61a582835835067461676f4043e480c9d86faab801"
+    },
+    {
+      "path": "accepted-talkback-week-focus.json",
+      "sha256": "7024b1680a7bbacdb60a4d6b16fe5243ce716d1426b908455549b56156d21b69"
+    },
+    {
+      "path": "activity-task-320-font-2-entry.png",
+      "sha256": "a7e3e21beb4379e07f03195346d53cb919f2f430a1274401f0e55065c953d53c"
+    },
+    {
+      "path": "activity-task-320-font-2-entry.json",
+      "sha256": "6738480d3cc33122d983ccb097c9a32144ef53941075f42a66f4b2efcb550489"
+    },
+    {
+      "path": "activity-task-320-font-2-entry.xml",
+      "sha256": "44f35a0c2f7fec24c1251ed792d53cbf20ed20e0ed85e7c5f30958413344d060"
+    },
+    {
+      "path": "activity-task-320-font-2-return.png",
+      "sha256": "db8fb28fa4ee61c37def1a856e8f2efa3113df3fae7376e53e639756af923e56"
+    },
+    {
+      "path": "activity-task-320-font-2-return.json",
+      "sha256": "02fc5ed9e864261f92672178dd1f2f17ae76bf435a0588b54f1cf271762297eb"
+    },
+    {
+      "path": "activity-task-320-font-2-return.xml",
+      "sha256": "3765ec6c8d38f9e3f4470f09ddb6ab2dd4c4d99f9f0b5e4533a854299aefb679"
+    },
+    {
+      "path": "activity-task-entry.png",
+      "sha256": "b26bb3ac19db69d1fc478ac445b99aa23db1d5e5dc3ea63160427489d3263cad"
+    },
+    {
+      "path": "activity-task-entry.json",
+      "sha256": "e518ec25783b90574c5489173a685f63173ac1be9361f41909ed249479a8dff0"
+    },
+    {
+      "path": "activity-task-entry.xml",
+      "sha256": "8b58c51922808f80bdcbea647c19c10043c96bb292160e2aa205d03ea507ec07"
+    },
+    {
+      "path": "activity-task-return.png",
+      "sha256": "4551e42b9548e0f6318c31a3e1746be9095e11a0d09fa4888729d3432c922ee6"
+    },
+    {
+      "path": "activity-task-return.json",
+      "sha256": "4bb33d270c39f4bdf33b6835adedb5ff85a0abab5786cd43efce659e1c1e65bd"
+    },
+    {
+      "path": "activity-task-return.xml",
+      "sha256": "a66e176efbac7c11720e8102a2431ebd633786405752bd52233d8d6584329f5d"
+    },
+    {
+      "path": "detail-calendar-open.png",
+      "sha256": "113ed135d6ae3aed10a11eec824bda66cf38ada1613fb26ff58290e3c76968d8"
+    },
+    {
+      "path": "detail-calendar-open.json",
+      "sha256": "cd443e5bfd90982583ecc044ff770b2d12b3bea559a75e900dd3ce03aea783c0"
+    },
+    {
+      "path": "detail-calendar-open.xml",
+      "sha256": "2917c67d6f18ccfec73f37e506e56a73f04a01c1e16e1ddf45967a832c74a7ad"
+    },
+    {
+      "path": "detail-calendar-return.png",
+      "sha256": "e08a3a91d77ce2add67303be785e6a0267b3f4715e082c496c44a03f4928e437"
+    },
+    {
+      "path": "detail-calendar-return.json",
+      "sha256": "66bba4a1d641e2980c55b91ebb1649648ba57b82dde0eb4ada0ba26c6a3332c5"
+    },
+    {
+      "path": "detail-calendar-return.xml",
+      "sha256": "a7e66faa69aa1158f2b7858852f378d34f5f3c1117a3983a45ea25c254abcbcb"
+    },
+    {
+      "path": "detail-week-open.png",
+      "sha256": "8d4dac8a5e0a4cc406b44451c3452e8a82adc7299aac11fefefd69d17321aa8f"
+    },
+    {
+      "path": "detail-week-open.json",
+      "sha256": "0772a0bcfb951f5332dca933b44abf71791834d717f8e615539e3d96e15bccf0"
+    },
+    {
+      "path": "detail-week-open.xml",
+      "sha256": "2917c67d6f18ccfec73f37e506e56a73f04a01c1e16e1ddf45967a832c74a7ad"
+    },
+    {
+      "path": "detail-week-return.png",
+      "sha256": "4da84d6e98600d48bab71f37a56a71efba6d4656164612d763904ce2d2d2a9d0"
+    },
+    {
+      "path": "detail-week-return.json",
+      "sha256": "ced1cbb1508d14ced67810d891e49aee4752e575b82c24eff9c6447a1f41f563"
+    },
+    {
+      "path": "detail-week-return.xml",
+      "sha256": "7d15685f1545c896d9b5de2d7fec22484ac0dd83624167a143eed9cd986e3d72"
+    },
+    {
+      "path": "keyboard-320-font-2.png",
+      "sha256": "58f0a68ed2830b17126670e5d134e75c3e3fd3dae4c1a494a987437dd402385f"
+    },
+    {
+      "path": "keyboard-320-font-2.json",
+      "sha256": "809d9b3de81c4390bee77b8dfd433dc2951e1c4512f60a61dbf1c64ac38465fb"
+    },
+    {
+      "path": "keyboard-320-font-2.xml",
+      "sha256": "71be5ba7c37e15ad6648937defd525c48e2da8784b58a6d6ac985758bb83dd10"
+    },
+    {
+      "path": "keyboard-320-font-2-lower.png",
+      "sha256": "50aaf1bc1f1b092ab7080090432605f86859ff9983b9524102d711a0c5af5047"
+    },
+    {
+      "path": "keyboard-320-font-2-lower.json",
+      "sha256": "a40c367b71577e21715011ddcd1a3dcac2d74b7aa6c6dd0285ff3b66040641ab"
+    },
+    {
+      "path": "keyboard-320-font-2-lower.xml",
+      "sha256": "735e33c80cc7c99b5e6151f3f322ac84e3ee52c8a2ba867fd846597977413a3d"
+    },
+    {
+      "path": "keyboard-reference.png",
+      "sha256": "ce5a72b8556957b12d20f2691527faffee96d638eecde942226b93df856c5b6b"
+    },
+    {
+      "path": "keyboard-reference.json",
+      "sha256": "d3e7c7246097a028245774375f860693d47f6ed16febb2839b3f2250ac11b4ef"
+    },
+    {
+      "path": "keyboard-reference.xml",
+      "sha256": "71c80612b03c60ea38ce767fef829dd7ce6b945f21f2106bb215a2723a2334d2"
+    },
+    {
+      "path": "keyboard-reference-lower.png",
+      "sha256": "db38b4e08e0f156045ffa3e9c19c90f926afb9b233e0c58d5a9cec949800892c"
+    },
+    {
+      "path": "keyboard-reference-lower.json",
+      "sha256": "73acf9a7a27573f10c4a80a6f375810268d8f7b30c76fdde954dcd58ccdd0067"
+    },
+    {
+      "path": "keyboard-reference-lower.xml",
+      "sha256": "48ae6f8ee67e9b047fdeb6b232cc7025e61da2498f081679d3b46d35bc6cc6bc"
+    },
+    {
+      "path": "onboarding-gate-activities-deep-entry.png",
+      "sha256": "cf73843018f05fed4c715d5a0b794a61f4b19cac23027827f33b84d436b34022"
+    },
+    {
+      "path": "onboarding-gate-activities-deep-entry.json",
+      "sha256": "a30097037b14cff004bf7fda0794746f20afb5a42518a8e5d84d3a66e9134fc2"
+    },
+    {
+      "path": "onboarding-gate-activities-deep-entry.xml",
+      "sha256": "a9556acdbf668712ec9cb5b6c3deb0f81edbfec13d6dd7edcfebd8f235355b12"
+    },
+    {
+      "path": "onboarding-gate-calendar-deep-entry.png",
+      "sha256": "f4da48882516d7907e6e895d3288068eddc5fe8c3315ac4c4af3903f7c83f357"
+    },
+    {
+      "path": "onboarding-gate-calendar-deep-entry.json",
+      "sha256": "2b4c7678f3ecbd5e182c57ec59ecf8f7d3b89b1fb9c51638f52413ca0f9e3529"
+    },
+    {
+      "path": "onboarding-gate-calendar-deep-entry.xml",
+      "sha256": "a9556acdbf668712ec9cb5b6c3deb0f81edbfec13d6dd7edcfebd8f235355b12"
+    },
+    {
+      "path": "pending-rpe-320-font-2-nl-activities.png",
+      "sha256": "da82b20bcd55709b438ffd36d3084fcc9ad0d878ad7e3b556de9a79424380fb4"
+    },
+    {
+      "path": "pending-rpe-320-font-2-nl-activities.json",
+      "sha256": "97ea42b99520d457ccd2e0b2c5778e217b97c3e51abce7304c3dc20c10342423"
+    },
+    {
+      "path": "pending-rpe-320-font-2-nl-activities.xml",
+      "sha256": "f51638ce3fec0cb89a0712524886c97d698206e7774b796bdd0ff5e633c795bf"
+    },
+    {
+      "path": "pending-rpe-320-font-2-nl-calendar.png",
+      "sha256": "679ef2041046d721819aeda0024406fb29bbfea70f7964d8894942b0e676037d"
+    },
+    {
+      "path": "pending-rpe-320-font-2-nl-calendar.json",
+      "sha256": "6cca87eb4eec0950f07915ebe99b8a34766f2703e71f55ec72e2984c835c868f"
+    },
+    {
+      "path": "pending-rpe-320-font-2-nl-calendar.xml",
+      "sha256": "9e153e9b326143b6fc17c9a03b68065922e254cf0a5c8a77384a20477a8d050b"
+    },
+    {
+      "path": "pending-rpe-320-font-2-nl-week.png",
+      "sha256": "bd54146af9493b92d91dc969feb4c5f1cc29bf376f4c3d4d9d18260bd69b23f3"
+    },
+    {
+      "path": "pending-rpe-320-font-2-nl-week.json",
+      "sha256": "9ace25102f3e3dcde3895f97c6573b39001c82dcbe9fcffde52d23547ca5aac3"
+    },
+    {
+      "path": "pending-rpe-320-font-2-nl-week.xml",
+      "sha256": "f6a7d1eb2716399b4e55dfad00e6a550b40529a318e2756b47665b6e13b33302"
+    },
+    {
+      "path": "pending-rpe-activities.png",
+      "sha256": "5ce297fe04bf98f961c3304ce8dce83a814a69e64b542d7535911a0cff1ea7cb"
+    },
+    {
+      "path": "pending-rpe-activities.json",
+      "sha256": "826acb4ac7dfdaa27b393703a7974acf5366c44dd26dd9b63a31a10d9eb66d4e"
+    },
+    {
+      "path": "pending-rpe-activities.xml",
+      "sha256": "c36e37750d94ed2f278faa5311242ecebb03379f834628e6b4818f632dd6139f"
+    },
+    {
+      "path": "pending-rpe-calendar.png",
+      "sha256": "b0191837dad5f30ffc36525d8b2532c02a9707b2b0c9fffcb246d248826dd10d"
+    },
+    {
+      "path": "pending-rpe-calendar.json",
+      "sha256": "e23c3b3ac3540fb42324acb8f49566c55ac31d2df4d6c534a5e67bcc4b4704e6"
+    },
+    {
+      "path": "pending-rpe-calendar.xml",
+      "sha256": "58889a5d4531537b3987c619bf8b1ca9a5f6251de2887bacf88df9ce1f2060e7"
+    },
+    {
+      "path": "pending-rpe-feedback.png",
+      "sha256": "777862278444caae1db258ba32fb4dd47e4d91472bcf610e7058771c1d535cc9"
+    },
+    {
+      "path": "pending-rpe-feedback.json",
+      "sha256": "8f3f99e75b58e520c479fab9b507394d10caa5bdf96ff32bb7f56244f6a8b6c3"
+    },
+    {
+      "path": "pending-rpe-feedback.xml",
+      "sha256": "54d704f7c6558f29dca566ff8775d6df01588d8f1fe091732133c8e435256fa5"
+    },
+    {
+      "path": "pending-rpe-return-activities.png",
+      "sha256": "ed20eeb47d17b483e9d9009dd40e061534e03415ef5ba380c1db0275298d21a8"
+    },
+    {
+      "path": "pending-rpe-return-activities.json",
+      "sha256": "26110c65de1e5b7c9832f55a2f5c7a08d02dd3719ef0b92f246096872c72ed97"
+    },
+    {
+      "path": "pending-rpe-return-activities.xml",
+      "sha256": "c36e37750d94ed2f278faa5311242ecebb03379f834628e6b4818f632dd6139f"
+    },
+    {
+      "path": "pending-rpe-week.png",
+      "sha256": "cdac6b614bee24866fe04d26b0e1a6199c8a8c57d018d00e20809ea8fd20adeb"
+    },
+    {
+      "path": "pending-rpe-week.json",
+      "sha256": "1b5011254fa100e24c8703787747015468276fbbe115014c7e92c53dd9987ce4"
+    },
+    {
+      "path": "pending-rpe-week.xml",
+      "sha256": "585f1a1577a5a67042b0a5b348ad2145c5ff72b641f800806fc654bafe0c2187"
+    },
+    {
+      "path": "profile-from-calendar.png",
+      "sha256": "4349b844a87e6a3450fbbe472873d7b98c973007ee010a8cd7e0ac670b61923e"
+    },
+    {
+      "path": "profile-from-calendar.json",
+      "sha256": "0379901fc834374c0f9b506d7d5c76db979213617508f8688e216ce81009c925"
+    },
+    {
+      "path": "profile-from-calendar.xml",
+      "sha256": "a3f5a17fde692fb46ff2059bd27c3e01183dedc09ed96a93ae2bc13a9d7c2e74"
+    },
+    {
+      "path": "profile-return-calendar.png",
+      "sha256": "fe2ac0900f286d8c8200fc62b746c9bb12a98c41f6afd5088285035b08a341b4"
+    },
+    {
+      "path": "profile-return-calendar.json",
+      "sha256": "86f203d93691b73b44558675273a1c559c37c609e0409e18f4b3fed040a510e4"
+    },
+    {
+      "path": "profile-return-calendar.xml",
+      "sha256": "8f9af9dcacb97582ad9919c83466b6ca5f799891d1e69cc4e584b73fc2793aea"
+    },
+    {
+      "path": "reduced-motion-week.png",
+      "sha256": "a53a5878304f5eeedbbac391b70abe20eb14e34d93f1fe9d88ed2290e51d1caf"
+    },
+    {
+      "path": "reduced-motion-week.json",
+      "sha256": "2ebb9b105c24e59c2dda1a7c26a6b7a3cdd78066eab03fd03f620c3a7d36f86e"
+    },
+    {
+      "path": "reduced-motion-week.xml",
+      "sha256": "ff382087588f1a225f98d7183fec1327023de2767d343ccc4f54bbb87d83364b"
+    }
+  ],
+  "diagnosticAndTransientFramesExcluded": true
+}

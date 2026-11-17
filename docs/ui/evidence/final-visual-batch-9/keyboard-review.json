@@ -1,0 +1,23 @@
+{
+  "pass": true,
+  "screenReaderEnabled": false,
+  "backendWrites": false,
+  "results": [
+    {
+      "tabEnterImmediateRpe": true,
+      "noSaveStep": true,
+      "exactActivity": "activity-a",
+      "canonicalValue": 4
+    },
+    {
+      "entryKeyboardVisible": true,
+      "saveFullyWithinScrollViewport": true,
+      "saved": false
+    },
+    {
+      "feedbackKeyboardVisible": true,
+      "canonicalChoiceFullyWithinScrollViewport": true,
+      "saved": false
+    }
+  ]
+}

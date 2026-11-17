@@ -1,0 +1,97 @@
+// Temporary inert public-data review route. Removed after native review.
+import { Redirect, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { CompletedActivity, Discipline } from '../src/api/types';
+import { completeActivity, pendingActivity } from '../src/features/activities/activities.test-fixtures';
+import { useLanguage } from '../src/i18n/LanguageProvider';
+import { ActivitiesScreen } from '../src/ui-v2/screens/ActivitiesScreen';
+import { ActivityEntryScreen, type ActivityChoice } from '../src/ui-v2/screens/ActivityEntryScreen';
+import { ActivityFeedbackScreen } from '../src/ui-v2/screens/ActivityFeedbackScreen';
+import { WeekScreen } from '../src/ui-v2/screens/WeekScreen';
+import { weekHomeViewModel } from '../src/ui-v2/utils/weekHomeViewModel';
+import { activityViewModel } from '../src/ui-v2/utils/activityViewModel';
+import { PendingRpeBanner } from '../src/ui-v2/components/PendingRpeBanner';
+import { BottomNavigation, NavigationFooter } from '../src/ui-v2/components/BottomNavigation';
+import { ShellInsets } from '../src/ui-v2/components/ShellInsets';
+import { colors } from '../src/ui-v2/tokens';
+
+function Review({ state }: { state: string }) {
+  const { t, locale, language } = useLanguage();
+  const insets = useSafeAreaInsets();
+  const entryStates = ['entry', 'entryEmpty', 'context', 'planned', 'external', 'swimEntry', 'busyCreate', 'entryError', 'timezoneMissing', 'longContext'];
+  const rpeStates = ['rpe', 'rpeNoHR', 'rpeHR', 'selected', 'busyRpe', 'rpeError', 'swimRpe', 'bikeRpe', 'reminderFeedback'];
+  const [screen, setScreen] = useState(state === 'reminderWeek' ? 'week' : entryStates.includes(state) ? 'entry' : rpeStates.includes(state) ? 'feedback' : 'history');
+  const [sport, setSport] = useState<Discipline>(['swimEntry', 'swimRpe', 'distanceOnly'].includes(state) ? 'swim' : state === 'bikeRpe' ? 'bike' : 'run');
+  const [duration, setDuration] = useState(state === 'swimEntry' ? '' : '45');
+  const [distance, setDistance] = useState(state === 'entryEmpty' ? '' : '5000');
+  const [startedAt, setStartedAt] = useState('2026-10-06T10:00:00Z');
+  const [heartRate, setHeartRate] = useState(['rpeHR', 'selected'].includes(state) ? '151' : '');
+  const choices: ActivityChoice[] = [
+    { id: 'occurrence-a', kind: 'workout', name: 'Same supplied template', date: 'Tuesday, 6 October 2026', discipline: 'run' },
+    { id: 'occurrence-b', kind: 'workout', name: state === 'longContext' ? 'Long exact source workout name '.repeat(5) : 'Same supplied template', date: 'Wednesday, 7 October 2026', discipline: 'run' },
+    { id: 'external-a', kind: 'external', name: 'Public external activity', date: 'Thursday, 8 October 2026, 18:00', discipline: 'bike' },
+  ];
+  const [selected, setSelected] = useState<ActivityChoice | null>(state === 'planned' ? choices[1] : state === 'external' ? choices[2] : null);
+  const [pending, setPending] = useState(['pending', 'blocked', 'match', 'reminderWeek', 'reminderDestination', 'reminderFeedback', ...rpeStates].includes(state));
+  const [savedRpe, setSavedRpe] = useState<number | null>(state === 'selected' ? 7 : null);
+  const [action, setAction] = useState('none');
+  const busy = ['busyCreate', 'busyRpe'].includes(state);
+  const error = state === 'entryError' ? 'Safe supplied validation error. The entered activity fields are retained.'
+    : state === 'rpeError' ? 'Safe supplied stale or ambiguous feedback response. The authoritative activity is retained.' : null;
+  const source: CompletedActivity = { ...(pending ? pendingActivity : completeActivity), discipline: sport,
+    duration_minutes: state === 'distanceOnly' ? null : '45', distance_meters: state === 'distanceOnly' ? 1500 : 5000,
+    rpe: pending ? savedRpe : savedRpe ?? 4,
+    qualitative_result: pending ? 'awaiting_rpe' : 'deviation',
+    public_message: state === 'longHistory' ? 'Exact supplied public activity explanation. '.repeat(14)
+      : pending ? 'Voeg je ervaren inspanning toe om de training af te ronden.' : 'Training opgeslagen. Er zijn onvoldoende meetgegevens voor een volledige vergelijking.',
+    metrics: ['noHR', 'rpeNoHR', 'distanceOnly'].includes(state) ? null : { average_heart_rate_bpm: 151,
+      max_heart_rate_bpm: null, normalized_power_watts: null, average_speed_kmh: null, max_speed_kmh: null,
+      low_intensity_minutes: null, high_intensity_minutes: null,
+      zone_minutes: state === 'partialCoverage' || state === 'pending' ? ['10', '0', '0', '0', '0'] : null,
+      average_pace_seconds_per_km: sport === 'run' ? '540' : null } };
+  const model = activityViewModel(source, locale, language);
+  const reminder = pending && ['pending', 'blocked', 'reminderWeek', 'reminderDestination', 'reminderFeedback'].includes(state);
+  const end = <View testID="batch-9-end" collapsable={false} style={{ height: 1, width: 1 }} />;
+  const record = (value: string) => setAction(value);
+  return <View testID={`batch-9-fixture-${state}`} collapsable={false} style={{ flex: 1, backgroundColor: colors.background }}>
+    <View testID="batch-9-build-final-4" collapsable={false} style={{ position: 'absolute', width: 1, height: 1 }} />
+    <View testID={`batch-9-action-${action}`} collapsable={false} style={{ position: 'absolute', width: 1, height: 1 }} />
+    {reminder ? <PendingRpeBanner disabled={busy} label={t('rpe.reminder', { count: 1, suffix: '', verbSuffix: '' })}
+      onPress={() => { record(`reminder-${source.id}`); setScreen('history'); }} /> : null}
+    <ShellInsets top={reminder} bottom={!busy}>
+      {screen === 'week' ? <WeekScreen model={weekHomeViewModel({ plan: null, activePlan: null, draft: null, today: '2026-10-06', resumeState: 'ready', activeReadState: 'ready' })}
+        busy={false} error={null} controls={end} goalName={null} onAction={value => record(`week-${value}`)} onOpenWorkout={record}
+        onProfile={() => record('profile')} onActivities={() => setScreen('history')} onCheckIn={() => record('checkin')}
+        onZones={() => record('zones')} onGoal={() => record('goal')} />
+        : screen === 'entry' ? <ActivityEntryScreen discipline={selected?.discipline ?? sport} duration={duration} distance={distance}
+          startedAt={startedAt} timezone={state === 'timezoneMissing' ? '' : 'Europe/Amsterdam'} choices={choices} selectedId={selected?.id ?? null}
+          selectedName={selected?.name ?? null} busy={busy} blocked={state === 'blocked'} error={error} controls={end}
+          onDiscipline={value => { setSport(value); record(`sport-${value}`); }} onDuration={setDuration} onDistance={setDistance} onStartedAt={setStartedAt}
+          onChoose={value => { setSelected(value); record(`context-${value?.id ?? 'unplanned'}`); }}
+          onSave={async () => { record(`create-${selected?.id ?? sport}-${duration}-${distance}`); setPending(true); setScreen('feedback'); }}
+          onBack={() => { record('entry-back'); setScreen('history'); }} />
+        : screen === 'feedback' ? <ActivityFeedbackScreen activity={model} heartRate={heartRate} busy={busy} error={error} controls={end}
+          onHeartRate={value => { setHeartRate(value); record(`hr-${value}`); }} onBack={() => { record(`feedback-back-${source.id}`); setScreen('history'); }}
+          onSelect={async value => { record(`rpe-${source.id}-${value}-hr-${heartRate}`); setSavedRpe(value); setPending(false); setScreen('history'); }} />
+        : <ActivitiesScreen rows={state === 'empty' && !pending ? [] : [{ activity: model, canCorrect: !pending && !['distanceOnly', 'longHistory'].includes(state),
+          match: state === 'match' ? { id: 'occurrence-b', name: 'Same supplied template' } : null },
+          ...(state === 'multiple' ? ['bike', 'swim'].map((discipline, index) => ({ activity: activityViewModel({ ...source, id: `sibling-${index}`, discipline: discipline as Discipline }, locale, language), canCorrect: index === 0, match: null })) : [])]}
+          pending={pending ? model : null} busy={busy} error={error} controls={end} onBack={() => { record('history-back'); setScreen('week'); }}
+          onProfile={() => record('profile')} onAdd={() => { record('add'); setScreen('entry'); }} onFeedback={() => { record(`feedback-${source.id}`); setScreen('feedback'); }}
+          onCorrect={id => { record(`correct-${id}`); setScreen('feedback'); }} onMatch={async (id, workoutId) => record(`match-${id}-${workoutId}`)} />}
+      {!busy ? <NavigationFooter bottomInset={insets.bottom}>
+        <BottomNavigation destinations={(['week', 'calendar', 'activities'] as const).map(key => ({ key, label: t(`shell.${key}`), icon: key }))}
+          selectedKey={screen === 'week' ? 'week' : 'activities'} onSelect={key => record(`tab-${key}`)} />
+      </NavigationFooter> : null}
+    </ShellInsets>
+  </View>;
+}
+export default function DevBatch9Review() {
+  const { state = 'history', language, review } = useLocalSearchParams<{ state?: string; language?: string; review?: string }>();
+  const { setPreference } = useLanguage();
+  useEffect(() => { void setPreference(language === 'en' ? 'en' : 'nl'); }, [language, setPreference]);
+  if (!__DEV__) return <Redirect href="/" />;
+  return <Review key={review} state={state} />;
+}

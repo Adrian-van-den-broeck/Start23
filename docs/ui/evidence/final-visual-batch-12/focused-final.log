@@ -1,0 +1,13 @@
+PASS src/screens/PlanningSupportingSheet.test.tsx
+PASS src/screens/CheckInScreen.test.tsx
+PASS src/screens/IntegrationsScreen.test.tsx
+PASS src/screens/AuthScreen.test.tsx
+PASS src/ui-v2/components/SupportingProfileMenu.test.tsx
+PASS src/screens/PioneerAccessScreen.test.tsx
+PASS src/privacy.test.ts
+
+Test Suites: 7 passed, 7 total
+Tests:       22 passed, 22 total
+Snapshots:   0 total
+Time:        8.577 s
+Ran all test suites matching /src\\screens\\CheckInScreen.test.tsx|src\\screens\\AuthScreen.test.tsx|src\\screens\\IntegrationsScreen.test.tsx|src\\screens\\PioneerAccessScreen.test.tsx|src\\screens\\PlanningSupportingSheet.test.tsx|src\\ui-v2\\components\\SupportingProfileMenu.test.tsx|src\\privacy.test.ts/i.

@@ -1,0 +1,264 @@
+PASS src/navigation/TrainingNavigation.test.tsx (45.386 s)
+PASS src/screens/PlanningWorkoutMoveBoundary.test.tsx (8.193 s)
+PASS src/screens/PlanningWeekBoundary.test.tsx (6.472 s)
+PASS src/ui/ActivityBoundary.test.tsx (6.276 s)
+  ● Console
+
+    console.error
+      An update to ForwardRef(FlashList) inside a test was not wrapped in act(...).
+
+      When testing, code that causes React state updates should be wrapped into act(...):
+
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:16307:19
+      at runWithFiberInDEV (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:2508:13)
+      at warnIfUpdatesNotWrappedWithActDEV (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:16306:9)
+      at scheduleUpdateOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:14070:11)
+      at dispatchSetStateInternal (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:6784:13)
+      at dispatchSetState (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:6741:7)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/@shopify/flash-list/src/recyclerview/hooks/useOnLoad.ts:52:7
+      at ../../wombo-ui-v2-activities/mobile/node_modules/@shopify/flash-list/src/recyclerview/hooks/useUnmountAwareCallbacks.ts:61:9
+      at Timeout.callback [as _onTimeout] (../../wombo-ui-v2-activities/mobile/node_modules/@react-native/jest-preset/jest/setup.js:61:31)
+
+PASS src/screens/PlanningProposalBoundary.test.tsx (7.703 s)
+  ● Console
+
+    console.error
+      You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+    console.error
+      You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+    console.error
+      You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+    console.error
+      You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+    console.error
+      You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+    console.error
+      You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+PASS src/screens/OnboardingScreen.test.tsx
+PASS src/screens/PlanningCreationBoundary.test.tsx (5.672 s)
+PASS src/screens/CalibrationScreen.test.tsx
+PASS src/ui-v2/screens/WeekScreen.refinement.test.tsx
+PASS src/ui-v2/screens/CalendarScreen.test.tsx
+PASS src/ui-v2/screens/ActivitiesScreens.test.tsx
+PASS src/screens/CheckInScreen.test.tsx
+PASS src/ui-v2/screens/PlanningCreationScreens.test.tsx
+PASS src/screens/PlanningControllerBoundary.test.tsx
+PASS src/screens/IntegrationsScreen.test.tsx
+PASS src/screens/OnboardingScreen.resume.test.tsx
+PASS src/screens/PlanningDetailBoundary.test.tsx
+PASS src/ui-v2/screens/ProposalReviewScreens.test.tsx
+PASS src/screens/ZoneProfileScreen.regression.test.tsx
+PASS src/ui-v2/screens/WorkoutMoveScreen.test.tsx
+PASS src/ui-v2/screens/WeekScreen.test.tsx
+PASS src/screens/AuthScreen.test.tsx
+PASS src/features/planning/PlanningFlowProvider.test.tsx
+PASS src/screens/PlanningSupportingSheet.test.tsx
+PASS src/ui-v2/assets/AssetFoundation.test.tsx
+PASS src/ui-v2/screens/WorkoutDetailScreen.test.tsx
+PASS src/screens/ZoneSetupStep.test.tsx
+PASS src/screens/ActivityScreen.regression.test.tsx
+  ● Console
+
+    console.error
+      An update to ForwardRef(FlashList) inside a test was not wrapped in act(...).
+
+      When testing, code that causes React state updates should be wrapped into act(...):
+
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:16307:19
+      at runWithFiberInDEV (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:2508:13)
+      at warnIfUpdatesNotWrappedWithActDEV (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:16306:9)
+      at scheduleUpdateOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:14070:11)
+      at dispatchSetStateInternal (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:6784:13)
+      at dispatchSetState (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:6741:7)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/@shopify/flash-list/src/recyclerview/RecyclerView.tsx:225:7
+      at Object.react_stack_bottom_frame (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:17681:20)
+      at runWithFiberInDEV (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:2508:13)
+      at commitHookEffectListMount (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:10861:29)
+      at commitHookLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:10825:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11490:13)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11705:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11605:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11493:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11493:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11605:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11493:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11488:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11488:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11705:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11488:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11488:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11705:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11488:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11570:11)
+      at flushLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:15671:15)
+      at commitRoot (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:15586:9)
+      at commitRootWhenReady (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:14467:7)
+      at performWorkOnRoot (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:14384:15)
+      at performWorkOnRootViaSchedulerTask (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:3335:7)
+      at Immediate.performWorkUntilDeadline [as _onImmediate] (../../wombo-ui-v2-activities/mobile/node_modules/scheduler/cjs/scheduler.native.development.js:45:48)
+
+    console.error
+      An update to ViewHolderCollection inside a test was not wrapped in act(...).
+
+      When testing, code that causes React state updates should be wrapped into act(...):
+
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:16307:19
+      at runWithFiberInDEV (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:2508:13)
+      at warnIfUpdatesNotWrappedWithActDEV (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:16306:9)
+      at scheduleUpdateOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:14070:11)
+      at dispatchSetStateInternal (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:6784:13)
+      at dispatchSetState (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:6741:7)
+      at Object.commitLayout (../../wombo-ui-v2-activities/mobile/node_modules/@shopify/flash-list/src/recyclerview/ViewHolderCollection.tsx:133:9)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/@shopify/flash-list/src/recyclerview/RecyclerView.tsx:227:40
+      at Object.react_stack_bottom_frame (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:17681:20)
+      at runWithFiberInDEV (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:2508:13)
+      at commitHookEffectListMount (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:10861:29)
+      at commitHookLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:10825:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11490:13)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11705:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11605:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11493:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11493:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11605:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11493:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11488:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11488:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11705:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11488:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11488:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11705:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11488:11)
+      at recursivelyTraverseLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:12653:11)
+      at commitLayoutEffectOnFiber (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:11570:11)
+      at flushLayoutEffects (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:15671:15)
+      at commitRoot (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:15586:9)
+      at commitRootWhenReady (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:14467:7)
+      at performWorkOnRoot (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:14384:15)
+      at performSyncWorkOnRoot (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:3350:7)
+      at flushSyncWorkAcrossRoots_impl (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:3192:21)
+      at flushSpawnedWork (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:15868:9)
+      at commitRoot (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:15587:9)
+      at commitRootWhenReady (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:14467:7)
+      at performWorkOnRoot (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:14384:15)
+      at performWorkOnRootViaSchedulerTask (../../wombo-ui-v2-activities/mobile/node_modules/react-reconciler/cjs/react-reconciler.development.js:3335:7)
+      at Immediate.performWorkUntilDeadline [as _onImmediate] (../../wombo-ui-v2-activities/mobile/node_modules/scheduler/cjs/scheduler.native.development.js:45:48)
+
+PASS src/ui-v2/components/Shell.test.tsx
+PASS src/screens/PioneerAccessScreen.test.tsx
+PASS src/api/client.test.ts
+PASS src/ui/WorkoutDetailBoundary.test.tsx
+PASS src/ui-v2/primitives/FinalPrimitives.test.tsx
+PASS src/components/DurationPicker.test.tsx
+PASS src/components/WorkoutDetail.test.tsx
+PASS src/components/TrainingCalendar.test.tsx
+PASS src/screens/ProfileScreen.test.tsx
+PASS src/ui-v2/components/WorkoutVisuals.test.tsx
+PASS src/ui-v2/components/SupportingProfileMenu.test.tsx
+PASS src/features/activities/ActivityFlowProvider.test.tsx
+PASS src/screens/PlanningWarnings.test.tsx
+PASS src/ui-v2/components/ZoneVisuals.test.tsx
+PASS src/ui-v2/components/AttentionRow.test.tsx
+PASS src/screens/ActivityScreen.test.tsx
+PASS src/navigation/AuthenticatedLayout.test.tsx
+PASS src/ui-v2/components/WeekCompositions.test.tsx
+PASS src/components/WeekSchedule.test.tsx
+PASS src/features/calendar/useCalendarController.test.tsx
+PASS src/ui-v2/primitives/Button.test.tsx
+PASS src/ui-v2/utils/calendarViewModel.test.ts
+PASS src/navigation/RootLayout.test.tsx
+PASS src/ui-v2/components/WeekContext.test.tsx
+PASS src/components/RpeChoiceList.test.tsx
+PASS src/ui-v2/motion/useMotionPolicy.test.tsx
+PASS src/lib/navigation.test.ts
+PASS src/privacy.test.ts
+PASS src/ui-v2/utils/planningCreationViewModel.test.ts
+PASS src/ui-v2/utils/proposalReviewViewModel.test.ts
+PASS src/ui-v2/tokens/tokens.test.ts
+PASS src/ui-v2/utils/weekHomeViewModel.test.ts
+PASS src/ui-v2/utils/activityViewModel.test.ts
+PASS src/ui-v2/utils/workoutDetailViewModel.test.ts
+PASS src/ui-v2/utils/workoutSummaryViewModel.test.ts
+PASS src/features/calendar/calendarDates.test.ts
+PASS src/lib/rpe.test.ts
+PASS src/ui/uiVersion.test.ts
+PASS src/lib/onboardingForms.test.ts
+PASS src/lib/runPace.test.ts
+
+Test Suites: 68 passed, 68 total
+Tests:       602 passed, 602 total
+Snapshots:   0 total
+Time:        132.002 s, estimated 138 s
+Ran all test suites.
+Test results written to: ..\docs\ui\evidence\final-visual-batch-12\full-mobile-tests.json

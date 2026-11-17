@@ -1,0 +1,37 @@
+{
+  "pass": true,
+  "controls": [
+    {
+      "capture": "interaction-remove-confirmation.png",
+      "label": "Confirm removal from proposal",
+      "dp": [
+        329.4760820045558,
+        58.31435079726651
+      ]
+    },
+    {
+      "capture": "confirmation-320-font-2-en-page-0.png",
+      "label": "Confirm removal from proposal",
+      "dp": [
+        256.0,
+        142.5185185185185
+      ]
+    },
+    {
+      "capture": "confirmation-320-font-2-en-page-1.png",
+      "label": "Confirm removal from proposal",
+      "dp": [
+        256.0,
+        142.5185185185185
+      ]
+    },
+    {
+      "capture": "confirmation-320-font-2-en-page-1.png",
+      "label": "Keep workout",
+      "dp": [
+        256.0,
+        69.92592592592592
+      ]
+    }
+  ]
+}

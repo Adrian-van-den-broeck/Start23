@@ -1,0 +1,16 @@
+{
+  "utc": "2026-10-07T17:16:46.686376+00:00",
+  "serial": "emulator-5556",
+  "provenance": "Actual TalkBack focus on public Selection fixture; no UIAutomation accessibility suppression during screenshot",
+  "nativeTargetBoundsBeforeTalkBack": [
+    110,
+    1538,
+    970,
+    1697
+  ],
+  "density": "Physical density: 440\nOverride density: 439",
+  "fontScale": "1",
+  "enabledServices": "com.google.android.marvin.talkback/.TalkBackService",
+  "accessibilityEnabled": "1",
+  "nativeChooseLabelBeforeTalkBack": "Choose \u00b7 RUN-013 \u00b7 Wisselduur"
+}

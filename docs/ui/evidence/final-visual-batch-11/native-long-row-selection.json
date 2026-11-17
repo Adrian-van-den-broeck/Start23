@@ -1,0 +1,290 @@
+[
+  {
+    "label": "Ik wil rustig beginnen en laten kalibreren",
+    "fixture": {
+      "state": "choice",
+      "width": 320,
+      "fontScale": 2,
+      "build": "final-6",
+      "language": "source Dutch",
+      "inertActions": true
+    },
+    "visibleControlBounds": [
+      54,
+      1395,
+      1026,
+      1848
+    ],
+    "fullyVisibleLabelBounds": [
+      219,
+      1439,
+      983,
+      1796
+    ],
+    "minimumVisibleDp": 48
+  },
+  {
+    "label": "Ik wil rustig beginnen en laten kalibreren",
+    "fixture": {
+      "state": "choice",
+      "width": 360,
+      "fontScale": 1,
+      "build": "final-6",
+      "language": "source Dutch",
+      "inertActions": true
+    },
+    "visibleControlBounds": [
+      48,
+      1796,
+      1032,
+      2037
+    ],
+    "fullyVisibleLabelBounds": [
+      195,
+      1835,
+      993,
+      1967
+    ],
+    "minimumVisibleDp": 48
+  },
+  {
+    "label": "Ik wil rustig beginnen en laten kalibreren",
+    "fixture": {
+      "state": "choice",
+      "width": 360,
+      "fontScale": 2,
+      "build": "final-6",
+      "language": "source Dutch",
+      "inertActions": true
+    },
+    "visibleControlBounds": [
+      48,
+      1368,
+      1032,
+      1941
+    ],
+    "fullyVisibleLabelBounds": [
+      195,
+      1407,
+      993,
+      1722
+    ],
+    "minimumVisibleDp": 48
+  },
+  {
+    "label": "Ik wil rustig beginnen en laten kalibreren",
+    "fixture": {
+      "state": "choice",
+      "width": 393,
+      "fontScale": 2,
+      "build": "final-6",
+      "language": "source Dutch",
+      "inertActions": true
+    },
+    "visibleControlBounds": [
+      44,
+      1713,
+      1036,
+      1967
+    ],
+    "fullyVisibleLabelBounds": [
+      178,
+      1749,
+      1001,
+      1943
+    ],
+    "minimumVisibleDp": 48
+  },
+  {
+    "label": "Ik wil rustig beginnen en laten kalibreren",
+    "fixture": {
+      "state": "choice",
+      "width": 412,
+      "fontScale": 2,
+      "build": "final-6",
+      "language": "source Dutch",
+      "inertActions": true
+    },
+    "visibleControlBounds": [
+      42,
+      1659,
+      1038,
+      1982
+    ],
+    "fullyVisibleLabelBounds": [
+      170,
+      1693,
+      1005,
+      1877
+    ],
+    "minimumVisibleDp": 48
+  },
+  {
+    "label": "Ik ken mijn waarden",
+    "fixture": {
+      "state": "boundaries",
+      "width": 320,
+      "fontScale": 2,
+      "build": "final-6",
+      "language": "source Dutch",
+      "inertActions": true
+    },
+    "visibleControlBounds": [
+      54,
+      1542,
+      1026,
+      1848
+    ],
+    "fullyVisibleLabelBounds": [
+      219,
+      1586,
+      983,
+      1824
+    ],
+    "minimumVisibleDp": 48
+  },
+  {
+    "label": "Ik ken mijn waarden",
+    "fixture": {
+      "state": "known",
+      "width": 320,
+      "fontScale": 2,
+      "build": "final-6",
+      "language": "source Dutch",
+      "inertActions": true
+    },
+    "visibleControlBounds": [
+      54,
+      1487,
+      1026,
+      1848
+    ],
+    "fullyVisibleLabelBounds": [
+      219,
+      1531,
+      983,
+      1769
+    ],
+    "minimumVisibleDp": 48
+  },
+  {
+    "label": "Ik ken mijn waarden",
+    "fixture": {
+      "state": "known",
+      "width": 320,
+      "fontScale": 2,
+      "build": "final-6",
+      "language": "source Dutch",
+      "inertActions": true
+    },
+    "visibleControlBounds": [
+      54,
+      1470,
+      1026,
+      1848
+    ],
+    "fullyVisibleLabelBounds": [
+      219,
+      1514,
+      983,
+      1752
+    ],
+    "minimumVisibleDp": 48
+  },
+  {
+    "label": "Ik ken mijn waarden",
+    "fixture": {
+      "state": "known",
+      "width": 320,
+      "fontScale": 2,
+      "build": "final-6",
+      "language": "source Dutch",
+      "inertActions": true
+    },
+    "visibleControlBounds": [
+      54,
+      1448,
+      1026,
+      1848
+    ],
+    "fullyVisibleLabelBounds": [
+      219,
+      1492,
+      983,
+      1730
+    ],
+    "minimumVisibleDp": 48
+  },
+  {
+    "label": "Ik ken mijn waarden",
+    "fixture": {
+      "state": "known",
+      "width": 320,
+      "fontScale": 2,
+      "build": "final-6",
+      "language": "source Dutch",
+      "inertActions": true
+    },
+    "visibleControlBounds": [
+      54,
+      1455,
+      1026,
+      1848
+    ],
+    "fullyVisibleLabelBounds": [
+      219,
+      1499,
+      983,
+      1737
+    ],
+    "minimumVisibleDp": 48
+  },
+  {
+    "label": "Ik ken mijn waarden",
+    "fixture": {
+      "state": "overview",
+      "width": 320,
+      "fontScale": 2,
+      "build": "final-6",
+      "language": "source Dutch",
+      "inertActions": true
+    },
+    "visibleControlBounds": [
+      111,
+      1449,
+      969,
+      1848
+    ],
+    "fullyVisibleLabelBounds": [
+      276,
+      1493,
+      924,
+      1731
+    ],
+    "minimumVisibleDp": 48
+  },
+  {
+    "label": "Ik ken mijn waarden",
+    "fixture": {
+      "state": "overview",
+      "width": 320,
+      "fontScale": 2,
+      "build": "final-6",
+      "language": "source Dutch",
+      "inertActions": true
+    },
+    "visibleControlBounds": [
+      111,
+      1530,
+      969,
+      1848
+    ],
+    "fullyVisibleLabelBounds": [
+      276,
+      1574,
+      924,
+      1812
+    ],
+    "minimumVisibleDp": 48
+  }
+]

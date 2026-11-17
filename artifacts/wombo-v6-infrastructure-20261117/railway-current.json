@@ -1,0 +1,351 @@
+{
+  "observed_at_utc": "2026-11-17T20:42:18.943384+00:00",
+  "mutations": 0,
+  "project_id": "c0cf7bc7-abe8-4db5-857a-85cc39850640",
+  "environments": [
+    {
+      "id": "d6bfb972-262b-46d9-9274-a63f16fe6677",
+      "name": "production",
+      "services": [
+        {
+          "serviceId": "3fdaf1d0-eca1-4ef0-b8fd-1ce8ee4ae8da",
+          "serviceName": "Start23",
+          "cronSchedule": null,
+          "nextCronRunAt": null,
+          "domains": {
+            "customDomains": [],
+            "serviceDomains": [
+              {
+                "domain": "start23-production.up.railway.app",
+                "id": "5f5802ad-c9b0-4f33-89d3-47d6dd048870",
+                "targetPort": 8080
+              }
+            ]
+          },
+          "source": {
+            "image": null,
+            "repo": "Adrian-van-den-broeck/Start23"
+          },
+          "startCommand": null,
+          "tracingEnabled": false,
+          "autoInstrumentationEnabled": false,
+          "configured_variables": {
+            "RAILWAY_ENVIRONMENT": {
+              "configured": true
+            },
+            "RAILWAY_ENVIRONMENT_ID": {
+              "configured": true
+            },
+            "RAILWAY_ENVIRONMENT_NAME": {
+              "configured": true
+            },
+            "RAILWAY_PRIVATE_DOMAIN": {
+              "configured": true
+            },
+            "RAILWAY_PROJECT_ID": {
+              "configured": true
+            },
+            "RAILWAY_PROJECT_NAME": {
+              "configured": true
+            },
+            "RAILWAY_PUBLIC_DOMAIN": "start23-production.up.railway.app",
+            "RAILWAY_SERVICE_ID": {
+              "configured": true
+            },
+            "RAILWAY_SERVICE_NAME": {
+              "configured": true
+            },
+            "RAILWAY_SERVICE_START23_URL": {
+              "configured": true
+            },
+            "RAILWAY_STATIC_URL": {
+              "configured": true
+            },
+            "START23_API_V1_PREFIX": "/api/v1",
+            "START23_ENVIRONMENT": "local",
+            "START23_LOG_LEVEL": "INFO",
+            "START23_OPENAI_API_KEY": {
+              "configured": true
+            },
+            "START23_OPENAI_API_TIMEOUT_SECONDS": {
+              "configured": true
+            },
+            "START23_OPENAI_MODEL": "gpt-5.6-luna",
+            "START23_POLAR_API_TIMEOUT_SECONDS": "10",
+            "START23_POLAR_CLIENT_SECRET": {
+              "configured": true
+            },
+            "START23_POLAR_MAX_ACTIVITY_FILE_BYTES": "26214400",
+            "START23_POLAR_OAUTH_REDIRECT_URL": "https://start23-production.up.railway.app/api/v1/integrations/polar/oauth/callback",
+            "START23_POLAR_WEBHOOK_SECRET": {
+              "configured": true
+            },
+            "START23_SUPABASE_DATA_API_TIMEOUT_SECONDS": {
+              "configured": true
+            },
+            "START23_SUPABASE_JWKS_CACHE_SECONDS": {
+              "configured": true
+            },
+            "START23_SUPABASE_JWKS_TIMEOUT_SECONDS": {
+              "configured": true
+            },
+            "START23_SUPABASE_JWT_AUDIENCE": "authenticated",
+            "START23_SUPABASE_PUBLISHABLE_KEY": {
+              "configured": true
+            },
+            "START23_SUPABASE_SECRET_KEY": {
+              "configured": true
+            },
+            "START23_SUPABASE_URL": "https://isfumhgqphieoayqahjv.supabase.co"
+          },
+          "active_deployments": [
+            {
+              "id": "1019a2a5-9ffa-441b-b0a4-aca6a9975dab",
+              "status": "SUCCESS",
+              "createdAt": "2026-10-09T15:15:23.380Z",
+              "deploymentStopped": false,
+              "instances": [
+                {
+                  "id": "45d78689-6f05-4751-9e5b-f3006dfd4786",
+                  "status": "RUNNING"
+                }
+              ],
+              "meta": {
+                "commitHash": "aff74558d0a6511286a4a84a44ea25a03ca57549",
+                "branch": "main",
+                "repo": "Adrian-van-den-broeck/Start23",
+                "rootDirectory": "/backend",
+                "imageDigest": "sha256:e40484a07f60b4ea4c4c611bb37b051bbb955e11ba732c6a3e10dd805e44836d",
+                "runtime": "V2",
+                "configFile": "/backend/railway.toml",
+                "serviceManifest": {
+                  "build": {
+                    "buildCommand": null,
+                    "buildEnvironment": "V3",
+                    "builder": "DOCKERFILE",
+                    "dockerfilePath": "Dockerfile",
+                    "nixpacksConfigPath": null,
+                    "nixpacksPlan": null,
+                    "watchPatterns": []
+                  },
+                  "deploy": {
+                    "cronSchedule": null,
+                    "drainingSeconds": null,
+                    "healthcheckPath": "/ready",
+                    "healthcheckTimeout": 300,
+                    "ipv6EgressEnabled": false,
+                    "limitOverride": null,
+                    "multiRegionConfig": {
+                      "sfo": {
+                        "numReplicas": 1
+                      }
+                    },
+                    "numReplicas": 1,
+                    "overlapSeconds": null,
+                    "preDeployCommand": null,
+                    "preDeployTimeoutSeconds": null,
+                    "region": null,
+                    "registryCredentials": null,
+                    "requiredMountPath": null,
+                    "restartPolicyMaxRetries": 10,
+                    "restartPolicyType": "ON_FAILURE",
+                    "runtime": "V2",
+                    "sleepApplication": false,
+                    "startCommand": null,
+                    "useLegacyStacker": false
+                  }
+                }
+              },
+              "snapshot": {
+                "id": "df220976-64f1-47ec-8a40-7ac2945913f0",
+                "variablesRedacted": false,
+                "variables": {
+                  "START23_API_V1_PREFIX": "/api/v1",
+                  "START23_ENVIRONMENT": "local",
+                  "START23_LOG_LEVEL": "INFO",
+                  "START23_OPENAI_API_KEY": {
+                    "configured": true
+                  },
+                  "START23_OPENAI_API_TIMEOUT_SECONDS": {
+                    "configured": true
+                  },
+                  "START23_OPENAI_MODEL": "gpt-5.6-luna",
+                  "START23_POLAR_API_TIMEOUT_SECONDS": "10",
+                  "START23_POLAR_CLIENT_SECRET": {
+                    "configured": true
+                  },
+                  "START23_POLAR_MAX_ACTIVITY_FILE_BYTES": "26214400",
+                  "START23_POLAR_OAUTH_REDIRECT_URL": "https://start23-production.up.railway.app/api/v1/integrations/polar/oauth/callback",
+                  "START23_POLAR_WEBHOOK_SECRET": {
+                    "configured": true
+                  },
+                  "START23_SUPABASE_DATA_API_TIMEOUT_SECONDS": {
+                    "configured": true
+                  },
+                  "START23_SUPABASE_JWKS_CACHE_SECONDS": {
+                    "configured": true
+                  },
+                  "START23_SUPABASE_JWKS_TIMEOUT_SECONDS": {
+                    "configured": true
+                  },
+                  "START23_SUPABASE_JWT_AUDIENCE": "authenticated",
+                  "START23_SUPABASE_PUBLISHABLE_KEY": {
+                    "configured": true
+                  },
+                  "START23_SUPABASE_SECRET_KEY": {
+                    "configured": true
+                  },
+                  "START23_SUPABASE_URL": "https://isfumhgqphieoayqahjv.supabase.co"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "875b7e64-0f3f-4e42-9efd-973dfb6e295b",
+      "name": "r6-staging",
+      "services": [
+        {
+          "serviceId": "6c2cb45b-43e1-43c1-983f-1ed154b2ac76",
+          "serviceName": "r6-api",
+          "cronSchedule": null,
+          "nextCronRunAt": null,
+          "domains": {
+            "customDomains": [],
+            "serviceDomains": [
+              {
+                "domain": "r6-api-r6-staging.up.railway.app",
+                "id": "a0ea68ee-5c54-40d8-888a-28c33ff8d7cd",
+                "targetPort": 8080
+              }
+            ]
+          },
+          "source": {
+            "image": null,
+            "repo": null
+          },
+          "startCommand": null,
+          "tracingEnabled": false,
+          "autoInstrumentationEnabled": false,
+          "configured_variables": {
+            "RAILWAY_ENVIRONMENT": {
+              "configured": true
+            },
+            "RAILWAY_ENVIRONMENT_ID": {
+              "configured": true
+            },
+            "RAILWAY_ENVIRONMENT_NAME": {
+              "configured": true
+            },
+            "RAILWAY_PRIVATE_DOMAIN": {
+              "configured": true
+            },
+            "RAILWAY_PROJECT_ID": {
+              "configured": true
+            },
+            "RAILWAY_PROJECT_NAME": {
+              "configured": true
+            },
+            "RAILWAY_PUBLIC_DOMAIN": "r6-api-r6-staging.up.railway.app",
+            "RAILWAY_SERVICE_ID": {
+              "configured": true
+            },
+            "RAILWAY_SERVICE_NAME": {
+              "configured": true
+            },
+            "RAILWAY_SERVICE_R6_API_URL": {
+              "configured": true
+            },
+            "RAILWAY_STATIC_URL": {
+              "configured": true
+            },
+            "START23_ENVIRONMENT": "staging",
+            "START23_SUPABASE_PUBLISHABLE_KEY": {
+              "configured": true
+            },
+            "START23_SUPABASE_SECRET_KEY": {
+              "configured": true
+            },
+            "START23_SUPABASE_URL": "https://isfumhgqphieoayqahjv.supabase.co"
+          },
+          "active_deployments": [
+            {
+              "id": "7b499763-a64b-4762-b67c-e606172cf5ba",
+              "status": "SUCCESS",
+              "createdAt": "2026-10-04T21:39:47.899Z",
+              "deploymentStopped": false,
+              "instances": [
+                {
+                  "id": "8369832a-151f-4f7a-b7df-db470877f789",
+                  "status": "RUNNING"
+                }
+              ],
+              "meta": {
+                "commitHash": null,
+                "branch": null,
+                "repo": null,
+                "rootDirectory": null,
+                "imageDigest": "sha256:d1a21058f1b9784e7ddaff18313486c73c089e7a551cae98c903554159a94bab",
+                "runtime": "V2",
+                "configFile": null,
+                "serviceManifest": {
+                  "build": {
+                    "buildCommand": null,
+                    "buildEnvironment": "V3",
+                    "builder": "DOCKERFILE",
+                    "dockerfilePath": "/Dockerfile",
+                    "nixpacksConfigPath": null,
+                    "nixpacksPlan": null,
+                    "watchPatterns": []
+                  },
+                  "deploy": {
+                    "cronSchedule": null,
+                    "drainingSeconds": null,
+                    "healthcheckPath": null,
+                    "healthcheckTimeout": null,
+                    "ipv6EgressEnabled": false,
+                    "limitOverride": null,
+                    "multiRegionConfig": {
+                      "sfo": {
+                        "numReplicas": 1
+                      }
+                    },
+                    "numReplicas": 1,
+                    "overlapSeconds": null,
+                    "preDeployCommand": null,
+                    "preDeployTimeoutSeconds": null,
+                    "region": null,
+                    "registryCredentials": null,
+                    "requiredMountPath": null,
+                    "restartPolicyMaxRetries": 10,
+                    "restartPolicyType": "ON_FAILURE",
+                    "runtime": "V2",
+                    "sleepApplication": false,
+                    "startCommand": null,
+                    "useLegacyStacker": false
+                  }
+                }
+              },
+              "snapshot": {
+                "id": "1f985473-af8f-44ca-bf68-97ed434853b1",
+                "variablesRedacted": false,
+                "variables": {
+                  "START23_ENVIRONMENT": "staging",
+                  "START23_SUPABASE_PUBLISHABLE_KEY": {
+                    "configured": true
+                  },
+                  "START23_SUPABASE_SECRET_KEY": {
+                    "configured": true
+                  },
+                  "START23_SUPABASE_URL": "https://isfumhgqphieoayqahjv.supabase.co"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

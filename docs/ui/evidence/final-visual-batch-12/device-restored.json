@@ -1,0 +1,12 @@
+{
+  "density": "Physical density: 440",
+  "fontScale": "1.0",
+  "ownedAppStopped": true,
+  "ownedMetroStopped": true,
+  "cleanupTransport": "Private ADB server port 5039 after shared 5037 stopped responding",
+  "reverseRemoval": "",
+  "ownedEmulatorShutdown": true,
+  "ownedPrivateAdbServerStopped": true,
+  "sharedAdbServerUnchanged": true,
+  "shutdownEvidence": "Authenticated console kill on owned emulator port 5556; launcher 33772 and headless process 32480 absent in subsequent process inventory"
+}

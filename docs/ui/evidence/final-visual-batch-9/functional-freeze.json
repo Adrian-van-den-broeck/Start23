@@ -1,0 +1,35 @@
+{
+  "result": "PASS",
+  "baselineCommit": "2b5c7753bde1e5dae2446da40c12469a29bf855e",
+  "changed": [
+    "mobile/src/ui-v2/components/ActivitySummary.tsx",
+    "mobile/src/ui-v2/components/RpeChoices.tsx",
+    "mobile/src/ui-v2/primitives/ChoiceRow.tsx",
+    "mobile/src/ui-v2/primitives/Notice.tsx",
+    "mobile/src/ui-v2/screens/ActivitiesScreen.tsx",
+    "mobile/src/ui-v2/screens/ActivitiesScreens.test.tsx",
+    "mobile/src/ui-v2/screens/ActivityEntryScreen.tsx",
+    "mobile/src/ui-v2/screens/ActivityFeedbackScreen.tsx"
+  ],
+  "protectedUnchanged": 200,
+  "unchangedOwners": [
+    "mobile/src/features/activities/useActivityController.ts",
+    "mobile/src/features/activities/ActivityFlowProvider.tsx",
+    "mobile/src/ui/ActivityBoundary.tsx",
+    "mobile/src/api/client.ts",
+    "mobile/src/api/types.ts",
+    "mobile/src/lib/rpe.ts",
+    "mobile/src/ui-v2/utils/activityViewModel.ts",
+    "mobile/src/navigation/TrainingLayout.tsx",
+    "mobile/src/navigation/TrainingFlowHost.tsx",
+    "mobile/src/ui-v2/components/PendingRpeBanner.tsx"
+  ],
+  "dependencyManifestsUnchanged": [
+    "mobile/package.json",
+    "mobile/package-lock.json",
+    "mobile/jest.config.js"
+  ],
+  "canonicalRpeUnchanged": true,
+  "createIdentityValidationRetryStaleAndHrOwnershipUnchanged": true,
+  "rpeInteraction": "Same immediate onSelect callback, per-choice ref lock/local pending until promise settles, supplied selection; no staged choice or Save button"
+}

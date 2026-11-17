@@ -1,0 +1,15 @@
+{
+  "galleryRemoved": true,
+  "normalWeekRoot": true,
+  "originalVersion": "v1",
+  "dutchLanguageRestored": true,
+  "density": "Physical density: 440",
+  "fontScale": "1.0",
+  "reviewTransportRemoved": true,
+  "athleteDataCapturedDuringCleanup": false,
+  "ownedDeviceScratchRemoved": true,
+  "ownedReviewServerStopped": true,
+  "originalPreviewRetained": true,
+  "originalPreviewPort": 8081,
+  "hostListenerVerification": "Escalated host read: 8081 listening, 8084 absent"
+}

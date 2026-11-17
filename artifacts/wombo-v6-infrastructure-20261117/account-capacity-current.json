@@ -1,0 +1,62 @@
+{
+  "observed_at_utc": "2026-11-17T20:42:30.054497+00:00",
+  "mutations": 0,
+  "organizations_status": 200,
+  "organizations": [
+    {
+      "id": "uuyjuxburhbjhvplvqmp",
+      "ref": null,
+      "name": "tarzan201230@gmail.com's Org",
+      "organization_id": null,
+      "slug": "uuyjuxburhbjhvplvqmp",
+      "status": null,
+      "region": null,
+      "plan": null
+    },
+    {
+      "id": "dhgozxsnsszssxkwjewa",
+      "ref": null,
+      "name": "Start23",
+      "organization_id": null,
+      "slug": "dhgozxsnsszssxkwjewa",
+      "status": null,
+      "region": null,
+      "plan": null
+    }
+  ],
+  "projects_status": 200,
+  "projects": [
+    {
+      "id": "oezvutiheircaioigumr",
+      "ref": "oezvutiheircaioigumr",
+      "name": "tarzan201230@gmail.com's Project",
+      "organization_id": "uuyjuxburhbjhvplvqmp",
+      "slug": null,
+      "status": "ACTIVE_HEALTHY",
+      "region": "eu-west-1",
+      "plan": null
+    },
+    {
+      "id": "isfumhgqphieoayqahjv",
+      "ref": "isfumhgqphieoayqahjv",
+      "name": "start23-dev",
+      "organization_id": "dhgozxsnsszssxkwjewa",
+      "slug": null,
+      "status": "ACTIVE_HEALTHY",
+      "region": "eu-west-1",
+      "plan": null
+    }
+  ],
+  "organization_plans": [
+    {
+      "id": "uuyjuxburhbjhvplvqmp",
+      "http_status": 200,
+      "plan": "free"
+    },
+    {
+      "id": "dhgozxsnsszssxkwjewa",
+      "http_status": 200,
+      "plan": "free"
+    }
+  ]
+}

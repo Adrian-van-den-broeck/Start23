@@ -1,0 +1,12 @@
+{
+  "temporaryDeviceOnly": true,
+  "before": {
+    "showFab": null,
+    "showsAtLaunch": "false"
+  },
+  "reviewValues": {
+    "showFab": false,
+    "showsAtLaunch": false
+  },
+  "restoration": "Discard temporary read-only emulator data after review"
+}

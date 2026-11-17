@@ -1,0 +1,254 @@
+[
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "noPlan"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "selection"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "placement"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "pending"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "active"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "activePending"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "warning"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "rest"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "next"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "siblings"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "activePending"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "state": "activePending"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "activePending"
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "en",
+    "state": "activePending"
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "activePending"
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "en",
+    "state": "activePending"
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "activePending"
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "en",
+    "state": "activePending"
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "activePending"
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "en",
+    "state": "activePending"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "noPlan"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "selection"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "placement"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "pending"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "active"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "activePending"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "warning"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "rest"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "next"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "siblings"
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "activePending"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "activePending"
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "activePending"
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "en",
+    "state": "activePending"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "reminder"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "reminder"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "siblings"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "sparse"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "sparse"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "attention"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "loading"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "failed"
+  }
+]

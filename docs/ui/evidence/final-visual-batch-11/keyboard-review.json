@@ -1,0 +1,23 @@
+{
+  "pass": true,
+  "backendWrites": false,
+  "results": [
+    {
+      "tabEnterZonesBack": true
+    },
+    {
+      "tabEnterSourceChoice": true,
+      "noAutomaticSave": true
+    },
+    {
+      "actualNestedZoneProfileEditor": true,
+      "discipline": "swim",
+      "widthDp": 320,
+      "fontScale": 2,
+      "IMEVisible": true,
+      "tabToSaveWithoutDismissingDrag": true,
+      "fullyVisibleSaveLabel": true,
+      "noWrites": true
+    }
+  ]
+}

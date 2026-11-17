@@ -1,0 +1,40 @@
+{
+  "observed_at_utc": "2026-11-17T20:44:36.252191+00:00",
+  "binaries": [
+    {
+      "label": "Local release APK",
+      "artifact_sha256": "d641363c088376c5afa3ba7c1967bdb80bb3329760660d47e16bcb16cd5ea9f1",
+      "bytes": 98967345,
+      "identity": {
+        "path": "F:\\Projecten Business\\Start23\\Code\\mobile\\android\\app\\build\\outputs\\apk\\release\\app-release.apk",
+        "installed_or_released": false
+      },
+      "bundles": [
+        {
+          "entry": "assets/index.android.bundle",
+          "sha256": "366fb1dfb1931c0b226a13523583daea8600219edc47a7e3c04aaaac3a5357a1",
+          "recognized_hosts": [
+            "r6-api-r6-staging.up.railway.app",
+            "isfumhgqphieoayqahjv.supabase.co"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Local debug APK",
+      "artifact_sha256": "d27cfd5b6e208fd946683700057c737323bce7dee6cd89572d3f38118a25ea84",
+      "bytes": 88799264,
+      "identity": {
+        "path": "F:\\Projecten Business\\Start23\\Code\\mobile\\android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
+        "installed_or_released": false
+      },
+      "bundles": []
+    }
+  ],
+  "installed_device_count": 0,
+  "eas_artifact_fetch": {
+    "http_status": 404,
+    "artifact_id": "0b1a3606-7476-4607-b4c7-a37e763249c0",
+    "compiled_endpoint_verified": false
+  }
+}

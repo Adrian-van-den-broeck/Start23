@@ -1,0 +1,10 @@
+{
+  "realReadOnlyDetailModal": true,
+  "closeRestoresExactWeekViewport": true,
+  "androidBackRestoresExactWeekViewport": true,
+  "selectedDestination": "Week",
+  "attentionCount": 3,
+  "twoItemLimit": true,
+  "expandCollapseRetainsCountAndFiltering": true,
+  "taskAndNavigationCallbacksInert": true
+}

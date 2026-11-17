@@ -1,0 +1,11 @@
+{
+  "utc": "2026-10-07T22:28:32.020457+00:00",
+  "serial": "emulator-5554",
+  "provenance": "Actual TalkBack-enabled public fixture; no accessibility dump during focus screenshot",
+  "expectedFocus": "Move RUN-013 \u00b7 Wisselduur",
+  "method": "Native touch exploration; no keyboard activation or hierarchy dump during focus capture",
+  "enabledServices": "com.google.android.marvin.talkback/.TalkBackService",
+  "visualFocusValidation": "Inspect actual focus rectangle; expected target alone is not evidence of accessibility focus",
+  "result": "NOT_ACCEPTED_FOR_INTENDED_FOCUS",
+  "observed": "Green focus on Cancel in the move task, not the intended Calendar Move entry"
+}

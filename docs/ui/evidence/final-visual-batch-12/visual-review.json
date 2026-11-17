@@ -1,0 +1,430 @@
+{
+  "nativeCases": 51,
+  "nativeViewports": 227,
+  "contactSheets": 95,
+  "allInspected": true,
+  "completedCheckInAccepted": false,
+  "reviewed": [
+    {
+      "file": "inspection/393-font-1-entry-1.jpg",
+      "sha256": "201bf2ee78c1b46ff18c4ef0bb627311f4f28ab627cd36443e56ec2fed9152f4"
+    },
+    {
+      "file": "inspection/320-font-2-entry-1.jpg",
+      "sha256": "700c9e43e098f5c22f623bc75cdbae43f93f7afff92bcf4d3f7f4602b8e6f205"
+    },
+    {
+      "file": "inspection/393-font-1-questions-1.jpg",
+      "sha256": "39ba0eabf56be831cd9155f9ae8adfe8edd8985a9ed71dee2928f1587f6499ed"
+    },
+    {
+      "file": "inspection/393-font-1-questions-2.jpg",
+      "sha256": "3021db57547a7089092105185b5fdd2813de94f8ccd890872a7b8a91b03d270f"
+    },
+    {
+      "file": "inspection/393-font-1-questions-3.jpg",
+      "sha256": "5631f4c94c8a773b97fe3d7ca7340e59a4411f17258197d3bb2207331a81a94c"
+    },
+    {
+      "file": "inspection/320-font-2-questions-1.jpg",
+      "sha256": "9a1575ab5f094176bc609ec6132afbf9a673f60fece8d32e9fe6f297471eaae9"
+    },
+    {
+      "file": "inspection/320-font-2-questions-2.jpg",
+      "sha256": "697cbadf2a90284be6661716a6fd164a06e88b336317eea9286b332d590184a5"
+    },
+    {
+      "file": "inspection/320-font-2-questions-3.jpg",
+      "sha256": "b50538bab221a320df326d566609e6da06080dfc89b1cd7c49745fa94e551795"
+    },
+    {
+      "file": "inspection/320-font-2-questions-4.jpg",
+      "sha256": "60cefd4ba3bae79532ac93471713c38398e60fa08e392079b53021959a722944"
+    },
+    {
+      "file": "inspection/320-font-2-questions-5.jpg",
+      "sha256": "44cd471eef83cf50a60e105c819e965a342ff0f625e6a4b15a077538496012a9"
+    },
+    {
+      "file": "inspection/393-font-1-selected-1.jpg",
+      "sha256": "f675f1e5bf98b03e6f912e3a3a4e3ed2cbf9c5afa410439111452b62389d001e"
+    },
+    {
+      "file": "inspection/393-font-1-selected-2.jpg",
+      "sha256": "0831433e999fce4c1c4b4f34e9394f2d7c5a5871dac0c151d6ee36815e8c4182"
+    },
+    {
+      "file": "inspection/393-font-1-selected-3.jpg",
+      "sha256": "38c6dd2a2177b6c07145338a04a664b6dae90bfd2e0365f4754c99c27b7ec026"
+    },
+    {
+      "file": "inspection/320-font-2-selected-1.jpg",
+      "sha256": "a4ae7d873d0b2d10e6ee1edcc103399f707ff4209393fcfbbdce398826f5a452"
+    },
+    {
+      "file": "inspection/320-font-2-selected-2.jpg",
+      "sha256": "e3b7ef7a48b07a73f5af6961946f6bc8a49459d42ef18562ac14c43a1b6ba756"
+    },
+    {
+      "file": "inspection/320-font-2-selected-3.jpg",
+      "sha256": "a1b211bfeec34269e609cedd98a3b17ea817bd71dced572a6a0ef7ad3af36dd5"
+    },
+    {
+      "file": "inspection/320-font-2-selected-4.jpg",
+      "sha256": "9ad7e9e467c92c707a45040ad81dd8f0771cbddcc214aeaa705a14860f665c25"
+    },
+    {
+      "file": "inspection/320-font-2-selected-5.jpg",
+      "sha256": "fddaff09883d76d68579eb553da6008e708c1331c4a9ccb7f7a1e307d5475800"
+    },
+    {
+      "file": "inspection/393-font-1-candidate-1.jpg",
+      "sha256": "1627a354a8b65605253a3426c1f0a5b7ac39921e5dcf9992aef6db5afbd9d349"
+    },
+    {
+      "file": "inspection/393-font-1-candidate-2.jpg",
+      "sha256": "bd2ff46b3d9554c1d762815de73bc7f199bcb2fd2caef046404ecfa2bb09a911"
+    },
+    {
+      "file": "inspection/393-font-1-candidate-3.jpg",
+      "sha256": "a09c976bc37d002f8fbd8b58f48b2c8692b7b29a14606ac82fd0cc0a3b450464"
+    },
+    {
+      "file": "inspection/320-font-2-candidate-1.jpg",
+      "sha256": "53a783059993626c063aad4000b07930ef3b4fb059f67dc23b84dadb319d3e8f"
+    },
+    {
+      "file": "inspection/320-font-2-candidate-2.jpg",
+      "sha256": "aed2925266321a9b4f7525750912514528f9108986186af31c446a85fdf4b6c9"
+    },
+    {
+      "file": "inspection/320-font-2-candidate-3.jpg",
+      "sha256": "0a057d34397b28e2d0dd51f5167891eaf17a130091668d3f200ea3d229a099a8"
+    },
+    {
+      "file": "inspection/320-font-2-candidate-4.jpg",
+      "sha256": "6904336705eb3009ce295b24174012da6c1db12d4ce38c84dd992197ce61ad63"
+    },
+    {
+      "file": "inspection/320-font-2-candidate-5.jpg",
+      "sha256": "e90c2882e3e4d06c12c899110418b8d66cd1edc97f2d1c74b567bcbdfc72a541"
+    },
+    {
+      "file": "inspection/320-font-2-candidate-6.jpg",
+      "sha256": "946d3124a4041198fbf4d176805a285e1771a248d468b14d772aed5c2e8b0050"
+    },
+    {
+      "file": "inspection/320-font-2-candidate-7.jpg",
+      "sha256": "b5b0d7a7f7fea49db9efebaef981eeba3240716950e1ea91670b6a7d77ca104d"
+    },
+    {
+      "file": "inspection/320-font-2-candidate-8.jpg",
+      "sha256": "9777930c8d8de46833c8f85cef7df20c88f4d73156466451657dd86011883e17"
+    },
+    {
+      "file": "inspection/393-font-1-saved-1.jpg",
+      "sha256": "cfbaebcc5e218b7b783a197fa85737d639c06f829562fb0d3f3c5eddf776884a"
+    },
+    {
+      "file": "inspection/393-font-1-saved-2.jpg",
+      "sha256": "b7b58158345c089926e5263afd75430ac18fe2868fe593d25849c0968231704f"
+    },
+    {
+      "file": "inspection/393-font-1-saved-3.jpg",
+      "sha256": "ec7f2dd1cb6a99bc43b4bf257046e705de6a46f29f4b9cb0a9c80d70d701c3c1"
+    },
+    {
+      "file": "inspection/320-font-2-saved-1.jpg",
+      "sha256": "439a88e3c66531c380bfbcc3f17ae2a017ff3eb0d5242e93e03c20f4dee61a63"
+    },
+    {
+      "file": "inspection/320-font-2-saved-2.jpg",
+      "sha256": "809c4cac8931ba55c81960975403049e8d890152ea7449c445328ee01f5bcfca"
+    },
+    {
+      "file": "inspection/320-font-2-saved-3.jpg",
+      "sha256": "5e8739726aa9d0bdf7296f0221073195a3b2f5a6cf501f0555735d543bfcad65"
+    },
+    {
+      "file": "inspection/320-font-2-saved-4.jpg",
+      "sha256": "8ea858751510cbcfb6be8e1dd19ca9b6aeed0818c5ddcbba0c50df4c7b0eccfc"
+    },
+    {
+      "file": "inspection/320-font-2-saved-5.jpg",
+      "sha256": "57b1c1c9738d71833c8b4e6368f9b3953718017becb4170bd4d144e8577d6464"
+    },
+    {
+      "file": "inspection/320-font-2-saved-6.jpg",
+      "sha256": "ac5eb1d905371ec46647cba0862561174b21e93f8de0fedc18431ab1d7dc9e23"
+    },
+    {
+      "file": "inspection/393-font-1-confirmed-1.jpg",
+      "sha256": "acfe5cf8daee1a9fdabfef15498d3b4a749e7230cec4ccd5f4182985b9391b61"
+    },
+    {
+      "file": "inspection/320-font-2-confirmed-1.jpg",
+      "sha256": "d93d2da15f05fbe28040bc06fc9ff586f5b8ed3429147c4ebae292eac6556f69"
+    },
+    {
+      "file": "inspection/393-font-1-error-1.jpg",
+      "sha256": "0527fb3d058a254939709d81d60fe5a18dbf5a62627c274eae2bfeb8ec80c4a8"
+    },
+    {
+      "file": "inspection/320-font-2-error-1.jpg",
+      "sha256": "abacc53691ecbabcb9145d3815717767f2bdefa3ee240b2ae82193d9319a94cc"
+    },
+    {
+      "file": "inspection/393-font-1-auth-1.jpg",
+      "sha256": "f01d1ab2ab364a2c5adaa0ee11fe487208b4c79643fc0f2a8263c7fbe77bab91"
+    },
+    {
+      "file": "inspection/320-font-2-auth-1.jpg",
+      "sha256": "f11f8c41559b2b345e62e3d35e4edb4c106c5391ab7a91c8baacccdfdd2e1aa3"
+    },
+    {
+      "file": "inspection/320-font-2-auth-2.jpg",
+      "sha256": "745a3da275d63f0b741d3f228d9915951d905a0d123f50a25db48d2fb26be263"
+    },
+    {
+      "file": "inspection/393-font-1-auth-register-1.jpg",
+      "sha256": "cfe23bc992d35d54ad26a5bab6c25dab9b0f89697599f93ab50fcb7017ef653e"
+    },
+    {
+      "file": "inspection/320-font-2-auth-register-1.jpg",
+      "sha256": "510a4c837f593d27070c7a369f7c5883925474381a1dbe1e9ad79bdaa4c37ce3"
+    },
+    {
+      "file": "inspection/320-font-2-auth-register-2.jpg",
+      "sha256": "568490ee523718e82c7774dc671ef99edff14bfe6296889d49fd89e7ebbb8088"
+    },
+    {
+      "file": "inspection/393-font-1-auth-error-1.jpg",
+      "sha256": "5299e573267c5dcff3e0cdee623359b5813310e04a88fa6cc85f458d4fedd8fb"
+    },
+    {
+      "file": "inspection/320-font-2-auth-error-1.jpg",
+      "sha256": "c1b91693d6fedc433912ed79cc3d5d18b5073b4386a078bdda23abb2cb2b300a"
+    },
+    {
+      "file": "inspection/320-font-2-auth-error-2.jpg",
+      "sha256": "d1c69d513c653cb3125a69d70c6fe2e420a16e9e74a0f9f59c2f14a30f78d9d2"
+    },
+    {
+      "file": "inspection/393-font-1-unlinked-1.jpg",
+      "sha256": "68b529bce7c2cc0d83b5782104aa00c38c266fe4e7271431cb14f42f681028e7"
+    },
+    {
+      "file": "inspection/320-font-2-unlinked-1.jpg",
+      "sha256": "618ee59397e42f742bd9806796d6cc5e71ea8c874ed4081fa171b6e6af1c612c"
+    },
+    {
+      "file": "inspection/320-font-2-unlinked-2.jpg",
+      "sha256": "53c5d495856589f98aa75ba20c05f2b2fc7f32495fc3122b8ccb476d70860006"
+    },
+    {
+      "file": "inspection/393-font-1-connected-1.jpg",
+      "sha256": "950e6c7674d1505bff20fd387fc8729deeb2701ec8efdbb9e7851f7a517897bc"
+    },
+    {
+      "file": "inspection/320-font-2-connected-1.jpg",
+      "sha256": "15ef487ca7cb04662bdfd90c814413f6bff38a4d83990c6f70bb1337c4579397"
+    },
+    {
+      "file": "inspection/320-font-2-connected-2.jpg",
+      "sha256": "bffd256d0712f141e0d3bda0b91511f93c9c1147c7a4c8290c51f4d6a8afe4c8"
+    },
+    {
+      "file": "inspection/393-font-1-history-1.jpg",
+      "sha256": "55f8c0618d31d9a0eae285708b4c8483be41ad1fd71714fee28cf5cca5c1b246"
+    },
+    {
+      "file": "inspection/320-font-2-history-1.jpg",
+      "sha256": "a97f7eef5aa339e2fa2dee8a3582de72109e09424564e6c47a85e7c1edb56e5a"
+    },
+    {
+      "file": "inspection/320-font-2-history-2.jpg",
+      "sha256": "b29be7f16e8cebdeeff9fc6932c5f8f4563868238ff9f27818b7b8167d44c8d9"
+    },
+    {
+      "file": "inspection/320-font-2-history-3.jpg",
+      "sha256": "ff6666b414bb2605fd81dd518575818f89a41af05831bf585c94aa9004231f8c"
+    },
+    {
+      "file": "inspection/393-font-1-reconnect-1.jpg",
+      "sha256": "73846bedb429941a6d957d27874a9b8ae8a143938cff87a96e6c8274ee54322c"
+    },
+    {
+      "file": "inspection/320-font-2-reconnect-1.jpg",
+      "sha256": "11ad7ed92ddbb729fc9e0cf1b2ad26ba5eb4e6ea7ccb8de06c70a57df54ece52"
+    },
+    {
+      "file": "inspection/320-font-2-reconnect-2.jpg",
+      "sha256": "af59958c50615776c973f7ac5f637078806ec8bac3234429cc69f2806eb8d54b"
+    },
+    {
+      "file": "inspection/393-font-1-pioneer-1.jpg",
+      "sha256": "5ee533e28929fc54ef91458a78f73ffbf919d3e4edce33e7ac8a745b8304ade4"
+    },
+    {
+      "file": "inspection/320-font-2-pioneer-1.jpg",
+      "sha256": "d7c49bb4f739695e6aa2797e90d0d083875e5008512733632a390e070d384632"
+    },
+    {
+      "file": "inspection/393-font-1-pioneer-error-1.jpg",
+      "sha256": "9c9b59b43842db65f653f29db9e71a26ccdf406fe3d26dddf67635f89a98cd70"
+    },
+    {
+      "file": "inspection/320-font-2-pioneer-error-1.jpg",
+      "sha256": "538b85c9e2be4aef3b1f2c99007842a8bfff6683743b204117b5c8fd48e928c1"
+    },
+    {
+      "file": "inspection/320-font-2-pioneer-error-2.jpg",
+      "sha256": "422202cc6fa6b9cd79778fbb4f6b339460e4f9dfad61cd98e6655151c5591a28"
+    },
+    {
+      "file": "inspection/393-font-1-profile-1.jpg",
+      "sha256": "dff92d857d56ff74d3315784538ed9c2ac2b085c387abbb18900e1dc92a23890"
+    },
+    {
+      "file": "inspection/320-font-2-profile-1.jpg",
+      "sha256": "e1bdf4edbd7779ffb28cfb86c3443e12d3acc4a0a8d6970301265ccbfcee7f23"
+    },
+    {
+      "file": "inspection/393-font-1-configuration-1.jpg",
+      "sha256": "4ec50c5e9a9a39990bddacb113dde3347a994599f4206ad48a600da1db79f907"
+    },
+    {
+      "file": "inspection/320-font-2-configuration-1.jpg",
+      "sha256": "b4ef298b0a7d39c5609a14bffbfe8250343d46659cf8fe1c901c56f9e8016b34"
+    },
+    {
+      "file": "inspection/393-font-1-session-loading-1.jpg",
+      "sha256": "eba302c5bf8d71519fa799d5186470abe9c13d7753633cf211af6bec415ffdec"
+    },
+    {
+      "file": "inspection/320-font-2-session-loading-1.jpg",
+      "sha256": "f886e502c00d2a9a02b94e3221364de489286651dd0f12e96cd7a15c5e09abab"
+    },
+    {
+      "file": "inspection/393-font-1-advice-1.jpg",
+      "sha256": "2ee857ce48fb7bec34eeee9b42ed0b25fb32b286b5ea0548607e09d1d3105f47"
+    },
+    {
+      "file": "inspection/393-font-1-advice-2.jpg",
+      "sha256": "6f0a9243beb2809fcee75c04d3092816d4cefd8b7a165cac91b8c361e64c50be"
+    },
+    {
+      "file": "inspection/393-font-1-advice-3.jpg",
+      "sha256": "f90fe6e4ebd13d503f4e6cded96367869919e4e83d73d5fd910b590470a8aa98"
+    },
+    {
+      "file": "inspection/320-font-2-advice-1.jpg",
+      "sha256": "afc1a3ddca841c70ced0cdd5f2f5733f79d78c91b37e583cffc2a0817a1c8707"
+    },
+    {
+      "file": "inspection/320-font-2-advice-2.jpg",
+      "sha256": "2bb02178a84fb8af19363b8fa4dde61cec122861940824154c1726600a699b4b"
+    },
+    {
+      "file": "inspection/320-font-2-advice-3.jpg",
+      "sha256": "5ecec1fd4ef8d5b668183260338f47a346ec13150d1a2e46174878d1f655a1b0"
+    },
+    {
+      "file": "inspection/320-font-2-advice-4.jpg",
+      "sha256": "23d346bb52e04bff036baf100512953baa935535cc732a19ed0b886e1081ea43"
+    },
+    {
+      "file": "inspection/320-font-2-advice-5.jpg",
+      "sha256": "6d9fb653212be989d21456b11983c6e40cf30dc3e89a2197524c0925894a7c71"
+    },
+    {
+      "file": "inspection/320-font-2-advice-6.jpg",
+      "sha256": "77598a9f76e0f2819bb59dacc7719e932b9d82bbbd8502b5a7303dc2114d7cbd"
+    },
+    {
+      "file": "inspection/393-font-1-sheet-1.jpg",
+      "sha256": "d659cb2d5532ecbaee8d1ca5b1ec7f6645b15c6be2f1853ba1a01bc791d42211"
+    },
+    {
+      "file": "inspection/320-font-2-sheet-1.jpg",
+      "sha256": "c7d53befc892d2db29e0b2283a4bed54471e57b54854fbb09a21852e65b10d76"
+    },
+    {
+      "file": "inspection/320-font-1-entry-1.jpg",
+      "sha256": "fbef66e21a6c1d039941050e6e284156d2439200dfa480c538a35ebe50e9ee56"
+    },
+    {
+      "file": "inspection/360-font-1-entry-1.jpg",
+      "sha256": "5427f3f456ba88ed4e8043f1e3ba636d7803b4135df43abe3113c12fd9f7f6f0"
+    },
+    {
+      "file": "inspection/412-font-1-entry-1.jpg",
+      "sha256": "5604b033af9d0856479d851a695062520404ee417273d68bf46e222a4ae559b9"
+    },
+    {
+      "file": "inspection/320-font-1-auth-1.jpg",
+      "sha256": "5db3c043cf9ca727fad63ea34510242d3655d3faface715244e7c7d6490b0494"
+    },
+    {
+      "file": "inspection/360-font-1-auth-1.jpg",
+      "sha256": "463b22ea8f3fc064b663a3a290fae1591422dd76d65729b39e64b9f48af9aa12"
+    },
+    {
+      "file": "inspection/412-font-1-auth-1.jpg",
+      "sha256": "d779d89ab49de8adbd83c952490fff2dd854c0150a32839aace1c512d9facb04"
+    },
+    {
+      "file": "inspection/320-font-1-sheet-1.jpg",
+      "sha256": "c16751d88cfb5838115ecebf80d0eee640ab0b01bb07af77b100bbccb7eb6063"
+    },
+    {
+      "file": "inspection/360-font-1-sheet-1.jpg",
+      "sha256": "bc6a5f9ed79677fd68e9553252338d897fb54f34646156a00721aa41b6daff79"
+    },
+    {
+      "file": "inspection/412-font-1-sheet-1.jpg",
+      "sha256": "38e26bcc53c1874ad51f2a85ab5bcd86db23f22f7c0524a0e4cb10ad25a58938"
+    }
+  ],
+  "interactionContactSheets": 4,
+  "interactionViewports": 8,
+  "nativeInteractionChecks": 10,
+  "interactionReview": [
+    {
+      "file": "interaction-inspection-1.jpg",
+      "sources": [
+        "interaction-auth-keyboard.png",
+        "interaction-context-confirmation.png"
+      ],
+      "sha256": "9b66d0601de1b205ea42a052dcec3f885fcc53049cbe411d8fe726caac4b072a",
+      "visuallyInspected": true
+    },
+    {
+      "file": "interaction-inspection-2.jpg",
+      "sources": [
+        "interaction-disconnect-confirmation.png",
+        "interaction-language-dutch.png"
+      ],
+      "sha256": "0b16b6b9ca442fde58d80970a3fd50b6f2729dfd362615ea54cce5de9e2cea6a",
+      "visuallyInspected": true
+    },
+    {
+      "file": "interaction-inspection-3.jpg",
+      "sources": [
+        "interaction-language-english.png",
+        "interaction-profile-dispatch.png"
+      ],
+      "sha256": "8e28c3d30ac6113c86393c753fb08581badd73f82adf507011fa7ccc70211f75",
+      "visuallyInspected": true
+    },
+    {
+      "file": "interaction-inspection-4.jpg",
+      "sources": [
+        "interaction-proposal-rejection.png",
+        "interaction-signout-dispatch.png"
+      ],
+      "sha256": "583fd8667967e0249a984a74321696d3b628755072acbf49244a0872ec239725",
+      "visuallyInspected": true
+    }
+  ]
+}

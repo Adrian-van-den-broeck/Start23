@@ -1,0 +1,418 @@
+[
+  {
+    "case": "form-393-font-1-nl",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "form",
+    "pngs": [
+      "form-393-font-1-nl-top.png",
+      "form-393-font-1-nl-lower-1.png"
+    ]
+  },
+  {
+    "case": "workout-393-font-1-nl",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "workout",
+    "pngs": [
+      "workout-393-font-1-nl-top.png",
+      "workout-393-font-1-nl-lower-1.png"
+    ]
+  },
+  {
+    "case": "notices-393-font-1-nl",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "notices",
+    "pngs": [
+      "notices-393-font-1-nl-top.png",
+      "notices-393-font-1-nl-lower-1.png"
+    ]
+  },
+  {
+    "case": "states-393-font-1-nl",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "states",
+    "pngs": [
+      "states-393-font-1-nl-top.png",
+      "states-393-font-1-nl-lower-1.png"
+    ]
+  },
+  {
+    "case": "form-393-font-1-en",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 1,
+    "language": "en",
+    "section": "form",
+    "pngs": [
+      "form-393-font-1-en-top.png",
+      "form-393-font-1-en-lower-1.png"
+    ]
+  },
+  {
+    "case": "workout-393-font-1-en",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 1,
+    "language": "en",
+    "section": "workout",
+    "pngs": [
+      "workout-393-font-1-en-top.png",
+      "workout-393-font-1-en-lower-1.png"
+    ]
+  },
+  {
+    "case": "notices-393-font-1-en",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 1,
+    "language": "en",
+    "section": "notices",
+    "pngs": [
+      "notices-393-font-1-en-top.png",
+      "notices-393-font-1-en-lower-1.png"
+    ]
+  },
+  {
+    "case": "states-393-font-1-en",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 1,
+    "language": "en",
+    "section": "states",
+    "pngs": [
+      "states-393-font-1-en-top.png",
+      "states-393-font-1-en-lower-1.png"
+    ]
+  },
+  {
+    "case": "form-393-font-2-nl",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "form",
+    "pngs": [
+      "form-393-font-2-nl-top.png",
+      "form-393-font-2-nl-lower-1.png",
+      "form-393-font-2-nl-lower-2.png",
+      "form-393-font-2-nl-lower-3.png"
+    ]
+  },
+  {
+    "case": "workout-393-font-2-nl",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "workout",
+    "pngs": [
+      "workout-393-font-2-nl-top.png",
+      "workout-393-font-2-nl-lower-1.png",
+      "workout-393-font-2-nl-lower-2.png",
+      "workout-393-font-2-nl-lower-3.png"
+    ]
+  },
+  {
+    "case": "notices-393-font-2-nl",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "notices",
+    "pngs": [
+      "notices-393-font-2-nl-top.png",
+      "notices-393-font-2-nl-lower-1.png",
+      "notices-393-font-2-nl-lower-2.png",
+      "notices-393-font-2-nl-lower-3.png"
+    ]
+  },
+  {
+    "case": "states-393-font-2-nl",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "states",
+    "pngs": [
+      "states-393-font-2-nl-top.png",
+      "states-393-font-2-nl-lower-1.png",
+      "states-393-font-2-nl-lower-2.png",
+      "states-393-font-2-nl-lower-3.png"
+    ]
+  },
+  {
+    "case": "form-393-font-2-en",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 2,
+    "language": "en",
+    "section": "form",
+    "pngs": [
+      "form-393-font-2-en-top.png",
+      "form-393-font-2-en-lower-1.png",
+      "form-393-font-2-en-lower-2.png",
+      "form-393-font-2-en-lower-3.png"
+    ]
+  },
+  {
+    "case": "workout-393-font-2-en",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 2,
+    "language": "en",
+    "section": "workout",
+    "pngs": [
+      "workout-393-font-2-en-top.png",
+      "workout-393-font-2-en-lower-1.png",
+      "workout-393-font-2-en-lower-2.png",
+      "workout-393-font-2-en-lower-3.png"
+    ]
+  },
+  {
+    "case": "notices-393-font-2-en",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 2,
+    "language": "en",
+    "section": "notices",
+    "pngs": [
+      "notices-393-font-2-en-top.png",
+      "notices-393-font-2-en-lower-1.png",
+      "notices-393-font-2-en-lower-2.png",
+      "notices-393-font-2-en-lower-3.png"
+    ]
+  },
+  {
+    "case": "states-393-font-2-en",
+    "requestedWidth": 393,
+    "actualWidth": 393.62186788154895,
+    "fontScale": 2,
+    "language": "en",
+    "section": "states",
+    "pngs": [
+      "states-393-font-2-en-top.png",
+      "states-393-font-2-en-lower-1.png",
+      "states-393-font-2-en-lower-2.png",
+      "states-393-font-2-en-lower-3.png"
+    ]
+  },
+  {
+    "case": "form-320-font-1-nl",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "form",
+    "pngs": [
+      "form-320-font-1-nl-top.png",
+      "form-320-font-1-nl-lower-1.png"
+    ]
+  },
+  {
+    "case": "workout-320-font-1-nl",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "workout",
+    "pngs": [
+      "workout-320-font-1-nl-top.png",
+      "workout-320-font-1-nl-lower-1.png"
+    ]
+  },
+  {
+    "case": "notices-320-font-1-nl",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "notices",
+    "pngs": [
+      "notices-320-font-1-nl-top.png",
+      "notices-320-font-1-nl-lower-1.png"
+    ]
+  },
+  {
+    "case": "states-320-font-1-nl",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "states",
+    "pngs": [
+      "states-320-font-1-nl-top.png",
+      "states-320-font-1-nl-lower-1.png"
+    ]
+  },
+  {
+    "case": "form-320-font-1-en",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 1,
+    "language": "en",
+    "section": "form",
+    "pngs": [
+      "form-320-font-1-en-top.png",
+      "form-320-font-1-en-lower-1.png"
+    ]
+  },
+  {
+    "case": "workout-320-font-1-en",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 1,
+    "language": "en",
+    "section": "workout",
+    "pngs": [
+      "workout-320-font-1-en-top.png",
+      "workout-320-font-1-en-lower-1.png"
+    ]
+  },
+  {
+    "case": "notices-320-font-1-en",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 1,
+    "language": "en",
+    "section": "notices",
+    "pngs": [
+      "notices-320-font-1-en-top.png",
+      "notices-320-font-1-en-lower-1.png"
+    ]
+  },
+  {
+    "case": "states-320-font-1-en",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 1,
+    "language": "en",
+    "section": "states",
+    "pngs": [
+      "states-320-font-1-en-top.png",
+      "states-320-font-1-en-lower-1.png"
+    ]
+  },
+  {
+    "case": "form-320-font-2-nl",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "form",
+    "pngs": [
+      "form-320-font-2-nl-top.png",
+      "form-320-font-2-nl-lower-1.png",
+      "form-320-font-2-nl-lower-2.png",
+      "form-320-font-2-nl-lower-3.png"
+    ]
+  },
+  {
+    "case": "workout-320-font-2-nl",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "workout",
+    "pngs": [
+      "workout-320-font-2-nl-top.png",
+      "workout-320-font-2-nl-lower-1.png",
+      "workout-320-font-2-nl-lower-2.png",
+      "workout-320-font-2-nl-lower-3.png"
+    ]
+  },
+  {
+    "case": "notices-320-font-2-nl",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "notices",
+    "pngs": [
+      "notices-320-font-2-nl-top.png",
+      "notices-320-font-2-nl-lower-1.png",
+      "notices-320-font-2-nl-lower-2.png",
+      "notices-320-font-2-nl-lower-3.png"
+    ]
+  },
+  {
+    "case": "states-320-font-2-nl",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "states",
+    "pngs": [
+      "states-320-font-2-nl-top.png",
+      "states-320-font-2-nl-lower-1.png",
+      "states-320-font-2-nl-lower-2.png",
+      "states-320-font-2-nl-lower-3.png"
+    ]
+  },
+  {
+    "case": "form-320-font-2-en",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 2,
+    "language": "en",
+    "section": "form",
+    "pngs": [
+      "form-320-font-2-en-top.png",
+      "form-320-font-2-en-lower-1.png",
+      "form-320-font-2-en-lower-2.png",
+      "form-320-font-2-en-lower-3.png"
+    ]
+  },
+  {
+    "case": "workout-320-font-2-en",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 2,
+    "language": "en",
+    "section": "workout",
+    "pngs": [
+      "workout-320-font-2-en-top.png",
+      "workout-320-font-2-en-lower-1.png",
+      "workout-320-font-2-en-lower-2.png",
+      "workout-320-font-2-en-lower-3.png"
+    ]
+  },
+  {
+    "case": "notices-320-font-2-en",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 2,
+    "language": "en",
+    "section": "notices",
+    "pngs": [
+      "notices-320-font-2-en-top.png",
+      "notices-320-font-2-en-lower-1.png",
+      "notices-320-font-2-en-lower-2.png",
+      "notices-320-font-2-en-lower-3.png"
+    ]
+  },
+  {
+    "case": "states-320-font-2-en",
+    "requestedWidth": 320,
+    "actualWidth": 320.0,
+    "fontScale": 2,
+    "language": "en",
+    "section": "states",
+    "pngs": [
+      "states-320-font-2-en-top.png",
+      "states-320-font-2-en-lower-1.png",
+      "states-320-font-2-en-lower-2.png",
+      "states-320-font-2-en-lower-3.png"
+    ]
+  }
+]

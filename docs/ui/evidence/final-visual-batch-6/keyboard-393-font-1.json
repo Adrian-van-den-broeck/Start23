@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-07T17:31:33.440254+00:00",
+  "serial": "emulator-5554",
+  "fixture": {
+    "state": "availability",
+    "language": "en",
+    "width": 393,
+    "fontScale": 1,
+    "inertActions": true
+  },
+  "provenance": "Actual focused date field and native IME screenshot; no UIAutomation after input focus",
+  "nativeInputBoundsBeforeFocus": [
+    255,
+    1200,
+    968,
+    1355
+  ],
+  "nativeKeyboardShown": true,
+  "nativeInputViewShown": true,
+  "density": "Physical density: 440\nOverride density: 439",
+  "fontScale": "1"
+}

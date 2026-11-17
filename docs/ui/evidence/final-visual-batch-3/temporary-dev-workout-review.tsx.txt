@@ -1,0 +1,44 @@
+// TEMPORARY read-only native Batch 3 gallery; removed after evidence.
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import type { PlannedWorkout } from '@/api/types';
+import { useLanguage } from '@/i18n/LanguageProvider';
+import { WorkoutSummary } from '@/ui-v2/components/WorkoutSummary';
+import { Button } from '@/ui-v2/primitives/Button';
+import { Screen } from '@/ui-v2/primitives/Screen';
+import { WorkoutDetailScreen } from '@/ui-v2/screens/WorkoutDetailScreen';
+import { sourceSegment, sourceWorkout } from '@/ui-v2/utils/workout.test-fixtures';
+import { workoutSummaryViewModel } from '@/ui-v2/utils/workoutSummaryViewModel';
+import { space } from '@/ui-v2/tokens';
+
+function Review() {
+  const { state } = useLocalSearchParams<{ state?: string }>();
+  const router = useRouter();
+  const { t } = useLanguage();
+  const [open, setOpen] = useState(true);
+  const workout: PlannedWorkout = state === 'run' ? { ...sourceWorkout, discipline: 'run', status: 'scheduled', segments: [
+    sourceSegment, { ...sourceSegment, sequence: 4, zone_target: null },
+    { ...sourceSegment, sequence: 2, zone_target: null, rpe_target: null },
+    { ...sourceSegment, sequence: 3, zone_target: null, rpe_target: null, protocol_target: null },
+  ] } : state === 'bike' ? { ...sourceWorkout, discipline: 'bike', status: 'scheduled' }
+    : state === 'distance' ? { ...sourceWorkout, duration_minutes: null, segments: [], description: '', rpe_zones: [] }
+      : sourceWorkout;
+  if (state === 'candidate') return <Screen title="Public candidate fixture" onBack={() => router.back()} focusHeading={false}>
+    <WorkoutSummary summary={workoutSummaryViewModel({ ...sourceWorkout, discipline: 'run' })} variant="focus"
+      footer={<View style={{ gap: space[12] }}>
+        <Button label={t('creation.choose')} onPress={() => undefined} />
+        <Button label={t('creation.pass')} variant="secondary" onPress={() => undefined} />
+      </View>} />
+  </Screen>;
+  return <><Screen title="Public detail origin" onBack={() => router.back()} focusHeading={false}>
+    <Button label="Open public detail" onPress={() => setOpen(true)} />
+  </Screen><WorkoutDetailScreen workout={open ? workout : null} onClose={() => setOpen(false)} /></>;
+}
+export default function DevWorkoutReview() {
+  const { language, review } = useLocalSearchParams<{ language?: string; review?: string }>();
+  const { setPreference } = useLanguage();
+  useEffect(() => { void setPreference(language === 'en' ? 'en' : 'nl'); }, [language, setPreference]);
+  if (!__DEV__) return <Redirect href="/" />;
+  return <Review key={review} />;
+}

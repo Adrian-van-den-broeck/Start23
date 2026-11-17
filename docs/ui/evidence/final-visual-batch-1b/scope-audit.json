@@ -1,0 +1,35 @@
+{
+  "baselineFileCount": 195,
+  "changedExistingFiles": [
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\assets\\assetColors.ts",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\primitives\\Button.test.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\primitives\\Button.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\primitives\\Card.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\primitives\\Divider.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\primitives\\Input.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\primitives\\Text.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\tokens\\colors.ts",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\tokens\\index.ts",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\tokens\\layout.ts",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\tokens\\tokens.test.ts",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\tokens\\typography.ts"
+  ],
+  "newFiles": [
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\dev\\PrimitiveGallery.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\primitives\\ChoiceRow.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\primitives\\FinalPrimitives.test.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\primitives\\FormField.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\primitives\\IconTile.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\primitives\\Notice.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\primitives\\SegmentedControl.tsx",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\src\\ui-v2\\tokens\\shadows.ts",
+    ".worktrees\\wombo-ui-v2-activities\\mobile\\app\\dev-primitives.tsx"
+  ],
+  "unchangedProtectedFileCount": 183,
+  "screenOwnerAndV1FilesUnchanged": true,
+  "dependenciesConfigUnchangedFrom1A": true,
+  "recursivePublicSourceFilesScanned": 139,
+  "privacyFindings": [],
+  "hexOutsidePalette": [],
+  "fontClampFindings": []
+}

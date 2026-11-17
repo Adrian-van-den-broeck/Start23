@@ -1,0 +1,19 @@
+{
+  "defect": "Explicit overflow hidden on Week ScrollView clipped the final goal card with long siblings at 320 dp and 200% text.",
+  "correction": "Use native ScrollView default overflow behavior. Keep the existing single scroll owner and padding.",
+  "beforeGoalBounds": [
+    108,
+    1312,
+    972,
+    1740
+  ],
+  "viewportBottom": 1740,
+  "afterGoalBounds": [
+    108,
+    1158,
+    972,
+    1633
+  ],
+  "afterGoalEntirelyVisible": true,
+  "temporaryGeometryLoggingRemoved": true
+}

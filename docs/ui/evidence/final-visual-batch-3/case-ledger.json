@@ -1,0 +1,134 @@
+[
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "run"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "bike"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "swim"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "distance"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "run"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "bike"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "swim"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "distance"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "run"
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "run"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "candidate"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "run"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "bike"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "swim"
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "state": "distance"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "run"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "bike"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "swim"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "distance"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "state": "run"
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "en",
+    "state": "run"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "state": "candidate"
+  }
+]

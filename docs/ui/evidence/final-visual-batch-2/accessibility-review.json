@@ -1,0 +1,27 @@
+{
+  "acceptedCaptures": [
+    "accepted-talkback-calendar-focus",
+    "accepted-talkback-calendar-activated",
+    "accepted-talkback-activities-focus",
+    "accepted-talkback-activities-activated",
+    "accepted-talkback-week-focus",
+    "accepted-talkback-week-activated",
+    "accepted-talkback-heading-focus",
+    "accepted-talkback-profile-focus",
+    "accepted-talkback-profile-activated"
+  ],
+  "talkBackVersion": "15.0.0.639625893",
+  "input": "Emulator native touchscreen events through one authenticated console connection for timed double taps",
+  "uiAutomationUsedWhileTalkBackEnabled": false,
+  "visuallyVerified": [
+    "Calendar focus and activation selects Calendar",
+    "Activities focus and activation selects Activities",
+    "Week focus and activation selects Week",
+    "Week return automatically focuses heading",
+    "Profile focus and activation opens secondary profile"
+  ],
+  "decorativeLandscape": "Excluded from accessibility tree in source/component assertions",
+  "speechAudioRecorded": false,
+  "reducedMotionCapture": "reduced-motion-week",
+  "diagnosticPromptStaleAndFrameworkInputFramesExcluded": true
+}

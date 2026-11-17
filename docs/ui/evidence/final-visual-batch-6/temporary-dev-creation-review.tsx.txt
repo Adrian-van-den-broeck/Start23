@@ -1,0 +1,53 @@
+import { Redirect, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import type { Discipline } from '../src/api/types';
+import { useLanguage } from '../src/i18n/LanguageProvider';
+import { AvailabilityScreen, SelectionScreen } from '../src/ui-v2/screens/PlanningCreationScreens';
+import { planningCreationViewModel } from '../src/ui-v2/utils/planningCreationViewModel';
+import { draft, occurrence } from '../src/features/planning/planning.test-fixtures';
+import { colors } from '../src/ui-v2/tokens';
+
+function Review({ state }: { state: string }) {
+  const [days, setDays] = useState(new Set(state === 'none' || state === 'reuse' ? [] : state === 'oneDay' ? [2] : [0, 2, 5]));
+  const [weekStart, setWeekStart] = useState(state === 'incomplete' ? '2026-10' : '2026-10-12');
+  const [reuse, setReuse] = useState(state === 'reuse');
+  const [injuries, setInjuries] = useState<Set<Discipline>>(new Set(state === 'restrictions' ? ['run'] : []));
+  const [optIns, setOptIns] = useState<Set<Discipline>>(new Set(state === 'restrictions' ? ['bike'] : []));
+  const [action, setAction] = useState('none');
+  function toggle<T>(set: Set<T>, value: T) { const next = new Set(set); if (next.has(value)) next.delete(value); else next.add(value); return next; }
+  const availability = ['availability', 'none', 'oneDay', 'reuse', 'restrictions', 'availabilityBusy', 'incomplete'].includes(state);
+  const busy = state === 'busy' || state === 'loading' || state === 'availabilityBusy';
+  const error = state === 'stale' ? 'Refresh required: the supplied draft has changed.' : state === 'reuse' ? 'No previous-week availability to reuse.' : null;
+  const candidate = { ...occurrence, name: state === 'long' ? 'Long exact public source workout name '.repeat(5) : 'RUN-013 \u00b7 Wisselduur',
+    description: state === 'long' ? 'Supplied public description with full instructions. '.repeat(6) : state === 'sparse' ? '' : state === 'rpe' ? 'RPE 2-3' : 'START23-catalogustraining voor Halve.',
+    duration_minutes: state === 'distance' || state === 'sparse' ? null : '90',
+    distance_meters: state === 'distance' ? 2500 : null, discipline: state === 'distance' ? 'swim' as const : 'run' as const,
+    occurrence_id: 'public-candidate-3' };
+  const accepted = ['accepted', 'repeated', 'placement', 'exhausted'].includes(state) ? [{ ...candidate, occurrence_id: 'public-accepted-1' },
+    ...(state === 'repeated' ? [{ ...candidate, occurrence_id: 'public-accepted-2' }] : [])] : [];
+  const model = planningCreationViewModel({ ...draft, warnings: state === 'warning' ? draft.warnings : [],
+    state: state === 'placement' ? 'placement' : 'collecting', accepted_workouts: accepted,
+    current_candidate: ['loading','unavailable','exhausted','placement'].includes(state) ? null : candidate,
+    exhausted: state === 'exhausted', can_undo: ['skipped','accepted','repeated','exhausted','placement'].includes(state),
+    passed_count: ['skipped','repeated','exhausted'].includes(state) ? 2 : 0 });
+  const task = { busy, error, onBack: () => setAction('back'), controls: null };
+  return <View testID={`batch-6-fixture-${state}`} collapsable={false} style={{ flex: 1, backgroundColor: colors.background }}>
+    <View testID={`batch-6-action-${action}`} collapsable={false} style={{ position: 'absolute', width: 1, height: 1 }} />
+    {availability ? <AvailabilityScreen {...task} weekStart={weekStart} selectedDays={days} reusePreviousWeek={reuse}
+      injuries={injuries} crossTrainingOptIns={optIns} onWeekStart={setWeekStart}
+      onToggleDay={offset => { setDays(toggle(days, offset)); setAction(`day-${offset}`); }}
+      onReuse={() => { setReuse(!reuse); setAction('reuse'); }}
+      onInjury={sport => { setInjuries(toggle(injuries, sport)); setAction(`injury-${sport}`); }}
+      onCrossTraining={sport => { setOptIns(toggle(optIns, sport)); setAction(`optIn-${sport}`); }}
+      onCreate={async () => { setAction(`create-${weekStart}-${Array.from(days).sort().join('_')}-${reuse}`); }} />
+      : <SelectionScreen {...task} model={model} onTransition={transition => setAction(`${transition}-${candidate.occurrence_id}`)} onContinue={() => setAction('continue')} />}
+  </View>;
+}
+export default function DevCreationReview() {
+  const { state = 'selection', language, review } = useLocalSearchParams<{ state?: string; language?: string; review?: string }>();
+  const { setPreference } = useLanguage();
+  useEffect(() => { void setPreference(language === 'en' ? 'en' : 'nl'); }, [language, setPreference]);
+  if (!__DEV__) return <Redirect href="/" />;
+  return <Review key={review} state={state} />;
+}

@@ -1,0 +1,67 @@
+{
+  "pairs": [
+    {
+      "foreground": "text",
+      "background": "background",
+      "ratio": 16.479809183776617,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 17.086902799676572,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textMuted",
+      "background": "surface",
+      "ratio": 5.794670367766425,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textMuted",
+      "background": "background",
+      "ratio": 5.588787099876458,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "primary",
+      "background": "primarySoft",
+      "ratio": 8.259677625906914,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textInverse",
+      "background": "primary",
+      "ratio": 9.59689960234215,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "primary",
+      "background": "surface",
+      "ratio": 9.59689960234215,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "primary",
+      "background": "warningSoft",
+      "ratio": 8.389957848159584,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "warning",
+      "background": "warningSoft",
+      "ratio": 6.011441606154814,
+      "minimum": 4.5,
+      "pass": true
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "baselineFiles": 206,
+  "changedExisting": [
+    "src/ui-v2/components/AttentionRow.test.tsx",
+    "src/ui-v2/components/AttentionRow.tsx",
+    "src/ui-v2/components/GoalSummaryRow.tsx",
+    "src/ui-v2/components/NextSession.tsx",
+    "src/ui-v2/components/QuickActionRow.tsx",
+    "src/ui-v2/components/WeekCompositions.test.tsx",
+    "src/ui-v2/components/WeekTaskCard.tsx",
+    "src/ui-v2/components/WorkoutSummary.tsx",
+    "src/ui-v2/screens/WeekScreen.refinement.test.tsx",
+    "src/ui-v2/screens/WeekScreen.tsx"
+  ],
+  "newFiles": [
+    "src/ui-v2/components/WeekHeader.tsx"
+  ],
+  "unchangedFiles": 196,
+  "publicSourceFiles": 145,
+  "privacyFindings": [],
+  "protectedOwnersMappersRoutesShellV1TokensDependenciesUnchanged": true,
+  "sourceSha256": {
+    "src/ui-v2/components/AttentionRow.test.tsx": "d3da9dac47252fe06854b6c379d31b40ec30e48090a9f798bd58f9f3e3344d8c",
+    "src/ui-v2/components/AttentionRow.tsx": "114e09fff92796ca9d812d5d431e7a008e8dc8f8fe41648f4939c23fe983e263",
+    "src/ui-v2/components/GoalSummaryRow.tsx": "ded628db7184d091c9fc5670ebd412e16514ba564c4584c4ed9fb5ceb8c2597b",
+    "src/ui-v2/components/NextSession.tsx": "1b5fcfeed47972344150abcb08eabc455b008223f71f876c2872df08c44785bf",
+    "src/ui-v2/components/QuickActionRow.tsx": "24fc5866b9e7d046302c2ebef7fcd4174705aa0480aaf0b193635a566f53d941",
+    "src/ui-v2/components/WeekCompositions.test.tsx": "86cf4e059e3e8869633f14003ae0ba602b5a72e51688d6690a86b7380ca494a8",
+    "src/ui-v2/components/WeekTaskCard.tsx": "949d9f9fc7ec6b9859205f639bdf1a77a68b76c9a178cf1caa871e581523301d",
+    "src/ui-v2/components/WorkoutSummary.tsx": "6a47caba57976db50652cb669be716346d58d4642504addef19e8a0dded3b8f4",
+    "src/ui-v2/screens/WeekScreen.refinement.test.tsx": "4d6c22333c690ed0cb28957f7a50b9d296a48eb2c04e7cff3d0bc6ead8572188",
+    "src/ui-v2/screens/WeekScreen.tsx": "1c931bcd2901787943909834bd10468acacc186c2c6337bfe44b4d35328009d5",
+    "src/ui-v2/components/WeekHeader.tsx": "7fe5631a21fec6f0edf053724159b27ffaed46e11129b564a3bc3343cd79f8c9"
+  },
+  "referencesUnchanged": true
+}

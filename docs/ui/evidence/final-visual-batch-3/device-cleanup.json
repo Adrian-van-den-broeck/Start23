@@ -1,0 +1,16 @@
+{
+  "enabledServices": "null",
+  "enabled": "0",
+  "animator": "null",
+  "window": "1.0",
+  "transition": "1.0",
+  "density": "Physical density: 440",
+  "fontScale": "1.0",
+  "reversePorts": [
+    "host-16 tcp:8081 tcp:8081"
+  ],
+  "fixtureServiceStopped": true,
+  "cleanRuntimeAuthenticated": true,
+  "cleanRuntimeFixtureBridgeAbsent": true,
+  "credentialsOrRealAthleteContentsRecorded": false
+}

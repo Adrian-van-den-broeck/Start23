@@ -1,0 +1,9 @@
+{
+  "utc": "2026-10-08T17:59:09.728615+00:00",
+  "serial": "emulator-5554",
+  "provenance": "Actual TalkBack-enabled public fixture; no accessibility dump during focus screenshot",
+  "expectedFocus": "Distance (metres, optional)",
+  "method": "Native touch exploration; no keyboard activation or hierarchy dump during focus capture",
+  "enabledServices": "com.google.android.marvin.talkback/.TalkBackService",
+  "visualFocusValidation": "Inspect actual focus rectangle; expected target alone is not evidence of accessibility focus"
+}

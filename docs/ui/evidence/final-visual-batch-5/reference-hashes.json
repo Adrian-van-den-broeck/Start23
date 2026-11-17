@@ -1,0 +1,15 @@
+{
+  "docs/ui/reference-screenshots/calendar/01-week-workouts.png": "d526206005633d4efd8fc81ebd0c41375e34889d432f1ff15c5f2385197a2b44",
+  "docs/ui/reference-screenshots/calendar/02-week-empty.png": "5891ac36af204c7d0693088174b4bf2dc3fc4f06e191ddb0bd07381b7efd6ec8",
+  "docs/ui/reference-screenshots/calendar/03-month.png": "64078862fbccd9434119a5839abc844068415ec91cde4c73a39abb0ef1ee822e",
+  "docs/ui/reference-screenshots/calendar/04-selected-date.png": "f30e74a2cd21220fa3eb7b8f0fcd19f16378119dd5bba3f81b02dca11fecbce6",
+  "docs/ui/reference-screenshots/calendar/05-multiple-same-day-01-top.png": "dccba429e24b954456683f8b97f8139d517c94bf09178f66ea4eed51c19df380",
+  "docs/ui/reference-screenshots/calendar/05-multiple-same-day-02-bottom.png": "62acf934a4f3190f36f8b8fddf210c0e93d8a991c8b55afacffa194e938a2f9c",
+  "docs/ui/reference-screenshots/calendar/06-workout-detail-entry.png": "0ff67f79baf1edbf39b5f0acac827ba618c19bae7f289210c7a30d0eb2cb1bb9",
+  "docs/ui/reference-screenshots/placement/05-active-move-entry.png": "f91baf6c09f1c0e19e6ce1581a4ae3c092ce4be52aef766296159e300b7463e7",
+  "docs/ui/reference-screenshots/placement/08-cancel.png": "74cadcf9f68a0364c2c84f82da1c09c3a5d9e0baa486fd1b031e9a1b0854f046",
+  "docs/ui/reference-screenshots/placement/09-after-move.png": "54435420539c919af984cf0c940f7a1ffb2c4c7feeadd7e98ece28d5a771ddd0",
+  "docs/ui/reference-screenshots/placement/10-calendar-after-move.png": "dece9cd6bc0f116f7675350b964f7acdef417949a25bf8bbff35b0e92b58b44b",
+  "docs/ui/mockups-final/01-calendar-week.png": "db837552fa1e7303c4ee2a782ee7a338e776a65ac50ab12c288ee6ae1df8ee00",
+  "docs/ui/mockups-final/02-calendar-month.png": "8e2c6ba90bdddb32398ba5912853afc37627c7db72e68f956ad2fb2c9fee0a4e"
+}

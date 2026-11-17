@@ -1,0 +1,25 @@
+[
+  {
+    "name": "Strict TypeScript",
+    "command": "node node_modules/typescript/bin/tsc --noEmit --noUnusedLocals --noUnusedParameters",
+    "exitCode": 0,
+    "log": "strict-types-production.log"
+  },
+  {
+    "name": "Focused Zones/calibration/privacy",
+    "exitCode": 0,
+    "suites": 5,
+    "tests": 35,
+    "log": "focused-production.log"
+  },
+  {
+    "name": "Full mobile suite on restored production roots",
+    "command": "node node_modules/jest/bin/jest.js --runInBand --setupFilesAfterEnv ./jest.setup.ts ../docs/ui/evidence/final-visual-batch-11/deterministic-proposal-fixture-date.cjs --json --outputFile ../docs/ui/evidence/final-visual-batch-11/full-mobile-tests.json",
+    "exitCode": 0,
+    "suites": 63,
+    "tests": 583,
+    "failedTests": 0,
+    "log": "full-mobile-production.log",
+    "fixtureDateLimit": "External clock applies only to two unchanged Wednesday proposal fixtures; normal Jest setup and assertions retained."
+  }
+]

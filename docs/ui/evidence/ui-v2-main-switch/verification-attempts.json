@@ -1,0 +1,17 @@
+{
+  "initialReleaseLockTest": {
+    "outcome": "Found Week switch missing activity-write lock; guard fixed; final focused release tests pass"
+  },
+  "firstFullMobileRun": {
+    "passed": 612,
+    "failed": 1,
+    "reason": "Existing all-destinations navigator round-trip exceeded unchanged 5000ms timeout while backend/full/export ran concurrently",
+    "assertionsChanged": false,
+    "timeoutChanged": false,
+    "followup": "Repeat the unchanged full mobile suite with other heavy runs finished"
+  },
+  "backend": {
+    "passed": 778,
+    "exitCode": 0
+  }
+}

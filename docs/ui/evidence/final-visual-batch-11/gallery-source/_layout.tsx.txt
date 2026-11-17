@@ -1,0 +1,7 @@
+import '../global.css';
+import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
+import { LanguageProvider } from '../src/i18n/LanguageProvider';
+export default function RootLayout(){return <GestureHandlerRootView style={{flex:1}}><SafeAreaProvider initialMetrics={initialWindowMetrics}><LanguageProvider><StatusBar style="dark"/><Stack screenOptions={{headerShown:false}}/></LanguageProvider></SafeAreaProvider></GestureHandlerRootView>;}

@@ -1,0 +1,153 @@
+{
+  "recordedUtc": "2026-10-06T16:06:37.357846+00:00",
+  "runtimeBaseSha": "19c23d58f0b71aea01478df2306e2492a515e36e",
+  "runtimeBranch": "feat/wombo-ui-v2-activities",
+  "productionScreenChanges": false,
+  "classification": "Live native asset proof; week-after is unchanged production V2 restoration. Other PNGs are diagnostic/intermediate only.",
+  "captures": {
+    "gallery-path": {
+      "utc": "2026-10-06T15:32:26.067572+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "gallery-icons-middle": {
+      "utc": "2026-10-06T15:32:50.532782+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "gallery-icons-bottom": {
+      "utc": "2026-10-06T15:33:11.191275+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "gallery-sports": {
+      "utc": "2026-10-06T15:33:28.140959+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "gallery-circles": {
+      "utc": "2026-10-06T15:39:20.059160+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "gallery-headers-final": {
+      "utc": "2026-10-06T15:37:33.467721+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "gallery-action-final": {
+      "utc": "2026-10-06T15:57:01.933010+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "headers-320-font-1": {
+      "utc": "2026-10-06T15:41:16.066020+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440\nOverride density: 540",
+      "fontScale": "1.0",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "headers-320-font-2": {
+      "utc": "2026-10-06T15:41:44.316968+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440\nOverride density: 540",
+      "fontScale": "2.0",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "headers-360-font-1": {
+      "utc": "2026-10-06T15:46:44.218599+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440\nOverride density: 480",
+      "fontScale": "1",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "headers-360-font-2": {
+      "utc": "2026-10-06T16:01:26.355353+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440\nOverride density: 480",
+      "fontScale": "2.0",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "headers-393-font-1": {
+      "utc": "2026-10-06T15:48:06.335020+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "headers-393-font-2": {
+      "utc": "2026-10-06T15:48:36.484821+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "2.0",
+      "locale": "",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "headers-412-font-1": {
+      "utc": "2026-10-06T16:04:27.662722+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440\nOverride density: 420",
+      "fontScale": "1",
+      "locale": "en-US",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "headers-412-font-2": {
+      "utc": "2026-10-06T16:05:05.718958+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440\nOverride density: 420",
+      "fontScale": "2.0",
+      "locale": "en-US",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "week-after": {
+      "utc": "2026-10-06T16:05:56.870047+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "en-US",
+      "provenance": "LIVE unchanged authenticated V2 Week, read-only navigation after gallery proof; no athlete mutation"
+    }
+  }
+}

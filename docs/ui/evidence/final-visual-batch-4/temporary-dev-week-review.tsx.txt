@@ -1,0 +1,55 @@
+// TEMPORARY read-only Batch 4 review. Removed after native evidence.
+import { Redirect, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useLanguage } from '@/i18n/LanguageProvider';
+import { activePlan, draft, pendingPlan, workout } from '@/features/planning/planning.test-fixtures';
+import { BottomNavigation, NavigationFooter } from '@/ui-v2/components/BottomNavigation';
+import { PendingRpeBanner } from '@/ui-v2/components/PendingRpeBanner';
+import { ShellInsets } from '@/ui-v2/components/ShellInsets';
+import { WeekScreen } from '@/ui-v2/screens/WeekScreen';
+import { WorkoutDetailScreen } from '@/ui-v2/screens/WorkoutDetailScreen';
+import { weekHomeViewModel } from '@/ui-v2/utils/weekHomeViewModel';
+import { colors } from '@/ui-v2/tokens';
+import type { PlannedWorkout } from '@/api/types';
+
+function Review({ state }: { state: string }) {
+  const { t } = useLanguage();
+  const insets = useSafeAreaInsets();
+  const [detail, setDetail] = useState<PlannedWorkout | null>(null);
+  const clean = { ...activePlan, warnings: [] };
+  const plan = state === 'siblings' ? { ...clean, workouts: [workout, { ...workout, id: 'second-occurrence', name: 'Long exact source name '.repeat(6) }] }
+    : state === 'sparse' ? { ...clean, workouts: [{ ...workout, duration_minutes: null, description: '', distance_meters: null }] }
+      : state === 'rest' ? { ...activePlan, workouts: [], rest_days: [{ date: '2026-10-07', reason: 'planned_rest' as const }] }
+        : state === 'warning' ? activePlan : clean;
+  const active = ['active', 'activePending', 'warning', 'rest', 'next', 'siblings', 'reminder', 'sparse', 'attention'].includes(state) ? plan : null;
+  const proposal = state === 'activePending' || state === 'attention' ? { ...pendingPlan, workouts: [{ ...workout, name: 'Pending occurrence never shown as active' }] } : pendingPlan;
+  const model = weekHomeViewModel({
+    plan: ['pending', 'activePending', 'attention'].includes(state) ? proposal : active,
+    activePlan: active, draft: state === 'selection' || state === 'attention' ? draft : state === 'placement' ? { ...draft, state: 'placement' } : null,
+    today: state === 'next' ? '2026-10-05' : '2026-10-07', resumeState: state === 'loading' ? 'loading' : state === 'failed' ? 'failed' : 'ready', activeReadState: 'ready',
+  });
+  const reminder = state === 'reminder';
+  return <View testID={`batch-4-fixture-${state}`} collapsable={false} style={{ flex: 1, backgroundColor: colors.background }}>
+    {reminder ? <PendingRpeBanner label={t('rpe.reminder', { count: 1, suffix: '', verbSuffix: '' })} disabled={false} onPress={() => undefined} /> : null}
+    <ShellInsets top={reminder} bottom>
+      <WeekScreen model={model} busy={false} error={null} controls={null} goalName="Supplied race goal"
+        onAction={() => undefined} onProfile={() => undefined} onActivities={() => undefined} onCheckIn={() => undefined} onZones={() => undefined} onGoal={() => undefined}
+        onOpenWorkout={(id) => setDetail(plan.workouts.find(item => item.id === id) ?? null)} />
+    </ShellInsets>
+    <NavigationFooter bottomInset={insets.bottom}>
+      <View pointerEvents={detail ? 'none' : 'auto'} accessibilityElementsHidden={!!detail} importantForAccessibility={detail ? 'no-hide-descendants' : 'auto'}>
+        <BottomNavigation selectedKey="week" onSelect={() => undefined} destinations={(['week', 'calendar', 'activities'] as const).map(icon => ({ key: icon, icon, label: t(`shell.${icon}`) }))} />
+      </View>
+    </NavigationFooter>
+    <WorkoutDetailScreen workout={detail} onClose={() => setDetail(null)} />
+  </View>;
+}
+export default function DevWeekReview() {
+  const { state = 'active', language, review } = useLocalSearchParams<{ state?: string; language?: string; review?: string }>();
+  const { setPreference } = useLanguage();
+  useEffect(() => { void setPreference(language === 'en' ? 'en' : 'nl'); }, [language, setPreference]);
+  if (!__DEV__) return <Redirect href="/" />;
+  return <Review key={review} state={state} />;
+}

@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "mobileTests": 547,
+  "mobileSuites": 62,
+  "nativeCases": 47,
+  "matrixPngs": 534,
+  "totalPngs": 552,
+  "nativeTargets": 3488,
+  "sourceFilesChanged": 9,
+  "unchangedBaselineFiles": 201,
+  "allMappedCalendarStates": true,
+  "allWidthsFontsLanguages": true,
+  "controllerNavigationMapperHashesUnchanged": true,
+  "temporaryGalleryRemoved": true,
+  "deviceSettingsRestored": true,
+  "minimumTextContrast": 4.6454222473089715,
+  "privacyFindings": [],
+  "liveAuthenticatedSmokeGate": "PASS",
+  "normalExpiredSessionGateVerified": false
+}

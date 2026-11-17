@@ -1,0 +1,20 @@
+[
+  {
+    "screen": "ZoneProfileScreen",
+    "domainStateAndHandlersUnchanged": true,
+    "startFound": true,
+    "sha256": "a3e0dfd9ad89d9193ec6d1e7821a954ff0d6996e3accdb8b3e4f30c2342b80ec"
+  },
+  {
+    "screen": "ZoneSetupStep",
+    "domainStateAndHandlersUnchanged": true,
+    "startFound": true,
+    "sha256": "691df97ecfd4b2fb1b4da9f5e05dff436130933d142d60e83f2563814fe44b0f"
+  },
+  {
+    "screen": "CalibrationScreen",
+    "domainStateAndHandlersUnchanged": true,
+    "startFound": true,
+    "sha256": "3d97653736f17fab7e368f61f6466a1b9c37b7fe6ad4c2aad97876a44861ed3d"
+  }
+]

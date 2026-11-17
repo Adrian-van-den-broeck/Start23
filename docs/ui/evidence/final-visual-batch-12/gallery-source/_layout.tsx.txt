@@ -1,0 +1,9 @@
+import '../global.css';
+import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { LanguageProvider } from '../src/i18n/LanguageProvider';
+import { UiVersionProvider } from '../src/ui/UiVersionProvider';
+export default function RootLayout(){return <GestureHandlerRootView style={{flex:1}}><SafeAreaProvider initialMetrics={initialWindowMetrics}><LanguageProvider><UiVersionProvider><BottomSheetModalProvider><StatusBar style="dark"/><Stack screenOptions={{headerShown:false}}/></BottomSheetModalProvider></UiVersionProvider></LanguageProvider></SafeAreaProvider></GestureHandlerRootView>;}

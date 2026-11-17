@@ -1,0 +1,17 @@
+{
+  "mobileTests": 530,
+  "mobileSuites": 61,
+  "typeScript": "PASS",
+  "unused": "PASS",
+  "protectedSourceFingerprints": 51,
+  "sourceManifestFiles": 13,
+  "acceptedNativeCaptures": 114,
+  "manifestIntegrity": "PASS",
+  "privacy": "PASS: 143 runtime public files; zero findings",
+  "credentialEvidenceScan": "PASS",
+  "diffCheck": "PASS: root and integrated worktree",
+  "newSourceWhitespace": "PASS",
+  "temporaryRuntimeReferences": 0,
+  "testClock": "PlanningWorkoutMoveBoundary fixture Date only; normal full-suite command",
+  "releaseGates": "Physical Android/iOS, signing and release artifacts remain separate"
+}

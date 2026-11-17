@@ -1,0 +1,214 @@
+{
+  "requiredStackedCaptures": 52,
+  "checks": [
+    {
+      "capture": "320-font-1-nl-week",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-1-nl-calendar",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-1-nl-activities",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-1-nl-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-1-en-week",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-1-en-calendar",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-1-en-activities",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-1-en-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-2-nl-week",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-2-nl-calendar",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-2-nl-activities",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-2-nl-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-2-en-week",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-2-en-calendar",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-2-en-activities",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "320-font-2-en-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-1-nl-week",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-1-nl-calendar",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-1-nl-activities",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-1-nl-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-1-en-week",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-1-en-calendar",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-1-en-activities",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-1-en-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-2-nl-week",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-2-nl-calendar",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-2-nl-activities",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-2-nl-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-2-en-week",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-2-en-calendar",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-2-en-activities",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "360-font-2-en-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "393-font-1-nl-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "393-font-1-en-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "393-font-2-nl-week",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "393-font-2-nl-calendar",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "393-font-2-nl-activities",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "393-font-2-nl-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "393-font-2-en-week",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "393-font-2-en-calendar",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "393-font-2-en-activities",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "393-font-2-en-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "412-font-1-nl-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "412-font-1-en-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "412-font-2-nl-week",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "412-font-2-nl-calendar",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "412-font-2-nl-activities",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "412-font-2-nl-long-labels",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "412-font-2-en-week",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "412-font-2-en-calendar",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "412-font-2-en-activities",
+      "allThreeIconsAboveLabels": true
+    },
+    {
+      "capture": "412-font-2-en-long-labels",
+      "allThreeIconsAboveLabels": true
+    }
+  ],
+  "failures": []
+}

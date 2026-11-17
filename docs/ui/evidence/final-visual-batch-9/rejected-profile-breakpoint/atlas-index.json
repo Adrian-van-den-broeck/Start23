@@ -1,0 +1,46 @@
+[
+  {
+    "atlas": "atlas-01.jpg",
+    "contactSheets": [
+      "320-font-1-en-empty-1.jpg",
+      "320-font-1-en-entry-1.jpg",
+      "320-font-1-en-history-1.jpg",
+      "320-font-1-en-rpe-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-02.jpg",
+    "contactSheets": [
+      "320-font-1-en-rpe-2.jpg",
+      "320-font-1-nl-empty-1.jpg",
+      "320-font-1-nl-entry-1.jpg",
+      "320-font-1-nl-history-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-03.jpg",
+    "contactSheets": [
+      "320-font-1-nl-rpe-1.jpg",
+      "320-font-1-nl-rpe-2.jpg",
+      "320-font-2-en-empty-1.jpg",
+      "320-font-2-nl-empty-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-04.jpg",
+    "contactSheets": [
+      "320-font-2-nl-entry-1.jpg",
+      "320-font-2-nl-entry-2.jpg",
+      "320-font-2-nl-history-1.jpg",
+      "320-font-2-nl-history-2.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-05.jpg",
+    "contactSheets": [
+      "320-font-2-nl-rpe-1.jpg",
+      "320-font-2-nl-rpe-2.jpg",
+      "320-font-2-nl-rpe-3.jpg"
+    ]
+  }
+]

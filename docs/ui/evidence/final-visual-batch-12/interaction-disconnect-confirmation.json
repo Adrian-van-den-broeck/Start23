@@ -1,0 +1,15 @@
+{
+  "timestampUTC": "2026-10-09T14:52:21.208799+00:00",
+  "fixture": {
+    "state": "connected",
+    "width": 393,
+    "fontScale": 1,
+    "build": "final-4",
+    "language": "source Dutch",
+    "inertActions": true
+  },
+  "nativeDialog": "Polar ontkoppelen?",
+  "density": "Physical density: 440\nOverride density: 439",
+  "fontScale": "1",
+  "provenance": "Actual native Alert from production Integrations; inert transport; no disconnect success"
+}

@@ -1,0 +1,65 @@
+{
+  "allUnchanged": true,
+  "checks": [
+    {
+      "file": "reference-screenshots/zones-calibration/01-overview-current-v1.png",
+      "expected": "a492c6258716ba0302a6dfbdce2facf664cc44d1febbff9ad9428a75285abff2",
+      "actual": "a492c6258716ba0302a6dfbdce2facf664cc44d1febbff9ad9428a75285abff2"
+    },
+    {
+      "file": "reference-screenshots/zones-calibration/02-run-current-v1-01-active.png",
+      "expected": "d31762bd1e4eacdc9ec9f7d3cf11b64ed742f998643f67ff2f7b5a28372e8789",
+      "actual": "d31762bd1e4eacdc9ec9f7d3cf11b64ed742f998643f67ff2f7b5a28372e8789"
+    },
+    {
+      "file": "reference-screenshots/zones-calibration/03-bike-rpe-current-v1.png",
+      "expected": "69e81fe777eaccdf48ac91096eb2ba43ea157fe99c058c6fa98b149122652c07",
+      "actual": "69e81fe777eaccdf48ac91096eb2ba43ea157fe99c058c6fa98b149122652c07"
+    },
+    {
+      "file": "reference-screenshots/zones-calibration/05-route-current-v1-01-top.png",
+      "expected": "d3b571646c8089cef9569d17f1717c1179e155b0917a1f3b25ba027b8257ed9d",
+      "actual": "d3b571646c8089cef9569d17f1717c1179e155b0917a1f3b25ba027b8257ed9d"
+    },
+    {
+      "file": "reference-screenshots/zones-calibration/06-known-values-current-v1.png",
+      "expected": "63b44bfe4bd0399d41e48e7db51f2110df756977e7093aa6abf6dbf3ecd064ce",
+      "actual": "63b44bfe4bd0399d41e48e7db51f2110df756977e7093aa6abf6dbf3ecd064ce"
+    },
+    {
+      "file": "reference-screenshots/zones-calibration/07-pending-approval-current-v1-02-numeric.png",
+      "expected": "15ba43def80ec03b2d84e32e843ad4002391a965e1ac8d297a9c0798cfb36e11",
+      "actual": "15ba43def80ec03b2d84e32e843ad4002391a965e1ac8d297a9c0798cfb36e11"
+    },
+    {
+      "file": "reference-screenshots/zones-calibration/07-pending-approval-current-v1.png",
+      "expected": "c574b277a2d85bbafa5fe277872da6e8f046b1cb645f47488851e06242377972",
+      "actual": "c574b277a2d85bbafa5fe277872da6e8f046b1cb645f47488851e06242377972"
+    },
+    {
+      "file": "reference-screenshots/zones-calibration/09-history-current-v1.png",
+      "expected": "057d264802557b1f44197e582fe2cdff12411c11e5e0c86deb44791069205c6e",
+      "actual": "057d264802557b1f44197e582fe2cdff12411c11e5e0c86deb44791069205c6e"
+    },
+    {
+      "file": "reference-screenshots/zones-calibration/calibration-choice-current-v1.png",
+      "expected": "a566ac842f0161d32fd381831c2cb198187859057f8db906948c042327ad8646",
+      "actual": "a566ac842f0161d32fd381831c2cb198187859057f8db906948c042327ad8646"
+    },
+    {
+      "file": "reference-screenshots/zones-calibration/tests-current-v1-no-protocol.png",
+      "expected": "1276828abc72789e486e01450b65072688066bba04d2710b853c6e933694e231",
+      "actual": "1276828abc72789e486e01450b65072688066bba04d2710b853c6e933694e231"
+    },
+    {
+      "file": "mockups-final/03-zones.png",
+      "expected": "271659cfb3a78f28e7286ce345ddf3896e1a64f2b166360ca20a1b5af64b2a97",
+      "actual": "271659cfb3a78f28e7286ce345ddf3896e1a64f2b166360ca20a1b5af64b2a97"
+    },
+    {
+      "file": "mockups-final/04-profile-onboarding.png",
+      "expected": "d79ba2ac81ac77877cbf5a4f42f7708324eca936b8fa67cdcee313efaa689632",
+      "actual": "d79ba2ac81ac77877cbf5a4f42f7708324eca936b8fa67cdcee313efaa689632"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "docs/ui/reference-screenshots/week/01-active-approved.png": "cca8f3b884709315da5df5e05ef67d65ee1495b9d88fd23d346b9fb7e28e181b",
+  "docs/ui/reference-screenshots/week/02-pending-proposal.png": "5335ffb815eab6b866738287b88002ed4247bcbb8044145124afa996d611d56e",
+  "docs/ui/reference-screenshots/week/03-selection-in-progress-detail.png": "88a55bed29fed9996eeee902066ed1292700281f0ebfe974aa478bb178f4574a",
+  "docs/ui/reference-screenshots/week/03-selection-in-progress-fixture.png": "f639ce4019f3816d09743cf9949f1854f54d7b05832903aa273d6bcf09b93547",
+  "docs/ui/reference-screenshots/week/04-placement-in-progress-fixture.png": "4172a43caa15877d8f3b6c0947ac31007058893bfb7459f6d3ed24891d06501c",
+  "docs/ui/reference-screenshots/week/05-no-plan.png": "1fa2a1f03a8041e3ac15ff76cc5ac5e747b28e3faa58cde3ab5a219c2b1c4c04",
+  "docs/ui/reference-screenshots/week/06-warning-fixture-01-top.png": "8de99ca211e2823e384b511369b7d5356ce47b00a1743ba816a2401be0ca0a81",
+  "docs/ui/reference-screenshots/week/07-multiple-same-day-fixture-01-top.png": "e1672e9ca2f935644ba16ae2169742d2dfd8809146b3848c188de68d00b5c425",
+  "docs/ui/reference-screenshots/week/07-multiple-same-day-fixture-02-workouts.png": "610039f112897788fd79cbf63476fca3ae99d86a256be0b46ed5ee48a2ccc749",
+  "docs/ui/reference-screenshots/week/08-active-plus-pending-fixture-01-top.png": "ef1eedc3417626d23c982a5737b4c73dcf1b78f2a224f11f1fb097c96de97329",
+  "docs/ui/reference-screenshots/week/09-rest-only-fixture.png": "40cfc01556500c924409106435af6f508ab34cffb7888488a31641a67a7c7bac",
+  "docs/ui/reference-screenshots/week/10-next-workout-fixture.png": "c0b5dd724d30e8d6cfd3fab9223710279ab0d5c200e06cd2db10514c55f2c688",
+  "docs/ui/mockups-final/05-workout-selection.png": "b69c9c9b66081c5b7d1277e2a7eaf7e28230348d93e9a6eee8b79ff8428887ee",
+  "docs/ui/mockups-final/06-activities.png": "4e6adab2327e7e213ebb6f710f0997b9b48dac6d7abfe8e34fa156066618b465"
+}

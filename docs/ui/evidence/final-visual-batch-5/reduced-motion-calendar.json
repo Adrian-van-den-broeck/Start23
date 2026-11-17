@@ -1,0 +1,20 @@
+{
+  "utc": "2026-10-07T11:14:09.091768+00:00",
+  "serial": "emulator-5554",
+  "size": "Physical size: 1080x2280",
+  "density": "Physical density: 440\nOverride density: 439",
+  "fontScale": "1",
+  "fixture": {
+    "language": "en",
+    "state": "selected",
+    "width": 393,
+    "fontScale": 1,
+    "inertActions": true
+  },
+  "provenance": "Actual CalendarScreen, calendarViewModel and useCalendarNavigation with public DTO variants and accepted shell components; inert move seam, real read-only detail modal; no fixture backend or athlete writes",
+  "motionScales": {
+    "animator_duration_scale": "0",
+    "window_animation_scale": "0",
+    "transition_animation_scale": "0"
+  }
+}

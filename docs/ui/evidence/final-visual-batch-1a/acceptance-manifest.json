@@ -1,0 +1,326 @@
+{
+  "classification": "Final native Batch 1A asset visual acceptance; intermediate acceptance-review and acceptance-headers are excluded from final proof set",
+  "reportSha256": "422bf8f3a1b9c4f24561f0b6318d83ef45f400953d6565b1699d3f31c84c0274",
+  "runtimeBaseSha": "19c23d58f0b71aea01478df2306e2492a515e36e",
+  "runtimeChanges": {
+    ".worktrees/wombo-ui-v2-activities/mobile/src/ui-v2/assets/HeaderLandscape.tsx": {
+      "before": "d61087392f3508f548bb4eb3105d30b9fde8d3ad31ddd2923e1831e7488972b6",
+      "after": "a688e396899740018a4b2f22323dae09fc326b3986758ac516e4bdd316810c2d"
+    },
+    ".worktrees/wombo-ui-v2-activities/mobile/src/ui-v2/assets/LandscapeArtwork.tsx": {
+      "before": "dbd1c9c88b591fd8c9c9280cc1a1dab0bc045d11bdb3eef2bf549f728bac4cb5",
+      "after": "0094dcd64ca4b2f0f984261a7ed63385c1958daf565c3d836959df6d546c49ed"
+    },
+    ".worktrees/wombo-ui-v2-activities/mobile/src/ui-v2/assets/SportVectors.tsx": {
+      "before": "0072feab9ad53dbdd4732cecbd2e8d5ddbeb2b608b4925499b37e086af341c7c",
+      "after": "6c7e0fdcae95158067cc1286a92abe5ba7c569d6b6b505ee1a0693e23a332690"
+    },
+    ".worktrees/wombo-ui-v2-activities/mobile/src/ui-v2/dev/AssetGallery.tsx": {
+      "before": "e3ab08dd05387e926356845581a3ff36f263e3b820921b9c8e9b09298bd0be63",
+      "after": "15b534e4cc47668a108cf7dea9f63e4d88a40c1c7d3cbc7e5043c3bdcc940ee2"
+    }
+  },
+  "captures": {
+    "acceptance-icons-1": {
+      "utc": "2026-10-06T16:16:46.490912+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "en-US",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "acceptance-icons-2": {
+      "utc": "2026-10-06T16:17:01.764794+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "en-US",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "acceptance-icons-3": {
+      "utc": "2026-10-06T16:17:16.759573+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "en-US",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "acceptance-sports": {
+      "utc": "2026-10-06T16:17:31.718156+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "en-US",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "acceptance-circles": {
+      "utc": "2026-10-06T16:17:45.340717+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "en-US",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "acceptance-header-standard": {
+      "utc": "2026-10-06T16:18:04.646794+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "en-US",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "acceptance-header-compact": {
+      "utc": "2026-10-06T16:18:17.277098+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "en-US",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "acceptance-header-trees-river": {
+      "utc": "2026-10-06T16:18:29.063444+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "en-US",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "acceptance-action": {
+      "utc": "2026-10-06T16:18:45.151785+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "en-US",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "acceptance-header-320": {
+      "utc": "2026-10-06T16:19:28.172392+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440\nOverride density: 540",
+      "fontScale": "1.0",
+      "locale": "en-US",
+      "provenance": "LIVE native development-only asset gallery; no athlete mutation callbacks"
+    },
+    "acceptance-week-restored": {
+      "utc": "2026-10-06T16:20:29.380690+00:00",
+      "serial": "emulator-5554",
+      "width": "Physical size: 1080x2280",
+      "density": "Physical density: 440",
+      "fontScale": "1.0",
+      "locale": "en-US",
+      "provenance": "LIVE unchanged authenticated V2 Week, read-only navigation after gallery proof; no athlete mutation"
+    }
+  },
+  "files": {
+    "acceptance-action.json": {
+      "bytes": 299,
+      "sha256": "a7d22036c6fb6d4bca9495ccd0c16c747130d493f4894c1984ab2b81d1f7c7f0"
+    },
+    "acceptance-action.png": {
+      "bytes": 152632,
+      "sha256": "c14e5ad7dac7bec9ff030c2547ebee86f73f4a555343d936f157ec9e82e13719"
+    },
+    "acceptance-action.xml": {
+      "bytes": 16173,
+      "sha256": "d371d1e5ee4b54a82c4a0a3aad328bc663147a73e4cd4a3536d1fb3207eda280"
+    },
+    "acceptance-audit.json": {
+      "bytes": 2724,
+      "sha256": "fa55a62d7d709d0170bb7d8bbbb03246d5f8fd36440598cc695b540cbd497364"
+    },
+    "acceptance-before.json": {
+      "bytes": 30268,
+      "sha256": "8f5ea49e5935572a3d080deaf2f1af9c9b5c650843aaaa9ab908c3e53c6ac4d3"
+    },
+    "acceptance-circles.json": {
+      "bytes": 299,
+      "sha256": "e2a6dfdad17ece09b65fc1ec432706d652a338336e33e1ec95bc609bf25eb061"
+    },
+    "acceptance-circles.png": {
+      "bytes": 173030,
+      "sha256": "fadc1e3a06130ebbbd3324e946cb2164cdb347590594274353a4fc6517df03c3"
+    },
+    "acceptance-circles.xml": {
+      "bytes": 36046,
+      "sha256": "3d779ff10bcc8b28aab6a1b398c676c69c2efca19e60ff719876ea510802b188"
+    },
+    "acceptance-dependency-audit.log": {
+      "bytes": 1358,
+      "sha256": "1efaa18100174b236f5cb1ab1d5527245dac1a71efb0acf72b02cd4aa624c5d8"
+    },
+    "acceptance-header-320.json": {
+      "bytes": 322,
+      "sha256": "825d98c3db7fc2ea040443f4f0b96b3739a486d4b849ccfe41b3a0e1cfa75fe9"
+    },
+    "acceptance-header-320.png": {
+      "bytes": 139332,
+      "sha256": "545c07bb2f48184c6e3f0b1f2ee12947cdefe4b939a04e2422aa63249a90f79b"
+    },
+    "acceptance-header-320.xml": {
+      "bytes": 18565,
+      "sha256": "9505274514a8b16223ec6ce4e70fa0c85466325b2e3e0460ccb23a8cb04f6723"
+    },
+    "acceptance-header-compact.json": {
+      "bytes": 299,
+      "sha256": "80da4f6463d6bf8970a87007f5f06a763947602af21047988abb0a0949c9823b"
+    },
+    "acceptance-header-compact.png": {
+      "bytes": 111266,
+      "sha256": "9781926db52080e9ab1325b46e41ab7146cf8dc86d12095c70c45a30db506ea9"
+    },
+    "acceptance-header-compact.xml": {
+      "bytes": 18551,
+      "sha256": "e0c780b0dcbcd6072c027b64188c0ae15d24d15ced2c2d3d7ee566ce936f7a61"
+    },
+    "acceptance-header-standard.json": {
+      "bytes": 299,
+      "sha256": "400155207f7a76dbdd5b3981e4fbe394265eee8692f7c1c8771e4981aca61f90"
+    },
+    "acceptance-header-standard.png": {
+      "bytes": 112986,
+      "sha256": "7990c30a8b81e19ad5f9fde25e0b5621880f2addfc63b2c77d551c1b80398d6e"
+    },
+    "acceptance-header-standard.xml": {
+      "bytes": 18556,
+      "sha256": "ab97633d86b9cba50adb228871d82c1905d79af3303258d5e6166efd66aa307e"
+    },
+    "acceptance-header-trees-river.json": {
+      "bytes": 299,
+      "sha256": "4895a3d14efb5c0245f979b396752043bd767c3e600ac232fd5f4164aa5e7187"
+    },
+    "acceptance-header-trees-river.png": {
+      "bytes": 121495,
+      "sha256": "94fdc549a4c350f2c39aa15adad5e3831eb366ab297c9727f17bef53cfefea6f"
+    },
+    "acceptance-header-trees-river.xml": {
+      "bytes": 19877,
+      "sha256": "cde9858c8a4ceb680943593d0f0c169198d10fd655fce9f0b698dbe153dd9041"
+    },
+    "acceptance-headers.json": {
+      "bytes": 299,
+      "sha256": "77349cf06f87f1d8969f8a2ed6aadd89383befde4ab39fe93818da3a4f2caab3"
+    },
+    "acceptance-headers.png": {
+      "bytes": 161263,
+      "sha256": "215f9d89e3c96876c27404a773906a303f3a9fcfc8091a0547559ab570179f63"
+    },
+    "acceptance-headers.xml": {
+      "bytes": 28313,
+      "sha256": "7438c792968cf535724be9be3de80d341e4bc5bb2db24e8970b27ceed3e576fa"
+    },
+    "acceptance-icons-1.json": {
+      "bytes": 299,
+      "sha256": "662ab527772aeb54ac515a69c89678b86e101e422410fae3734f34b19ffb2ca7"
+    },
+    "acceptance-icons-1.png": {
+      "bytes": 134508,
+      "sha256": "5e644b95d42e5ee7dcf74296cb5a7fc680fa378f0474838c58040644f5d9c33b"
+    },
+    "acceptance-icons-1.xml": {
+      "bytes": 60263,
+      "sha256": "6db4bdce6f4cf0a6ba83319f6aea2c4710522add08a34175bc76b998015e1efe"
+    },
+    "acceptance-icons-2.json": {
+      "bytes": 299,
+      "sha256": "cc95363c7dfa46e387238d98968d704624aabe2d9c2c1ceee2d1c13d1e7437ca"
+    },
+    "acceptance-icons-2.png": {
+      "bytes": 157704,
+      "sha256": "a298812134925d1d0da007f1ab1fd3f22a3c2551e10cced048a8db52ac50a3a7"
+    },
+    "acceptance-icons-2.xml": {
+      "bytes": 57358,
+      "sha256": "7e5ac2e6d10c8b1759d7569e2beacc1cb463f8fddee1e70c02677d113aa08179"
+    },
+    "acceptance-icons-3.json": {
+      "bytes": 299,
+      "sha256": "de35f4108465729fb782c6987848fba3fbdba3bb1bce0f63ea0936f581f7039d"
+    },
+    "acceptance-icons-3.png": {
+      "bytes": 123238,
+      "sha256": "26b34ebabf3932e9e56898b6d9512f3d51cfbd030d3a1f7e361f2163aba2e309"
+    },
+    "acceptance-icons-3.xml": {
+      "bytes": 45192,
+      "sha256": "09e60b76f99c7e00f99c0f34758325d6e5a02bf45e0b47dbd77d029ccda3c9ab"
+    },
+    "acceptance-package-consistency.log": {
+      "bytes": 432,
+      "sha256": "c55b43dd6cfce2dc26e6c7436beca70fbb84b334ce51dbfa7d1972c7acf67d54"
+    },
+    "acceptance-review.json": {
+      "bytes": 299,
+      "sha256": "cb46541c6fa46b642fad7867d7431eb129107ef0510007e3c3a4ac43dff5ef71"
+    },
+    "acceptance-review.png": {
+      "bytes": 133802,
+      "sha256": "f8090974863e132b974418b70f52ff4fb00e3f6e147afc1230f2603399f274ee"
+    },
+    "acceptance-review.xml": {
+      "bytes": 60263,
+      "sha256": "6db4bdce6f4cf0a6ba83319f6aea2c4710522add08a34175bc76b998015e1efe"
+    },
+    "acceptance-sports.json": {
+      "bytes": 299,
+      "sha256": "11eb1bb75722b61b1bf159ec51494d380f4e3c343fcdb5c42ae0b58e3e5ec04d"
+    },
+    "acceptance-sports.png": {
+      "bytes": 181657,
+      "sha256": "49bae93c8915813b80685a857cd49ea314e48c63f4360b97e35c8fe3e9fbc517"
+    },
+    "acceptance-sports.xml": {
+      "bytes": 36056,
+      "sha256": "53248464b38dff254f25caab23a3cd0482389757dc3a54d4fd377ae28eb39e47"
+    },
+    "acceptance-tests.json": {
+      "bytes": 2489,
+      "sha256": "38631c1218dea0405ee03d25e6dee4ecc440c65c1c2be932fb9a9512222b4583"
+    },
+    "acceptance-tests.log": {
+      "bytes": 2596,
+      "sha256": "c379053b5996ed452d2c58568b73f2999691e44d702a0942411005a05c5f67ce"
+    },
+    "acceptance-typecheck.log": {
+      "bytes": 94,
+      "sha256": "c6e00c5cb43469ecdbcd169520e39344fa6cb3f688150a9b8a988d4252de39ac"
+    },
+    "acceptance-unused.log": {
+      "bytes": 176,
+      "sha256": "7f574d7365982990ef03fd76eb6ffba20c06be9c1f1b3cfc3370b2cbfb343771"
+    },
+    "acceptance-week-restored.json": {
+      "bytes": 325,
+      "sha256": "f4c225ceea0ec92321db56808f684a90c406e9c7eaf2edcb7449ae68340674ce"
+    },
+    "acceptance-week-restored.png": {
+      "bytes": 133230,
+      "sha256": "022dbb947c23146bffa04abb32524bb443d7265c46761dc02e14d3916ef5a42e"
+    },
+    "acceptance-week-restored.xml": {
+      "bytes": 25740,
+      "sha256": "e47596da72b0b6e2fb4f942cc8624a2b53d4103da01a3e6a1af5745d1213f12a"
+    },
+    "capture-acceptance.py": {
+      "bytes": 1827,
+      "sha256": "a2c18134ab5110cdf7b9e7f07be144873152e8c40856d27335f01587a299d429"
+    },
+    "capture-android.py": {
+      "bytes": 2243,
+      "sha256": "6feea3bf0cf848767fbf6f5a1a0387a4f22904afaee191279f7b6df05ac41bd9"
+    },
+    "verify-acceptance.py": {
+      "bytes": 5980,
+      "sha256": "2bb66d37d3d187241f69d93a11e6c75ba2e64589e05dc89daaa370c2e98173b5"
+    }
+  }
+}

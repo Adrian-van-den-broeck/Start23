@@ -1,0 +1,76 @@
+{
+  "publicInertCallbacksOnly": true,
+  "backendWrites": false,
+  "results": [
+    {
+      "case": "interaction-accept",
+      "exactCallback": "accept-public-candidate-3",
+      "pass": true
+    },
+    {
+      "case": "interaction-pass",
+      "exactCallback": "pass-public-candidate-3",
+      "pass": true
+    },
+    {
+      "case": "interaction-undo",
+      "exactCallback": "undo-public-candidate-3",
+      "pass": true
+    },
+    {
+      "case": "interaction-reset_passed",
+      "exactCallback": "reset_passed-public-candidate-3",
+      "pass": true
+    },
+    {
+      "case": "interaction-continue",
+      "exactCallback": "continue",
+      "pass": true
+    },
+    {
+      "case": "interaction-one-day-create",
+      "exactCallback": "create-2026-10-12-2-false",
+      "pass": true
+    },
+    {
+      "case": "interaction-toggle-day",
+      "exactCallback": "day-1",
+      "pass": true
+    },
+    {
+      "case": "interaction-reuse",
+      "exactCallback": "reuse",
+      "pass": true
+    },
+    {
+      "case": "interaction-injury",
+      "exactCallback": "injury-run",
+      "pass": true
+    },
+    {
+      "case": "interaction-opt-in",
+      "exactCallback": "optIn-swim",
+      "pass": true
+    },
+    {
+      "case": "keyboard-393-font-1",
+      "nativeKeyboardShown": true,
+      "pass": true
+    },
+    {
+      "case": "keyboard-320-font-2",
+      "nativeKeyboardShown": true,
+      "pass": true
+    },
+    {
+      "case": "interaction-busy-locked",
+      "exactCallback": "none",
+      "pass": true
+    },
+    {
+      "case": "interaction-back",
+      "exactCallback": "back",
+      "pass": true
+    }
+  ]
+}

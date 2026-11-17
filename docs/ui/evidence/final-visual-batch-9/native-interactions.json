@@ -1,0 +1,130 @@
+{
+  "backendWrites": false,
+  "results": [
+    {
+      "name": "Add opens existing entry",
+      "exactMarker": "add",
+      "pass": true
+    },
+    {
+      "name": "Context expansion does not create",
+      "exactMarker": "add",
+      "pass": true
+    },
+    {
+      "name": "Choose exact repeated occurrence",
+      "exactMarker": "context-occurrence-b",
+      "pass": true
+    },
+    {
+      "name": "Reset to deliberate extra",
+      "exactMarker": "context-unplanned",
+      "pass": true
+    },
+    {
+      "name": "Sport choice stays local",
+      "exactMarker": "sport-bike",
+      "pass": true
+    },
+    {
+      "name": "Return to Run stays local",
+      "exactMarker": "sport-run",
+      "pass": true
+    },
+    {
+      "name": "Explicit create enters same pending feedback",
+      "exactMarker": "create-run-45-5000",
+      "pass": true
+    },
+    {
+      "name": "RPE tap directly saves and returns; no Save step",
+      "exactMarker": "rpe-activity-a-4-hr-",
+      "pass": true
+    },
+    {
+      "name": "External exact identity",
+      "exactMarker": "context-external-a",
+      "pass": true
+    },
+    {
+      "name": "Entry Back returns without create",
+      "exactMarker": "entry-back",
+      "pass": true
+    },
+    {
+      "name": "Pending disables Add",
+      "exactMarker": "none",
+      "pass": true
+    },
+    {
+      "name": "Pending continuation preserves activity identity",
+      "exactMarker": "feedback-activity-a",
+      "pass": true
+    },
+    {
+      "name": "Feedback Back preserves pending context",
+      "exactMarker": "feedback-back-activity-a",
+      "pass": true
+    },
+    {
+      "name": "Eligible correction uses exact activity",
+      "exactMarker": "correct-activity-a",
+      "pass": true
+    },
+    {
+      "name": "Correction choice saves immediately",
+      "exactMarker": "rpe-activity-a-7-hr-",
+      "pass": true
+    },
+    {
+      "name": "Match is not automatic",
+      "exactMarker": "none",
+      "pass": true
+    },
+    {
+      "name": "Explicit match exact identifiers",
+      "exactMarker": "match-activity-a-occurrence-b",
+      "pass": true
+    },
+    {
+      "name": "Global reminder enters pending Activities",
+      "exactMarker": "reminder-activity-a",
+      "pass": true
+    },
+    {
+      "name": "Reminder destination resumes same feedback",
+      "exactMarker": "feedback-activity-a",
+      "pass": true
+    },
+    {
+      "name": "Create busy prevents submission",
+      "exactMarker": "none",
+      "pass": true
+    },
+    {
+      "name": "Create busy locks dismissal",
+      "exactMarker": "none",
+      "pass": true
+    },
+    {
+      "name": "Feedback busy prevents a choice save",
+      "exactMarker": "none",
+      "pass": true
+    },
+    {
+      "name": "Feedback busy locks dismissal",
+      "exactMarker": "none",
+      "pass": true
+    },
+    {
+      "name": "Missing confirmed timezone retains disabled save",
+      "exactMarker": "none",
+      "pass": true
+    },
+    {
+      "name": "Last canonical choice saves at 320 dp and 200% text",
+      "exactMarker": "rpe-activity-a-10-hr-",
+      "pass": true
+    }
+  ]
+}

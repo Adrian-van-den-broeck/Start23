@@ -1,0 +1,11 @@
+{
+  "reducedMotionScalesZero": true,
+  "reducedMotionBootVerified": true,
+  "reducedMotionEvidence": "Zero-scale first-run captures retained after TalkBack driver field-name failure",
+  "zoneDecisionAndObservationReachable": true,
+  "TalkBackEnabledCapturesProduced": true,
+  "targetFocusRetentionVerified": false,
+  "announcementsVerified": false,
+  "physicalDeviceVerified": false,
+  "backendWrites": false
+}

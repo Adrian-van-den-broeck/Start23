@@ -1,0 +1,21 @@
+# Batch 7 evidence
+
+Actual Android renders of the production PlacementScreen, ProposalReviewScreen and ProposalAlternativesScreen in `.worktrees/wombo-ui-v2-activities/mobile`. The gallery imports the production public mappers and existing public test DTOs. All callbacks are inert, recording only exact identifiers in a local fixture ledger. There are no backend or athlete writes; a native callback capture does not claim server approval, scheduling, replacement or removal.
+
+The device is emulator-5554, Android 15/API 35, 1080 x 2280. Device metadata records the actual density override and system font scale for every capture. Width 393 uses 439 dpi (approximately 393.6 dp); other widths use the nearest integer density. Cases cover 320/360/393/412 dp, default/200% text, Dutch/English. The 48 base cases cover manual placement, pending review and alternatives; 21 canonical state cases and seven narrow large-text stress cases complete the 76-case matrix.
+
+Each raw PNG has its actual UIAutomator hierarchy and fixture/device metadata. Capture refuses a missing fixture marker. Sequential overlapping viewports preserve scroll content; inspection contact sheets and atlases are labeled review thumbnails, not substitute or composited application screenshots. The atlas index maps all 118 contact sheets to 30 inspection atlases. Original references and M3/M5 mockups are hash-protected.
+
+Run native-review.py, run-matrix.py, native-interactions.py, native-accessibility.py and cleanup-native.py sequentially. Do not run simultaneous device-mutating scripts. inspect-evidence.py and make-atlases.py read completed captures. final-checks.py requires removal of the temporary route.
+
+The callback review tests explicit placement submit, exact repeated occurrence/date selection, incomplete/busy locks, return controls, edit identity, separate approval/rejection, selected replacement, capability-gated removal confirmation/keep, stale lock and retry. The 320 dp/200% confirmation is additional native evidence. Production boundary tests retain the actual revision/precondition, authoritative-result and stale-write behavior.
+
+Preview setup required an IPv4 Expo server outside the filesystem sandbox on the owned port 8083. An initial callback attempt refused an unavailable fixture after the app returned to its original preview; reconnecting to the owned server resolved it. The native date locator was corrected to Hermes' actual English date punctuation. Neither issue caused a production change or an athlete write. The target audit uses the last density value (override when present); using physical density initially produced six false failures at 412 dp. Its final results use actual override metadata.
+
+TalkBack and reduced-motion settings are restored in a finally block. Cleanup removes only the temporary route and owned transport/server, restores the original Dutch language, V1 preference, density 440/font scale 1.0 and original preview on port 8081. No athlete content is retained during original-root verification. The existing emulator/account is preserved.
+
+The final TalkBack screenshot visibly focuses the complete selected manual-mode row. A requested date touch did not establish date focus, even after correcting emulator hardware coordinates to their 0..32767 range. Metadata records the actual observed mode focus and explicitly does not claim date focus. Independent date labels, checked state, occurrence identity and callbacks are verified in the native hierarchies and interaction ledger. The confirmation target audit uses actual ScrollView bounds to exclude clipped edge controls; complete Confirm and Keep controls are covered by overlapping captures.
+
+Git review branch `feat/wombo-ui-v2-final-batch-7` begins with accepted-mobile snapshot `9e9d5b6003d13a5cf2bbfa8f11b001ce27d805bd`, preserving the earlier uncommitted visual batches without modifying their original index/branch. Placement is commit A; proposal review/editing is commit B. Only five baseline source/test files change in Batch 7; the scope audit protects the other 203 sources, including controllers, mappers, API clients, routes and V1.
+
+This evidence closes the Android visual scope only. Physical iPhone/device and whole-app release gates remain outside Batch 7. Backend, database and physiology are unchanged.

@@ -1,0 +1,271 @@
+[
+  {
+    "atlas": "atlas-01.jpg",
+    "contactSheets": [
+      "320-font-1-en-after-1.jpg",
+      "320-font-1-en-after-2.jpg",
+      "320-font-1-en-before-1.jpg",
+      "320-font-1-en-before-2.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-02.jpg",
+    "contactSheets": [
+      "320-font-1-en-chooser-1.jpg",
+      "320-font-1-en-warning-1.jpg",
+      "320-font-1-nl-after-1.jpg",
+      "320-font-1-nl-after-2.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-03.jpg",
+    "contactSheets": [
+      "320-font-1-nl-before-1.jpg",
+      "320-font-1-nl-before-2.jpg",
+      "320-font-1-nl-chooser-1.jpg",
+      "320-font-1-nl-warning-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-04.jpg",
+    "contactSheets": [
+      "320-font-2-en-after-1.jpg",
+      "320-font-2-en-after-2.jpg",
+      "320-font-2-en-after-3.jpg",
+      "320-font-2-en-before-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-05.jpg",
+    "contactSheets": [
+      "320-font-2-en-before-2.jpg",
+      "320-font-2-en-before-3.jpg",
+      "320-font-2-en-chooser-1.jpg",
+      "320-font-2-en-chooser-2.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-06.jpg",
+    "contactSheets": [
+      "320-font-2-en-longChooser-1.jpg",
+      "320-font-2-en-longChooser-2.jpg",
+      "320-font-2-en-longWarning-1.jpg",
+      "320-font-2-en-longWarning-2.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-07.jpg",
+    "contactSheets": [
+      "320-font-2-en-multiple-1.jpg",
+      "320-font-2-en-multiple-2.jpg",
+      "320-font-2-en-multiple-3.jpg",
+      "320-font-2-en-multiple-4.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-08.jpg",
+    "contactSheets": [
+      "320-font-2-en-selected-1.jpg",
+      "320-font-2-en-selected-2.jpg",
+      "320-font-2-en-stale-1.jpg",
+      "320-font-2-en-stale-2.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-09.jpg",
+    "contactSheets": [
+      "320-font-2-en-warning-1.jpg",
+      "320-font-2-en-warning-2.jpg",
+      "320-font-2-nl-after-1.jpg",
+      "320-font-2-nl-after-2.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-10.jpg",
+    "contactSheets": [
+      "320-font-2-nl-after-3.jpg",
+      "320-font-2-nl-before-1.jpg",
+      "320-font-2-nl-before-2.jpg",
+      "320-font-2-nl-before-3.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-11.jpg",
+    "contactSheets": [
+      "320-font-2-nl-chooser-1.jpg",
+      "320-font-2-nl-chooser-2.jpg",
+      "320-font-2-nl-warning-1.jpg",
+      "320-font-2-nl-warning-2.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-12.jpg",
+    "contactSheets": [
+      "360-font-1-en-after-1.jpg",
+      "360-font-1-en-before-1.jpg",
+      "360-font-1-en-chooser-1.jpg",
+      "360-font-1-en-warning-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-13.jpg",
+    "contactSheets": [
+      "360-font-1-nl-after-1.jpg",
+      "360-font-1-nl-before-1.jpg",
+      "360-font-1-nl-chooser-1.jpg",
+      "360-font-1-nl-warning-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-14.jpg",
+    "contactSheets": [
+      "360-font-2-en-after-1.jpg",
+      "360-font-2-en-after-2.jpg",
+      "360-font-2-en-before-1.jpg",
+      "360-font-2-en-before-2.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-15.jpg",
+    "contactSheets": [
+      "360-font-2-en-chooser-1.jpg",
+      "360-font-2-en-warning-1.jpg",
+      "360-font-2-nl-after-1.jpg",
+      "360-font-2-nl-after-2.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-16.jpg",
+    "contactSheets": [
+      "360-font-2-nl-before-1.jpg",
+      "360-font-2-nl-before-2.jpg",
+      "360-font-2-nl-chooser-1.jpg",
+      "360-font-2-nl-warning-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-17.jpg",
+    "contactSheets": [
+      "393-font-1-en-after-1.jpg",
+      "393-font-1-en-before-1.jpg",
+      "393-font-1-en-chooser-1.jpg",
+      "393-font-1-en-warning-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-18.jpg",
+    "contactSheets": [
+      "393-font-1-nl-after-1.jpg",
+      "393-font-1-nl-ambiguous-1.jpg",
+      "393-font-1-nl-before-1.jpg",
+      "393-font-1-nl-cancel-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-19.jpg",
+    "contactSheets": [
+      "393-font-1-nl-chooser-1.jpg",
+      "393-font-1-nl-confirmBusy-1.jpg",
+      "393-font-1-nl-distance-1.jpg",
+      "393-font-1-nl-laterCalendar-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-20.jpg",
+    "contactSheets": [
+      "393-font-1-nl-longChooser-1.jpg",
+      "393-font-1-nl-longWarning-1.jpg",
+      "393-font-1-nl-multiple-1.jpg",
+      "393-font-1-nl-multiple-2.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-21.jpg",
+    "contactSheets": [
+      "393-font-1-nl-rejected-1.jpg",
+      "393-font-1-nl-selected-1.jpg",
+      "393-font-1-nl-sparse-1.jpg",
+      "393-font-1-nl-stale-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-22.jpg",
+    "contactSheets": [
+      "393-font-1-nl-staleChooser-1.jpg",
+      "393-font-1-nl-validation-1.jpg",
+      "393-font-1-nl-warning-1.jpg",
+      "393-font-2-en-after-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-23.jpg",
+    "contactSheets": [
+      "393-font-2-en-after-2.jpg",
+      "393-font-2-en-before-1.jpg",
+      "393-font-2-en-before-2.jpg",
+      "393-font-2-en-chooser-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-24.jpg",
+    "contactSheets": [
+      "393-font-2-en-warning-1.jpg",
+      "393-font-2-nl-after-1.jpg",
+      "393-font-2-nl-after-2.jpg",
+      "393-font-2-nl-before-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-25.jpg",
+    "contactSheets": [
+      "393-font-2-nl-before-2.jpg",
+      "393-font-2-nl-chooser-1.jpg",
+      "393-font-2-nl-warning-1.jpg",
+      "412-font-1-en-after-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-26.jpg",
+    "contactSheets": [
+      "412-font-1-en-before-1.jpg",
+      "412-font-1-en-chooser-1.jpg",
+      "412-font-1-en-warning-1.jpg",
+      "412-font-1-nl-after-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-27.jpg",
+    "contactSheets": [
+      "412-font-1-nl-before-1.jpg",
+      "412-font-1-nl-chooser-1.jpg",
+      "412-font-1-nl-warning-1.jpg",
+      "412-font-2-en-after-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-28.jpg",
+    "contactSheets": [
+      "412-font-2-en-after-2.jpg",
+      "412-font-2-en-before-1.jpg",
+      "412-font-2-en-before-2.jpg",
+      "412-font-2-en-chooser-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-29.jpg",
+    "contactSheets": [
+      "412-font-2-en-warning-1.jpg",
+      "412-font-2-nl-after-1.jpg",
+      "412-font-2-nl-after-2.jpg",
+      "412-font-2-nl-before-1.jpg"
+    ]
+  },
+  {
+    "atlas": "atlas-30.jpg",
+    "contactSheets": [
+      "412-font-2-nl-before-2.jpg",
+      "412-font-2-nl-chooser-1.jpg",
+      "412-font-2-nl-warning-1.jpg"
+    ]
+  }
+]

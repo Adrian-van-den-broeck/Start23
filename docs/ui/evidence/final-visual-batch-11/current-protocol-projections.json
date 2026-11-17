@@ -1,0 +1,311 @@
+{
+  "swim": [
+    {
+      "protocol_id": "start23_swim_css_400_200_v1",
+      "discipline": "swim",
+      "protocol_type": "field_test",
+      "version": 1,
+      "review_status": "approved_active",
+      "result_status_on_success": "threshold_estimated",
+      "guidance_modes": [
+        "pace"
+      ],
+      "required_observation_type": "elapsed_time_distance_and_rpe",
+      "calculated_result": "threshold_and_zone_profiles",
+      "pending_zone_lifecycle": "confirmation_creates_pending_proposal",
+      "segments": [
+        {
+          "order": 1,
+          "segment_id": "warmup",
+          "purpose": "prepare",
+          "duration_seconds": null,
+          "distance_meters": 600,
+          "target_rpe_min": 2,
+          "target_rpe_max": 3,
+          "rpe_zone_number": 1,
+          "rpe_display_label": "Zone 1 · RPE 2-3",
+          "rpe_training_type": "Inzwemmen",
+          "rpe_description": "Zeer rustig; niet buiten adem.",
+          "optional": false
+        },
+        {
+          "order": 2,
+          "segment_id": "tt_400m",
+          "purpose": "valid_test_segment",
+          "duration_seconds": null,
+          "distance_meters": 400,
+          "target_rpe_min": 9,
+          "target_rpe_max": 10,
+          "rpe_zone_number": 5,
+          "rpe_display_label": "Zone 5 · RPE 9-10",
+          "rpe_training_type": "Sprint",
+          "rpe_description": "Maximale slagfrequentie; volledig buiten adem aan de kant.",
+          "optional": false
+        },
+        {
+          "order": 3,
+          "segment_id": "active_recovery",
+          "purpose": "recovery_between_tests",
+          "duration_seconds": 420,
+          "distance_meters": null,
+          "target_rpe_min": 2,
+          "target_rpe_max": 3,
+          "rpe_zone_number": 1,
+          "rpe_display_label": "Zone 1 · RPE 2-3",
+          "rpe_training_type": "Inzwemmen",
+          "rpe_description": "Zeer rustig; niet buiten adem.",
+          "optional": false
+        },
+        {
+          "order": 4,
+          "segment_id": "tt_200m",
+          "purpose": "valid_test_segment",
+          "duration_seconds": null,
+          "distance_meters": 200,
+          "target_rpe_min": 9,
+          "target_rpe_max": 10,
+          "rpe_zone_number": 5,
+          "rpe_display_label": "Zone 5 · RPE 9-10",
+          "rpe_training_type": "Sprint",
+          "rpe_description": "Maximale slagfrequentie; volledig buiten adem aan de kant.",
+          "optional": false
+        },
+        {
+          "order": 5,
+          "segment_id": "cooldown",
+          "purpose": "recovery",
+          "duration_seconds": null,
+          "distance_meters": 200,
+          "target_rpe_min": 2,
+          "target_rpe_max": 3,
+          "rpe_zone_number": 1,
+          "rpe_display_label": "Zone 1 · RPE 2-3",
+          "rpe_training_type": "Inzwemmen",
+          "rpe_description": "Zeer rustig; niet buiten adem.",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "protocol_id": "start23_week1_swim_calibration_v1",
+      "discipline": "swim",
+      "protocol_type": "submaximal_calibration",
+      "version": 1,
+      "review_status": "approved_active",
+      "result_status_on_success": "threshold_estimated",
+      "guidance_modes": [
+        "pace"
+      ],
+      "required_observation_type": "elapsed_time_distance_and_rpe",
+      "calculated_result": "threshold_and_zone_profiles",
+      "pending_zone_lifecycle": "confirmation_creates_pending_proposal",
+      "segments": [
+        {
+          "order": 1,
+          "segment_id": "warmup",
+          "purpose": "prepare",
+          "duration_seconds": null,
+          "distance_meters": 300,
+          "target_rpe_min": 2,
+          "target_rpe_max": 3,
+          "rpe_zone_number": 1,
+          "rpe_display_label": "Zone 1 · RPE 2-3",
+          "rpe_training_type": "Inzwemmen",
+          "rpe_description": "Zeer rustig; niet buiten adem.",
+          "optional": false
+        },
+        {
+          "order": 2,
+          "segment_id": "4x200_comfortable",
+          "purpose": "calibration_observation",
+          "duration_seconds": null,
+          "distance_meters": 800,
+          "target_rpe_min": 4,
+          "target_rpe_max": 4,
+          "rpe_zone_number": 2,
+          "rpe_display_label": "Zone 2 · RPE 4",
+          "rpe_training_type": "Duurzwemmen",
+          "rpe_description": "Gelijkmatig en beheerst ritme; goed vol te houden.",
+          "optional": false
+        },
+        {
+          "order": 3,
+          "segment_id": "4x100_steady",
+          "purpose": "calibration_observation",
+          "duration_seconds": null,
+          "distance_meters": 400,
+          "target_rpe_min": 5,
+          "target_rpe_max": 6,
+          "rpe_zone_number": 3,
+          "rpe_display_label": "Zone 3 · RPE 5-6",
+          "rpe_training_type": "Drempel",
+          "rpe_description": "Stevig tempo; intensievere ademhaling en keerpunten.",
+          "optional": false
+        },
+        {
+          "order": 4,
+          "segment_id": "cooldown",
+          "purpose": "recovery",
+          "duration_seconds": null,
+          "distance_meters": 200,
+          "target_rpe_min": 2,
+          "target_rpe_max": 3,
+          "rpe_zone_number": 1,
+          "rpe_display_label": "Zone 1 · RPE 2-3",
+          "rpe_training_type": "Inzwemmen",
+          "rpe_description": "Zeer rustig; niet buiten adem.",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "bike": [
+    {
+      "protocol_id": "start23_week1_bike_calibration_v1",
+      "discipline": "bike",
+      "protocol_type": "submaximal_calibration",
+      "version": 1,
+      "review_status": "approved_active",
+      "result_status_on_success": "threshold_estimated",
+      "guidance_modes": [
+        "heart_rate",
+        "combined"
+      ],
+      "required_observation_type": "average_heart_rate_and_rpe",
+      "calculated_result": "threshold_and_zone_profiles",
+      "pending_zone_lifecycle": "confirmation_creates_pending_proposal",
+      "segments": [
+        {
+          "order": 1,
+          "segment_id": "warmup",
+          "purpose": "prepare",
+          "duration_seconds": 900,
+          "distance_meters": null,
+          "target_rpe_min": 2,
+          "target_rpe_max": 3,
+          "rpe_zone_number": 1,
+          "rpe_display_label": "Zone 1 · RPE 2-3",
+          "rpe_training_type": "Losrijden",
+          "rpe_description": "Zeer lichte weerstand; volkomen rustig.",
+          "optional": false
+        },
+        {
+          "order": 2,
+          "segment_id": "comfortable_20min",
+          "purpose": "calibration_observation",
+          "duration_seconds": 1200,
+          "distance_meters": null,
+          "target_rpe_min": 4,
+          "target_rpe_max": 4,
+          "rpe_zone_number": 2,
+          "rpe_display_label": "Zone 2 · RPE 4",
+          "rpe_training_type": "Basisduur",
+          "rpe_description": "Constante lichte druk; makkelijk praten.",
+          "optional": false
+        },
+        {
+          "order": 3,
+          "segment_id": "steady_10min_optional",
+          "purpose": "optional_calibration_observation",
+          "duration_seconds": 600,
+          "distance_meters": null,
+          "target_rpe_min": 5,
+          "target_rpe_max": 6,
+          "rpe_zone_number": 3,
+          "rpe_display_label": "Zone 3 · RPE 5-6",
+          "rpe_training_type": "Moderato",
+          "rpe_description": "Pittige pedaaldruk; praten in korte zinnen.",
+          "optional": true
+        },
+        {
+          "order": 4,
+          "segment_id": "cooldown",
+          "purpose": "recovery",
+          "duration_seconds": 600,
+          "distance_meters": null,
+          "target_rpe_min": 2,
+          "target_rpe_max": 3,
+          "rpe_zone_number": 1,
+          "rpe_display_label": "Zone 1 · RPE 2-3",
+          "rpe_training_type": "Losrijden",
+          "rpe_description": "Zeer lichte weerstand; volkomen rustig.",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "run": [
+    {
+      "protocol_id": "start23_week1_run_calibration_v1",
+      "discipline": "run",
+      "protocol_type": "submaximal_calibration",
+      "version": 1,
+      "review_status": "approved_active",
+      "result_status_on_success": "threshold_estimated",
+      "guidance_modes": [
+        "heart_rate"
+      ],
+      "required_observation_type": "average_heart_rate_and_rpe",
+      "calculated_result": "threshold_and_zone_profiles",
+      "pending_zone_lifecycle": "confirmation_creates_pending_proposal",
+      "segments": [
+        {
+          "order": 1,
+          "segment_id": "warmup",
+          "purpose": "prepare",
+          "duration_seconds": 600,
+          "distance_meters": null,
+          "target_rpe_min": 2,
+          "target_rpe_max": 3,
+          "rpe_zone_number": 1,
+          "rpe_display_label": "Zone 1 · RPE 2-3",
+          "rpe_training_type": "Herstel",
+          "rpe_description": "Heel ontspannen; moeiteloos praten en zingen.",
+          "optional": false
+        },
+        {
+          "order": 2,
+          "segment_id": "comfortable_20min",
+          "purpose": "calibration_observation",
+          "duration_seconds": 1200,
+          "distance_meters": null,
+          "target_rpe_min": 4,
+          "target_rpe_max": 4,
+          "rpe_zone_number": 2,
+          "rpe_display_label": "Zone 2 · RPE 4",
+          "rpe_training_type": "Duur",
+          "rpe_description": "Comfortabel tempo; vlot babbelen in hele zinnen.",
+          "optional": false
+        },
+        {
+          "order": 3,
+          "segment_id": "steady_8min_optional",
+          "purpose": "optional_calibration_observation",
+          "duration_seconds": 480,
+          "distance_meters": null,
+          "target_rpe_min": 5,
+          "target_rpe_max": 6,
+          "rpe_zone_number": 3,
+          "rpe_display_label": "Zone 3 · RPE 5-6",
+          "rpe_training_type": "Tempo",
+          "rpe_description": "Pittig; praten lukt enkel in korte zinnen.",
+          "optional": true
+        },
+        {
+          "order": 4,
+          "segment_id": "cooldown",
+          "purpose": "recovery",
+          "duration_seconds": 600,
+          "distance_meters": null,
+          "target_rpe_min": 2,
+          "target_rpe_max": 3,
+          "rpe_zone_number": 1,
+          "rpe_display_label": "Zone 1 · RPE 2-3",
+          "rpe_training_type": "Herstel",
+          "rpe_description": "Heel ontspannen; moeiteloos praten en zingen.",
+          "optional": false
+        }
+      ]
+    }
+  ]
+}

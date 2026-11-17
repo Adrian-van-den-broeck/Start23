@@ -1,0 +1,4 @@
+{
+  "acceptedAsComplete": false,
+  "reason": "Harness searched only downwards for header Back after an external choice. Existing callback/identity checks passed; scroll to top before the Back check."
+}

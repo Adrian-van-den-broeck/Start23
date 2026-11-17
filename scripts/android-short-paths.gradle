@@ -1,0 +1,40 @@
+// Applied only by the local emulator task, including to native dependencies.
+gradle.beforeProject { project ->
+    def configureNativePaths = {
+        def android = project.extensions.getByName('android')
+        android.externalNativeBuild.cmake.buildStagingDirectory =
+            new File(System.getProperty('start23.nativeRoot'), project.name)
+        // Hash long source paths, including node_modules shared by worktrees.
+        android.defaultConfig.externalNativeBuild.cmake.arguments.add('-DCMAKE_OBJECT_PATH_MAX=200')
+    }
+    project.plugins.withId('com.android.application') { configureNativePaths() }
+    project.plugins.withId('com.android.library') { configureNativePaths() }
+
+    // Autolinking resolves node_modules to the original drive. React Native's
+    // codegen uses relative paths, so all its inputs and working directory must
+    // use that same drive rather than mixing it with the SUBST alias.
+    project.afterEvaluate {
+        def originalRoot = System.getProperty('start23.projectRoot')
+        if (originalRoot != null) {
+            def mappedRoot = project.rootProject.projectDir.parentFile.parentFile.toPath()
+            def originalPath = { File input ->
+                def path = input.toPath()
+                path.startsWith(mappedRoot)
+                    ? new File(originalRoot, mappedRoot.relativize(path).toString())
+                    : input
+            }
+            project.tasks.matching {
+                it.name in ['generateCodegenSchemaFromJavaScript', 'generateCodegenArtifactsFromSchema']
+            }.configureEach { task ->
+                ['codegenDir', 'reactNativeDir', 'jsRootDir', 'generatedSrcDir'].each { name ->
+                    if (task.hasProperty(name)) {
+                        def directory = task.property(name)
+                        directory.set(originalPath(directory.get().asFile))
+                    }
+                }
+                task.nodeWorkingDir.set(originalPath(new File(task.nodeWorkingDir.get())).absolutePath)
+                task.workingDir(task.nodeWorkingDir.get())
+            }
+        }
+    }
+}

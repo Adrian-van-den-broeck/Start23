@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-07T18:01:57.124450+00:00",
+  "serial": "emulator-5554",
+  "size": "Physical size: 1080x2280",
+  "density": "Physical density: 440\nOverride density: 480",
+  "fontScale": "1",
+  "fixture": {
+    "width": 360,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "review",
+    "inertActions": true
+  },
+  "provenance": "Actual production PlacementScreen/ProposalReviewScreen/ProposalAlternativesScreen; production public mappers; inert callback ledger; no server or athlete writes"
+}

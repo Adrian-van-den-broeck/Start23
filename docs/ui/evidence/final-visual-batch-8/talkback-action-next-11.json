@@ -1,0 +1,9 @@
+{
+  "method": "Actual documented TalkBack modifier+Right native shortcut; no accessibility dump during focus capture",
+  "modifierKeyCode": "117",
+  "step": 11,
+  "state": "chooser",
+  "services": "com.google.android.marvin.talkback/.TalkBackService",
+  "source": "https://support.google.com/accessibility/android/answer/6110948?hl=en-GB",
+  "visualFocusInspectionRequired": true
+}

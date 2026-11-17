@@ -1,0 +1,35 @@
+{
+  "baseline": "f25379d",
+  "branch": "feat/wombo-ui-v2-final-batch-11",
+  "reference": "docs/ui/mockups-final/03-zones.png",
+  "files": [
+    {
+      "file": "mobile/src/screens/ZoneProfileScreen.tsx",
+      "sha256": "8d8eb822f9f0d876cd6628276b973c99b806499bf74e609c0ef1c902c9e883d7"
+    },
+    {
+      "file": "mobile/src/screens/ZoneSetupStep.tsx",
+      "sha256": "71fcb50416e8f2945b2cc678a22c8b84ac3f4ed4121614f0209a187eb06ec060"
+    },
+    {
+      "file": "mobile/src/screens/CalibrationScreen.tsx",
+      "sha256": "e1080da221a93ac8e4abb59751dc5017fe73cf40aa66ac9875ade0991d9cc7ea"
+    },
+    {
+      "file": "mobile/src/ui-v2/components/ZoneVisuals.tsx",
+      "sha256": "eda3f0ad1245c28241a8a44e4e45e93ad96847dcbe19a14c856aeda24effadcb"
+    },
+    {
+      "file": "mobile/src/ui-v2/components/ZoneField.tsx",
+      "sha256": "bf6dd95fb28ced37bc6549a17d2ce67a4e5f6d29b4b57b33f66030642090015e"
+    },
+    {
+      "file": "mobile/src/ui-v2/components/FormComposition.tsx",
+      "sha256": "6146d0d9885291e0976168e8c061049ef235c74ff9e7d4a4ef13186ef73bb985"
+    }
+  ],
+  "nativeBuilds": {
+    "final5": "Retained overview/history/hidden, result, incomplete, onboarding and known forms; later changes affect observation checkbox row layout and optional boundary columns only.",
+    "final6": "Cache-cleared final code; corrected observation rows, optional boundary columns, current protocol gallery and remaining forms."
+  }
+}

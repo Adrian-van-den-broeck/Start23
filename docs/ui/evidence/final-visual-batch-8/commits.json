@@ -1,0 +1,27 @@
+{
+  "branch": "feat/wombo-ui-v2-final-batch-8",
+  "baseline": "70568a80c0d19a88cd6b47fe1184a16ed7b4a7a1",
+  "commit": "2b5c7753bde1e5dae2446da40c12469a29bf855e",
+  "sourceFiles": [
+    "mobile/src/screens/PlanningWorkoutMoveTask.tsx",
+    "mobile/src/ui-v2/components/WeekAgenda.tsx",
+    "mobile/src/ui-v2/components/WorkoutSummary.tsx",
+    "mobile/src/ui-v2/screens/WorkoutMoveScreen.test.tsx",
+    "mobile/src/ui-v2/screens/WorkoutMoveScreen.tsx"
+  ],
+  "originalBranchAndIndexRetained": true,
+  "protectedState": {
+    ".": {
+      "branch": "fix/pre-ui-beta-blockers",
+      "head": "6bb3a047139d91c71ac065c35a8af595221b54c5",
+      "indexHash": "7aa1a1e73031c2f7750614ef2ebac8148f24458efb11de1de3ea0d5127c04a12",
+      "trackedStatus": "M .vscode/tasks.json\n M backend/app/modules/coach/weekly_plan.py\n M docs/deployment-tasks.md"
+    },
+    ".worktrees\\wombo-ui-v2-activities": {
+      "branch": "feat/wombo-ui-v2-activities",
+      "head": "19c23d58f0b71aea01478df2306e2492a515e36e",
+      "indexHash": "5d0ff71c94ce716dc0de366501ad452bbc297bf6b11331d8122c41948cc56194",
+      "trackedStatus": "M mobile/app/(authenticated)/_layout.tsx\n M mobile/jest.config.js\n M mobile/package-lock.json\n M mobile/package.json\n M mobile/src/i18n/LanguageProvider.tsx\n M mobile/src/navigation/AuthenticatedLayout.test.tsx\n M mobile/src/navigation/TrainingLayout.tsx\n M mobile/src/screens/PlanningWorkoutMoveBoundary.test.tsx\n M mobile/src/screens/PlanningWorkoutMoveTask.tsx\n M mobile/src/ui-v2/components/AttentionRow.test.tsx\n M mobile/src/ui-v2/components/AttentionRow.tsx\n M mobile/src/ui-v2/components/DayHeader.tsx\n M mobile/src/ui-v2/components/GoalSummaryRow.tsx\n M mobile/src/ui-v2/components/MonthGrid.tsx\n M mobile/src/ui-v2/components/NextSession.tsx\n M mobile/src/ui-v2/components/QuickActionRow.tsx\n M mobile/src/ui-v2/components/RpeIndicator.tsx\n M mobile/src/ui-v2/components/SessionSequence.tsx\n M mobile/src/ui-v2/components/SportIndicator.tsx\n M mobile/src/ui-v2/components/WeekAgenda.tsx\n M mobile/src/ui-v2/components/WeekCompositions.test.tsx\n M mobile/src/ui-v2/components/WeekTaskCard.tsx\n M mobile/src/ui-v2/components/WorkoutSummary.tsx\n M mobile/src/ui-v2/primitives/Button.test.tsx\n M mobile/src/ui-v2/primitives/Button.tsx\n M mobile/src/ui-v2/primitives/Card.tsx\n M mobile/src/ui-v2/primitives/Divider.tsx\n M mobile/src/ui-v2/primitives/Input.tsx\n M mobile/src/ui-v2/primitives/Screen.tsx\n M mobile/src/ui-v2/primitives/Text.tsx\n M mobile/src/ui-v2/screens/ActivitiesScreen.tsx\n M mobile/src/ui-v2/screens/CalendarScreen.test.tsx\n M mobile/src/ui-v2/screens/CalendarScreen.tsx\n M mobile/src/ui-v2/screens/PlanningCreationScreens.test.tsx\n M mobile/src/ui-v2/screens/PlanningCreationScreens.tsx\n M mobile/src/ui-v2/screens/ProposalReviewScreens.test.tsx\n M mobile/src/ui-v2/screens/ProposalReviewScreens.tsx\n M mobile/src/ui-v2/screens/WeekScreen.refinement.test.tsx\n M mobile/src/ui-v2/screens/WeekScreen.tsx\n M mobile/src/ui-v2/screens/WorkoutDetailScreen.test.tsx\n M mobile/src/ui-v2/screens/WorkoutDetailScreen.tsx\n M mobile/src/ui-v2/screens/WorkoutMoveScreen.test.tsx\n M mobile/src/ui-v2/screens/WorkoutMoveScreen.tsx\n M mobile/src/ui-v2/tokens/colors.ts\n M mobile/src/ui-v2/tokens/index.ts\n M mobile/src/ui-v2/tokens/layout.ts\n M mobile/src/ui-v2/tokens/tokens.test.ts\n M mobile/src/ui-v2/tokens/typography.ts"
+    }
+  }
+}

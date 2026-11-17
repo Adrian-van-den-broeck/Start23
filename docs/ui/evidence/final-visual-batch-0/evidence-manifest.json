@@ -1,0 +1,113 @@
+{
+  "classification": "Batch 0 BEFORE provenance evidence: 4 fresh representative states, 3 inherited Workout Detail references in capture-ledger; no visual redesign",
+  "files": {
+    "activities-before.png": {
+      "sha256": "89b23f666363a86d7dd8667920c5d48eec1c6cf7147f7638cd1edc006fbcb3f4",
+      "bytes": 186979
+    },
+    "activities-before.xml": {
+      "sha256": "dd9671acae93b62c530645e002756443918886d18dc94b37715d0520a7cf3bdb",
+      "bytes": 22596
+    },
+    "activities-restored-v2.xml": {
+      "sha256": "e0469a81cc1055ee67674ff47075299e56393a662bdd7bb31b4aa37961917692",
+      "bytes": 22595
+    },
+    "activities-v1-before.png": {
+      "sha256": "301a9c61a2d2d79b472819799fd729e308c9d16eef7efda05b152eae0d750b02",
+      "bytes": 178388
+    },
+    "activities-v1-before.xml": {
+      "sha256": "94306bae0a79537093924941351a6e37502cdd7dfafdbfd1497c7e7353156438",
+      "bytes": 21880
+    },
+    "audit-baseline.py": {
+      "sha256": "48031347b3b03b582c325afedabbef12b432502baf05fc73a74f3c16388dbc07",
+      "bytes": 4521
+    },
+    "baseline-audit.json": {
+      "sha256": "91c22d634c8213af395d9c9158b343dbd1bddc0c4e06158e1a800865550fd3ef",
+      "bytes": 53508
+    },
+    "calendar-before.png": {
+      "sha256": "7db1a1289e3fbe7d820cb9e968146bd0852373496ba2f3e2ddda1a9dec19b946",
+      "bytes": 198898
+    },
+    "calendar-before.xml": {
+      "sha256": "068eba973afd9228719f99ec33a8619984fb73f4169ea6e9e752a14d0aab938b",
+      "bytes": 24608
+    },
+    "calendar-historical-search-1.xml": {
+      "sha256": "ec43ee9d0104b5789c9dd17f878aa62368738ecb49277584debc676c2133d19d",
+      "bytes": 56901
+    },
+    "calendar-historical-search-2.xml": {
+      "sha256": "dbebe6f188c8197fd0bf5063a908f038003b732ecb36e57b72fe50b133f2a5cf",
+      "bytes": 63112
+    },
+    "calendar-historical-search-3.xml": {
+      "sha256": "8e20fc15723fe8dbce688bde49bd3c55b6cc86ab69aacb1ad01c957535a3cfb2",
+      "bytes": 57969
+    },
+    "calendar-search-september.xml": {
+      "sha256": "f61282c509e078cb6dc8e16a94a822950dce06bbbb9ae71ca200358b95f2f1fe",
+      "bytes": 58128
+    },
+    "capture-ledger.json": {
+      "sha256": "e05264878ae36fd0e1ba5b4daf6cc540df7a59e1c11cef85fe699be3c20a1a62",
+      "bytes": 7112
+    },
+    "current-runtime.png": {
+      "sha256": "805f669cee36d61d506b92d736c7610677cc454076d0c47e093c8a349c0f986e",
+      "bytes": 301676
+    },
+    "current-ui.xml": {
+      "sha256": "fabdbd81e837e8034150f3b461df35d60a0601fdd53292cfd2e5e93af3d0d40b",
+      "bytes": 18109
+    },
+    "final-state.xml": {
+      "sha256": "08154dc4e0cd957979616e0288f28ccc97af48f905c057a07c81783ad769a7b6",
+      "bytes": 25739
+    },
+    "metro-manifest.json": {
+      "sha256": "1d44f22beda1b63c8833e10ea027aafce4f773b1bc34c2da9134bb95deded7f1",
+      "bytes": 683
+    },
+    "mobile-tests.json": {
+      "sha256": "269c98dbc41da242bc40c3aee907c55053d34f4aa95a8de644271186a165f85a",
+      "bytes": 199192
+    },
+    "mobile-tests.log": {
+      "sha256": "c93a55dc1b5f9aff71dc61b59d67df899c96d0a22e9865721b0c23cf5f9378be",
+      "bytes": 44912
+    },
+    "planning-task-before.png": {
+      "sha256": "ff8670af0e8e8c0ce466ea2dec1784004a1c5a451ace74311c4c3afd4afefca3",
+      "bytes": 179571
+    },
+    "planning-task-before.xml": {
+      "sha256": "1ee139469119a47f7b0d54f1bad45e816746ab6f2e5e25a93474bf0d5fe3f9d8",
+      "bytes": 19627
+    },
+    "typecheck.log": {
+      "sha256": "c6e00c5cb43469ecdbcd169520e39344fa6cb3f688150a9b8a988d4252de39ac",
+      "bytes": 94
+    },
+    "unused.log": {
+      "sha256": "7f574d7365982990ef03fd76eb6ffba20c06be9c1f1b3cfc3370b2cbfb343771",
+      "bytes": 176
+    },
+    "week-before.png": {
+      "sha256": "ec43f81ca36c0dc8033ecbeb3c798be160c47eadb9da7d2962843c9542c6c2d6",
+      "bytes": 132675
+    },
+    "week-before.xml": {
+      "sha256": "e47596da72b0b6e2fb4f942cc8624a2b53d4103da01a3e6a1af5745d1213f12a",
+      "bytes": 25740
+    },
+    "week-restored.xml": {
+      "sha256": "08154dc4e0cd957979616e0288f28ccc97af48f905c057a07c81783ad769a7b6",
+      "bytes": 25739
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "method": "Actual default TalkBack Alt+Right native shortcut; no accessibility dump during focus capture",
+  "step": 13,
+  "state": "chooser",
+  "services": "com.google.android.marvin.talkback/.TalkBackService",
+  "source": "https://support.google.com/accessibility/android/answer/6110948?hl=en-GB",
+  "visualFocusInspectionRequired": true
+}

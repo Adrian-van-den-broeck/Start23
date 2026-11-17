@@ -1,0 +1,51 @@
+[
+  {
+    "foreground": "#071E22",
+    "background": "#FAFAF6",
+    "ratio": 16.479809183776617,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "foreground": "#526874",
+    "background": "#FFFEFA",
+    "ratio": 5.794670367766425,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "foreground": "#124D43",
+    "background": "#E7EFE8",
+    "ratio": 8.259677625906914,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "foreground": "#FFFEFA",
+    "background": "#124D43",
+    "ratio": 9.59689960234215,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "foreground": "#79520E",
+    "background": "#F8EED6",
+    "ratio": 6.011441606154814,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "foreground": "#A23B2A",
+    "background": "#FBE5DF",
+    "ratio": 5.437716725659554,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "foreground": "#70837D",
+    "background": "#FFFEFA",
+    "ratio": 3.9775862361849925,
+    "threshold": 3,
+    "pass": true
+  }
+]

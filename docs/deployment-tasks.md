@@ -2,6 +2,72 @@
 
 Run the Wombo tasks from **Terminal > Run Task** in VS Code.
 
+## Run on an Android emulator
+
+Run `Wombo: Run Android app`. It starts directly with `Pixel_4_API_35_2` and
+UI V2, without input prompts. The task reuses the selected
+emulator or boots the selected AVD, waits for Android, configures the localhost
+bridges, builds and installs the development APK, then starts Metro and opens
+the app. The first native build takes longer; later builds reuse Gradle caches.
+
+It runs Metro
+from a local worktree at the current `feat/wombo-ui-v2` integration commit;
+the stabilization checkout itself contains only V1. In the app, use **UI V1**
+and **UI V2** near the Week screen header to compare the implemented screens
+without signing out. Switching is disabled while an operation is in progress.
+Screens that have not yet been migrated retain their existing presentation.
+The comparison is available only in development builds.
+
+The launcher shares this checkout's native build when the UI worktree's package
+files and Expo app configuration match. When they differ, it builds and installs
+the UI worktree's own native app so new native dependencies are included. It uses
+this workspace's public backend configuration. It does
+not change branches or merge UI code into the stabilization checkout. The UI
+worktree must have its mobile dependencies installed. When this workspace's
+Metro server is already running, the task restarts it automatically with the
+selected source and UI version. If another service owns port 8081, it chooses
+a free port between 8082 and 8099 and configures Android to use that port.
+Only Node processes running this workspace's known Expo CLI paths are stopped.
+The app is reopened at its start route with stored login and app data retained.
+Launcher ADB commands have a 20-second timeout. If Android's SDK connection
+hangs, the task restarts the verified SDK daemon and retries once without
+resetting the emulator.
+
+The task checks the selected emulator's internal storage before building and
+again using the APK size before installation. It reserves at least 512 MiB (or
+three times the APK size plus 256 MiB) for staging, extracted files and Android's
+storage reserve. When space is low, it trims disposable caches and removes the
+stale `/data/local/tmp/app-debug.apk` installer. If space is still insufficient,
+it stops with the AVD name and available space before starting Metro. Select
+another AVD, such as the default `Pixel_4_API_35_2`, or free internal storage in
+the emulator's **Settings > Storage**. The task preserves installed apps and
+app data; it does not wipe the emulator.
+
+The app uses the backend URL already configured in `mobile/.env`. For local
+mode, start `Wombo: Start backend` separately before using API features. The
+Android task can also use the existing production backend directly.
+
+On Windows, the script temporarily maps the selected native source to a free drive letter
+and places CMake build files in `.runtime/android-native` through that short
+path. CMake hashes long object paths to stay below Ninja's path limit. This
+also supports worktrees with a shared `mobile/node_modules` junction. The
+React Native code-generation paths use the original drive consistently so
+autolinking cannot mix drive letters. The mapping is removed when the task
+exits; no repository move is required.
+
+Run the same flow directly from the repository root:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run-start23-android.ps1
+```
+
+Pass `-UiVersion v1` to start the comparison in V1; the in-app buttons still
+let you switch to V2. Pass `-AvdName <name>` to use a different emulator.
+
+Use `-BuildOnly` to verify the x86_64 development build without starting an
+emulator or Metro. `npm run android` only starts Metro and requires a development
+app already installed on the emulator.
+
 ## Select the backend target
 
 - `Wombo: Switch to local mode` sets `mobile/.env` to

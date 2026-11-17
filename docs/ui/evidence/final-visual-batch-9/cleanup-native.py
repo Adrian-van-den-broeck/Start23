@@ -1,0 +1,30 @@
+from pathlib import Path
+import importlib.util,json,re,sys,time
+HERE=Path(__file__).resolve().parent
+root=HERE.parents[3];mobile=root/'.worktrees/wombo-ui-v2-activities/mobile'
+spec=importlib.util.spec_from_file_location('review',HERE/'native-review.py');r=importlib.util.module_from_spec(spec);spec.loader.exec_module(r)
+original=json.loads((HERE/'device-baseline.json').read_text())
+gallery=mobile/'app/dev-batch9-review.tsx'
+if sys.argv[1]=='prepare':
+    assert gallery.resolve().parent==(mobile/'app').resolve()
+    assert gallery.read_bytes()==(HERE/'temporary-dev-batch9-review.tsx.txt').read_bytes()
+    r.open_review('history','nl');time.sleep(1);gallery.unlink()
+    density=int(re.findall(r'(?:Physical density|Override density): (\d+)',original['density'])[-1])
+    r.adb('shell','wm','density',str(density));r.adb('shell','settings','put','system','font_scale',original['font_scale'])
+    (HERE/'cleanup-prepared.json').write_text(json.dumps({'galleryRemoved':True,'dutchPreferenceRestored':True,'displayRestored':True,'restartOriginal8081AfterRemoval':True},indent=2)+'\n')
+    print('Temporary route removed; original preview must restart before normal-root verification')
+    sys.exit(0)
+assert sys.argv[1]=='restore' and not gallery.exists() and (HERE/'cleanup-prepared.json').exists()
+r.adb('reverse','tcp:8081','tcp:8081');r.adb('shell','am','force-stop','com.adrivdbs.wombo')
+r.adb('shell',"am start -a android.intent.action.VIEW -d 'wombo://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A8081' com.adrivdbs.wombo")
+time.sleep(10);r.adb('shell',"am start -a android.intent.action.VIEW -d 'wombo:///planning' com.adrivdbs.wombo")
+for _ in range(20):
+    time.sleep(2);tree=r.hierarchy();labels={n.get('content-desc','') for n in tree.iter('node')}
+    v1={'Week','Kalender','Profielmenu'}.issubset(labels);v2={'Week','Kalender','Activiteiten','Profiel'}.issubset(labels)
+    if (v1 or v2) and not any(n.get('resource-id','').startswith('batch-9-') for n in tree.iter('node')):break
+else:raise AssertionError('Original normal preview did not settle')
+r.adb('reverse','--remove','tcp:8084')
+r.adb('shell','rm','-f','/sdcard/wombo-batch9.xml','/sdcard/wombo-batch9.png','/sdcard/wombo-batch9-a11y.png')
+data={'galleryRemoved':True,'normalWeekRoot':True,'originalVersion':'v1' if v1 else 'v2','dutchLanguageRestored':True,'density':r.adb('shell','wm','density'),'fontScale':r.adb('shell','settings','get','system','font_scale'),'reviewTransportRemoved':True,'athleteDataCapturedDuringCleanup':False,'ownedDeviceScratchRemoved':True,'originalPreviewRestartedAfterRouteRemoval':True}
+assert data['density']==original['density'] and data['fontScale']==original['font_scale']
+(HERE/'device-cleanup.json').write_text(json.dumps(data,indent=2)+'\n');print('Original normal Week preview and preferences restored; owned transport/scratch removed')

@@ -1,0 +1,308 @@
+[
+  {
+    "state": "entry",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "entry",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 3
+  },
+  {
+    "state": "questions",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 7
+  },
+  {
+    "state": "questions",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 15
+  },
+  {
+    "state": "selected",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 7
+  },
+  {
+    "state": "selected",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 15
+  },
+  {
+    "state": "candidate",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 8
+  },
+  {
+    "state": "candidate",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 24
+  },
+  {
+    "state": "saved",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 7
+  },
+  {
+    "state": "saved",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 17
+  },
+  {
+    "state": "confirmed",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 1
+  },
+  {
+    "state": "confirmed",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 2
+  },
+  {
+    "state": "error",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 1
+  },
+  {
+    "state": "error",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 3
+  },
+  {
+    "state": "auth",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "auth",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 4
+  },
+  {
+    "state": "auth-register",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "auth-register",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 4
+  },
+  {
+    "state": "auth-error",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "auth-error",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 5
+  },
+  {
+    "state": "unlinked",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "unlinked",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 5
+  },
+  {
+    "state": "connected",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 3
+  },
+  {
+    "state": "connected",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 6
+  },
+  {
+    "state": "history",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 3
+  },
+  {
+    "state": "history",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 8
+  },
+  {
+    "state": "reconnect",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "reconnect",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 5
+  },
+  {
+    "state": "pioneer",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "pioneer",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 3
+  },
+  {
+    "state": "pioneer-error",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "pioneer-error",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 4
+  },
+  {
+    "state": "profile",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 1
+  },
+  {
+    "state": "profile",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 2
+  },
+  {
+    "state": "configuration",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 1
+  },
+  {
+    "state": "configuration",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 2
+  },
+  {
+    "state": "session-loading",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 1
+  },
+  {
+    "state": "session-loading",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 1
+  },
+  {
+    "state": "advice",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 7
+  },
+  {
+    "state": "advice",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 16
+  },
+  {
+    "state": "sheet",
+    "width": 393,
+    "fontScale": 1,
+    "pages": 1
+  },
+  {
+    "state": "sheet",
+    "width": 320,
+    "fontScale": 2,
+    "pages": 2
+  },
+  {
+    "state": "entry",
+    "width": 320,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "entry",
+    "width": 360,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "entry",
+    "width": 412,
+    "fontScale": 1,
+    "pages": 1
+  },
+  {
+    "state": "auth",
+    "width": 320,
+    "fontScale": 1,
+    "pages": 3
+  },
+  {
+    "state": "auth",
+    "width": 360,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "auth",
+    "width": 412,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "sheet",
+    "width": 320,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "sheet",
+    "width": 360,
+    "fontScale": 1,
+    "pages": 2
+  },
+  {
+    "state": "sheet",
+    "width": 412,
+    "fontScale": 1,
+    "pages": 1
+  }
+]

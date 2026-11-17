@@ -1,0 +1,72 @@
+{
+  "candidate_sha": "1730a3f62deea3acee5267fa20d2f4ce135a6362",
+  "deployed_sha": "aff74558d0a6511286a4a84a44ea25a03ca57549",
+  "checks": {
+    "review_manifest_exact": true,
+    "group_1_hash": true,
+    "group_2_hash": true,
+    "group_3_hash": true,
+    "original_63_bytes_unchanged": true,
+    "exact_65_files": true,
+    "hosted_function_fingerprints_unchanged": true,
+    "hosted_effective_execution_unchanged": true,
+    "hosted_effective_table_privileges_unchanged": true,
+    "hosted_default_privileges_unchanged": true,
+    "hosted_47_versions_unchanged": true,
+    "deployed_schemas_equals_tested_consumer": true,
+    "deployed_service_equals_tested_consumer": true,
+    "release_worktree_clean": true
+  },
+  "groups": [
+    {
+      "group": 1,
+      "file": "group-1.review.sql",
+      "sha256": "5a1fbec0c9673f27904abd7f7d156363462c15c1c1842ebbc5d8502251d04756",
+      "migrations": [
+        "20261026224844_wombo_a5_checkin_proposal_recovery.sql"
+      ]
+    },
+    {
+      "group": 2,
+      "file": "group-2.review.sql",
+      "sha256": "db97b32546de18887d99838297ebe9be617c3742b26184e692f672e6d2c340f3",
+      "migrations": [
+        "20261103134520_joren_realized_tss_v2_private_provenance.sql",
+        "20261103135735_realized_v2_weekly_registration.sql",
+        "20261103140959_realized_v2_planning_evidence_preconditions.sql",
+        "20261103142339_realized_v2_session_rpe_guidance.sql",
+        "20261105120000_inactive_v6_persistence.sql",
+        "20261105120100_inactive_v6_catalog.sql",
+        "20261107182000_v6_segment_snapshot_compatibility.sql",
+        "20261107182500_v6_frozen_snapshot_operator_precedence.sql",
+        "20261107183000_realized_v2_internal_approval_custody.sql",
+        "20261107183500_realized_v2_business_conflict_codes.sql",
+        "20261107184500_v6_insert_custody.sql",
+        "20261116231106_v6_activity_projection_compatibility.sql"
+      ]
+    },
+    {
+      "group": 3,
+      "file": "group-3.review.sql",
+      "sha256": "0ac1e6cc1e092d5f0940816119bdaf2682bed91926df682a0518badc51add356",
+      "migrations": [
+        "20261108142454_inactive_v6_mobile_identity.sql",
+        "20261108180000_inactive_v6_lifecycle_completion.sql",
+        "20261108210000_inactive_v6_evidence_memberships.sql",
+        "20261113154716_inactive_v6_approved_frequency_policy.sql",
+        "20261116231107_v6_reviewed_privilege_closure.sql"
+      ]
+    }
+  ],
+  "activity_consumer_source_hashes": {
+    "backend/app/modules/activities/schemas.py": {
+      "5d71c688deb610bf5ec79c0f6fac77c835be6b51": "46f6588e990fa4af11ca77bcbe3957a96ac99a392cf410bd04656419c6bd5cc3",
+      "aff74558d0a6511286a4a84a44ea25a03ca57549": "46f6588e990fa4af11ca77bcbe3957a96ac99a392cf410bd04656419c6bd5cc3"
+    },
+    "backend/app/modules/activities/service.py": {
+      "5d71c688deb610bf5ec79c0f6fac77c835be6b51": "52dace3a501a7f1a339b8c29f65fffacce519c0c8f16f871f3006fe7741bc173",
+      "aff74558d0a6511286a4a84a44ea25a03ca57549": "52dace3a501a7f1a339b8c29f65fffacce519c0c8f16f871f3006fe7741bc173"
+    }
+  },
+  "compatibility_limit": "C1 activity projection consumer byte identity only; complete deployed historical workflow and mobile compatibility still requires isolated hosted verification."
+}

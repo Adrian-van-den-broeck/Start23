@@ -1,0 +1,22 @@
+{
+  "temporaryGalleryRemoved": true,
+  "originalRootLayoutUnchanged": true,
+  "physicalDensityRestored": true,
+  "fontScaleRestored": true,
+  "density": "Physical density: 440",
+  "fontScale": "1.0",
+  "localeRestored": "nl",
+  "normalAuthenticatedWeekVerifiedWithoutSavingLiveContent": true,
+  "metroSessionRecoveredOnOriginalPort": 8081,
+  "priorMetroAbsentOnResume": true,
+  "backendBridgeAndAuthOverrideStarted": false,
+  "temporaryEmulatorCaptureFilesRemoved": true,
+  "storedAvdAndAppDataPreserved": true,
+  "emulatorConsoleRestartedForRecovery": true,
+  "headlessSoftwareRendererUsedForRecovery": true,
+  "normalProfileAccessibilityLabel": "Profielmenu",
+  "normalAppContextVerifiedWithoutSavingLiveContent": true,
+  "normalExpiredSessionGateVerified": false,
+  "liveAuthenticatedSmokeGate": "PASS",
+  "adbTransportRecovery": "Restarted the hung ADB server and emulator, preserving stored AVD/app data. Relaunched stopped Metro on its original port with IPv4 loopback binding; restored pre-existing 8081/8000 reverse transports."
+}

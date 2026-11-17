@@ -1,0 +1,27 @@
+import { Redirect, useLocalSearchParams } from 'expo-router';
+import { ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AppHeader } from '@/ui-v2/components/AppHeader';
+import { BottomNavigation, NavigationFooter } from '@/ui-v2/components/BottomNavigation';
+import { ShellInsets, ShellSafeArea } from '@/ui-v2/components/ShellInsets';
+import { Text } from '@/ui-v2/primitives/Text';
+import { colors, layout, space } from '@/ui-v2/tokens';
+export default function DevShellReview() {
+  const params=useLocalSearchParams<{language?: string}>();
+  const insets=useSafeAreaInsets();
+  if (!__DEV__) return <Redirect href="/" />;
+  const nl=params.language==='nl';
+  const labels=nl ? ['Week met uitgebreid overzicht','Kalender met geplande trainingen','Activiteiten en trainingsgeschiedenis'] : ['Week with extended overview','Calendar with planned sessions','Activities and training history'];
+  return <View style={{flex:1,backgroundColor:colors.background}}>
+    <ShellInsets bottom><ShellSafeArea style={{flex:1}}>
+      <ScrollView key={nl ? 'nl' : 'en'} contentContainerStyle={{padding:layout.phoneGutter,gap:space[24]}}>
+        <AppHeader title={nl?'Een lange schermtitel die volledig mag doorlopen':'A long screen title that remains fully readable'}
+          onProfile={()=>undefined} profileLabel={nl?'Persoonlijk profiel openen':'Open personal profile'}
+          onBack={()=>undefined} backLabel={nl?'Terug naar het vorige overzicht':'Return to the previous overview'} landscape="treesRiver" />
+        <Text>{nl?'Openbaar ontwikkelvoorbeeld zonder gegevenswijzigingen.':'Public development fixture with no data changes.'}</Text>
+      </ScrollView>
+    </ShellSafeArea></ShellInsets>
+    <NavigationFooter bottomInset={insets.bottom}><BottomNavigation selectedKey="calendar" onSelect={()=>undefined}
+      destinations={(['week','calendar','activities'] as const).map((icon,i)=>({key:icon,icon,label:labels[i]}))} /></NavigationFooter>
+  </View>;
+}

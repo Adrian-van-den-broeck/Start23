@@ -1,0 +1,364 @@
+{
+  "utc": "2026-10-07T09:49:52.076702+00:00",
+  "visualGate": "PASS",
+  "referenceFamilyImagesReviewed": 12,
+  "mockupsReviewed": [
+    "M6 header/Profile",
+    "M5 training-card anatomy"
+  ],
+  "provisionalScaffoldUsedAsDesignReference": false,
+  "mappedStatesReviewed": [
+    "noPlan",
+    "selection",
+    "placement",
+    "pending",
+    "active",
+    "activePending",
+    "warning",
+    "rest",
+    "next",
+    "siblings"
+  ],
+  "nativeCasesReviewed": 42,
+  "matrixScreenshots": 268,
+  "activeCard": "Ivory training summary with forest detail CTA",
+  "activePending": "Authoritative active occurrences and literal progress; separate pending review",
+  "longContent": "Natural wrapping, each independent sibling action and final goal reachable",
+  "nativeDefectsCorrected": [
+    "Stacked header automatic flex basis",
+    "Native default ScrollView overflow for full long-content extent"
+  ],
+  "actualTalkBackProfileFocusReviewed": true,
+  "reducedMotionReviewed": true,
+  "readOnlyDetailAndAttentionExpansionReviewed": true,
+  "contactSheets": [
+    {
+      "path": "inspection/320-font-1-en-activePending-1.jpg",
+      "sha256": "a543224e968df4a6f37702ddbde3f06cb70516fbb4308d76b3f5dd52797e1f75"
+    },
+    {
+      "path": "inspection/320-font-1-en-activePending-2.jpg",
+      "sha256": "6a6dd9ac52a5e9e5206a61a411ed30752b8e53bee9743ca54cc8e159099e208f"
+    },
+    {
+      "path": "inspection/320-font-1-nl-activePending-1.jpg",
+      "sha256": "3e9c3cdf20061664988c973d46c996f888a6ad9681c38a013554c6790ee8727d"
+    },
+    {
+      "path": "inspection/320-font-1-nl-activePending-2.jpg",
+      "sha256": "e551936d4ff6023b2944ff9a9dc64fc476ea838ee33b81bc306e88894d92fa25"
+    },
+    {
+      "path": "inspection/320-font-2-en-active-1.jpg",
+      "sha256": "85f283b0b39df005d25fb73de0608202b027b1394a341d4686071ee6f75a97f8"
+    },
+    {
+      "path": "inspection/320-font-2-en-active-2.jpg",
+      "sha256": "26b1bf3d3227ff84ab0068d8425a3b606b369b08884ae6a7b83768ab68e6730c"
+    },
+    {
+      "path": "inspection/320-font-2-en-activePending-1.jpg",
+      "sha256": "d387ff1ff2ca90a4f74d86f71594c615dc63585a32cdf3c417240066e0f30721"
+    },
+    {
+      "path": "inspection/320-font-2-en-activePending-2.jpg",
+      "sha256": "4b1b9155f05ee967df15e5f3a39460afaaa2c995e8bc492e75dedfec6b692b08"
+    },
+    {
+      "path": "inspection/320-font-2-en-activePending-3.jpg",
+      "sha256": "d8e0e09bd544e310c1565709009e248664808c2e27b47d0e31c420fec46c13ab"
+    },
+    {
+      "path": "inspection/320-font-2-en-next-1.jpg",
+      "sha256": "e7ad816b520804b4f3959ac98f988d7451e69e201de7a9b5f6e202d4644af1fa"
+    },
+    {
+      "path": "inspection/320-font-2-en-next-2.jpg",
+      "sha256": "dd3ee903af0c96b022da34f4b0380c0124368d72a1254a485bae10f6a5b159a4"
+    },
+    {
+      "path": "inspection/320-font-2-en-next-3.jpg",
+      "sha256": "5bb01fbdd5b71280aa0dd3924947be90648b2006e6e4a09e41029aec512b01a1"
+    },
+    {
+      "path": "inspection/320-font-2-en-noPlan-1.jpg",
+      "sha256": "51c83b276fcdd276409be68d2363efdbe3f41ebd7dd14144aa8e4a5e226d07ae"
+    },
+    {
+      "path": "inspection/320-font-2-en-noPlan-2.jpg",
+      "sha256": "fefc3b71afc514981a5647d5a7e83d7adeba37db20311bc15ada429a31f4561c"
+    },
+    {
+      "path": "inspection/320-font-2-en-pending-1.jpg",
+      "sha256": "07c35502ca3cd622341fed4b1b96b5ee347338809f836026c6eb289aaf61cd66"
+    },
+    {
+      "path": "inspection/320-font-2-en-pending-2.jpg",
+      "sha256": "5cc44ce869a46389fca97edf2b1f45139aaff025978f400d436992eee81844b9"
+    },
+    {
+      "path": "inspection/320-font-2-en-placement-1.jpg",
+      "sha256": "08cb522d4e76966d1a912c5b09ccd89731efcf568efe6dffed58a96bead04db9"
+    },
+    {
+      "path": "inspection/320-font-2-en-placement-2.jpg",
+      "sha256": "3d8bab8c407e2c975bcc61c49a459283458bcd3fd34ca849dca31b710c768de3"
+    },
+    {
+      "path": "inspection/320-font-2-en-rest-1.jpg",
+      "sha256": "b27c835e03badd242c7f2a128d711b2b31225aa92f16996e94d668a0a7edaf08"
+    },
+    {
+      "path": "inspection/320-font-2-en-rest-2.jpg",
+      "sha256": "f117bc4074a759e641e4276fa21c1d3f049e8a0077248dfeb9c0433a26d7436a"
+    },
+    {
+      "path": "inspection/320-font-2-en-selection-1.jpg",
+      "sha256": "3d90d447b734adc2888512a249213cf2b9fbb5536f6510d382a94e832b86ad91"
+    },
+    {
+      "path": "inspection/320-font-2-en-selection-2.jpg",
+      "sha256": "9a717bc3e7da82e392b12ad3b3f277e00bf6c313c9d06c562a9cfc1fb0a12857"
+    },
+    {
+      "path": "inspection/320-font-2-en-siblings-1.jpg",
+      "sha256": "e5fadb2a9477bfd4587b0b28468384f9dba5183501d02ab63734d74d4d9e6707"
+    },
+    {
+      "path": "inspection/320-font-2-en-siblings-2.jpg",
+      "sha256": "76ff75b0088a49cb85931f4ad15a5af72a6e2dcd18d7d6420e52eda43aed96db"
+    },
+    {
+      "path": "inspection/320-font-2-en-siblings-3.jpg",
+      "sha256": "d0f5c61a1498fe100a3d9cea44a6a09095222c258af53bf60f684e4d863c43e8"
+    },
+    {
+      "path": "inspection/320-font-2-en-siblings-4.jpg",
+      "sha256": "0afe74f32ca5b32b25b1baf4489e0b1b5bd020fd43b861c45df1f76032b38900"
+    },
+    {
+      "path": "inspection/320-font-2-en-warning-1.jpg",
+      "sha256": "272c594c79e664a1630cd0f79bdb24a88f4b58367e78c84c802cee6118f00343"
+    },
+    {
+      "path": "inspection/320-font-2-en-warning-2.jpg",
+      "sha256": "5c46ec70968a6ae05b350b4b40d0d756cee9dbedd1c9d9d6f2443a9d8831b8cc"
+    },
+    {
+      "path": "inspection/320-font-2-en-warning-3.jpg",
+      "sha256": "7f8c246fcc803d74c758e18aa2d955755dae03299732f5c4b2f853936c075fb9"
+    },
+    {
+      "path": "inspection/320-font-2-nl-activePending-1.jpg",
+      "sha256": "3de6048ec7d3a2b05d525ed9e191cbcd5dfe7a83c33e3cbd836df0ac077ecaf0"
+    },
+    {
+      "path": "inspection/320-font-2-nl-activePending-2.jpg",
+      "sha256": "32b6d5ff273eafe241e4b6661a7850c5228a7ef41b8c24c1df71f97afa2ecca5"
+    },
+    {
+      "path": "inspection/320-font-2-nl-activePending-3.jpg",
+      "sha256": "bd1ef745872152f45f69ec0d991e94bb37e32f0db720f412298da77db29743f4"
+    },
+    {
+      "path": "inspection/320-font-2-nl-reminder-1.jpg",
+      "sha256": "849bcf31e65df1ed3d796ff25412a8f2b51515f2e9a7f3f62ea1559b74d898d7"
+    },
+    {
+      "path": "inspection/320-font-2-nl-reminder-2.jpg",
+      "sha256": "fe14830a5ba1c583197c0033848f98bc0b3138e846f7c3c4ddd17e9ba733e871"
+    },
+    {
+      "path": "inspection/320-font-2-nl-reminder-3.jpg",
+      "sha256": "4e1c32e95dc0701b69c146321d329beebfb3f006cbab9575886c1b382e078c85"
+    },
+    {
+      "path": "inspection/320-font-2-nl-reminder-4.jpg",
+      "sha256": "6011e9a3062cece7ce485cc35a146c3b9463dbdf9ece9b194be64ecd45576214"
+    },
+    {
+      "path": "inspection/320-font-2-nl-siblings-1.jpg",
+      "sha256": "1b6e3578e2519d3410ed9fa75f1da59e7e373de0bb34d96c6e2d23558afbfbae"
+    },
+    {
+      "path": "inspection/320-font-2-nl-siblings-2.jpg",
+      "sha256": "46673679858da22f206de27d9c94807904469c78cbfbd5c5027eb6bc61a6536f"
+    },
+    {
+      "path": "inspection/320-font-2-nl-siblings-3.jpg",
+      "sha256": "287d1a077442e9a899459aa265f1b3b3f4b5634fd90f34b4d22be3fa1ac6f586"
+    },
+    {
+      "path": "inspection/320-font-2-nl-siblings-4.jpg",
+      "sha256": "52e01d0973fb093ace218d812e1451511f7f476f6b359c5ad060e3816312c473"
+    },
+    {
+      "path": "inspection/320-font-2-nl-sparse-1.jpg",
+      "sha256": "affb02de6da4059c6515dc5ab068124549f7832e3da65bf05d075822b96cee0d"
+    },
+    {
+      "path": "inspection/320-font-2-nl-sparse-2.jpg",
+      "sha256": "4a861ceefad79050dc61a876207caf0a5fb878160ad1b74687b89b83d79810b9"
+    },
+    {
+      "path": "inspection/360-font-1-en-activePending-1.jpg",
+      "sha256": "6aa2405f50f31f60a1b83516f3ff2d24e93e84561c5db2de1529c746b4d8cce5"
+    },
+    {
+      "path": "inspection/360-font-1-en-activePending-2.jpg",
+      "sha256": "145582b3dcac87fedf884fce660b7f17cef2effc918d59e6a0da26f64bf934d6"
+    },
+    {
+      "path": "inspection/360-font-1-nl-activePending-1.jpg",
+      "sha256": "a6ab33ad5174af8bbb8d4cbfc7c15f2fd0b3e0eacb5811e4c3ef2efa73fa51fa"
+    },
+    {
+      "path": "inspection/360-font-1-nl-activePending-2.jpg",
+      "sha256": "6622777e2bdac339a7c7487c6e498cc1026cd1f8c5643280324802cdd3ac8340"
+    },
+    {
+      "path": "inspection/360-font-2-en-activePending-1.jpg",
+      "sha256": "5779af2ba98d8fa07a19974f45f70edb4aed32117d8458b411c7cebd8dce6beb"
+    },
+    {
+      "path": "inspection/360-font-2-en-activePending-2.jpg",
+      "sha256": "efd054f041637a0d04166093c349da067fb0127911743f10b341897d6ee9025b"
+    },
+    {
+      "path": "inspection/360-font-2-en-activePending-3.jpg",
+      "sha256": "88d568b9d45aa0ef8404b3470657f9107566ef185e2e133ed8219f12aa6be327"
+    },
+    {
+      "path": "inspection/360-font-2-nl-activePending-1.jpg",
+      "sha256": "210e84675f829add7eebe8421df14e3f85c0b405681e8e0b85cd5bf9f5c45d21"
+    },
+    {
+      "path": "inspection/360-font-2-nl-activePending-2.jpg",
+      "sha256": "a8f7eb19b492e930af22b0f0abb6009fa0b696295da59632db06fcc9c22817e7"
+    },
+    {
+      "path": "inspection/360-font-2-nl-activePending-3.jpg",
+      "sha256": "954f9434d5950314b3127b406ac696389b13417ec903c1292bbe3a450c83581a"
+    },
+    {
+      "path": "inspection/393-font-1-en-activePending-1.jpg",
+      "sha256": "384a2d97845742133d3207b4bc7b02a6bb7a6f058194295c51fb15ba9cbed619"
+    },
+    {
+      "path": "inspection/393-font-1-en-activePending-2.jpg",
+      "sha256": "71b57c77cd22723d4aa175dae9f7845a1fe8c7d8ccde4cf687361a5bd5401234"
+    },
+    {
+      "path": "inspection/393-font-1-en-attention-1.jpg",
+      "sha256": "d056742ae2bbbcf1db3af647de1da7c5f29fa33ad7b2140d2221577917cd6e58"
+    },
+    {
+      "path": "inspection/393-font-1-en-attention-2.jpg",
+      "sha256": "55d394edbfa7f2ac8ffca0e7562aad47aac2484936a93d9eba7486193a11e7e0"
+    },
+    {
+      "path": "inspection/393-font-1-en-failed-1.jpg",
+      "sha256": "3e0d7a8df59e0da4d55d22e1578bc48d68c14f983a0eaa72a1095533c26cb682"
+    },
+    {
+      "path": "inspection/393-font-1-en-loading-1.jpg",
+      "sha256": "5c9f62e5f70b325271f1a9c69525e9cf8fcb8abd98d95cc63501fcb203381663"
+    },
+    {
+      "path": "inspection/393-font-1-en-reminder-1.jpg",
+      "sha256": "7f322cda5a47faf25afe6fa0dc2feff1222b83e952e157eaf4e9dd78b6d2ec74"
+    },
+    {
+      "path": "inspection/393-font-1-en-sparse-1.jpg",
+      "sha256": "8c8135beb14c57b2c4baefc1b87dea1b9dae69fd59bd07dacd6ccfcd23c176a4"
+    },
+    {
+      "path": "inspection/393-font-1-nl-active-1.jpg",
+      "sha256": "fdc57caf2be62031c1abf302033ac98ae00ee86c8c3d2f2d4579318b405d8c5e"
+    },
+    {
+      "path": "inspection/393-font-1-nl-activePending-1.jpg",
+      "sha256": "495d5b7d5015d29a7e07ea36e5281713281a9805849960058f231d2f6e5a7057"
+    },
+    {
+      "path": "inspection/393-font-1-nl-activePending-2.jpg",
+      "sha256": "46715aac1d7bce79c55d5c8a696f7a0346ed83ae398f85e0ff3070c4053aa421"
+    },
+    {
+      "path": "inspection/393-font-1-nl-next-1.jpg",
+      "sha256": "1f7d86ce4ad6cdf87714bb7fd4b8286ae5c086a691f26a1a2a228e38a3101f75"
+    },
+    {
+      "path": "inspection/393-font-1-nl-noPlan-1.jpg",
+      "sha256": "457f065e31633f7cfd925824c896931aad2ff438fbab2804847bc24961025664"
+    },
+    {
+      "path": "inspection/393-font-1-nl-pending-1.jpg",
+      "sha256": "49279c066574b0f2c6eb40ac9b2d0a00cedc8329ea14b9a988bd317e03623163"
+    },
+    {
+      "path": "inspection/393-font-1-nl-placement-1.jpg",
+      "sha256": "0a9ac399d0bf7421ccdba33582e11f822db2aefa424fcc1c7b2293bb34ec2fed"
+    },
+    {
+      "path": "inspection/393-font-1-nl-rest-1.jpg",
+      "sha256": "ede205f7a0a3d99866c663ffec0623fbbf8496e40564f821ab664a3457ee1ff5"
+    },
+    {
+      "path": "inspection/393-font-1-nl-selection-1.jpg",
+      "sha256": "452aeded569d618f42f5ae0fca7b730ab730052c15dd982b392a5ec318102fd8"
+    },
+    {
+      "path": "inspection/393-font-1-nl-siblings-1.jpg",
+      "sha256": "521299ead41a3282712f331f38580ddcbed72a2c7ce34769c157d664f0c8ef7b"
+    },
+    {
+      "path": "inspection/393-font-1-nl-siblings-2.jpg",
+      "sha256": "aa5623a07cd0095c824ca38c12fd534ad0c1523583d9b120945c7cc1e43f6ab2"
+    },
+    {
+      "path": "inspection/393-font-1-nl-warning-1.jpg",
+      "sha256": "2fae76928c6bfb80dde426b4eaf9cab482b8ec22a2efd3567cc17a692b215580"
+    },
+    {
+      "path": "inspection/393-font-2-en-activePending-1.jpg",
+      "sha256": "adc80579f1f6352ea6163bc132e4eb45404cfdee8a86ea539b6081e635876322"
+    },
+    {
+      "path": "inspection/393-font-2-en-activePending-2.jpg",
+      "sha256": "bae3714a4e2ab46702ac831993405328778f3d688ff9e2abb18d90e19a4e5170"
+    },
+    {
+      "path": "inspection/393-font-2-nl-activePending-1.jpg",
+      "sha256": "85dadb9f4d37555ae8d353c3baffd69d382b81528dd16e821099eeae6f224232"
+    },
+    {
+      "path": "inspection/393-font-2-nl-activePending-2.jpg",
+      "sha256": "91ca66b698d745e6087f9363e08b7e81bbb1a07ca50c1d5d6469afab5ee2b5b0"
+    },
+    {
+      "path": "inspection/412-font-1-en-activePending-1.jpg",
+      "sha256": "b7f3292d363eeaac5c69d4e1e7c1e6a65bf92cacc0f838b69b0083616bdb9e18"
+    },
+    {
+      "path": "inspection/412-font-1-nl-activePending-1.jpg",
+      "sha256": "508615fdab456d21098d38471073e49d262063b4cded7720e284a99b39536f68"
+    },
+    {
+      "path": "inspection/412-font-2-en-activePending-1.jpg",
+      "sha256": "854559f26b4d58dbfb60bb7ed3732d1cd8c2128db677e3a5c658656ef494f8c4"
+    },
+    {
+      "path": "inspection/412-font-2-en-activePending-2.jpg",
+      "sha256": "aa26c756860e3d05ee17312cd35bdbb0822809a6482f7e0c8b836fddf7992c8f"
+    },
+    {
+      "path": "inspection/412-font-2-nl-activePending-1.jpg",
+      "sha256": "be512054d2665e5140d7b545ef4444aa64d58eb680cd17cf475110efe3806fac"
+    },
+    {
+      "path": "inspection/412-font-2-nl-activePending-2.jpg",
+      "sha256": "eb5a91b7193a791694b54ad644c1d2ca5056e27925e77dbcfedeb5c1c145e367"
+    }
+  ]
+}

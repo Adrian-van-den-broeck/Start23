@@ -1,0 +1,16 @@
+{
+  "utc": "2026-10-08T17:02:17.906062+00:00",
+  "serial": "emulator-5554",
+  "size": "Physical size: 1080x2280",
+  "density": "Physical density: 440\nOverride density: 480",
+  "fontScale": "1",
+  "fixture": {
+    "width": 360,
+    "fontScale": 1,
+    "language": "en",
+    "state": "rpe",
+    "build": "final-4",
+    "inertActions": true
+  },
+  "provenance": "Actual production ActivitiesScreen/ActivityEntryScreen/ActivityFeedbackScreen, public DTO mapper, canonical RPE data and shell components; inert callbacks; no server or athlete writes"
+}

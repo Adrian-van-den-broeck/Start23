@@ -1,0 +1,99 @@
+{
+  "lucide-react-native": {
+    "version": "1.48.0",
+    "license": "ISC",
+    "peerDependencies": {
+      "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+      "react-native": "*",
+      "react-native-svg": "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0"
+    },
+    "exports": {
+      ".": {
+        "types": "./dist/types/lucide-react-native.d.ts",
+        "react-native": "./dist/esm/lucide-react-native.mjs",
+        "import": "./dist/esm/lucide-react-native.mjs",
+        "browser": "./dist/esm/lucide-react-native.mjs",
+        "require": "./dist/cjs/lucide-react-native.js"
+      },
+      "./icons": {
+        "types": "./dist/types/icons.d.ts",
+        "react-native": "./dist/esm/icons/index.mjs",
+        "import": "./dist/esm/icons/index.mjs",
+        "browser": "./dist/esm/icons/index.mjs",
+        "require": "./dist/cjs/icons/index.js"
+      },
+      "./icons/*": {
+        "types": "./dist/types/icons/*.d.ts",
+        "react-native": "./dist/esm/icons/*.mjs",
+        "import": "./dist/esm/icons/*.mjs",
+        "browser": "./dist/esm/icons/*.mjs",
+        "require": "./dist/cjs/icons/*.js"
+      }
+    },
+    "main": "dist/cjs/lucide-react-native.js",
+    "module": "dist/esm/lucide-react-native.mjs",
+    "licenseSha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
+    "lockIntegrity": "sha512-/URnAnnF+Nshnu1OXSvSuT+boZ7pjr+zYLjQtW4GL72IxzcecIT5mC7X5i35mWBz4bHrnIDGitIR8Wt9clN9Hw=="
+  },
+  "react-native-svg": {
+    "version": "15.15.4",
+    "license": "MIT",
+    "peerDependencies": {
+      "react": "*",
+      "react-native": "*"
+    },
+    "exports": null,
+    "main": "lib/commonjs/index.js",
+    "module": "lib/module/index.js",
+    "licenseSha256": "1bc2aa7dad15097cd71308d9ae013ff14d11a84357b170c1554f4035fb8a3acb",
+    "lockIntegrity": "sha512-boT/vIRgj6zZKBpfTPJJiYWMbZE9duBMOwPK6kCSTgxsS947IFMOq9OgIFkpWZTB7t229H24pDRkh3W9ZK/J1A=="
+  },
+  "verifiedNamedExports": {
+    "ArrowLeft": true,
+    "ArrowRight": true,
+    "Calendar": true,
+    "CalendarDays": true,
+    "ChartNoAxesColumnIncreasing": true,
+    "Check": true,
+    "ChevronLeft": true,
+    "ChevronRight": true,
+    "Clock": true,
+    "FileText": true,
+    "Flag": true,
+    "HeartPulse": true,
+    "Info": true,
+    "List": true,
+    "LogOut": true,
+    "MapPin": true,
+    "Plus": true,
+    "RefreshCw": true,
+    "TriangleAlert": true,
+    "Undo2": true,
+    "UserRound": true,
+    "X": true
+  },
+  "verifiedIndividualExports": {
+    "ArrowLeft": true,
+    "ArrowRight": true,
+    "Calendar": true,
+    "CalendarDays": true,
+    "ChartNoAxesColumnIncreasing": true,
+    "Check": true,
+    "ChevronLeft": true,
+    "ChevronRight": true,
+    "Clock": true,
+    "FileText": true,
+    "Flag": true,
+    "HeartPulse": true,
+    "Info": true,
+    "List": true,
+    "LogOut": true,
+    "MapPin": true,
+    "Plus": true,
+    "RefreshCw": true,
+    "TriangleAlert": true,
+    "Undo2": true,
+    "UserRound": true,
+    "X": true
+  }
+}

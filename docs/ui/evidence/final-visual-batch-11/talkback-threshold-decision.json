@@ -1,0 +1,9 @@
+{
+  "utc": "2026-10-09T09:52:44.835372+00:00",
+  "provenance": "Actual TalkBack-enabled production screen with inert DTOs; no hierarchy dump during focus screenshot",
+  "expectedFocus": "Drempel bevestigen",
+  "method": "Existing result positioned before TalkBack activation; captured with service enabled. The hierarchy target was unavailable after activation, so no target touch or focus-retention claim.",
+  "services": "com.google.android.marvin.talkback/.TalkBackService",
+  "targetTouchAttempted": false,
+  "targetFocusRetentionVerified": false
+}

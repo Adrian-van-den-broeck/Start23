@@ -1,0 +1,161 @@
+INFO    | Storing crashdata in: C:\Users\Adria\AppData\Local\Temp\\AndroidEmulator\emu-crash-34.1.20.db, detection is enabled for process: 3832
+INFO    | Android emulator version 34.1.20.0 (build_id 11610631) (CL:N/A)
+INFO    | Found systemPath C:\Users\Adria\AppData\Local\Android\Sdk\system-images\android-35\google_apis_playstore\x86_64\
+INFO    | Storing crashdata in: C:\Users\Adria\AppData\Local\Temp\\AndroidEmulator\emu-crash-34.1.20.db, detection is enabled for process: 29512
+INFO    | Duplicate loglines will be removed, if you wish to see each individual line launch with the -log-nofilter flag.
+INFO    | IPv4 server found: 192.168.128.1
+INFO    | Ignore IPv6 address: f0c1:9797:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: f0c1:9797:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: 40c8:9797:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: 40c8:9797:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: f0d4:9797:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: f0d4:9797:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: c0dd:9797:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: c0dd:9797:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: d8e3:9797:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: d8e3:9797:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: 40ea:9797:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: 40ea:9797:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: 70f0:9797:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: 70f0:9797:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: 58fc:9797:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: 58fc:9797:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: 6002:9897:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: 6002:9897:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: 7008:9897:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: 7008:9897:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: 1011:9897:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: 1011:9897:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: b019:9897:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: b019:9897:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: 1020:9897:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: 1020:9897:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | Ignore IPv6 address: 6826:9897:5501:0:f0c1:9797:5501:0
+INFO    | Ignore IPv6 address: 6826:9897:5501:0:f0c1:9797:5501:0 (2x)
+INFO    | No consent for crashreport 9791e634-7d1b-413f-b7cf-bab62b7cc200, deleting.
+INFO    | No consent for crashreport c25cf81d-5db7-4856-8bbc-855746817579, deleting.
+INFO    | No consent for crashreport 4996e312-65bb-4c9d-be7a-5075b19b9fe9, deleting.
+library_mode swiftshader_indirect gpu mode swiftshader_indirect
+Initializing hardware OpenGLES emulation supportandroid_startOpenglesRenderer: gpu infoGPU #1
+  Make: 10de
+  Model: NVIDIA GeForce GTX 1080 Ti
+  Device ID: 1b06
+I1008 18:23:52.015010   14216 HealthMonitor.cpp:279] HealthMonitor disabled.
+createGlobalVkEmulation:964 Selecting Vulkan device: SwiftShader Device (LLVM 10.0.0)
+I1008 18:23:52.098169   14216 VkCommonOperations.cpp:1226] Initializing VkEmulation features:
+I1008 18:23:52.098183   14216 VkCommonOperations.cpp:1227]     glInteropSupported: false
+I1008 18:23:52.098185   14216 VkCommonOperations.cpp:1228]     useDeferredCommands: true
+I1008 18:23:52.098187   14216 VkCommonOperations.cpp:1230]     createResourceWithRequirements: true
+I1008 18:23:52.098189   14216 VkCommonOperations.cpp:1231]     useVulkanComposition: false
+I1008 18:23:52.098191   14216 VkCommonOperations.cpp:1232]     useVulkanNativeSwapchain: false
+I1008 18:23:52.098193   14216 VkCommonOperations.cpp:1233]     enable guestRenderDoc: false
+I1008 18:23:52.098194   14216 VkCommonOperations.cpp:1234]     ASTC LDR emulation mode: 2
+I1008 18:23:52.098196   14216 VkCommonOperations.cpp:1235]     enable ETC2 emulation: true
+I1008 18:23:52.098198   14216 VkCommonOperations.cpp:1236]     enable Ycbcr emulation: false
+I1008 18:23:52.098200   14216 VkCommonOperations.cpp:1237]     guestUsesAngle: false
+I1008 18:23:52.098201   14216 VkCommonOperations.cpp:1238]     useDedicatedAllocations: false
+I1008 18:23:52.099449   14216 FrameBuffer.cpp:486] Graphics Adapter Vendor Google (Google Inc.)
+I1008 18:23:52.099462   14216 FrameBuffer.cpp:487] Graphics Adapter Android Emulator OpenGL ES Translator (Google SwiftShader)
+I1008 18:23:52.099902   14216 FrameBuffer.cpp:488] Graphics API Version OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)
+I1008 18:23:52.099908   14216 FrameBuffer.cpp:489] Graphics API Extensions GL_OES_EGL_sync GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_depth24 GL_OES_depth32 GL_OES_element_index_uint GL_OES_texture_float GL_OES_texture_float_linear GL_OES_compressed_paletted_texture GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth_texture GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_packed_depth_stencil GL_OES_vertex_half_float GL_OES_standard_derivatives GL_OES_texture_npot GL_OES_rgb8_rgba8 GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_texture_format_BGRA8888 GL_APPLE_texture_format_BGRA8888 
+I1008 18:23:52.099912   14216 FrameBuffer.cpp:490] Graphics Device Extensions N/A
+INFO    | Sending adb public key [QAAAAB08Z7jLmS5+p3aiv9z5XLnmYjWYHJetxL4KQcxruirbpjDDCjhSRKE77p/dVXTbPbKG+UASsV8gtkiT8g3xhLivpPh9/HtvxGyXRb4N2O/p/XCgX5Wqa3vvPQxP6EYrVGYiHfOO3y+pggRuuNivxDAHRr/Av3bA1GYzIy4nWWzRfpyLJbzZwqsMMTKuEF2A8RcmfPLLj0IftcXUC3Jm/ugJBln4q52sL/N1hqvIlrgq+CjgOcrSQGhmjhDQi2flhT3sC/84Ak7C/bvo30uaDKQ46q3R899CqH8eQza+7VN3ACPTxLBjbfzabrpH4GQvw7rkcX3YacOkGHAX6/KI6/ko7WHL688e6y2oFLlEiJoiJ+bH8qG+gOpopD8+9MSjE4Q18iW5OecX6UdYU4hz3TFbz7wpeiP/nI+KN80GkLcAm2O6yhiHwoFAEkJxXYU2QTbjJjMF/+5gp6AAuz2fIxo1m2kQKW//4Jxe111TiRilxwdD3InVH19d1XnwlU+GYHqhWBj4eKfzTStjrWdf2k+07R/jOB8uMvX8hGYyzYad2bSrhO5zQylU4KMtXEjQbTOUkF7WoW29HPHPoMCuxY0wEOGlnbSOls+ruOnjtPyX9qLDhNnggspcf/qZsi3aYQ0c57dtcnpFdh50F5UmqkvWEXZfKGe6ei7bEFZ36N3wit1KOgEAAQA= @unknown]
+WHPX on Windows 10.0.19045 detected.
+Windows Hypervisor Platform accelerator is operational
+INFO    | Using security allow list from: C:\Users\Adria\AppData\Local\Android\Sdk\emulator\lib\emulator_access.json
+INFO    | The active JSON Web Key Sets can be found here: C:\Users\Adria\AppData\Local\Temp\avd\running\29512\jwks\76b025cb-3fb4-4dae-89da-c87aab22ce9a\active.jwk
+INFO    | Scanning C:\Users\Adria\AppData\Local\Temp\avd\running\29512\jwks\76b025cb-3fb4-4dae-89da-c87aab22ce9a for jwk keys.
+INFO    | Started GRPC server at 127.0.0.1:8554, security: Local, auth: +token
+INFO    | Advertising in: C:\Users\Adria\AppData\Local\Temp\avd\running\pid_29512.ini
+I1008 18:23:52.542919   23936 FrameBuffer.cpp:3707] setDisplayConfigs w 1080 h 2280 dpiX 440 dpiY 440
+I1008 18:23:52.554980   23936 FrameBuffer.cpp:3720] setDisplayActiveConfig 0
+INFO    | Cold boot: requested by the user
+INFO    | Activated packet streamer for bluetooth emulation
+INFO    | Boot completed in 28194 ms
+INFO    | Increasing screen off timeout, logcat buffer size to 2M.
+INFO    | IPv4 server found: 192.168.128.1
+INFO    | Ignore IPv6 address: 1020:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 1020:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 6026:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 6026:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 1033:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 1033:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: e03b:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: e03b:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: f841:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: f841:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 6048:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 6048:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 904e:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 904e:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 785a:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 785a:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 8060:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 8060:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 9066:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 9066:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 306f:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 306f:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: d077:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: d077:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 307e:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 307e:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 8884:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 8884:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | IPv4 server found: 192.168.128.1
+INFO    | Ignore IPv6 address: 1020:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 1020:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 6026:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 6026:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 1033:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 1033:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: e03b:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: e03b:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: f841:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: f841:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 6048:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 6048:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 904e:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 904e:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 785a:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 785a:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 8060:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 8060:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 9066:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 9066:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 306f:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 306f:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: d077:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: d077:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 307e:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 307e:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 8884:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 8884:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | IPv4 server found: 192.168.128.1
+INFO    | Ignore IPv6 address: 1020:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 1020:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 6026:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 6026:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 1033:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 1033:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: e03b:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: e03b:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: f841:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: f841:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 6048:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 6048:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 904e:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 904e:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 785a:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 785a:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 8060:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 8060:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 9066:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 9066:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 306f:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 306f:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: d077:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: d077:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 307e:c815:5701:0:1020:c815:5701:0
+INFO    | Ignore IPv6 address: 307e:c815:5701:0:1020:c815:5701:0 (2x)
+INFO    | Ignore IPv6 address: 8884:c815:5701:0:1020:c815:5701:0

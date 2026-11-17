@@ -1,0 +1,15 @@
+{
+  "files": [
+    {
+      "file": "mobile/app/_layout.tsx",
+      "restoredExactly": true
+    },
+    {
+      "file": "mobile/app/index.tsx",
+      "restoredExactly": true
+    }
+  ],
+  "fixtureModuleRemoved": true,
+  "fixtureConfigRemoved": true,
+  "publicDirectoryRemoved": true
+}

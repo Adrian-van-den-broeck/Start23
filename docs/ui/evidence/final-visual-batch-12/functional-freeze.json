@@ -1,0 +1,26 @@
+[
+  {
+    "file": "mobile/src/screens/CheckInScreen.tsx",
+    "stateAndOperationsUnchanged": true,
+    "beforeSha256": "216cfc98adfa49ff955a016dea21b4209c1cf0d22a3901a2d162d73e608deece",
+    "afterSha256": "216cfc98adfa49ff955a016dea21b4209c1cf0d22a3901a2d162d73e608deece"
+  },
+  {
+    "file": "mobile/src/screens/AuthScreen.tsx",
+    "stateAndOperationsUnchanged": true,
+    "beforeSha256": "ed98781265ff628d7dbbb99b8dd98bb09108fe187130509777ed5f62bc815d7c",
+    "afterSha256": "ed98781265ff628d7dbbb99b8dd98bb09108fe187130509777ed5f62bc815d7c"
+  },
+  {
+    "file": "mobile/src/screens/IntegrationsScreen.tsx",
+    "stateAndOperationsUnchanged": true,
+    "beforeSha256": "cd3f20b6c0172cb9fcd85f19957592d275f412dae36bf4fcb9c77b6320fbac66",
+    "afterSha256": "cd3f20b6c0172cb9fcd85f19957592d275f412dae36bf4fcb9c77b6320fbac66"
+  },
+  {
+    "file": "mobile/src/screens/PioneerAccessScreen.tsx",
+    "stateAndOperationsUnchanged": true,
+    "beforeSha256": "c94b8362fb1c472d28db45643fcd73250cc267079ea6f03e9657ae9f8fb9c425",
+    "afterSha256": "c94b8362fb1c472d28db45643fcd73250cc267079ea6f03e9657ae9f8fb9c425"
+  }
+]

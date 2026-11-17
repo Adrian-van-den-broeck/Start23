@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-07T17:16:40.374641+00:00",
+  "serial": "emulator-5556",
+  "provenance": "Actual TalkBack focus on public Selection fixture; no UIAutomation accessibility suppression during screenshot",
+  "nativeTargetBoundsBeforeTalkBack": [
+    44,
+    110,
+    488,
+    242
+  ],
+  "density": "Physical density: 440\nOverride density: 439",
+  "fontScale": "1",
+  "enabledServices": "com.google.android.marvin.talkback/.TalkBackService",
+  "accessibilityEnabled": "1"
+}

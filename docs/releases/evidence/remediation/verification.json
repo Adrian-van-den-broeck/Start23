@@ -1,0 +1,94 @@
+{
+  "base_sha": "f5831d3cbde04f60053402eb3083a1f1e6ade7a8",
+  "final_software_sha": "8f75140169e074111e868d48bcf67e82aed8f899",
+  "backend": {
+    "tests": 1282,
+    "failed": 0,
+    "seconds": 175.37,
+    "ruff": "PASS",
+    "format": "PASS; 175 files",
+    "strict_mypy": "PASS; 171 source files"
+  },
+  "mobile": {
+    "tests": 923,
+    "suites": 84,
+    "failed": 0,
+    "seconds": 144.146,
+    "typecheck": "PASS",
+    "unused": "PASS",
+    "focused_tests": 105,
+    "focused_suites": 4,
+    "focused_seconds": 29.623,
+    "timezone_subsets": {
+      "Europe/Amsterdam": {
+        "suites": 4,
+        "passed": 53,
+        "seconds": 11.594
+      },
+      "America/Los_Angeles": {
+        "suites": 4,
+        "passed": 53,
+        "seconds": 11.138
+      }
+    }
+  },
+  "native": {
+    "clean_release": "PASS; 7m29s; 836 tasks executed",
+    "final_source_release": "PASS; 1m27s; 26 executed, 810 up-to-date",
+    "copied_source_files": 285,
+    "all_source_hashes_match": true,
+    "architectures": [
+      "arm64-v8a"
+    ],
+    "store_signed": false,
+    "distributable": false
+  },
+  "privacy_contract_security": "Full backend/mobile suites include existing privacy, API, isolation/retry/injury/shared-state regressions; new A6 old/new and exact observed activity schema tests pass",
+  "dependency_probe": "PASS",
+  "dependency_findings": {
+    "before": {
+      "critical": 1,
+      "high": 10,
+      "moderate": 31,
+      "low": 5
+    },
+    "after": {
+      "critical": 0,
+      "high": 6,
+      "moderate": 31,
+      "low": 5
+    },
+    "risk_accepted": false
+  },
+  "hosted": {
+    "railway_sha": null,
+    "railway_production_ids": null,
+    "railway_authorized": false,
+    "public_environment": "local",
+    "a6_advertised": false,
+    "play_current_version": null,
+    "play_testers_read_verified": false,
+    "eas_latest_completed_build": "0b1a3606-7476-4607-b4c7-a37e763249c0",
+    "eas_completed_versionCode": 22,
+    "eas_remote_counter": 23
+  },
+  "postgres_pgtap": "DEFERRED BY OWNER - PRE-BETA; not executed",
+  "device_checks": "NOT RUN",
+  "operations": {
+    "login": false,
+    "link": false,
+    "push": false,
+    "merge": false,
+    "deploy": false,
+    "migrate": false,
+    "hosted_configuration_change": false,
+    "cloud_build": false,
+    "tester_change": false,
+    "submission": false,
+    "publication": false
+  },
+  "release_decisions": {
+    "mobile_only": "NO-GO",
+    "backend_and_mobile": "NO-GO"
+  }
+}

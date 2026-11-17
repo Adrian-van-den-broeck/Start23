@@ -1,0 +1,3717 @@
+{
+  "scope": "Batch 12 Check-in and current supporting controls; existing V1 week background excluded behind its profile modal",
+  "minimumDp": 48,
+  "nativePixelToleranceDp": 0.5,
+  "fullyVisibleControls": 618,
+  "failures": [],
+  "targets": [
+    {
+      "file": "320-font-2-auth-error-page-1.xml",
+      "label": "Aanmelden",
+      "widthDp": 248.0,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-auth-error-page-1.xml",
+      "label": "Registreren",
+      "widthDp": 248.0,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-auth-error-page-3.xml",
+      "label": "Account maken",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-auth-error-page-4.xml",
+      "label": "Account maken",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "393-font-1-entry-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-entry-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-entry-page-0.xml",
+      "label": "Start check-in",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-entry-page-1.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-entry-page-1.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-entry-page-1.xml",
+      "label": "Start check-in",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "360-font-1-entry-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.33333333333334,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-entry-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.66666666666667,
+      "heightDp": 58.0
+    },
+    {
+      "file": "360-font-1-entry-page-1.xml",
+      "label": "Start check-in",
+      "widthDp": 296.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "393-font-1-confirmed-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-confirmed-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-confirmed-page-0.xml",
+      "label": "Maak planvoorstel",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-reconnect-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 242.37037037037038,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-reconnect-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-reconnect-page-1.xml",
+      "label": "Opnieuw toestemming geven",
+      "widthDp": 256.0,
+      "heightDp": 142.5185185185185
+    },
+    {
+      "file": "320-font-2-reconnect-page-2.xml",
+      "label": "Status vernieuwen",
+      "widthDp": 256.0,
+      "heightDp": 98.37037037037037
+    },
+    {
+      "file": "320-font-2-reconnect-page-2.xml",
+      "label": "Ge\u00efmporteerde activiteiten bekijken",
+      "widthDp": 256.0,
+      "heightDp": 168.88888888888889
+    },
+    {
+      "file": "320-font-2-auth-page-1.xml",
+      "label": "Aanmelden",
+      "widthDp": 248.0,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-auth-page-1.xml",
+      "label": "Registreren",
+      "widthDp": 248.0,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-auth-page-2.xml",
+      "label": "Aanmelden",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "file": "320-font-2-auth-page-3.xml",
+      "label": "Aanmelden",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "file": "320-font-2-questions-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 242.37037037037038,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-questions-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-questions-page-10.xml",
+      "label": "Lopen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-10.xml",
+      "label": "Lopen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-questions-page-12.xml",
+      "label": "Zwemmen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-questions-page-12.xml",
+      "label": "Fietsen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-12.xml",
+      "label": "Lopen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-13.xml",
+      "label": "Inspannend",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-14.xml",
+      "label": "Inspannend",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-14.xml",
+      "label": "Terugkerend",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-questions-page-14.xml",
+      "label": "Toevoegen",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-questions-page-14.xml",
+      "label": "Context opslaan",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "file": "320-font-2-questions-page-2.xml",
+      "label": "Maak invulvoorstel",
+      "widthDp": 256.0,
+      "heightDp": 106.07407407407408
+    },
+    {
+      "file": "320-font-2-questions-page-3.xml",
+      "label": "Ma",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-3.xml",
+      "label": "Di",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-3.xml",
+      "label": "Wo",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-questions-page-3.xml",
+      "label": "Do",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-4.xml",
+      "label": "Vr",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-4.xml",
+      "label": "Za",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-4.xml",
+      "label": "Zo",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-questions-page-4.xml",
+      "label": "Geen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-questions-page-4.xml",
+      "label": "Licht",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-5.xml",
+      "label": "Matig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-5.xml",
+      "label": "Hoog",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-5.xml",
+      "label": "Tijd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-5.xml",
+      "label": "Vermoeidheid",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-6.xml",
+      "label": "Blessure",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-questions-page-6.xml",
+      "label": "Ziekte",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-6.xml",
+      "label": "Motivatie",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-6.xml",
+      "label": "Weer",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-6.xml",
+      "label": "Anders",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-questions-page-7.xml",
+      "label": "Zwemmen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-7.xml",
+      "label": "Zwemmen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-8.xml",
+      "label": "Zwemmen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-questions-page-8.xml",
+      "label": "Zwemmen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-questions-page-8.xml",
+      "label": "Fietsen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-8.xml",
+      "label": "Fietsen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-questions-page-9.xml",
+      "label": "Fietsen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-9.xml",
+      "label": "Fietsen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-questions-page-9.xml",
+      "label": "Lopen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-questions-page-9.xml",
+      "label": "Lopen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-pioneer-error-page-0.xml",
+      "label": "Profiel",
+      "widthDp": 147.25925925925927,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-pioneer-error-page-2.xml",
+      "label": "Code inwisselen",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-pioneer-error-page-3.xml",
+      "label": "Code inwisselen",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-selected-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 242.37037037037038,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-selected-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-selected-page-10.xml",
+      "label": "Lopen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-10.xml",
+      "label": "Lopen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-selected-page-12.xml",
+      "label": "Zwemmen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-selected-page-12.xml",
+      "label": "Fietsen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-13.xml",
+      "label": "Lopen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-14.xml",
+      "label": "Inspannend",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-14.xml",
+      "label": "Terugkerend",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-selected-page-14.xml",
+      "label": "Toevoegen",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-selected-page-14.xml",
+      "label": "Context opslaan",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "file": "320-font-2-selected-page-2.xml",
+      "label": "Maak invulvoorstel",
+      "widthDp": 256.0,
+      "heightDp": 106.07407407407408
+    },
+    {
+      "file": "320-font-2-selected-page-3.xml",
+      "label": "Ma",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-3.xml",
+      "label": "Di",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-3.xml",
+      "label": "Wo",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-selected-page-3.xml",
+      "label": "Do",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-4.xml",
+      "label": "Vr",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-4.xml",
+      "label": "Za",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-4.xml",
+      "label": "Zo",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-selected-page-4.xml",
+      "label": "Geen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-selected-page-4.xml",
+      "label": "Licht",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-5.xml",
+      "label": "Matig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-5.xml",
+      "label": "Hoog",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-5.xml",
+      "label": "Tijd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-5.xml",
+      "label": "Vermoeidheid",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-6.xml",
+      "label": "Blessure",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-selected-page-6.xml",
+      "label": "Ziekte",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-6.xml",
+      "label": "Motivatie",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-6.xml",
+      "label": "Weer",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-6.xml",
+      "label": "Anders",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-selected-page-7.xml",
+      "label": "Zwemmen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-8.xml",
+      "label": "Zwemmen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-8.xml",
+      "label": "Zwemmen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-selected-page-8.xml",
+      "label": "Zwemmen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-selected-page-8.xml",
+      "label": "Fietsen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-9.xml",
+      "label": "Fietsen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-selected-page-9.xml",
+      "label": "Fietsen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-9.xml",
+      "label": "Fietsen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-selected-page-9.xml",
+      "label": "Lopen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-selected-page-9.xml",
+      "label": "Lopen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-1-entry-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.33333333333334,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-entry-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.88888888888889,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "320-font-1-entry-page-1.xml",
+      "label": "Start check-in",
+      "widthDp": 256.0,
+      "heightDp": 57.77777777777778
+    },
+    {
+      "file": "320-font-2-pioneer-page-0.xml",
+      "label": "Profiel",
+      "widthDp": 147.25925925925927,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-pioneer-page-2.xml",
+      "label": "Code inwisselen",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "393-font-1-questions-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-questions-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-questions-page-0.xml",
+      "label": "Maak invulvoorstel",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-questions-page-1.xml",
+      "label": "Ma",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-1.xml",
+      "label": "Di",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-questions-page-1.xml",
+      "label": "Wo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-1.xml",
+      "label": "Do",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-1.xml",
+      "label": "Vr",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-1.xml",
+      "label": "Za",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-1.xml",
+      "label": "Zo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-1.xml",
+      "label": "Geen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-1.xml",
+      "label": "Licht",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-2.xml",
+      "label": "Hoog",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-2.xml",
+      "label": "Tijd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-2.xml",
+      "label": "Vermoeidheid",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-2.xml",
+      "label": "Blessure",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-2.xml",
+      "label": "Ziekte",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-questions-page-2.xml",
+      "label": "Motivatie",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-2.xml",
+      "label": "Weer",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-2.xml",
+      "label": "Anders",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-3.xml",
+      "label": "Zwemmen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-3.xml",
+      "label": "Zwemmen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-3.xml",
+      "label": "Zwemmen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-3.xml",
+      "label": "Zwemmen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-3.xml",
+      "label": "Fietsen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-3.xml",
+      "label": "Fietsen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-3.xml",
+      "label": "Fietsen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-3.xml",
+      "label": "Fietsen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-4.xml",
+      "label": "Lopen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-4.xml",
+      "label": "Lopen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-4.xml",
+      "label": "Lopen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-4.xml",
+      "label": "Ik begrijp dat alarmsymptomen medische beoordeling vragen en niet door dit plan worden beoordeeld.",
+      "widthDp": 313.4396355353075,
+      "heightDp": 114.80637813211845
+    },
+    {
+      "file": "393-font-1-questions-page-4.xml",
+      "label": "Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd.",
+      "widthDp": 313.4396355353075,
+      "heightDp": 92.57403189066059
+    },
+    {
+      "file": "393-font-1-questions-page-5.xml",
+      "label": "Fietsen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-5.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-5.xml",
+      "label": "Inspannend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-5.xml",
+      "label": "Terugkerend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-5.xml",
+      "label": "Toevoegen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-questions-page-5.xml",
+      "label": "Context opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-questions-page-6.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-6.xml",
+      "label": "Inspannend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-6.xml",
+      "label": "Terugkerend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-questions-page-6.xml",
+      "label": "Toevoegen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-questions-page-6.xml",
+      "label": "Context opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-auth-register-page-1.xml",
+      "label": "Aanmelden",
+      "widthDp": 248.0,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-auth-register-page-1.xml",
+      "label": "Registreren",
+      "widthDp": 248.0,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-auth-register-page-2.xml",
+      "label": "Account maken",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-auth-register-page-3.xml",
+      "label": "Account maken",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "393-font-1-reconnect-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-reconnect-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-reconnect-page-0.xml",
+      "label": "Opnieuw toestemming geven",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-reconnect-page-0.xml",
+      "label": "Status vernieuwen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "393-font-1-reconnect-page-1.xml",
+      "label": "Status vernieuwen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "393-font-1-reconnect-page-1.xml",
+      "label": "Ge\u00efmporteerde activiteiten bekijken",
+      "widthDp": 329.4760820045558,
+      "heightDp": 76.17312072892939
+    },
+    {
+      "file": "393-font-1-selected-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-selected-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-selected-page-0.xml",
+      "label": "Maak invulvoorstel",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-selected-page-1.xml",
+      "label": "Ma",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-1.xml",
+      "label": "Di",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-selected-page-1.xml",
+      "label": "Wo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-1.xml",
+      "label": "Do",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-1.xml",
+      "label": "Vr",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-1.xml",
+      "label": "Za",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-1.xml",
+      "label": "Zo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-1.xml",
+      "label": "Geen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-1.xml",
+      "label": "Licht",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-2.xml",
+      "label": "Hoog",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-2.xml",
+      "label": "Tijd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-2.xml",
+      "label": "Vermoeidheid",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-2.xml",
+      "label": "Blessure",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-2.xml",
+      "label": "Ziekte",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-selected-page-2.xml",
+      "label": "Motivatie",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-2.xml",
+      "label": "Weer",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-2.xml",
+      "label": "Anders",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-3.xml",
+      "label": "Zwemmen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-3.xml",
+      "label": "Zwemmen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-3.xml",
+      "label": "Zwemmen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-3.xml",
+      "label": "Zwemmen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-3.xml",
+      "label": "Fietsen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-3.xml",
+      "label": "Fietsen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-3.xml",
+      "label": "Fietsen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-3.xml",
+      "label": "Fietsen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-4.xml",
+      "label": "Lopen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-4.xml",
+      "label": "Lopen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-4.xml",
+      "label": "Lopen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-4.xml",
+      "label": "Lopen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-4.xml",
+      "label": "Ik begrijp dat alarmsymptomen medische beoordeling vragen en niet door dit plan worden beoordeeld.",
+      "widthDp": 313.4396355353075,
+      "heightDp": 114.80637813211845
+    },
+    {
+      "file": "393-font-1-selected-page-4.xml",
+      "label": "Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd.",
+      "widthDp": 313.4396355353075,
+      "heightDp": 92.57403189066059
+    },
+    {
+      "file": "393-font-1-selected-page-5.xml",
+      "label": "Zwemmen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-5.xml",
+      "label": "Fietsen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-5.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-5.xml",
+      "label": "Inspannend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-5.xml",
+      "label": "Terugkerend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-5.xml",
+      "label": "Toevoegen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-selected-page-6.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-6.xml",
+      "label": "Inspannend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-6.xml",
+      "label": "Terugkerend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-selected-page-6.xml",
+      "label": "Toevoegen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-selected-page-6.xml",
+      "label": "Context opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-candidate-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 242.37037037037038,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-candidate-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-candidate-page-10.xml",
+      "label": "Geen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-candidate-page-10.xml",
+      "label": "Licht",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-10.xml",
+      "label": "Matig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-10.xml",
+      "label": "Hoog",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-11.xml",
+      "label": "Tijd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-11.xml",
+      "label": "Vermoeidheid",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-11.xml",
+      "label": "Blessure",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-candidate-page-12.xml",
+      "label": "Ziekte",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-12.xml",
+      "label": "Motivatie",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-12.xml",
+      "label": "Weer",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-12.xml",
+      "label": "Anders",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-candidate-page-14.xml",
+      "label": "Zwemmen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-14.xml",
+      "label": "Zwemmen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-14.xml",
+      "label": "Zwemmen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-candidate-page-14.xml",
+      "label": "Zwemmen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-candidate-page-15.xml",
+      "label": "Fietsen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-15.xml",
+      "label": "Fietsen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-candidate-page-15.xml",
+      "label": "Fietsen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-16.xml",
+      "label": "Fietsen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-candidate-page-16.xml",
+      "label": "Lopen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-16.xml",
+      "label": "Lopen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-17.xml",
+      "label": "Lopen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-17.xml",
+      "label": "Lopen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-candidate-page-19.xml",
+      "label": "Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd.",
+      "widthDp": 256.0,
+      "heightDp": 237.62962962962962
+    },
+    {
+      "file": "320-font-2-candidate-page-2.xml",
+      "label": "Maak invulvoorstel",
+      "widthDp": 256.0,
+      "heightDp": 106.07407407407408
+    },
+    {
+      "file": "320-font-2-candidate-page-20.xml",
+      "label": "Zwemmen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-candidate-page-20.xml",
+      "label": "Fietsen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-20.xml",
+      "label": "Lopen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-22.xml",
+      "label": "Inspannend",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-22.xml",
+      "label": "Terugkerend",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-candidate-page-22.xml",
+      "label": "Toevoegen",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-candidate-page-23.xml",
+      "label": "Terugkerend",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-candidate-page-23.xml",
+      "label": "Toevoegen",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-candidate-page-23.xml",
+      "label": "Context opslaan",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "file": "320-font-2-candidate-page-7.xml",
+      "label": "Negeer invulvoorstel",
+      "widthDp": 224.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-candidate-page-8.xml",
+      "label": "Ma",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-8.xml",
+      "label": "Di",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-8.xml",
+      "label": "Wo",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-candidate-page-9.xml",
+      "label": "Do",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-9.xml",
+      "label": "Vr",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-9.xml",
+      "label": "Za",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-candidate-page-9.xml",
+      "label": "Zo",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-error-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 242.37037037037038,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-error-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-error-page-2.xml",
+      "label": "Maak planvoorstel",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "360-font-1-auth-page-0.xml",
+      "label": "Aanmelden",
+      "widthDp": 142.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-auth-page-0.xml",
+      "label": "Registreren",
+      "widthDp": 142.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-auth-page-1.xml",
+      "label": "Aanmelden",
+      "widthDp": 142.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-auth-page-1.xml",
+      "label": "Registreren",
+      "widthDp": 142.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "360-font-1-auth-page-1.xml",
+      "label": "Aanmelden",
+      "widthDp": 296.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "393-font-1-auth-page-0.xml",
+      "label": "Aanmelden",
+      "widthDp": 150.8883826879271,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-auth-page-0.xml",
+      "label": "Registreren",
+      "widthDp": 150.8883826879271,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-auth-page-1.xml",
+      "label": "Aanmelden",
+      "widthDp": 150.8883826879271,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-auth-page-1.xml",
+      "label": "Registreren",
+      "widthDp": 150.8883826879271,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-auth-page-1.xml",
+      "label": "Aanmelden",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-profile-page-0.xml",
+      "label": "Week",
+      "widthDp": 115.17084282460137,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-profile-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-profile-page-0.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 329.4760820045558,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "393-font-1-profile-page-0.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 329.4760820045558,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "320-font-2-profile-page-0.xml",
+      "label": "Week",
+      "widthDp": 133.62962962962962,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-profile-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-profile-page-0.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 256.0,
+      "heightDp": 98.66666666666667
+    },
+    {
+      "file": "320-font-2-profile-page-1.xml",
+      "label": "Testen en kalibratie",
+      "widthDp": 256.0,
+      "heightDp": 98.66666666666667
+    },
+    {
+      "file": "320-font-2-profile-page-1.xml",
+      "label": "Pioneer toegang",
+      "widthDp": 256.0,
+      "heightDp": 98.37037037037037
+    },
+    {
+      "file": "393-font-1-pioneer-page-0.xml",
+      "label": "Profiel",
+      "widthDp": 111.52619589977222,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-pioneer-page-0.xml",
+      "label": "Code inwisselen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-pioneer-page-1.xml",
+      "label": "Code inwisselen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-1-auth-page-0.xml",
+      "label": "Aanmelden",
+      "widthDp": 248.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-auth-page-0.xml",
+      "label": "Registreren",
+      "widthDp": 248.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-auth-page-1.xml",
+      "label": "Registreren",
+      "widthDp": 248.0,
+      "heightDp": 48.0
+    },
+    {
+      "file": "320-font-1-auth-page-1.xml",
+      "label": "Aanmelden",
+      "widthDp": 256.0,
+      "heightDp": 57.77777777777778
+    },
+    {
+      "file": "320-font-1-auth-page-2.xml",
+      "label": "Aanmelden",
+      "widthDp": 256.0,
+      "heightDp": 57.77777777777778
+    },
+    {
+      "file": "393-font-1-error-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-error-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-error-page-0.xml",
+      "label": "Maak planvoorstel",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "320-font-2-saved-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 242.37037037037038,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-saved-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-saved-page-10.xml",
+      "label": "Lopen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-10.xml",
+      "label": "Lopen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-saved-page-12.xml",
+      "label": "Verwijderen",
+      "widthDp": 256.0,
+      "heightDp": 76.14814814814815
+    },
+    {
+      "file": "320-font-2-saved-page-13.xml",
+      "label": "Zwemmen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-saved-page-13.xml",
+      "label": "Fietsen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-13.xml",
+      "label": "Lopen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-14.xml",
+      "label": "Inspannend",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-14.xml",
+      "label": "Terugkerend",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-14.xml",
+      "label": "Toevoegen",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "file": "320-font-2-saved-page-15.xml",
+      "label": "Context opslaan",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-saved-page-15.xml",
+      "label": "Deze context bevestigen",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-saved-page-16.xml",
+      "label": "Context opslaan",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-saved-page-16.xml",
+      "label": "Deze context bevestigen",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "320-font-2-saved-page-2.xml",
+      "label": "Maak invulvoorstel",
+      "widthDp": 256.0,
+      "heightDp": 106.07407407407408
+    },
+    {
+      "file": "320-font-2-saved-page-3.xml",
+      "label": "Ma",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-3.xml",
+      "label": "Di",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-3.xml",
+      "label": "Wo",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-saved-page-3.xml",
+      "label": "Do",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-4.xml",
+      "label": "Vr",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-4.xml",
+      "label": "Za",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-4.xml",
+      "label": "Zo",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-saved-page-4.xml",
+      "label": "Geen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-saved-page-4.xml",
+      "label": "Licht",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-5.xml",
+      "label": "Matig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-5.xml",
+      "label": "Hoog",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-5.xml",
+      "label": "Tijd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-5.xml",
+      "label": "Vermoeidheid",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-6.xml",
+      "label": "Blessure",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-saved-page-6.xml",
+      "label": "Ziekte",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-6.xml",
+      "label": "Motivatie",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-6.xml",
+      "label": "Weer",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-6.xml",
+      "label": "Anders",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-saved-page-7.xml",
+      "label": "Zwemmen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-8.xml",
+      "label": "Zwemmen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-8.xml",
+      "label": "Zwemmen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-saved-page-8.xml",
+      "label": "Zwemmen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-saved-page-8.xml",
+      "label": "Fietsen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-8.xml",
+      "label": "Fietsen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-saved-page-9.xml",
+      "label": "Fietsen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-9.xml",
+      "label": "Fietsen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-saved-page-9.xml",
+      "label": "Lopen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-saved-page-9.xml",
+      "label": "Lopen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "412-font-1-entry-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.72792362768496,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-entry-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 89.35560859188544,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "412-font-1-entry-page-0.xml",
+      "label": "Start check-in",
+      "widthDp": 332.21957040572795,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "320-font-2-connected-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 242.37037037037038,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-connected-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-connected-page-1.xml",
+      "label": "7 dagen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-connected-page-2.xml",
+      "label": "14 dagen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-connected-page-2.xml",
+      "label": "30 dagen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-connected-page-2.xml",
+      "label": "Import starten",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-connected-page-2.xml",
+      "label": "Ontkoppelen",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-connected-page-3.xml",
+      "label": "Ge\u00efmporteerde activiteiten bekijken",
+      "widthDp": 256.0,
+      "heightDp": 168.88888888888889
+    },
+    {
+      "file": "393-font-1-pioneer-error-page-0.xml",
+      "label": "Profiel",
+      "widthDp": 111.52619589977222,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-pioneer-error-page-0.xml",
+      "label": "Code inwisselen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-pioneer-error-page-1.xml",
+      "label": "Code inwisselen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-auth-register-page-0.xml",
+      "label": "Aanmelden",
+      "widthDp": 150.8883826879271,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-auth-register-page-0.xml",
+      "label": "Registreren",
+      "widthDp": 150.8883826879271,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-auth-register-page-1.xml",
+      "label": "Account maken",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-history-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 242.37037037037038,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-history-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-history-page-1.xml",
+      "label": "7 dagen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-history-page-2.xml",
+      "label": "14 dagen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-history-page-2.xml",
+      "label": "30 dagen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-history-page-2.xml",
+      "label": "Import starten",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-history-page-2.xml",
+      "label": "Ontkoppelen",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-history-page-3.xml",
+      "label": "Nu opnieuw proberen",
+      "widthDp": 256.0,
+      "heightDp": 98.66666666666667
+    },
+    {
+      "file": "320-font-2-history-page-5.xml",
+      "label": "Ge\u00efmporteerde activiteiten bekijken",
+      "widthDp": 256.0,
+      "heightDp": 168.88888888888889
+    },
+    {
+      "file": "393-font-1-candidate-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-candidate-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-candidate-page-0.xml",
+      "label": "Maak invulvoorstel",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-candidate-page-1.xml",
+      "label": "Neem datums, vermoeidheid en redenen over",
+      "widthDp": 281.3667425968109,
+      "heightDp": 82.36902050113895
+    },
+    {
+      "file": "393-font-1-candidate-page-1.xml",
+      "label": "Negeer invulvoorstel",
+      "widthDp": 281.3667425968109,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-candidate-page-2.xml",
+      "label": "Ma",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-2.xml",
+      "label": "Di",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-candidate-page-2.xml",
+      "label": "Wo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-2.xml",
+      "label": "Do",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-2.xml",
+      "label": "Vr",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-2.xml",
+      "label": "Za",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-2.xml",
+      "label": "Zo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-2.xml",
+      "label": "Geen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-2.xml",
+      "label": "Licht",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-2.xml",
+      "label": "Matig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-3.xml",
+      "label": "Tijd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-3.xml",
+      "label": "Vermoeidheid",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-3.xml",
+      "label": "Blessure",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-3.xml",
+      "label": "Ziekte",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-candidate-page-3.xml",
+      "label": "Motivatie",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-3.xml",
+      "label": "Weer",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-3.xml",
+      "label": "Anders",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-4.xml",
+      "label": "Zwemmen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-4.xml",
+      "label": "Zwemmen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-4.xml",
+      "label": "Zwemmen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-4.xml",
+      "label": "Zwemmen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-4.xml",
+      "label": "Fietsen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-4.xml",
+      "label": "Fietsen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-4.xml",
+      "label": "Fietsen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-4.xml",
+      "label": "Fietsen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-5.xml",
+      "label": "Lopen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-5.xml",
+      "label": "Lopen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-5.xml",
+      "label": "Lopen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-5.xml",
+      "label": "Lopen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-5.xml",
+      "label": "Ik begrijp dat alarmsymptomen medische beoordeling vragen en niet door dit plan worden beoordeeld.",
+      "widthDp": 313.4396355353075,
+      "heightDp": 114.80637813211845
+    },
+    {
+      "file": "393-font-1-candidate-page-5.xml",
+      "label": "Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd.",
+      "widthDp": 313.4396355353075,
+      "heightDp": 92.57403189066059
+    },
+    {
+      "file": "393-font-1-candidate-page-6.xml",
+      "label": "Zwemmen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-6.xml",
+      "label": "Fietsen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-6.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-6.xml",
+      "label": "Inspannend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-6.xml",
+      "label": "Terugkerend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-6.xml",
+      "label": "Toevoegen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-candidate-page-7.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-7.xml",
+      "label": "Inspannend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-7.xml",
+      "label": "Terugkerend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-candidate-page-7.xml",
+      "label": "Toevoegen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-candidate-page-7.xml",
+      "label": "Context opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-saved-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-saved-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-saved-page-0.xml",
+      "label": "Maak invulvoorstel",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-saved-page-1.xml",
+      "label": "Ma",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-1.xml",
+      "label": "Di",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-saved-page-1.xml",
+      "label": "Wo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-1.xml",
+      "label": "Do",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-1.xml",
+      "label": "Vr",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-1.xml",
+      "label": "Za",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-1.xml",
+      "label": "Zo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-1.xml",
+      "label": "Geen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-1.xml",
+      "label": "Licht",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-2.xml",
+      "label": "Hoog",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-2.xml",
+      "label": "Tijd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-2.xml",
+      "label": "Vermoeidheid",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-2.xml",
+      "label": "Blessure",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-2.xml",
+      "label": "Ziekte",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-saved-page-2.xml",
+      "label": "Motivatie",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-2.xml",
+      "label": "Weer",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-2.xml",
+      "label": "Anders",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-3.xml",
+      "label": "Zwemmen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-3.xml",
+      "label": "Zwemmen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-3.xml",
+      "label": "Zwemmen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-3.xml",
+      "label": "Zwemmen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-3.xml",
+      "label": "Fietsen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-3.xml",
+      "label": "Fietsen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-3.xml",
+      "label": "Fietsen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-3.xml",
+      "label": "Fietsen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-4.xml",
+      "label": "Lopen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-4.xml",
+      "label": "Lopen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-4.xml",
+      "label": "Lopen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-4.xml",
+      "label": "Ik begrijp dat alarmsymptomen medische beoordeling vragen en niet door dit plan worden beoordeeld.",
+      "widthDp": 313.4396355353075,
+      "heightDp": 114.80637813211845
+    },
+    {
+      "file": "393-font-1-saved-page-4.xml",
+      "label": "Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd.",
+      "widthDp": 313.4396355353075,
+      "heightDp": 92.57403189066059
+    },
+    {
+      "file": "393-font-1-saved-page-5.xml",
+      "label": "Zwemmen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-5.xml",
+      "label": "Fietsen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-5.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-5.xml",
+      "label": "Inspannend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-5.xml",
+      "label": "Terugkerend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-6.xml",
+      "label": "Inspannend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-6.xml",
+      "label": "Terugkerend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-saved-page-6.xml",
+      "label": "Toevoegen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-saved-page-6.xml",
+      "label": "Context opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-saved-page-6.xml",
+      "label": "Deze context bevestigen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-sheet-page-0.xml",
+      "label": "Intakeprofiel",
+      "widthDp": 288.0,
+      "heightDp": 76.14814814814815
+    },
+    {
+      "file": "320-font-2-sheet-page-0.xml",
+      "label": "Integraties",
+      "widthDp": 288.0,
+      "heightDp": 75.85185185185185
+    },
+    {
+      "file": "320-font-2-sheet-page-1.xml",
+      "label": "Automatisch",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-sheet-page-1.xml",
+      "label": "Nederlands",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-sheet-page-1.xml",
+      "label": "English",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-sheet-page-1.xml",
+      "label": "Veilig afmelden",
+      "widthDp": 288.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "393-font-1-connected-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-connected-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-connected-page-0.xml",
+      "label": "7 dagen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-connected-page-0.xml",
+      "label": "14 dagen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-connected-page-1.xml",
+      "label": "Import starten",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-connected-page-1.xml",
+      "label": "Ontkoppelen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-connected-page-1.xml",
+      "label": "Status vernieuwen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "393-font-1-connected-page-1.xml",
+      "label": "Ge\u00efmporteerde activiteiten bekijken",
+      "widthDp": 329.4760820045558,
+      "heightDp": 76.17312072892939
+    },
+    {
+      "file": "393-font-1-connected-page-2.xml",
+      "label": "Status vernieuwen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "393-font-1-connected-page-2.xml",
+      "label": "Ge\u00efmporteerde activiteiten bekijken",
+      "widthDp": 329.4760820045558,
+      "heightDp": 76.17312072892939
+    },
+    {
+      "file": "320-font-2-unlinked-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 242.37037037037038,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-unlinked-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-unlinked-page-1.xml",
+      "label": "Polar koppelen",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-unlinked-page-2.xml",
+      "label": "Ge\u00efmporteerde activiteiten bekijken",
+      "widthDp": 256.0,
+      "heightDp": 168.88888888888889
+    },
+    {
+      "file": "360-font-1-sheet-page-0.xml",
+      "label": "Intakeprofiel",
+      "widthDp": 328.0,
+      "heightDp": 76.0
+    },
+    {
+      "file": "360-font-1-sheet-page-0.xml",
+      "label": "Integraties",
+      "widthDp": 328.0,
+      "heightDp": 76.0
+    },
+    {
+      "file": "360-font-1-sheet-page-0.xml",
+      "label": "Automatisch",
+      "widthDp": 328.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-sheet-page-0.xml",
+      "label": "Nederlands",
+      "widthDp": 328.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-sheet-page-0.xml",
+      "label": "English",
+      "widthDp": 328.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-sheet-page-1.xml",
+      "label": "Intakeprofiel",
+      "widthDp": 328.0,
+      "heightDp": 76.0
+    },
+    {
+      "file": "360-font-1-sheet-page-1.xml",
+      "label": "Integraties",
+      "widthDp": 328.0,
+      "heightDp": 76.0
+    },
+    {
+      "file": "360-font-1-sheet-page-1.xml",
+      "label": "Automatisch",
+      "widthDp": 328.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-sheet-page-1.xml",
+      "label": "Nederlands",
+      "widthDp": 328.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-sheet-page-1.xml",
+      "label": "English",
+      "widthDp": 328.0,
+      "heightDp": 50.0
+    },
+    {
+      "file": "360-font-1-sheet-page-1.xml",
+      "label": "Veilig afmelden",
+      "widthDp": 328.0,
+      "heightDp": 58.0
+    },
+    {
+      "file": "393-font-1-sheet-page-0.xml",
+      "label": "Intakeprofiel",
+      "widthDp": 361.54897494305243,
+      "heightDp": 76.17312072892939
+    },
+    {
+      "file": "393-font-1-sheet-page-0.xml",
+      "label": "Integraties",
+      "widthDp": 361.54897494305243,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "393-font-1-sheet-page-0.xml",
+      "label": "Automatisch",
+      "widthDp": 361.54897494305243,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-sheet-page-0.xml",
+      "label": "Nederlands",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-sheet-page-0.xml",
+      "label": "English",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-sheet-page-0.xml",
+      "label": "Veilig afmelden",
+      "widthDp": 361.54897494305243,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "412-font-1-auth-page-0.xml",
+      "label": "Aanmelden",
+      "widthDp": 160.38186157517902,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-auth-page-0.xml",
+      "label": "Registreren",
+      "widthDp": 160.38186157517902,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-auth-page-1.xml",
+      "label": "Aanmelden",
+      "widthDp": 160.38186157517902,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-auth-page-1.xml",
+      "label": "Registreren",
+      "widthDp": 160.38186157517902,
+      "heightDp": 48.1145584725537
+    },
+    {
+      "file": "412-font-1-auth-page-1.xml",
+      "label": "Aanmelden",
+      "widthDp": 332.21957040572795,
+      "heightDp": 58.04295942720764
+    },
+    {
+      "file": "320-font-2-advice-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 242.37037037037038,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-advice-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-advice-page-10.xml",
+      "label": "Lopen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-10.xml",
+      "label": "Lopen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-10.xml",
+      "label": "Lopen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.29629629629629
+    },
+    {
+      "file": "320-font-2-advice-page-11.xml",
+      "label": "Ik begrijp dat alarmsymptomen medische beoordeling vragen en niet door dit plan worden beoordeeld.",
+      "widthDp": 256.0,
+      "heightDp": 308.14814814814815
+    },
+    {
+      "file": "320-font-2-advice-page-12.xml",
+      "label": "Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd.",
+      "widthDp": 256.0,
+      "heightDp": 237.62962962962962
+    },
+    {
+      "file": "320-font-2-advice-page-13.xml",
+      "label": "Zwemmen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-advice-page-13.xml",
+      "label": "Fietsen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-13.xml",
+      "label": "Lopen",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-14.xml",
+      "label": "Inspannend",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-14.xml",
+      "label": "Terugkerend",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-advice-page-15.xml",
+      "label": "Inspannend",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-15.xml",
+      "label": "Terugkerend",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-advice-page-15.xml",
+      "label": "Toevoegen",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-advice-page-15.xml",
+      "label": "Context opslaan",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "file": "320-font-2-advice-page-2.xml",
+      "label": "Maak invulvoorstel",
+      "widthDp": 256.0,
+      "heightDp": 106.07407407407408
+    },
+    {
+      "file": "320-font-2-advice-page-3.xml",
+      "label": "Ma",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-3.xml",
+      "label": "Di",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-3.xml",
+      "label": "Wo",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-advice-page-3.xml",
+      "label": "Do",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-4.xml",
+      "label": "Do",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-4.xml",
+      "label": "Vr",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-4.xml",
+      "label": "Za",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-4.xml",
+      "label": "Zo",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-advice-page-4.xml",
+      "label": "Geen",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-advice-page-5.xml",
+      "label": "Licht",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-5.xml",
+      "label": "Matig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-5.xml",
+      "label": "Hoog",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-5.xml",
+      "label": "Tijd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-6.xml",
+      "label": "Vermoeidheid",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-6.xml",
+      "label": "Blessure",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-advice-page-6.xml",
+      "label": "Ziekte",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-6.xml",
+      "label": "Motivatie",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-6.xml",
+      "label": "Weer",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-6.xml",
+      "label": "Anders",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-advice-page-8.xml",
+      "label": "Zwemmen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-8.xml",
+      "label": "Zwemmen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-8.xml",
+      "label": "Zwemmen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-advice-page-8.xml",
+      "label": "Zwemmen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-advice-page-9.xml",
+      "label": "Fietsen: Vrij",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-9.xml",
+      "label": "Fietsen: Alleen rustig",
+      "widthDp": 256.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "file": "320-font-2-advice-page-9.xml",
+      "label": "Fietsen: Geblokkeerd",
+      "widthDp": 256.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "file": "320-font-2-advice-page-9.xml",
+      "label": "Fietsen: Professioneel advies",
+      "widthDp": 256.0,
+      "heightDp": 96.5925925925926
+    },
+    {
+      "file": "320-font-2-confirmed-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 242.37037037037038,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-confirmed-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-confirmed-page-1.xml",
+      "label": "Maak planvoorstel",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "file": "393-font-1-history-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-history-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-history-page-0.xml",
+      "label": "7 dagen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-history-page-0.xml",
+      "label": "14 dagen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-history-page-1.xml",
+      "label": "Import starten",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-history-page-1.xml",
+      "label": "Ontkoppelen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-history-page-1.xml",
+      "label": "Status vernieuwen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "393-font-1-history-page-1.xml",
+      "label": "Nu opnieuw proberen",
+      "widthDp": 329.4760820045558,
+      "heightDp": 76.17312072892939
+    },
+    {
+      "file": "393-font-1-history-page-2.xml",
+      "label": "Ge\u00efmporteerde activiteiten bekijken",
+      "widthDp": 329.4760820045558,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "320-font-1-sheet-page-0.xml",
+      "label": "Intakeprofiel",
+      "widthDp": 288.0,
+      "heightDp": 76.14814814814815
+    },
+    {
+      "file": "320-font-1-sheet-page-0.xml",
+      "label": "Integraties",
+      "widthDp": 288.0,
+      "heightDp": 75.85185185185185
+    },
+    {
+      "file": "320-font-1-sheet-page-0.xml",
+      "label": "Automatisch",
+      "widthDp": 288.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "file": "320-font-1-sheet-page-0.xml",
+      "label": "Nederlands",
+      "widthDp": 288.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "file": "320-font-1-sheet-page-1.xml",
+      "label": "Integraties",
+      "widthDp": 288.0,
+      "heightDp": 75.85185185185185
+    },
+    {
+      "file": "320-font-1-sheet-page-1.xml",
+      "label": "Automatisch",
+      "widthDp": 288.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "file": "320-font-1-sheet-page-1.xml",
+      "label": "Nederlands",
+      "widthDp": 288.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "file": "320-font-1-sheet-page-1.xml",
+      "label": "English",
+      "widthDp": 288.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "file": "320-font-1-sheet-page-1.xml",
+      "label": "Veilig afmelden",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "file": "393-font-1-unlinked-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-unlinked-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-unlinked-page-0.xml",
+      "label": "Polar koppelen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-unlinked-page-0.xml",
+      "label": "Status vernieuwen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "393-font-1-unlinked-page-1.xml",
+      "label": "Status vernieuwen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 75.80865603644648
+    },
+    {
+      "file": "393-font-1-unlinked-page-1.xml",
+      "label": "Ge\u00efmporteerde activiteiten bekijken",
+      "widthDp": 329.4760820045558,
+      "heightDp": 76.17312072892939
+    },
+    {
+      "file": "393-font-1-advice-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 165.83143507972665,
+      "heightDp": 47.74487471526196
+    },
+    {
+      "file": "393-font-1-advice-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 88.92938496583143,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "393-font-1-advice-page-0.xml",
+      "label": "Maak invulvoorstel",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-advice-page-1.xml",
+      "label": "Ma",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-1.xml",
+      "label": "Di",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-advice-page-1.xml",
+      "label": "Wo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-1.xml",
+      "label": "Do",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-1.xml",
+      "label": "Vr",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-1.xml",
+      "label": "Za",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-1.xml",
+      "label": "Zo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-1.xml",
+      "label": "Geen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-1.xml",
+      "label": "Licht",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-2.xml",
+      "label": "Hoog",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-2.xml",
+      "label": "Tijd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-2.xml",
+      "label": "Vermoeidheid",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-2.xml",
+      "label": "Blessure",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-2.xml",
+      "label": "Ziekte",
+      "widthDp": 313.4396355353075,
+      "heightDp": 50.29612756264237
+    },
+    {
+      "file": "393-font-1-advice-page-2.xml",
+      "label": "Motivatie",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-2.xml",
+      "label": "Weer",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-2.xml",
+      "label": "Anders",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-3.xml",
+      "label": "Zwemmen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-3.xml",
+      "label": "Zwemmen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-3.xml",
+      "label": "Zwemmen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-3.xml",
+      "label": "Zwemmen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-3.xml",
+      "label": "Fietsen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-3.xml",
+      "label": "Fietsen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-3.xml",
+      "label": "Fietsen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-3.xml",
+      "label": "Fietsen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-4.xml",
+      "label": "Lopen: Vrij",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-4.xml",
+      "label": "Lopen: Alleen rustig",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-4.xml",
+      "label": "Lopen: Geblokkeerd",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-4.xml",
+      "label": "Lopen: Professioneel advies",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-4.xml",
+      "label": "Ik begrijp dat alarmsymptomen medische beoordeling vragen en niet door dit plan worden beoordeeld.",
+      "widthDp": 313.4396355353075,
+      "heightDp": 114.80637813211845
+    },
+    {
+      "file": "393-font-1-advice-page-5.xml",
+      "label": "Zwemmen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-5.xml",
+      "label": "Fietsen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-5.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-5.xml",
+      "label": "Inspannend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-5.xml",
+      "label": "Terugkerend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-6.xml",
+      "label": "Lopen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-6.xml",
+      "label": "Inspannend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-6.xml",
+      "label": "Terugkerend",
+      "widthDp": 313.4396355353075,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "file": "393-font-1-advice-page-6.xml",
+      "label": "Toevoegen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "file": "393-font-1-advice-page-6.xml",
+      "label": "Context opslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "320-font-2-entry-page-0.xml",
+      "label": "Weekplanning",
+      "widthDp": 242.37037037037038,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "file": "320-font-2-entry-page-0.xml",
+      "label": "Afmelden",
+      "widthDp": 104.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "file": "320-font-2-entry-page-2.xml",
+      "label": "Start check-in",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "file": "393-font-1-auth-error-page-0.xml",
+      "label": "Aanmelden",
+      "widthDp": 150.8883826879271,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-auth-error-page-0.xml",
+      "label": "Registreren",
+      "widthDp": 150.8883826879271,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "file": "393-font-1-auth-error-page-1.xml",
+      "label": "Account maken",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "file": "412-font-1-sheet-page-0.xml",
+      "label": "Intakeprofiel",
+      "widthDp": 380.33412887828166,
+      "heightDp": 75.99045346062053
+    },
+    {
+      "file": "412-font-1-sheet-page-0.xml",
+      "label": "Integraties",
+      "widthDp": 380.33412887828166,
+      "heightDp": 75.99045346062053
+    },
+    {
+      "file": "412-font-1-sheet-page-0.xml",
+      "label": "Automatisch",
+      "widthDp": 380.33412887828166,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-sheet-page-0.xml",
+      "label": "Nederlands",
+      "widthDp": 380.33412887828166,
+      "heightDp": 49.64200477326969
+    },
+    {
+      "file": "412-font-1-sheet-page-0.xml",
+      "label": "English",
+      "widthDp": 380.33412887828166,
+      "heightDp": 50.02386634844869
+    },
+    {
+      "file": "412-font-1-sheet-page-0.xml",
+      "label": "Veilig afmelden",
+      "widthDp": 380.33412887828166,
+      "heightDp": 58.04295942720764
+    }
+  ]
+}

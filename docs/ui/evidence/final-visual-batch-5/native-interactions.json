@@ -1,0 +1,16 @@
+{
+  "monthRangePreviousNext": true,
+  "weekRangePreviousNext": true,
+  "todaySelectsActualDeviceDate": "2026-10-07",
+  "outsideMonthSelectionRetainsMonthAnchor": true,
+  "selectedDateViewWeek": true,
+  "rapidMonthWeekPresentationChanges": 10,
+  "realReadOnlyDetailModal": true,
+  "closeRestoresExactCalendarViewport": true,
+  "androidBackRestoresExactCalendarViewport": true,
+  "secondSiblingDetailIdentity": true,
+  "selectedDestination": "Calendar",
+  "activeMoveCallbackInvokedForExactOccurrence": true,
+  "moveCallbackInertNoMutation": true,
+  "latestRequestWinsVerifiedByUnchangedControllerTests": true
+}

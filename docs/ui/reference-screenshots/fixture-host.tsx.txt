@@ -1,0 +1,63 @@
+// TEMPORARY local screenshot host. Removed after native captures; no API calls.
+import { useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
+import { useLanguage } from '../src/i18n/LanguageProvider';
+import { WeekScreen } from '../src/ui-v2/screens/WeekScreen';
+import { WorkoutDetailScreen } from '../src/ui-v2/screens/WorkoutDetailScreen';
+import { WorkoutMoveScreen } from '../src/ui-v2/screens/WorkoutMoveScreen';
+import { ProposalReviewScreen, ProposalAlternativesScreen } from '../src/ui-v2/screens/ProposalReviewScreens';
+import { weekHomeViewModel } from '../src/ui-v2/utils/weekHomeViewModel';
+import { proposalReviewViewModel, proposalAlternativesViewModel } from '../src/ui-v2/utils/proposalReviewViewModel';
+import { activePlan, pendingPlan, draft, workout, occurrence } from '../src/features/planning/planning.test-fixtures';
+import { sourceWorkout } from '../src/ui-v2/utils/workout.test-fixtures';
+import { PlacementScreen } from '../src/ui-v2/screens/PlanningCreationScreens';
+import { planningCreationViewModel } from '../src/ui-v2/utils/planningCreationViewModel';
+import { ActivitiesScreen } from '../src/ui-v2/screens/ActivitiesScreen';
+import { activityViewModel } from '../src/ui-v2/utils/activityViewModel';
+import { completeActivity, pendingActivity } from '../src/features/activities/activities.test-fixtures';
+import { ActivityFeedbackScreen } from '../src/ui-v2/screens/ActivityFeedbackScreen';
+const noop = () => undefined;
+export default function ScreenshotReference() {
+  const { state = 'week-active' } = useLocalSearchParams<{ state: string }>();
+  const { setPreference } = useLanguage();
+  useEffect(() => { if (__DEV__) void setPreference('nl'); }, [setPreference]);
+  if (!__DEV__) return null;
+  if (state.startsWith('detail-')) {
+    const item = state === 'detail-bike' ? { ...workout, discipline: 'bike' as const }
+      : state === 'detail-distance' ? { ...sourceWorkout, duration_minutes: null, segments: [], description: '', rpe_zones: [] }
+      : sourceWorkout;
+    return <WorkoutDetailScreen key={state} workout={item} onClose={noop} embedded />;
+  }
+  const review = proposalReviewViewModel(pendingPlan);
+  if (state === 'remove' || state === 'alternative-selected') return <ProposalAlternativesScreen key={state} model={review} workout={review.workouts[0]}
+    options={proposalAlternativesViewModel({ plan_id: pendingPlan.id, revision: 3, proposal_id: 'proposal-a', workout_id: workout.id, can_remove: state === 'remove', alternatives: [occurrence] })}
+    selectedId={state === 'alternative-selected' ? occurrence.id : null} loading={false} busy={false} error={null} controls={null} onBack={noop}
+    onSelect={noop} onReplace={noop} onRemove={noop} onRetry={noop} />;
+  if (state === 'review-active-pending') return <ProposalReviewScreen key={state} model={review} busy={false} error={null}
+    controls={null} onBack={noop} onEdit={noop} onApprove={noop} onReject={noop} />;
+  if (state === 'move-warning') return <WorkoutMoveScreen name={workout.name} currentDate="2026-10-07" weekStart="2026-10-05"
+    targetDate="2026-10-10" warnings={[{ title: 'Supplied title', message: 'Exact supplied public warning' }]}
+    busy={false} error={null} available controls={null} onReview={noop} onConfirm={noop} onCancel={noop} />;
+  if (state === 'placement-multiple') return <PlacementScreen
+    model={planningCreationViewModel({ ...draft, state: 'placement', accepted_workouts: [occurrence, { ...occurrence, occurrence_id: 'repeat' }],
+      available_dates: draft.available_dates, placements: [occurrence.occurrence_id, 'repeat'].map((id, index) => ({ occurrence_id: id, scheduled_date: draft.available_dates[index] })) })}
+    mode="manual" busy={false} error={null} controls={null} onBack={noop} onMode={noop} onPlace={noop} onSubmit={noop} onSelection={noop} />;
+  if (state === 'rpe-selected') return <ActivityFeedbackScreen key={state} activity={activityViewModel(completeActivity, 'nl-NL', 'nl')}
+    heartRate="" busy={false} error={null} controls={null} onHeartRate={noop} onSelect={async () => undefined} onBack={noop} />;
+  if (['activities-no-hr', 'activities-empty', 'activities-blocked'].includes(state)) return <ActivitiesScreen
+    rows={state === 'activities-empty' ? [] : [{ activity: activityViewModel(completeActivity, 'nl-NL', 'nl'), canCorrect: true, match: null }]}
+    pending={state === 'activities-blocked' ? activityViewModel(pendingActivity, 'nl-NL', 'nl') : null} busy={false} error={null} controls={null} onBack={noop} onProfile={noop} onAdd={noop} onFeedback={noop} onCorrect={noop} onMatch={async () => undefined} />;
+  // Same deterministic public inputs as the archived Slice-2C component host.
+  const active = state === 'week-rest' ? { ...activePlan, workouts: [], rest_days: [{ date: '2026-10-07', reason: 'planned_rest' as const }] }
+    : state === 'week-multiple' ? { ...activePlan, workouts: [workout, { ...workout, id: 'repeat' }] }
+    : activePlan;
+  const usesActive = ['week-active', 'week-warning', 'week-multiple', 'week-active-pending', 'week-rest', 'week-next'].includes(state);
+  const model = weekHomeViewModel({
+    plan: state === 'week-pending' || state === 'week-active-pending' ? pendingPlan : usesActive ? active : null,
+    activePlan: usesActive ? active : null,
+    draft: state === 'week-selection' || state === 'week-placement' ? { ...draft, warnings: [], state: state === 'week-placement' ? 'placement' : 'collecting' } : null,
+    today: state === 'week-next' ? '2026-10-05' : '2026-10-07', resumeState: 'ready', activeReadState: 'ready',
+  });
+  return <WeekScreen key={state} model={model} error={null} busy={false} controls={null} goalName={null}
+    onAction={noop} onOpenWorkout={noop} onProfile={noop} onActivities={noop} onCheckIn={noop} onZones={noop} onGoal={noop} />;
+}

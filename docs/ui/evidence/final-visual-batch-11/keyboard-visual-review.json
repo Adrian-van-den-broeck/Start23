@@ -1,0 +1,17 @@
+{
+  "pass": true,
+  "inspected": [
+    "keyboard-zones-back-focus.png",
+    "keyboard-zone-source-focus.png",
+    "keyboard-zones-nested-css-focus.png",
+    "keyboard-zones-nested-save-reachable.png"
+  ],
+  "findings": [
+    "Native keyboard focus is visible on the header back action and the lab source choice.",
+    "The CSS field is focused with the numeric IME open.",
+    "The complete Save label and focus outline are visible above the open IME at 320 dp / 200%; no dismissing drag or write."
+  ],
+  "limits": [
+    "Inert public DTO gallery; no backend persistence."
+  ]
+}

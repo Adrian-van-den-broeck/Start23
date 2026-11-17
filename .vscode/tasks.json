@@ -114,22 +114,29 @@
     },
     {
       "label": "Wombo: Run Android app",
-      "type": "shell",
-      "command": "npm run android -- --localhost",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\scripts\\run-start23-android.ps1",
+        "-AvdName",
+        "Pixel_4_API_35_2"
+      ],
       "options": {
         "cwd": "${workspaceFolder}\\mobile",
         "env": {
           "NODE_OPTIONS": "--dns-result-order=ipv4first"
         }
       },
-      "dependsOn": [
-        "Wombo: Start backend",
-        "Wombo: Configure Android bridges"
-      ],
-      "dependsOrder": "sequence",
       "presentation": {
         "reveal": "always",
         "panel": "dedicated"
+      },
+      "runOptions": {
+        "instanceLimit": 2
       },
       "problemMatcher": []
     },
@@ -156,7 +163,7 @@
       "id": "androidAvd",
       "type": "promptString",
       "description": "Android Virtual Device name",
-      "default": "Pixel_4_API_35"
+      "default": "Pixel_4_API_35_2"
     }
   ]
 }

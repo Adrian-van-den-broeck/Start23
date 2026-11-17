@@ -1,0 +1,4 @@
+rejected-*/
+__pycache__/
+fixture-config.json
+debug.xml

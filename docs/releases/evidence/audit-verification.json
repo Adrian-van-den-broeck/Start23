@@ -1,0 +1,100 @@
+{
+  "audit_date": "2026-11-04",
+  "timezone": "Europe/Amsterdam",
+  "candidate_base_sha": "f5831d3cbde04f60053402eb3083a1f1e6ade7a8",
+  "candidate_final_commit": null,
+  "source_manifest_sha256": "daf64a5c8310a354c32dfc31da29f6cb68632c36d4d5109e2adf944e879e4037",
+  "backend": {
+    "pytest": {
+      "passed": 1282,
+      "seconds": 155.27
+    },
+    "ruff": "pass; 175 formatted files",
+    "strict_mypy": "pass; 171 files",
+    "source_changed": false
+  },
+  "mobile": {
+    "full_final": {
+      "suites": 83,
+      "passed": 895,
+      "failed": 0,
+      "seconds": 123.572,
+      "timezone": "UTC"
+    },
+    "earlier_valid_attempt": {
+      "passed": 893,
+      "failed": 2,
+      "reason": "unchanged 5000ms navigation timeouts during concurrent export"
+    },
+    "initial_environment_attempt": "root dependency install lacked react-native-svg/lucide; corrected to matched A9 lock install",
+    "typecheck": "pass",
+    "unused": "pass",
+    "amsterdam_subset": {
+      "suites": 4,
+      "passed": 53,
+      "seconds": 17.682
+    }
+  },
+  "android": {
+    "hermes_export": "pass; placeholder publishable key; 5.8MB HBC",
+    "prebuild": "pass; expo-system-ui warning; no package changes",
+    "native_release": "failed after 3m28s; screens/worklets Ninja dirty manifest and path warnings",
+    "aab_created": false,
+    "devices": []
+  },
+  "hosted": {
+    "railway_sha": null,
+    "railway_branch": null,
+    "railway_autodeploy": null,
+    "railway_cli": "5.45.10; unauthorized",
+    "ready": {
+      "status": "ready",
+      "service": "Start23 API",
+      "version": "0.1.0",
+      "environment": "local"
+    },
+    "public_api_base": "https://start23-production.up.railway.app",
+    "hosted_openapi_paths": 69,
+    "candidate_openapi_paths": 71,
+    "missing_hosted_operations": [
+      "GET /api/v1/weekly-plans/recovery",
+      "GET /api/v1/planned-workouts/{workout_id}/registration",
+      "PUT /api/v1/planned-workouts/{workout_id}/registration"
+    ],
+    "linked_supabase_host": "isfumhgqphieoayqahjv.supabase.co",
+    "migration_ledger_verified": false,
+    "postgres_pgtap": "DEFERRED BY OWNER - PRE-BETA"
+  },
+  "eas": {
+    "project_id": "57a06d4f-7405-432b-9b63-a3753c1ebf88",
+    "build_id": "0b1a3606-7476-4607-b4c7-a37e763249c0",
+    "version_name": "1.0.0",
+    "version_code": 22,
+    "git_commit_hash": "ee229a9ac2b8de56a6b5bf69026921eab0ab5b56",
+    "package": "com.adrivdbs.wombo",
+    "profile": "wombo",
+    "status": "FINISHED",
+    "distribution": "STORE",
+    "remote_version_counter": 23,
+    "internal_distributed_version": null,
+    "installed_version": null
+  },
+  "gate_probe": "disabled registration read/write: zero database I/O; storage activation rejected in staging and production",
+  "operations": {
+    "push": false,
+    "merge": false,
+    "commit": false,
+    "deploy": false,
+    "migration": false,
+    "hosted_config_change": false,
+    "remote_build": false,
+    "submission": false,
+    "publication": false,
+    "tester_change": false
+  },
+  "decision": {
+    "backend": "NO-GO",
+    "mobile": "NO-GO against observed backend",
+    "mobile_only": "NOT VERIFIED; A6 startup API unavailable"
+  }
+}

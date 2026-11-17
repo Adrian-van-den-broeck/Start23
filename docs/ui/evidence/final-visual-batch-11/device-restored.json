@@ -1,0 +1,14 @@
+{
+  "density": "Physical density: 440",
+  "fontScale": "1.0",
+  "accessibilityServices": "null",
+  "accessibilityEnabled": "0",
+  "animationScales": {
+    "animator_duration_scale": "null",
+    "window_animation_scale": "1.0",
+    "transition_animation_scale": "1.0"
+  },
+  "keyboardPreference": "1",
+  "reverse8084Removed": true,
+  "backendWrites": false
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "empty"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "history"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "entry"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "state": "rpe"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "state": "empty"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "state": "history"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "state": "entry"
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "state": "rpe"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "empty"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "history"
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "state": "entry"
+  }
+]

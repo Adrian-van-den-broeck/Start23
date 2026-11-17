@@ -1,0 +1,33 @@
+{
+  "reviewDate": "2026-10-09",
+  "keyboard": {
+    "pass": true,
+    "actualNestedSaveAboveIMEAt320Dp200Percent": true
+  },
+  "reducedMotion": {
+    "pass": true,
+    "zeroScaleColdBoot": true,
+    "zoneDecisionAndObservationReachable": true
+  },
+  "talkBack": {
+    "enabled": true,
+    "sourceChoiceActivatedAndChecked": true,
+    "thresholdResultDisplayed": true,
+    "thresholdTargetTouchAttempted": false,
+    "targetFocusRetentionVerified": false,
+    "spokenAnnouncementsVerified": false,
+    "physicalDeviceVerified": false
+  },
+  "imagesReviewed": [
+    "talkback-zone-source.png",
+    "talkback-threshold-decision.png",
+    "reduced-motion-zone-decision.png",
+    "reduced-motion-observation.png"
+  ],
+  "openGates": [
+    "TalkBack target focus retention",
+    "Spoken screen-reader behavior",
+    "Physical device/iOS"
+  ],
+  "backendWrites": false
+}

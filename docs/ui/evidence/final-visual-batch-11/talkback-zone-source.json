@@ -1,0 +1,7 @@
+{
+  "utc": "2026-10-09T09:44:32.764064+00:00",
+  "provenance": "Actual TalkBack-enabled production screen with inert DTOs; no hierarchy dump during focus screenshot",
+  "expectedFocus": "Gemeten door arts/lab",
+  "method": "Native touch exploration after TalkBack activation; expected target does not prove observed focus or spoken announcements",
+  "services": "com.google.android.marvin.talkback/.TalkBackService"
+}

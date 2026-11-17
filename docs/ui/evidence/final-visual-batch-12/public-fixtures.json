@@ -1,0 +1,172 @@
+{
+  "open": {
+    "id": "inert-check-in",
+    "week_start": "2026-10-12",
+    "timezone": "Europe/Amsterdam",
+    "status": "open",
+    "context_revision": 0,
+    "plan_proposal_id": null,
+    "started_at": "2026-10-09T08:00:00Z",
+    "completed_at": null,
+    "context": null
+  },
+  "saved": {
+    "id": "inert-check-in",
+    "week_start": "2026-10-12",
+    "timezone": "Europe/Amsterdam",
+    "status": "open",
+    "context_revision": 3,
+    "plan_proposal_id": null,
+    "started_at": "2026-10-09T08:00:00Z",
+    "completed_at": null,
+    "context": {
+      "revision": 3,
+      "state": "draft",
+      "source": "structured_form",
+      "expires_at": "2026-10-18T22:00:00Z",
+      "fingerprint": "inert-context-fingerprint",
+      "blocked_dates": [
+        "2026-10-14"
+      ],
+      "fatigue_level": "moderate",
+      "missed_workout_reasons": [
+        "time_constraint"
+      ],
+      "recurring_activities_confirmed": true,
+      "external_activities": [
+        {
+          "name": "Clubtraining",
+          "discipline": "run",
+          "scheduled_at": "2026-10-15T18:00:00+02:00",
+          "duration_minutes": "60",
+          "strenuous": true,
+          "recurring": true
+        }
+      ],
+      "restrictions": [],
+      "alarm_symptoms_acknowledged": true,
+      "confirmed_at": null
+    }
+  },
+  "confirmed": {
+    "id": "inert-check-in",
+    "week_start": "2026-10-12",
+    "timezone": "Europe/Amsterdam",
+    "status": "open",
+    "context_revision": 3,
+    "plan_proposal_id": null,
+    "started_at": "2026-10-09T08:00:00Z",
+    "completed_at": null,
+    "context": {
+      "revision": 3,
+      "state": "confirmed",
+      "source": "structured_form",
+      "expires_at": "2026-10-18T22:00:00Z",
+      "fingerprint": "inert-context-fingerprint",
+      "blocked_dates": [
+        "2026-10-14"
+      ],
+      "fatigue_level": "moderate",
+      "missed_workout_reasons": [
+        "time_constraint"
+      ],
+      "recurring_activities_confirmed": true,
+      "external_activities": [
+        {
+          "name": "Clubtraining",
+          "discipline": "run",
+          "scheduled_at": "2026-10-15T18:00:00+02:00",
+          "duration_minutes": "60",
+          "strenuous": true,
+          "recurring": true
+        }
+      ],
+      "restrictions": [],
+      "alarm_symptoms_acknowledged": true,
+      "confirmed_at": "2026-10-09T08:05:00Z"
+    }
+  },
+  "candidate": {
+    "source": "deterministic_fallback",
+    "requires_structured_confirmation": true,
+    "candidate": {
+      "blocked_dates": [
+        "2026-10-14"
+      ],
+      "fatigue_level": "high",
+      "missed_workout_reasons": [
+        "fatigue"
+      ],
+      "possible_injury_disciplines": [
+        "run"
+      ],
+      "agenda_context": [
+        "Woensdag niet beschikbaar"
+      ],
+      "clarifying_questions": [
+        "Welke discipline is beperkt?"
+      ]
+    }
+  },
+  "connection": {
+    "id": "inert-polar",
+    "provider": "polar",
+    "status": "connected",
+    "connected_at": "2026-10-01T08:00:00Z",
+    "disconnected_at": null,
+    "last_import_at": null
+  },
+  "imports": [
+    {
+      "id": "inert-import-retry",
+      "provider": "polar",
+      "kind": "historical",
+      "status": "failed",
+      "range_start": "2026-09-25",
+      "range_end": "2026-10-09",
+      "discovered_count": 4,
+      "imported_count": 2,
+      "skipped_count": 1,
+      "failure_code": "provider_unavailable",
+      "retry_count": 0,
+      "max_attempts": 3,
+      "next_attempt_at": null,
+      "created_at": "2026-10-09T08:00:00Z",
+      "completed_at": null
+    },
+    {
+      "id": "inert-import-reconnect",
+      "provider": "polar",
+      "kind": "webhook",
+      "status": "failed",
+      "range_start": null,
+      "range_end": null,
+      "discovered_count": 0,
+      "imported_count": 0,
+      "skipped_count": 0,
+      "failure_code": "reconnect_required",
+      "retry_count": 0,
+      "max_attempts": 3,
+      "next_attempt_at": null,
+      "created_at": "2026-10-09T08:00:00Z",
+      "completed_at": null
+    },
+    {
+      "id": "inert-import-exhausted",
+      "provider": "polar",
+      "kind": "historical",
+      "status": "failed",
+      "range_start": "2026-09-09",
+      "range_end": "2026-10-09",
+      "discovered_count": 2,
+      "imported_count": 0,
+      "skipped_count": 0,
+      "failure_code": "provider_unavailable",
+      "retry_count": 2,
+      "max_attempts": 3,
+      "next_attempt_at": null,
+      "created_at": "2026-10-09T08:00:00Z",
+      "completed_at": null
+    }
+  ]
+}

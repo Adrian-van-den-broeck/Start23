@@ -1,0 +1,19 @@
+{
+  "result": "PASS",
+  "changed": [
+    "mobile/src/screens/PlanningWorkoutMoveTask.tsx",
+    "mobile/src/ui-v2/components/WeekAgenda.tsx",
+    "mobile/src/ui-v2/components/WorkoutSummary.tsx",
+    "mobile/src/ui-v2/screens/WorkoutMoveScreen.test.tsx",
+    "mobile/src/ui-v2/screens/WorkoutMoveScreen.tsx"
+  ],
+  "protectedSourcesUnchanged": 203,
+  "taskLifecycleOutsideSummaryBindingUnchanged": true,
+  "dependencyManifestsUnchanged": [
+    "mobile/package.json",
+    "mobile/package-lock.json",
+    "mobile/jest.config.js",
+    "mobile/tsconfig.json"
+  ],
+  "controllersMappersClientsRoutesV1Unchanged": true
+}
