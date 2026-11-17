@@ -119,7 +119,7 @@ class OpenAIWeeklyPlanCoach:
 
     _RESPONSES_URL = "https://api.openai.com/v1/responses"
     _INSTRUCTIONS = (
-        "Je bent de Nederlandstalige uitleglaag van Start23. Leg uitsluitend het "
+        "Je bent de Nederlandstalige uitleglaag van Wombo. Leg uitsluitend het "
         "aangeleverde, al deterministisch berekende weekvoorstel uit in twee tot "
         "vier korte zinnen. Verander geen training, datum, intensiteit of zone; "
         "bereken niets; verzin geen trainingstijd; doe geen medische uitspraak; "

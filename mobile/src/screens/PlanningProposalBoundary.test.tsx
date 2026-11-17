@@ -47,6 +47,15 @@ function presentation() {
 }
 
 beforeEach(() => {
+  // Keep the approved/pending fixture workouts upcoming as the real date moves.
+  // Retain real timers so asynchronous rendering and interactions still run.
+  jest.useFakeTimers({
+    now: new Date('2026-10-06T12:00:00Z'),
+    doNotFake: ['hrtime', 'nextTick', 'performance', 'queueMicrotask',
+      'requestAnimationFrame', 'cancelAnimationFrame', 'requestIdleCallback',
+      'cancelIdleCallback', 'setImmediate', 'clearImmediate', 'setInterval',
+      'clearInterval', 'setTimeout', 'clearTimeout'],
+  });
   jest.clearAllMocks();
   for (const method of Object.values(api).filter(jest.isMockFunction)) method.mockReset();
   process.env.EXPO_PUBLIC_UI_VERSION = 'v2';
@@ -56,7 +65,7 @@ beforeEach(() => {
   jest.mocked(api.getCalendar).mockResolvedValue({ from_date: '2026-10-05', to_date: '2026-10-12', workouts: [workout], rest_days: [] });
   jest.mocked(api.getPendingWorkoutAlternatives).mockResolvedValue({ plan_id: pendingPlan.id, revision: 3, proposal_id: proposal.id, workout_id: workout.id, alternatives: [], can_remove: false });
 });
-afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.restoreAllMocks(); });
+afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.restoreAllMocks(); jest.useRealTimers(); });
 function restore(kind: 'plan') {
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) =>
     key === 'start23.language-preference' ? 'en' :
