@@ -22,6 +22,28 @@ function loadClient() {
   return { client, fetchMock };
 }
 
+test('release gate rejects deferred registration reads and writes before any network request', async () => {
+  const { client, fetchMock } = loadClient();
+  await expect(client.getWorkoutRegistration('athlete-token', 'workout-a')).rejects.toThrow('not available');
+  await expect(client.confirmWorkoutRegistration('athlete-token', 'workout-a', {
+    plan_revision_id: 'revision-a', expected_registration_revision: 0, status: 'skipped',
+  })).rejects.toThrow('not available');
+  expect(fetchMock).not.toHaveBeenCalled();
+});
+
+test('release activity transport keeps the legacy request shape even if a caller supplies V2 confirmation', async () => {
+  const { client, fetchMock } = loadClient();
+  fetchMock.mockResolvedValueOnce(response(200, activityResponse(null)));
+  await client.createActivity('athlete-token', 'retry-key', {
+    discipline: 'run', started_at: '2026-11-04T10:00:00Z', timezone: 'Europe/Amsterdam',
+    duration_minutes: '37', performed_duration_confirmed: true,
+  });
+  expect(JSON.parse(fetchMock.mock.calls[0][1]!.body as string)).toEqual({
+    discipline: 'run', started_at: '2026-11-04T10:00:00Z', timezone: 'Europe/Amsterdam', duration_minutes: '37',
+  });
+  expect(fetchMock.mock.calls[0][1]?.headers).toEqual({ ...headers, 'Idempotency-Key': 'retry-key' });
+});
+
 const headers = {
   Accept: 'application/json',
   Authorization: 'Bearer athlete-token',

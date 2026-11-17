@@ -64,7 +64,7 @@ test('V2 create validates existing fields, calls exact shared payload, then same
   await fireEvent.changeText(view.getByLabelText('Distance (metres, optional)'), '5000');
   await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
   await view.findByText('Activity feedback'); expect(flow.feedbackActivity?.id).toBe(pendingActivity.id);
-  expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.stringMatching(/^[\da-f-]{36}$/), { discipline: 'run', duration_minutes: '45', performed_duration_confirmed: true, distance_meters: 5000, started_at: '2026-10-06T10:00:00Z', timezone: 'Europe/Amsterdam' });
+  expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.stringMatching(/^[\da-f-]{36}$/), { discipline: 'run', duration_minutes: '45', distance_meters: 5000, started_at: '2026-10-06T10:00:00Z', timezone: 'Europe/Amsterdam' });
   expect(api.submitActivityRpeWithRefresh).not.toHaveBeenCalled(); expect(view.getAllByRole('radio')).toHaveLength(10); expect(view.getAllByTestId('activity-feedback-scroll')).toHaveLength(1);
   await fireEvent.changeText(view.getByLabelText('Average heart rate (bpm)'), '151');
   await fireEvent.press(view.getByRole('radio', { name: rpeFour })); await view.findByTestId('v2-activities');
@@ -161,6 +161,19 @@ test('planned source selection keeps exact workout ID in create', async () => {
   await fireEvent.press(view.getByRole('radio', { name: new RegExp(workout.name) }));
   await fireEvent.changeText(view.getByLabelText('Actual duration (minutes)'), '45');
   await fireEvent.press(view.getByRole('button', { name: 'Save activity' })); expect(jest.mocked(api.createActivity).mock.calls[0][2].planned_workout_id).toBe(workout.id);
+});
+
+test('release gate hides deferred registration actions in both V2 and V1 for a planned workout', async () => {
+  jest.mocked(api.getCalendar).mockResolvedValue({ from_date: 'from', to_date: 'to', workouts: [workout], rest_days: [] });
+  const view = await openEntry();
+  await act(() => flow.selectWorkout(workout));
+  expect(view.queryByRole('button', { name: 'Confirm: not performed' })).toBeNull();
+  expect(view.queryByRole('button', { name: 'Reset completion to unknown' })).toBeNull();
+  await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
+  await view.findByText('Record a workout');
+  expect(view.queryByRole('button', { name: 'Confirm: not performed' })).toBeNull();
+  expect(view.queryByRole('button', { name: 'Reset completion to unknown' })).toBeNull();
+  expect(api.createActivity).not.toHaveBeenCalled();
 });
 
 test('V2 external selection retains identity and requires performed time', async () => {

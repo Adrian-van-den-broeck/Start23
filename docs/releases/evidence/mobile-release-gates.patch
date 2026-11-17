@@ -1,0 +1,186 @@
+diff --git a/mobile/src/api/client.test.ts b/mobile/src/api/client.test.ts
+index 04e3922..af70858 100644
+--- a/mobile/src/api/client.test.ts
++++ b/mobile/src/api/client.test.ts
+@@ -22,6 +22,28 @@ function loadClient() {
+   return { client, fetchMock };
+ }
+ 
++test('release gate rejects deferred registration reads and writes before any network request', async () => {
++  const { client, fetchMock } = loadClient();
++  await expect(client.getWorkoutRegistration('athlete-token', 'workout-a')).rejects.toThrow('not available');
++  await expect(client.confirmWorkoutRegistration('athlete-token', 'workout-a', {
++    plan_revision_id: 'revision-a', expected_registration_revision: 0, status: 'skipped',
++  })).rejects.toThrow('not available');
++  expect(fetchMock).not.toHaveBeenCalled();
++});
++
++test('release activity transport keeps the legacy request shape even if a caller supplies V2 confirmation', async () => {
++  const { client, fetchMock } = loadClient();
++  fetchMock.mockResolvedValueOnce(response(200, activityResponse(null)));
++  await client.createActivity('athlete-token', 'retry-key', {
++    discipline: 'run', started_at: '2026-11-04T10:00:00Z', timezone: 'Europe/Amsterdam',
++    duration_minutes: '37', performed_duration_confirmed: true,
++  });
++  expect(JSON.parse(fetchMock.mock.calls[0][1]!.body as string)).toEqual({
++    discipline: 'run', started_at: '2026-11-04T10:00:00Z', timezone: 'Europe/Amsterdam', duration_minutes: '37',
++  });
++  expect(fetchMock.mock.calls[0][1]?.headers).toEqual({ ...headers, 'Idempotency-Key': 'retry-key' });
++});
++
+ const headers = {
+   Accept: 'application/json',
+   Authorization: 'Bearer athlete-token',
+diff --git a/mobile/src/api/client.ts b/mobile/src/api/client.ts
+index e0895c9..7ac8ed7 100644
+--- a/mobile/src/api/client.ts
++++ b/mobile/src/api/client.ts
+@@ -1,3 +1,4 @@
++import { realizedV2MobileEnabled } from '../lib/releaseGates';
+ import type {
+   CalibrationEvaluation,
+   CalibrationObservation,
+@@ -841,7 +842,7 @@ export function createActivity(
+   return request(accessToken, '/api/v1/activities', {
+     method: 'POST',
+     headers: { 'Idempotency-Key': idempotencyKey },
+-    body: JSON.stringify(input),
++    body: JSON.stringify(realizedV2MobileEnabled ? input : { ...input, performed_duration_confirmed: undefined }),
+   }, validate.activityResponse);
+ }
+ 
+@@ -850,11 +851,13 @@ export type WorkoutRegistration = {
+   registration_revision: number; status: 'unknown' | 'skipped';
+ };
+ export function getWorkoutRegistration(accessToken: string, workoutId: string): Promise<WorkoutRegistration> {
++  if (!realizedV2MobileEnabled) return Promise.reject(new Error('Workout registration is not available in this release.'));
+   return request(accessToken, `/api/v1/planned-workouts/${workoutId}/registration`, undefined, validate.workoutRegistration);
+ }
+ export function confirmWorkoutRegistration(accessToken: string, workoutId: string, input: {
+   plan_revision_id: string; expected_registration_revision: number; status: 'unknown' | 'skipped';
+ }): Promise<WorkoutRegistration> {
++  if (!realizedV2MobileEnabled) return Promise.reject(new Error('Workout registration is not available in this release.'));
+   return request(accessToken, `/api/v1/planned-workouts/${workoutId}/registration`, {
+     method: 'PUT', body: JSON.stringify(input),
+   }, validate.workoutRegistration);
+diff --git a/mobile/src/features/activities/ActivityFlowProvider.test.tsx b/mobile/src/features/activities/ActivityFlowProvider.test.tsx
+index b91681e..3066d53 100644
+--- a/mobile/src/features/activities/ActivityFlowProvider.test.tsx
++++ b/mobile/src/features/activities/ActivityFlowProvider.test.tsx
+@@ -46,7 +46,7 @@ test('D06 duration starts unknown and selecting a prescription never confirms pe
+   await act(() => flow.setDuration('37'));
+   await act(() => flow.save());
+   expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.any(String), expect.objectContaining({
+-    planned_workout_id: workout.id, duration_minutes: '37', performed_duration_confirmed: true,
++    planned_workout_id: workout.id, duration_minutes: '37',
+   }));
+ });
+ 
+@@ -137,7 +137,7 @@ test('rapid create and rerender during transport yield one create with exact exi
+   let save!: Promise<void>; await act(() => { save = flow.save(); void flow.save(); });
+   await view.rerender(<Host />); expect(api.createActivity).toHaveBeenCalledTimes(1); expect(flow.busy).toBe(true);
+   expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.stringMatching(/^[0-9a-f-]{36}$/), {
+-    discipline: 'run', started_at: '2026-10-06T12:00:00Z', timezone: 'Europe/Amsterdam', duration_minutes: '45', performed_duration_confirmed: true,
++    discipline: 'run', started_at: '2026-10-06T12:00:00Z', timezone: 'Europe/Amsterdam', duration_minutes: '45',
+   });
+   jest.mocked(api.listActivities).mockResolvedValue([pendingActivity]);
+   await act(async () => { create.resolve(pendingActivity); await save; });
+diff --git a/mobile/src/features/activities/activityCreateInput.ts b/mobile/src/features/activities/activityCreateInput.ts
+index f8153d3..a07d55f 100644
+--- a/mobile/src/features/activities/activityCreateInput.ts
++++ b/mobile/src/features/activities/activityCreateInput.ts
+@@ -1,5 +1,6 @@
+ import type { createActivity } from '../../api/client';
+ import type { Discipline, PlannedExternalActivity, PlannedWorkout } from '../../api/types';
++import { realizedV2MobileEnabled } from '../../lib/releaseGates';
+ 
+ export function newIdempotencyKey(): string {
+   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (value) => {
+@@ -45,7 +46,7 @@ export function activityCreateInput({ discipline, duration, distance, startedAt,
+     started_at: startedAt,
+     timezone: athleteTimezone,
+     duration_minutes: numericDuration === null ? null : String(numericDuration),
+-    performed_duration_confirmed: numericDuration !== null,
++    ...(realizedV2MobileEnabled ? { performed_duration_confirmed: numericDuration !== null } : {}),
+     ...(numericDistance === undefined
+       ? {}
+       : { distance_meters: numericDistance }),
+diff --git a/mobile/src/screens/ActivityScreen.tsx b/mobile/src/screens/ActivityScreen.tsx
+index 1f2e013..25a43f2 100644
+--- a/mobile/src/screens/ActivityScreen.tsx
++++ b/mobile/src/screens/ActivityScreen.tsx
+@@ -1,4 +1,5 @@
+ import { localizeRecoveryMessage } from '../i18n/recoveryMessages';
++import { realizedV2MobileEnabled } from '../lib/releaseGates';
+ import { FlashList } from '@shopify/flash-list';
+ import { useEffect, useState } from 'react';
+ import {
+@@ -323,7 +324,7 @@ export function ActivityScreen({
+             <Text style={styles.actionText}>{t('activity.save')}</Text>
+           </Pressable>
+           {registrationOutcome ? <Text accessibilityRole="alert">{t(registrationOutcome === 'skipped' ? 'activities.skippedConfirmed' : 'activities.unknownConfirmed')}</Text> : null}
+-          {selectedWorkout ? <>
++          {realizedV2MobileEnabled && selectedWorkout ? <>
+             <Pressable accessibilityRole="button" disabled={busy || pendingRpe.length > 0} onPress={() => void registerCompletion('skipped')}>
+               <Text style={styles.link}>{t('activities.confirmSkipped')}</Text>
+             </Pressable>
+diff --git a/mobile/src/ui/ActivityBoundary.test.tsx b/mobile/src/ui/ActivityBoundary.test.tsx
+index 71badc8..3357766 100644
+--- a/mobile/src/ui/ActivityBoundary.test.tsx
++++ b/mobile/src/ui/ActivityBoundary.test.tsx
+@@ -64,7 +64,7 @@ test('V2 create validates existing fields, calls exact shared payload, then same
+   await fireEvent.changeText(view.getByLabelText('Distance (metres, optional)'), '5000');
+   await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
+   await view.findByText('Activity feedback'); expect(flow.feedbackActivity?.id).toBe(pendingActivity.id);
+-  expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.stringMatching(/^[\da-f-]{36}$/), { discipline: 'run', duration_minutes: '45', performed_duration_confirmed: true, distance_meters: 5000, started_at: '2026-10-06T10:00:00Z', timezone: 'Europe/Amsterdam' });
++  expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.stringMatching(/^[\da-f-]{36}$/), { discipline: 'run', duration_minutes: '45', distance_meters: 5000, started_at: '2026-10-06T10:00:00Z', timezone: 'Europe/Amsterdam' });
+   expect(api.submitActivityRpeWithRefresh).not.toHaveBeenCalled(); expect(view.getAllByRole('radio')).toHaveLength(10); expect(view.getAllByTestId('activity-feedback-scroll')).toHaveLength(1);
+   await fireEvent.changeText(view.getByLabelText('Average heart rate (bpm)'), '151');
+   await fireEvent.press(view.getByRole('radio', { name: rpeFour })); await view.findByTestId('v2-activities');
+@@ -163,6 +163,19 @@ test('planned source selection keeps exact workout ID in create', async () => {
+   await fireEvent.press(view.getByRole('button', { name: 'Save activity' })); expect(jest.mocked(api.createActivity).mock.calls[0][2].planned_workout_id).toBe(workout.id);
+ });
+ 
++test('release gate hides deferred registration actions in both V2 and V1 for a planned workout', async () => {
++  jest.mocked(api.getCalendar).mockResolvedValue({ from_date: 'from', to_date: 'to', workouts: [workout], rest_days: [] });
++  const view = await openEntry();
++  await act(() => flow.selectWorkout(workout));
++  expect(view.queryByRole('button', { name: 'Confirm: not performed' })).toBeNull();
++  expect(view.queryByRole('button', { name: 'Reset completion to unknown' })).toBeNull();
++  await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
++  await view.findByText('Record a workout');
++  expect(view.queryByRole('button', { name: 'Confirm: not performed' })).toBeNull();
++  expect(view.queryByRole('button', { name: 'Reset completion to unknown' })).toBeNull();
++  expect(api.createActivity).not.toHaveBeenCalled();
++});
++
+ test('V2 external selection retains identity and requires performed time', async () => {
+   const external = { ...externalActivity, name: 'Exact external ride', scheduled_at: '2026-10-06T10:00:00Z' };
+   jest.mocked(api.listPlannedExternalActivities).mockResolvedValue([external]);
+diff --git a/mobile/src/ui/ActivityBoundary.tsx b/mobile/src/ui/ActivityBoundary.tsx
+index d5143ee..d151a2c 100644
+--- a/mobile/src/ui/ActivityBoundary.tsx
++++ b/mobile/src/ui/ActivityBoundary.tsx
+@@ -1,4 +1,5 @@
+ import { localizeRecoveryMessage } from '../i18n/recoveryMessages';
++import { realizedV2MobileEnabled } from '../lib/releaseGates';
+ import { useEffect, type ComponentProps } from 'react';
+ import { View } from 'react-native';
+ import { useActivityFlow } from '../features/activities/ActivityFlowProvider';
+@@ -66,7 +67,7 @@ export function ActivityBoundary(props: ComponentProps<typeof ActivityScreen> &
+       if (!choice) flow.selectWorkout(null);
+       else if (choice.kind === 'workout') { const workout = flow.workouts.find(item => item.id === choice.id); if (workout) flow.selectWorkout(workout); }
+       else { const activity = flow.externalActivities.find(item => item.id === choice.id); if (activity) flow.selectExternal(activity); }
+-    }} onSave={flow.save} onRegistration={flow.registerCompletion} registrationOutcome={flow.registrationOutcome} />;
++    }} onSave={flow.save} onRegistration={realizedV2MobileEnabled ? flow.registerCompletion : undefined} registrationOutcome={flow.registrationOutcome} />;
+   const now = new Date();
+   return <ActivitiesScreen rows={flow.activities.map(activity => {
+     const match = activity.match_status === 'unmatched' && activity.processing_state === 'awaiting_rpe' ? suggestedWorkout(activity, flow.workouts) : null;
+diff --git a/mobile/src/lib/releaseGates.ts b/mobile/src/lib/releaseGates.ts
+new file mode 100644
+--- /dev/null
++++ b/mobile/src/lib/releaseGates.ts
+@@ -0,0 +1,3 @@
++// Keep database-backed Realized V2 interactions inactive until a separate
++// database/release approval. Deliberately not controlled by a public env flag.
++export const realizedV2MobileEnabled: boolean = false;

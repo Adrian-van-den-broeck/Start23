@@ -1,3 +1,4 @@
+import { realizedV2MobileEnabled } from '../lib/releaseGates';
 import type {
   CalibrationEvaluation,
   CalibrationObservation,
@@ -841,7 +842,7 @@ export function createActivity(
   return request(accessToken, '/api/v1/activities', {
     method: 'POST',
     headers: { 'Idempotency-Key': idempotencyKey },
-    body: JSON.stringify(input),
+    body: JSON.stringify(realizedV2MobileEnabled ? input : { ...input, performed_duration_confirmed: undefined }),
   }, validate.activityResponse);
 }
 
@@ -850,11 +851,13 @@ export type WorkoutRegistration = {
   registration_revision: number; status: 'unknown' | 'skipped';
 };
 export function getWorkoutRegistration(accessToken: string, workoutId: string): Promise<WorkoutRegistration> {
+  if (!realizedV2MobileEnabled) return Promise.reject(new Error('Workout registration is not available in this release.'));
   return request(accessToken, `/api/v1/planned-workouts/${workoutId}/registration`, undefined, validate.workoutRegistration);
 }
 export function confirmWorkoutRegistration(accessToken: string, workoutId: string, input: {
   plan_revision_id: string; expected_registration_revision: number; status: 'unknown' | 'skipped';
 }): Promise<WorkoutRegistration> {
+  if (!realizedV2MobileEnabled) return Promise.reject(new Error('Workout registration is not available in this release.'));
   return request(accessToken, `/api/v1/planned-workouts/${workoutId}/registration`, {
     method: 'PUT', body: JSON.stringify(input),
   }, validate.workoutRegistration);

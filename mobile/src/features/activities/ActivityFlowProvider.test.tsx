@@ -46,7 +46,7 @@ test('D06 duration starts unknown and selecting a prescription never confirms pe
   await act(() => flow.setDuration('37'));
   await act(() => flow.save());
   expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.any(String), expect.objectContaining({
-    planned_workout_id: workout.id, duration_minutes: '37', performed_duration_confirmed: true,
+    planned_workout_id: workout.id, duration_minutes: '37',
   }));
 });
 
@@ -137,7 +137,7 @@ test('rapid create and rerender during transport yield one create with exact exi
   let save!: Promise<void>; await act(() => { save = flow.save(); void flow.save(); });
   await view.rerender(<Host />); expect(api.createActivity).toHaveBeenCalledTimes(1); expect(flow.busy).toBe(true);
   expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.stringMatching(/^[0-9a-f-]{36}$/), {
-    discipline: 'run', started_at: '2026-10-06T12:00:00Z', timezone: 'Europe/Amsterdam', duration_minutes: '45', performed_duration_confirmed: true,
+    discipline: 'run', started_at: '2026-10-06T12:00:00Z', timezone: 'Europe/Amsterdam', duration_minutes: '45',
   });
   jest.mocked(api.listActivities).mockResolvedValue([pendingActivity]);
   await act(async () => { create.resolve(pendingActivity); await save; });

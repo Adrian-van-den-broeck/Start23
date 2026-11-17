@@ -1,4 +1,5 @@
 import { localizeRecoveryMessage } from '../i18n/recoveryMessages';
+import { realizedV2MobileEnabled } from '../lib/releaseGates';
 import { FlashList } from '@shopify/flash-list';
 import { useEffect, useState } from 'react';
 import {
@@ -323,7 +324,7 @@ export function ActivityScreen({
             <Text style={styles.actionText}>{t('activity.save')}</Text>
           </Pressable>
           {registrationOutcome ? <Text accessibilityRole="alert">{t(registrationOutcome === 'skipped' ? 'activities.skippedConfirmed' : 'activities.unknownConfirmed')}</Text> : null}
-          {selectedWorkout ? <>
+          {realizedV2MobileEnabled && selectedWorkout ? <>
             <Pressable accessibilityRole="button" disabled={busy || pendingRpe.length > 0} onPress={() => void registerCompletion('skipped')}>
               <Text style={styles.link}>{t('activities.confirmSkipped')}</Text>
             </Pressable>
