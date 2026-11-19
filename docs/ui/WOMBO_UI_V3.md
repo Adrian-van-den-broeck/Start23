@@ -2,16 +2,16 @@
 
 ## Build and rollback
 
-The current app lives on the main checkout based on `afeafa12`. Start Metro from its `mobile` directory. Expo reads `EXPO_PUBLIC_UI_VERSION` when it bundles the client. The Metro transform-cache version includes the flag so that rebuilding with a fallback setting also replaces previously inlined presentation choices.
+The V3 checkpoint lives on `save/wombo-ui-v3`, based on `afeafa12`. Start Metro from the branch worktree's `mobile` directory. Expo reads `EXPO_PUBLIC_UI_VERSION` when it bundles the client. The Metro transform-cache version includes the flag so a rebuild picks up the selected presentation.
 
 | Build setting | Athlete experience |
 | --- | --- |
-| Unset or `v3` | Current pine, orange and grey design across training and supporting flows |
-| `v2` | Previous landscape presentation and its shared supporting screens |
+| Unset or `v2` | Default landscape presentation and its shared supporting screens |
+| `v3` | Opt-in pine, orange and grey design across training and supporting flows |
 | `v1` | Previous default training interface and the released shared supporting screens |
 | Other explicit value | V1 fallback |
 
-To roll back the entire redesign, set the desired fallback value in the mobile build environment, rebuild the mobile bundle and distribute it through the existing release process. For a local comparison, set the value in the ignored mobile environment file and restart Expo with `npx expo start --clear --dev-client`. Production screens expose no presentation controls. Explicit V1 and V2 development builds retain the existing comparison controls. The flag carries no athlete preference or credentials. A rollback requires no data migration, backend release, or change to a saved draft.
+To return to V2, unset the flag or set it to `v2` in the mobile build environment and rebuild the bundle. For a local comparison, set the value in the ignored mobile environment file and restart Expo with `npx expo start --clear --dev-client`. Production screens expose no presentation controls. V1 and V2 development builds retain the existing comparison controls. Changing the flag only requires a mobile rebuild.
 
 ## Ownership
 
