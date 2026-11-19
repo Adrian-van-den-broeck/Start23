@@ -80,7 +80,7 @@ export function CalendarScreen({ model, mode, anchor, loading, error, onModeChan
 }
 const styles = StyleSheet.create({
   frame: { flex: 1, backgroundColor: colors.background }, scroll: { flex: 1 },
-  content: { padding: layout.phoneGutter, paddingBottom: space[32], width: '100%', maxWidth: layout.readingWidth, alignSelf: 'center', gap: space[24] },
+  content: { padding: layout.phoneGutter, paddingBottom: space[32], width: '100%', maxWidth: layout.readingWidth, alignSelf: 'center', gap: studioPresentation ? space[12] : space[24] },
   header: { gap: space[8] }, utility: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: space[8] },
   stackedUtility: { flexDirection: 'column', alignItems: 'stretch' },
   titleRegion: { minHeight: layout.artwork.compact }, art: { position: 'absolute', top: 0, left: -layout.phoneGutter, right: -layout.phoneGutter },

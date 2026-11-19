@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { parseCalendarDate } from '../../features/calendar/calendarDates';
+import { Icon } from '../primitives/Icon';
 import { Card } from '../primitives/Card';
 import { Text } from '../primitives/Text';
 import { colors, layout, radius, space } from '../tokens';
@@ -29,15 +30,20 @@ export function MonthGrid({ days, known, onSelectDate }: { days: readonly Calend
     return <Pressable key={day.date} testID={`calendar-date-${day.date}`} accessibilityRole="button"
       accessibilityLabel={`${dateLabel} \u00b7 ${info}`} accessibilityState={{ selected: day.selected }} onPress={() => onSelectDate(day.date)}
       onFocus={() => setFocusedDate(day.date)} onBlur={() => setFocusedDate(null)}
-      style={[styles.date, list ? styles.listDate : styles.gridDate, day.selected && styles.selected, day.today && styles.today, focusedDate === day.date && styles.focused]}>
+      style={[styles.date, list ? styles.listDate : styles.gridDate, studioPresentation && !list && styles.openCell, day.selected && styles.selected, day.today && styles.today, focusedDate === day.date && styles.focused]}>
       <Text accessible={false} importantForAccessibility="no" variant="label" tone={day.inMonth ? 'text' : 'textMuted'}>
         {list ? formats.short.format(date) : date.getDate()}
       </Text>
-      {(!studioPresentation || list || !known || day.workouts.length > 0) && <Text accessible={false} importantForAccessibility="no" variant={list ? 'supporting' : 'caption'} tone="textMuted">{list ? info : known ? String(day.workouts.length) : '\u2014'}</Text>}
-      {!list && shortInfo ? <Text accessible={false} importantForAccessibility="no" variant="caption" tone="textMuted">{shortInfo}</Text> : null}
+      {studioPresentation && !list && known ? <View style={styles.marks}>
+        {sports.map(sport => <Icon key={sport} name={sport} size={20} color={colors.sport[sport].text} />)}
+        {day.workouts.length > 1 && <Text variant="caption" tone="primary">{'\u00d7'}{day.workouts.length}</Text>}
+        {day.restDays.length > 0 && <Icon name="minus" size={20} color={colors.textMuted} />}
+      </View> : null}
+      {(!studioPresentation || list || !known) && <Text accessible={false} importantForAccessibility="no" variant={list ? 'supporting' : 'caption'} tone="textMuted">{list ? info : known ? String(day.workouts.length) : '\u2014'}</Text>}
+      {!studioPresentation && !list && shortInfo ? <Text accessible={false} importantForAccessibility="no" variant="caption" tone="textMuted">{shortInfo}</Text> : null}
     </Pressable>;
   }
-  return <Card testID={list ? 'calendar-month-day-list' : 'calendar-month-grid'} elevated style={[styles.container, !list && styles.gridCard]}>
+  return <Card testID={list ? 'calendar-month-day-list' : 'calendar-month-grid'} elevated style={[styles.container, !list && styles.gridCard, studioPresentation && !list && styles.flat]}>
     {list ? <>
       <Text variant="label">{t('calendar.chooseDay')}</Text>
       <View style={styles.list}>{days.map(dateCell)}</View>
@@ -47,16 +53,30 @@ export function MonthGrid({ days, known, onSelectDate }: { days: readonly Calend
           {parseCalendarDate(day.date).toLocaleDateString(locale, { weekday: 'short' })}
         </Text>)}
       </View>
-      <View style={styles.grid}>{rows.map((row, index) => <View key={index} style={styles.gridRow}>{row.map(dateCell)}</View>)}</View>
+      <View style={studioPresentation ? undefined : styles.grid}>{rows.map((row, index) => <View key={index} style={[styles.gridRow, studioPresentation && styles.weekRule]}>{row.map(dateCell)}</View>)}</View>
       <View style={styles.legend}>
-        <Text variant="caption" tone="textMuted">{t('calendar.countKey')}</Text>
-        <Text variant="caption" tone="textMuted">{(['run', 'bike', 'swim'] as const).map(sport => `${t(`calendar.sportShort.${sport}`)} = ${t(`common.${sport}`)}`).join(' \u00b7 ')}{` \u00b7 ${t('calendar.restShort')} = ${t('common.restDay')}`}</Text>
+        {!studioPresentation ? <Text variant="caption" tone="textMuted">{t('calendar.countKey')}</Text>
+          : days.some(day => day.workouts.length > 1) && <Text variant="caption" tone="textMuted">
+            {'\u00d72 = '}{t('week.sessionCount.other', { count: 2 })}
+          </Text>}
+        {studioPresentation ? <View style={styles.keyRow}>
+          {(['run', 'bike', 'swim'] as const).map(sport => <View key={sport} style={styles.keyItem}>
+            <Icon name={sport} size={20} color={colors.sport[sport].text} /><Text variant="caption">{t(`common.${sport}`)}</Text>
+          </View>)}
+          <View style={styles.keyItem}><Icon name="minus" size={20} color={colors.textMuted} /><Text variant="caption">{t('common.restDay')}</Text></View>
+        </View> : <Text variant="caption" tone="textMuted">{(['run', 'bike', 'swim'] as const).map(sport => `${t(`calendar.sportShort.${sport}`)} = ${t(`common.${sport}`)}`).join(' \u00b7 ')}{` \u00b7 ${t('calendar.restShort')} = ${t('common.restDay')}`}</Text>}
         {days.some(day => day.today) ? <Text variant="caption" tone="warning" style={styles.todayLegend}>{t('common.today')}: {parseCalendarDate(days.find(day => day.today)!.date).toLocaleDateString(locale, { day: 'numeric', month: 'short' })}</Text> : null}
       </View>
     </>}
   </Card>;
 }
 const styles = StyleSheet.create({
+  marks: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', minHeight: 20 },
+  keyRow: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 14, rowGap: 4 },
+  keyItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  flat: { backgroundColor: 'transparent', borderWidth: 0 },
+  weekRule: { borderTopWidth: StyleSheet.hairlineWidth, borderColor: colors.border },
+  openCell: { borderRightColor: 'transparent', borderBottomColor: 'transparent', gap: 1 },
   container: { gap: space[12] }, gridCard: { padding: studioPresentation ? 0 : space[8] },
   weekdays: { flexDirection: 'row', paddingVertical: space[8] }, weekday: { flex: 1, textAlign: 'center', textTransform: 'uppercase', fontWeight: '600' },
   list: { gap: space[4] }, grid: { borderWidth: layout.decorativeLine, borderColor: colors.border, borderRadius: radius.control, overflow: 'hidden' },

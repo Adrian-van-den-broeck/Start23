@@ -1,7 +1,8 @@
 import { studioPresentation } from '../../ui-v3/presentation';
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { parseCalendarDate } from '../../features/calendar/calendarDates';
+import { Icon } from '../primitives/Icon';
 import { Button } from '../primitives/Button';
 import { Text } from '../primitives/Text';
 import { colors, layout, radius, space } from '../tokens';
@@ -16,11 +17,33 @@ export function CalendarDayList({ day, known, onOpenWorkout, onMoveWorkout }: { 
     {day.workouts.map(({ id, summary }) => {
       const move = onMoveWorkout?.(id);
       return <View key={id} testID={`calendar-workout-${id}`}>
-        <WorkoutSummary summary={summary} footer={<View style={styles.actions}>
+        {studioPresentation ? <>
+          <Pressable accessibilityRole="button" accessibilityLabel={t('week.viewWorkout', { name: summary.name })}
+            accessibilityHint={[t(`common.${summary.discipline}`), t(`detail.status.${summary.status}`),
+              summary.measures.durationMinutes !== null && t('detail.minutesSpoken', { value: summary.measures.durationMinutes }),
+              summary.measures.distanceMeters !== null && t('detail.metersSpoken', { value: summary.measures.distanceMeters }),
+              t(`detail.intensity.${summary.intensity}`)].filter(Boolean).join(', ')}
+            onPress={() => onOpenWorkout(id)} style={styles.sessionRow}>
+            <View style={[styles.sportTile, { backgroundColor: colors.sport[summary.discipline].soft }]}>
+              <Icon name={summary.discipline} color={colors.sport[summary.discipline].text} />
+            </View>
+            <View style={styles.sessionText}>
+              <Text variant="caption" tone="textMuted">{t(`common.${summary.discipline}`)} {'\u00b7'} {t(`detail.status.${summary.status}`)}</Text>
+              <Text variant="label">{summary.name}</Text>
+              <View style={styles.measures}>
+                {summary.measures.durationMinutes !== null && <Text variant="supporting">{t('common.durationMinutes', { minutes: summary.measures.durationMinutes })}</Text>}
+                {summary.measures.distanceMeters !== null && <Text variant="supporting">{t('detail.meters', { value: summary.measures.distanceMeters })}</Text>}
+                <Text variant="supporting" tone="textMuted">{t(`detail.intensity.${summary.intensity}`)}</Text>
+              </View>
+            </View>
+            <Icon name="chevron" size={20} color={colors.textMuted} />
+          </Pressable>
+          {move && <Button variant="tertiary" label={t('move.entry')} accessibilityLabel={t('move.entryLabel', { name: summary.name })} onPress={move} />}
+        </> : <WorkoutSummary summary={summary} footer={<View style={styles.actions}>
           <Button label={t('week.viewWorkoutLabel')} accessibilityLabel={t('week.viewWorkout', { name: summary.name })}
             trailingIcon="forward" onPress={() => onOpenWorkout(id)} />
           {move ? <Button variant="secondary" trailingIcon="calendar" label={t('move.entry')} accessibilityLabel={t('move.entryLabel', { name: summary.name })} onPress={move} /> : null}
-        </View>} />
+        </View>} />}
       </View>;
     })}
     {day.restDays.map((rest, index) => <View key={`${rest.reason}-${index}`} style={styles.rest}>
@@ -43,7 +66,7 @@ export function WeekAgenda({ days, known, onOpenWorkout, onMoveWorkout }: { days
     </View> : null}
     {days.map((day) => <View key={day.date} testID={`calendar-day-${day.date}`} style={[styles.day, stacked && styles.stacked]}>
       <View style={!stacked && styles.date}><DayHeader day={day} known={known} rail={!stacked} /></View>
-      {!stacked && days.length === 7 ? <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={styles.rail}>
+      {!studioPresentation && !stacked && days.length === 7 ? <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={styles.rail}>
         <View style={styles.line} /><View style={styles.node} />
       </View> : null}
       <View style={[styles.dayContent, stacked && styles.stackedContent]}>
@@ -53,6 +76,9 @@ export function WeekAgenda({ days, known, onOpenWorkout, onMoveWorkout }: { days
   </View>;
 }
 const styles = StyleSheet.create({
+  sessionRow: { flexDirection: 'row', gap: 8, minHeight: 48, alignItems: 'center' },
+  sportTile: { width: 38, height: 38, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  sessionText: { flex: 1, gap: 2 }, measures: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 8 },
   weekdays: { flexDirection: 'row', paddingBottom: space[16] }, weekday: { flex: 1, textAlign: 'center', textTransform: 'uppercase', fontWeight: '600' },
   day: { flexDirection: 'row', borderTopWidth: layout.decorativeLine, borderColor: colors.border },
   stacked: { flexDirection: 'column', paddingVertical: space[16], gap: space[16] },

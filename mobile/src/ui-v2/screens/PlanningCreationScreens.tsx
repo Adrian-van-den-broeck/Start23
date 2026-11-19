@@ -210,11 +210,19 @@ export function PlacementScreen({ model, mode, onMode, onPlace, onSubmit, onSele
       <AcceptedList accepted={model.accepted} />
     </> : <View style={styles.summary}>
       <Text tone="textMuted">{t('creation.manualHint')}</Text>
-      {model.accepted.map((workout, index) => <Card key={workout.occurrenceId} elevated style={styles.summary}>
+      {model.accepted.map((workout, index) => <Card key={workout.occurrenceId} elevated style={[styles.summary, studioPresentation && styles.placementGroup]}>
         <Text variant="label" tone="textMuted">{t('creation.choiceNumber', { number: index + 1 })}</Text>
-        <SelectionSummary workout={workout} />
-        <Divider />
-        <PlacementRail label={t('creation.choiceNumber', { number: index + 1 }) + ' \u00b7 ' + workout.name} dates={model.availableDates} selected={placements.get(workout.occurrenceId)} disabled={task.busy}
+        <PlacementRail workout={studioPresentation ? <View testID={`selection-occurrence-${workout.occurrenceId}`} style={styles.stack}>
+          <View style={styles.placementSport}><Icon name={workout.discipline} size={20} color={colors.primary} />
+            <Text variant="caption" tone="primary">{t(`common.${workout.discipline}`)}</Text></View>
+          <Text variant="cardTitle" accessibilityRole="header">{workout.name}</Text>
+          <View style={styles.placementSport}>
+            {workout.durationMinutes !== null && <Text variant="label">{t('common.durationMinutes', { minutes: workout.durationMinutes })}</Text>}
+            {workout.distanceMeters !== null && <Text variant="label">{t('detail.meters', { value: workout.distanceMeters })}</Text>}
+            <Text variant="supporting" tone="textMuted">{t(`detail.intensity.${workout.intensity}`)}</Text>
+          </View>
+          {workout.description ? <Text variant="supporting" tone="textMuted">{workout.description}</Text> : null}
+        </View> : <><SelectionSummary workout={workout} /><Divider /></>} label={t('creation.choiceNumber', { number: index + 1 }) + ' \u00b7 ' + workout.name} dates={model.availableDates} selected={placements.get(workout.occurrenceId)} disabled={task.busy}
           onSelect={date => onPlace(workout.occurrenceId, date)}>
           {model.availableDates.map((date) => {
             const label = new Date(`${date}T12:00:00`).toLocaleDateString(locale, {
@@ -239,6 +247,8 @@ export function PlacementScreen({ model, mode, onMode, onPlace, onSubmit, onSele
 
 const styles = StyleSheet.create({
   stack: { gap: space[12] },
+  placementGroup: { borderWidth: 0, padding: 0, backgroundColor: 'transparent', gap: 8 },
+  placementSport: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space[8] },
   frame: { flex: 1 }, grow: { flex: 1 },
   form: { gap: space[24] }, summary: { gap: space[16] },
   error: { flexDirection: 'row', alignItems: 'flex-start', gap: space[12], padding: space[16], borderRadius: radius.inset, backgroundColor: colors.destructiveSoft },

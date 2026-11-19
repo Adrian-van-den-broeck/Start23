@@ -112,7 +112,9 @@ test.each([393, 412])('Month keeps >=48 grid targets at default text/%sdp, with 
   dimensions(width, 1);
   const view = await render(screen('month'));
   expect(view.getByTestId('calendar-month-grid')).toBeTruthy();
-  expect(view.getByText('Number = workout count')).toBeTruthy();
+  // The icon grid labels only multi-session totals. V2 still prints a count on every date.
+  expect(view.getByText(studioPresentation ? '\u00d72 = 2 workouts' : 'Number = workout count')).toBeTruthy();
+  if (studioPresentation) expect(within(view.getByTestId('calendar-date-2026-10-07')).getByText('\u00d72')).toBeTruthy();
   const selected = view.getByTestId('calendar-date-2026-10-07');
   const today = view.getByTestId('calendar-date-2026-10-05');
   expect(Native.StyleSheet.flatten(selected.props.style)).toMatchObject({ minWidth: 48, minHeight: studioPresentation ? 50 : 64, backgroundColor: colors.primarySoft, borderColor: colors.primary });
