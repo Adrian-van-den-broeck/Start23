@@ -1,14 +1,20 @@
-import type { SwipeWeekDraft, WeeklyPlan } from '../../api/types';
+import type { Discipline, SwipeWeekDraft, WeeklyPlan } from '../../api/types';
 import { addDays, isoDate } from '../../features/planning/planningDates';
 import { workoutSummaryViewModel, type WorkoutSummaryViewModel } from './workoutSummaryViewModel';
 export type WeekAction = 'prepare' | 'draft' | 'review' | 'planning' | 'calendar';
 export type WeekState = 'loading' | 'failed' | 'noPlan' | 'draft' | 'placement' | 'pending' | 'active' | 'activePending' | 'rejected' | 'expired' | 'unavailable';
+// One calendar day of the approved active week. Counts are literal row counts, never load.
+export type WeekDay = Readonly<{
+  date: string; disciplines: readonly Discipline[]; planned: number; completed: number;
+  rest: boolean; today: boolean; next: boolean;
+}>;
 export type WeekAttention = Readonly<{ kind: 'draft' | 'proposal' | 'warnings'; action: WeekAction; }>;
 export type WeekHomeViewModel = Readonly<{
   weekStart: string; weekEnd: string; state: WeekState;
   sessions: readonly Readonly<{ id: string; summary: WorkoutSummaryViewModel; }>[];
   sessionDate: string | null; isToday: boolean;
   progress: Readonly<{ completed: number; planned: number; }> | null;
+  days: readonly WeekDay[];
   empty: 'noPlan' | 'noFuture' | 'rest' | 'restrictedRest' | null;
   attention: readonly WeekAttention[]; mainAction: WeekAction | null; readState: 'loading' | 'ready' | 'failed';
 }>;
@@ -45,9 +51,18 @@ export function weekHomeViewModel(input: {
   if (draft && draft.state !== 'submitted') attention.push({ kind: 'draft', action: 'draft' });
   if (pending) attention.push({ kind: 'proposal', action: 'review' });
   if (plan?.warnings.length || draft?.warnings.length || active?.warnings.length) attention.push({ kind: 'warnings', action: pending ? 'review' : draft ? 'draft' : 'planning' });
+  const days: WeekDay[] = active ? Array.from({ length: 7 }, (_, offset) => {
+    const day = isoDate(addDays(active.week_start, offset));
+    const rows = workouts.filter((item) => item.scheduled_date === day);
+    return {
+      date: day, disciplines: [...new Set(rows.map((item) => item.discipline))],
+      planned: rows.length, completed: rows.filter((item) => item.status === 'completed').length,
+      rest: active.rest_days.some((item) => item.date === day), today: day === today, next: day === date,
+    };
+  }) : [];
   return {
     weekStart, weekEnd: isoDate(addDays(weekStart, 6)), state, sessions, sessionDate: date, isToday: date === today,
-    progress: active ? { completed: workouts.filter((item) => item.status === 'completed').length, planned: workouts.length } : null,
+    progress: active ? { completed: workouts.filter((item) => item.status === 'completed').length, planned: workouts.length } : null, days,
     empty, attention, mainAction: sessions.length ? null : draft ? 'draft' : pending ? 'review'
       : state === 'noPlan' ? 'prepare' : ['rejected', 'expired', 'unavailable'].includes(state) ? 'planning' : null, readState
   };

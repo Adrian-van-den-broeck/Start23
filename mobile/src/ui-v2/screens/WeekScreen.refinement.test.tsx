@@ -17,7 +17,9 @@ const cases = [
   { state: 'B', model: weekHomeViewModel({ ...base, draft }), task: true, hero: false, en: 'Choose your workouts', nl: 'Kies je trainingen' },
   { state: 'C', model: weekHomeViewModel({ ...base, draft: { ...draft, state: 'placement' } }), task: true, hero: false, en: 'Confirm your training dates', nl: 'Bevestig je trainingsdatums' },
   { state: 'D', model: weekHomeViewModel({ ...base, plan: pendingPlan }), task: true, hero: false, en: 'Review your week', nl: 'Controleer je week' },
-  { state: 'E', model: weekHomeViewModel({ ...base, plan: activePlan, activePlan }), task: false, hero: true, en: 'Today · 1 workout', nl: 'Vandaag · 1 training' },
+  { state: 'E', model: weekHomeViewModel({ ...base, plan: activePlan, activePlan }), task: false, hero: true,
+    // V3 drops the count for a lone session; the hero card itself is the one workout.
+    en: studioPresentation ? 'Today' : 'Today · 1 workout', nl: studioPresentation ? 'Vandaag' : 'Vandaag · 1 training' },
   { state: 'F', model: weekHomeViewModel({ ...base, plan: activePlan, activePlan, today: '2026-10-05' }), task: false, hero: true, en: 'Next training day', nl: 'Volgende trainingsdag' },
   { state: 'G', model: weekHomeViewModel({ ...base, plan: pendingPlan, activePlan }), task: false, hero: true, en: 'Approved · new proposal awaiting review', nl: 'Goedgekeurd · nieuw voorstel wacht op jou' },
   { state: 'H', model: weekHomeViewModel({ ...base, plan: restPlan, activePlan: restPlan }), task: false, hero: false, en: 'Rest due to a confirmed restriction', nl: 'Rust vanwege een bevestigde beperking' },
@@ -25,6 +27,11 @@ const cases = [
 const actions = { onAction: jest.fn(), onOpenWorkout: jest.fn(), onProfile: jest.fn(), onActivities: jest.fn(), onCheckIn: jest.fn(), onZones: jest.fn(), onGoal: jest.fn() };
 beforeEach(() => { jest.clearAllMocks(); jest.mocked(SecureStore.getItemAsync).mockResolvedValue('en'); });
 afterEach(() => jest.restoreAllMocks());
+// V3 shows progress as "0/1 done" inside the week strip; the full literal sentence
+// is the hint of its single "View week" button. V1/V2 keep the visible sentence.
+const expectProgress = (view: Awaited<ReturnType<typeof render>>, sentence: string) => studioPresentation
+  ? expect(view.getByRole('button', { name: 'View week' }).props.accessibilityHint).toBe(sentence)
+  : expect(view.getByText(sentence)).toBeTruthy();
 const screen = (model: WeekHomeViewModel, goalName: string | null = null, controls = <View testID="supplied-dev-controls" />) =>
   <LanguageProvider><WeekScreen {...actions} model={model} error={null} busy={false} goalName={goalName} controls={controls} /></LanguageProvider>;
 
@@ -129,7 +136,7 @@ test('no future session remains a truthful quiet empty message and literal singl
   const view = await render(screen(model));
   expect(view.queryByTestId('week-session-hero')).toBeNull();
   expect(view.getByText('No upcoming workout planned in this week')).toBeTruthy();
-  expect(view.getByText('0 of 1 planned workout completed')).toBeTruthy();
+  expectProgress(view, '0 of 1 planned workout completed');
 });
 
 test('same-day siblings use complete summaries, preserve all source fields and have independent occurrence actions', async () => {
@@ -163,7 +170,7 @@ test('dual-state cards expose only active occurrences and a separate pending rev
   const pending = within(view.getByTestId('week-attention-proposal'));
   await fireEvent.press(pending.getByRole('button', { name: 'Review proposal' }));
   expect(actions.onAction).toHaveBeenCalledWith('review');
-  expect(view.getByText('0 of 1 planned workout completed')).toBeTruthy();
+  expectProgress(view, '0 of 1 planned workout completed');
 });
 
 test('sparse Week summary omits absent measures and description while keeping status and detail', async () => {

@@ -13,10 +13,12 @@ export function NextSession({ model, onOpenWorkout }: { model: WeekHomeViewModel
   if (!model.sessionDate || !model.sessions.length) return null;
   const date = new Date(model.sessionDate + 'T12:00:00').toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
   const count = t(model.sessions.length === 1 ? 'week.sessionCount.one' : 'week.sessionCount.other', { count: model.sessions.length });
+  // A lone session needs no count; the card already shows it.
+  const several = model.sessions.length > 1;
   return <View style={styles.group}>
     {model.sessions.map(({ id, summary }, index) => <View key={id} testID={index === 0 ? 'week-session-hero' : 'week-session-sibling'}>
-      {studioPresentation && index === 0 ? <SessionLead summary={summary} heading={model.isToday ? t('week.todayLabel') + ' \u00b7 ' + count : t('week.nextDay')}
-        date={date} count={model.isToday ? undefined : count} onOpen={() => onOpenWorkout(id)} /> : <WorkoutSummary summary={summary} variant="focus" context={index === 0 ? <View style={styles.context}>
+      {studioPresentation && index === 0 ? <SessionLead summary={summary} heading={model.isToday ? several ? t('week.todayLabel') + ' \u00b7 ' + count : t('week.todayLabel') : t('week.nextDay')}
+        date={date} count={!model.isToday && several ? count : undefined} onOpen={() => onOpenWorkout(id)} /> : <WorkoutSummary summary={summary} variant="focus" context={index === 0 ? <View style={styles.context}>
         <Text variant="label">{t(model.isToday ? 'week.todayLabel' : 'week.nextDay')}{model.isToday ? ` · ${count}` : ''}</Text>
         {!model.isToday ? <><Text tone="textMuted">{date}</Text><Text variant="supporting" tone="textMuted">{count}</Text></> : null}
       </View> : null} footer={<Button label={t('week.viewWorkoutLabel')}
