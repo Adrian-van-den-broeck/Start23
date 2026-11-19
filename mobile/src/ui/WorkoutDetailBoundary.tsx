@@ -5,7 +5,7 @@ import type { PlannedWorkout } from '../api/types';
 import { WorkoutDetail } from '../components/WorkoutDetail';
 import { WorkoutDetailScreen } from '../ui-v2/screens/WorkoutDetailScreen';
 import { colors } from '../ui-v2/tokens';
-import { UiVersionControl } from './UiVersionControl';
+import { showUiVersionControl, UiVersionControl } from './UiVersionControl';
 import type { UiVersion } from './uiVersion';
 import { useUiVersion } from './UiVersionProvider';
 
@@ -51,7 +51,7 @@ export function WorkoutDetailBoundary({ workout, onClose }: {
   }
   return <Modal testID="workout-detail-modal" animationType="none" visible={workout !== null} onRequestClose={onClose}>
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <SafeAreaView edges={['top']}><UiVersionControl /></SafeAreaView>
+      <SafeAreaView edges={['top']}>{showUiVersionControl() && <UiVersionControl />}</SafeAreaView>
       {version === 'v1' ? legacyContent : <WorkoutDetailScreen workout={workout} onClose={onClose}
         embedded scrollProps={scrollProps} focusHeading={!position.current.compared} />}
     </View>

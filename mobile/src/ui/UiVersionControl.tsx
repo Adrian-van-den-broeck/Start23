@@ -5,6 +5,10 @@ import { Text } from '../ui-v2/primitives/Text';
 import { space } from '../ui-v2/tokens';
 import { useUiVersion } from './UiVersionProvider';
 
+export function showUiVersionControl() {
+  return __DEV__ && (process.env.EXPO_PUBLIC_UI_VERSION === 'v1' || process.env.EXPO_PUBLIC_UI_VERSION === 'v2');
+}
+
 export function UiVersionControl({ disabled = false, onSelect }: { disabled?: boolean; onSelect?: (version: 'v1' | 'v2') => void }) {
   const { requested, setRequested } = useUiVersion();
   const { t } = useLanguage();

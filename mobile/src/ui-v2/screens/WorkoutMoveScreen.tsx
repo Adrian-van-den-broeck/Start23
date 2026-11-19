@@ -1,3 +1,4 @@
+import { PlacementRail } from '../../ui-v3/PlacementRail';
 import { useState, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
@@ -26,6 +27,7 @@ export function WorkoutMoveScreen({ summary, currentDate, weekStart, targetDate,
   const fullDate = (date: string) => parseCalendarDate(date).toLocaleDateString(locale, {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   });
+  const choices = Array.from({ length: 7 }, (_, index) => isoDate(addDays(weekStart, index)));
   return <Screen title={t(warnings ? 'move.warning' : 'move.title')} landscape="ridges" titleVariant="display"
     onBack={onCancel} backLabel={t('move.cancel')} backDisabled={busy}>
     {busy ? <Text tone="textMuted" accessibilityState={{ busy: true }} accessibilityLiveRegion="polite">{t('move.busy')}</Text> : null}
@@ -42,10 +44,12 @@ export function WorkoutMoveScreen({ summary, currentDate, weekStart, targetDate,
     </> : <>
       <Card elevated padding="form" style={styles.dates}>
         <Text variant="sectionTitle" accessibilityRole="header">{t('move.newDate')}</Text>
-        {Array.from({ length: 7 }, (_, index) => isoDate(addDays(weekStart, index))).map(date =>
-        <ChoiceRow key={date} selected={selectedDate === date}
-          label={`${fullDate(date)}${date === currentDate ? ` · ${t('move.current')}` : ''}`}
-          disabled={busy || !available} onPress={() => setSelectedDate(date)} />)}
+        <PlacementRail showDate={false} dates={choices} selected={selectedDate} disabled={busy || !available} onSelect={setSelectedDate} label={t('move.newDate')}>
+          {choices.map(date =>
+            <ChoiceRow key={date} selected={selectedDate === date}
+              label={`${fullDate(date)}${date === currentDate ? ` · ${t('move.current')}` : ''}`}
+              disabled={busy || !available} onPress={() => setSelectedDate(date)} />)}
+        </PlacementRail>
         <Divider />
         <Text tone="textMuted">{t('move.targetDate', { date: fullDate(selectedDate) })}</Text>
       </Card>

@@ -1,3 +1,4 @@
+import { studioPresentation } from '../../ui-v3/presentation';
 import { useState } from 'react';
 import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { colors, layout, radius, space } from '../tokens';
@@ -39,14 +40,14 @@ export function SegmentedControl<T extends string>({ options, value, onChange, a
   </View>;
 }
 const styles = StyleSheet.create({
-  track: { backgroundColor: colors.primarySoft, borderRadius: radius.pill,
+  track: { backgroundColor: studioPresentation ? colors.surfaceSubtle : colors.primarySoft, borderRadius: studioPresentation ? radius.control : radius.pill,
     minHeight: layout.segmentedHeight, padding: layout.segmentedInset, gap: space[4] },
   horizontal: { flexDirection: 'row' },
-  segment: { minHeight: layout.touch, minWidth: layout.touch, borderRadius: radius.pill,
+  segment: { minHeight: layout.touch, minWidth: layout.touch, borderRadius: studioPresentation ? radius.inset : radius.pill,
     padding: space[12], flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: space[8] },
   selected: { backgroundColor: colors.primary },
   disabled: { backgroundColor: colors.surfaceSubtle },
-  focus: { ...StyleSheet.absoluteFill, margin: layout.focusOutline, borderRadius: radius.pill,
+  focus: { ...StyleSheet.absoluteFill, margin: layout.focusOutline, borderRadius: studioPresentation ? radius.inset : radius.pill,
     borderWidth: layout.focusOutline },
   measure: { position: 'absolute', opacity: 0, alignItems: 'flex-start' },
 });

@@ -1,3 +1,6 @@
+import { palette } from '../../ui-v3/tokens';
+// This suite verifies the documented V2 rollback contract. V3 has its own palette tests.
+jest.mock('../../ui-v3/presentation', () => ({ studioPresentation: false }));
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { colors, focusCardPadding, layout, radius, space, typography } from './index';
@@ -77,7 +80,7 @@ function contrast(a: string, b: string) {
   return (values[0] + 0.05) / (values[1] + 0.05);
 }
 
-test('every informative FINAL text pair reaches 4.5 and control/focus edges reach 3 without rounding', () => {
+test.each([['V2', colors], ['V3', palette]] as const)('%s text reaches 4.5 and control/focus edges reach 3', (_name, colors) => {
   const pairs = [
     ...[colors.background, colors.surface, colors.surfaceSubtle, colors.primarySoft].flatMap((fill) =>
       [[colors.text, fill], [colors.textMuted, fill]]),

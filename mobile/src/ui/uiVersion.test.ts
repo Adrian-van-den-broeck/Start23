@@ -1,8 +1,11 @@
 import { effectiveUiVersion, initialUiVersion, implementedSlices } from './uiVersion';
 
 describe('user-selectable UI resolution', () => {
-  test.each([undefined, 'v1', 'invalid', 'V2', ''])('defaults %s to V1', value => {
+  test.each(['v1', 'invalid', 'V2', ''])('defaults %s to V1', value => {
     expect(initialUiVersion(value)).toBe('v1');
+  });
+  test.each([undefined, 'v3'])('the current presentation uses the V2 controller adapters for %s', flag => {
+    expect(initialUiVersion(flag)).toBe('v2');
   });
   test('an explicit V2 build default is supported', () => {
     expect(initialUiVersion('v2')).toBe('v2');

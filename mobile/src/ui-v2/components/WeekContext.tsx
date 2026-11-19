@@ -1,3 +1,4 @@
+import { studioPresentation } from '../../ui-v3/presentation';
 import { StyleSheet, View } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { Text } from '../primitives/Text';
@@ -13,11 +14,11 @@ export function WeekContext({ model, showStatus = true }: { model: WeekHomeViewM
   const last = end.toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' });
   const range = `${first}${sameMonth ? '–' : ' – '}${last}`;
   const full = (date: Date) => date.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  return <View style={styles.context}>
+  return <View style={[styles.context, studioPresentation && styles.inline]}>
     <Text testID="week-range" variant="supporting" tone="textMuted" accessibilityLabel={`${full(start)} – ${full(end)}`}>
       {range}
     </Text>
     {showStatus ? <Text variant="label">{t(`week.state.${model.state}`)}</Text> : null}
   </View>;
 }
-const styles = StyleSheet.create({ context: { gap: space[4] } });
+const styles = StyleSheet.create({ inline: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', columnGap: space[12] }, context: { gap: space[4] } });

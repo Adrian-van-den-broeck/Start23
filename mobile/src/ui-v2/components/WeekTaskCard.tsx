@@ -1,3 +1,5 @@
+import { studioPresentation } from '../../ui-v3/presentation';
+import { TrackCover } from '../../ui-v3/TrackCover';
 import { StyleSheet, View } from 'react-native';
 import { Button } from '../primitives/Button';
 import { Card } from '../primitives/Card';
@@ -8,6 +10,14 @@ import { colors, radius, space } from '../tokens';
 export function WeekTaskCard({ status, heading, supporting, actionLabel, onAction, disabled = false, icon = 'week' }: {
   status: string; heading: string; supporting?: string; actionLabel: string; onAction: () => void; disabled?: boolean; icon?: IconName;
 }) {
+  if (studioPresentation) return <View testID="week-task-card" style={{ gap: space[12] }}>
+    <TrackCover>
+      <Text variant="caption" tone="textInverse">{status}</Text>
+      <Text variant="screenTitle" tone="textInverse" accessibilityRole="header">{heading}</Text>
+    </TrackCover>
+    {supporting ? <Text variant="supporting" tone="textMuted">{supporting}</Text> : null}
+    <Button label={actionLabel} trailingIcon="forward" onPress={onAction} disabled={disabled} />
+  </View>;
   return <Card testID="week-task-card" padding="focus" elevated style={styles.card}>
     <View style={styles.copy}>
       <View style={styles.status}><Icon name={icon} size={20} /><Text variant="supporting" tone="primary" style={styles.statusLabel}>{status}</Text></View>

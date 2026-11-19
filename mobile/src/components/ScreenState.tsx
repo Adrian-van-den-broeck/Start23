@@ -1,3 +1,5 @@
+import { Masthead } from '../ui-v3/Masthead';
+import { studioPresentation } from '../ui-v3/presentation';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppHeader } from '../ui-v2/components/AppHeader';
@@ -9,9 +11,9 @@ type ScreenStateProps = { loading?: boolean; message?: string; title: string; };
 export function ScreenState({ loading = false, message, title }: ScreenStateProps) {
   return <SafeAreaView style={styles.safeArea}>
     <ScrollView contentContainerStyle={styles.content}>
-      <AppHeader title="WOMBO" landscape="ridges" />
+      {studioPresentation ? <Masthead title={title} /> : <AppHeader title="WOMBO" landscape="ridges" />}
       <Card elevated padding="form" style={{ gap: space[24] }}>
-        <Text variant="sectionTitle" accessibilityRole="header">{title}</Text>
+        {!studioPresentation && <Text variant="sectionTitle" accessibilityRole="header">{title}</Text>}
         {loading ? <View accessibilityState={{ busy: true }}><ActivityIndicator color={colors.primary} size="large" /></View> : null}
         {message ? <Notice>{message}</Notice> : null}
       </Card>

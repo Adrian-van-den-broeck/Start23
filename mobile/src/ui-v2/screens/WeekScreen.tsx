@@ -1,5 +1,7 @@
+import { focusHeading as focusScreenHeading } from '../../ui-v3/focusHeading';
+import { studioPresentation } from '../../ui-v3/presentation';
 import { useRef, useState, type ReactNode } from 'react';
-import { AccessibilityInfo, ScrollView, StyleSheet, View, type ScrollViewProps } from 'react-native';
+import { ScrollView, StyleSheet, View, type ScrollViewProps } from 'react-native';
 import { ShellSafeArea } from '../components/ShellInsets';
 import { WeekHeader } from '../components/WeekHeader';
 import { useLanguage } from '../../i18n/LanguageProvider';
@@ -44,7 +46,7 @@ export function WeekScreen({ model, error, busy, onAction, onOpenWorkout, onProf
     <ScrollView testID="week-home-scroll" {...scrollProps} contentContainerStyle={styles.content}>
       <WeekHeader title={t('planning.week')} onProfile={onProfile} profileLabel={t('planning.profile')}
         disabled={busy} titleRef={heading} onTitleLayout={() => {
-          if (!focused.current && heading.current) { focused.current = true; AccessibilityInfo.sendAccessibilityEvent(heading.current, 'focus'); }
+          if (!focused.current && heading.current) { focused.current = true; focusScreenHeading(heading.current); }
         }} />
       <View style={styles.context}><WeekContext model={model} showStatus={!task || model.state === 'active' || model.state === 'activePending'} /></View>
       {initialLoading ? <><Text accessibilityLiveRegion="polite">{t('common.loading')}</Text><Skeleton /></> : <ContentTransition>
@@ -58,30 +60,40 @@ export function WeekScreen({ model, error, busy, onAction, onOpenWorkout, onProf
             : <Card padding="focus" elevated><Text variant="body">{t(`week.empty.${model.empty}`)}</Text></Card> : null}
           {task && action ? <WeekTaskCard {...task} icon={action === 'review' ? 'document' : action === 'draft' ? 'list' : 'week'} actionLabel={t(`week.action.${action}`)} disabled={busy} onAction={() => onAction(action)} /> : null}
           <View style={styles.navigation}>
+             {studioPresentation && model.progress && model.progress.planned > 0 && (
+              <View accessible={false} importantForAccessibility="no-hide-descendants" style={styles.track}>
+                <View style={[styles.fill, { width: `${100 * model.progress.completed / model.progress.planned}%` }]} />
+              </View>
+            )}
             {model.progress ? <Text variant="supporting" tone="textMuted">{t(model.progress.planned === 1 ? 'week.progress.one' : 'week.progress', model.progress)}</Text> : null}
             <QuickActionRow icon="calendar" label={t('week.action.calendar')} disabled={busy} onAction={() => onAction('calendar')} />
           </View>
           {attentionGroup}
           <View style={styles.tools} testID="week-training-tools">
             <Text variant="sectionTitle" accessibilityRole="header">{t('week.tools')}</Text>
-            <Card elevated>
+            <ToolsSurface>
               <QuickActionRow icon="activities" label={t('week.activities')} disabled={busy} onAction={onActivities} />
               <View style={styles.rowDivider}><Divider /></View>
               <QuickActionRow icon="document" label={t('week.checkIn')} disabled={busy} onAction={onCheckIn} />
               <View style={styles.rowDivider}><Divider /></View>
               <QuickActionRow icon="intensity" label={t('planning.myZones')} disabled={busy} onAction={onZones} />
               {model.mainAction !== 'prepare' ? <><View style={styles.rowDivider}><Divider /></View><QuickActionRow icon="week" label={t('week.action.prepare')} disabled={busy} onAction={() => onAction('prepare')} /></> : null}
-            </Card>
+            </ToolsSurface>
           </View>
           {goalName ? <Card elevated style={styles.goal}><GoalSummaryRow label={t('week.goalLabel')} name={goalName}
             accessibilityLabel={t('week.goal', { name: goalName })} disabled={busy} onAction={onGoal} /></Card> : null}
         </View>
       </ContentTransition>}
-      {controls ? <View testID="week-version-controls" style={styles.development}><Divider /><View style={styles.developmentControls}>{controls}</View></View> : null}
+      {__DEV__ && controls ? <View testID="week-version-controls" style={styles.development}><Divider /><View style={styles.developmentControls}>{controls}</View></View> : null}
     </ScrollView>
   </ShellSafeArea>;
 }
+function ToolsSurface({ children }: { children: ReactNode }) {
+  return studioPresentation ? <View>{children}</View> : <Card elevated>{children}</Card>;
+}
 const styles = StyleSheet.create({
+  track: { height: 4, overflow: 'hidden', borderRadius: 2, backgroundColor: colors.border, marginVertical: space[8] },
+  fill: { height: '100%', backgroundColor: colors.primary },
   frame: { flex: 1, backgroundColor: colors.background },
   content: { padding: layout.phoneGutter, width: '100%', maxWidth: layout.readingWidth, alignSelf: 'center' },
   context: { marginTop: space[12], marginBottom: space[16] },

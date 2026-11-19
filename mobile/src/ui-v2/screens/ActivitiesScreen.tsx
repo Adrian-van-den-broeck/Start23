@@ -1,3 +1,5 @@
+import { studioPresentation } from '../../ui-v3/presentation';
+import { Masthead } from '../../ui-v3/Masthead';
 import { FlashList } from '@shopify/flash-list';
 import { useState, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
@@ -44,13 +46,14 @@ export function ActivitiesScreen({ rows, pending, busy, error, controls, onBack,
       contentContainerStyle={styles.content} extraData={busy}
       ItemSeparatorComponent={() => <View style={{ height: space[16] }} />}
       ListHeaderComponent={<View style={styles.stack}>
-        <View>
+        {studioPresentation ? <Masthead title={t('shell.activities')}
+          trailing={<ProfileAction label={t('planning.profile')} onPress={onProfile} disabled={busy} />} /> : <View>
           <View style={[styles.heading, stacked && styles.stacked]}>
             <Text variant="display" accessibilityRole="header" style={!stacked && styles.title}>{t('shell.activities')}</Text>
             <ProfileAction label={t('planning.profile')} onPress={onProfile} disabled={busy} />
           </View>
           <View pointerEvents="none" style={styles.landscape}><HeaderLandscape compact variant="treesRiver" /></View>
-        </View>
+        </View>}
         <ActivityStatus busy={busy} error={error} />
         {pending ? <Card elevated style={styles.card} testID="activity-pending">
           <Text variant="sectionTitle" accessibilityRole="header">{t('rpe.awaiting')}</Text>
@@ -91,7 +94,7 @@ function AddActivityBanner({ label, disabled, disabledReason, onPress }: {
       accessibilityState={{ disabled }} disabled={disabled} onPress={onPress}
       onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)}
       style={[styles.banner, pressed && states.pressed, disabled && styles.disabled]}>
-      {!disabled ? <ActionLandscape /> : null}
+      {!studioPresentation && !disabled ? <ActionLandscape /> : null}
       <View accessible={false} importantForAccessibility="no-hide-descendants" style={styles.plus}><Icon name="add" /></View>
       <Text variant="button" accessible={false} style={[styles.title, { color: disabled ? colors.text : colors.textInverse }]}>{label}</Text>
       <Icon name="forward" color={disabled ? colors.text : colors.textInverse} />

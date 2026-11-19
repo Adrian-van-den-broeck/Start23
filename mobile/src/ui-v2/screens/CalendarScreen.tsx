@@ -1,3 +1,6 @@
+import { SwipeSurface } from '../../ui-v3/SwipeSurface';
+import { studioPresentation } from '../../ui-v3/presentation';
+import { Masthead } from '../../ui-v3/Masthead';
 import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View, useWindowDimensions, type ScrollViewProps } from 'react-native';
 import { ShellSafeArea } from '../components/ShellInsets';
@@ -32,7 +35,11 @@ export function CalendarScreen({ model, mode, anchor, loading, error, onModeChan
   const stacked = width < 393 || fontScale >= 1.5;
   return <ShellSafeArea style={styles.frame}>
     <ScrollView testID="calendar-scroll" {...scrollProps} style={styles.scroll} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
+      {studioPresentation ? <Masthead title={t('calendar.title')}
+        leading={<HeaderAction label={t('week.return')} onPress={onBack} />}
+        trailing={onProfile ? <ProfileAction label={t('planning.profile')} onPress={onProfile} /> : undefined}>
+        <Text variant="supporting" tone="textMuted">{t('calendar.approvedOnly')}</Text>
+      </Masthead> : <View style={styles.header}>
         <View style={[styles.utility, stacked && styles.stackedUtility]}>
           <HeaderAction label={t('week.return')} onPress={onBack} />
           {onProfile ? <ProfileAction label={t('planning.profile')} onPress={onProfile} /> : null}
@@ -44,23 +51,25 @@ export function CalendarScreen({ model, mode, anchor, loading, error, onModeChan
             <Text variant="supporting" tone="textMuted">{t('calendar.approvedOnly')}</Text>
           </View>
         </View>
-      </View>
+      </View>}
       <SegmentedControl options={(['week', 'month'] as const).map(value => ({ value, label: t(`calendar.${value}`) }))}
         role="tab" value={mode} onChange={onModeChange} accessibilityLabel={t('calendar.title')} />
-      <CalendarRangeNavigation model={model} mode={mode} anchor={anchor} onMove={onMove} onToday={onToday} />
-      {loading ? <Text accessibilityLiveRegion="polite">{t('common.loading')}</Text> : null}
-      {error ? <Card style={styles.notice}><Text accessibilityLiveRegion="polite" style={{ color: colors.destructive }}>{t('calendar.loadFailed')}</Text><Text>{error}</Text><Button label={t('calendar.retry')} onPress={onRetry} /></Card> : null}
-      {mode === 'week' ? <WeekAgenda days={model.days} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : <>
-        <MonthGrid days={model.days} known={model.rangeKnown} onSelectDate={onSelectDate} />
-        <View testID="calendar-selected-day" style={styles.notice}>
-          <Card elevated style={styles.notice}>
-            <DayHeader day={model.selectedDay} known={model.rangeKnown} />
-            <Button variant="secondary" label={t('calendar.selectedWeek')} onPress={() => onModeChange('week')} />
-            {!model.selectedDay.workouts.length ? <CalendarDayList day={model.selectedDay} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : null}
-          </Card>
-          {model.selectedDay.workouts.length ? <CalendarDayList day={model.selectedDay} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : null}
-        </View>
-      </>}
+      <SwipeSurface style={styles.notice} translate={false} context={mode + anchor} onSwipe={direction => onMove(direction === 1 ? -1 : 1)}>
+        <CalendarRangeNavigation model={model} mode={mode} anchor={anchor} onMove={onMove} onToday={onToday} />
+        {loading ? <Text accessibilityLiveRegion="polite">{t('common.loading')}</Text> : null}
+        {error ? <Card style={styles.notice}><Text accessibilityLiveRegion="polite" style={{ color: colors.destructive }}>{t('calendar.loadFailed')}</Text><Text>{error}</Text><Button label={t('calendar.retry')} onPress={onRetry} /></Card> : null}
+        {mode === 'week' ? <WeekAgenda days={model.days} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : <>
+          <MonthGrid days={model.days} known={model.rangeKnown} onSelectDate={onSelectDate} />
+          <View testID="calendar-selected-day" style={styles.notice}>
+            <Card elevated style={styles.notice}>
+              <DayHeader day={model.selectedDay} known={model.rangeKnown} />
+              <Button variant="secondary" label={t('calendar.selectedWeek')} onPress={() => onModeChange('week')} />
+              {!model.selectedDay.workouts.length ? <CalendarDayList day={model.selectedDay} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : null}
+            </Card>
+            {model.selectedDay.workouts.length ? <CalendarDayList day={model.selectedDay} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : null}
+          </View>
+        </>}
+      </SwipeSurface>
       {!model.rangeKnown && model.loadedRange ? <View testID="calendar-retained-range" style={styles.notice}>
         <Text variant="label">{t('calendar.retainedRange', { from: fullDate(model.loadedRange.fromDate), to: fullDate(isoDate(addDays(model.loadedRange.toDate, -1))) })}</Text>
         {model.retainedDays.length ? <WeekAgenda days={model.retainedDays} known onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : <Text>{t('calendar.retainedEmpty')}</Text>}

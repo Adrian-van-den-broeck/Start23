@@ -1,3 +1,4 @@
+import { studioPresentation } from '../../ui-v3/presentation';
 import { fireEvent, render } from '@testing-library/react-native';
 import * as Native from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -44,7 +45,8 @@ test('header callbacks and disabled state stay literal, landscape stays decorati
   expect(Native.StyleSheet.flatten(view.getByRole('button', { name: 'Profile' }).props.style)).toMatchObject({ minHeight: 48, minWidth: 48 });
   await fireEvent.press(view.getByRole('button', { name: 'Profile' })); expect(profile).not.toHaveBeenCalled();
   await fireEvent.press(view.getByRole('button', { name: 'Return to Week' })); expect(back).toHaveBeenCalledTimes(1);
-  expect(view.getByTestId('header-landscape', { includeHiddenElements: true }).props.pointerEvents).toBe('none');
+  if (studioPresentation) expect(view.queryByTestId('header-landscape')).toBeNull();
+  else expect(view.getByTestId('header-landscape', { includeHiddenElements: true }).props.pointerEvents).toBe('none');
 });
 test('owned safe areas are removed once; independent detail retains modal bottom area', async () => {
   const view = await render(<SafeAreaProvider initialMetrics={{ frame: { x: 0, y: 0, width: 393, height: 800 }, insets: { top: 24, bottom: 24, left: 0, right: 0 } }}>

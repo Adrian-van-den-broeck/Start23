@@ -1,5 +1,10 @@
+import { studioPresentation } from '../../ui-v3/presentation';
+
 export const space = { 4: 4, 8: 8, 12: 12, 16: 16, 24: 24, 32: 32, 48: 48 } as const;
-export const radius = { inset: 8, control: 12, button: 16, card: 20, sheet: 28, pill: 999 } as const;
+const legacyRadius = { inset: 8, control: 12, button: 16, card: 20, sheet: 28, pill: 999 } as const;
+export const radius = studioPresentation
+  ? { ...legacyRadius, control: 10, button: 12, card: 16, sheet: 24 } as const
+  : legacyRadius;
 const focusPadding = space[24];
 export const layout = {
   phoneGutter: 16, wideGutter: 24, readingWidth: 600, cardPadding: 16,

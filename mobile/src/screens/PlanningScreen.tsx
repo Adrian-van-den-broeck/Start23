@@ -70,7 +70,7 @@ import { planningCreationViewModel } from '../ui-v2/utils/planningCreationViewMo
 import { calendarViewModel } from '../ui-v2/utils/calendarViewModel';
 import { type CalendarNavigation } from '../features/calendar/useCalendarNavigation';
 import { weekHomeViewModel, type WeekAction } from '../ui-v2/utils/weekHomeViewModel';
-import { UiVersionControl } from '../ui/UiVersionControl';
+import { showUiVersionControl, UiVersionControl } from '../ui/UiVersionControl';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { formatIsoDateInput } from '../lib/dateInput';
 import { workoutCardDescription } from '../lib/workoutPresentation';
@@ -866,7 +866,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
       kind === 'draft' || (kind === 'prepare' && flow.swipeDraft) ? 'creation' : kind === 'review' ? 'review' : 'existing');
     if (kind === 'review') setReviewWorkoutId(null);
   };
-  const controls = <UiVersionControl disabled={locked || activityBusy || sheetOpen} onSelect={(version) => {
+  const controls = showUiVersionControl() && <UiVersionControl disabled={locked || activityBusy || sheetOpen} onSelect={(version) => {
     if (!locked && !activityBusy && !sheetOpen && !detailWorkout) {
       if (calendarOpen) { setCalendarVersion(effectiveUiVersion(version, 'calendar')); if (props.destination && !task) { if (version === 'v1') flow.openCalendar(); setRootVersion(effectiveUiVersion(version, 'week')); } }
       else if (!task) {

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { studioPresentation } from '../../ui-v3/presentation';
+import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { parseCalendarDate } from '../../features/calendar/calendarDates';
@@ -10,13 +11,17 @@ import type { CalendarDay } from '../utils/calendarViewModel';
 export function MonthGrid({ days, known, onSelectDate }: { days: readonly CalendarDay[]; known: boolean; onSelectDate: (date: string) => void; }) {
   const { locale, t } = useLanguage();
   const { width, fontScale } = useWindowDimensions();
+  const formats = useMemo(() => ({
+    full: new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+    short: new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' }),
+  }), [locale]);
   const [focusedDate, setFocusedDate] = useState<string | null>(null);
   // Include the real grid-card inset and perimeter when choosing the accessible list.
-  const list = (Math.min(width, layout.readingWidth) - layout.phoneGutter * 2 - space[8] * 2 - layout.decorativeLine * 2) / 7 < layout.touch || fontScale > 1.2;
+  const list = (Math.min(width, layout.readingWidth) - layout.phoneGutter * 2 - (studioPresentation ? 0 : space[8] * 2) - layout.decorativeLine * 2) / 7 < layout.touch || fontScale > 1.2;
   const rows = Array.from({ length: Math.ceil(days.length / 7) }, (_, index) => days.slice(index * 7, index * 7 + 7));
   function dateCell(day: CalendarDay) {
     const date = parseCalendarDate(day.date);
-    const dateLabel = date.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const dateLabel = formats.full.format(date);
     const count = t(day.workouts.length === 1 ? 'week.sessionCount.one' : 'week.sessionCount.other', { count: day.workouts.length });
     const sports = [...new Set(day.workouts.map(workout => workout.summary.discipline))];
     const info = [known ? count : t('calendar.rangeUnknown'), ...sports.map(sport => t(`common.${sport}`)), day.restDays.length ? t('common.restDay') : '', day.today ? t('common.today') : ''].filter(Boolean).join(' \u00b7 ');
@@ -26,9 +31,9 @@ export function MonthGrid({ days, known, onSelectDate }: { days: readonly Calend
       onFocus={() => setFocusedDate(day.date)} onBlur={() => setFocusedDate(null)}
       style={[styles.date, list ? styles.listDate : styles.gridDate, day.selected && styles.selected, day.today && styles.today, focusedDate === day.date && styles.focused]}>
       <Text accessible={false} importantForAccessibility="no" variant="label" tone={day.inMonth ? 'text' : 'textMuted'}>
-        {list ? date.toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' }) : date.getDate()}
+        {list ? formats.short.format(date) : date.getDate()}
       </Text>
-      <Text accessible={false} importantForAccessibility="no" variant={list ? 'supporting' : 'caption'} tone="textMuted">{list ? info : known ? String(day.workouts.length) : '\u2014'}</Text>
+      {(!studioPresentation || list || !known || day.workouts.length > 0) && <Text accessible={false} importantForAccessibility="no" variant={list ? 'supporting' : 'caption'} tone="textMuted">{list ? info : known ? String(day.workouts.length) : '\u2014'}</Text>}
       {!list && shortInfo ? <Text accessible={false} importantForAccessibility="no" variant="caption" tone="textMuted">{shortInfo}</Text> : null}
     </Pressable>;
   }
@@ -52,15 +57,15 @@ export function MonthGrid({ days, known, onSelectDate }: { days: readonly Calend
   </Card>;
 }
 const styles = StyleSheet.create({
-  container: { gap: space[12] }, gridCard: { padding: space[8] },
+  container: { gap: space[12] }, gridCard: { padding: studioPresentation ? 0 : space[8] },
   weekdays: { flexDirection: 'row', paddingVertical: space[8] }, weekday: { flex: 1, textAlign: 'center', textTransform: 'uppercase', fontWeight: '600' },
   list: { gap: space[4] }, grid: { borderWidth: layout.decorativeLine, borderColor: colors.border, borderRadius: radius.control, overflow: 'hidden' },
   gridRow: { flexDirection: 'row' },
   date: { minWidth: layout.touch, minHeight: layout.touch, borderWidth: layout.focusOutline, borderColor: 'transparent', padding: space[4], gap: space[4], justifyContent: 'center' },
   listDate: { width: '100%', padding: space[12], borderRadius: radius.control, borderBottomColor: colors.border },
-  gridDate: { flex: 1, alignItems: 'center', minHeight: 64, borderRightWidth: layout.decorativeLine, borderBottomWidth: layout.decorativeLine, borderRightColor: colors.border, borderBottomColor: colors.border },
+  gridDate: { flex: 1, alignItems: 'center', minHeight: studioPresentation ? 50 : 64, borderRightWidth: layout.decorativeLine, borderBottomWidth: layout.decorativeLine, borderRightColor: colors.border, borderBottomColor: colors.border },
   selected: { backgroundColor: colors.primarySoft, borderColor: colors.primary, borderRightColor: colors.primary, borderBottomColor: colors.primary, borderRadius: radius.control, borderRightWidth: layout.focusOutline, borderBottomWidth: layout.focusOutline },
   today: { backgroundColor: colors.warningSoft, borderRadius: radius.control }, focused: { borderColor: colors.focus, borderRightColor: colors.focus, borderBottomColor: colors.focus, borderRightWidth: layout.focusOutline, borderBottomWidth: layout.focusOutline },
-  legend: { gap: space[4], paddingHorizontal: space[4], paddingBottom: space[4] },
+  legend: { gap: space[4], paddingHorizontal: studioPresentation ? space[12] : space[4], paddingBottom: studioPresentation ? space[12] : space[4] },
   todayLegend: { alignSelf: 'flex-start', backgroundColor: colors.warningSoft, borderRadius: radius.inset, paddingHorizontal: space[4] },
 });

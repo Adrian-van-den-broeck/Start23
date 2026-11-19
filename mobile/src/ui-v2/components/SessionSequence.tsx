@@ -1,3 +1,5 @@
+import { studioPresentation } from '../../ui-v3/presentation';
+import { SegmentProfile } from '../../ui-v3/SegmentProfile';
 import { StyleSheet, View } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { Text } from '../primitives/Text';
@@ -12,6 +14,7 @@ export function SessionSequence({ segments }: { segments: readonly SegmentViewMo
   const { t } = useLanguage();
   return <Card style={styles.sequence}>
     <Text variant="sectionTitle" accessibilityRole="header">{t('detail.sequence')}</Text>
+    {studioPresentation && <SegmentProfile segments={segments} />}
     {segments.length === 0 ? <Text>{t('detail.noSegments')}</Text> : segments.map((segment, index) => (
       <View key={`${segment.sequence}:${index}`} style={styles.block}>
         {index > 0 ? <Divider /> : null}

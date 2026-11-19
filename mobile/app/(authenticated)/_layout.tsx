@@ -1,3 +1,4 @@
+import { useMotionPolicy } from '@/ui-v2/motion/useMotionPolicy';
 import { BlurView } from 'expo-blur';
 import { Redirect, Stack, usePathname, useRouter } from 'expo-router';
 import { useEffect } from 'react';
@@ -35,6 +36,7 @@ export default function AuthenticatedLayout() {
 }
 
 function AuthenticatedContent({ accessToken }: { accessToken: string }) {
+  const { reducedMotion } = useMotionPolicy();
   const { pendingRpe } = useActivityFlow();
   const presentation = useOptionalPlanningPresentation();
   const { effectiveVersion } = useUiVersion();
@@ -42,7 +44,7 @@ function AuthenticatedContent({ accessToken }: { accessToken: string }) {
   return <View style={[styles.shell, v2 && { backgroundColor: finalColors.background }]}>
     <PendingRpeReminder accessToken={accessToken} v2={v2} />
     <ShellInsets top={v2 && pendingRpe.length > 0}>
-      <Stack screenOptions={{ animation: 'fade_from_bottom', animationDuration: 220,
+      <Stack screenOptions={{ animation: reducedMotion ? 'none' : 'fade_from_bottom', animationDuration: 220,
         contentStyle: { backgroundColor: v2 ? finalColors.background : colors.canvas }, headerShown: false }} />
     </ShellInsets>
   </View>;

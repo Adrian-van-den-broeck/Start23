@@ -1,3 +1,4 @@
+import { studioPresentation } from '../../ui-v3/presentation';
 import type { ReactNode } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import type { ZoneMetricKind, ZoneProfileSnapshot } from '../../api/types';
@@ -35,8 +36,8 @@ export function ZoneTable({ boundaries, metricKind }: {
   const stacked = width < 360 || fontScale >= 1.5;
   return <View style={styles.table}>
     {boundaries.map(boundary => <View key={boundary.zone_number} style={[styles.tableRow, stacked && styles.stacked]}>
-      <Text variant="label" style={styles.zone}>Z{boundary.zone_number}</Text>
-      <Text style={styles.range}>{zoneValue(metricKind, boundary.lower_value)}{' – '}{zoneValue(metricKind, boundary.upper_value)}</Text>
+      <Text variant="label" style={[styles.zone, studioPresentation && styles.zoneLabel]}>Z{boundary.zone_number}</Text>
+      <Text style={[styles.range, studioPresentation && styles.numeric]}>{zoneValue(metricKind, boundary.lower_value)}{' – '}{zoneValue(metricKind, boundary.upper_value)}</Text>
     </View>)}
   </View>;
 }
@@ -69,5 +70,7 @@ const styles = StyleSheet.create({
   table: { borderRadius: radius.inset, borderWidth: layout.decorativeLine, borderColor: colors.border, overflow: 'hidden' },
   tableRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space[8], padding: space[12], borderBottomWidth: layout.decorativeLine, borderBottomColor: colors.border },
   stacked: { flexDirection: 'column', alignItems: 'flex-start' },
+  zoneLabel: { minWidth: 40, color: colors.primary, backgroundColor: colors.primarySoft, paddingHorizontal: 8, borderRadius: 4, textAlign: 'center' },
+  numeric: { fontVariant: ['tabular-nums'], fontWeight: '600' },
   zone: { color: colors.primary }, range: { flexShrink: 1 },
 });

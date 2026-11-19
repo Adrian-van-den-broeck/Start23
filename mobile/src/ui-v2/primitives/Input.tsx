@@ -1,3 +1,4 @@
+import { studioPresentation } from '../../ui-v3/presentation';
 import { useState, type RefObject } from 'react';
 import { StyleSheet, TextInput, useWindowDimensions, View, type TextInputProps } from 'react-native';
 import { colors, layout, radius, space, typography } from '../tokens';
@@ -21,7 +22,7 @@ export function Input({ label, hint, error, optionalLabel, disabledReason, disab
   return <FormField label={compact && unit ? `${label} (${unit})` : label} hint={hint} error={error}
     optionalLabel={optionalLabel} disabledReason={disabledReason}>
     {(labelId) => <View style={{ gap: space[8] }}>
-      {icon && compact ? <IconTile name={icon} size="field" /> : null}
+      {icon && compact && !studioPresentation ? <IconTile name={icon} size="field" /> : null}
       <View style={[styles.control, locked && styles.locked, error && { borderColor: colors.destructive }]}>
         {icon && !compact ? <View style={{ paddingLeft: space[12] }}><IconTile name={icon} size="field" /></View> : null}
         {readOnly ? <Text accessibilityLabel={`${fullLabel}: ${props.value ?? ''}`} style={styles.readOnly}>{props.value}</Text> :

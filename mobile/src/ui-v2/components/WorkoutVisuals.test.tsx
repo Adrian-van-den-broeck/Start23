@@ -1,3 +1,4 @@
+import { typography } from '../tokens';
 import { render } from '@testing-library/react-native';
 import * as SecureStore from 'expo-secure-store';
 import { StyleSheet } from 'react-native';
@@ -53,6 +54,6 @@ test('sequence keeps nonascending supplied order, every target branch and exact 
   for (const heading of view.getAllByTestId(/segment-heading-/)) {
     expect(heading.props.numberOfLines).toBeUndefined();
     expect(heading.props.maxFontSizeMultiplier).toBeUndefined();
-    expect(StyleSheet.flatten(heading.props.style).fontSize).toBe(22);
+    expect(StyleSheet.flatten(heading.props.style).fontSize).toBe(typography.cardTitle.fontSize);
   }
 });

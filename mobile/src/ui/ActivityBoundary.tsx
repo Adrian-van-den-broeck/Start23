@@ -8,7 +8,7 @@ import { ActivitiesScreen } from '../ui-v2/screens/ActivitiesScreen';
 import { ActivityEntryScreen } from '../ui-v2/screens/ActivityEntryScreen';
 import { ActivityFeedbackScreen } from '../ui-v2/screens/ActivityFeedbackScreen';
 import { activityViewModel } from '../ui-v2/utils/activityViewModel';
-import { UiVersionControl } from './UiVersionControl';
+import { showUiVersionControl, UiVersionControl } from './UiVersionControl';
 import type { UiVersion } from './uiVersion';
 
 export type ActivityView = 'history' | 'entry' | 'feedback';
@@ -30,7 +30,7 @@ export function ActivityBoundary(props: ComponentProps<typeof ActivityScreen> & 
     if (props.view === 'entry' && flow.feedbackActivity) props.onView('feedback');
     if (props.view === 'feedback' && !flow.feedbackActivity && !props.correctionId) props.onView('history');
   }, [props.version, props.view, props.correctionId, props.onView, flow.busy, flow.feedbackActivity]);
-  const controls = <UiVersionControl disabled={props.switchLocked || flow.busy} onSelect={props.onVersion} />;
+  const controls = showUiVersionControl() && <UiVersionControl disabled={props.switchLocked || flow.busy} onSelect={props.onVersion} />;
   if (props.version === 'v1') return <View style={{ flex: 1 }}>{controls}<ActivityScreen
     onBack={props.onBack} onOpenProfile={props.onOpenProfile} onSignOut={props.onSignOut} /></View>;
   const correction = props.correctionId ? flow.activities.find(activity => activity.id === props.correctionId) : undefined;

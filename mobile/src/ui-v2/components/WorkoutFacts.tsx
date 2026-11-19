@@ -1,6 +1,8 @@
+import { studioPresentation } from '../../ui-v3/presentation';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { Divider } from '../primitives/Divider';
+import { Icon } from '../primitives/Icon';
 import { IconTile } from '../primitives/IconTile';
 import { Text } from '../primitives/Text';
 import { colors, layout, space } from '../tokens';
@@ -18,9 +20,10 @@ export function WorkoutFacts({ measures, intensity, variant = 'scheduled' }: Pic
   return <View style={[styles.facts, stacked && styles.stacked]}>
     {hasMeasure ? <>
       <View style={[styles.fact, stacked && styles.stackedFact]}>
-        <IconTile name={durationMinutes !== null ? 'clock' : 'location'} size="field" />
+         {studioPresentation ? <Icon name={durationMinutes !== null ? 'clock' : 'location'} size={20} /> :
+          <IconTile name={durationMinutes !== null ? 'clock' : 'location'} size="field" />}
         <View style={styles.value}>
-          {durationMinutes !== null ? <Text variant={variant === 'focus' ? 'body' : 'numeric'} accessibilityLabel={t('detail.minutesSpoken', { value: durationMinutes })}>
+          {durationMinutes !== null ? <Text variant={studioPresentation ? 'numericCompact' : variant !== 'focus' ? 'numeric' : 'body'} accessibilityLabel={t('detail.minutesSpoken', { value: durationMinutes })}>
             {t('common.durationMinutes', { minutes: durationMinutes })}
           </Text> : null}
           {distanceMeters !== null ? <Text variant={durationMinutes === null ? 'numeric' : 'body'}
@@ -33,7 +36,7 @@ export function WorkoutFacts({ measures, intensity, variant = 'scheduled' }: Pic
         importantForAccessibility="no-hide-descendants" style={styles.rule} />}
     </> : null}
     <View style={[styles.fact, stacked && styles.stackedFact]}>
-      <IconTile name="intensity" size="field" />
+      {studioPresentation ? <Icon name="intensity" size={20} /> : <IconTile name="intensity" size="field" />}
       <Text variant="label" style={styles.value}>{t(`detail.intensity.${intensity}`)}</Text>
     </View>
   </View>;

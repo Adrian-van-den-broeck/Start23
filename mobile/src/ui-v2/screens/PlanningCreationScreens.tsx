@@ -1,3 +1,6 @@
+import { studioPresentation } from '../../ui-v3/presentation';
+import { SwipeSurface } from '../../ui-v3/SwipeSurface';
+import { PlacementRail } from '../../ui-v3/PlacementRail';
 import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
 import type { Discipline } from '../../api/types';
@@ -135,15 +138,18 @@ export function SelectionScreen({ model, onTransition, onContinue, ...task }: Ta
         <Text variant="label" tone="warning">{warning.title}</Text><Text tone="warning">{warning.message}</Text>
       </View>
     </View>)}
-    {candidate ? <Card padding="focus" elevated style={styles.form} testID="selection-candidate">
-      <SelectionSummary key={candidate.occurrenceId} workout={candidate} focus />
-      <View style={styles.stack}>
-        <Button label={t('creation.choose')} accessibilityLabel={`${t('creation.choose')} \u00b7 ${candidate.name}`}
-          trailingIcon="forward" busy={task.busy} onPress={() => onTransition('accept')} />
-        <Button label={t('creation.pass')} accessibilityLabel={`${t('creation.pass')} \u00b7 ${candidate.name}`}
-          variant="secondary" busy={task.busy} onPress={() => onTransition('pass')} />
-      </View>
-    </Card> : model.state === 'collecting' ? <Card padding="focus" elevated style={styles.summary} testID="selection-empty">
+    {candidate ? <SwipeSurface key={candidate.occurrenceId} disabled={task.busy} onSwipe={direction => onTransition(direction > 0 ? 'accept' : 'pass')}>
+      <Card padding="focus" elevated style={styles.form} testID="selection-candidate">
+        <SelectionSummary key={candidate.occurrenceId} workout={candidate} focus />
+        <View style={styles.stack}>
+          <Button label={t('creation.choose')} accessibilityLabel={`${t('creation.choose')} \u00b7 ${candidate.name}`}
+            trailingIcon="forward" busy={task.busy} onPress={() => onTransition('accept')} />
+          <Button label={t('creation.pass')} accessibilityLabel={`${t('creation.pass')} \u00b7 ${candidate.name}`}
+            variant="secondary" busy={task.busy} onPress={() => onTransition('pass')} />
+        </View>
+        {studioPresentation && <Text variant="caption" tone="textMuted">{t('creation.swipeChoice')}</Text>}
+      </Card>
+    </SwipeSurface> : model.state === 'collecting' ? <Card padding="focus" elevated style={styles.summary} testID="selection-empty">
       {!model.exhausted && task.busy ? <View accessible={false} importantForAccessibility="no-hide-descendants" style={styles.stack}>
         <View style={styles.skeletonCircle} /><View style={styles.skeletonLine} /><View style={styles.skeletonLine} />
       </View> : null}
@@ -208,15 +214,18 @@ export function PlacementScreen({ model, mode, onMode, onPlace, onSubmit, onSele
         <Text variant="label" tone="textMuted">{t('creation.choiceNumber', { number: index + 1 })}</Text>
         <SelectionSummary workout={workout} />
         <Divider />
-        {model.availableDates.map((date) => {
-          const label = new Date(`${date}T12:00:00`).toLocaleDateString(locale, {
-            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-          });
-          return <ChoiceRow key={date} label={label}
-            accessibilityLabel={`${t('creation.choiceNumber', { number: index + 1 })} · ${workout.name} · ${label}`}
-            selected={placements.get(workout.occurrenceId) === date} disabled={task.busy}
-            onPress={() => onPlace(workout.occurrenceId, date)} />;
-        })}
+        <PlacementRail label={t('creation.choiceNumber', { number: index + 1 }) + ' \u00b7 ' + workout.name} dates={model.availableDates} selected={placements.get(workout.occurrenceId)} disabled={task.busy}
+          onSelect={date => onPlace(workout.occurrenceId, date)}>
+          {model.availableDates.map((date) => {
+            const label = new Date(`${date}T12:00:00`).toLocaleDateString(locale, {
+              weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+            });
+            return <ChoiceRow key={date} label={label}
+              accessibilityLabel={`${t('creation.choiceNumber', { number: index + 1 })} · ${workout.name} · ${label}`}
+              selected={placements.get(workout.occurrenceId) === date} disabled={task.busy}
+              onPress={() => onPlace(workout.occurrenceId, date)} />;
+          })}
+        </PlacementRail>
       </Card>)}
     </View>}
     <Button label={t(mode === 'automatic' ? 'creation.submitAutomatic' : 'creation.submitManual')}

@@ -1,3 +1,4 @@
+import { studioPresentation } from '../../ui-v3/presentation';
 import { fireEvent, render, within } from '@testing-library/react-native';
 import * as SecureStore from 'expo-secure-store';
 import { StyleSheet, View } from 'react-native';
@@ -55,7 +56,8 @@ test('pending warning follows week navigation; neutral pending is not amber or a
   const view = await render(screen(cases[3].model));
   expect(view.queryByTestId('week-session-hero')).toBeNull();
   const task = view.getByTestId('week-task-card');
-  expect(StyleSheet.flatten(task.props.style).backgroundColor).toBe(colors.surface);
+  if (studioPresentation) expect(within(task).getByTestId('track-cover')).toBeTruthy();
+  else expect(StyleSheet.flatten(task.props.style).backgroundColor).toBe(colors.surface);
   expect(StyleSheet.flatten(view.getByTestId('week-attention-warnings').props.style).backgroundColor).toBe(colors.warningSoft);
   const labels = view.getAllByRole('button').map((button) => button.props.accessibilityLabel);
   expect(labels.indexOf('Review attention items')).toBeGreaterThan(labels.indexOf('View week'));
@@ -98,13 +100,13 @@ test('no-plan has a single Prepare action; absent goal has no row', async () => 
   expect(view.getByTestId('week-version-controls')).toBeTruthy();
 });
 
-test('release rendering retains the supplied version switch', async () => {
+test('release rendering hides even an explicitly supplied version switch', async () => {
   const original = __DEV__;
   try {
     Object.assign(globalThis, { __DEV__: false });
     const view = await render(screen(cases[1].model));
-    expect(view.getByTestId('week-version-controls')).toBeTruthy();
-    expect(view.getByTestId('supplied-dev-controls')).toBeTruthy();
+    expect(view.queryByTestId('week-version-controls')).toBeNull();
+    expect(view.queryByTestId('supplied-dev-controls')).toBeNull();
   } finally { Object.assign(globalThis, { __DEV__: original }); }
 });
 

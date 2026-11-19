@@ -1,7 +1,10 @@
+import { studioPresentation } from '../../ui-v3/presentation';
+import { palette } from '../../ui-v3/tokens';
+
 const primary = '#124D43';
 const primarySoft = '#E7EFE8';
 
-export const colors = {
+const legacy = {
   background: '#FAFAF6',
   surface: '#FFFEFA',
   surfaceElevated: '#FFFFFF',
@@ -30,3 +33,5 @@ export const colors = {
   scrim: 'rgba(16,43,40,0.28)',
   landscape: { sage: '#76A396', sun: '#FFE3A6' },
 } as const;
+
+export const colors = studioPresentation ? palette : legacy;

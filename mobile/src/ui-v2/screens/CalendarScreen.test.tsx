@@ -1,3 +1,5 @@
+import { colors } from '../tokens';
+import { studioPresentation } from '../../ui-v3/presentation';
 import { fireEvent, render, within } from '@testing-library/react-native';
 import * as Native from 'react-native';
 import * as SecureStore from 'expo-secure-store';
@@ -113,8 +115,8 @@ test.each([393, 412])('Month keeps >=48 grid targets at default text/%sdp, with 
   expect(view.getByText('Number = workout count')).toBeTruthy();
   const selected = view.getByTestId('calendar-date-2026-10-07');
   const today = view.getByTestId('calendar-date-2026-10-05');
-  expect(Native.StyleSheet.flatten(selected.props.style)).toMatchObject({ minWidth: 48, minHeight: 64, backgroundColor: '#E7EFE8', borderColor: '#124D43' });
-  expect(Native.StyleSheet.flatten(today.props.style)).toMatchObject({ backgroundColor: '#F8EED6' });
+  expect(Native.StyleSheet.flatten(selected.props.style)).toMatchObject({ minWidth: 48, minHeight: studioPresentation ? 50 : 64, backgroundColor: colors.primarySoft, borderColor: colors.primary });
+  expect(Native.StyleSheet.flatten(today.props.style)).toMatchObject({ backgroundColor: colors.warningSoft });
   expect(selected.props.accessibilityLabel).toContain('Rest day');
   expect(today.props.accessibilityState.selected).toBe(false);
 });

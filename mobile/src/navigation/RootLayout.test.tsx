@@ -1,3 +1,4 @@
+import { initialUiVersion } from '../ui/uiVersion';
 import { render } from '@testing-library/react-native';
 import type { PropsWithChildren } from 'react';
 
@@ -80,6 +81,6 @@ describe('RootLayout provider order', () => {
 
     expect(view.getByText('bottom-sheet-language:system')).toBeTruthy();
     expect(view.getByText('router-stack')).toBeTruthy();
-    expect(view.getByText('stack-ui:v1')).toBeTruthy();
+    expect(view.getByText('stack-ui:' + initialUiVersion(process.env.EXPO_PUBLIC_UI_VERSION))).toBeTruthy();
   });
 });

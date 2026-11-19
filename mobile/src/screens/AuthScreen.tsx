@@ -1,3 +1,7 @@
+import type { ReactNode } from 'react';
+import { TrackCover } from '../ui-v3/TrackCover';
+import { Wordmark } from '../ui-v3/Masthead';
+import { studioPresentation } from '../ui-v3/presentation';
 import { useState } from 'react';
 import Constants from 'expo-constants';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
@@ -91,22 +95,27 @@ export function AuthScreen() {
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
       <ScrollView automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'} contentContainerStyle={styles.content}
         keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        <AppHeader title="WOMBO" landscape="ridges" />
-        <View style={{ gap: space[12] }}>
-          <Text variant="supporting" tone="primary">Train bewust</Text>
-          <Text variant="display">Train met richting.{'\n'}Beslis zelf.</Text>
-          <Text tone="textMuted">{mode === 'sign-in'
-            ? 'Alles wat je nodig hebt voor een doordachte trainingsweek, afgestemd op jouw ritme.'
-            : 'Maak je persoonlijke trainingsruimte en bouw stap voor stap aan een plan dat bij je past.'}</Text>
-        </View>
-        <Card elevated padding="form" style={{ gap: layout.fieldGroupGap }}>
+        {studioPresentation ? <TrackCover>
+          <Wordmark inverse />
+          <Text variant="screenTitle" tone="textInverse" accessibilityRole="header">Train met richting.{'\n'}Beslis zelf.</Text>
+        </TrackCover> : <>
+          <AppHeader title="WOMBO" landscape="ridges" />
+          <View style={{ gap: space[12] }}>
+            <Text variant="supporting" tone="primary">Train bewust</Text>
+            <Text variant="display">Train met richting.{'\n'}Beslis zelf.</Text>
+            <Text tone="textMuted">{mode === 'sign-in'
+              ? 'Alles wat je nodig hebt voor een doordachte trainingsweek, afgestemd op jouw ritme.'
+              : 'Maak je persoonlijke trainingsruimte en bouw stap voor stap aan een plan dat bij je past.'}</Text>
+          </View>
+        </>}
+        <FormSurface>
           <SegmentedControl role="tab" accessibilityLabel="Account" disabled={loading}
             options={[{value: 'sign-in', label: 'Aanmelden'}, {value: 'sign-up', label: 'Registreren'}]}
             value={mode} onChange={selectMode} />
-          <View style={{ gap: space[4] }}>
+          {!studioPresentation && <View style={{ gap: space[4] }}>
             <Text variant="supporting" tone="primary">{mode === 'sign-in' ? 'Welkom terug' : 'Klaar voor je start?'}</Text>
             <Text variant="sectionTitle" accessibilityRole="header">{mode === 'sign-in' ? 'Aanmelden' : 'Account maken'}</Text>
-          </View>
+          </View>}
           <Input autoCapitalize="none" autoComplete="email" inputMode="email" keyboardType="email-address"
             label="E-mailadres" onChangeText={setEmail} placeholder="jij@voorbeeld.nl" value={email} icon="profile" />
           <Input autoCapitalize="none" autoComplete={mode === 'sign-in' ? 'current-password' : 'new-password'}
@@ -115,8 +124,8 @@ export function AuthScreen() {
             onChangeText={setPasswordConfirmation} placeholder="Nogmaals je wachtwoord" secureTextEntry value={passwordConfirmation} /> : null}
           {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error}><Notice tone="error">{error}</Notice></View> : null}
           {notice ? <View accessibilityLiveRegion="polite"><Notice tone="info">{notice}</Notice></View> : null}
-          <Button label={mode === 'sign-in' ? 'Aanmelden' : 'Account maken'} busy={loading} disabled={loading || !canSubmit} onPress={() => void submit()} />
-        </Card>
+          <Button label={mode === 'sign-in' ? 'Aanmelden' : 'Account maken'} busy={loading} disabled={loading || !canSubmit} onPress={submit} />
+        </FormSurface>
         <Notice>Je sessie blijft versleuteld op dit apparaat. Trainingswijzigingen worden nooit zonder jouw bevestiging toegepast.</Notice>
         {showVerificationBuild ? <View accessibilityLabel="Staging build diagnostics" style={{ gap: space[4] }}>
           <Text variant="caption" tone="textMuted">Staging candidate {Constants.expoConfig?.version ?? 'unknown'}
@@ -127,6 +136,11 @@ export function AuthScreen() {
     </KeyboardAvoidingView>
   </SafeAreaView>;
 }
+function FormSurface({ children }: { children: ReactNode }) {
+  return studioPresentation ? <View style={{ gap: space[16] }}>{children}</View>
+    : <Card elevated padding="form" style={{ gap: layout.fieldGroupGap }}>{children}</Card>;
+}
+
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.background, flex: 1 },
   content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },

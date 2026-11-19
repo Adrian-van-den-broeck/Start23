@@ -1,3 +1,5 @@
+import { studioPresentation } from '../../ui-v3/presentation';
+import { SessionLead } from '../../ui-v3/SessionLead';
 import { StyleSheet, View } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { Button } from '../primitives/Button';
@@ -13,11 +15,12 @@ export function NextSession({ model, onOpenWorkout }: { model: WeekHomeViewModel
   const count = t(model.sessions.length === 1 ? 'week.sessionCount.one' : 'week.sessionCount.other', { count: model.sessions.length });
   return <View style={styles.group}>
     {model.sessions.map(({ id, summary }, index) => <View key={id} testID={index === 0 ? 'week-session-hero' : 'week-session-sibling'}>
-      <WorkoutSummary summary={summary} variant="focus" context={index === 0 ? <View style={styles.context}>
+      {studioPresentation && index === 0 ? <SessionLead summary={summary} heading={model.isToday ? t('week.todayLabel') + ' \u00b7 ' + count : t('week.nextDay')}
+        date={date} count={model.isToday ? undefined : count} onOpen={() => onOpenWorkout(id)} /> : <WorkoutSummary summary={summary} variant="focus" context={index === 0 ? <View style={styles.context}>
         <Text variant="label">{t(model.isToday ? 'week.todayLabel' : 'week.nextDay')}{model.isToday ? ` · ${count}` : ''}</Text>
         {!model.isToday ? <><Text tone="textMuted">{date}</Text><Text variant="supporting" tone="textMuted">{count}</Text></> : null}
       </View> : null} footer={<Button label={t('week.viewWorkoutLabel')}
-        accessibilityLabel={t('week.viewWorkout', { name: summary.name })} trailingIcon="forward" onPress={() => onOpenWorkout(id)} />} />
+        accessibilityLabel={t('week.viewWorkout', { name: summary.name })} trailingIcon="forward" onPress={() => onOpenWorkout(id)} />} />}
     </View>)}
   </View>;
 }

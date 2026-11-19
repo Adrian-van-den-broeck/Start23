@@ -1,3 +1,5 @@
+import { studioPresentation } from '../../ui-v3/presentation';
+import { Masthead } from '../../ui-v3/Masthead';
 import type { ReactNode } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { HeaderLandscape } from '../assets/HeaderLandscape';
@@ -12,6 +14,9 @@ export function BrandedFormHeader({ caption, onBack, onSignOut, children, backLa
 }) {
   const { width, fontScale } = useWindowDimensions();
   const stacked = width < 393 || fontScale > 1 || backLabel.length > 8;
+  if (studioPresentation) return <Masthead title={caption}
+    leading={onBack ? <HeaderAction label={backLabel} onPress={onBack} /> : undefined}
+    trailing={<View style={styles.actions}>{children}<Button label="Uit" accessibilityLabel="Afmelden" onPress={onSignOut} variant="tertiary" trailingIcon="logout" /></View>} />;
   const brand = <View style={styles.brand}><Text variant="screenTitle" tone="primary">WOMBO</Text><Text tone="textMuted">{caption}</Text></View>;
   return <View style={{ gap: space[8] }}>
     {stacked ? brand : null}
@@ -29,8 +34,10 @@ export function FormComposition({ title, description, children, progress }: {
 }) {
   return <View style={{ gap: space[24] }}>
     {progress}
-    <View style={{ gap: space[8] }}><Text variant="display" accessibilityRole="header">{title}</Text><Text tone="textMuted">{description}</Text></View>
-    <Card padding="form" elevated style={{ gap: layout.fieldGroupGap }}>{children}</Card>
+    <View style={{ gap: space[8] }}><Text variant={studioPresentation ? 'sectionTitle' : 'display'} accessibilityRole="header">{title}</Text><Text tone="textMuted">{description}</Text></View>
+    {studioPresentation
+      ? <View style={{ gap: layout.fieldGroupGap }}>{children}</View>
+      : <Card padding="form" elevated style={{ gap: layout.fieldGroupGap }}>{children}</Card>}
   </View>;
 }
 const styles = StyleSheet.create({
