@@ -6,6 +6,7 @@
 .runtime/
 .railway/
 tmp/
+.tmp/
 mobile/dist/
 
 # Python caches from standalone verification scripts
