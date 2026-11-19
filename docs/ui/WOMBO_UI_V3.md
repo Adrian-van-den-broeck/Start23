@@ -45,7 +45,7 @@ The sign-in and registration captures use the Expo app entry. Training captures 
 
 ## Build and regression results
 
-Strict TypeScript, including unused-local and unused-parameter checks, passed. Each of the V3, V2 and V1 configurations passed 629 mobile tests across 70 suites. The backend suite passed 778 tests, including athlete-facing contract and private-load checks.
+The original checkpoint passed 629 mobile tests across 70 suites for each of V3, V2 and V1. After changing the default, strict TypeScript and unused-code checks passed, and both unset (V2) and explicit V3 passed all 635 mobile tests across 71 suites. The initial unset run had one navigation timeout during native compilation. That test passed on its own with the default timeout, and the full rerun passed with a 15-second runner timeout. The backend suite passed all 778 tests, including athlete-facing contract and private-load checks.
 
 The shipping V3 source exported Android and iOS Hermes bundles and a web bundle. The temporary QA route was absent from all three outputs. A consecutive V1, V2 and V3 build using the same transform cache produced the intended inlined flag in both the route provider and design selection. Each exported web app rendered its password field. The V3 build displayed the track cover, and both fallback builds displayed their released sign-in presentation. The offline Expo compatibility check reported the installed dependencies up to date against the locally available SDK metadata.
 
@@ -55,7 +55,11 @@ The Android API 35 Pixel 4 emulator exercised workout detail, month paging, choo
 
 Web pointer tests exercised both swipe directions, cancelled input, vertical scrolling and choosing a date. The sign-in and supporting screens were also inspected at mobile widths from 320 to 430 CSS pixels.
 
-The calendar keeps its agenda mounted during paging, reuses locale date formatters and leaves vertical scrolling to the native scroll view. The following Android frame samples used three pairs of 350 ms vertical swipes across the month calendar. Measurements come from Android `dumpsys gfxinfo` on an Expo development client at 1080 x 2280.
+The calendar keeps its agenda mounted during paging, reuses locale date formatters and leaves vertical scrolling to the native scroll view.
+
+### Earlier development-client samples
+
+These Android samples used three pairs of 350 ms vertical swipes across the month calendar. Measurements came from Android `dumpsys gfxinfo` on an Expo development client at 1080 x 2280.
 
 | Calendar sample | Rendered frames | Frames flagged as janky | Median | 95th percentile |
 | --- | ---: | ---: | ---: | ---: |
@@ -63,7 +67,30 @@ The calendar keeps its agenda mounted during paging, reuses locale date formatte
 | Final implementation, minified production-mode JS, SwiftShader | 115 | 84 (73%) | 57 ms | 150 ms |
 | Final implementation, minified production-mode JS, host NVIDIA GPU | 44 | 29 (66%) | 65 ms | 150 ms |
 
-All three emulator samples missed the 16.7 ms frame budget. They establish a release gate for calendar scrolling. Repeat the same interactions on representative iOS and Android hardware with signed release builds, including VoiceOver/TalkBack, large text, reduced motion, and both warm and cold navigation. An iOS simulator and physical devices were unavailable in this Windows environment.
+All three samples missed the 16.7 ms frame budget and used different build or renderer settings.
+
+### Matched Android release benchmark
+
+The two local, non-debuggable Gradle `release` APKs run the same fixture entry and real month calendar from this branch. The only APK archive entry that differs is the Hermes bundle with the baked-in `EXPO_PUBLIC_UI_VERSION`. The APKs were built for x86_64 and signed with the development key for local installation. The fixture fixes the October 2026 date range, selected day, six workout occurrences and one rest day. It bypasses sign-in and uses no network requests. The QA entry is outside the shipping router.
+
+Both APKs used the same API 35 Pixel 4 emulator at 1080 × 2280, 60 Hz, 440 dpi and font scale 1.0, with the NVIDIA host renderer. Six runs alternated direction and balanced version order (V2, V3, V3, V2, V2, V3). Each run warmed up with two swipe pairs, then recorded three pairs of 350 ms vertical swipes at x=540 between y=440 and y=1800. The measurement reset `gfxinfo` per swipe and pooled valid, unflagged frames. Frame time is `FrameCompleted - IntendedVsync`, and p95 uses nearest rank. [Android frame statistics documentation](https://developer.android.com/tools/dumpsys#ui-performance)
+
+| Presentation | Frames | Median | p95 |
+| --- | ---: | ---: | ---: |
+| V2 | 1,111 | 17.43 ms | 25.91 ms |
+| V3 | 1,093 | 17.38 ms | 18.85 ms |
+
+V3's pooled median was essentially flat (−0.05 ms) and its p95 fell by 7.06 ms. Per-run p95 ranged from 18.85 to 27.52 ms for V2 and from 18.77 to 18.92 ms for V3. Emulator variability and the fixture workload limit the result to this comparison.
+
+The untraced frame data showed a shorter V3 p95 from render sync to buffer swap (2.97 vs. 4.80 ms) and from buffer swap to frame completion (13.74 vs. 17.76 ms). The median for the latter stage was 0.83 ms longer in V3. Individual stage percentiles use different frames and cannot be added to reconstruct the end-to-end p95.
+
+Separate Android system traces recorded graphics, view, input and scheduler activity using the same swipe sequence. V2/V3 p95 was 9.01/9.21 ms for UI-thread `Choreographer#doFrame`, 18.21/18.32 ms for RenderThread `DrawFrames`, and 0.59/0.50 ms for `ReactScrollView.onScrollChanged`. The traced UI-thread median rose from 6.89 to 7.70 ms. These stage differences did not translate into a pooled scroll regression. The follow-up implementation commit was limited to the build selector and its test. The local raw frame dumps, traces, fixture and capture script are under `.tmp/v3-calendar` in the workspace.
+
+### Open release checks
+
+- Physical Android and iOS release hardware. Repeat the scroll comparison and confirm swipe, drag-and-drop, tap alternatives, large text, reduced motion, and TalkBack or VoiceOver with warm and cold navigation.
+- Native iOS build and runtime. The Windows workstation has no Xcode or iOS simulator.
+- Authenticated release flow. The fixture starts directly at the calendar, so real-token sign-in, owner-scoped data, pending review, and stale-safe plan transitions still need release-runtime evidence.
 
 ## Cover asset
 
