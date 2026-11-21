@@ -10,7 +10,7 @@ import type { CalendarDay } from '../utils/calendarViewModel';
 import { DayHeader } from './DayHeader';
 import { WorkoutSummary } from './WorkoutSummary';
 
-export function CalendarDayList({ day, known, onOpenWorkout, onMoveWorkout }: { day: CalendarDay; known: boolean; onOpenWorkout: (id: string) => void; onMoveWorkout?: (id: string) => (() => void) | undefined; }) {
+export function CalendarDayList({ day, known, onOpenWorkout, onMoveWorkout, hideEmpty = false }: { day: CalendarDay; known: boolean; onOpenWorkout: (id: string) => void; onMoveWorkout?: (id: string) => (() => void) | undefined; hideEmpty?: boolean; }) {
   const { t } = useLanguage();
   return <View style={styles.rows}>
     {!known ? <Text tone="textMuted">{t('calendar.rangeUnknown')}</Text> : null}
@@ -50,7 +50,8 @@ export function CalendarDayList({ day, known, onOpenWorkout, onMoveWorkout }: { 
       <Text variant="label">{t('common.restDay')}</Text>
       <Text variant="supporting" tone="textMuted">{t(rest.reason === 'restriction_rest' ? 'calendar.restrictionRest' : 'calendar.scheduledRest')}</Text>
     </View>)}
-    {known && !day.workouts.length && !day.restDays.length ? <Text tone="textMuted" style={styles.empty}>{t('calendar.emptyDay')}</Text> : null}
+    {/* The day header already announces zero workouts; V3's week agenda drops the repeated sentence. */}
+    {known && !hideEmpty && !day.workouts.length && !day.restDays.length ? <Text tone="textMuted" style={styles.empty}>{t('calendar.emptyDay')}</Text> : null}
   </View>;
 }
 
@@ -64,15 +65,16 @@ export function WeekAgenda({ days, known, onOpenWorkout, onMoveWorkout }: { days
         {parseCalendarDate(day.date).toLocaleDateString(locale, { weekday: 'short' })}
       </Text>)}
     </View> : null}
-    {days.map((day) => <View key={day.date} testID={`calendar-day-${day.date}`} style={[styles.day, stacked && styles.stacked]}>
-      <View style={!stacked && styles.date}><DayHeader day={day} known={known} rail={!stacked} /></View>
+    {days.map((day) => { const quiet = studioPresentation && known && !day.workouts.length && !day.restDays.length;
+      return <View key={day.date} testID={`calendar-day-${day.date}`} style={[styles.day, stacked && styles.stacked, quiet && stacked && styles.quietStacked]}>
+      <View style={[!stacked && styles.date, quiet && !stacked && styles.quietDate]}><DayHeader day={day} known={known} rail={!stacked} /></View>
       {!studioPresentation && !stacked && days.length === 7 ? <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={styles.rail}>
         <View style={styles.line} /><View style={styles.node} />
       </View> : null}
-      <View style={[styles.dayContent, stacked && styles.stackedContent]}>
-        <CalendarDayList day={day} known={known} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} />
+      <View style={[styles.dayContent, stacked && styles.stackedContent, quiet && styles.quietContent]}>
+        <CalendarDayList day={day} known={known} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} hideEmpty={studioPresentation} />
       </View>
-    </View>)}
+    </View>; })}
   </View>;
 }
 const styles = StyleSheet.create({
@@ -89,5 +91,6 @@ const styles = StyleSheet.create({
     borderWidth: layout.decorativeLine, borderColor: colors.borderControl, backgroundColor: colors.surfaceSubtle },
   dayContent: { flex: 1, paddingLeft: space[12], paddingVertical: space[16], justifyContent: 'center', minHeight: studioPresentation ? 64 : 96 },
   stackedContent: { flex: 0, paddingLeft: 0, paddingVertical: 0, minHeight: 0 },
+  quietDate: { paddingVertical: space[8] }, quietContent: { minHeight: 0, paddingVertical: space[8] }, quietStacked: { paddingVertical: space[8] },
   rows: { gap: space[16] }, actions: { gap: space[12] }, rest: { gap: space[4] }, empty: { fontStyle: 'italic' },
 });

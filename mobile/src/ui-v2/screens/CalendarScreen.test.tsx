@@ -37,7 +37,13 @@ test.each(['en', 'nl'] as const)('Week renders seven complete date sections, sou
   expect(day.getByText(language === 'en' ? 'Rest due to a confirmed restriction.' : 'Rust vanwege een bevestigde beperking.')).toBeTruthy();
   const buttons = day.getAllByRole('button'); for (const button of buttons) await fireEvent.press(button);
   expect(callbacks.onOpenWorkout.mock.calls).toEqual([[workout.id], ['second']]);
-  expect(within(view.getByTestId('calendar-day-2026-10-11')).getByText(language === 'en' ? 'No workout planned.' : 'Geen training gepland.')).toBeTruthy();
+  const empty = within(view.getByTestId('calendar-day-2026-10-11'));
+  const emptyText = language === 'en' ? 'No workout planned.' : 'Geen training gepland.';
+  if (studioPresentation) {
+    // V3 drops the sentence repeated on every empty day; the day heading still announces zero workouts.
+    expect(empty.queryByText(emptyText)).toBeNull();
+    expect(empty.getByRole('header').props.accessibilityLabel).toContain(language === 'en' ? '0 workouts' : '0 trainingen');
+  } else expect(empty.getByText(emptyText)).toBeTruthy();
 });
 test.each(['2026-10-06', '2026-10-07'])('Month selected date %s keeps empty/populated readable details below orientation grid', async (date) => {
   dimensions(412, 1);

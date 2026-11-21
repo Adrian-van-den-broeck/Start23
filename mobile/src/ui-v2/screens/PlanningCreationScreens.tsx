@@ -1,6 +1,7 @@
 import { studioPresentation } from '../../ui-v3/presentation';
 import { SwipeSurface } from '../../ui-v3/SwipeSurface';
 import { PlacementRail } from '../../ui-v3/PlacementRail';
+import { ChosenRow } from '../../ui-v3/ChosenRow';
 import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
 import type { Discipline } from '../../api/types';
@@ -83,10 +84,10 @@ export function AvailabilityScreen(props: TaskProps & {
 
 function AcceptedList({ accepted }: { accepted: readonly SelectionWorkout[] }) {
   const { t } = useLanguage();
-  return <View style={styles.summary} testID="accepted-occurrences">
+  return <View style={studioPresentation ? styles.chosen : styles.summary} testID="accepted-occurrences">
     <Text variant="sectionTitle" accessibilityRole="header">{t('creation.accepted')}</Text>
     {accepted.length === 0 ? <Text tone="textMuted">{t('creation.acceptedEmpty')}</Text> : null}
-    {accepted.map((workout, index) => <Card key={workout.occurrenceId} elevated style={styles.summary}>
+    {accepted.map((workout, index) => studioPresentation ? <ChosenRow key={workout.occurrenceId} {...workout} position={index + 1} /> : <Card key={workout.occurrenceId} elevated style={styles.summary}>
       <Text variant="label" tone="textMuted">{t('creation.choiceNumber', { number: index + 1 })}</Text>
       <SelectionSummary workout={workout} />
     </Card>)}
@@ -171,10 +172,10 @@ export function SelectionScreen({ model, onTransition, onContinue, ...task }: Ta
         </View>
       </View>
     </View>
-    <View style={styles.summary} testID="accepted-occurrences">
+    <View style={studioPresentation ? styles.chosen : styles.summary} testID="accepted-occurrences">
       <Text variant="sectionTitle" accessibilityRole="header">{t('creation.accepted')}</Text>
       {model.accepted.length === 0 ? <Text tone="textMuted">{t('creation.acceptedEmpty')}</Text> : null}
-      {model.accepted.map((workout, index) => <Card key={workout.occurrenceId} elevated style={styles.summary}>
+      {model.accepted.map((workout, index) => studioPresentation ? <ChosenRow key={workout.occurrenceId} {...workout} position={index + 1} /> : <Card key={workout.occurrenceId} elevated style={styles.summary}>
         <Text variant="label" tone="textMuted">{t('creation.choiceNumber', { number: index + 1 })}</Text>
         <SelectionSummary workout={workout} />
       </Card>)}
@@ -246,7 +247,7 @@ export function PlacementScreen({ model, mode, onMode, onPlace, onSubmit, onSele
 }
 
 const styles = StyleSheet.create({
-  stack: { gap: space[12] },
+  stack: { gap: space[12] }, chosen: { gap: space[8] },
   placementGroup: { borderWidth: 0, padding: 0, backgroundColor: 'transparent', gap: 8 },
   placementSport: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space[8] },
   frame: { flex: 1 }, grow: { flex: 1 },

@@ -60,14 +60,20 @@ export function CalendarScreen({ model, mode, anchor, loading, error, onModeChan
         {error ? <Card style={styles.notice}><Text accessibilityLiveRegion="polite" style={{ color: colors.destructive }}>{t('calendar.loadFailed')}</Text><Text>{error}</Text><Button label={t('calendar.retry')} onPress={onRetry} /></Card> : null}
         {mode === 'week' ? <WeekAgenda days={model.days} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : <>
           <MonthGrid days={model.days} known={model.rangeKnown} onSelectDate={onSelectDate} />
-          <View testID="calendar-selected-day" style={styles.notice}>
+          {studioPresentation ? <View testID="calendar-selected-day" style={styles.selectedFlat}>
+            <DayHeader day={model.selectedDay} known={model.rangeKnown} />
+            <CalendarDayList day={model.selectedDay} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} />
+            <View style={styles.weekLink}>
+              <Button variant="tertiary" trailingIcon="forward" label={t('calendar.selectedWeek')} onPress={() => onModeChange('week')} />
+            </View>
+          </View> : <View testID="calendar-selected-day" style={styles.notice}>
             <Card elevated style={styles.notice}>
               <DayHeader day={model.selectedDay} known={model.rangeKnown} />
               <Button variant="secondary" label={t('calendar.selectedWeek')} onPress={() => onModeChange('week')} />
               {!model.selectedDay.workouts.length ? <CalendarDayList day={model.selectedDay} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : null}
             </Card>
             {model.selectedDay.workouts.length ? <CalendarDayList day={model.selectedDay} known={model.rangeKnown} onOpenWorkout={onOpenWorkout} onMoveWorkout={onMoveWorkout} /> : null}
-          </View>
+          </View>}
         </>}
       </SwipeSurface>
       {!model.rangeKnown && model.loadedRange ? <View testID="calendar-retained-range" style={styles.notice}>
@@ -85,4 +91,6 @@ const styles = StyleSheet.create({
   stackedUtility: { flexDirection: 'column', alignItems: 'stretch' },
   titleRegion: { minHeight: layout.artwork.compact }, art: { position: 'absolute', top: 0, left: -layout.phoneGutter, right: -layout.phoneGutter },
   titleCopy: { paddingTop: space[48] + space[16], gap: space[8] }, notice: { gap: space[16] },
+  selectedFlat: { gap: space[12], paddingTop: space[8], borderTopWidth: layout.decorativeLine, borderColor: colors.border },
+  weekLink: { alignItems: 'flex-start' },
 });
