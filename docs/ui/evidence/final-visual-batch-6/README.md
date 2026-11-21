@@ -1,0 +1,19 @@
+# Batch 6 native visual evidence
+
+These are actual Android renders of AvailabilityScreen and SelectionScreen in the integrated mobile worktree. M4 and M5 own appearance; S039, S040 and S091 own the mapped content/state family. The original references and mockups are hash-protected.
+
+The temporary gallery imports the production planningCreationViewModel and accepted primitives. Public DTO variants are clearly fixtures; callbacks record exact identifiers in an inert local ledger. They make no backend calls or athlete writes. They do not simulate server planning, approval, concurrency or scheduling. Controller behavior remains covered by the mobile tests and the source-scope hash comparison.
+
+Each page has a PNG, the actual UIAutomator XML, and device/fixture metadata. Capture refuses a missing fixture marker. Sequential overlapping viewports preserve each scroll sequence. Inspection JPEGs show four complete viewports with labels; they are review thumbnails, not stitched replacement screenshots.
+
+The matrix spans 320, 360, approximately 393 and 412 dp; default and 200% system font scale; Dutch and English. Additional fixtures exercise no days, one day, explicit reuse with missing historical availability, injuries/opt-ins, incomplete input, loading/unavailable/exhausted candidate, stale/error, busy, skipped and accepted summaries, repeated occurrences, placement-ready continuation, warning, distance-only, absent measures, long text and default RPE-description suppression.
+
+Preflight found an unresponsive existing Expo preview. Review uses the isolated IPv4 Expo server on port 8083 and emulator-5556, Pixel_4_API_35, Android 15/API 35, 1080 x 2280. Its existing data volume lacked installation space, so a fresh data image was created only under the workspace-owned .tmp/wombo-batch6-emulator directory. The installed AVD uses read-only mode, leaving its original data unchanged. First-launch Expo dialogs and the Android startup timeout were resolved before accepted captures. The Expo tools overlay is disabled only in this disposable review image. No raw emulator startup/environment logs are retained.
+
+Run scripts sequentially: native-review.py, run-matrix.py, native-interactions.py, native-accessibility.py, native-keyboard.py. Do not run two device-mutating scripts together. inspect-cases.py and native-audit.py may read completed cases during capture. Final checks run sequentially after gallery removal and emulator shutdown. scope-audit.json protects every baseline source, owner, mapper, route, V1 token and dependency manifest outside the four authorized changed files.
+
+Keyboard and TalkBack captures are separate native evidence. The disposable device reported a visible input method while rendering only its navigation strip, so those keyboard images were rejected. Final full-keypad captures use the same public fixture on the existing emulator-5554, Pixel_4_API_35_2, with previously verified Gboard. Both the approximately 393 dp/default and 320 dp/200% date fields remain fully visible above the actual keypad. Keyboard metadata explicitly records this device and the bounds before focus; screenshots avoid an accessibility dump after input focus. The paired XML is labeled before-focus, rather than claiming it represents a keyboard-visible hierarchy.
+
+Reduced-motion scales and TalkBack settings are restored in a finally block. The temporary route and emulator data are removed after review; production source contains no gallery route, fixture marker or native preference override. Original display density 440, font scale 1.0 and Dutch language are restored. The unresponsive prior preview server is replaced by a healthy IPv4 server on its original port 8081. Only the owned 8083 transport/server and disposable data are removed; original app/account preferences and AVD data are retained.
+
+This visual batch does not claim physical iOS/device acceptance, backend mutation coverage or whole-app release approval.

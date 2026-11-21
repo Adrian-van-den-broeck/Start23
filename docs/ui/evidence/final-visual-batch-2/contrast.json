@@ -1,0 +1,55 @@
+{
+  "source": "existing ui-v2/tokens/colors.ts",
+  "pairs": [
+    {
+      "foreground": "text",
+      "background": "background",
+      "ratio": 16.479809183776617,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "text",
+      "background": "primarySoft",
+      "ratio": 14.706031593379496,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textMuted",
+      "background": "surface",
+      "ratio": 5.794670367766425,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textInverse",
+      "background": "primary",
+      "ratio": 9.59689960234215,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "primary",
+      "background": "primarySoft",
+      "ratio": 8.259677625906914,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "primary",
+      "background": "surface",
+      "ratio": 9.59689960234215,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "foreground": "textInverse",
+      "background": "primary",
+      "ratio": 9.59689960234215,
+      "minimum": 3,
+      "pass": true
+    }
+  ],
+  "landscapeBehindText": false
+}

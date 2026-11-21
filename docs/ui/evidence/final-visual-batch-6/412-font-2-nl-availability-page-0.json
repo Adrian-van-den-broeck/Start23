@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-07T16:55:33.195544+00:00",
+  "serial": "emulator-5556",
+  "size": "Physical size: 1080x2280",
+  "density": "Physical density: 440\nOverride density: 419",
+  "fontScale": "2.0",
+  "fixture": {
+    "language": "nl",
+    "state": "availability",
+    "width": 412,
+    "fontScale": 2,
+    "inertActions": true
+  },
+  "provenance": "Actual AvailabilityScreen and SelectionScreen with public occurrence DTO variants; exact production mapper and primitives; inert mutation ledger; no backend or athlete writes"
+}

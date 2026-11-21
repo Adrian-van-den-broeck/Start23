@@ -1,0 +1,8 @@
+{
+  "temporaryFilesRemoved": [
+    "src/ui-v2/dev/ShellReviewBootstrap.ts",
+    "app/dev-shell-review.tsx"
+  ],
+  "rootLayoutByteIdenticalToBaseline": true,
+  "existingAcceptedDevHostsRetained": true
+}

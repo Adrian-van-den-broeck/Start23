@@ -1,0 +1,514 @@
+[
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "week",
+    "png": "320-font-1-nl-week.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "calendar",
+    "png": "320-font-1-nl-calendar.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "activities",
+    "png": "320-font-1-nl-activities.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "long-labels",
+    "png": "320-font-1-nl-long-labels.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "section": "week",
+    "png": "320-font-1-en-week.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "section": "calendar",
+    "png": "320-font-1-en-calendar.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "section": "activities",
+    "png": "320-font-1-en-activities.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 1,
+    "language": "en",
+    "section": "long-labels",
+    "png": "320-font-1-en-long-labels.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "week",
+    "png": "320-font-2-nl-week.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "calendar",
+    "png": "320-font-2-nl-calendar.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "activities",
+    "png": "320-font-2-nl-activities.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "long-labels",
+    "png": "320-font-2-nl-long-labels.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "section": "week",
+    "png": "320-font-2-en-week.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "section": "calendar",
+    "png": "320-font-2-en-calendar.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "section": "activities",
+    "png": "320-font-2-en-activities.png",
+    "density": 540.0
+  },
+  {
+    "width": 320,
+    "fontScale": 2,
+    "language": "en",
+    "section": "long-labels",
+    "png": "320-font-2-en-long-labels.png",
+    "density": 540.0
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "week",
+    "png": "360-font-1-nl-week.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "calendar",
+    "png": "360-font-1-nl-calendar.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "activities",
+    "png": "360-font-1-nl-activities.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "long-labels",
+    "png": "360-font-1-nl-long-labels.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "en",
+    "section": "week",
+    "png": "360-font-1-en-week.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "en",
+    "section": "calendar",
+    "png": "360-font-1-en-calendar.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "en",
+    "section": "activities",
+    "png": "360-font-1-en-activities.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 1,
+    "language": "en",
+    "section": "long-labels",
+    "png": "360-font-1-en-long-labels.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "week",
+    "png": "360-font-2-nl-week.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "calendar",
+    "png": "360-font-2-nl-calendar.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "activities",
+    "png": "360-font-2-nl-activities.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "long-labels",
+    "png": "360-font-2-nl-long-labels.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "en",
+    "section": "week",
+    "png": "360-font-2-en-week.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "en",
+    "section": "calendar",
+    "png": "360-font-2-en-calendar.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "en",
+    "section": "activities",
+    "png": "360-font-2-en-activities.png",
+    "density": 480.0
+  },
+  {
+    "width": 360,
+    "fontScale": 2,
+    "language": "en",
+    "section": "long-labels",
+    "png": "360-font-2-en-long-labels.png",
+    "density": 480.0
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "week",
+    "png": "393-font-1-nl-week.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "calendar",
+    "png": "393-font-1-nl-calendar.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "activities",
+    "png": "393-font-1-nl-activities.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "long-labels",
+    "png": "393-font-1-nl-long-labels.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "section": "week",
+    "png": "393-font-1-en-week.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "section": "calendar",
+    "png": "393-font-1-en-calendar.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "section": "activities",
+    "png": "393-font-1-en-activities.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 1,
+    "language": "en",
+    "section": "long-labels",
+    "png": "393-font-1-en-long-labels.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "week",
+    "png": "393-font-2-nl-week.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "calendar",
+    "png": "393-font-2-nl-calendar.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "activities",
+    "png": "393-font-2-nl-activities.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "long-labels",
+    "png": "393-font-2-nl-long-labels.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "en",
+    "section": "week",
+    "png": "393-font-2-en-week.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "en",
+    "section": "calendar",
+    "png": "393-font-2-en-calendar.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "en",
+    "section": "activities",
+    "png": "393-font-2-en-activities.png",
+    "density": 439.0
+  },
+  {
+    "width": 393,
+    "fontScale": 2,
+    "language": "en",
+    "section": "long-labels",
+    "png": "393-font-2-en-long-labels.png",
+    "density": 439.0
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "week",
+    "png": "412-font-1-nl-week.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "calendar",
+    "png": "412-font-1-nl-calendar.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "activities",
+    "png": "412-font-1-nl-activities.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "nl",
+    "section": "long-labels",
+    "png": "412-font-1-nl-long-labels.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "en",
+    "section": "week",
+    "png": "412-font-1-en-week.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "en",
+    "section": "calendar",
+    "png": "412-font-1-en-calendar.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "en",
+    "section": "activities",
+    "png": "412-font-1-en-activities.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 1,
+    "language": "en",
+    "section": "long-labels",
+    "png": "412-font-1-en-long-labels.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "week",
+    "png": "412-font-2-nl-week.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "calendar",
+    "png": "412-font-2-nl-calendar.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "activities",
+    "png": "412-font-2-nl-activities.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "nl",
+    "section": "long-labels",
+    "png": "412-font-2-nl-long-labels.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "en",
+    "section": "week",
+    "png": "412-font-2-en-week.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "en",
+    "section": "calendar",
+    "png": "412-font-2-en-calendar.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "en",
+    "section": "activities",
+    "png": "412-font-2-en-activities.png",
+    "density": 420.0
+  },
+  {
+    "width": 412,
+    "fontScale": 2,
+    "language": "en",
+    "section": "long-labels",
+    "png": "412-font-2-en-long-labels.png",
+    "density": 420.0
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "WeekScreen.tsx": {
+    "bodyUnchanged": true,
+    "sha256": "e01b5780fb71f36fdeb6eba8073f39ed481673a44ba0e3f3dc4da25cb1654e2e"
+  },
+  "CalendarScreen.tsx": {
+    "bodyUnchanged": true,
+    "sha256": "945827a115b73801bb0c81aa4bde8624e885c7f36d6382c45b4297f7bac28247"
+  },
+  "ActivitiesScreen.tsx": {
+    "bodyUnchanged": true,
+    "sha256": "cd74ee73fbbf69ef76678a2bce5c3b97119160313fd68476794ac9e9b793881f"
+  }
+}

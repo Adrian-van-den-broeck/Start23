@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-07T08:46:07.523707+00:00",
+  "serial": "emulator-5554",
+  "size": "Physical size: 1080x2280",
+  "density": "Physical density: 440\nOverride density: 540",
+  "fontScale": "2",
+  "fixture": {
+    "language": "en",
+    "state": "activePending",
+    "width": 320,
+    "fontScale": 2,
+    "inertActions": true
+  },
+  "provenance": "Actual WeekScreen with public test DTO variants and accepted shell components; inert task/navigation callbacks, real read-only detail modal; no fixture backend or athlete writes"
+}

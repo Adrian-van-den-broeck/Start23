@@ -1,0 +1,1802 @@
+{
+  "cases": [
+    {
+      "width": 393,
+      "fontScale": 1,
+      "language": "nl",
+      "state": "run",
+      "captures": 5,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 393,
+      "fontScale": 1,
+      "language": "nl",
+      "state": "bike",
+      "captures": 4,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 393,
+      "fontScale": 1,
+      "language": "nl",
+      "state": "swim",
+      "captures": 4,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 393,
+      "fontScale": 1,
+      "language": "nl",
+      "state": "distance",
+      "captures": 1,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 320,
+      "fontScale": 2,
+      "language": "nl",
+      "state": "run",
+      "captures": 8,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 320,
+      "fontScale": 2,
+      "language": "nl",
+      "state": "bike",
+      "captures": 5,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 320,
+      "fontScale": 2,
+      "language": "nl",
+      "state": "swim",
+      "captures": 5,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 320,
+      "fontScale": 2,
+      "language": "nl",
+      "state": "distance",
+      "captures": 2,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 320,
+      "fontScale": 1,
+      "language": "nl",
+      "state": "run",
+      "captures": 6,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 393,
+      "fontScale": 2,
+      "language": "nl",
+      "state": "run",
+      "captures": 6,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 393,
+      "fontScale": 1,
+      "language": "nl",
+      "state": "candidate",
+      "captures": 1,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 393,
+      "fontScale": 1,
+      "language": "en",
+      "state": "run",
+      "captures": 5,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 393,
+      "fontScale": 1,
+      "language": "en",
+      "state": "bike",
+      "captures": 4,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 393,
+      "fontScale": 1,
+      "language": "en",
+      "state": "swim",
+      "captures": 4,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 393,
+      "fontScale": 1,
+      "language": "en",
+      "state": "distance",
+      "captures": 1,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 320,
+      "fontScale": 2,
+      "language": "en",
+      "state": "run",
+      "captures": 8,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 320,
+      "fontScale": 2,
+      "language": "en",
+      "state": "bike",
+      "captures": 5,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 320,
+      "fontScale": 2,
+      "language": "en",
+      "state": "swim",
+      "captures": 5,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 320,
+      "fontScale": 2,
+      "language": "en",
+      "state": "distance",
+      "captures": 2,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 320,
+      "fontScale": 1,
+      "language": "en",
+      "state": "run",
+      "captures": 6,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 393,
+      "fontScale": 2,
+      "language": "en",
+      "state": "run",
+      "captures": 6,
+      "suppliedContentReachable": true
+    },
+    {
+      "width": 320,
+      "fontScale": 2,
+      "language": "en",
+      "state": "candidate",
+      "captures": 2,
+      "suppliedContentReachable": true
+    }
+  ],
+  "nativeTargets": [
+    {
+      "capture": "393-font-1-nl-run-page-0",
+      "label": "Sluiten",
+      "widthDp": 114.44191343963554,
+      "heightDp": 48.109339407744876,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-run-page-2",
+      "label": "RPE-uitleg",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-run-page-3",
+      "label": "RPE-uitleg",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-bike-page-0",
+      "label": "Sluiten",
+      "widthDp": 114.44191343963554,
+      "heightDp": 48.109339407744876,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-bike-page-1",
+      "label": "RPE-uitleg",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-bike-page-2",
+      "label": "RPE-uitleg",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-swim-page-0",
+      "label": "Sluiten",
+      "widthDp": 114.44191343963554,
+      "heightDp": 48.109339407744876,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-swim-page-1",
+      "label": "RPE-uitleg",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-swim-page-2",
+      "label": "RPE-uitleg",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-distance-page-0",
+      "label": "Sluiten",
+      "widthDp": 114.44191343963554,
+      "heightDp": 48.109339407744876,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-run-page-0",
+      "label": "Sluiten",
+      "widthDp": 152.0,
+      "heightDp": 59.25925925925926,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-run-page-5",
+      "label": "RPE-uitleg",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-run-page-6",
+      "label": "RPE-uitleg",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-bike-page-0",
+      "label": "Sluiten",
+      "widthDp": 152.0,
+      "heightDp": 59.25925925925926,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-bike-page-3",
+      "label": "RPE-uitleg",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-swim-page-0",
+      "label": "Sluiten",
+      "widthDp": 152.0,
+      "heightDp": 59.25925925925926,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-swim-page-3",
+      "label": "RPE-uitleg",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-distance-page-0",
+      "label": "Sluiten",
+      "widthDp": 152.0,
+      "heightDp": 59.25925925925926,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-run-page-0",
+      "label": "Sluiten",
+      "widthDp": 114.07407407407408,
+      "heightDp": 48.0,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-run-page-3",
+      "label": "RPE-uitleg",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-run-page-4",
+      "label": "RPE-uitleg",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-run-page-0",
+      "label": "Sluiten",
+      "widthDp": 151.98177676537586,
+      "heightDp": 59.40774487471526,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-run-page-3",
+      "label": "RPE-uitleg",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-run-page-4",
+      "label": "RPE-uitleg",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-candidate-page-0",
+      "label": "Sluiten",
+      "widthDp": 114.44191343963554,
+      "heightDp": 48.109339407744876,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-candidate-page-0",
+      "label": "Kiezen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-candidate-page-0",
+      "label": "Overslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-run-page-0",
+      "label": "Close",
+      "widthDp": 104.96583143507974,
+      "heightDp": 48.109339407744876,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-run-page-2",
+      "label": "RPE reference",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-run-page-3",
+      "label": "RPE reference",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-bike-page-0",
+      "label": "Close",
+      "widthDp": 104.96583143507974,
+      "heightDp": 48.109339407744876,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-bike-page-1",
+      "label": "RPE reference",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-bike-page-2",
+      "label": "RPE reference",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-swim-page-0",
+      "label": "Close",
+      "widthDp": 104.96583143507974,
+      "heightDp": 48.109339407744876,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-swim-page-1",
+      "label": "RPE reference",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-swim-page-2",
+      "label": "RPE reference",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-distance-page-0",
+      "label": "Close",
+      "widthDp": 104.96583143507974,
+      "heightDp": 48.109339407744876,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-run-page-0",
+      "label": "Close",
+      "widthDp": 135.40740740740742,
+      "heightDp": 59.25925925925926,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-run-page-5",
+      "label": "RPE reference",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-run-page-6",
+      "label": "RPE reference",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-bike-page-0",
+      "label": "Close",
+      "widthDp": 135.40740740740742,
+      "heightDp": 59.25925925925926,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-bike-page-3",
+      "label": "RPE reference",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-swim-page-0",
+      "label": "Close",
+      "widthDp": 135.40740740740742,
+      "heightDp": 59.25925925925926,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-swim-page-3",
+      "label": "RPE reference",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-distance-page-0",
+      "label": "Close",
+      "widthDp": 135.40740740740742,
+      "heightDp": 59.25925925925926,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-run-page-0",
+      "label": "Close",
+      "widthDp": 104.5925925925926,
+      "heightDp": 48.0,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-run-page-3",
+      "label": "RPE reference",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-run-page-4",
+      "label": "RPE reference",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-run-page-0",
+      "label": "Close",
+      "widthDp": 135.21640091116174,
+      "heightDp": 59.40774487471526,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-run-page-3",
+      "label": "RPE reference",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-run-page-4",
+      "label": "RPE reference",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-candidate-page-0",
+      "label": "Close",
+      "widthDp": 135.40740740740742,
+      "heightDp": 59.25925925925926,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-candidate-page-1",
+      "label": "Choose",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-candidate-page-1",
+      "label": "Pass",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592,
+      "pass": true
+    }
+  ],
+  "targetRounding": "Integer hierarchy bounds; less than one physical pixel endpoint tolerance",
+  "origins": [
+    {
+      "origin": "calendar",
+      "exactSelectedReturn": "Calendar",
+      "sameContentBoundsAndScroll": true,
+      "pass": true
+    },
+    {
+      "origin": "week",
+      "exactSelectedReturn": "Week",
+      "sameContentBoundsAndScroll": true,
+      "pass": true
+    }
+  ],
+  "acceptedCaptures": 102,
+  "artifacts": [
+    {
+      "path": "320-font-1-en-run-page-0.png",
+      "sha256": "c34f8871a24fdef50ae016baf0a85c340142416562c608a95142ed61ee55510e"
+    },
+    {
+      "path": "320-font-1-en-run-page-0.xml",
+      "sha256": "3a3175b0b23b0662c3d0cd34425d496dbdfc3bc5c9b1c8f1af187552cb89c327"
+    },
+    {
+      "path": "320-font-1-en-run-page-0.json",
+      "sha256": "75e212238b9ca0df097bf8b7d5e450978073e329bbc4432dc9facfa2641e888f"
+    },
+    {
+      "path": "320-font-1-en-run-page-1.png",
+      "sha256": "e8c0f0920287eeb2ac256990e142f95b27a6a2a9a12e189a64d3e3935151cff5"
+    },
+    {
+      "path": "320-font-1-en-run-page-1.xml",
+      "sha256": "f85522d572e3b153d968401255497888337e0369e021f51f4d7b20fb54cd3ed8"
+    },
+    {
+      "path": "320-font-1-en-run-page-1.json",
+      "sha256": "a7f052f19b3f026928748f4a20272f48875ba32f3adc3db9b0af245830fd2123"
+    },
+    {
+      "path": "320-font-1-en-run-page-2.png",
+      "sha256": "c07acd39cfaae67fe7a0583b1163b337191f7ec5384c6c20fa2c5da7f9238ac0"
+    },
+    {
+      "path": "320-font-1-en-run-page-2.xml",
+      "sha256": "36f57f96ec73de7b3dc1f485969c245655f917d199af7699c609432a2c3fe4c2"
+    },
+    {
+      "path": "320-font-1-en-run-page-2.json",
+      "sha256": "8b4411219bbe88f3e617920813cf13fa0c64f4427e676ef9fbe501265d52c4ce"
+    },
+    {
+      "path": "320-font-1-en-run-page-3.png",
+      "sha256": "f91f433606cdf24bd07d8ab4f9ea767f7626a1d0903bbaaca8cf74f52a23a0de"
+    },
+    {
+      "path": "320-font-1-en-run-page-3.xml",
+      "sha256": "8e45f3e22af73f1c599029284b08f86d047ad82fed81c36bd2c720846e111cf0"
+    },
+    {
+      "path": "320-font-1-en-run-page-3.json",
+      "sha256": "9ac313540802b337fbcdb167d1b7c54668d9e9843534f00a1183f5659a31441a"
+    },
+    {
+      "path": "320-font-1-en-run-page-4.png",
+      "sha256": "8075ce4923d6e5526c18335986da492892e7a28d2c4d2ebd3d9db13cd52825a1"
+    },
+    {
+      "path": "320-font-1-en-run-page-4.xml",
+      "sha256": "a1082ab23b0f60450089179340552941dc3522a31cd2bf3e2f04d657816be58f"
+    },
+    {
+      "path": "320-font-1-en-run-page-4.json",
+      "sha256": "954533cf6c4a70a8fcd597a7936ec530e027a7cf7afe46cec440fa801ef87ff9"
+    },
+    {
+      "path": "320-font-1-en-run-reference-expanded.png",
+      "sha256": "96478a2162942c82265972b8202a84cf830da3555a22d0566cfe6bad46e2d2d3"
+    },
+    {
+      "path": "320-font-1-en-run-reference-expanded.xml",
+      "sha256": "ede4c7812663a00cb0a0df4e19efab9cfb8037604ebbd9ea0db173bfed33edf6"
+    },
+    {
+      "path": "320-font-1-en-run-reference-expanded.json",
+      "sha256": "e0624e18363ae71cae989635205f0ad1949c8f2b9730d6808ee2b0e71df47ee6"
+    },
+    {
+      "path": "320-font-1-nl-run-page-0.png",
+      "sha256": "9be532860e346e190783dda4c8bd366e8df06a0c8fa5f2b842eec4072030cb20"
+    },
+    {
+      "path": "320-font-1-nl-run-page-0.xml",
+      "sha256": "e3f6692e36123b898ef50f93e8886cdaac9ac46710ced878302192b5140fbfea"
+    },
+    {
+      "path": "320-font-1-nl-run-page-0.json",
+      "sha256": "316d0b2d8d16ed3b2114142c2179c90656f4bf4ab8c3db367e3f23a8a03fedf0"
+    },
+    {
+      "path": "320-font-1-nl-run-page-1.png",
+      "sha256": "95befe5384a94170ec17dea1622ff88542d09b03bb7a3a39df812f20447ee63d"
+    },
+    {
+      "path": "320-font-1-nl-run-page-1.xml",
+      "sha256": "57ae4bd908d60d0b9713ba802360e4edaf7f04a2cd2a40b624057c0280c750ae"
+    },
+    {
+      "path": "320-font-1-nl-run-page-1.json",
+      "sha256": "f0d89ff8da61f0eb53d4b291ecf5b8e7b3d66e9eb1490bcf826e35cde0520963"
+    },
+    {
+      "path": "320-font-1-nl-run-page-2.png",
+      "sha256": "14a459a9fefd71e03833c58303fce3dd095d8119a17837d36124630a34135ca9"
+    },
+    {
+      "path": "320-font-1-nl-run-page-2.xml",
+      "sha256": "6ca05b945f12202e1415aa70b403bd21ee24f3d9b508373385d69d40715dae2d"
+    },
+    {
+      "path": "320-font-1-nl-run-page-2.json",
+      "sha256": "4ddc8125d4c6464bc9d4669a73d97ae0fc4092c08f54def355ba0e0f4c884cd7"
+    },
+    {
+      "path": "320-font-1-nl-run-page-3.png",
+      "sha256": "d1e40979fc91940ed4e9a17943a9bb7ab559ad0c64b170149236f28265594ced"
+    },
+    {
+      "path": "320-font-1-nl-run-page-3.xml",
+      "sha256": "9f2607561594dfbcd8dc519eb43f3036404c60397731ee159d52386a2cc2c132"
+    },
+    {
+      "path": "320-font-1-nl-run-page-3.json",
+      "sha256": "0107ea948398f75663efb80130335f3113180ece5826761161cf2f6adeb7cf3f"
+    },
+    {
+      "path": "320-font-1-nl-run-page-4.png",
+      "sha256": "f202ca933f49ae49cd1ac5673803efd8ded68cf3c3e7cc91f6a11a4bc7eabde0"
+    },
+    {
+      "path": "320-font-1-nl-run-page-4.xml",
+      "sha256": "8041be41c286de7d36508d5ab70b3f03030fb60b4c3f95a268d61a050256741d"
+    },
+    {
+      "path": "320-font-1-nl-run-page-4.json",
+      "sha256": "4048b281a58c79bf5b09caf03fef8c415edbf8bfc40b78d751b0a73a6b26dc4e"
+    },
+    {
+      "path": "320-font-1-nl-run-reference-expanded.png",
+      "sha256": "efdef8b239eb7637288fc3f8a18dbdffbd4d5284812d6e647d78d4d0d6193a47"
+    },
+    {
+      "path": "320-font-1-nl-run-reference-expanded.xml",
+      "sha256": "5a424b79aac32f0ec9ddb61ea8f5a288d9be2f1113f205ceff75bfe911bad34c"
+    },
+    {
+      "path": "320-font-1-nl-run-reference-expanded.json",
+      "sha256": "ccc46840544ce764fcf70bb8267c5b22403acb7e2534db9f7ef5cb633852e805"
+    },
+    {
+      "path": "320-font-2-en-bike-page-0.png",
+      "sha256": "de8ac664fdc1eb32781abce7516ab7d12f3ee351d073529c3ab6f330c753ec28"
+    },
+    {
+      "path": "320-font-2-en-bike-page-0.xml",
+      "sha256": "fe5b9b3cc2203cf9482c3a7f81721f080bc7b569b9c354df9e3c5679275075a8"
+    },
+    {
+      "path": "320-font-2-en-bike-page-0.json",
+      "sha256": "b570840251ad6f2558cef11aafefa0d55e93f64df07466dbb424938528736498"
+    },
+    {
+      "path": "320-font-2-en-bike-page-1.png",
+      "sha256": "83cfe0ea601bc91315c9e3e87b886024bbf41f32f691e98b16ce23a357223f04"
+    },
+    {
+      "path": "320-font-2-en-bike-page-1.xml",
+      "sha256": "dc748b24333191778943f46a6d86a19f958826f90d17b57c100c6ee05a069f04"
+    },
+    {
+      "path": "320-font-2-en-bike-page-1.json",
+      "sha256": "56679f57f27b68e3370466424e5c1c14bb801f70d1bf5af001fabbb467de357b"
+    },
+    {
+      "path": "320-font-2-en-bike-page-2.png",
+      "sha256": "541f3278e3d714d557df2272e22965aff96f7a1be20c30a750438265fd61dae1"
+    },
+    {
+      "path": "320-font-2-en-bike-page-2.xml",
+      "sha256": "7a2ac8f833a61d8456607f9e1243a5d474cc57dd10984ce2466edf618002e331"
+    },
+    {
+      "path": "320-font-2-en-bike-page-2.json",
+      "sha256": "a08ceaf39d0c4c89dffb853cff0cf0f2fb3207911aeed41ce294067ba4b18958"
+    },
+    {
+      "path": "320-font-2-en-bike-page-3.png",
+      "sha256": "444868663ad1b44dcde09408ec1f9241517b353e0b8ff49ae8362563687b7679"
+    },
+    {
+      "path": "320-font-2-en-bike-page-3.xml",
+      "sha256": "aaf3ea59d3bec70583b1b589a8a61b029ff07cd6c5c7b76e5bc3ab9a18f4dc6c"
+    },
+    {
+      "path": "320-font-2-en-bike-page-3.json",
+      "sha256": "6f6074e2704c4a3334128efb0dd80d2d2aa9115a6329552255abb3eb4b88e6bb"
+    },
+    {
+      "path": "320-font-2-en-bike-reference-expanded.png",
+      "sha256": "541f3278e3d714d557df2272e22965aff96f7a1be20c30a750438265fd61dae1"
+    },
+    {
+      "path": "320-font-2-en-bike-reference-expanded.xml",
+      "sha256": "7a2ac8f833a61d8456607f9e1243a5d474cc57dd10984ce2466edf618002e331"
+    },
+    {
+      "path": "320-font-2-en-bike-reference-expanded.json",
+      "sha256": "58b22b91692b2294773e18d11d373e36e62581752286669266b89abe5916614e"
+    },
+    {
+      "path": "320-font-2-en-candidate-page-0.png",
+      "sha256": "9a82877e44f2e5afd111de5742e8999f31513e577e660c32ad6cc69096d57534"
+    },
+    {
+      "path": "320-font-2-en-candidate-page-0.xml",
+      "sha256": "bf34f7e0298650822006bce3e790bb7039660cdd152f3da682048811b21afc7e"
+    },
+    {
+      "path": "320-font-2-en-candidate-page-0.json",
+      "sha256": "d309340e10ec770218981f5c38990d54fdf7366a8d3d4bcf911cb503cdb00850"
+    },
+    {
+      "path": "320-font-2-en-candidate-page-1.png",
+      "sha256": "206f320f1014f0e1d619f8111e696a2214187255c23225633cb2a473adca7c5c"
+    },
+    {
+      "path": "320-font-2-en-candidate-page-1.xml",
+      "sha256": "9e248e3adb9384a23d4208bb8415bcb3d4234c16aeea943e2c5957639ce689b1"
+    },
+    {
+      "path": "320-font-2-en-candidate-page-1.json",
+      "sha256": "358dc7a3d3e97284e9dfca5d70b280cdcd8454b7170ea95aacfb7607ce57dab7"
+    },
+    {
+      "path": "320-font-2-en-distance-page-0.png",
+      "sha256": "1288386f6e27ca3337b6301883968bf977eef7f8a16e34c950738da93b25ad49"
+    },
+    {
+      "path": "320-font-2-en-distance-page-0.xml",
+      "sha256": "bec55f191f742ecd34d95e955ea99d531b8e3e3b9abfe261275b753e4a649158"
+    },
+    {
+      "path": "320-font-2-en-distance-page-0.json",
+      "sha256": "4727c9e3aeaf37104acafc64cfc00087320c9adfb1d85c3ad8c384d6be88ac36"
+    },
+    {
+      "path": "320-font-2-en-distance-page-1.png",
+      "sha256": "e6e43ef4ffccbde1b4997a86bf4548a9661029b1d4c968bca706aa1fecd7add6"
+    },
+    {
+      "path": "320-font-2-en-distance-page-1.xml",
+      "sha256": "2360d57cf356d5bfb452834b72c529f0858da20f02271e2467c685b453e1acf8"
+    },
+    {
+      "path": "320-font-2-en-distance-page-1.json",
+      "sha256": "c485e889d6664c1abdba70822b9034f11ecdd122cb6ebd4a4ed1bcfec2d52a02"
+    },
+    {
+      "path": "320-font-2-en-run-page-0.png",
+      "sha256": "7bfd6adf519b90a3cb44f5602acacbcd984267efa397f752bef4114994a21f98"
+    },
+    {
+      "path": "320-font-2-en-run-page-0.xml",
+      "sha256": "87d2d9900ee1790a45e1e1e7e0d1235b47feb4e7d2bd676889c8c7e1553d6420"
+    },
+    {
+      "path": "320-font-2-en-run-page-0.json",
+      "sha256": "917814e37eb84456617304ebbcd8c28ff013f4a3e30c6c8ef0490bd27b68fe8e"
+    },
+    {
+      "path": "320-font-2-en-run-page-1.png",
+      "sha256": "d42bfbc841c5140dc0df5c7ab1ee975dd4445a15ed7f96c10c5a52d7e2a554d7"
+    },
+    {
+      "path": "320-font-2-en-run-page-1.xml",
+      "sha256": "a2827a01290841ab4f19dac1ff0781b754acc90b5ba074b4efd883ebb09f68c1"
+    },
+    {
+      "path": "320-font-2-en-run-page-1.json",
+      "sha256": "ff6ee495aa6a8d3c5c5a57ec0e57e440be64776f53d2a807a27761f2a9028dd4"
+    },
+    {
+      "path": "320-font-2-en-run-page-2.png",
+      "sha256": "188f6ed5e81805252f5812e8e82b4f8ad461991a93536eccdcaa2aa05b008fee"
+    },
+    {
+      "path": "320-font-2-en-run-page-2.xml",
+      "sha256": "5b413bf85baf33044c54de6db6a16dad1090650d84313e21a5e0d30dc55f3152"
+    },
+    {
+      "path": "320-font-2-en-run-page-2.json",
+      "sha256": "1265848ea333db9523d82589a209d3423a9d8487aad93cdab694a2d72ecc63d9"
+    },
+    {
+      "path": "320-font-2-en-run-page-3.png",
+      "sha256": "2c6e97c16fc88030b5a39889e11a06833b6682d994cb2395fabcecaff851ed8e"
+    },
+    {
+      "path": "320-font-2-en-run-page-3.xml",
+      "sha256": "bb3ac91c83f1f4685100fa5fda4900a8c83925945ef8f51df8f3c68e8cdb8bfc"
+    },
+    {
+      "path": "320-font-2-en-run-page-3.json",
+      "sha256": "deae97d909b716bafceb38dafa3938b148dd645e7715e29b5fc4e8238a7cfd44"
+    },
+    {
+      "path": "320-font-2-en-run-page-4.png",
+      "sha256": "ffec0aece7076a356849565d30aac4788856c06509bbb21ea9528eff99c9bb7c"
+    },
+    {
+      "path": "320-font-2-en-run-page-4.xml",
+      "sha256": "a56b8c59d01624ee3eefb4d9f0d3f901faacf7229121fb331feafa1a0973e85e"
+    },
+    {
+      "path": "320-font-2-en-run-page-4.json",
+      "sha256": "2f8dfa341cb277e204288e3c14c12e0384392d28147063412f4e950dbcfc2779"
+    },
+    {
+      "path": "320-font-2-en-run-page-5.png",
+      "sha256": "16bb4fd1d7902328fd85ba4dd463b9a2f850e50a481167a26620598f1f9f2b71"
+    },
+    {
+      "path": "320-font-2-en-run-page-5.xml",
+      "sha256": "c6a056c470f00d7dc120e170729deb458c2dad08eec8287bbd913f7fd2ae4985"
+    },
+    {
+      "path": "320-font-2-en-run-page-5.json",
+      "sha256": "2a179b6e13d7d29fe123c9a3a02793d45bbd159f081c3faef6f020cbcc5ddacb"
+    },
+    {
+      "path": "320-font-2-en-run-page-6.png",
+      "sha256": "0bb8f50e559ba57506c2294176ca913a66adc9cf82da1d7e1aa3e80821fc8634"
+    },
+    {
+      "path": "320-font-2-en-run-page-6.xml",
+      "sha256": "a7647ea41b3a6a09edab56295e9cb9615bb186d5be22483f42f114ec92aa3d9a"
+    },
+    {
+      "path": "320-font-2-en-run-page-6.json",
+      "sha256": "b148a269724ecb658c5725507ccbe328dc419daed0f8af9009c3c773ec62db5a"
+    },
+    {
+      "path": "320-font-2-en-run-reference-expanded.png",
+      "sha256": "83ded9ab67bbcf93fe69d15189b5483c970f4022181f4237eb613180a4787e07"
+    },
+    {
+      "path": "320-font-2-en-run-reference-expanded.xml",
+      "sha256": "e342a9ad1ecd1d1b89972ed2e54da052ec366bee6f0b834c9c5c7315684cb0cb"
+    },
+    {
+      "path": "320-font-2-en-run-reference-expanded.json",
+      "sha256": "d042844677bfcfda913a25a21b9f2609d618ef33878a7c5258076fcbeb6d7594"
+    },
+    {
+      "path": "320-font-2-en-swim-page-0.png",
+      "sha256": "00d5a9ca91fd6d32d97e8fcf8e78ef81a91b29a621bcda266bdc3e1d7a0a1871"
+    },
+    {
+      "path": "320-font-2-en-swim-page-0.xml",
+      "sha256": "0d330f03308009f5bd22c37a5a44dc039cad3b4d89530aa83b806ba1c5a2cb77"
+    },
+    {
+      "path": "320-font-2-en-swim-page-0.json",
+      "sha256": "4cb1c5cc2be99fc15f372003ff2a1da103f7cb192595d3ff4b45128ead156a93"
+    },
+    {
+      "path": "320-font-2-en-swim-page-1.png",
+      "sha256": "4e5dcf54d2b7bb9f941bde9e313e14aa250f2fa52e1a16f4c74b5113a402d06f"
+    },
+    {
+      "path": "320-font-2-en-swim-page-1.xml",
+      "sha256": "dc748b24333191778943f46a6d86a19f958826f90d17b57c100c6ee05a069f04"
+    },
+    {
+      "path": "320-font-2-en-swim-page-1.json",
+      "sha256": "f8087699f7d6faa102a72d637f4b340e31944c4c20d69d46950b087089da568b"
+    },
+    {
+      "path": "320-font-2-en-swim-page-2.png",
+      "sha256": "31d966eedb7536082c403c9a60bf4c1e924239f30cd3eadb28513493609a5fa6"
+    },
+    {
+      "path": "320-font-2-en-swim-page-2.xml",
+      "sha256": "6dd639d6a2d89057961c32eb1b71da68797e4cee2ca83edb3f8d3ee0784c4af8"
+    },
+    {
+      "path": "320-font-2-en-swim-page-2.json",
+      "sha256": "0395e7236975935f660616aa716abb47c469ed7183a266676e8342405b9d4e9d"
+    },
+    {
+      "path": "320-font-2-en-swim-page-3.png",
+      "sha256": "b475dc67aec34da80d79ce08c1a0cc911a04ec7aaa4ef9675769574d9ac65deb"
+    },
+    {
+      "path": "320-font-2-en-swim-page-3.xml",
+      "sha256": "aaf3ea59d3bec70583b1b589a8a61b029ff07cd6c5c7b76e5bc3ab9a18f4dc6c"
+    },
+    {
+      "path": "320-font-2-en-swim-page-3.json",
+      "sha256": "2542a7ab961992e908d663a1631b7856f12ccbb5035614cf1297560883e8e768"
+    },
+    {
+      "path": "320-font-2-en-swim-reference-expanded.png",
+      "sha256": "31d966eedb7536082c403c9a60bf4c1e924239f30cd3eadb28513493609a5fa6"
+    },
+    {
+      "path": "320-font-2-en-swim-reference-expanded.xml",
+      "sha256": "6dd639d6a2d89057961c32eb1b71da68797e4cee2ca83edb3f8d3ee0784c4af8"
+    },
+    {
+      "path": "320-font-2-en-swim-reference-expanded.json",
+      "sha256": "137096ded86763c90ec98c86edd56bc3a031605893a2be448d1c8517c9d95091"
+    },
+    {
+      "path": "320-font-2-nl-bike-page-0.png",
+      "sha256": "d8284e7ba8361e864f79ad6dd937fe85b1c2ead1eead89d538cc8cdc9df256d8"
+    },
+    {
+      "path": "320-font-2-nl-bike-page-0.xml",
+      "sha256": "1351b562aaf8c524421e4a8a1a558e34abbba652a3fae35de3ba00b926421b1e"
+    },
+    {
+      "path": "320-font-2-nl-bike-page-0.json",
+      "sha256": "04ed897b4590109207439826a3d161e1fd641802909d63497b454c59befc607b"
+    },
+    {
+      "path": "320-font-2-nl-bike-page-1.png",
+      "sha256": "28b15e6eb1d4464a8d86172407cdccdf0fcca497dccd53db779015d45c0cec83"
+    },
+    {
+      "path": "320-font-2-nl-bike-page-1.xml",
+      "sha256": "c8a2242bc5bb0832d01038505e403e6d8b455f9c7690d3b4235cca6438ae9981"
+    },
+    {
+      "path": "320-font-2-nl-bike-page-1.json",
+      "sha256": "d0c742943da461b1d6386604dbcde069bde583ab23d014d2808720c29f6fed7f"
+    },
+    {
+      "path": "320-font-2-nl-bike-page-2.png",
+      "sha256": "5a1cc7d0dc78e854cdd48d87b90819c1b2e4da7aaefad9b0a03a3e7ae706e6ea"
+    },
+    {
+      "path": "320-font-2-nl-bike-page-2.xml",
+      "sha256": "d2e1cfc432701943dbae62a5504a904647e736ccd73aff9dba6ed8d4e5ccdb08"
+    },
+    {
+      "path": "320-font-2-nl-bike-page-2.json",
+      "sha256": "c34df4a14503d7aed686e81199927d14a3c9c0709d8871d861314cbb8f961a44"
+    },
+    {
+      "path": "320-font-2-nl-bike-page-3.png",
+      "sha256": "e3350ba4d0e7c03b4cd235f5be1272a0bffa7215768666d7d128d00352c0aa6d"
+    },
+    {
+      "path": "320-font-2-nl-bike-page-3.xml",
+      "sha256": "1d86cc1e3c45ef0a1ea2cfacee53b799119c51ccd0094f8174e451eb4ba7730a"
+    },
+    {
+      "path": "320-font-2-nl-bike-page-3.json",
+      "sha256": "40748f1dffdbf55e271706d69f35a8959bc0c62e381057230eebaa0839c64a29"
+    },
+    {
+      "path": "320-font-2-nl-bike-reference-expanded.png",
+      "sha256": "5a1cc7d0dc78e854cdd48d87b90819c1b2e4da7aaefad9b0a03a3e7ae706e6ea"
+    },
+    {
+      "path": "320-font-2-nl-bike-reference-expanded.xml",
+      "sha256": "d2e1cfc432701943dbae62a5504a904647e736ccd73aff9dba6ed8d4e5ccdb08"
+    },
+    {
+      "path": "320-font-2-nl-bike-reference-expanded.json",
+      "sha256": "7e0fb0559b6caa61403db3101654767f876fd4d5baea4752350110b06b0060bc"
+    },
+    {
+      "path": "320-font-2-nl-distance-page-0.png",
+      "sha256": "80adf5ed23476f21001170e8385dff3a67926a79d627587842d06f5394362f13"
+    },
+    {
+      "path": "320-font-2-nl-distance-page-0.xml",
+      "sha256": "065c422a28d9f3cfe73964b65354c2dd6690f8ec20acb942305ade143ed446ca"
+    },
+    {
+      "path": "320-font-2-nl-distance-page-0.json",
+      "sha256": "1831ad6af2a99dced479c35404ce743fd7670649a27e269ea90d9cbbe3add0be"
+    },
+    {
+      "path": "320-font-2-nl-distance-page-1.png",
+      "sha256": "3b490f7a0b89ad7a2c6ab2fc2d631fed1b37733823bd3de8ea95280083e9e2f7"
+    },
+    {
+      "path": "320-font-2-nl-distance-page-1.xml",
+      "sha256": "c508ccd7a06dbbc115ae2f3c6bd071f089eedbd9b3ca4b6cfd4e88a7b99ff657"
+    },
+    {
+      "path": "320-font-2-nl-distance-page-1.json",
+      "sha256": "216218c47f56a1a4d3e733017375ac8319e704ea4395719f94a2ea06cc18a701"
+    },
+    {
+      "path": "320-font-2-nl-run-page-0.png",
+      "sha256": "ecccad5ab11a8af264fdc21b8b78d600543c76191f94464fd5711ce6e86c302e"
+    },
+    {
+      "path": "320-font-2-nl-run-page-0.xml",
+      "sha256": "7d8b10c5cfbd9a39ae226e8a5c7b149243202ecebdaaf5abf683f690baa100aa"
+    },
+    {
+      "path": "320-font-2-nl-run-page-0.json",
+      "sha256": "6d304680fe937a0756f515beda5806685b8cbcd44afde405cee9b25e0a6f76be"
+    },
+    {
+      "path": "320-font-2-nl-run-page-1.png",
+      "sha256": "3c64da752c2f0ad83eb9789140c7950d4fa4479e0e180fec6f7f729ad5351919"
+    },
+    {
+      "path": "320-font-2-nl-run-page-1.xml",
+      "sha256": "07f1555475fce67703f6d25952ffa5c90ad3cc68fb2edc5007796f47074f446c"
+    },
+    {
+      "path": "320-font-2-nl-run-page-1.json",
+      "sha256": "d9ec49f52775f4dea9e702f1ab49633dfb1a645120b7491c1471d46484d4c3e2"
+    },
+    {
+      "path": "320-font-2-nl-run-page-2.png",
+      "sha256": "bcc17947a87f6c771f85dcdfedfd1e8ab298ee39f18685c2003db4d90cd901f2"
+    },
+    {
+      "path": "320-font-2-nl-run-page-2.xml",
+      "sha256": "2e40a8fe071036cb2aa77707ccdbd2117b6953ed766acd66033ce83fc8c27223"
+    },
+    {
+      "path": "320-font-2-nl-run-page-2.json",
+      "sha256": "02e819d276a279f1dee79c55ed86fc5b75ffb760ceb0a832e299287603027428"
+    },
+    {
+      "path": "320-font-2-nl-run-page-3.png",
+      "sha256": "41c1dcee6d2643583a5b4146c8cbdc3f4f15fa3a23f2e85a17676b054c148a07"
+    },
+    {
+      "path": "320-font-2-nl-run-page-3.xml",
+      "sha256": "7fe95c23fef8bf11773341d28fe074062f788c45f3ba2debb36e133e7fa13d43"
+    },
+    {
+      "path": "320-font-2-nl-run-page-3.json",
+      "sha256": "9cad0af41bb32b412e4a2272ec0f07e4d22439df19371a6ae68f1c7140d7cb2f"
+    },
+    {
+      "path": "320-font-2-nl-run-page-4.png",
+      "sha256": "fff8a5e3cd5fe13a4721fb9da02db64d7a73936875e99e67bc9706d78f1df330"
+    },
+    {
+      "path": "320-font-2-nl-run-page-4.xml",
+      "sha256": "bd14c9b59c4b3b4d4fbe251c9acdcf4ca2ba8a8b5f383e3000d813d3119c22c7"
+    },
+    {
+      "path": "320-font-2-nl-run-page-4.json",
+      "sha256": "d8d739329669e515d41ecefff724822a46ad938037620abc7b800c701c378c3c"
+    },
+    {
+      "path": "320-font-2-nl-run-page-5.png",
+      "sha256": "d72133d78a46df49eea1f937fadcb4db275dec2bca6ae3c412fb506c2316a86c"
+    },
+    {
+      "path": "320-font-2-nl-run-page-5.xml",
+      "sha256": "f7158609bb402b85be03e1a7b85c2a608d6db3bdefcc2b2e625a423afdd7e56d"
+    },
+    {
+      "path": "320-font-2-nl-run-page-5.json",
+      "sha256": "4210ff8c69c824a7c0963597af9835f6a1606ce23a6439bd3319744e6c6d1701"
+    },
+    {
+      "path": "320-font-2-nl-run-page-6.png",
+      "sha256": "c1753a0edae748ee6886850d1207a9866155be919120272fa5f61dcd16a8e9ca"
+    },
+    {
+      "path": "320-font-2-nl-run-page-6.xml",
+      "sha256": "7f6c05eb59094b9394b23e5c4c2b312e90cb2c9b95e3ef60b619a33a458b4201"
+    },
+    {
+      "path": "320-font-2-nl-run-page-6.json",
+      "sha256": "6e065f2b460596c9c1328ad2834912bc4f5ec3d60588543ab26e6631f9a7c4f2"
+    },
+    {
+      "path": "320-font-2-nl-run-reference-expanded.png",
+      "sha256": "0bf20d8289a9bb3aeadf0a731c985818cd93d4d3bea4077ed0766a7b240247cc"
+    },
+    {
+      "path": "320-font-2-nl-run-reference-expanded.xml",
+      "sha256": "6a17ad1e54d935ebc6ab3b119a555f10828bab216daa6921e08fd6f6923d5e13"
+    },
+    {
+      "path": "320-font-2-nl-run-reference-expanded.json",
+      "sha256": "43281e3f85b17daa180307c0257899876448b98cd7e947601b74f9bc86f19bef"
+    },
+    {
+      "path": "320-font-2-nl-swim-page-0.png",
+      "sha256": "9be4d91bbe329efe5d017311d4b46a539c6591a5df65609968c645c2592504c9"
+    },
+    {
+      "path": "320-font-2-nl-swim-page-0.xml",
+      "sha256": "4d68f32bcd19f67f9486b7610db3f75a71b50c9ab49c97c83830795cd0ed257c"
+    },
+    {
+      "path": "320-font-2-nl-swim-page-0.json",
+      "sha256": "24fbb4c9d51a86749a073056ddb8831eac183929a4f20e0f557260803d98745a"
+    },
+    {
+      "path": "320-font-2-nl-swim-page-1.png",
+      "sha256": "d1762a7b848e8178c94805d2198dce3175c4a428fca1ce95fd2a8ca06bdf3987"
+    },
+    {
+      "path": "320-font-2-nl-swim-page-1.xml",
+      "sha256": "5b99921351624cfd124200b0a753c026bec64fdd76d6e56310717feb409d8c8d"
+    },
+    {
+      "path": "320-font-2-nl-swim-page-1.json",
+      "sha256": "95e6e6dbca470ec9053899ca763e9d3dfc088c8c252ca88e4b4500f220b610df"
+    },
+    {
+      "path": "320-font-2-nl-swim-page-2.png",
+      "sha256": "0774596bd9645ef355f66c61d9307a53dc98e6de2eea4dab90f3a5d56469574a"
+    },
+    {
+      "path": "320-font-2-nl-swim-page-2.xml",
+      "sha256": "29f54a68e9417b66400a252b80579d9d8b6e4ca1cd14a42687f6df40ca17b544"
+    },
+    {
+      "path": "320-font-2-nl-swim-page-2.json",
+      "sha256": "bb7e41c612c84fe98a087f968bae8984648cadd75811b523712e5e79414fd014"
+    },
+    {
+      "path": "320-font-2-nl-swim-page-3.png",
+      "sha256": "9b8f9b3bd188b4c634f1522dba90704cce08332a9592c317d3f83a5acc8ebd3a"
+    },
+    {
+      "path": "320-font-2-nl-swim-page-3.xml",
+      "sha256": "1d86cc1e3c45ef0a1ea2cfacee53b799119c51ccd0094f8174e451eb4ba7730a"
+    },
+    {
+      "path": "320-font-2-nl-swim-page-3.json",
+      "sha256": "bbb1bd6f30e651640cc20c439b58c6fcc40cbac867afb5d6ad993006e0170fde"
+    },
+    {
+      "path": "320-font-2-nl-swim-reference-expanded.png",
+      "sha256": "0774596bd9645ef355f66c61d9307a53dc98e6de2eea4dab90f3a5d56469574a"
+    },
+    {
+      "path": "320-font-2-nl-swim-reference-expanded.xml",
+      "sha256": "29f54a68e9417b66400a252b80579d9d8b6e4ca1cd14a42687f6df40ca17b544"
+    },
+    {
+      "path": "320-font-2-nl-swim-reference-expanded.json",
+      "sha256": "bb89eea068902ed9c195e3b25b587b824a93ba91fe64005fc1ad57c43d6a4a7d"
+    },
+    {
+      "path": "393-font-1-en-bike-page-0.png",
+      "sha256": "4431d1ee170a7bdc9a530e30ee34c0630fee0126ef39f0b39311e09130099a5f"
+    },
+    {
+      "path": "393-font-1-en-bike-page-0.xml",
+      "sha256": "f8967197d83d58c9f2c16b9da54d03faffde342f51654665d91cd3ee12a8b536"
+    },
+    {
+      "path": "393-font-1-en-bike-page-0.json",
+      "sha256": "d2dd9171bc0c43f24ff8d59873a0585373c11183cad3485196fc7d36044eddda"
+    },
+    {
+      "path": "393-font-1-en-bike-page-1.png",
+      "sha256": "2df75d820aafd5ec7223ce219f8b22385a2a9f9d79be3c80dab995fbdafeced9"
+    },
+    {
+      "path": "393-font-1-en-bike-page-1.xml",
+      "sha256": "c1e6cb2314c5952201802179da5674698c63a4d9622704756c633a0c04e51bb3"
+    },
+    {
+      "path": "393-font-1-en-bike-page-1.json",
+      "sha256": "be514ff5102c7c32cf20539b70b080a2a4fb48d752476f39cc5eaa743630a236"
+    },
+    {
+      "path": "393-font-1-en-bike-page-2.png",
+      "sha256": "73fce086a8cd255e4adc10ea01c7e0c0b12d496647bb30440ec7254625f927e0"
+    },
+    {
+      "path": "393-font-1-en-bike-page-2.xml",
+      "sha256": "67c4a6bb99765f22ba38abee40c7a40f00b1d869965ca59bd6ecdb0b71f2baf2"
+    },
+    {
+      "path": "393-font-1-en-bike-page-2.json",
+      "sha256": "856188775e540850ec387909b7b17b5aca2f688d40cb6319760eef396d265e38"
+    },
+    {
+      "path": "393-font-1-en-bike-reference-expanded.png",
+      "sha256": "e023c9ed49179f33cfdecf4cf0e98cd383acbda0d1c5bbecc4a011144e07b1f9"
+    },
+    {
+      "path": "393-font-1-en-bike-reference-expanded.xml",
+      "sha256": "a68f16ebc9280df3a0bc06e4c46483bb0ecfd528b7cab1d4f150dc58328e4096"
+    },
+    {
+      "path": "393-font-1-en-bike-reference-expanded.json",
+      "sha256": "14b52df7fc2a4256f33ebde6ca30afd7103159574b5d2e5667ddc10c9c009f8e"
+    },
+    {
+      "path": "393-font-1-en-distance-page-0.png",
+      "sha256": "0ccdb83d830f7384ca08e4dfc095b8f6329f09dfec40b8776bbf5bce0ed07ca1"
+    },
+    {
+      "path": "393-font-1-en-distance-page-0.xml",
+      "sha256": "0722b403ebc7cbb003fcf29fe42a37b60c52cbcd8a9a1b76d9393406f00d0752"
+    },
+    {
+      "path": "393-font-1-en-distance-page-0.json",
+      "sha256": "1c8618930e879ca10b429d82e73d129146c59624bb66ede4a35bc40d1d9f5643"
+    },
+    {
+      "path": "393-font-1-en-run-page-0.png",
+      "sha256": "ce21c19ed5895613eb48b36f9a18f94205e4b2302d2f7bd9cf1ca06f37cad03d"
+    },
+    {
+      "path": "393-font-1-en-run-page-0.xml",
+      "sha256": "6fb4a93bdd16780ee386715e73435e38c0851e00890b0c682ff2f24532bb715c"
+    },
+    {
+      "path": "393-font-1-en-run-page-0.json",
+      "sha256": "90add344a3d025168243288a5a1779713c01e9e0f91f27297e9c80736edad486"
+    },
+    {
+      "path": "393-font-1-en-run-page-1.png",
+      "sha256": "1192896bf2df497bc08f75942a674ffc9ceec701ff584c41e97aa5567a7dc76e"
+    },
+    {
+      "path": "393-font-1-en-run-page-1.xml",
+      "sha256": "f3a6dc900dbdefd6673b54a4c8d1db19289f756a94c2103fc095a4a9f0888ca0"
+    },
+    {
+      "path": "393-font-1-en-run-page-1.json",
+      "sha256": "340ea7cfd323332236c4690532ae14547f5d1b73c6b4a2fae22dddc229ee04a8"
+    },
+    {
+      "path": "393-font-1-en-run-page-2.png",
+      "sha256": "52dcba5edef67b46649621e9cd77b0c8003ef199a2e68ac36fdfceef2572fa71"
+    },
+    {
+      "path": "393-font-1-en-run-page-2.xml",
+      "sha256": "d57ddb041d9dbd400e709d61ef01b3ff9607a703860027af652dc7e403b7634d"
+    },
+    {
+      "path": "393-font-1-en-run-page-2.json",
+      "sha256": "4bbdf661454268826fa2100a6b3cc6139f4229834a935bf59640d858968c2e14"
+    },
+    {
+      "path": "393-font-1-en-run-page-3.png",
+      "sha256": "2689165241a9457530f4ab5ca0a38dcf64abd317fe69bcf14dd89d1dfdf091fe"
+    },
+    {
+      "path": "393-font-1-en-run-page-3.xml",
+      "sha256": "c07160250298c2f748497f4cc5d2414f1f85fb35a2e90500ebab0bd5284a7774"
+    },
+    {
+      "path": "393-font-1-en-run-page-3.json",
+      "sha256": "513d82f5f5f947a87e2080ca055362b5d32d404d20e2e3c70faadeb3271276c2"
+    },
+    {
+      "path": "393-font-1-en-run-reference-expanded.png",
+      "sha256": "1db5df480a5d0589a2f5aef8d227122ab02cd00a50777c9d055bd6ca3a1b3ad9"
+    },
+    {
+      "path": "393-font-1-en-run-reference-expanded.xml",
+      "sha256": "1d6db03fa8418cadcdd02c1adeb2135b06c061b60bd1e7b1d3c9858b63619c22"
+    },
+    {
+      "path": "393-font-1-en-run-reference-expanded.json",
+      "sha256": "60b6e84406756baef31f94a671b51bc3c50bc118b7352a1c6bbdb8d4f6e9198b"
+    },
+    {
+      "path": "393-font-1-en-swim-page-0.png",
+      "sha256": "5d44e6c17d27fef61ab493fa2119da49d57f017f3370809562ab82f523cb0be4"
+    },
+    {
+      "path": "393-font-1-en-swim-page-0.xml",
+      "sha256": "64b2a1659c9a19279a68ce4d68dc1d96b37d807146738d5c615b0b1e6e739dc4"
+    },
+    {
+      "path": "393-font-1-en-swim-page-0.json",
+      "sha256": "07a495b22d42b22dc08a0cfc71e583f7003061dc239a03122953a32128d147cc"
+    },
+    {
+      "path": "393-font-1-en-swim-page-1.png",
+      "sha256": "be35c45c8592a7fa84c3a86c6f0716f199dc45a70dce02428d7eeed1e2bc35a2"
+    },
+    {
+      "path": "393-font-1-en-swim-page-1.xml",
+      "sha256": "3ab750cc2f78cba391aaabe713815e4571cb78e551af243f55a6b68c5a6f0606"
+    },
+    {
+      "path": "393-font-1-en-swim-page-1.json",
+      "sha256": "6062df90f62c600ac36c6e2763be720bc21c936d0c9ae48cad43164795f35451"
+    },
+    {
+      "path": "393-font-1-en-swim-page-2.png",
+      "sha256": "b26e18a8654cbe48d2fc092872bdc4a2a304bdc5acf41e543c3d0d04f3b01538"
+    },
+    {
+      "path": "393-font-1-en-swim-page-2.xml",
+      "sha256": "67c4a6bb99765f22ba38abee40c7a40f00b1d869965ca59bd6ecdb0b71f2baf2"
+    },
+    {
+      "path": "393-font-1-en-swim-page-2.json",
+      "sha256": "d615b5a490b6dfea519fbda39a31300b1023390917c4e8f24d3aa5b70fcd376a"
+    },
+    {
+      "path": "393-font-1-en-swim-reference-expanded.png",
+      "sha256": "81dc47c0b0ccf66c75f593b1e592389e7e614aacc7e6198ee8e27f9f9623123c"
+    },
+    {
+      "path": "393-font-1-en-swim-reference-expanded.xml",
+      "sha256": "520e9db918e7c22ec83c84cd10e099f558f41a81b4f77f685487d5d7a036e1e4"
+    },
+    {
+      "path": "393-font-1-en-swim-reference-expanded.json",
+      "sha256": "4d39146e2f4fb18adff8272e27a2ff34f18e8085f90867e88e984fefa5a1ac11"
+    },
+    {
+      "path": "393-font-1-nl-bike-page-0.png",
+      "sha256": "7c186a491cb5bca40e91b7355a83dc2bef0dff9fa87f27d338878f63c9b1eda2"
+    },
+    {
+      "path": "393-font-1-nl-bike-page-0.xml",
+      "sha256": "303e42d58d2e4ec75f0222b9915b778b8020186223eaf5caa14bdd05443678b4"
+    },
+    {
+      "path": "393-font-1-nl-bike-page-0.json",
+      "sha256": "7fee245dd24c179c77d622f03c0df906b6df9d9b0e5d98238ff254c9d62b1bdc"
+    },
+    {
+      "path": "393-font-1-nl-bike-page-1.png",
+      "sha256": "af5a966aeef27b76aed1cb5417b366585848768bda03452a5e030d8537a829fa"
+    },
+    {
+      "path": "393-font-1-nl-bike-page-1.xml",
+      "sha256": "3d64504fda78c0cee3eef917c5b6811b06a25f0204ad8dcc7a14df1d76f79cbe"
+    },
+    {
+      "path": "393-font-1-nl-bike-page-1.json",
+      "sha256": "c1638cf8aead188a752f64fa94fd5cf001c3eeb7f7dae34f601d0aa7e25c7ae1"
+    },
+    {
+      "path": "393-font-1-nl-bike-page-2.png",
+      "sha256": "469ab0f1900d03cf9697332530fc6db07d3f8585c9bbe82b015c8a1abbb9ed67"
+    },
+    {
+      "path": "393-font-1-nl-bike-page-2.xml",
+      "sha256": "4ea115bdba64e785fae22466c2915bd138baab4f1c69c92ba24958165883fa5c"
+    },
+    {
+      "path": "393-font-1-nl-bike-page-2.json",
+      "sha256": "529f694dc96805645e6fd4dbece1a14c2b355f1058cd7803eef70431cd7a6b1d"
+    },
+    {
+      "path": "393-font-1-nl-bike-reference-expanded.png",
+      "sha256": "7b868ebbf6caa3a38a3309c56f24c91e18e43b4ca76aec7fc84cae9fc95793fa"
+    },
+    {
+      "path": "393-font-1-nl-bike-reference-expanded.xml",
+      "sha256": "ffab3f31d2e39fb138a586105e0c5eba8bc343ab396827f82a49e8e76cda77e6"
+    },
+    {
+      "path": "393-font-1-nl-bike-reference-expanded.json",
+      "sha256": "5d4bc06b7e71278771920acd25be61b2628b88964f8aca6dd5382b8fe120b9a3"
+    },
+    {
+      "path": "393-font-1-nl-candidate-page-0.png",
+      "sha256": "1e76a23cff506a701ccf1380761565c99e63701e78b5be3cc0a65d299bfff229"
+    },
+    {
+      "path": "393-font-1-nl-candidate-page-0.xml",
+      "sha256": "0f5a1ac6f4e693de655ee2fa9dfc14cc06bd2a0224f53fce7128f0511c42d6bc"
+    },
+    {
+      "path": "393-font-1-nl-candidate-page-0.json",
+      "sha256": "8dd426298aeddb30d59f0dc44ca9c11d039209c8b0f014f67e2323cefeedbdf5"
+    },
+    {
+      "path": "393-font-1-nl-distance-page-0.png",
+      "sha256": "54e0fa86014fc5856b6b40c34cf8d9b0d185a2f8bfa527ce27cf16c0bde9d618"
+    },
+    {
+      "path": "393-font-1-nl-distance-page-0.xml",
+      "sha256": "7dfe6bb69fab1704e6678d29c1d7834898a9ae51e4019f8e6447d4981949b04d"
+    },
+    {
+      "path": "393-font-1-nl-distance-page-0.json",
+      "sha256": "b5e13506303ddda9b2d17214ae291994ae48961451449a1c2ad598696bfd79e2"
+    },
+    {
+      "path": "393-font-1-nl-run-page-0.png",
+      "sha256": "19ee360e3003094cb47e96afa39da78635e3ba771b613fe830bb7e87df36789b"
+    },
+    {
+      "path": "393-font-1-nl-run-page-0.xml",
+      "sha256": "cd11c0fa8d690a63a40735f982de40afec1f61849d47bbe5b2d4c8542f3363ee"
+    },
+    {
+      "path": "393-font-1-nl-run-page-0.json",
+      "sha256": "f70a6b340133fb71011b3128631b08b56fb2eb7b6ebc564c89334c98cffec59a"
+    },
+    {
+      "path": "393-font-1-nl-run-page-1.png",
+      "sha256": "f8285ec14625a80a20f57c3ba6283c336584fe7754e4e259d5df5b83876bff70"
+    },
+    {
+      "path": "393-font-1-nl-run-page-1.xml",
+      "sha256": "6f667a267829c9bdb98846656f09590495aefa983d34e66f8646f687efec66e4"
+    },
+    {
+      "path": "393-font-1-nl-run-page-1.json",
+      "sha256": "07b569b00204da6e38898d2373fe21380bab7fde822f497ef534b1a3b6b1a239"
+    },
+    {
+      "path": "393-font-1-nl-run-page-2.png",
+      "sha256": "4bc7d00a1f544271017b3645107f4fd19fbac1247927bd856ba80ef710c7e0b3"
+    },
+    {
+      "path": "393-font-1-nl-run-page-2.xml",
+      "sha256": "7338d962b1668eea14d7d80a1ff33a7b54c481ac8fb4f15dbfb769606bf79e0b"
+    },
+    {
+      "path": "393-font-1-nl-run-page-2.json",
+      "sha256": "87e0383a58fae449fdf767c5645264fae09859b1ed0a8a9a90a1c8b64bb7348b"
+    },
+    {
+      "path": "393-font-1-nl-run-page-3.png",
+      "sha256": "9709028d923df7e55661557c5cf446f09b1396ef9c8ffbc16f23deb000058a4c"
+    },
+    {
+      "path": "393-font-1-nl-run-page-3.xml",
+      "sha256": "7c3dfd809668f8dc142c5ba1f28294d54ab5b2e79c7143d0e0a54879ce697d10"
+    },
+    {
+      "path": "393-font-1-nl-run-page-3.json",
+      "sha256": "d1d54410fbc269725551800ad22777955d22d152e5803b0a6f3a658800c343b7"
+    },
+    {
+      "path": "393-font-1-nl-run-reference-expanded.png",
+      "sha256": "90aff3c0ba95854be2102cbf236283cadce219a50a83309218064a059f753311"
+    },
+    {
+      "path": "393-font-1-nl-run-reference-expanded.xml",
+      "sha256": "cf686036be15f92b46f76874bd5c0b56aa410808f4e979b891312615b66be2b7"
+    },
+    {
+      "path": "393-font-1-nl-run-reference-expanded.json",
+      "sha256": "724cf04693b94438f4e9082fe9a5566d74ab6359f1ac30e89920af1b57af5827"
+    },
+    {
+      "path": "393-font-1-nl-swim-page-0.png",
+      "sha256": "e55fecd2179b5df6bc1385b2ba05ee627cd6d8fb4f5a426512afe4a9f45d7ed2"
+    },
+    {
+      "path": "393-font-1-nl-swim-page-0.xml",
+      "sha256": "bb7ea6ee5e1576d18d21cf6c7d4ab228c35e7e7fa7161230c86756fd50ffea3b"
+    },
+    {
+      "path": "393-font-1-nl-swim-page-0.json",
+      "sha256": "90efab68856fdf276701ed55a1d475964f0fab462e18db6d322033629531fcf0"
+    },
+    {
+      "path": "393-font-1-nl-swim-page-1.png",
+      "sha256": "e728ee0babccd65f0026518b95896574ca640a2b64e595aa04f44c6405b18960"
+    },
+    {
+      "path": "393-font-1-nl-swim-page-1.xml",
+      "sha256": "4cae59ba5df0cc74009ba47a9ecd59fb326ce4496adabe65d50fe6d8342a2b5b"
+    },
+    {
+      "path": "393-font-1-nl-swim-page-1.json",
+      "sha256": "15e10af3ea92ce626cce61dc35e7f661e01e3b811620bce363b359b69e4432ae"
+    },
+    {
+      "path": "393-font-1-nl-swim-page-2.png",
+      "sha256": "f6eae11cd4c3d4bbcc68c12189d949ef8081c14d5fbe0b0668825b460abf200f"
+    },
+    {
+      "path": "393-font-1-nl-swim-page-2.xml",
+      "sha256": "4ea115bdba64e785fae22466c2915bd138baab4f1c69c92ba24958165883fa5c"
+    },
+    {
+      "path": "393-font-1-nl-swim-page-2.json",
+      "sha256": "356873aeebfbd7b0dbed47bedd87074cefc8f4842d33b1c85510d61c2b826d1c"
+    },
+    {
+      "path": "393-font-1-nl-swim-reference-expanded.png",
+      "sha256": "884a0e1257e628a9e1e65aa079ba7b621bffdffabf1c593a021c94b9ea71801a"
+    },
+    {
+      "path": "393-font-1-nl-swim-reference-expanded.xml",
+      "sha256": "44ddf84a5cffbaf79dc7de82a1c2afdc548160f6def43be4151dad284de26048"
+    },
+    {
+      "path": "393-font-1-nl-swim-reference-expanded.json",
+      "sha256": "40a7fbe34dac8ff6c5021c2e0be565a4c6add54955662af040546a860c7a1340"
+    },
+    {
+      "path": "393-font-2-en-run-page-0.png",
+      "sha256": "7a5d4d7dcedde0a5861c2bc7d0e37741aab4b3667faedff68794197d30e75eed"
+    },
+    {
+      "path": "393-font-2-en-run-page-0.xml",
+      "sha256": "de7fe43cc1b3aa60a0518346de95127f2f1980c4bdc053ef8124a15a71b75520"
+    },
+    {
+      "path": "393-font-2-en-run-page-0.json",
+      "sha256": "747f765197045304d26e3a818fd24ad19edd994511142324909d93fc8ed0a153"
+    },
+    {
+      "path": "393-font-2-en-run-page-1.png",
+      "sha256": "fe3a4f248acd2b5f2dc789de92136e5449e95ee5341561461d6ea978067b67e7"
+    },
+    {
+      "path": "393-font-2-en-run-page-1.xml",
+      "sha256": "737889015d60d9e58781b7818311de53b36ad70953cc80d5cd5567165bdebc23"
+    },
+    {
+      "path": "393-font-2-en-run-page-1.json",
+      "sha256": "850d147b86d8e599acf107147f58ad8c468f5499a78287b0bef45c5d67789b9b"
+    },
+    {
+      "path": "393-font-2-en-run-page-2.png",
+      "sha256": "60ad1bd0235b9b24a858d66797d352f8c0d4dd43f2843c22c4ed864b8ff1c83a"
+    },
+    {
+      "path": "393-font-2-en-run-page-2.xml",
+      "sha256": "1b94381b060860f7a5c68781c891a30e04676d494458428cc45b9f58b0301e55"
+    },
+    {
+      "path": "393-font-2-en-run-page-2.json",
+      "sha256": "64520b225055af978692092ae58c14a0847e2889115bb01dce4f22b2512a7578"
+    },
+    {
+      "path": "393-font-2-en-run-page-3.png",
+      "sha256": "1dc590148018c2aa9020ffc3994d7334deac1d62d4b6e1f4f94394c85d76e524"
+    },
+    {
+      "path": "393-font-2-en-run-page-3.xml",
+      "sha256": "5bfb3d2b44211f24e08cf8253a66c37f3b8c51ce82acaa9a73f8465e0ca0fe5c"
+    },
+    {
+      "path": "393-font-2-en-run-page-3.json",
+      "sha256": "4fe2995fb846b29508d602746b1a957e5f8e2086873514ad20508cfc0f096077"
+    },
+    {
+      "path": "393-font-2-en-run-page-4.png",
+      "sha256": "687bc32993ab753d7aa3fc72b91bc08be4f5d16480dcce8148f555995c301d72"
+    },
+    {
+      "path": "393-font-2-en-run-page-4.xml",
+      "sha256": "eadc4998b53c4fbc70cd6ee72751a6cafecf93fcc58184d2ae94caeb12a3bb06"
+    },
+    {
+      "path": "393-font-2-en-run-page-4.json",
+      "sha256": "fa077e80d55cb0d1a3cd71f3e0d0e83bc66bfa39b85dbe010d61e64588ddd253"
+    },
+    {
+      "path": "393-font-2-en-run-reference-expanded.png",
+      "sha256": "e0dfed724d407f5d59d219693df64a3fe5e2241acae969ee3a221c91e1addc14"
+    },
+    {
+      "path": "393-font-2-en-run-reference-expanded.xml",
+      "sha256": "422660f5b8aa412c22908ab868422d65836aff8d92269e5c9a7d517c6e8a005a"
+    },
+    {
+      "path": "393-font-2-en-run-reference-expanded.json",
+      "sha256": "6e83f3c65eb75a1eb5f00d743cd1718c67cf8a5cc512dfb897b27aab6698956e"
+    },
+    {
+      "path": "393-font-2-nl-run-page-0.png",
+      "sha256": "f623178df1044f9f0b5eb0a9c98b821da6ac10ccc8e6688f51f5869724da2bf4"
+    },
+    {
+      "path": "393-font-2-nl-run-page-0.xml",
+      "sha256": "c4facb1273a08b5b140fac167c6559d0ebb4bc6c654f111cb109fe320696c324"
+    },
+    {
+      "path": "393-font-2-nl-run-page-0.json",
+      "sha256": "20c1501a36e7a2c3f8e089ba6626ef688cc64fb14e415430769945eeffc43042"
+    },
+    {
+      "path": "393-font-2-nl-run-page-1.png",
+      "sha256": "057d140526273a6170b1503f7bfa559264bb7a11693dbfaca99e10a676a13538"
+    },
+    {
+      "path": "393-font-2-nl-run-page-1.xml",
+      "sha256": "9740552969eb6fb1a765a6484135b481a771682a527380941b25e94a123278c0"
+    },
+    {
+      "path": "393-font-2-nl-run-page-1.json",
+      "sha256": "7ff910e6b566e4665b3c446e88624e820660f22a21a0bf1263be8953b3519dc0"
+    },
+    {
+      "path": "393-font-2-nl-run-page-2.png",
+      "sha256": "867a100ee28acf8cc6dafb1bca3cd2f380a5a61ced1ecef012f3b647c266afe0"
+    },
+    {
+      "path": "393-font-2-nl-run-page-2.xml",
+      "sha256": "a790b5d87e2c4bc30a3883f9258884bb51be4f71f45e11f5704e67cd0c2a8a7b"
+    },
+    {
+      "path": "393-font-2-nl-run-page-2.json",
+      "sha256": "1c288789359c8de39214e0c5d98f168e78a9125b0570433b55805c7fce46fdf0"
+    },
+    {
+      "path": "393-font-2-nl-run-page-3.png",
+      "sha256": "5a594d9ad9c10e2083a391381d8192443b08d8942f0dc92bf3c8248e52add6ec"
+    },
+    {
+      "path": "393-font-2-nl-run-page-3.xml",
+      "sha256": "994d65d3ff0a148a3356defc9bf54df959b0c91a6801629ff6bcbf8b9ff20bfe"
+    },
+    {
+      "path": "393-font-2-nl-run-page-3.json",
+      "sha256": "a18f1f640f9cd29e0cd5ed9f8518b8e981073b5b1977bcb748ef90d05a5057c3"
+    },
+    {
+      "path": "393-font-2-nl-run-page-4.png",
+      "sha256": "6d0f357a248485e33b99dd90174e300d103b5e175fa9e2cd92d67da3c383cc56"
+    },
+    {
+      "path": "393-font-2-nl-run-page-4.xml",
+      "sha256": "bd291e2e8331d7c19a14384c64895133127e03e8f6c0dbb935f31661767321ac"
+    },
+    {
+      "path": "393-font-2-nl-run-page-4.json",
+      "sha256": "98dfd5fb2ebea83bcfb3b00df6d837acabd57f467fe2dcbf1de685d672a40b85"
+    },
+    {
+      "path": "393-font-2-nl-run-reference-expanded.png",
+      "sha256": "09446e50437f34e823b8043f3cb91445e80b0b037072f00f6ff40c17f011c43a"
+    },
+    {
+      "path": "393-font-2-nl-run-reference-expanded.xml",
+      "sha256": "feb5ae3b1b222d0489dde9cb2d8268c2b6cb9efc4a79cfbb47feb8d3adc814a8"
+    },
+    {
+      "path": "393-font-2-nl-run-reference-expanded.json",
+      "sha256": "d4713728de4bd9cc80f508264449c528d74f0e2cba7d7025397f2efc086db96e"
+    },
+    {
+      "path": "calendar-before-detail.png",
+      "sha256": "ebe4bef1872041ee763a0a28ad508893984df822b51d67e9a5e17f6d804aefa7"
+    },
+    {
+      "path": "calendar-before-detail.xml",
+      "sha256": "39078963d7b14838f32c8870ae50c3626f6ca0ccaa9ff72145d3e0acc909e515"
+    },
+    {
+      "path": "calendar-before-detail.json",
+      "sha256": "c08fbf97ff86cbff4f82d3e51e5e06280693cf3b475e2418efb0ebf0a65688cb"
+    },
+    {
+      "path": "calendar-detail-entry.png",
+      "sha256": "8142f3d049264441493af4ba8ae4421741f89bde7791723b4b4bdbce51062d89"
+    },
+    {
+      "path": "calendar-detail-entry.xml",
+      "sha256": "74724517e32b8c8602fa15d577d083cbe5e9953395c4818bee050fff6f3a0f18"
+    },
+    {
+      "path": "calendar-detail-entry.json",
+      "sha256": "249bfb91706b3e6959625e9a445873a20712db7658931ddc4dc805e8a2923d15"
+    },
+    {
+      "path": "calendar-detail-return.png",
+      "sha256": "e35ddd6025e8e82de44e8cbf3f93f7c5f9132e7a8624b5d323d5b26a1c9ca2e3"
+    },
+    {
+      "path": "calendar-detail-return.xml",
+      "sha256": "7876b52c012002cb63e14a4fb76c7102e680e1ec989f944bba3864cf4a9ddac5"
+    },
+    {
+      "path": "calendar-detail-return.json",
+      "sha256": "6800a3425813455cdb279403ed0ccaa332bc415037577431d018d28ed34f1784"
+    },
+    {
+      "path": "calendar-hardware-back-return.png",
+      "sha256": "e35ddd6025e8e82de44e8cbf3f93f7c5f9132e7a8624b5d323d5b26a1c9ca2e3"
+    },
+    {
+      "path": "calendar-hardware-back-return.xml",
+      "sha256": "7876b52c012002cb63e14a4fb76c7102e680e1ec989f944bba3864cf4a9ddac5"
+    },
+    {
+      "path": "calendar-hardware-back-return.json",
+      "sha256": "18b8b7ca5b44d6ee9cf043911d0d2b24eb9d220fd64e11fea5debedcda7e1d84"
+    },
+    {
+      "path": "week-before-detail.png",
+      "sha256": "badb1d598141228119ffbbcf652c17249638dcfb95f69978416aff7a698739fd"
+    },
+    {
+      "path": "week-before-detail.xml",
+      "sha256": "fc6462f1390a24593aad8f2d184f69a9e3e6f5428e677e2161f3442d8d0cff11"
+    },
+    {
+      "path": "week-before-detail.json",
+      "sha256": "cad6e157da7e99086edd150a9f80d672e5b3d8cf83ccaab7b873b54b95a7e490"
+    },
+    {
+      "path": "week-detail-entry.png",
+      "sha256": "bcaf3b454405e16351c0f809121b49547114edd26269f69f298b10ad5139fbbb"
+    },
+    {
+      "path": "week-detail-entry.xml",
+      "sha256": "71a35b3b4d0d8de587e2ce8b3f98bc961601a1176ebc3a1a9616b4782823f7fa"
+    },
+    {
+      "path": "week-detail-entry.json",
+      "sha256": "2fd63c33e1ba2c0993f19107d65abbe2be7edaee526d1398ffee7d90bcdd9728"
+    },
+    {
+      "path": "week-detail-return.png",
+      "sha256": "87cd338a3ac235c5bebb035f212da46ac656a95a160f23990511e30d3cca58bc"
+    },
+    {
+      "path": "week-detail-return.xml",
+      "sha256": "bd37d676cb23756383d1af4b6f4457e6904b04256e27e97d625840b490b61abf"
+    },
+    {
+      "path": "week-detail-return.json",
+      "sha256": "67550c212a5b429691a3fb930b4cfbcb9941602b4d7d6b3551c79cefab0422f4"
+    }
+  ]
+}

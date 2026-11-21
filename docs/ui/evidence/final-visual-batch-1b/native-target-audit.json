@@ -1,0 +1,1593 @@
+{
+  "checkedVisibleTargets": 264,
+  "minWidthDp": 137.77777777777777,
+  "minHeightDp": 48.0,
+  "roundingToleranceDp": 0.3,
+  "failures": [],
+  "targets": [
+    {
+      "png": "form-393-font-1-nl-top.png",
+      "label": "Voornaam, (optioneel)",
+      "widthDp": 259.86332574031894,
+      "heightDp": 56.12756264236902
+    },
+    {
+      "png": "form-393-font-1-nl-top.png",
+      "label": "Geboortedatum",
+      "widthDp": 259.86332574031894,
+      "heightDp": 56.12756264236902
+    },
+    {
+      "png": "form-393-font-1-nl-top.png",
+      "label": "Rusthartslag, bpm",
+      "widthDp": 202.64236902050115,
+      "heightDp": 56.12756264236902
+    },
+    {
+      "png": "form-393-font-1-nl-lower-1.png",
+      "label": "Voornaam, (optioneel)",
+      "widthDp": 259.86332574031894,
+      "heightDp": 56.12756264236902
+    },
+    {
+      "png": "form-393-font-1-nl-lower-1.png",
+      "label": "Geboortedatum",
+      "widthDp": 259.86332574031894,
+      "heightDp": 56.12756264236902
+    },
+    {
+      "png": "form-393-font-1-nl-lower-1.png",
+      "label": "Rusthartslag, bpm",
+      "widthDp": 202.64236902050115,
+      "heightDp": 56.12756264236902
+    },
+    {
+      "png": "form-393-font-1-nl-lower-1.png",
+      "label": "Verder",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "workout-393-font-1-nl-top.png",
+      "label": "Deze training kiezen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "png": "workout-393-font-1-nl-top.png",
+      "label": "Deze training overslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "workout-393-font-1-nl-top.png",
+      "label": "Ongedaan maken",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "workout-393-font-1-nl-lower-1.png",
+      "label": "Deze training kiezen",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "png": "workout-393-font-1-nl-lower-1.png",
+      "label": "Deze training overslaan",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "workout-393-font-1-nl-lower-1.png",
+      "label": "Ongedaan maken",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "notices-393-font-1-nl-top.png",
+      "label": "Verder",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "notices-393-font-1-nl-lower-1.png",
+      "label": "Verder",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "states-393-font-1-nl-top.png",
+      "label": "Verder",
+      "widthDp": 361.54897494305243,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "states-393-font-1-nl-top.png",
+      "label": "Deze training overslaan",
+      "widthDp": 361.54897494305243,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "states-393-font-1-nl-top.png",
+      "label": "Ongedaan maken",
+      "widthDp": 361.54897494305243,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "states-393-font-1-nl-top.png",
+      "label": "Verder",
+      "widthDp": 361.54897494305243,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "png": "states-393-font-1-nl-top.png",
+      "label": "Wijzigingen opslaan, busy",
+      "widthDp": 361.54897494305243,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "png": "states-393-font-1-nl-top.png",
+      "label": "Maandag",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "png": "states-393-font-1-nl-top.png",
+      "label": "Dinsdag",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "png": "states-393-font-1-nl-top.png",
+      "label": "Een uitgebreide optie die altijd volledig leesbaar moet blijven",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-1-nl-lower-1.png",
+      "label": "Wijzigingen opslaan, busy",
+      "widthDp": 361.54897494305243,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "png": "states-393-font-1-nl-lower-1.png",
+      "label": "Maandag",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "png": "states-393-font-1-nl-lower-1.png",
+      "label": "Dinsdag",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "png": "states-393-font-1-nl-lower-1.png",
+      "label": "Een uitgebreide optie die altijd volledig leesbaar moet blijven",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-1-nl-lower-1.png",
+      "label": "Week",
+      "widthDp": 174.94305239179954,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "png": "states-393-font-1-nl-lower-1.png",
+      "label": "Maand",
+      "widthDp": 174.94305239179954,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "png": "form-393-font-1-en-top.png",
+      "label": "First name, (optional)",
+      "widthDp": 259.86332574031894,
+      "heightDp": 56.12756264236902
+    },
+    {
+      "png": "form-393-font-1-en-top.png",
+      "label": "Birth date",
+      "widthDp": 259.86332574031894,
+      "heightDp": 56.12756264236902
+    },
+    {
+      "png": "form-393-font-1-en-top.png",
+      "label": "Resting heart rate, bpm",
+      "widthDp": 202.64236902050115,
+      "heightDp": 56.12756264236902
+    },
+    {
+      "png": "form-393-font-1-en-lower-1.png",
+      "label": "First name, (optional)",
+      "widthDp": 259.86332574031894,
+      "heightDp": 56.12756264236902
+    },
+    {
+      "png": "form-393-font-1-en-lower-1.png",
+      "label": "Birth date",
+      "widthDp": 259.86332574031894,
+      "heightDp": 56.12756264236902
+    },
+    {
+      "png": "form-393-font-1-en-lower-1.png",
+      "label": "Resting heart rate, bpm",
+      "widthDp": 202.64236902050115,
+      "heightDp": 56.12756264236902
+    },
+    {
+      "png": "form-393-font-1-en-lower-1.png",
+      "label": "Continue",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "workout-393-font-1-en-top.png",
+      "label": "Choose this workout",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "png": "workout-393-font-1-en-top.png",
+      "label": "Skip this workout",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "workout-393-font-1-en-top.png",
+      "label": "Undo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "workout-393-font-1-en-lower-1.png",
+      "label": "Choose this workout",
+      "widthDp": 313.4396355353075,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "png": "workout-393-font-1-en-lower-1.png",
+      "label": "Skip this workout",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "workout-393-font-1-en-lower-1.png",
+      "label": "Undo",
+      "widthDp": 313.4396355353075,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "notices-393-font-1-en-top.png",
+      "label": "Continue",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "notices-393-font-1-en-lower-1.png",
+      "label": "Continue",
+      "widthDp": 329.4760820045558,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "states-393-font-1-en-top.png",
+      "label": "Continue",
+      "widthDp": 361.54897494305243,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "states-393-font-1-en-top.png",
+      "label": "Skip this workout",
+      "widthDp": 361.54897494305243,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "states-393-font-1-en-top.png",
+      "label": "Undo",
+      "widthDp": 361.54897494305243,
+      "heightDp": 57.9498861047836
+    },
+    {
+      "png": "states-393-font-1-en-top.png",
+      "label": "Continue",
+      "widthDp": 361.54897494305243,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "png": "states-393-font-1-en-top.png",
+      "label": "Saving changes, busy",
+      "widthDp": 361.54897494305243,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "png": "states-393-font-1-en-top.png",
+      "label": "Monday",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "png": "states-393-font-1-en-top.png",
+      "label": "Tuesday",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "png": "states-393-font-1-en-top.png",
+      "label": "An extended option label that must remain fully readable",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-1-en-lower-1.png",
+      "label": "Saving changes, busy",
+      "widthDp": 361.54897494305243,
+      "heightDp": 58.31435079726651
+    },
+    {
+      "png": "states-393-font-1-en-lower-1.png",
+      "label": "Monday",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "png": "states-393-font-1-en-lower-1.png",
+      "label": "Tuesday",
+      "widthDp": 361.54897494305243,
+      "heightDp": 49.93166287015946
+    },
+    {
+      "png": "states-393-font-1-en-lower-1.png",
+      "label": "An extended option label that must remain fully readable",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-1-en-lower-1.png",
+      "label": "Week",
+      "widthDp": 174.94305239179954,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "png": "states-393-font-1-en-lower-1.png",
+      "label": "Month",
+      "widthDp": 174.94305239179954,
+      "heightDp": 48.109339407744876
+    },
+    {
+      "png": "form-393-font-2-nl-top.png",
+      "label": "Voornaam, (optioneel)",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-nl-top.png",
+      "label": "Geboortedatum",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-nl-top.png",
+      "label": "Rusthartslag, bpm",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-nl-lower-1.png",
+      "label": "Geboortedatum",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-nl-lower-1.png",
+      "label": "Rusthartslag, bpm",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-nl-lower-2.png",
+      "label": "Rusthartslag, bpm",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-nl-lower-2.png",
+      "label": "Verder",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "form-393-font-2-nl-lower-3.png",
+      "label": "Rusthartslag, bpm",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-nl-lower-3.png",
+      "label": "Verder",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-nl-top.png",
+      "label": "Deze training kiezen",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-nl-lower-1.png",
+      "label": "Deze training kiezen",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-nl-lower-1.png",
+      "label": "Deze training overslaan",
+      "widthDp": 329.4760820045558,
+      "heightDp": 106.4236902050114
+    },
+    {
+      "png": "workout-393-font-2-nl-lower-1.png",
+      "label": "Ongedaan maken",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "workout-393-font-2-nl-lower-2.png",
+      "label": "Deze training kiezen",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-nl-lower-2.png",
+      "label": "Deze training overslaan",
+      "widthDp": 329.4760820045558,
+      "heightDp": 106.4236902050114
+    },
+    {
+      "png": "workout-393-font-2-nl-lower-2.png",
+      "label": "Ongedaan maken",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "workout-393-font-2-nl-lower-3.png",
+      "label": "Deze training kiezen",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-nl-lower-3.png",
+      "label": "Deze training overslaan",
+      "widthDp": 329.4760820045558,
+      "heightDp": 106.4236902050114
+    },
+    {
+      "png": "workout-393-font-2-nl-lower-3.png",
+      "label": "Ongedaan maken",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "notices-393-font-2-nl-top.png",
+      "label": "Verder",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "notices-393-font-2-nl-lower-1.png",
+      "label": "Verder",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "notices-393-font-2-nl-lower-2.png",
+      "label": "Verder",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "notices-393-font-2-nl-lower-3.png",
+      "label": "Verder",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "states-393-font-2-nl-top.png",
+      "label": "Verder",
+      "widthDp": 361.54897494305243,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "states-393-font-2-nl-top.png",
+      "label": "Deze training overslaan",
+      "widthDp": 361.54897494305243,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "states-393-font-2-nl-top.png",
+      "label": "Ongedaan maken",
+      "widthDp": 361.54897494305243,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "states-393-font-2-nl-top.png",
+      "label": "Verder",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-2-nl-top.png",
+      "label": "Wijzigingen opslaan, busy",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-2-nl-top.png",
+      "label": "Maandag",
+      "widthDp": 361.54897494305243,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "png": "states-393-font-2-nl-top.png",
+      "label": "Dinsdag",
+      "widthDp": 361.54897494305243,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "png": "states-393-font-2-nl-lower-1.png",
+      "label": "Verder",
+      "widthDp": 361.54897494305243,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "states-393-font-2-nl-lower-1.png",
+      "label": "Deze training overslaan",
+      "widthDp": 361.54897494305243,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "states-393-font-2-nl-lower-1.png",
+      "label": "Ongedaan maken",
+      "widthDp": 361.54897494305243,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "states-393-font-2-nl-lower-1.png",
+      "label": "Verder",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-2-nl-lower-1.png",
+      "label": "Wijzigingen opslaan, busy",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-2-nl-lower-1.png",
+      "label": "Maandag",
+      "widthDp": 361.54897494305243,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "png": "states-393-font-2-nl-lower-1.png",
+      "label": "Dinsdag",
+      "widthDp": 361.54897494305243,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "png": "states-393-font-2-nl-lower-2.png",
+      "label": "Ongedaan maken",
+      "widthDp": 361.54897494305243,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "states-393-font-2-nl-lower-2.png",
+      "label": "Verder",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-2-nl-lower-2.png",
+      "label": "Wijzigingen opslaan, busy",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-2-nl-lower-2.png",
+      "label": "Maandag",
+      "widthDp": 361.54897494305243,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "png": "states-393-font-2-nl-lower-2.png",
+      "label": "Dinsdag",
+      "widthDp": 361.54897494305243,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "png": "states-393-font-2-nl-lower-2.png",
+      "label": "Een uitgebreide optie die altijd volledig leesbaar moet blijven",
+      "widthDp": 361.54897494305243,
+      "heightDp": 131.9362186788155
+    },
+    {
+      "png": "states-393-font-2-nl-lower-3.png",
+      "label": "Week",
+      "widthDp": 353.5307517084283,
+      "heightDp": 59.40774487471526
+    },
+    {
+      "png": "states-393-font-2-nl-lower-3.png",
+      "label": "Maand",
+      "widthDp": 353.5307517084283,
+      "heightDp": 59.40774487471526
+    },
+    {
+      "png": "form-393-font-2-en-top.png",
+      "label": "First name, (optional)",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-en-top.png",
+      "label": "Birth date",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-en-top.png",
+      "label": "Resting heart rate, bpm",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-en-lower-1.png",
+      "label": "Resting heart rate, bpm",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-en-lower-2.png",
+      "label": "Resting heart rate, bpm",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-en-lower-2.png",
+      "label": "Continue",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "form-393-font-2-en-lower-3.png",
+      "label": "Resting heart rate, bpm",
+      "widthDp": 328.01822323462414,
+      "heightDp": 60.50113895216401
+    },
+    {
+      "png": "form-393-font-2-en-lower-3.png",
+      "label": "Continue",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-en-top.png",
+      "label": "Choose this workout",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-en-lower-1.png",
+      "label": "Choose this workout",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-en-lower-1.png",
+      "label": "Skip this workout",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-en-lower-1.png",
+      "label": "Undo",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "workout-393-font-2-en-lower-2.png",
+      "label": "Choose this workout",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-en-lower-2.png",
+      "label": "Skip this workout",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-en-lower-2.png",
+      "label": "Undo",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "workout-393-font-2-en-lower-3.png",
+      "label": "Choose this workout",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-en-lower-3.png",
+      "label": "Skip this workout",
+      "widthDp": 329.4760820045558,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "workout-393-font-2-en-lower-3.png",
+      "label": "Undo",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "notices-393-font-2-en-top.png",
+      "label": "Continue",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "notices-393-font-2-en-lower-1.png",
+      "label": "Continue",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "notices-393-font-2-en-lower-2.png",
+      "label": "Continue",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "notices-393-font-2-en-lower-3.png",
+      "label": "Continue",
+      "widthDp": 329.4760820045558,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "states-393-font-2-en-top.png",
+      "label": "Continue",
+      "widthDp": 361.54897494305243,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "states-393-font-2-en-top.png",
+      "label": "Skip this workout",
+      "widthDp": 361.54897494305243,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "states-393-font-2-en-top.png",
+      "label": "Undo",
+      "widthDp": 361.54897494305243,
+      "heightDp": 69.97722095671982
+    },
+    {
+      "png": "states-393-font-2-en-top.png",
+      "label": "Continue",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-2-en-top.png",
+      "label": "Saving changes, busy",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-2-en-top.png",
+      "label": "Monday",
+      "widthDp": 361.54897494305243,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "png": "states-393-font-2-en-top.png",
+      "label": "Tuesday",
+      "widthDp": 361.54897494305243,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "png": "states-393-font-2-en-lower-1.png",
+      "label": "Saving changes, busy",
+      "widthDp": 361.54897494305243,
+      "heightDp": 70.34168564920273
+    },
+    {
+      "png": "states-393-font-2-en-lower-1.png",
+      "label": "Monday",
+      "widthDp": 361.54897494305243,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "png": "states-393-font-2-en-lower-1.png",
+      "label": "Tuesday",
+      "widthDp": 361.54897494305243,
+      "heightDp": 61.23006833712984
+    },
+    {
+      "png": "states-393-font-2-en-lower-1.png",
+      "label": "An extended option label that must remain fully readable",
+      "widthDp": 361.54897494305243,
+      "heightDp": 131.9362186788155
+    },
+    {
+      "png": "states-393-font-2-en-lower-1.png",
+      "label": "Week",
+      "widthDp": 353.5307517084283,
+      "heightDp": 59.40774487471526
+    },
+    {
+      "png": "states-393-font-2-en-lower-1.png",
+      "label": "Month",
+      "widthDp": 353.5307517084283,
+      "heightDp": 59.40774487471526
+    },
+    {
+      "png": "states-393-font-2-en-lower-2.png",
+      "label": "An extended option label that must remain fully readable",
+      "widthDp": 361.54897494305243,
+      "heightDp": 131.9362186788155
+    },
+    {
+      "png": "states-393-font-2-en-lower-2.png",
+      "label": "Week",
+      "widthDp": 353.5307517084283,
+      "heightDp": 59.40774487471526
+    },
+    {
+      "png": "states-393-font-2-en-lower-2.png",
+      "label": "Month",
+      "widthDp": 353.5307517084283,
+      "heightDp": 59.40774487471526
+    },
+    {
+      "png": "states-393-font-2-en-lower-3.png",
+      "label": "Week",
+      "widthDp": 353.5307517084283,
+      "heightDp": 59.40774487471526
+    },
+    {
+      "png": "states-393-font-2-en-lower-3.png",
+      "label": "Month",
+      "widthDp": 353.5307517084283,
+      "heightDp": 59.40774487471526
+    },
+    {
+      "png": "form-320-font-1-nl-top.png",
+      "label": "Voornaam, (optioneel)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 56.0
+    },
+    {
+      "png": "form-320-font-1-nl-top.png",
+      "label": "Geboortedatum",
+      "widthDp": 254.22222222222223,
+      "heightDp": 56.0
+    },
+    {
+      "png": "form-320-font-1-nl-top.png",
+      "label": "Rusthartslag, bpm",
+      "widthDp": 254.22222222222223,
+      "heightDp": 56.0
+    },
+    {
+      "png": "form-320-font-1-nl-lower-1.png",
+      "label": "Geboortedatum",
+      "widthDp": 254.22222222222223,
+      "heightDp": 56.0
+    },
+    {
+      "png": "form-320-font-1-nl-lower-1.png",
+      "label": "Rusthartslag, bpm",
+      "widthDp": 254.22222222222223,
+      "heightDp": 56.0
+    },
+    {
+      "png": "workout-320-font-1-nl-top.png",
+      "label": "Deze training kiezen",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "workout-320-font-1-nl-top.png",
+      "label": "Deze training overslaan",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "workout-320-font-1-nl-lower-1.png",
+      "label": "Deze training kiezen",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "workout-320-font-1-nl-lower-1.png",
+      "label": "Deze training overslaan",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "workout-320-font-1-nl-lower-1.png",
+      "label": "Ongedaan maken",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "notices-320-font-1-nl-top.png",
+      "label": "Verder",
+      "widthDp": 256.0,
+      "heightDp": 57.77777777777778
+    },
+    {
+      "png": "notices-320-font-1-nl-lower-1.png",
+      "label": "Verder",
+      "widthDp": 256.0,
+      "heightDp": 57.77777777777778
+    },
+    {
+      "png": "states-320-font-1-nl-top.png",
+      "label": "Verder",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-nl-top.png",
+      "label": "Deze training overslaan",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-nl-top.png",
+      "label": "Ongedaan maken",
+      "widthDp": 288.0,
+      "heightDp": 57.77777777777778
+    },
+    {
+      "png": "states-320-font-1-nl-top.png",
+      "label": "Verder",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-nl-top.png",
+      "label": "Wijzigingen opslaan, busy",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-nl-top.png",
+      "label": "Maandag",
+      "widthDp": 288.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "png": "states-320-font-1-nl-top.png",
+      "label": "Dinsdag",
+      "widthDp": 288.0,
+      "heightDp": 49.77777777777778
+    },
+    {
+      "png": "states-320-font-1-nl-lower-1.png",
+      "label": "Deze training overslaan",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-nl-lower-1.png",
+      "label": "Ongedaan maken",
+      "widthDp": 288.0,
+      "heightDp": 57.77777777777778
+    },
+    {
+      "png": "states-320-font-1-nl-lower-1.png",
+      "label": "Verder",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-nl-lower-1.png",
+      "label": "Wijzigingen opslaan, busy",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-nl-lower-1.png",
+      "label": "Maandag",
+      "widthDp": 288.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "png": "states-320-font-1-nl-lower-1.png",
+      "label": "Dinsdag",
+      "widthDp": 288.0,
+      "heightDp": 49.77777777777778
+    },
+    {
+      "png": "states-320-font-1-nl-lower-1.png",
+      "label": "Een uitgebreide optie die altijd volledig leesbaar moet blijven",
+      "widthDp": 288.0,
+      "heightDp": 70.51851851851852
+    },
+    {
+      "png": "form-320-font-1-en-top.png",
+      "label": "First name, (optional)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 56.0
+    },
+    {
+      "png": "form-320-font-1-en-top.png",
+      "label": "Birth date",
+      "widthDp": 254.22222222222223,
+      "heightDp": 56.0
+    },
+    {
+      "png": "form-320-font-1-en-top.png",
+      "label": "Resting heart rate, bpm",
+      "widthDp": 254.22222222222223,
+      "heightDp": 56.0
+    },
+    {
+      "png": "form-320-font-1-en-lower-1.png",
+      "label": "Birth date",
+      "widthDp": 254.22222222222223,
+      "heightDp": 56.0
+    },
+    {
+      "png": "form-320-font-1-en-lower-1.png",
+      "label": "Resting heart rate, bpm",
+      "widthDp": 254.22222222222223,
+      "heightDp": 56.0
+    },
+    {
+      "png": "workout-320-font-1-en-top.png",
+      "label": "Choose this workout",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "workout-320-font-1-en-top.png",
+      "label": "Skip this workout",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "workout-320-font-1-en-lower-1.png",
+      "label": "Choose this workout",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "workout-320-font-1-en-lower-1.png",
+      "label": "Skip this workout",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "workout-320-font-1-en-lower-1.png",
+      "label": "Undo",
+      "widthDp": 256.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "notices-320-font-1-en-top.png",
+      "label": "Continue",
+      "widthDp": 256.0,
+      "heightDp": 57.77777777777778
+    },
+    {
+      "png": "notices-320-font-1-en-lower-1.png",
+      "label": "Continue",
+      "widthDp": 256.0,
+      "heightDp": 57.77777777777778
+    },
+    {
+      "png": "states-320-font-1-en-top.png",
+      "label": "Continue",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-en-top.png",
+      "label": "Skip this workout",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-en-top.png",
+      "label": "Undo",
+      "widthDp": 288.0,
+      "heightDp": 57.77777777777778
+    },
+    {
+      "png": "states-320-font-1-en-top.png",
+      "label": "Continue",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-en-top.png",
+      "label": "Saving changes, busy",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-en-top.png",
+      "label": "Monday",
+      "widthDp": 288.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "png": "states-320-font-1-en-top.png",
+      "label": "Tuesday",
+      "widthDp": 288.0,
+      "heightDp": 49.77777777777778
+    },
+    {
+      "png": "states-320-font-1-en-lower-1.png",
+      "label": "Continue",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-en-lower-1.png",
+      "label": "Saving changes, busy",
+      "widthDp": 288.0,
+      "heightDp": 58.074074074074076
+    },
+    {
+      "png": "states-320-font-1-en-lower-1.png",
+      "label": "Monday",
+      "widthDp": 288.0,
+      "heightDp": 50.074074074074076
+    },
+    {
+      "png": "states-320-font-1-en-lower-1.png",
+      "label": "Tuesday",
+      "widthDp": 288.0,
+      "heightDp": 49.77777777777778
+    },
+    {
+      "png": "states-320-font-1-en-lower-1.png",
+      "label": "An extended option label that must remain fully readable",
+      "widthDp": 288.0,
+      "heightDp": 70.51851851851852
+    },
+    {
+      "png": "states-320-font-1-en-lower-1.png",
+      "label": "Week",
+      "widthDp": 137.77777777777777,
+      "heightDp": 48.0
+    },
+    {
+      "png": "states-320-font-1-en-lower-1.png",
+      "label": "Month",
+      "widthDp": 138.07407407407408,
+      "heightDp": 48.0
+    },
+    {
+      "png": "form-320-font-2-nl-top.png",
+      "label": "Voornaam, (optioneel)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 60.148148148148145
+    },
+    {
+      "png": "form-320-font-2-nl-top.png",
+      "label": "Geboortedatum",
+      "widthDp": 254.22222222222223,
+      "heightDp": 60.148148148148145
+    },
+    {
+      "png": "form-320-font-2-nl-lower-1.png",
+      "label": "Geboortedatum",
+      "widthDp": 254.22222222222223,
+      "heightDp": 60.148148148148145
+    },
+    {
+      "png": "form-320-font-2-nl-lower-1.png",
+      "label": "Rusthartslag, bpm",
+      "widthDp": 254.22222222222223,
+      "heightDp": 60.148148148148145
+    },
+    {
+      "png": "form-320-font-2-nl-lower-2.png",
+      "label": "Rusthartslag, bpm",
+      "widthDp": 254.22222222222223,
+      "heightDp": 60.148148148148145
+    },
+    {
+      "png": "form-320-font-2-nl-lower-3.png",
+      "label": "Verder",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "workout-320-font-2-nl-lower-1.png",
+      "label": "Deze training kiezen",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-nl-lower-1.png",
+      "label": "Deze training overslaan",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-nl-lower-2.png",
+      "label": "Deze training kiezen",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-nl-lower-2.png",
+      "label": "Deze training overslaan",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-nl-lower-2.png",
+      "label": "Ongedaan maken",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-nl-lower-3.png",
+      "label": "Deze training kiezen",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-nl-lower-3.png",
+      "label": "Deze training overslaan",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-nl-lower-3.png",
+      "label": "Ongedaan maken",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "notices-320-font-2-nl-lower-1.png",
+      "label": "Verder",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "png": "notices-320-font-2-nl-lower-2.png",
+      "label": "Verder",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "png": "notices-320-font-2-nl-lower-3.png",
+      "label": "Verder",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "png": "states-320-font-2-nl-top.png",
+      "label": "Verder",
+      "widthDp": 288.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "states-320-font-2-nl-top.png",
+      "label": "Deze training overslaan",
+      "widthDp": 288.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "states-320-font-2-nl-top.png",
+      "label": "Ongedaan maken",
+      "widthDp": 288.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "png": "states-320-font-2-nl-top.png",
+      "label": "Verder",
+      "widthDp": 288.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "states-320-font-2-nl-lower-1.png",
+      "label": "Ongedaan maken",
+      "widthDp": 288.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "png": "states-320-font-2-nl-lower-1.png",
+      "label": "Verder",
+      "widthDp": 288.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "states-320-font-2-nl-lower-1.png",
+      "label": "Wijzigingen opslaan, busy",
+      "widthDp": 288.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "states-320-font-2-nl-lower-1.png",
+      "label": "Maandag",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "png": "states-320-font-2-nl-lower-1.png",
+      "label": "Dinsdag",
+      "widthDp": 288.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "png": "states-320-font-2-nl-lower-2.png",
+      "label": "Verder",
+      "widthDp": 288.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "states-320-font-2-nl-lower-2.png",
+      "label": "Wijzigingen opslaan, busy",
+      "widthDp": 288.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "states-320-font-2-nl-lower-2.png",
+      "label": "Maandag",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "png": "states-320-font-2-nl-lower-2.png",
+      "label": "Dinsdag",
+      "widthDp": 288.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "png": "states-320-font-2-nl-lower-2.png",
+      "label": "Een uitgebreide optie die altijd volledig leesbaar moet blijven",
+      "widthDp": 288.0,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "png": "states-320-font-2-nl-lower-3.png",
+      "label": "Dinsdag",
+      "widthDp": 288.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "png": "states-320-font-2-nl-lower-3.png",
+      "label": "Een uitgebreide optie die altijd volledig leesbaar moet blijven",
+      "widthDp": 288.0,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "png": "states-320-font-2-nl-lower-3.png",
+      "label": "Week",
+      "widthDp": 280.0,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "png": "states-320-font-2-nl-lower-3.png",
+      "label": "Maand",
+      "widthDp": 280.0,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "png": "form-320-font-2-en-top.png",
+      "label": "First name, (optional)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 60.148148148148145
+    },
+    {
+      "png": "form-320-font-2-en-top.png",
+      "label": "Birth date",
+      "widthDp": 254.22222222222223,
+      "heightDp": 60.148148148148145
+    },
+    {
+      "png": "form-320-font-2-en-lower-1.png",
+      "label": "First name, (optional)",
+      "widthDp": 254.22222222222223,
+      "heightDp": 60.148148148148145
+    },
+    {
+      "png": "form-320-font-2-en-lower-1.png",
+      "label": "Birth date",
+      "widthDp": 254.22222222222223,
+      "heightDp": 60.148148148148145
+    },
+    {
+      "png": "form-320-font-2-en-lower-1.png",
+      "label": "Resting heart rate, bpm",
+      "widthDp": 254.22222222222223,
+      "heightDp": 60.148148148148145
+    },
+    {
+      "png": "form-320-font-2-en-lower-2.png",
+      "label": "Resting heart rate, bpm",
+      "widthDp": 254.22222222222223,
+      "heightDp": 60.148148148148145
+    },
+    {
+      "png": "form-320-font-2-en-lower-3.png",
+      "label": "Continue",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "workout-320-font-2-en-lower-1.png",
+      "label": "Choose this workout",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-en-lower-1.png",
+      "label": "Skip this workout",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-en-lower-2.png",
+      "label": "Choose this workout",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-en-lower-2.png",
+      "label": "Skip this workout",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-en-lower-2.png",
+      "label": "Undo",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "workout-320-font-2-en-lower-3.png",
+      "label": "Choose this workout",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-en-lower-3.png",
+      "label": "Skip this workout",
+      "widthDp": 256.0,
+      "heightDp": 106.37037037037037
+    },
+    {
+      "png": "workout-320-font-2-en-lower-3.png",
+      "label": "Undo",
+      "widthDp": 256.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "notices-320-font-2-en-lower-1.png",
+      "label": "Continue",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "png": "notices-320-font-2-en-lower-2.png",
+      "label": "Continue",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "png": "notices-320-font-2-en-lower-3.png",
+      "label": "Continue",
+      "widthDp": 256.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "png": "states-320-font-2-en-top.png",
+      "label": "Continue",
+      "widthDp": 288.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "states-320-font-2-en-top.png",
+      "label": "Skip this workout",
+      "widthDp": 288.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "states-320-font-2-en-top.png",
+      "label": "Undo",
+      "widthDp": 288.0,
+      "heightDp": 69.92592592592592
+    },
+    {
+      "png": "states-320-font-2-en-top.png",
+      "label": "Continue",
+      "widthDp": 288.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "states-320-font-2-en-top.png",
+      "label": "Saving changes, busy",
+      "widthDp": 288.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "states-320-font-2-en-lower-1.png",
+      "label": "Continue",
+      "widthDp": 288.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "states-320-font-2-en-lower-1.png",
+      "label": "Saving changes, busy",
+      "widthDp": 288.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "states-320-font-2-en-lower-1.png",
+      "label": "Monday",
+      "widthDp": 288.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "png": "states-320-font-2-en-lower-1.png",
+      "label": "Tuesday",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "png": "states-320-font-2-en-lower-2.png",
+      "label": "Saving changes, busy",
+      "widthDp": 288.0,
+      "heightDp": 70.22222222222223
+    },
+    {
+      "png": "states-320-font-2-en-lower-2.png",
+      "label": "Monday",
+      "widthDp": 288.0,
+      "heightDp": 61.03703703703704
+    },
+    {
+      "png": "states-320-font-2-en-lower-2.png",
+      "label": "Tuesday",
+      "widthDp": 288.0,
+      "heightDp": 61.333333333333336
+    },
+    {
+      "png": "states-320-font-2-en-lower-2.png",
+      "label": "An extended option label that must remain fully readable",
+      "widthDp": 288.0,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "png": "states-320-font-2-en-lower-3.png",
+      "label": "An extended option label that must remain fully readable",
+      "widthDp": 288.0,
+      "heightDp": 167.11111111111111
+    },
+    {
+      "png": "states-320-font-2-en-lower-3.png",
+      "label": "Week",
+      "widthDp": 280.0,
+      "heightDp": 59.25925925925926
+    },
+    {
+      "png": "states-320-font-2-en-lower-3.png",
+      "label": "Month",
+      "widthDp": 280.0,
+      "heightDp": 59.25925925925926
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "sdkVersion": "57.0.0",
+  "projectRoot": "F:\\Projecten Business\\Start23\\Code\\.worktrees\\wombo-ui-v2-activities\\mobile",
+  "packagerOpts": {
+    "dev": true
+  },
+  "debuggerHost": "127.0.0.1:8081"
+}

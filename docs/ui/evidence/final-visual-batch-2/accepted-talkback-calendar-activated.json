@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-06T22:30:17.886312+00:00",
+  "provenance": "Actual TalkBack accessibility focus; public native fixture; no UIAutomation suppression during screenshot",
+  "inputMethod": "talkback-hardware-activate",
+  "accessibilityServices": "com.google.android.marvin.talkback/.TalkBackService",
+  "enabled": "1",
+  "density": "Physical density: 440\nOverride density: 439",
+  "fontScale": "1",
+  "fixture": {
+    "language": "en",
+    "pending": false,
+    "gate": false,
+    "plan": true
+  }
+}

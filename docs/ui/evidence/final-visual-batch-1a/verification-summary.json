@@ -1,0 +1,19 @@
+{
+  "protectedCount": 324,
+  "changedProtectedFiles": [
+    ".worktrees/wombo-ui-v2-activities/mobile/package.json",
+    ".worktrees/wombo-ui-v2-activities/mobile/package-lock.json",
+    ".worktrees/wombo-ui-v2-activities/mobile/jest.config.js"
+  ],
+  "privacySourceCount": 131,
+  "privacyHits": [],
+  "nativeApkBytes": 93337714,
+  "nativeApkSha256": "9b060e6f9ed3e77ddced507c6e21db2cb042aeccee8cb6ec8bbf33eebe851985",
+  "svgAutolink": true,
+  "runtimeStatus": " M mobile/jest.config.js\n M mobile/package-lock.json\n M mobile/package.json\n?? mobile/THIRD_PARTY_NOTICES.md\n?? mobile/app/dev-assets.tsx\n?? mobile/src/ui-v2/assets/\n?? mobile/src/ui-v2/dev/\n?? mobile/src/ui-v2/primitives/Icon.tsx\n",
+  "trackedDiff": " mobile/jest.config.js    |  11 +++\n mobile/package-lock.json | 169 +++++++++++++++++++++++++++++++++++++++++++++++\n mobile/package.json      |   2 +\n 3 files changed, 182 insertions(+)\n",
+  "finalUtc": "2026-10-06T16:06:37.357846+00:00",
+  "finalRuntimeStatus": "M mobile/jest.config.js\n M mobile/package-lock.json\n M mobile/package.json\n?? mobile/THIRD_PARTY_NOTICES.md\n?? mobile/app/dev-assets.tsx\n?? mobile/src/ui-v2/assets/ActionLandscape.tsx\n?? mobile/src/ui-v2/assets/AssetFoundation.test.tsx\n?? mobile/src/ui-v2/assets/HeaderLandscape.tsx\n?? mobile/src/ui-v2/assets/LandscapeArtwork.tsx\n?? mobile/src/ui-v2/assets/SportVectors.tsx\n?? mobile/src/ui-v2/assets/assetColors.ts\n?? mobile/src/ui-v2/dev/AssetGallery.tsx\n?? mobile/src/ui-v2/primitives/Icon.tsx",
+  "fullMobileTestsPassed": 515,
+  "fullMobileSuitesPassed": 59
+}

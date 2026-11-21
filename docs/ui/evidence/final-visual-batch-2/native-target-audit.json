@@ -1,0 +1,2602 @@
+{
+  "checked": 288,
+  "minimumHeightDp": 47.74487471526196,
+  "minimumWidthDp": 96.0,
+  "failures": [],
+  "sourceMinimumDp": 48,
+  "boundsRounding": "UIAutomation integer endpoints; allow less than one physical pixel below exact dp conversion",
+  "targets": [
+    {
+      "capture": "320-font-1-nl-week",
+      "label": "Profiel",
+      "widthDp": 139.55555555555554,
+      "heightDp": 48.0,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-week",
+      "label": "Week",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-week",
+      "label": "Kalender",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-week",
+      "label": "Activiteiten",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-calendar",
+      "label": "Terug naar Week",
+      "widthDp": 184.88888888888889,
+      "heightDp": 48.0,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-calendar",
+      "label": "Profiel",
+      "widthDp": 184.88888888888889,
+      "heightDp": 48.0,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-calendar",
+      "label": "Week",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-calendar",
+      "label": "Kalender",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-calendar",
+      "label": "Activiteiten",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-activities",
+      "label": "Profiel",
+      "widthDp": 139.55555555555554,
+      "heightDp": 48.0,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-activities",
+      "label": "Week",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-activities",
+      "label": "Kalender",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-activities",
+      "label": "Activiteiten",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-long-labels",
+      "label": "Terug naar het vorige overzicht",
+      "widthDp": 287.1111111111111,
+      "heightDp": 48.0,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-long-labels",
+      "label": "Persoonlijk profiel openen",
+      "widthDp": 287.1111111111111,
+      "heightDp": 48.0,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-long-labels",
+      "label": "Week met uitgebreid overzicht",
+      "widthDp": 96.0,
+      "heightDp": 124.74074074074075,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-long-labels",
+      "label": "Kalender met geplande trainingen",
+      "widthDp": 96.0,
+      "heightDp": 124.74074074074075,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-nl-long-labels",
+      "label": "Activiteiten en trainingsgeschiedenis",
+      "widthDp": 96.0,
+      "heightDp": 124.74074074074075,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-week",
+      "label": "Profile",
+      "widthDp": 139.55555555555554,
+      "heightDp": 48.0,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-week",
+      "label": "Week",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-week",
+      "label": "Calendar",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-week",
+      "label": "Activities",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-calendar",
+      "label": "Back to Week",
+      "widthDp": 161.4814814814815,
+      "heightDp": 48.0,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-calendar",
+      "label": "Profile",
+      "widthDp": 161.4814814814815,
+      "heightDp": 48.0,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-calendar",
+      "label": "Week",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-calendar",
+      "label": "Calendar",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-calendar",
+      "label": "Activities",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-activities",
+      "label": "Profile",
+      "widthDp": 139.55555555555554,
+      "heightDp": 48.0,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-activities",
+      "label": "Week",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-activities",
+      "label": "Calendar",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-activities",
+      "label": "Activities",
+      "widthDp": 96.0,
+      "heightDp": 64.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-long-labels",
+      "label": "Return to the previous overview",
+      "widthDp": 288.0,
+      "heightDp": 68.44444444444444,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-long-labels",
+      "label": "Open personal profile",
+      "widthDp": 288.0,
+      "heightDp": 48.0,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-long-labels",
+      "label": "Week with extended overview",
+      "widthDp": 96.0,
+      "heightDp": 124.74074074074075,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-long-labels",
+      "label": "Calendar with planned sessions",
+      "widthDp": 96.0,
+      "heightDp": 124.74074074074075,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-1-en-long-labels",
+      "label": "Activities and training history",
+      "widthDp": 96.0,
+      "heightDp": 124.74074074074075,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-week",
+      "label": "Profiel",
+      "widthDp": 175.40740740740742,
+      "heightDp": 59.25925925925926,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-week",
+      "label": "Week",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-week",
+      "label": "Kalender",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-week",
+      "label": "Activiteiten",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-calendar",
+      "label": "Terug naar Week",
+      "widthDp": 276.74074074074076,
+      "heightDp": 59.25925925925926,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-calendar",
+      "label": "Profiel",
+      "widthDp": 276.74074074074076,
+      "heightDp": 59.25925925925926,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-calendar",
+      "label": "Week",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-calendar",
+      "label": "Kalender",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-calendar",
+      "label": "Activiteiten",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-activities",
+      "label": "Profiel",
+      "widthDp": 175.40740740740742,
+      "heightDp": 59.25925925925926,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-activities",
+      "label": "Week",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-activities",
+      "label": "Kalender",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-activities",
+      "label": "Activiteiten",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-long-labels",
+      "label": "Terug naar het vorige overzicht",
+      "widthDp": 288.0,
+      "heightDp": 94.51851851851852,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-long-labels",
+      "label": "Persoonlijk profiel openen",
+      "widthDp": 288.0,
+      "heightDp": 94.51851851851852,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-long-labels",
+      "label": "Week met uitgebreid overzicht",
+      "widthDp": 96.0,
+      "heightDp": 248.59259259259258,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-long-labels",
+      "label": "Kalender met geplande trainingen",
+      "widthDp": 96.0,
+      "heightDp": 248.59259259259258,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-nl-long-labels",
+      "label": "Activiteiten en trainingsgeschiedenis",
+      "widthDp": 96.0,
+      "heightDp": 248.59259259259258,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-week",
+      "label": "Profile",
+      "widthDp": 175.40740740740742,
+      "heightDp": 59.25925925925926,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-week",
+      "label": "Week",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-week",
+      "label": "Calendar",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-week",
+      "label": "Activities",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-calendar",
+      "label": "Back to Week",
+      "widthDp": 235.25925925925927,
+      "heightDp": 59.25925925925926,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-calendar",
+      "label": "Profile",
+      "widthDp": 235.25925925925927,
+      "heightDp": 59.25925925925926,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-calendar",
+      "label": "Week",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-calendar",
+      "label": "Calendar",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-calendar",
+      "label": "Activities",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-activities",
+      "label": "Profile",
+      "widthDp": 175.40740740740742,
+      "heightDp": 59.25925925925926,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-activities",
+      "label": "Week",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-activities",
+      "label": "Calendar",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-activities",
+      "label": "Activities",
+      "widthDp": 96.0,
+      "heightDp": 112.29629629629629,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-long-labels",
+      "label": "Return to the previous overview",
+      "widthDp": 288.0,
+      "heightDp": 129.77777777777777,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-long-labels",
+      "label": "Open personal profile",
+      "widthDp": 288.0,
+      "heightDp": 94.51851851851852,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-long-labels",
+      "label": "Week with extended overview",
+      "widthDp": 96.0,
+      "heightDp": 248.59259259259258,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-long-labels",
+      "label": "Calendar with planned sessions",
+      "widthDp": 96.0,
+      "heightDp": 248.59259259259258,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "320-font-2-en-long-labels",
+      "label": "Activities and training history",
+      "widthDp": 96.0,
+      "heightDp": 248.59259259259258,
+      "minimumPixels": 162,
+      "roundingResolutionDp": 0.2962962962962963,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-week",
+      "label": "Profiel",
+      "widthDp": 139.33333333333334,
+      "heightDp": 48.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-week",
+      "label": "Week",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-week",
+      "label": "Kalender",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-week",
+      "label": "Activiteiten",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-calendar",
+      "label": "Terug naar Week",
+      "widthDp": 185.0,
+      "heightDp": 48.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-calendar",
+      "label": "Profiel",
+      "widthDp": 139.33333333333334,
+      "heightDp": 48.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-calendar",
+      "label": "Week",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-calendar",
+      "label": "Kalender",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-calendar",
+      "label": "Activiteiten",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-activities",
+      "label": "Profiel",
+      "widthDp": 139.33333333333334,
+      "heightDp": 48.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-activities",
+      "label": "Week",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-activities",
+      "label": "Kalender",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-activities",
+      "label": "Activiteiten",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-long-labels",
+      "label": "Terug naar het vorige overzicht",
+      "widthDp": 287.0,
+      "heightDp": 48.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-long-labels",
+      "label": "Persoonlijk profiel openen",
+      "widthDp": 279.6666666666667,
+      "heightDp": 48.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-long-labels",
+      "label": "Week met uitgebreid overzicht",
+      "widthDp": 109.33333333333333,
+      "heightDp": 104.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-long-labels",
+      "label": "Kalender met geplande trainingen",
+      "widthDp": 109.33333333333333,
+      "heightDp": 104.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-nl-long-labels",
+      "label": "Activiteiten en trainingsgeschiedenis",
+      "widthDp": 109.33333333333333,
+      "heightDp": 104.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-week",
+      "label": "Profile",
+      "widthDp": 139.33333333333334,
+      "heightDp": 48.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-week",
+      "label": "Week",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-week",
+      "label": "Calendar",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-week",
+      "label": "Activities",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-calendar",
+      "label": "Back to Week",
+      "widthDp": 161.33333333333334,
+      "heightDp": 48.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-calendar",
+      "label": "Profile",
+      "widthDp": 139.33333333333334,
+      "heightDp": 48.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-calendar",
+      "label": "Week",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-calendar",
+      "label": "Calendar",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-calendar",
+      "label": "Activities",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-activities",
+      "label": "Profile",
+      "widthDp": 139.33333333333334,
+      "heightDp": 48.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-activities",
+      "label": "Week",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-activities",
+      "label": "Calendar",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-activities",
+      "label": "Activities",
+      "widthDp": 109.33333333333333,
+      "heightDp": 64.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-long-labels",
+      "label": "Return to the previous overview",
+      "widthDp": 290.3333333333333,
+      "heightDp": 48.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-long-labels",
+      "label": "Open personal profile",
+      "widthDp": 246.0,
+      "heightDp": 48.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-long-labels",
+      "label": "Week with extended overview",
+      "widthDp": 109.33333333333333,
+      "heightDp": 104.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-long-labels",
+      "label": "Calendar with planned sessions",
+      "widthDp": 109.33333333333333,
+      "heightDp": 104.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-1-en-long-labels",
+      "label": "Activities and training history",
+      "widthDp": 109.33333333333333,
+      "heightDp": 104.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-week",
+      "label": "Profiel",
+      "widthDp": 174.66666666666666,
+      "heightDp": 59.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-week",
+      "label": "Week",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-week",
+      "label": "Kalender",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-week",
+      "label": "Activiteiten",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-calendar",
+      "label": "Terug naar Week",
+      "widthDp": 275.6666666666667,
+      "heightDp": 59.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-calendar",
+      "label": "Profiel",
+      "widthDp": 275.6666666666667,
+      "heightDp": 59.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-calendar",
+      "label": "Week",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-calendar",
+      "label": "Kalender",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-calendar",
+      "label": "Activiteiten",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-activities",
+      "label": "Profiel",
+      "widthDp": 174.66666666666666,
+      "heightDp": 59.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-activities",
+      "label": "Week",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-activities",
+      "label": "Kalender",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-activities",
+      "label": "Activiteiten",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-long-labels",
+      "label": "Terug naar het vorige overzicht",
+      "widthDp": 328.0,
+      "heightDp": 94.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-long-labels",
+      "label": "Persoonlijk profiel openen",
+      "widthDp": 328.0,
+      "heightDp": 94.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-long-labels",
+      "label": "Week met uitgebreid overzicht",
+      "widthDp": 109.33333333333333,
+      "heightDp": 214.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-long-labels",
+      "label": "Kalender met geplande trainingen",
+      "widthDp": 109.33333333333333,
+      "heightDp": 214.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-nl-long-labels",
+      "label": "Activiteiten en trainingsgeschiedenis",
+      "widthDp": 109.33333333333333,
+      "heightDp": 214.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-week",
+      "label": "Profile",
+      "widthDp": 174.66666666666666,
+      "heightDp": 59.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-week",
+      "label": "Week",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-week",
+      "label": "Calendar",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-week",
+      "label": "Activities",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-calendar",
+      "label": "Back to Week",
+      "widthDp": 234.33333333333334,
+      "heightDp": 59.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-calendar",
+      "label": "Profile",
+      "widthDp": 234.33333333333334,
+      "heightDp": 59.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-calendar",
+      "label": "Week",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-calendar",
+      "label": "Calendar",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-calendar",
+      "label": "Activities",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-activities",
+      "label": "Profile",
+      "widthDp": 174.66666666666666,
+      "heightDp": 59.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-activities",
+      "label": "Week",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-activities",
+      "label": "Calendar",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-activities",
+      "label": "Activities",
+      "widthDp": 109.33333333333333,
+      "heightDp": 112.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-long-labels",
+      "label": "Return to the previous overview",
+      "widthDp": 328.0,
+      "heightDp": 94.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-long-labels",
+      "label": "Open personal profile",
+      "widthDp": 328.0,
+      "heightDp": 94.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-long-labels",
+      "label": "Week with extended overview",
+      "widthDp": 109.33333333333333,
+      "heightDp": 214.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-long-labels",
+      "label": "Calendar with planned sessions",
+      "widthDp": 109.33333333333333,
+      "heightDp": 214.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "360-font-2-en-long-labels",
+      "label": "Activities and training history",
+      "widthDp": 109.33333333333333,
+      "heightDp": 214.0,
+      "minimumPixels": 144,
+      "roundingResolutionDp": 0.3333333333333333,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-week",
+      "label": "Profiel",
+      "widthDp": 139.2255125284738,
+      "heightDp": 48.109339407744876,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-week",
+      "label": "Week",
+      "widthDp": 120.63781321184511,
+      "heightDp": 64.14578587699317,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-week",
+      "label": "Kalender",
+      "widthDp": 120.27334851936219,
+      "heightDp": 64.14578587699317,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-week",
+      "label": "Activiteiten",
+      "widthDp": 120.63781321184511,
+      "heightDp": 64.14578587699317,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-calendar",
+      "label": "Terug naar Week",
+      "widthDp": 185.5125284738041,
+      "heightDp": 48.109339407744876,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-calendar",
+      "label": "Profiel",
+      "widthDp": 139.2255125284738,
+      "heightDp": 48.109339407744876,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-calendar",
+      "label": "Week",
+      "widthDp": 120.63781321184511,
+      "heightDp": 64.14578587699317,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-calendar",
+      "label": "Kalender",
+      "widthDp": 120.27334851936219,
+      "heightDp": 64.14578587699317,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-calendar",
+      "label": "Activiteiten",
+      "widthDp": 120.63781321184511,
+      "heightDp": 64.14578587699317,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-activities",
+      "label": "Profiel",
+      "widthDp": 139.2255125284738,
+      "heightDp": 48.109339407744876,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-activities",
+      "label": "Week",
+      "widthDp": 120.63781321184511,
+      "heightDp": 64.14578587699317,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-activities",
+      "label": "Kalender",
+      "widthDp": 120.27334851936219,
+      "heightDp": 64.14578587699317,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-activities",
+      "label": "Activiteiten",
+      "widthDp": 120.63781321184511,
+      "heightDp": 64.14578587699317,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-long-labels",
+      "label": "Terug naar het vorige overzicht",
+      "widthDp": 287.5626423690205,
+      "heightDp": 48.109339407744876,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-long-labels",
+      "label": "Persoonlijk profiel openen",
+      "widthDp": 280.2733485193622,
+      "heightDp": 47.74487471526196,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-long-labels",
+      "label": "Week met uitgebreid overzicht",
+      "widthDp": 120.63781321184511,
+      "heightDp": 104.2369020501139,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-long-labels",
+      "label": "Kalender met geplande trainingen",
+      "widthDp": 120.27334851936219,
+      "heightDp": 104.2369020501139,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-nl-long-labels",
+      "label": "Activiteiten en trainingsgeschiedenis",
+      "widthDp": 120.63781321184511,
+      "heightDp": 104.2369020501139,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-week",
+      "label": "Profile",
+      "widthDp": 139.2255125284738,
+      "heightDp": 48.109339407744876,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-week",
+      "label": "Week",
+      "widthDp": 120.63781321184511,
+      "heightDp": 56.12756264236902,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-week",
+      "label": "Calendar",
+      "widthDp": 120.27334851936219,
+      "heightDp": 56.12756264236902,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-week",
+      "label": "Activities",
+      "widthDp": 120.63781321184511,
+      "heightDp": 56.12756264236902,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-calendar",
+      "label": "Back to Week",
+      "widthDp": 161.82232346241457,
+      "heightDp": 48.109339407744876,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-calendar",
+      "label": "Profile",
+      "widthDp": 139.2255125284738,
+      "heightDp": 48.109339407744876,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-calendar",
+      "label": "Week",
+      "widthDp": 120.63781321184511,
+      "heightDp": 56.12756264236902,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-calendar",
+      "label": "Calendar",
+      "widthDp": 120.27334851936219,
+      "heightDp": 56.12756264236902,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-calendar",
+      "label": "Activities",
+      "widthDp": 120.63781321184511,
+      "heightDp": 56.12756264236902,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-activities",
+      "label": "Profile",
+      "widthDp": 139.2255125284738,
+      "heightDp": 48.109339407744876,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-activities",
+      "label": "Week",
+      "widthDp": 120.63781321184511,
+      "heightDp": 56.12756264236902,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-activities",
+      "label": "Calendar",
+      "widthDp": 120.27334851936219,
+      "heightDp": 56.12756264236902,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-activities",
+      "label": "Activities",
+      "widthDp": 120.63781321184511,
+      "heightDp": 56.12756264236902,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-long-labels",
+      "label": "Return to the previous overview",
+      "widthDp": 291.20728929384967,
+      "heightDp": 48.109339407744876,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-long-labels",
+      "label": "Open personal profile",
+      "widthDp": 246.01366742596812,
+      "heightDp": 47.74487471526196,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-long-labels",
+      "label": "Week with extended overview",
+      "widthDp": 120.63781321184511,
+      "heightDp": 104.2369020501139,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-long-labels",
+      "label": "Calendar with planned sessions",
+      "widthDp": 120.27334851936219,
+      "heightDp": 104.2369020501139,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-1-en-long-labels",
+      "label": "Activities and training history",
+      "widthDp": 120.63781321184511,
+      "heightDp": 104.2369020501139,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-week",
+      "label": "Profiel",
+      "widthDp": 174.94305239179954,
+      "heightDp": 59.40774487471526,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-week",
+      "label": "Week",
+      "widthDp": 120.63781321184511,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-week",
+      "label": "Kalender",
+      "widthDp": 120.27334851936219,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-week",
+      "label": "Activiteiten",
+      "widthDp": 120.63781321184511,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-calendar",
+      "label": "Terug naar Week",
+      "widthDp": 276.26423690205013,
+      "heightDp": 59.40774487471526,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-calendar",
+      "label": "Profiel",
+      "widthDp": 276.26423690205013,
+      "heightDp": 59.40774487471526,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-calendar",
+      "label": "Week",
+      "widthDp": 120.63781321184511,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-calendar",
+      "label": "Kalender",
+      "widthDp": 120.27334851936219,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-calendar",
+      "label": "Activiteiten",
+      "widthDp": 120.63781321184511,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-activities",
+      "label": "Profiel",
+      "widthDp": 174.94305239179954,
+      "heightDp": 59.40774487471526,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-activities",
+      "label": "Week",
+      "widthDp": 120.63781321184511,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-activities",
+      "label": "Kalender",
+      "widthDp": 120.27334851936219,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-activities",
+      "label": "Activiteiten",
+      "widthDp": 120.63781321184511,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-long-labels",
+      "label": "Terug naar het vorige overzicht",
+      "widthDp": 361.54897494305243,
+      "heightDp": 94.76082004555809,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-long-labels",
+      "label": "Persoonlijk profiel openen",
+      "widthDp": 361.54897494305243,
+      "heightDp": 94.76082004555809,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-long-labels",
+      "label": "Week met uitgebreid overzicht",
+      "widthDp": 120.63781321184511,
+      "heightDp": 215.3986332574032,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-long-labels",
+      "label": "Kalender met geplande trainingen",
+      "widthDp": 120.27334851936219,
+      "heightDp": 215.3986332574032,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-nl-long-labels",
+      "label": "Activiteiten en trainingsgeschiedenis",
+      "widthDp": 120.63781321184511,
+      "heightDp": 215.3986332574032,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-week",
+      "label": "Profile",
+      "widthDp": 174.94305239179954,
+      "heightDp": 59.40774487471526,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-week",
+      "label": "Week",
+      "widthDp": 120.63781321184511,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-week",
+      "label": "Calendar",
+      "widthDp": 120.27334851936219,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-week",
+      "label": "Activities",
+      "widthDp": 120.63781321184511,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-calendar",
+      "label": "Back to Week",
+      "widthDp": 234.71526195899773,
+      "heightDp": 59.40774487471526,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-calendar",
+      "label": "Profile",
+      "widthDp": 234.71526195899773,
+      "heightDp": 59.40774487471526,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-calendar",
+      "label": "Week",
+      "widthDp": 120.63781321184511,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-calendar",
+      "label": "Calendar",
+      "widthDp": 120.27334851936219,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-calendar",
+      "label": "Activities",
+      "widthDp": 120.63781321184511,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-activities",
+      "label": "Profile",
+      "widthDp": 174.94305239179954,
+      "heightDp": 59.40774487471526,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-activities",
+      "label": "Week",
+      "widthDp": 120.63781321184511,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-activities",
+      "label": "Calendar",
+      "widthDp": 120.27334851936219,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-activities",
+      "label": "Activities",
+      "widthDp": 120.63781321184511,
+      "heightDp": 112.61958997722095,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-long-labels",
+      "label": "Return to the previous overview",
+      "widthDp": 361.54897494305243,
+      "heightDp": 94.76082004555809,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-long-labels",
+      "label": "Open personal profile",
+      "widthDp": 361.54897494305243,
+      "heightDp": 94.76082004555809,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-long-labels",
+      "label": "Week with extended overview",
+      "widthDp": 120.63781321184511,
+      "heightDp": 215.3986332574032,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-long-labels",
+      "label": "Calendar with planned sessions",
+      "widthDp": 120.27334851936219,
+      "heightDp": 215.3986332574032,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "393-font-2-en-long-labels",
+      "label": "Activities and training history",
+      "widthDp": 120.63781321184511,
+      "heightDp": 215.3986332574032,
+      "minimumPixels": 131,
+      "roundingResolutionDp": 0.36446469248291574,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-week",
+      "label": "Profiel",
+      "widthDp": 139.04761904761904,
+      "heightDp": 48.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-week",
+      "label": "Week",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-week",
+      "label": "Kalender",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-week",
+      "label": "Activiteiten",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-calendar",
+      "label": "Terug naar Week",
+      "widthDp": 185.14285714285714,
+      "heightDp": 48.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-calendar",
+      "label": "Profiel",
+      "widthDp": 139.04761904761904,
+      "heightDp": 48.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-calendar",
+      "label": "Week",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-calendar",
+      "label": "Kalender",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-calendar",
+      "label": "Activiteiten",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-activities",
+      "label": "Profiel",
+      "widthDp": 139.04761904761904,
+      "heightDp": 48.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-activities",
+      "label": "Week",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-activities",
+      "label": "Kalender",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-activities",
+      "label": "Activiteiten",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-long-labels",
+      "label": "Terug naar het vorige overzicht",
+      "widthDp": 287.23809523809524,
+      "heightDp": 48.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-long-labels",
+      "label": "Persoonlijk profiel openen",
+      "widthDp": 280.0,
+      "heightDp": 48.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-long-labels",
+      "label": "Week met uitgebreid overzicht",
+      "widthDp": 126.47619047619048,
+      "heightDp": 104.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-long-labels",
+      "label": "Kalender met geplande trainingen",
+      "widthDp": 126.47619047619048,
+      "heightDp": 104.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-nl-long-labels",
+      "label": "Activiteiten en trainingsgeschiedenis",
+      "widthDp": 126.47619047619048,
+      "heightDp": 104.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-week",
+      "label": "Profile",
+      "widthDp": 139.04761904761904,
+      "heightDp": 48.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-week",
+      "label": "Week",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-week",
+      "label": "Calendar",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-week",
+      "label": "Activities",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-calendar",
+      "label": "Back to Week",
+      "widthDp": 161.52380952380952,
+      "heightDp": 48.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-calendar",
+      "label": "Profile",
+      "widthDp": 139.04761904761904,
+      "heightDp": 48.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-calendar",
+      "label": "Week",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-calendar",
+      "label": "Calendar",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-calendar",
+      "label": "Activities",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-activities",
+      "label": "Profile",
+      "widthDp": 139.04761904761904,
+      "heightDp": 48.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-activities",
+      "label": "Week",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-activities",
+      "label": "Calendar",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-activities",
+      "label": "Activities",
+      "widthDp": 126.47619047619048,
+      "heightDp": 56.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-long-labels",
+      "label": "Return to the previous overview",
+      "widthDp": 290.2857142857143,
+      "heightDp": 48.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-long-labels",
+      "label": "Open personal profile",
+      "widthDp": 246.0952380952381,
+      "heightDp": 48.0,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-long-labels",
+      "label": "Week with extended overview",
+      "widthDp": 126.47619047619048,
+      "heightDp": 104.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-long-labels",
+      "label": "Calendar with planned sessions",
+      "widthDp": 126.47619047619048,
+      "heightDp": 104.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-1-en-long-labels",
+      "label": "Activities and training history",
+      "widthDp": 126.47619047619048,
+      "heightDp": 104.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-week",
+      "label": "Profiel",
+      "widthDp": 175.61904761904762,
+      "heightDp": 59.04761904761905,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-week",
+      "label": "Week",
+      "widthDp": 126.47619047619048,
+      "heightDp": 112.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-week",
+      "label": "Kalender",
+      "widthDp": 126.47619047619048,
+      "heightDp": 112.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-week",
+      "label": "Activiteiten",
+      "widthDp": 126.47619047619048,
+      "heightDp": 112.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-calendar",
+      "label": "Terug naar Week",
+      "widthDp": 276.95238095238096,
+      "heightDp": 59.04761904761905,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-calendar",
+      "label": "Profiel",
+      "widthDp": 276.95238095238096,
+      "heightDp": 59.04761904761905,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-calendar",
+      "label": "Week",
+      "widthDp": 126.47619047619048,
+      "heightDp": 112.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-calendar",
+      "label": "Kalender",
+      "widthDp": 126.47619047619048,
+      "heightDp": 112.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-calendar",
+      "label": "Activiteiten",
+      "widthDp": 126.47619047619048,
+      "heightDp": 112.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-activities",
+      "label": "Profiel",
+      "widthDp": 175.61904761904762,
+      "heightDp": 59.04761904761905,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-activities",
+      "label": "Week",
+      "widthDp": 126.47619047619048,
+      "heightDp": 112.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-activities",
+      "label": "Kalender",
+      "widthDp": 126.47619047619048,
+      "heightDp": 112.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-activities",
+      "label": "Activiteiten",
+      "widthDp": 126.47619047619048,
+      "heightDp": 112.76190476190476,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-long-labels",
+      "label": "Terug naar het vorige overzicht",
+      "widthDp": 379.42857142857144,
+      "heightDp": 94.0952380952381,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-long-labels",
+      "label": "Persoonlijk profiel openen",
+      "widthDp": 379.42857142857144,
+      "heightDp": 94.0952380952381,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-long-labels",
+      "label": "Week met uitgebreid overzicht",
+      "widthDp": 126.47619047619048,
+      "heightDp": 215.61904761904762,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-long-labels",
+      "label": "Kalender met geplande trainingen",
+      "widthDp": 126.47619047619048,
+      "heightDp": 215.61904761904762,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-nl-long-labels",
+      "label": "Activiteiten en trainingsgeschiedenis",
+      "widthDp": 126.47619047619048,
+      "heightDp": 215.61904761904762,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-week",
+      "label": "Profile",
+      "widthDp": 175.61904761904762,
+      "heightDp": 59.04761904761905,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-week",
+      "label": "Week",
+      "widthDp": 126.47619047619048,
+      "heightDp": 78.47619047619048,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-week",
+      "label": "Calendar",
+      "widthDp": 126.47619047619048,
+      "heightDp": 78.47619047619048,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-week",
+      "label": "Activities",
+      "widthDp": 126.47619047619048,
+      "heightDp": 78.47619047619048,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-calendar",
+      "label": "Back to Week",
+      "widthDp": 235.42857142857142,
+      "heightDp": 59.04761904761905,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-calendar",
+      "label": "Profile",
+      "widthDp": 235.42857142857142,
+      "heightDp": 59.04761904761905,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-calendar",
+      "label": "Week",
+      "widthDp": 126.47619047619048,
+      "heightDp": 78.47619047619048,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-calendar",
+      "label": "Calendar",
+      "widthDp": 126.47619047619048,
+      "heightDp": 78.47619047619048,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-calendar",
+      "label": "Activities",
+      "widthDp": 126.47619047619048,
+      "heightDp": 78.47619047619048,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-activities",
+      "label": "Profile",
+      "widthDp": 175.61904761904762,
+      "heightDp": 59.04761904761905,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-activities",
+      "label": "Week",
+      "widthDp": 126.47619047619048,
+      "heightDp": 78.47619047619048,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-activities",
+      "label": "Calendar",
+      "widthDp": 126.47619047619048,
+      "heightDp": 78.47619047619048,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-activities",
+      "label": "Activities",
+      "widthDp": 126.47619047619048,
+      "heightDp": 78.47619047619048,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-long-labels",
+      "label": "Return to the previous overview",
+      "widthDp": 379.42857142857144,
+      "heightDp": 94.0952380952381,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-long-labels",
+      "label": "Open personal profile",
+      "widthDp": 379.42857142857144,
+      "heightDp": 59.04761904761905,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-long-labels",
+      "label": "Week with extended overview",
+      "widthDp": 126.47619047619048,
+      "heightDp": 181.33333333333334,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-long-labels",
+      "label": "Calendar with planned sessions",
+      "widthDp": 126.47619047619048,
+      "heightDp": 181.33333333333334,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    },
+    {
+      "capture": "412-font-2-en-long-labels",
+      "label": "Activities and training history",
+      "widthDp": 126.47619047619048,
+      "heightDp": 181.33333333333334,
+      "minimumPixels": 126,
+      "roundingResolutionDp": 0.38095238095238093,
+      "pass": true
+    }
+  ]
+}

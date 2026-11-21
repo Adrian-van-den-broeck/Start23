@@ -1,0 +1,90 @@
+[
+  {
+    "reference": "S023",
+    "state": "Week workouts and prescribed rest",
+    "capturePrefix": "393-font-1-nl-week",
+    "publicFixture": true,
+    "visualReview": "PASS",
+    "nativeMutationSubmitted": false
+  },
+  {
+    "reference": "S024",
+    "state": "Empty Week",
+    "capturePrefix": "393-font-1-nl-empty",
+    "publicFixture": true,
+    "visualReview": "PASS",
+    "nativeMutationSubmitted": false
+  },
+  {
+    "reference": "S025",
+    "state": "Month; selected rest date",
+    "capturePrefix": "393-font-1-nl-month",
+    "publicFixture": true,
+    "visualReview": "PASS",
+    "nativeMutationSubmitted": false
+  },
+  {
+    "reference": "S026",
+    "state": "Selected date; all workouts",
+    "capturePrefix": "393-font-1-nl-selected",
+    "publicFixture": true,
+    "visualReview": "PASS",
+    "nativeMutationSubmitted": false
+  },
+  {
+    "reference": "S027",
+    "state": "Same-day occurrences; upper viewport",
+    "capturePrefix": "393-font-1-nl-week",
+    "publicFixture": true,
+    "visualReview": "PASS",
+    "nativeMutationSubmitted": false
+  },
+  {
+    "reference": "S028",
+    "state": "Same-day occurrences; last action and footer clearance",
+    "capturePrefix": "393-font-1-nl-week",
+    "publicFixture": true,
+    "visualReview": "PASS",
+    "nativeMutationSubmitted": false
+  },
+  {
+    "reference": "S029",
+    "state": "Real detail from Calendar; Close and Back return",
+    "capturePrefix": "interaction-detail-entry",
+    "publicFixture": true,
+    "visualReview": "PASS",
+    "nativeMutationSubmitted": false
+  },
+  {
+    "reference": "S062",
+    "state": "Active move entry",
+    "capturePrefix": "393-font-1-nl-moveEntry",
+    "publicFixture": true,
+    "visualReview": "PASS",
+    "nativeMutationSubmitted": false
+  },
+  {
+    "reference": "S066",
+    "state": "Supplied stored date after cancellation",
+    "capturePrefix": "393-font-1-nl-cancelReturn",
+    "publicFixture": true,
+    "visualReview": "PASS",
+    "nativeMutationSubmitted": false
+  },
+  {
+    "reference": "S067",
+    "state": "Supplied stored date after move",
+    "capturePrefix": "393-font-1-nl-afterMove",
+    "publicFixture": true,
+    "visualReview": "PASS",
+    "nativeMutationSubmitted": false
+  },
+  {
+    "reference": "S068",
+    "state": "Calendar with supplied moved location",
+    "capturePrefix": "393-font-1-nl-calendarAfterMove",
+    "publicFixture": true,
+    "visualReview": "PASS",
+    "nativeMutationSubmitted": false
+  }
+]

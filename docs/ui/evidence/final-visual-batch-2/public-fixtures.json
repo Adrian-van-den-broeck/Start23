@@ -1,0 +1,175 @@
+{
+  "activePlan": {
+    "id": "plan-a",
+    "week_start": "2026-10-05",
+    "timezone": "Europe/Amsterdam",
+    "state": "active",
+    "active_revision": 2,
+    "revision_id": "revision-2",
+    "revision": 2,
+    "revision_state": "active",
+    "phase": "base",
+    "target_basis": "prior_planned_hold",
+    "taper_period": null,
+    "total_duration_minutes": "30.5",
+    "low_intensity_percent": "100",
+    "high_intensity_percent": "0",
+    "display_low_intensity_percent": 100,
+    "display_high_intensity_percent": 0,
+    "low_intensity_minutes": "30.5",
+    "high_intensity_minutes": "0",
+    "confirmed_injuries": [
+      "run"
+    ],
+    "low_only_disciplines": [],
+    "available_dates": [
+      "2026-10-05",
+      "2026-10-07",
+      "2026-10-10"
+    ],
+    "availability_source": "explicit",
+    "workouts": [
+      {
+        "id": "workout-a",
+        "template_id": "template-1",
+        "template_key": "source-template",
+        "template_version": 1,
+        "discipline": "run",
+        "name": "Exact source workout",
+        "description": "Exact source description. RPE 2–3.",
+        "duration_minutes": "30.5",
+        "distance_meters": 1200,
+        "intensity_bucket": "low",
+        "expected_rpe_min": 2,
+        "expected_rpe_max": 3,
+        "segments": [
+          {
+            "sequence": 1,
+            "name": "Source segment",
+            "instructions": "4 × 200 m.\nRest exactly as instructed in source.",
+            "duration_minutes": "12.5",
+            "distance_meters": 800,
+            "zone_target": 2,
+            "protocol_target": {
+              "protocol_id": "historical-protocol",
+              "segment_id": "original",
+              "target_rpe_min": 6,
+              "target_rpe_max": 7,
+              "intensity_bucket": "high",
+              "optional": false
+            },
+            "rpe_target": {
+              "target_rpe_min": 3,
+              "target_rpe_max": 4,
+              "intensity_bucket": "low",
+              "heart_rate_observation_required": true
+            },
+            "expected_rpe": 5,
+            "is_swim_technique": false
+          }
+        ],
+        "rpe_zones": [
+          {
+            "zone_number": 2,
+            "target_rpe_min": 2,
+            "target_rpe_max": 3,
+            "display_label": "Exact source reference",
+            "training_type": "Exact training type",
+            "description": "Exact reference description."
+          }
+        ],
+        "scheduled_date": "2026-10-07",
+        "source": "auto_planned",
+        "status": "scheduled",
+        "warnings": []
+      }
+    ],
+    "rest_days": [],
+    "warnings": [
+      {
+        "id": "warning",
+        "rule_id": "supplied-rule",
+        "code": "target_outside_catalog_capacity",
+        "severity": "warning",
+        "message": "Review the combination",
+        "planned_workout_id": null
+      }
+    ],
+    "proposal": null
+  },
+  "workout": {
+    "id": "workout-a",
+    "template_id": "template-1",
+    "template_key": "source-template",
+    "template_version": 1,
+    "discipline": "run",
+    "name": "Exact source workout",
+    "description": "Exact source description. RPE 2–3.",
+    "duration_minutes": "30.5",
+    "distance_meters": 1200,
+    "intensity_bucket": "low",
+    "expected_rpe_min": 2,
+    "expected_rpe_max": 3,
+    "segments": [
+      {
+        "sequence": 1,
+        "name": "Source segment",
+        "instructions": "4 × 200 m.\nRest exactly as instructed in source.",
+        "duration_minutes": "12.5",
+        "distance_meters": 800,
+        "zone_target": 2,
+        "protocol_target": {
+          "protocol_id": "historical-protocol",
+          "segment_id": "original",
+          "target_rpe_min": 6,
+          "target_rpe_max": 7,
+          "intensity_bucket": "high",
+          "optional": false
+        },
+        "rpe_target": {
+          "target_rpe_min": 3,
+          "target_rpe_max": 4,
+          "intensity_bucket": "low",
+          "heart_rate_observation_required": true
+        },
+        "expected_rpe": 5,
+        "is_swim_technique": false
+      }
+    ],
+    "rpe_zones": [
+      {
+        "zone_number": 2,
+        "target_rpe_min": 2,
+        "target_rpe_max": 3,
+        "display_label": "Exact source reference",
+        "training_type": "Exact training type",
+        "description": "Exact reference description."
+      }
+    ],
+    "scheduled_date": "2026-10-07",
+    "source": "auto_planned",
+    "status": "scheduled",
+    "warnings": []
+  },
+  "pendingActivity": {
+    "id": "activity-a",
+    "planned_workout_id": null,
+    "discipline": "run",
+    "source": "canonical_summary",
+    "started_at": "2026-10-06T10:00:00Z",
+    "timezone": "Europe/Amsterdam",
+    "duration_minutes": "45",
+    "distance_meters": null,
+    "elevation_gain_meters": null,
+    "rpe": null,
+    "rpe_submitted_at": null,
+    "match_status": "unmatched",
+    "processing_state": "awaiting_rpe",
+    "qualitative_result": "awaiting_rpe",
+    "public_message": "RPE nodig.",
+    "correction_proposal_id": null,
+    "metrics": null,
+    "created_at": "2026-10-06T10:45:00Z",
+    "updated_at": "2026-10-06T10:45:00Z"
+  }
+}

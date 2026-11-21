@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-06T19:31:17.087087+00:00",
+  "serial": "emulator-5554",
+  "size": "Physical size: 1080x2280",
+  "density": "Physical density: 440\nOverride density: 540",
+  "fontScale": "1",
+  "osLocale": "en-US",
+  "provenance": "Real integrated routes/controllers with public DTO fixtures; temporary read-only fetch/cache bridge",
+  "fixture": {
+    "language": "nl",
+    "pending": false,
+    "gate": false,
+    "plan": true
+  }
+}

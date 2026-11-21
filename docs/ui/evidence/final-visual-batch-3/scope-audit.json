@@ -1,0 +1,30 @@
+{
+  "baselineFiles": 204,
+  "changedExisting": [
+    "src/ui-v2/components/RpeIndicator.tsx",
+    "src/ui-v2/components/SessionSequence.tsx",
+    "src/ui-v2/components/SportIndicator.tsx",
+    "src/ui-v2/components/WorkoutSummary.tsx",
+    "src/ui-v2/screens/WorkoutDetailScreen.test.tsx",
+    "src/ui-v2/screens/WorkoutDetailScreen.tsx"
+  ],
+  "newFiles": [
+    "src/ui-v2/components/WorkoutFacts.tsx",
+    "src/ui-v2/components/WorkoutVisuals.test.tsx"
+  ],
+  "unchangedFiles": 198,
+  "publicSourceFiles": 144,
+  "privacyFindings": [],
+  "mappersSourceFixturesOwnersRoutesShellV1TokensDependenciesUnchanged": true,
+  "temporaryHostRemoved": true,
+  "sourceSha256": {
+    "src/ui-v2/components/RpeIndicator.tsx": "a167ad3a63159b9aaeb27756eaf75a15a7d2e4d4fdb947864d9e83cb0868fc66",
+    "src/ui-v2/components/SessionSequence.tsx": "739fc9b1b81b60b1af1090c9f72def5eecf1a44018b106ed436789f94027214e",
+    "src/ui-v2/components/SportIndicator.tsx": "b18f180947bdd5b6342ff8e69fad3ae3de5db1b84ff0c3c1b8336de184caa167",
+    "src/ui-v2/components/WorkoutSummary.tsx": "9d8318120d8bd7e1bdcccb0e1e051a3253ea72456a7a67b8954035a1416819dc",
+    "src/ui-v2/screens/WorkoutDetailScreen.test.tsx": "24667e2bd9f29cb3f65cd4d41b7f27ee5865696c50ba5ed77d3c5d6f7f5886c7",
+    "src/ui-v2/screens/WorkoutDetailScreen.tsx": "b967bc0e6de1e1111c3b40708054346a244854d59705304339d961f343edc458",
+    "src/ui-v2/components/WorkoutFacts.tsx": "397a5541091b53b3c7b9567e11516e84384b28cba08296e1a005e5247f0805bd",
+    "src/ui-v2/components/WorkoutVisuals.test.tsx": "e22c196e136ed9c4628b3befc747d83e9363346eb8e926f1dbf5eab6fb7551a9"
+  }
+}

@@ -1,0 +1,30 @@
+// TEMPORARY native review bridge. Removed after evidence; not a product feature.
+import * as SecureStore from 'expo-secure-store';
+if (__DEV__) {
+  const originalFetch = globalThis.fetch;
+  const originalRead = SecureStore.getItemAsync;
+  const originalDelete = SecureStore.deleteItemAsync;
+  const originalWrite = SecureStore.setItemAsync;
+  const config = () => originalFetch('http://127.0.0.1:8123/config').then(r => r.json()) as Promise<{language: string; plan: boolean}>;
+  const localKey = (key: string) => ['start23.latest-plan-id','start23.latest-swipe-draft-id','start23.language-preference'].includes(key);
+  Object.defineProperty(SecureStore, 'getItemAsync', { value: async (key: string, options?: SecureStore.SecureStoreOptions) => {
+    if (key === 'start23.latest-plan-id') return (await config()).plan ? 'plan-a' : null;
+    if (key === 'start23.latest-swipe-draft-id') return null;
+    if (key === 'start23.language-preference') return (await config()).language;
+    return originalRead(key, options);
+  }});
+  Object.defineProperty(SecureStore, 'setItemAsync', { value: async (key: string, value: string, options?: SecureStore.SecureStoreOptions) => {
+    if (localKey(key)) return;
+    return originalWrite(key, value, options);
+  }});
+  Object.defineProperty(SecureStore, 'deleteItemAsync', { value: async (key: string, options?: SecureStore.SecureStoreOptions) => {
+    if (localKey(key)) return;
+    return originalDelete(key, options);
+  }});
+  globalThis.fetch = ((input: RequestInfo, options?: RequestInit) => {
+    const url = typeof input === 'string' ? input : input.url;
+    const apiIndex = url.indexOf('/api/v1/');
+    // Drop authorization/header/body data. Local service rejects every mutation.
+    return apiIndex >= 0 ? originalFetch(`http://127.0.0.1:8123${url.slice(apiIndex)}`, { method: options?.method ?? 'GET' }) : originalFetch(input, options);
+  }) as typeof fetch;
+}

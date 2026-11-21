@@ -1,0 +1,10 @@
+﻿{
+    "runtimeVersion":  "exposdk:57.0.0",
+    "projectRoot":  "F:\\Projecten Business\\Start23\\Code\\.worktrees\\wombo-ui-v2-activities\\mobile",
+    "packageJsonPath":  "F:\\Projecten Business\\Start23\\Code\\.worktrees\\wombo-ui-v2-activities\\mobile\\package.json",
+    "sdkVersion":  "57.0.0",
+    "appName":  "Wombo",
+    "appVersion":  "1.0.0",
+    "debuggerHost":  "127.0.0.1:8081",
+    "launchAssetUrl":  "http://127.0.0.1:8081/node_modules/expo-router/entry.bundle?platform=android\u0026dev=true\u0026hot=false\u0026lazy=true\u0026transform.engine=hermes\u0026transform.bytecode=1\u0026transform.routerRoot=app\u0026unstable_transformProfile=hermes-stable"
+}

@@ -1,0 +1,32 @@
+{
+  "baselineFiles": 209,
+  "changedExisting": [
+    "src/i18n/LanguageProvider.tsx",
+    "src/ui-v2/assets/HeaderLandscape.tsx",
+    "src/ui-v2/components/DayHeader.tsx",
+    "src/ui-v2/components/MonthGrid.tsx",
+    "src/ui-v2/components/WeekAgenda.tsx",
+    "src/ui-v2/primitives/SegmentedControl.tsx",
+    "src/ui-v2/screens/CalendarScreen.test.tsx",
+    "src/ui-v2/screens/CalendarScreen.tsx"
+  ],
+  "newFiles": [
+    "src/ui-v2/components/CalendarRangeNavigation.tsx"
+  ],
+  "unchangedFiles": 201,
+  "publicSourceFiles": 146,
+  "privacyFindings": [],
+  "protectedOwnersMappersRoutesV1TokensDependenciesUnchanged": true,
+  "sourceSha256": {
+    "src/i18n/LanguageProvider.tsx": "4f25b50117a9f313e30b63170e35e9f831d5cb45194569cd98ca31fc84998de2",
+    "src/ui-v2/assets/HeaderLandscape.tsx": "0ae57654d0db82fe4ff6f2fd44b353d445776c528cbf89d0c302755e251c8ff5",
+    "src/ui-v2/components/DayHeader.tsx": "65a9cd9e9b06adeba6e2d99e837dd2ab9a78265de123c9298d8c8c1ab4ef230d",
+    "src/ui-v2/components/MonthGrid.tsx": "b2ccb883cdfb4c2d3fda6fd14b0ea97ed17c3142a80b6b2dd8116417917e3396",
+    "src/ui-v2/components/WeekAgenda.tsx": "1f56074accc781c08a4f2290c18b9928b525a629dfb38ee9878dddc679654eea",
+    "src/ui-v2/primitives/SegmentedControl.tsx": "7d213d1f5dd9eac2621338e02149a43a9ba7ac3e1c686693def1899f33c876cb",
+    "src/ui-v2/screens/CalendarScreen.test.tsx": "071b7476593f96224babd52ede4267551d56801257f97f4d565b1c4f6cd01c78",
+    "src/ui-v2/screens/CalendarScreen.tsx": "0e7b0f5943caad3c4876460e5fbb4ccc92437be0f26ec7ed72e423decbf6222f",
+    "src/ui-v2/components/CalendarRangeNavigation.tsx": "477da59d62c6eebb5028cf7a9a987394042d9fb87ffddf0fa4b563954b385236"
+  },
+  "referencesUnchanged": true
+}

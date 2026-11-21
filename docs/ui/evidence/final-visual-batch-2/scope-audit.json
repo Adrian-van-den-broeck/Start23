@@ -1,0 +1,25 @@
+{
+  "baselineFiles": 203,
+  "changedExisting": [
+    "src/navigation/AuthenticatedLayout.test.tsx",
+    "src/navigation/TrainingLayout.tsx",
+    "src/screens/PlanningWorkoutMoveBoundary.test.tsx",
+    "src/ui-v2/primitives/Screen.tsx",
+    "src/ui-v2/screens/ActivitiesScreen.tsx",
+    "src/ui-v2/screens/CalendarScreen.tsx",
+    "src/ui-v2/screens/WeekScreen.tsx",
+    "app/(authenticated)/_layout.tsx"
+  ],
+  "newFiles": [
+    "src/ui-v2/components/AppHeader.tsx",
+    "src/ui-v2/components/BottomNavigation.tsx",
+    "src/ui-v2/components/PendingRpeBanner.tsx",
+    "src/ui-v2/components/Shell.test.tsx",
+    "src/ui-v2/components/ShellInsets.tsx"
+  ],
+  "unchangedFiles": 195,
+  "publicSourceFiles": 143,
+  "privacyFindings": [],
+  "ownersRoutesV1DependenciesTokensUnchanged": true,
+  "temporaryHostRemoved": true
+}

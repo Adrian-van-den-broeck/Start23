@@ -1,0 +1,61 @@
+{
+  "source": "existing V2 palette",
+  "pairs": [
+    {
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 17.086902799676572,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "text",
+      "background": "primarySoft",
+      "ratio": 14.706031593379496,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textMuted",
+      "background": "surface",
+      "ratio": 5.794670367766425,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "primary",
+      "background": "primarySoft",
+      "ratio": 8.259677625906914,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "destructive",
+      "background": "destructiveSoft",
+      "ratio": 5.437716725659554,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "run",
+      "background": "run.soft",
+      "ratio": 5.761428580974557,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "bike",
+      "background": "bike.soft",
+      "ratio": 6.159530209613798,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "swim",
+      "background": "swim.soft",
+      "ratio": 6.018469520225973,
+      "minimum": 4.5,
+      "pass": true
+    }
+  ]
+}

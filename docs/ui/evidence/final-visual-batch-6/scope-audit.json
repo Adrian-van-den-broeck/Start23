@@ -1,0 +1,21 @@
+{
+  "baselineFiles": 210,
+  "changedExisting": [
+    "src/ui-v2/primitives/ChoiceRow.tsx",
+    "src/ui-v2/primitives/Screen.tsx",
+    "src/ui-v2/screens/PlanningCreationScreens.test.tsx",
+    "src/ui-v2/screens/PlanningCreationScreens.tsx"
+  ],
+  "newFiles": [],
+  "unchangedFiles": 206,
+  "publicSourceFiles": 146,
+  "privacyFindings": [],
+  "protectedOwnersMappersRoutesV1TokensDependenciesUnchanged": true,
+  "sourceSha256": {
+    "src/ui-v2/primitives/ChoiceRow.tsx": "1b0545da4554a0c1ed311b6fbdde27bb98d2dda731008e727029eb3a67d817e9",
+    "src/ui-v2/primitives/Screen.tsx": "dd8a5e5ff6be091bf9162bd7812a7646e55fdf236d93c32a1d9160c1067822ba",
+    "src/ui-v2/screens/PlanningCreationScreens.test.tsx": "d37cc87a5be91482380f58d5e5c744d7882333f874e5f05454554f130bbc561d",
+    "src/ui-v2/screens/PlanningCreationScreens.tsx": "f6a74e88be45eefece27e71600a98e853d3b28338b89fc99ce1f1e9bb68154ed"
+  },
+  "referencesUnchanged": true
+}

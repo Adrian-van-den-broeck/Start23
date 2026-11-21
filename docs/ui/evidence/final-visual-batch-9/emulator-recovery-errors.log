@@ -1,0 +1,13 @@
+[460:512:20261008,182217.565:ERROR filesystem_win.cc:130] GetFileAttributes C:\Users\Adria\AppData\Local\Temp\\AndroidEmulator\emu-crash-34.1.20.db\attachments\9791e634-7d1b-413f-b7cf-bab62b7cc200: Het systeem kan het opgegeven bestand niet vinden. (2)
+[460:512:20261008,182217.567:ERROR filesystem_win.cc:130] GetFileAttributes C:\Users\Adria\AppData\Local\Temp\\AndroidEmulator\emu-crash-34.1.20.db\attachments\c25cf81d-5db7-4856-8bbc-855746817579: Het systeem kan het opgegeven bestand niet vinden. (2)
+[460:512:20261008,182217.568:ERROR filesystem_win.cc:130] GetFileAttributes C:\Users\Adria\AppData\Local\Temp\\AndroidEmulator\emu-crash-34.1.20.db\attachments\4996e312-65bb-4c9d-be7a-5075b19b9fe9: Het systeem kan het opgegeven bestand niet vinden. (2)
+[4700:8852:20261008,182218.573:ERROR filesystem_win.cc:130] GetFileAttributes C:\Users\Adria\AppData\Local\Temp\\AndroidEmulator\emu-crash-34.1.20.db\attachments\9791e634-7d1b-413f-b7cf-bab62b7cc200: Het systeem kan het opgegeven bestand niet vinden. (2)
+[4700:8852:20261008,182218.574:ERROR filesystem_win.cc:130] GetFileAttributes C:\Users\Adria\AppData\Local\Temp\\AndroidEmulator\emu-crash-34.1.20.db\attachments\c25cf81d-5db7-4856-8bbc-855746817579: Het systeem kan het opgegeven bestand niet vinden. (2)
+[4700:8852:20261008,182218.574:ERROR filesystem_win.cc:130] GetFileAttributes C:\Users\Adria\AppData\Local\Temp\\AndroidEmulator\emu-crash-34.1.20.db\attachments\4996e312-65bb-4c9d-be7a-5075b19b9fe9: Het systeem kan het opgegeven bestand niet vinden. (2)
+WARNING | Please update the emulator to one that supports the feature(s): AndroidVirtualizationFramework
+added library vulkan-1.dll
+initialize: Supports id properties, got a vulkan device UUID
+pc_memory_init: above 4g size: 95a00000
+WARNING | The emulator now requires a signed jwt token for gRPC access! Use the -grpc flag if you really want an open unprotected grpc port
+WARNING | *** Basic token auth should only be used by android-studio ***
+WARNING | Cold boot:  requested by the user

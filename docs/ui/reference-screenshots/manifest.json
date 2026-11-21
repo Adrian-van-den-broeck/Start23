@@ -1,0 +1,1055 @@
+[
+  {
+    "screenshot": "proposal/01-review-01-top.png",
+    "classification": "LIVE V2",
+    "state": "Pending proposal overview and warning",
+    "source": ".worktrees/wombo-ui-v2-proposal-review/mobile/.runtime/slice4b/pending-review.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "1b312d0b62fd48d62fd40b8aec95aebcf7161e540be592768c08840f4ebee551",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/01-review-02-workouts.png",
+    "classification": "LIVE V2",
+    "state": "Proposed workouts and edit entry",
+    "source": ".worktrees/wombo-ui-v2-proposal-review/mobile/.runtime/slice4b/proposal-workouts.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "58ad05f0415fbc05dec282e9c113040b8d42de65863e6ccf5852b78d9c63d230",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/03-actions.png",
+    "classification": "LIVE V2",
+    "state": "Explicit approve/reject controls",
+    "source": ".worktrees/wombo-ui-v2-proposal-review/mobile/.runtime/slice4b/proposal-decision-controls.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "d3aeccf53e88db7f4d28a4b66ab9c966b6f768e92bc5484f3b03864f3d2a9f2a",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/05-alternatives-01-top.png",
+    "classification": "LIVE V2",
+    "state": "Alternatives list and current workout",
+    "source": ".worktrees/wombo-ui-v2-proposal-review/mobile/.runtime/slice4b/alternatives-first.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "8478010410fcdc9a6d6b5ace103219e6b73ddf83bac7f05c60f2ebb4ee802e20",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/05-alternatives-02-bottom.png",
+    "classification": "LIVE V2",
+    "state": "Alternatives lower actions; removal unavailable",
+    "source": ".worktrees/wombo-ui-v2-proposal-review/mobile/.runtime/slice4b/alternatives-final-action.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "282fe020caec8263b05aacbef95ed7881c00475884a790ff505a52535310ed27",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/07-replacement-result.png",
+    "classification": "LIVE V2",
+    "state": "Authoritative replacement result",
+    "source": ".worktrees/wombo-ui-v2-proposal-review/mobile/.runtime/slice4b/replaced-workout.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "91d3cbe4558aabe5e6cd14b199b2327051fb6223d15e080235cfb868c9494584",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/07-replacement-result-02-actions.png",
+    "classification": "LIVE V2",
+    "state": "Updated proposal decisions after replacement",
+    "source": ".worktrees/wombo-ui-v2-proposal-review/mobile/.runtime/slice4b/approval-controls-updated.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "d9adb13c6a44bfa0003fe500a3f54318b0d67d04b5f9fc093c27d064bb912e80",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/01-automatic.png",
+    "classification": "LIVE V2",
+    "state": "Automatic placement choice",
+    "source": ".worktrees/wombo-ui-v2-planning-creation/mobile/.runtime/slice4a/automatic-placement.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "e7af656aac868cb849861e132412f62a87c869bcef4369cfb87b9cd12184f137",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/02-manual-01-top.png",
+    "classification": "LIVE V2",
+    "state": "Manual placement entry",
+    "source": ".worktrees/wombo-ui-v2-planning-creation/mobile/.runtime/slice4a/manual-placement.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "4eb7f5fd07c7dec0315270e68e4dbed836ba8423a1bc0cb7a376c71f98a25fad",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/04-incomplete-01-top.png",
+    "classification": "LIVE V2",
+    "state": "Partially placed workouts",
+    "source": ".worktrees/wombo-ui-v2-planning-creation/mobile/.runtime/slice4a/manual-incomplete.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "318b0ebbe959c75d3b1d160cf0954642425e05aae07e63db57ee8f896322ed60",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/04-incomplete-02-bottom.png",
+    "classification": "LIVE V2",
+    "state": "Incomplete placement and disabled submit",
+    "source": ".worktrees/wombo-ui-v2-planning-creation/mobile/.runtime/slice4a/manual-incomplete-final.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "ba327b595e8ca181c83fa7f4a4f266340e49b18794421d478652e0a73c5d83b8",
+    "inspected": true
+  },
+  {
+    "screenshot": "week/03-selection-in-progress-detail.png",
+    "classification": "LIVE V2",
+    "state": "Current selection task",
+    "source": ".worktrees/wombo-ui-v2-planning-creation/mobile/.runtime/slice4a/draft-candidate.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "88a55bed29fed9996eeee902066ed1292700281f0ebfe974aa478bb178f4574a",
+    "inspected": true
+  },
+  {
+    "screenshot": "week/02-pending-proposal.png",
+    "classification": "LIVE V2",
+    "state": "Week after submitting proposal",
+    "source": ".worktrees/wombo-ui-v2-planning-creation/mobile/.runtime/slice4a/week-after-submit.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "5335ffb815eab6b866738287b88002ed4247bcbb8044145124afa996d611d56e",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/05-active-move-entry.png",
+    "classification": "LIVE V2",
+    "state": "Active workout move entry",
+    "source": ".worktrees/wombo-ui-v2-active-workout-moves/mobile/.runtime/slice4c/move-entry.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "f91baf6c09f1c0e19e6ce1581a4ae3c092ce4be52aef766296159e300b7463e7",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/06-date-chooser-01-top.png",
+    "classification": "LIVE V2",
+    "state": "Date chooser and current date",
+    "source": ".worktrees/wombo-ui-v2-active-workout-moves/mobile/.runtime/slice4c/date-chooser.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "e36b98b578aab9588f3724ea770edfaaf9e330f3b35af0265e151a268bd3f31e",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/06-date-chooser-02-selected.png",
+    "classification": "LIVE V2",
+    "state": "Selected target and review controls",
+    "source": ".worktrees/wombo-ui-v2-active-workout-moves/mobile/.runtime/slice4c/selected-target.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "1368ff98b4cd6b53be9663a624603514c0ad84d7678de8473d8d3953ee534f74",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/08-cancel.png",
+    "classification": "LIVE V2",
+    "state": "Cancel returns without applying movement",
+    "source": ".worktrees/wombo-ui-v2-active-workout-moves/mobile/.runtime/slice4c/cancel-state.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "74cadcf9f68a0364c2c84f82da1c09c3a5d9e0baa486fd1b031e9a1b0854f046",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/09-after-move.png",
+    "classification": "LIVE V2",
+    "state": "Workout moved to Thursday 15 October",
+    "source": ".worktrees/wombo-ui-v2-active-workout-moves/mobile/.runtime/slice4c/successful-move-result.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. Real authoritative result of the first movement. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "54435420539c919af984cf0c940f7a1ffb2c4c7feeadd7e98ece28d5a771ddd0",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/10-calendar-after-move.png",
+    "classification": "LIVE V2",
+    "state": "Calendar after subsequent move back to Wednesday 14 October",
+    "source": ".worktrees/wombo-ui-v2-active-workout-moves/mobile/.runtime/slice4c/final-calendar-after.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. A second explicit supported move restored Wednesday; this is not the date of the first movement result. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "dece9cd6bc0f116f7675350b964f7acdef417949a25bf8bbff35b0e92b58b44b",
+    "inspected": true
+  },
+  {
+    "screenshot": "week/01-active-approved.png",
+    "classification": "LIVE V2",
+    "state": "Approved active week after move",
+    "source": ".worktrees/wombo-ui-v2-active-workout-moves/mobile/.runtime/slice4c/final-week-after.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "cca8f3b884709315da5df5e05ef67d65ee1495b9d88fd23d346b9fb7e28e181b",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/01-root.png",
+    "classification": "LIVE V2",
+    "state": "Activities root with pending activity",
+    "source": ".worktrees/wombo-ui-v2-activities/mobile/.runtime/slice5b/activities-initial.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. Actual completed history is shown by 11-after-feedback and 03-with-hr. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "19c3551b0798b4b6326c9b91a4dbd6f709e3a0f289460ca7b28514279cf41fc5",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/05-add-empty.png",
+    "classification": "LIVE V2",
+    "state": "Initial manual activity form; existing duration default retained",
+    "source": ".worktrees/wombo-ui-v2-activities/mobile/.runtime/slice5b/activity-entry.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "772cec5577085cf0cdd201bf706b87c7de3cf03780f6e4327eb4f83d3d4a53e3",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/06-add-filled.png",
+    "classification": "LIVE V2",
+    "state": "Filled manual activity form",
+    "source": ".worktrees/wombo-ui-v2-activities/mobile/.runtime/slice5b/activity-entry-filled.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "816b3da2568135566367dc6aaa206cfd7cd76295c1b976d5eb23eb8bdbdb491e",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/07-pending-feedback.png",
+    "classification": "LIVE V2",
+    "state": "Post-create pending feedback",
+    "source": ".worktrees/wombo-ui-v2-activities/mobile/.runtime/slice5b/pending-feedback.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "0fc332e18137aa0f560e3a51d9ce3bb28f980dbda2597b735aac56506dbdb245",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/08-rpe-choices-01-top.png",
+    "classification": "LIVE V2",
+    "state": "Feedback context before scrolling to choices",
+    "source": ".worktrees/wombo-ui-v2-activities/mobile/.runtime/slice5b/rpe-initial.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. Top context; choices are visible in the lower/live-bottom images. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "67ea5c12372f778b7d01a1f655eea5255a8cefa56c616f4a87ae4e2e7b9d9faf",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/08-rpe-choices-02-lower.png",
+    "classification": "LIVE V2",
+    "state": "RPE choices lower section; optional HR",
+    "source": ".worktrees/wombo-ui-v2-activities/mobile/.runtime/slice5b/rpe-before-save.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "bbc003d9ce25b781c6f87f072afd9027310fe8cdcb95888dd22803d2d4988137",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/10-create-blocked.png",
+    "classification": "LIVE V2",
+    "state": "Pending feedback root overview",
+    "source": ".worktrees/wombo-ui-v2-activities/mobile/.runtime/slice5b/pending-create-blocked.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. Disabled Add control is below the fold; see 10-create-blocked-02-controls. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "5ec09fd76480bd99938b607725023cba11237d6307c65ca230292a85acf5d3f6",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/11-after-feedback.png",
+    "classification": "LIVE V2",
+    "state": "History after explicit feedback",
+    "source": ".worktrees/wombo-ui-v2-activities/mobile/.runtime/slice5b/activities-after-rpe.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "b325a78707194d078c6a7622bc068d672afd0d614d1ba41096ceb1a8aeed233f",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/03-with-hr.png",
+    "classification": "LIVE V2",
+    "state": "Completed activity with supplied HR/RPE/result",
+    "source": ".worktrees/wombo-ui-v2-activities/mobile/.runtime/slice5b/activities-result-detail.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "4da21868b0d5b1b97f211845f0695feff5d11895460493a6d26baac4ba03926a",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/12-reminder-destination.png",
+    "classification": "LIVE V2",
+    "state": "Activities root after returning from reminder feedback",
+    "source": ".worktrees/wombo-ui-v2-activities/mobile/.runtime/slice5b/reminder-feedback-return.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Presentation component unchanged in current integrated source; embedded development UI selector, where present, is original product development control. Historical capture is the returned root, not the feedback screen; use 12-reminder-feedback-destination for the actual destination. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "a03779dfe5cc59de28bb44efeb27164d7dfde8eece5119b40483a54cd5c7e26e",
+    "inspected": true
+  },
+  {
+    "screenshot": "calendar/01-week-workouts.png",
+    "classification": "LIVE V2",
+    "state": "Week calendar with workouts and rest",
+    "source": ".worktrees/wombo-ui-v2-week/mobile/.runtime/slice3a/week-mode.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Earlier Slice-3A shell; current Calendar adds Profile/move controls, separately covered by Slice-4C evidence. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "d526206005633d4efd8fc81ebd0c41375e34889d432f1ff15c5f2385197a2b44",
+    "inspected": true
+  },
+  {
+    "screenshot": "calendar/02-week-empty.png",
+    "classification": "LIVE V2",
+    "state": "Week calendar with empty dates",
+    "source": ".worktrees/wombo-ui-v2-week/mobile/.runtime/slice3a/today-week-empty.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Earlier Slice-3A shell; current Calendar adds Profile/move controls, separately covered by Slice-4C evidence. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "5891ac36af204c7d0693088174b4bf2dc3fc4f06e191ddb0bd07381b7efd6ec8",
+    "inspected": true
+  },
+  {
+    "screenshot": "calendar/03-month.png",
+    "classification": "LIVE V2",
+    "state": "Month calendar",
+    "source": ".worktrees/wombo-ui-v2-week/mobile/.runtime/slice3a/month-mode.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Earlier Slice-3A shell; current Calendar adds Profile/move controls, separately covered by Slice-4C evidence. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "64078862fbccd9434119a5839abc844068415ec91cde4c73a39abb0ef1ee822e",
+    "inspected": true
+  },
+  {
+    "screenshot": "calendar/04-selected-date.png",
+    "classification": "LIVE V2",
+    "state": "Selected-date workouts",
+    "source": ".worktrees/wombo-ui-v2-week/mobile/.runtime/slice3a/month-selected-details.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Earlier Slice-3A shell; current Calendar adds Profile/move controls, separately covered by Slice-4C evidence. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "f30e74a2cd21220fa3eb7b8f0fcd19f16378119dd5bba3f81b02dca11fecbce6",
+    "inspected": true
+  },
+  {
+    "screenshot": "calendar/05-multiple-same-day-01-top.png",
+    "classification": "LIVE V2",
+    "state": "Multiple workouts on Sunday",
+    "source": ".worktrees/wombo-ui-v2-week/mobile/.runtime/slice3a/week-sunday-multiple.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Earlier Slice-3A shell; current Calendar adds Profile/move controls, separately covered by Slice-4C evidence. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "dccba429e24b954456683f8b97f8139d517c94bf09178f66ea4eed51c19df380",
+    "inspected": true
+  },
+  {
+    "screenshot": "calendar/05-multiple-same-day-02-bottom.png",
+    "classification": "LIVE V2",
+    "state": "Second workout reachable",
+    "source": ".worktrees/wombo-ui-v2-week/mobile/.runtime/slice3a/week-sunday-second-reachable.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Earlier Slice-3A shell; current Calendar adds Profile/move controls, separately covered by Slice-4C evidence. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "62acf934a4f3190f36f8b8fddf210c0e93d8a991c8b55afacffa194e938a2f9c",
+    "inspected": true
+  },
+  {
+    "screenshot": "calendar/06-workout-detail-entry.png",
+    "classification": "LIVE V2",
+    "state": "Workout detail entered from Calendar",
+    "source": ".worktrees/wombo-ui-v2-week/mobile/.runtime/slice3a/week-detail-open.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Earlier Slice-3A shell; current Calendar adds Profile/move controls, separately covered by Slice-4C evidence. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "0ff67f79baf1edbf39b5f0acac827ba618c19bae7f289210c7a30d0eb2cb1bb9",
+    "inspected": true
+  },
+  {
+    "screenshot": "workout-detail/run-01-top.png",
+    "classification": "LIVE V2",
+    "state": "Live RUN detail: top",
+    "source": "F:/wv2/mobile/.runtime/authenticated-v2-run-detail-top.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Original authenticated staging Slice-1 capture; exact source text retained. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "001c7a13e466e394dab846cbe6261b30c9266d2fc76b3e99030474d6498783b5",
+    "inspected": true
+  },
+  {
+    "screenshot": "workout-detail/run-02-segments.png",
+    "classification": "LIVE V2",
+    "state": "RUN ordered blocks, middle section",
+    "source": "F:/wv2/mobile/.runtime/authenticated-v2-run-detail-middle.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Original authenticated staging Slice-1 capture; exact source text retained. Starts inside block 2; blocks 3, 4 and 5 and their supplied targets/instructions are visible. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "407b02ac9ec5fad88058df9fff83db0ccc6496cc07539dd63bb827c24df36bd0",
+    "inspected": true
+  },
+  {
+    "screenshot": "workout-detail/run-03-instructions.png",
+    "classification": "LIVE V2",
+    "state": "Live RUN detail: lower",
+    "source": "F:/wv2/mobile/.runtime/authenticated-v2-run-detail-lower.png",
+    "notes": "Reused original native live staging capture; owned temporary athlete subsequently deleted. Original authenticated staging Slice-1 capture; exact source text retained. V2 FUNCTIONAL REFERENCE.",
+    "sha256": "fb88f8aa2494f61dc6382151be444463ad700d339dfbeabe4a543bf2f59ac44f",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/profile-current-v1-01-top.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "Basic profile and seven-step progress",
+    "source": "Live disposable, 19c23d5",
+    "notes": "Initial supported profile form CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "2a53470aba1cb80988a33f4fbe05d2f0b4d7fd14866cc902ed3357a99563a415",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/profile-current-v1-02-filled.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "Filled basic profile",
+    "source": "Live disposable, 19c23d5",
+    "notes": "Normal UI entry; fixture-backed disposable profile values CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "f668e3aed0e56dbf06527fa50a4acaa15a4f3269255fb8998d70561fe1a21234",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/heart-rate-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "heart-rate-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "9f642f2e962b5c747191ebbab31f2eedd48af8e2cf4f3b8aaa2d4076f06f7c88",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/timezone-current-v1-01-top.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "timezone-current-v1-01-top",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "9be34daae7a61648627f89cbf9838eca4e2d214047f1cb087a9353a81e3ee06c",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/timezone-current-v1-02-confirm.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "timezone-current-v1-02-confirm",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "31159e7502d67a7b3e648116db3548a967598fd2d6f22096796865b08ab39a63",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/disciplines-history-current-v1-01-top.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "disciplines-history-current-v1-01-top",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "8f8812b8574a00120edf373c5f6fccf5dce726a81af18fc2359beca2000a7726",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/disciplines-history-current-v1-02-filled.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "disciplines-history-current-v1-02-filled",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "d2bcc47a7e988e2524a33911182280d83f937a726a048bc0509d3c6a9738f1e4",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/goal-current-v1-01-choice.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "goal-current-v1-01-choice",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "92352d2b96fad16633084e2163f449b80345bef4bc8098f7cf66613a4ee23a0b",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/event-current-v1-01-disciplines.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "event-current-v1-01-disciplines",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "d0a4a96cf4f8f1f197cdf80ddeae9de879b32c54b1c6835507e00ab48d4cae21",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/event-current-v1-02-details.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "Event form: name, date and distance input",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete Distance 10000 is the displayed placeholder at this moment; the value was subsequently entered through the UI and saved. CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "0af186384f6543b206a4a2eeadaefac46aadf76c5f29ca2a94b610427ba102f6",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/duration-picker-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "duration-picker-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "3cef2ed194dac3e2f5366c2980d3724c81233e545208d02565f844f77f7e2aad",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/event-current-v1-03-target.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "event-current-v1-03-target",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "f455abb9482921124279fb7e0f33e673ff759153946148d2ee2450682fd8d877",
+    "inspected": true
+  },
+  {
+    "screenshot": "zones-calibration/05-route-current-v1-01-top.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "05-route-current-v1-01-top",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "d3b571646c8089cef9569d17f1717c1179e155b0917a1f3b25ba027b8257ed9d",
+    "inspected": true
+  },
+  {
+    "screenshot": "zones-calibration/07-pending-approval-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "07-pending-approval-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "c574b277a2d85bbafa5fe277872da6e8f046b1cb645f47488851e06242377972",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/completion-current-v1-02-actions.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "completion-current-v1-02-actions",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "89129068f45890298a751d568817eedb0a20b27f11cb085b64806b6279b8e71e",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/completion-current-v1-01-review.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "completion-current-v1-01-review",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "c91d877f234ca3c142c65eaa851de00781f2e9f1e10bce4e882fb3a668df4b19",
+    "inspected": true
+  },
+  {
+    "screenshot": "week/05-no-plan.png",
+    "classification": "LIVE V2",
+    "state": "05-no-plan",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete V2 FUNCTIONAL REFERENCE.",
+    "sha256": "1fa2a1f03a8041e3ac15ff76cc5ac5e747b28e3faa58cde3ab5a219c2b1c4c04",
+    "inspected": true
+  },
+  {
+    "screenshot": "zones-calibration/01-overview-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "01-overview-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "a492c6258716ba0302a6dfbdce2facf664cc44d1febbff9ad9428a75285abff2",
+    "inspected": true
+  },
+  {
+    "screenshot": "zones-calibration/03-bike-rpe-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "03-bike-rpe-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "69e81fe777eaccdf48ac91096eb2ba43ea157fe99c058c6fa98b149122652c07",
+    "inspected": true
+  },
+  {
+    "screenshot": "zones-calibration/02-run-current-v1-01-active.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "02-run-current-v1-01-active",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "d31762bd1e4eacdc9ec9f7d3cf11b64ed742f998643f67ff2f7b5a28372e8789",
+    "inspected": true
+  },
+  {
+    "screenshot": "zones-calibration/calibration-choice-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "calibration-choice-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "a566ac842f0161d32fd381831c2cb198187859057f8db906948c042327ad8646",
+    "inspected": true
+  },
+  {
+    "screenshot": "zones-calibration/06-known-values-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "06-known-values-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "63b44bfe4bd0399d41e48e7db51f2110df756977e7093aa6abf6dbf3ecd064ce",
+    "inspected": true
+  },
+  {
+    "screenshot": "zones-calibration/07-pending-approval-current-v1-02-numeric.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "07-pending-approval-current-v1-02-numeric",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "15ba43def80ec03b2d84e32e843ad4002391a965e1ac8d297a9c0798cfb36e11",
+    "inspected": true
+  },
+  {
+    "screenshot": "zones-calibration/09-history-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "Active zone version 2 and superseded version 1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete The v2 badge is a zone-data version, not UI V2. Both numeric profiles were calculated by staging from athlete-entered existing-test inputs. CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "057d264802557b1f44197e582fe2cdff12411c11e5e0c86deb44791069205c6e",
+    "inspected": true
+  },
+  {
+    "screenshot": "check-in/01-entry-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "01-entry-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "3a566835d735ed2de55b50a623edb8e482a197c33117bbece360e6a267f2fa44",
+    "inspected": true
+  },
+  {
+    "screenshot": "check-in/02-questions-current-v1-01-top.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "02-questions-current-v1-01-top",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "1992479fff52085653cdef5288bd469e7c9797ebe61522668b48ef1b9f4d33d0",
+    "inspected": true
+  },
+  {
+    "screenshot": "check-in/03-selected-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "03-selected-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "8bd13f3370c9910750d425a9797a6454c3191ce2c1c3f3a7eab40ce881c0c9de",
+    "inspected": true
+  },
+  {
+    "screenshot": "check-in/02-questions-current-v1-02-advice.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "02-questions-current-v1-02-advice",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "2969433b6ecefcc5c0e1750ed0f60f38a05a85dca8fb32e754ee822882dd6126",
+    "inspected": true
+  },
+  {
+    "screenshot": "check-in/02-questions-current-v1-03-external-sport.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "02-questions-current-v1-03-external-sport",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "e2d9076b4af003eb8dac4752c0e22f66465373cc868d9152767f82fae3aa41e4",
+    "inspected": true
+  },
+  {
+    "screenshot": "check-in/04-submit-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "04-submit-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "f185f6925ac6f7cfb66eecd86074d7deff74d6a9b6e2f024cbccea50c5d3541f",
+    "inspected": true
+  },
+  {
+    "screenshot": "check-in/04-review-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "04-review-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "3d0669b891b401d97303633fe9c4978d567728181510d49223cd66b01e3bf43c",
+    "inspected": true
+  },
+  {
+    "screenshot": "check-in/04-confirmed-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "04-confirmed-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "38aeae3df36c8bf07ee8c4ef9308d4450045c3dfc8c27a2fef0c33b83a24bf50",
+    "inspected": true
+  },
+  {
+    "screenshot": "check-in/06-result-or-error-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "Actual check-in proposal creation error",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete Context was saved and explicitly confirmed; proposal creation failed with the public safe-error message. No success state is claimed. CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "5c6ffce2a0092e75047341ebff772b99838536f96803665a0380c0297a160738",
+    "inspected": true
+  },
+  {
+    "screenshot": "profile-supporting/profile-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "profile-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "a22e505102490872d4789f68d0435b9a85920ec616ed7f458f2ce51a52301911",
+    "inspected": true
+  },
+  {
+    "screenshot": "profile-supporting/profile-current-v1-02-destinations.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "profile-current-v1-02-destinations",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "e6b3e2368fe5a05fa0bc1c98c0aba0d0aaea43bd1cde7862db03ecb5ec483311",
+    "inspected": true
+  },
+  {
+    "screenshot": "profile-supporting/pioneer-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "pioneer-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "13539349e4d56ef0caee39f6146be4f1fdd82a5ee812d8d36419881f20435b3e",
+    "inspected": true
+  },
+  {
+    "screenshot": "profile-supporting/integrations-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "integrations-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "a281ae0a140fa9cae53082c8f99151a42215b0023930b5501b4a55fadd477a57",
+    "inspected": true
+  },
+  {
+    "screenshot": "zones-calibration/tests-current-v1-no-protocol.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "tests-current-v1-no-protocol",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "1276828abc72789e486e01450b65072688066bba04d2710b853c6e933694e231",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/availability-v2-01-top.png",
+    "classification": "LIVE V2",
+    "state": "availability-v2-01-top",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete V2 FUNCTIONAL REFERENCE.",
+    "sha256": "38e11f2129e9a9e71ee27877798a77332d9144dffa157def214e6c87aac67e81",
+    "inspected": true
+  },
+  {
+    "screenshot": "onboarding-goal/availability-v2-02-options.png",
+    "classification": "LIVE V2",
+    "state": "availability-v2-02-options",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete V2 FUNCTIONAL REFERENCE.",
+    "sha256": "69b0bbd9aaddc7eb8afac024deb692564225fdc9b5ca9c216479344f1e25c6f2",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/02-empty.png",
+    "classification": "LIVE V2",
+    "state": "02-empty",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete V2 FUNCTIONAL REFERENCE.",
+    "sha256": "d1f3178fefb8a2939140474a32e091cdb27cf74a04fdd42006845b7f9c2ffbb4",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/05-add-empty-02-fields.png",
+    "classification": "LIVE V2",
+    "state": "05-add-empty-02-fields",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete V2 FUNCTIONAL REFERENCE.",
+    "sha256": "6f2f974575fbb234816a157d0eb30f91a169d0a77496a0f3f86283c44483d85e",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/06-add-filled-02-fields.png",
+    "classification": "LIVE V2",
+    "state": "06-add-filled-02-fields",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete V2 FUNCTIONAL REFERENCE.",
+    "sha256": "b5eb2bbf3635348cba13ac4b30ee7be7938fa97773a4682a3490c60a7412847c",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/07-pending-feedback-no-hr.png",
+    "classification": "LIVE V2",
+    "state": "07-pending-feedback-no-hr",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete V2 FUNCTIONAL REFERENCE.",
+    "sha256": "c82b9d9b67fec0550bdd8a4739db7843460ac267c9fca90e34a85e6a71a205d8",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/12-global-reminder-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "Global pending-RPE banner on V2 Week",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete Banner is current/V1 presentation; surrounding Week is V2. Destination is the adjacent LIVE V2 feedback capture. CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "88b44f06f4d88bb6db1f06f805c67d5f4aad6ddbf099db2cd7a621fb3aef7834",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/12-reminder-feedback-destination.png",
+    "classification": "LIVE V2",
+    "state": "12-reminder-feedback-destination",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete V2 FUNCTIONAL REFERENCE.",
+    "sha256": "7344c3f128aab5ea1d4e7171c87eeb4ce66aef5ad8ba48d603a48201580f7941",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/10-create-blocked-02-controls.png",
+    "classification": "LIVE V2",
+    "state": "10-create-blocked-02-controls",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete V2 FUNCTIONAL REFERENCE.",
+    "sha256": "c61e9f7bb48b9ccb17f2a07302976a0d7ddb4ffb752cf74a8f544fef25a4cac5",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/08-rpe-choices-03-live.png",
+    "classification": "LIVE V2",
+    "state": "08-rpe-choices-03-live",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete V2 FUNCTIONAL REFERENCE.",
+    "sha256": "78e63f39a3e5fe614fb4306ac21e22a3a4ce93b1949f4374d88dda8297ef732f",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/08-rpe-choices-04-live-bottom.png",
+    "classification": "LIVE V2",
+    "state": "08-rpe-choices-04-live-bottom",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete V2 FUNCTIONAL REFERENCE.",
+    "sha256": "c4033d013d7db6bbdf3c3e9f210ab6175cb7dc0ba9c2ab0948382741534e4963",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/04-without-hr.png",
+    "classification": "LIVE V2",
+    "state": "04-without-hr",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete V2 FUNCTIONAL REFERENCE.",
+    "sha256": "fc210e132e7462b1f5baa2decbb952217fedcf1952b9097876751d8b1dc24de0",
+    "inspected": true
+  },
+  {
+    "screenshot": "profile-supporting/language-signout-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "language-signout-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "79e0727dd11a920a52c1345c5494fbcf5394549157914193d3acb82550f7e1d4",
+    "inspected": true
+  },
+  {
+    "screenshot": "week/03-selection-in-progress-fixture.png",
+    "classification": "FIXTURE V2",
+    "state": "03-selection-in-progress-fixture",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "f639ce4019f3816d09743cf9949f1854f54d7b05832903aa273d6bcf09b93547",
+    "inspected": true
+  },
+  {
+    "screenshot": "week/04-placement-in-progress-fixture.png",
+    "classification": "FIXTURE V2",
+    "state": "04-placement-in-progress-fixture",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "4172a43caa15877d8f3b6c0947ac31007058893bfb7459f6d3ed24891d06501c",
+    "inspected": true
+  },
+  {
+    "screenshot": "week/06-warning-fixture-01-top.png",
+    "classification": "FIXTURE V2",
+    "state": "06-warning-fixture-01-top",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "8de99ca211e2823e384b511369b7d5356ce47b00a1743ba816a2401be0ca0a81",
+    "inspected": true
+  },
+  {
+    "screenshot": "week/07-multiple-same-day-fixture-01-top.png",
+    "classification": "FIXTURE V2",
+    "state": "07-multiple-same-day-fixture-01-top",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "e1672e9ca2f935644ba16ae2169742d2dfd8809146b3848c188de68d00b5c425",
+    "inspected": true
+  },
+  {
+    "screenshot": "week/07-multiple-same-day-fixture-02-workouts.png",
+    "classification": "FIXTURE V2",
+    "state": "07-multiple-same-day-fixture-02-workouts",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "610039f112897788fd79cbf63476fca3ae99d86a256be0b46ed5ee48a2ccc749",
+    "inspected": true
+  },
+  {
+    "screenshot": "week/08-active-plus-pending-fixture-01-top.png",
+    "classification": "FIXTURE V2",
+    "state": "08-active-plus-pending-fixture-01-top",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "ef1eedc3417626d23c982a5737b4c73dcf1b78f2a224f11f1fb097c96de97329",
+    "inspected": true
+  },
+  {
+    "screenshot": "week/10-next-workout-fixture.png",
+    "classification": "FIXTURE V2",
+    "state": "10-next-workout-fixture",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "c0b5dd724d30e8d6cfd3fab9223710279ab0d5c200e06cd2db10514c55f2c688",
+    "inspected": true
+  },
+  {
+    "screenshot": "workout-detail/bike-fixture-01-top.png",
+    "classification": "FIXTURE V2",
+    "state": "BIKE detail rendering variant",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation Existing supplied workout fixture with the public discipline enum set to bike; this is a rendering reference, not a generated BIKE catalogue workout. V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "eabc5e0a59fc9ce19d71c80c216c6abe680e378d486bc4fc2d8da064a1379980",
+    "inspected": true
+  },
+  {
+    "screenshot": "workout-detail/swim-fixture-01-top.png",
+    "classification": "FIXTURE V2",
+    "state": "swim-fixture-01-top",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "e0e89cf35424477ab7f05e658cc644e3aa88722291e5be69937be7ee08083b07",
+    "inspected": true
+  },
+  {
+    "screenshot": "workout-detail/distance-only-fixture.png",
+    "classification": "FIXTURE V2",
+    "state": "Distance-only workout presentation",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation Existing workout-detail test variant: duration absent, no supplied segments/description/RPE-reference list; no computed duration is invented. V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "ff52c36768150b290b477b500d4cede7d4427f6fad5189f38dd8a49cf528ffaf",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/06-alternative-selected-fixture-01-top.png",
+    "classification": "FIXTURE V2",
+    "state": "06-alternative-selected-fixture-01-top",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "2e221b3ad3a3eac1e1c4cb495014df82673d3769961da4676932b43cadd7c8bc",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/08-remove-capability-fixture-01-top.png",
+    "classification": "FIXTURE V2",
+    "state": "08-remove-capability-fixture-01-top",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "fb8047d9a53b62d096250922bf4c70f9b0a3001a031d7a0cb2f3a71671c4a761",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/09-active-plus-pending-fixture-01-top.png",
+    "classification": "FIXTURE V2",
+    "state": "09-active-plus-pending-fixture-01-top",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "d42cf3bf58f4ad5bedca106ab4765d1a70e1ec6d36bed3015089ff3541534ac0",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/09-active-plus-pending-fixture-02-actions.png",
+    "classification": "FIXTURE V2",
+    "state": "09-active-plus-pending-fixture-02-actions",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "932f83ffedfccc78388478e39ba3b41e261ba7bc051b40cc5a7f556151dd1647",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/03-multiple-workouts-fixture-01-top.png",
+    "classification": "FIXTURE V2",
+    "state": "03-multiple-workouts-fixture-01-top",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "5ff16a68ede38becf40eb3b8bec726b56d9a70d4420cda3d4b7a4aa22492ecbf",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/07-warning-fixture-01-top.png",
+    "classification": "FIXTURE V2",
+    "state": "07-warning-fixture-01-top",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "7a2ee9e12d436c0fc465d68d79c187f4298d1977fbd5734735c655dd82322bc2",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/09-rpe-selected-fixture-01-top.png",
+    "classification": "FIXTURE V2",
+    "state": "Feedback context with existing RPE 7 fixture",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation Pure presentation of existing completeActivity; the existing RPE-needed hint is preserved. No claim that this fixture was created through a live pending flow. V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "bb44c9f7cda86bb0a5d4b4d400ee2bd491ca6cc99174889520a748524d701761",
+    "inspected": true
+  },
+  {
+    "screenshot": "activities/09-rpe-selected-fixture-02-choices.png",
+    "classification": "FIXTURE V2",
+    "state": "RPE 7 selected; full canonical choices",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation Existing fixture prop supplies the checked value; live selection saves immediately, so no artificial live pause was introduced. V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "5af149e3f87eaf94f71d76211547d1b5ee088b636cf0473f0a185c2516fa07eb",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/08-remove-capability-fixture-02-controls.png",
+    "classification": "FIXTURE V2",
+    "state": "08-remove-capability-fixture-02-controls",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "e57730d673af2f4a8e3b7f385ca5d1629b5628f03ba8c6550951f0f306796222",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/08-remove-capability-fixture-03-confirmation.png",
+    "classification": "FIXTURE V2",
+    "state": "08-remove-capability-fixture-03-confirmation",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "1e345d8987e5d64728d868c47ea2f9420e781263614ce5ea5adf6b4854d99cb4",
+    "inspected": true
+  },
+  {
+    "screenshot": "proposal/06-alternative-selected-fixture-02-controls.png",
+    "classification": "FIXTURE V2",
+    "state": "06-alternative-selected-fixture-02-controls",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "f27eefe4838b13da1526209d77948cd1a97922d2d720f0f2b7b4a4dd9b794eaa",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/03-multiple-workouts-fixture-02-dates.png",
+    "classification": "FIXTURE V2",
+    "state": "03-multiple-workouts-fixture-02-dates",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "8dd3db72f003d7314a0fd6d7e3cbea8c1017957b59806550da79114717387416",
+    "inspected": true
+  },
+  {
+    "screenshot": "placement/03-multiple-workouts-fixture-03-submit.png",
+    "classification": "FIXTURE V2",
+    "state": "03-multiple-workouts-fixture-03-submit",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "32be041ff114eb8ac4a363c479b3cfc8d1abe853d86d7bf42c17f32341587d0f",
+    "inspected": true
+  },
+  {
+    "screenshot": "workout-detail/swim-fixture-02-instructions.png",
+    "classification": "FIXTURE V2",
+    "state": "swim-fixture-02-instructions",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "712473e5aa6d57c48c62f77a366366eaa771f73ae020e615042a582093c9c663",
+    "inspected": true
+  },
+  {
+    "screenshot": "week/09-rest-only-fixture.png",
+    "classification": "FIXTURE V2",
+    "state": "Approved rest-only week presentation",
+    "source": "19c23d5 existing V2 screens/public test fixtures; documented temporary host",
+    "notes": "Isolated development presentation host using existing public test fixtures; no API/domain mutation Existing active-plan fixture with no workouts and planned rest; its existing attention warning is retained. V2 FUNCTIONAL REFERENCE; callbacks inert, Dutch chrome and unchanged supplied English fixture text; public fixture dates, not device-clock changes.",
+    "sha256": "40cfc01556500c924409106435af6f508ab34cffb7888488a31641a67a7c7bac",
+    "inspected": true
+  },
+  {
+    "screenshot": "profile-supporting/signed-out-current-v1.png",
+    "classification": "CURRENT/V1 REFERENCE",
+    "state": "signed-out-current-v1",
+    "source": "Native emulator-5554, runtime 19c23d5",
+    "notes": "New capture; Dutch, font scale 1.0; temporary staging athlete CURRENT/V1 functional/content reference; not a V2 implementation.",
+    "sha256": "aedbf0278d43b2d65a8a6b58e0795c2cbad7ef1170de00de3c1c00de0e4d98de",
+    "inspected": true
+  }
+]
