@@ -1,0 +1,47 @@
+{
+  "exit_code": 0,
+  "builds": [
+    {
+      "id": "0b1a3606-7476-4607-b4c7-a37e763249c0",
+      "status": "FINISHED",
+      "platform": "ANDROID",
+      "buildProfile": "wombo",
+      "distribution": "STORE",
+      "gitCommitHash": "ee229a9ac2b8de56a6b5bf69026921eab0ab5b56",
+      "gitCommitMessage": "fix: detect stale week proposal server contract",
+      "appVersion": "1.0.0",
+      "appBuildVersion": "22",
+      "sdkVersion": "57.0.0",
+      "createdAt": "2026-10-01T09:26:34.803Z",
+      "updatedAt": "2026-10-15T03:00:10.519Z"
+    },
+    {
+      "id": "a2700f1b-3ec6-4986-8497-b15fc124cac3",
+      "status": "FINISHED",
+      "platform": "ANDROID",
+      "buildProfile": "wombo",
+      "distribution": "STORE",
+      "gitCommitHash": "20d40b2cf22377cd780e8b8b0b7de1792cc92749",
+      "gitCommitMessage": "Implement Joren planning ruleset 2",
+      "appVersion": "1.0.0",
+      "appBuildVersion": "21",
+      "sdkVersion": "57.0.0",
+      "createdAt": "2026-10-01T07:43:23.274Z",
+      "updatedAt": "2026-10-15T02:20:15.569Z"
+    },
+    {
+      "id": "bd8b79ad-0fbb-4162-adcc-d8719787a6e9",
+      "status": "FINISHED",
+      "platform": "ANDROID",
+      "buildProfile": "wombo",
+      "distribution": "STORE",
+      "gitCommitHash": "3f351468e5c30277e9ce5091491c20522088c90f",
+      "gitCommitMessage": "fix: stabilize planning and duration entry",
+      "appVersion": "1.0.0",
+      "appBuildVersion": "20",
+      "sdkVersion": "57.0.0",
+      "createdAt": "2026-09-23T22:59:12.694Z",
+      "updatedAt": "2026-10-12T15:40:58.358Z"
+    }
+  ]
+}

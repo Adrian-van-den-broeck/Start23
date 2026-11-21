@@ -1,0 +1,16 @@
+node : PASS ../docs/audits/evidence/audit-mobile.test.tsx
+At line:2 char:76
++ ... c.invalid'; node node_modules/jest/bin/jest.js --config ../docs/audit ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PASS ../docs/au...mobile.test.tsx:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+PASS ../docs/audits/evidence/audit-auth.test.tsx
+PASS ../docs/audits/evidence/audit-transport.test.tsx
+
+Test Suites: 3 passed, 3 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        3.649 s, estimated 17 s
+Ran all test suites.
+Test results written to: ..\docs\audits\evidence\audit-mobile-results.json

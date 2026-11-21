@@ -1,0 +1,26 @@
+[
+  {
+    "base": "https://start23-production.up.railway.app",
+    "path": "/ready",
+    "observed_at": "2026-10-26T15:21:49.435747+00:00",
+    "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:997)>"
+  },
+  {
+    "base": "https://start23-production.up.railway.app",
+    "path": "/openapi.json",
+    "observed_at": "2026-10-26T15:21:49.521920+00:00",
+    "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:997)>"
+  },
+  {
+    "base": "https://r6-api-r6-staging.up.railway.app",
+    "path": "/ready",
+    "observed_at": "2026-10-26T15:21:49.566989+00:00",
+    "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:997)>"
+  },
+  {
+    "base": "https://r6-api-r6-staging.up.railway.app",
+    "path": "/openapi.json",
+    "observed_at": "2026-10-26T15:21:49.642253+00:00",
+    "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:997)>"
+  }
+]
