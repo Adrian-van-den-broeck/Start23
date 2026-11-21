@@ -1,3 +1,4 @@
+import { studioPresentation } from '../ui-v3/presentation';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
 import {
@@ -65,6 +66,14 @@ describe('field-test scheduling regression', () => {
     jest.clearAllMocks();
     jest.mocked(getOnboarding).mockResolvedValue({} as OnboardingState);
     jest.mocked(scheduleFieldTest).mockResolvedValue({} as never);
+  });
+
+  test('setup route is named in V3 and keeps its API code otherwise', async () => {
+    jest.mocked(getZoneProfileState).mockResolvedValue(profile(['standalone']));
+    const screen = await render(
+      <ZoneProfileScreen accessToken="athlete-token" onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} planContext={null} />,
+    );
+    expect(await screen.findByText(studioPresentation ? 'Route: Veldtest' : 'Route: field_test')).toBeTruthy();
   });
 
   test('current server-advertised swim protocol schedules through the API', async () => {

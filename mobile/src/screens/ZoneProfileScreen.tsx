@@ -1,3 +1,4 @@
+import { studioPresentation } from '../ui-v3/presentation';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -31,6 +32,7 @@ import type {
   TestAssignment,
   TestSchedulingMode,
   ZoneProfileState,
+  ZoneSetupRoute,
 } from '../api/types';
 import { FadeInView } from '../components/FadeInView';
 import { ZoneField as FormField } from '../ui-v2/components/ZoneField';
@@ -52,6 +54,10 @@ type Props = {
   planContext: { planId: string; revision: number } | null;
 };
 
+// V3 names the setup route instead of printing its API code.
+const routeNames: Record<ZoneSetupRoute, string> = {
+  known_values: 'Bekende waarden', field_test: 'Veldtest', calibration_week: 'Kalibratieweek', rpe_only: 'Alleen RPE',
+};
 const disciplineLabels: Record<Discipline, string> = {
   swim: 'Zwemmen',
   bike: 'Fietsen',
@@ -315,7 +321,7 @@ export function ZoneProfileScreen({
                   <StatusPill label={visibilityLabels[state.numeric_zone_visibility]} pending={state.numeric_zone_visibility === 'proposal_confirmation_pending'} />
                 </View>
               </View>
-              <ZoneInfoRow icon="location"><Text tone="textMuted">Route: {state.setup?.setup_route ?? 'nog niet ingesteld'}</Text></ZoneInfoRow>
+              <ZoneInfoRow icon="location"><Text tone="textMuted">Route: {state.setup ? studioPresentation ? routeNames[state.setup.setup_route] : state.setup.setup_route : 'nog niet ingesteld'}</Text></ZoneInfoRow>
               {state.active_profile ? (
                 <View style={[styles.profileBlock, styles.profileBlockActive]}>
                   <View style={styles.profileBlockHeading}>

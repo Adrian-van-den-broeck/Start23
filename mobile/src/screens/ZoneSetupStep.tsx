@@ -1,3 +1,4 @@
+import { studioPresentation } from '../ui-v3/presentation';
 import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
@@ -391,9 +392,10 @@ export function ZoneSetupStep({
   return (
     <View style={styles.step}>
       <View>
-        <Text style={styles.eyebrow}>
+        {/* V3 onboarding already shows this step above in its progress rail. */}
+        {profileMode || !studioPresentation ? <Text style={styles.eyebrow}>
           {profileMode ? 'Profiel bijwerken' : 'Stap 6 van 7'}
-        </Text>
+        </Text> : null}
         <Text style={styles.title}>Instellen voor {disciplineLabels[discipline]}</Text>
         <Text style={styles.description}>
           Kies één expliciete route. Drempels, voorlopige observaties en echte

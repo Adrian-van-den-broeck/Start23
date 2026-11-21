@@ -1,3 +1,4 @@
+import { studioPresentation } from '../ui-v3/presentation';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -53,6 +54,9 @@ function statusLabel(connection: PolarConnection | null): string {
     error: 'Aandacht nodig',
   }[connection.status];
 }
+
+// V3 shows the import state in the interface language instead of its API code.
+const importStatusNames: Record<PolarImportRun['status'], string> = { running: 'Bezig', completed: 'Voltooid', failed: 'Mislukt' };
 
 export function IntegrationsScreen({
   accessToken,
@@ -150,7 +154,7 @@ export function IntegrationsScreen({
         {imports.length === 0 ? <Text tone="textMuted">Nog geen imports.</Text> : null}
         {imports.map(item => <View key={item.id} style={styles.importRow}>
           <Text variant="label">{item.range_start ?? 'Webhook'} – {item.range_end ?? 'activiteit'}</Text>
-          <View style={styles.chip}><Text variant="supporting">{item.status}</Text></View>
+          <View style={styles.chip}><Text variant="supporting">{studioPresentation ? importStatusNames[item.status] : item.status}</Text></View>
           <Text variant="supporting" tone="textMuted">{item.imported_count} geïmporteerd · {item.skipped_count} overgeslagen</Text>
           {item.status === 'failed' && item.failure_code !== 'reconnect_required' && item.retry_count < item.max_attempts - 1 ?
             <QuickActionRow label="Nu opnieuw proberen" icon="refresh" disabled={busy} onAction={() => void run(() => retryPolarImport(accessToken, item.id))} /> : null}

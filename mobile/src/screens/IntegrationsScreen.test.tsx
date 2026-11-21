@@ -1,3 +1,4 @@
+import { studioPresentation } from '../ui-v3/presentation';
 import { Alert, Linking } from 'react-native';
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import * as api from '../api/client';
@@ -32,6 +33,14 @@ test('connected history uses exact supported days and idempotency key; retry eli
   expect(view.getAllByRole('button', { name: 'Nu opnieuw proberen' })).toHaveLength(1);
   await fireEvent.press(view.getByRole('button', { name: 'Nu opnieuw proberen' }));
   await waitFor(() => expect(api.retryPolarImport).toHaveBeenCalledWith('athlete-token', 'inert-import-retry'));
+});
+test('import status shows a Dutch label in V3 and the unchanged API value otherwise', async () => {
+  jest.mocked(api.getPolarConnection).mockResolvedValue(fixtures.connection as PolarConnection);
+  jest.mocked(api.listPolarImports).mockResolvedValue(fixtures.imports as PolarImportRun[]);
+  const { view } = await surface();
+  const failed = fixtures.imports.filter(item => item.status === 'failed').length;
+  expect(view.getAllByText(studioPresentation ? 'Mislukt' : 'failed')).toHaveLength(failed);
+  if (studioPresentation) expect(view.queryByText('failed')).toBeNull();
 });
 test('disconnect stays behind the existing explicit native confirmation', async () => {
   jest.mocked(api.getPolarConnection).mockResolvedValue(fixtures.connection as PolarConnection);

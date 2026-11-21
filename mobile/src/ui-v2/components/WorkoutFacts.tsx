@@ -17,6 +17,15 @@ export function WorkoutFacts({ measures, intensity, variant = 'scheduled' }: Pic
   const { durationMinutes, distanceMeters } = measures;
   const stacked = width < 360 || fontScale >= 1.5 || variant === 'scheduled' || durationMinutes === null;
   const hasMeasure = durationMinutes !== null || distanceMeters !== null;
+  // V3: one wrapping row of facts without dividers. The stacked V2 layout let a
+  // second measure collide with its divider when duration and distance coexist.
+  if (studioPresentation) return <View style={styles.inline}>
+    {durationMinutes !== null ? <View style={styles.item}><Icon name="clock" size={20} />
+      <Text variant="numericCompact" accessibilityLabel={t('detail.minutesSpoken', { value: durationMinutes })}>{t('common.durationMinutes', { minutes: durationMinutes })}</Text></View> : null}
+    {distanceMeters !== null ? <View style={styles.item}><Icon name="location" size={20} />
+      <Text variant={durationMinutes === null ? 'numericCompact' : 'label'} accessibilityLabel={t('detail.metersSpoken', { value: distanceMeters })}>{t('detail.meters', { value: distanceMeters })}</Text></View> : null}
+    <View style={styles.item}><Icon name="intensity" size={20} /><Text variant="label">{t(`detail.intensity.${intensity}`)}</Text></View>
+  </View>;
   return <View style={[styles.facts, stacked && styles.stacked]}>
     {hasMeasure ? <>
       <View style={[styles.fact, stacked && styles.stackedFact]}>
@@ -43,6 +52,8 @@ export function WorkoutFacts({ measures, intensity, variant = 'scheduled' }: Pic
 }
 const styles = StyleSheet.create({
   facts: { flexDirection: 'row', gap: space[16] },
+  inline: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: space[16], rowGap: space[8] },
+  item: { flexDirection: 'row', alignItems: 'center', gap: space[8] },
   stacked: { flexDirection: 'column' },
   fact: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: space[12] },
   stackedFact: { flex: 0 },
