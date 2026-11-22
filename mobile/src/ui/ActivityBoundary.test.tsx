@@ -10,6 +10,8 @@ import { LanguageProvider } from '../i18n/LanguageProvider';
 import { ActivityBoundary, type ActivityView } from './ActivityBoundary';
 import { UiVersionProvider } from './UiVersionProvider';
 import type { UiVersion } from './uiVersion';
+// These tests run in English. RPE descriptions and activity validation used to stay Dutch in English;
+// they are now translated, so the assertions expect the English text.
 
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(async () => 'en') }));
 jest.mock('../api/client', () => ({ confirmActivityMatch: jest.fn(), createActivity: jest.fn(), getCalendar: jest.fn(), getOnboarding: jest.fn(), listActivities: jest.fn(), listPlannedExternalActivities: jest.fn(), submitActivityRpeWithRefresh: jest.fn() }));
@@ -54,7 +56,7 @@ async function openEntry() {
   const view = await render(<Host />); await view.findByText('No activities recorded yet.');
   await fireEvent.press(view.getByRole('button', { name: 'Add activity' })); return view;
 }
-const rpeFour = 'Save RPE · Focus nodig, praten in zinnen. (RPE 4)';
+const rpeFour = 'Save RPE · Focus needed, talking in sentences. (RPE 4)';
 
 test('V2 create validates existing fields, calls exact shared payload, then same pending feedback and one authoritative save', async () => {
   const view = await openEntry(); await fireEvent.changeText(view.getByLabelText('Actual start (ISO including time zone)'), '2026-10-06T10:00:00Z');
@@ -69,7 +71,7 @@ test('V2 create validates existing fields, calls exact shared payload, then same
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1); expect(flow.pendingRpe).toEqual([]);
   expect(api.listActivities).toHaveBeenCalledTimes(3); expect(api.createActivity).toHaveBeenCalledTimes(1);
 });
-test.each([['Actual duration (minutes)', '0', 'Vul een geldige duur in minuten in.'], ['Distance (metres, optional)', '1.5', 'Vul afstand in hele meters in.'], ['Actual start (ISO including time zone)', 'invalid', 'Gebruik een geldig werkelijk starttijdstip in ISO-formaat.']])('invalid %s stays populated; no mutation', async (field, value, message) => {
+test.each([['Actual duration (minutes)', '0', 'Enter a valid duration in minutes.'], ['Distance (metres, optional)', '1.5', 'Enter the distance in whole metres.'], ['Actual start (ISO including time zone)', 'invalid', 'Use a valid actual start time in ISO format.']])('invalid %s stays populated; no mutation', async (field, value, message) => {
   const view = await openEntry(); await fireEvent.changeText(view.getByLabelText(field), value); await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
   expect(view.getByRole('alert')).toHaveTextContent(message); expect(view.getByLabelText(field).props.value).toBe(value); expect(api.createActivity).not.toHaveBeenCalled();
 });
@@ -105,7 +107,7 @@ test('feedback failure/retry, rapid press and rerender never rebind exact activi
   const view = await render(<Host />); await view.findByTestId('activity-pending'); await fireEvent.press(view.getByRole('button', { name: 'Complete feedback' }));
   await fireEvent.changeText(view.getByLabelText('Average heart rate (bpm)'), '151');
   const choice = view.getByRole('radio', { name: rpeFour }); await fireEvent.press(choice); await fireEvent.press(choice);
-  await fireEvent.press(view.getByRole('radio', { name: "Save RPE · 'Sweet spot', comfortabel oncomfortabel. (RPE 5)" }));
+  await fireEvent.press(view.getByRole('radio', { name: "Save RPE · 'Sweet spot', comfortably uncomfortable. (RPE 5)" }));
   await view.rerender(<Host />); expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
   await act(() => request.reject(new Error('Safe feedback failure'))); expect(view.getByRole('alert')).toHaveTextContent('Safe feedback failure');
   expect(flow.feedbackActivity).toBe(pendingActivity); expect(view.getByLabelText('Average heart rate (bpm)').props.value).toBe('151');
@@ -147,7 +149,7 @@ test('current-week correction uses stored RPE and same snapshot; historical corr
   const view = await render(<Host />); const record = within(await view.findByTestId(`activity-row-${recent.id}`));
   expect(within(view.getByTestId('activity-row-historical')).queryByRole('button', { name: /Correct this week/ })).toBeNull();
   await fireEvent.press(record.getByRole('button', { name: /Correct this week/ }));
-  expect(view.getByRole('radio', { name: 'Save RPE · Diepe ademhaling (10k wedstrijdtempo). (RPE 7)' })).toBeChecked();
+  expect(view.getByRole('radio', { name: 'Save RPE · Deep breathing (10k race pace). (RPE 7)' })).toBeChecked();
   await fireEvent.press(view.getByRole('radio', { name: rpeFour })); expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledWith('token-a', recent, 4, undefined);
 });
 test('planned source selection keeps exact workout ID in create', async () => {

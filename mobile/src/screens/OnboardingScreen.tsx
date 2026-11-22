@@ -48,15 +48,16 @@ import {
   resolveDeviceTimezone,
 } from '../lib/onboardingForms';
 import { ZoneSetupStep } from './ZoneSetupStep';
+import { useLanguage, type TranslationKey } from '../i18n/LanguageProvider';
 
-const stepLabels: Array<{ step: OnboardingStep; label: string }> = [
-  { step: 'profile', label: 'Profiel' },
-  { step: 'heart_rate_monitor', label: 'Hartslag' },
-  { step: 'timezone', label: 'Tijdzone' },
-  { step: 'history', label: 'Historie' },
-  { step: 'goal', label: 'Doel' },
-  { step: 'zones', label: 'Zones' },
-  { step: 'review', label: 'Afronden' },
+const stepLabelKeys: Array<{ step: OnboardingStep; labelKey: TranslationKey }> = [
+  { step: 'profile', labelKey: 'onboarding.step.profile' },
+  { step: 'heart_rate_monitor', labelKey: 'onboarding.step.heartRateMonitor' },
+  { step: 'timezone', labelKey: 'onboarding.step.timezone' },
+  { step: 'history', labelKey: 'onboarding.step.history' },
+  { step: 'goal', labelKey: 'onboarding.step.goal' },
+  { step: 'zones', labelKey: 'onboarding.step.zones' },
+  { step: 'review', labelKey: 'onboarding.step.review' },
 ];
 
 type OnboardingScreenProps = {
@@ -83,20 +84,20 @@ type ConfirmationStepProps = {
 };
 
 export function HeartRateMonitorStep({ saving, onSave }: ConfirmationStepProps) {
+  const { t } = useLanguage();
   return (
     <StepFrame
-      description="Voor het huidige MVP moet je gemiddelde hartslag kunnen meten. Dat mag met iedere hartslagmeter en je kunt de waarde handmatig invoeren; een specifieke wearable is niet nodig."
-      title="Heb je toegang tot een hartslagmeter?"
+      description={t('onboarding.heartRate.description')}
+      title={t('onboarding.heartRate.title')}
     >
       <View style={styles.approvalNotice}>
-        <Text style={styles.approvalTitle}>RPE-only is niet beschikbaar</Text>
+        <Text style={styles.approvalTitle}>{t('onboarding.heartRate.rpeOnlyTitle')}</Text>
         <Text style={styles.approvalText}>
-          Zonder bevestigde toegang kan onboarding niet worden afgerond en kan
-          er geen planning worden aangemaakt.
+          {t('onboarding.heartRate.rpeOnlyText')}
         </Text>
       </View>
       <ActionButton
-        label="Ja, ik kan gemiddelde hartslag meten"
+        label={t('onboarding.heartRate.confirm')}
         loading={saving}
         onPress={() => void onSave()}
       />
@@ -122,6 +123,7 @@ const fallbackTimezones = [
 ] as const;
 
 export function TimezoneStep({ profile, saving, onSave }: TimezoneStepProps) {
+  const { t } = useLanguage();
   const detected = useMemo(resolveDeviceTimezone, []);
   const [timezone, setTimezone] = useState(
     profile?.timezone_confirmed_at ? (profile.timezone ?? '') : '',
@@ -132,14 +134,14 @@ export function TimezoneStep({ profile, saving, onSave }: TimezoneStepProps) {
 
   return (
     <StepFrame
-      description="Je tijdzone bepaalt lokale trainingsweken en datums. Controleer de gedetecteerde waarde of kies expliciet een IANA-tijdzone. We slaan nooit stilzwijgend een gok op."
-      title="Bevestig je tijdzone"
+      description={t('onboarding.timezone.description')}
+      title={t('onboarding.timezone.title')}
     >
       {detected ? (
-        <Button label={"Gedetecteerd op dit apparaat: " + detected} variant="secondary" onPress={() => { setTimezone(detected); setSource('device'); }} />
+        <Button label={t('onboarding.timezone.detected', { timezone: detected })} variant="secondary" onPress={() => { setTimezone(detected); setSource('device'); }} />
       ) : (
         <Text style={styles.fieldError}>
-          Automatische detectie is niet beschikbaar. Kies hieronder een tijdzone.
+          {t('onboarding.timezone.noDetection')}
         </Text>
       )}
       <View style={styles.goalModeList}>
@@ -149,9 +151,9 @@ export function TimezoneStep({ profile, saving, onSave }: TimezoneStepProps) {
       </View>
       <Input
         autoCapitalize="none"
-        hint="Gebruik een geldige IANA-naam als je tijdzone niet in de lijst staat."
+        hint={t('onboarding.timezone.otherHint')}
         icon="location"
-        label="Andere IANA-tijdzone"
+        label={t('onboarding.timezone.otherLabel')}
         onChangeText={(value) => {
           setTimezone(value);
           setSource('manual');
@@ -161,7 +163,7 @@ export function TimezoneStep({ profile, saving, onSave }: TimezoneStepProps) {
       />
       <ActionButton
         disabled={!timezone.trim()}
-        label="Tijdzone expliciet bevestigen"
+        label={t('onboarding.timezone.confirm')}
         loading={saving}
         onPress={() => void onSave(timezone.trim(), source)}
       />
@@ -176,6 +178,7 @@ type HistoryStepProps = {
 };
 
 export function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
+  const { t } = useLanguage();
   const initial = (discipline: Discipline): string => {
     const entry = state.training_history.find((item) => item.discipline === discipline);
     return entry?.previous_month_weekly_minutes != null
@@ -191,28 +194,28 @@ export function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
     hours.reduce((total, value) => total + value, 0) <= 168;
   return (
     <StepFrame
-      description="Hoeveel uur per week trainde je gemiddeld de afgelopen maand? Vul ook nul in als je een discipline niet deed."
-      title="Waar sta je nu?"
+      description={t('onboarding.history.description')}
+      title={t('onboarding.history.title')}
     >
       <View style={styles.form}>
         {(['swim', 'bike', 'run'] as const).map((discipline) => (
           <View key={discipline} style={styles.disciplineCard}>
             <Text style={styles.cardTitle}>
-              {discipline === 'swim' ? 'Zwemmen' : discipline === 'bike' ? 'Fietsen' : 'Hardlopen'}
+              {t(discipline === 'swim' ? 'common.swim' : discipline === 'bike' ? 'common.bike' : 'onboarding.history.run')}
             </Text>
             <Input
               inputMode="decimal"
-              label="Gemiddelde uren per week"
+              label={t('onboarding.history.hoursLabel')}
               onChangeText={(value) => setValues((current) => ({ ...current, [discipline]: value }))}
               placeholder="0"
-              unit="uur/week"
-              accessibilityLabel="Gemiddelde uren per week"
+              unit={t('onboarding.history.hoursUnit')}
+              accessibilityLabel={t('onboarding.history.hoursLabel')}
               value={values[discipline]}
             />
           </View>
         ))}
       </View>
-      <ActionButton disabled={!valid} label="Trainingshistorie opslaan" loading={saving}
+      <ActionButton disabled={!valid} label={t('onboarding.history.save')} loading={saving}
         onPress={() => void onSave(values)} />
     </StepFrame>
   );
@@ -236,6 +239,7 @@ export function ReviewStep({
   onApproveZone,
   onRejectZone,
 }: ReviewStepProps) {
+  const { t } = useLanguage();
   const pendingZones = state.zones.filter(
     (zone) =>
       state.required_disciplines.includes(zone.discipline) &&
@@ -244,26 +248,26 @@ export function ReviewStep({
   );
   return (
     <StepFrame
-      description="Afronden maakt geen trainingsplan actief. Het zet alleen een planningsverzoek klaar voor de volgende fase."
-      title="Klaar voor je eerste voorstel"
+      description={t('onboarding.review.description')}
+      title={t('onboarding.review.title')}
     >
       <View style={styles.reviewCard}>
         <ReviewRow
-          label="Profiel"
-          value={state.profile?.timezone ?? 'Ontbreekt'}
+          label={t('onboarding.step.profile')}
+          value={state.profile?.timezone ?? t('onboarding.review.missing')}
         />
         <ReviewRow
-          label="Historie"
-          value={`${state.training_history.length}/3 disciplines`}
+          label={t('onboarding.step.history')}
+          value={t('onboarding.review.disciplineCount', { done: state.training_history.length, total: 3 })}
         />
         <ReviewRow
-          label="A-doel"
-          value={state.primary_goal?.race_name ?? 'Ontbreekt'}
+          label={t('onboarding.review.goal')}
+          value={state.primary_goal?.race_name ?? t('onboarding.review.missing')}
         />
         <ReviewRow
-          label="Actieve zones"
-          value={`${
-            new Set(
+          label={t('onboarding.review.activeZones')}
+          value={t('onboarding.review.disciplineCount', {
+            done: new Set(
               state.zones
                 .filter(
                   (zone) =>
@@ -271,25 +275,27 @@ export function ReviewStep({
                     zone.status === 'active',
                 )
                 .map((zone) => zone.discipline),
-            ).size
-          }/${state.required_disciplines.length} disciplines`}
+            ).size,
+            total: state.required_disciplines.length,
+          })}
         />
       </View>
       {pendingZones.map((zone) => (
         <View key={zone.id} style={styles.approvalNotice}>
           <Text style={styles.approvalTitle}>
-            Zonevoorstel {zone.discipline}
+            {t('onboarding.review.zoneProposal', { discipline: zone.discipline })}
           </Text>
           <Text style={styles.approvalText}>
-            {zone.metric_profiles.length > 1
-              ? `${zone.metric_profiles.length} metrische representaties`
-              : zone.metric?.metric_kind ?? 'Berekende zones'}{' '}
-            volgens {zone.zone_model_version}. De huidige zones veranderen pas
-            na jouw bevestiging.
+            {t('onboarding.review.zoneProposalText', {
+              subject: zone.metric_profiles.length > 1
+                ? t('onboarding.review.metricRepresentations', { count: zone.metric_profiles.length })
+                : zone.metric?.metric_kind ?? t('onboarding.review.calculatedZones'),
+              version: zone.zone_model_version ?? '',
+            })}
           </Text>
           <ActionButton
             disabled={saving}
-            label="Zones bevestigen"
+            label={t('onboarding.review.approveZones')}
             onPress={() =>
               void onApproveZone(
                 zone.proposal_id!,
@@ -299,22 +305,21 @@ export function ReviewStep({
           />
           <ActionButton
             disabled={saving}
-            label="Zonevoorstel afwijzen"
+            label={t('onboarding.review.rejectZones')}
             onPress={() => void onRejectZone(zone.proposal_id!)}
             secondary
           />
         </View>
       ))}
       <View style={styles.approvalNotice}>
-        <Text style={styles.approvalTitle}>Jij houdt de controle</Text>
+        <Text style={styles.approvalTitle}>{t('onboarding.review.controlTitle')}</Text>
         <Text style={styles.approvalText}>
-          Ook het toekomstige weekplan wordt eerst als voorstel getoond. Er
-          verandert niets zonder een aparte goedkeuring.
+          {t('onboarding.review.controlText')}
         </Text>
       </View>
       <ActionButton
         disabled={!state.can_complete}
-        label="Onboarding afronden"
+        label={t('onboarding.review.complete')}
         loading={saving}
         onPress={() => void onComplete()}
       />
@@ -340,6 +345,11 @@ export function OnboardingScreen({
   onOpenPlanning,
   onSignOut,
 }: OnboardingScreenProps) {
+  const { t } = useLanguage();
+  const stepLabels = useMemo(
+    () => stepLabelKeys.map(({ step, labelKey }) => ({ step, label: t(labelKey) })),
+    [t],
+  );
   const [state, setState] = useState<OnboardingState | null>(null);
   const [physiologyProfile, setPhysiologyProfile] =
     useState<AthletePhysiologyProfile | null>(null);
@@ -372,7 +382,7 @@ export function OnboardingScreen({
       setError(
         caught instanceof Error
           ? caught.message
-          : 'Onboarding laden is niet gelukt.',
+          : t('onboarding.loadFailed'),
       );
     } finally {
       setLoading(false);
@@ -404,7 +414,7 @@ export function OnboardingScreen({
           setError(
             caught instanceof Error
               ? caught.message
-              : 'Onboarding laden is niet gelukt.',
+              : t('onboarding.loadFailed'),
           );
         }
       })
@@ -435,7 +445,7 @@ export function OnboardingScreen({
       setError(
         caught instanceof Error
           ? caught.message
-          : 'Opslaan is niet gelukt.',
+          : t('onboarding.saveFailed'),
       );
     } finally {
       setSaving(false);
@@ -452,7 +462,7 @@ export function OnboardingScreen({
       setError(
         caught instanceof Error
           ? caught.message
-          : 'Afronden is niet gelukt.',
+          : t('onboarding.completeFailed'),
       );
     } finally {
       setSaving(false);
@@ -476,7 +486,7 @@ export function OnboardingScreen({
     return (
       <SafeAreaView style={styles.centered}>
         <ActivityIndicator color={colors.primary} size="large" />
-        <Text style={styles.loadingText}>Je intake wordt hervat…</Text>
+        <Text style={styles.loadingText}>{t('onboarding.loading')}</Text>
       </SafeAreaView>
     );
   }
@@ -484,14 +494,14 @@ export function OnboardingScreen({
   if (!state) {
     return (
       <SafeAreaView style={styles.centered}>
-        <Text style={styles.errorTitle}>We kunnen je intake niet laden.</Text>
+        <Text style={styles.errorTitle}>{t('onboarding.loadFailedTitle')}</Text>
         {error ? <Text style={styles.centeredError}>{error}</Text> : null}
         <ActionButton
-          label="Opnieuw proberen"
+          label={t('shell.retry')}
           onPress={() => void retryLoad()}
         />
         <ActionButton
-          label="Afmelden"
+          label={t('activity.signOut')}
           onPress={() => void onSignOut()}
           secondary
         />
@@ -515,10 +525,13 @@ export function OnboardingScreen({
       >
         <ScrollView automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'} contentContainerStyle={styles.scrollContent}
           keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} style={styles.scroll}>
-          <BrandedFormHeader caption="Jouw profiel" onSignOut={onSignOut}>
-            {state.discipline_setups.some((setup) => setup.protocol_id) ? <Button label="Testen" variant="secondary" onPress={onOpenCalibration} /> : null}
+          <BrandedFormHeader caption={t('onboarding.headerCaption')} onSignOut={onSignOut}>
+            {state.discipline_setups.some((setup) => setup.protocol_id) ? <Button label={t('onboarding.openCalibration')} variant="secondary" onPress={onOpenCalibration} /> : null}
           </BrandedFormHeader>
-          {state.upgrade_required ? <Notice title="Werk je onboarding bij">{'Je eerdere afronding blijft bewaard. Alleen deze onderdelen zijn nog nodig voor ' + state.current_onboarding_version + ': ' + (state.missing_upgrade_steps.length ? state.missing_upgrade_steps.map((missing) => stepLabels.find((item) => item.step === missing)?.label ?? missing).join(', ') : 'controle en bevestiging') + '.'}</Notice> : null}
+          {state.upgrade_required ? <Notice title={t('onboarding.upgrade.title')}>{t('onboarding.upgrade.text', {
+            version: state.current_onboarding_version,
+            steps: state.missing_upgrade_steps.length ? state.missing_upgrade_steps.map((missing) => stepLabels.find((item) => item.step === missing)?.label ?? missing).join(', ') : t('onboarding.upgrade.reviewOnly'),
+          })}</Notice> : null}
           <StepProgress current={step} steps={stepLabels} completed={completed} />
           {error ? <Notice tone="error">{error}</Notice> : null}
 
@@ -639,15 +652,14 @@ export function OnboardingScreen({
                 .map((zone) => (
                   <View key={zone.id} style={styles.approvalNotice}>
                     <Text style={styles.approvalTitle}>
-                      Zonevoorstel {zone.discipline} wacht op bevestiging
+                      {t('onboarding.zones.pendingTitle', { discipline: zone.discipline })}
                     </Text>
                     <Text style={styles.approvalText}>
-                      De berekende zones worden pas na deze aparte, stale-safe
-                      bevestiging actief.
+                      {t('onboarding.zones.pendingText')}
                     </Text>
                     <ActionButton
                       disabled={saving}
-                      label={`Zones ${zone.discipline} bevestigen`}
+                      label={t('onboarding.zones.approve', { discipline: zone.discipline })}
                       onPress={() =>
                         void mutate(() =>
                           approveZoneProposal(
@@ -660,7 +672,7 @@ export function OnboardingScreen({
                     />
                     <ActionButton
                       disabled={saving}
-                      label={`Zonevoorstel ${zone.discipline} afwijzen`}
+                      label={t('onboarding.zones.reject', { discipline: zone.discipline })}
                       onPress={() =>
                         void mutate(() =>
                           rejectZoneProposal(accessToken, zone.proposal_id!),

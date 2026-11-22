@@ -1,8 +1,13 @@
+import * as SecureStore from 'expo-secure-store';
+import type { ReactElement } from 'react';
 import { render } from '@testing-library/react-native';
 
 import { getOnboarding, saveProfile } from '../api/client';
 import type { OnboardingState } from '../api/types';
 import { ProfileScreen } from './ProfileScreen';
+import { LanguageProvider } from '../i18n/LanguageProvider';
+jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(async () => null), setItemAsync: jest.fn(async () => undefined), WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'unlocked' }));
+const renderWithLanguage = (ui: ReactElement) => render(<LanguageProvider>{ui}</LanguageProvider>);
 
 jest.mock('../api/client', () => ({
   getOnboarding: jest.fn(),
@@ -32,7 +37,7 @@ describe('ProfileScreen navigation regression', () => {
       },
     } as OnboardingState);
 
-    const screen = await render(
+    const screen = await renderWithLanguage(
       <ProfileScreen
         accessToken="athlete-token"
         onBack={jest.fn()}
@@ -47,5 +52,25 @@ describe('ProfileScreen navigation regression', () => {
     expect(screen.getByRole('button', { name: /Pioneer toegang/ })).toBeTruthy();
     expect(screen.queryByText(/Stap \d van/)).toBeNull();
     expect(saveProfile).not.toHaveBeenCalled();
+  });
+
+  test('English preference translates the profile destinations', async () => {
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValueOnce('en');
+    jest.mocked(getOnboarding).mockRejectedValue('offline');
+    const screen = await renderWithLanguage(
+      <ProfileScreen
+        accessToken="athlete-token"
+        onBack={jest.fn()}
+        onOpenPioneerAccess={jest.fn()}
+        onOpenTests={jest.fn()}
+        onSignOut={jest.fn(async () => undefined)}
+      />,
+    );
+    expect(await screen.findByText('My profile')).toBeTruthy();
+    expect(screen.getByRole('button', { name: /Tests and calibration/ })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /Pioneer access/ })).toBeTruthy();
+    expect(screen.getByText('Open the current protocols you can carry out.')).toBeTruthy();
+    expect(screen.getByText('Redeem your personal beta code.')).toBeTruthy();
+    expect(screen.queryByText('Testen en kalibratie')).toBeNull();
   });
 });

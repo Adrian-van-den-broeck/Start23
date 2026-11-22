@@ -258,7 +258,7 @@ export const baseEn: Record<keyof typeof baseNl, string> = {
   'activities.add': 'Add activity',
   'activities.return': 'Back to Activities',
   'activities.continueFeedback': 'Complete feedback',
-  'activities.blocked': 'Finish the saved activity?s RPE before adding another activity.',
+  'activities.blocked': 'Finish the saved activity’s RPE before adding another activity.',
   'activities.feedback': 'Activity feedback',
   'activities.saveOnChoice': 'Choose how it felt to save. Your choice is saved immediately.',
   'activities.saveFeedback': 'Save RPE',

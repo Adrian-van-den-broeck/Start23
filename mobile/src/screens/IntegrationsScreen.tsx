@@ -19,6 +19,7 @@ import {
   startPolarOAuth,
 } from '../api/client';
 import type { PolarConnection, PolarImportRun } from '../api/types';
+import { type TranslationKey, useLanguage } from '../i18n/LanguageProvider';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
 import { Button } from '../ui-v2/primitives/Button';
@@ -44,19 +45,21 @@ function newIdempotencyKey(): string {
   });
 }
 
-function statusLabel(connection: PolarConnection | null): string {
-  if (!connection) return 'Niet gekoppeld';
-  return {
-    connected: 'Verbonden',
-    disconnected: 'Ontkoppeld',
-    revoked: 'Toegang ingetrokken',
-    reconnect_required: 'Opnieuw koppelen',
-    error: 'Aandacht nodig',
-  }[connection.status];
+const statusLabels: Record<PolarConnection['status'], TranslationKey> = {
+  connected: 'integrations.status.connected',
+  disconnected: 'integrations.status.disconnected',
+  revoked: 'integrations.status.revoked',
+  reconnect_required: 'integrations.status.reconnect_required',
+  error: 'integrations.status.error',
+};
+
+function statusLabel(connection: PolarConnection | null): TranslationKey {
+  if (!connection) return 'integrations.status.none';
+  return statusLabels[connection.status];
 }
 
 // V3 shows the import state in the interface language instead of its API code.
-const importStatusNames: Record<PolarImportRun['status'], string> = { running: 'Bezig', completed: 'Voltooid', failed: 'Mislukt' };
+const importStatusNames: Record<PolarImportRun['status'], TranslationKey> = { running: 'integrations.importStatus.running', completed: 'integrations.importStatus.completed', failed: 'integrations.importStatus.failed' };
 
 export function IntegrationsScreen({
   accessToken,
@@ -64,6 +67,7 @@ export function IntegrationsScreen({
   onOpenActivities,
   onSignOut,
 }: IntegrationsScreenProps) {
+  const { t } = useLanguage();
   const [connection, setConnection] = useState<PolarConnection | null>(null);
   const [imports, setImports] = useState<PolarImportRun[]>([]);
   const [days, setDays] = useState<7 | 14 | 30>(14);
@@ -80,7 +84,7 @@ export function IntegrationsScreen({
     setBusy(true);
     load()
       .catch((caught) =>
-        setError(caught instanceof Error ? caught.message : 'Laden is mislukt.'),
+        setError(caught instanceof Error ? caught.message : t('integrations.loadFailed')),
       )
       .finally(() => setBusy(false));
     // load is intentionally local to this screen.
@@ -95,13 +99,13 @@ export function IntegrationsScreen({
       await action();
     } catch (caught) {
       actionFailed = true;
-      setError(caught instanceof Error ? caught.message : 'Actie is mislukt.');
+      setError(caught instanceof Error ? caught.message : t('integrations.actionFailed'));
     } finally {
       try {
         await load();
       } catch (caught) {
         if (!actionFailed) {
-          setError(caught instanceof Error ? caught.message : 'Laden is mislukt.');
+          setError(caught instanceof Error ? caught.message : t('integrations.loadFailed'));
         }
       }
       setBusy(false);
@@ -116,12 +120,12 @@ export function IntegrationsScreen({
 
   const disconnect = () => {
     Alert.alert(
-      'Polar ontkoppelen?',
-      'De provider-toegang wordt verwijderd. Eerder geïmporteerde activiteiten en bestanden worden niet automatisch gewist.',
+      t('integrations.disconnect.title'),
+      t('integrations.disconnect.message'),
       [
-        { text: 'Annuleren', style: 'cancel' },
+        { text: t('integrations.disconnect.cancel'), style: 'cancel' },
         {
-          text: 'Ontkoppelen',
+          text: t('integrations.disconnect.confirm'),
           style: 'destructive',
           onPress: () => void run(() => disconnectPolar(accessToken)),
         },
@@ -131,39 +135,39 @@ export function IntegrationsScreen({
 
   return <SafeAreaView edges={['top']} style={styles.safeArea}>
     <ScrollView contentContainerStyle={styles.content}>
-      <BrandedFormHeader caption="Integraties" backLabel="Weekplanning" onBack={onBack} onSignOut={onSignOut} />
+      <BrandedFormHeader caption={t('integrations.title')} backLabel={t('activity.back')} onBack={onBack} onSignOut={onSignOut} />
       {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error}><Notice tone="error">{error}</Notice></View> : null}
       {busy ? <ActivityIndicator color={colors.primary} /> : null}
       <Card elevated padding="form" style={styles.panel}>
         <View style={styles.identity}><IconTile name="activities" /><Text variant="sectionTitle" accessibilityRole="header">Polar</Text></View>
-        <View style={styles.chip}><Text variant="supporting" tone="primary">{statusLabel(connection)}</Text></View>
-        <Notice>Polar is de eerste provider. Productie blijft uit totdat juridische, privacy- en providervoorwaarden zijn goedgekeurd.</Notice>
+        <View style={styles.chip}><Text variant="supporting" tone="primary">{t(statusLabel(connection))}</Text></View>
+        <Notice>{t('integrations.polar.notice')}</Notice>
         {connection?.status === 'connected' ? <>
-          <Text variant="label">Historie importeren</Text>
-          <View accessibilityRole="radiogroup" accessibilityLabel="Historie importeren" style={{ gap: space[12] }}>
-            {([7, 14, 30] as const).map(value => <ChoiceRow key={value} label={`${value} dagen`} selected={days === value} onPress={() => setDays(value)} />)}
+          <Text variant="label">{t('integrations.history.title')}</Text>
+          <View accessibilityRole="radiogroup" accessibilityLabel={t('integrations.history.title')} style={{ gap: space[12] }}>
+            {([7, 14, 30] as const).map(value => <ChoiceRow key={value} label={t('integrations.history.days', { days: value })} selected={days === value} onPress={() => setDays(value)} />)}
           </View>
-          <Text variant="supporting" tone="textMuted">Standaard 14 dagen. Meer dan 30 dagen is via deze koppeling niet beschikbaar.</Text>
-          <Button label="Import starten" disabled={busy} onPress={() => void run(() => importPolarHistory(accessToken, newIdempotencyKey(), days))} />
-          <Button label="Ontkoppelen" variant="outline" onPress={disconnect} />
-        </> : <Button label={connection?.status === 'reconnect_required' ? 'Opnieuw toestemming geven' : 'Polar koppelen'} disabled={busy} onPress={() => void connect()} />}
-        <QuickActionRow label="Status vernieuwen" icon="refresh" disabled={busy} onAction={() => void run(load)} />
+          <Text variant="supporting" tone="textMuted">{t('integrations.history.hint')}</Text>
+          <Button label={t('integrations.history.start')} disabled={busy} onPress={() => void run(() => importPolarHistory(accessToken, newIdempotencyKey(), days))} />
+          <Button label={t('integrations.disconnect.confirm')} variant="outline" onPress={disconnect} />
+        </> : <Button label={connection?.status === 'reconnect_required' ? t('integrations.reconnect') : t('integrations.connect')} disabled={busy} onPress={() => void connect()} />}
+        <QuickActionRow label={t('integrations.refresh')} icon="refresh" disabled={busy} onAction={() => void run(load)} />
       </Card>
       <Card elevated style={styles.panel}>
-        <Text variant="sectionTitle" accessibilityRole="header">Imports</Text>
-        {imports.length === 0 ? <Text tone="textMuted">Nog geen imports.</Text> : null}
+        <Text variant="sectionTitle" accessibilityRole="header">{t('integrations.imports.title')}</Text>
+        {imports.length === 0 ? <Text tone="textMuted">{t('integrations.imports.empty')}</Text> : null}
         {imports.map(item => <View key={item.id} style={styles.importRow}>
-          <Text variant="label">{item.range_start ?? 'Webhook'} – {item.range_end ?? 'activiteit'}</Text>
-          <View style={styles.chip}><Text variant="supporting">{studioPresentation ? importStatusNames[item.status] : item.status}</Text></View>
-          <Text variant="supporting" tone="textMuted">{item.imported_count} geïmporteerd · {item.skipped_count} overgeslagen</Text>
+          <Text variant="label">{item.range_start ?? t('integrations.imports.webhook')} – {item.range_end ?? t('integrations.imports.activity')}</Text>
+          <View style={styles.chip}><Text variant="supporting">{studioPresentation ? t(importStatusNames[item.status]) : item.status}</Text></View>
+          <Text variant="supporting" tone="textMuted">{t('integrations.imports.counts', { imported: item.imported_count, skipped: item.skipped_count })}</Text>
           {item.status === 'failed' && item.failure_code !== 'reconnect_required' && item.retry_count < item.max_attempts - 1 ?
-            <QuickActionRow label="Nu opnieuw proberen" icon="refresh" disabled={busy} onAction={() => void run(() => retryPolarImport(accessToken, item.id))} /> : null}
+            <QuickActionRow label={t('integrations.imports.retry')} icon="refresh" disabled={busy} onAction={() => void run(() => retryPolarImport(accessToken, item.id))} /> : null}
         </View>)}
-        <QuickActionRow label="Geïmporteerde activiteiten bekijken" icon="activities" onAction={onOpenActivities} />
+        <QuickActionRow label={t('integrations.imports.view')} icon="activities" onAction={onOpenActivities} />
       </Card>
       <Card elevated style={styles.panel}>
-        <Text variant="sectionTitle" accessibilityRole="header">Privacy</Text>
-        <Text tone="textMuted">Ontkoppelen stopt nieuwe toegang en verwijdert de credentials. Het is geen verwijderverzoek: bestaande activiteiten blijven behouden. Ruwe FIT-bestanden blijven backend-only; Wombo toont geen filemanager of downloadscherm in de MVP. Bewaartermijnen en verwijder-/exportprocessen moeten vóór productie formeel zijn vastgelegd.</Text>
+        <Text variant="sectionTitle" accessibilityRole="header">{t('integrations.privacy.title')}</Text>
+        <Text tone="textMuted">{t('integrations.privacy.body')}</Text>
       </Card>
     </ScrollView>
   </SafeAreaView>;

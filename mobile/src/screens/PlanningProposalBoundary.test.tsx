@@ -94,7 +94,7 @@ test('review and Back preserve pending snapshot, all occurrences/warnings and ac
   const view = await enterReview(value);
   expect(view.getAllByRole('button', { name: /^View alternatives/ })).toHaveLength(2);
   expect(view.getByText('Your approved plan remains active until you approve this proposal.')).toBeTruthy();
-  expect(view.getByText('Weekcombinatie vraagt aandacht')).toBeTruthy();
+  expect(view.getByText('Week combination needs attention')).toBeTruthy();
   expect(api.getPendingWorkoutAlternatives).not.toHaveBeenCalled();
   await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
   expect(flow.plan).toBe(value); expect(flow.activePlan).toBe(activePlan);

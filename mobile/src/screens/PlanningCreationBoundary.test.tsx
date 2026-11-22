@@ -155,12 +155,12 @@ test('leave, re-enter, cold restore and V1/V2 comparison retain exact draft/revi
   await fireEvent.press(view.getAllByRole('button', { name: 'Continue choosing' })[0]);
   expect(flow.swipeDraft).toBe(same);
   await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
-  await view.findByText('Stel je week samen');
+  await view.findByText('Build your week');
   expect(view.queryByText('Choose your workouts')).toBeNull();
   expect(flow.swipeDraft).toBe(same);
   await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
   await view.findByText('Choose your workouts');
-  expect(view.queryByText('Stel je week samen')).toBeNull();
+  expect(view.queryByText('Build your week')).toBeNull();
   expect(flow.swipeDraft?.revision).toBe(draft.revision);
   await view.unmount();
   const cold = await render(presentation());

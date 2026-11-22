@@ -1,3 +1,4 @@
+import { setRuntimeLanguage } from '../i18n/runtime';
 import { rpeChoices, rpeDescription } from './rpe';
 
 describe('Phase 15 textual RPE catalog', () => {
@@ -59,5 +60,20 @@ describe('Phase 15 textual RPE catalog', () => {
     expect(() => rpeDescription('run', 0)).toThrow();
     expect(() => rpeDescription('bike', 11)).toThrow();
     expect(() => rpeDescription('swim', 1.5)).toThrow();
+  });
+
+  test('English follows the applied language with the same values and order', () => {
+    setRuntimeLanguage('en');
+    try {
+      expect(rpeChoices('run')).toHaveLength(10);
+      expect(rpeChoices('run').map((choice) => choice.value)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+      expect(rpeDescription('run', 1)).toBe('Walking or extremely slow jogging.');
+      expect(rpeDescription('run', 5)).toBe("'Sweet spot', comfortably uncomfortable.");
+      expect(rpeDescription('bike', 10)).toBe('Full sprint, maximum power.');
+      expect(rpeDescription('swim', 10)).toBe('All-out sprint.');
+      expect(() => rpeDescription('run', 0)).toThrow();
+    } finally {
+      setRuntimeLanguage('nl');
+    }
   });
 });

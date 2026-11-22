@@ -3,6 +3,7 @@ import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleShe
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getPioneerRedemption, redeemPioneerAccess } from '../api/client';
 import type { PioneerRedemption } from '../api/types';
+import { useLanguage } from '../i18n/LanguageProvider';
 import { AppHeader } from '../ui-v2/components/AppHeader';
 import { Button } from '../ui-v2/primitives/Button';
 import { Card } from '../ui-v2/primitives/Card';
@@ -25,6 +26,7 @@ function newIdempotencyKey(): string {
 }
 
 export function PioneerAccessScreen({ accessToken, onBack }: Props) {
+  const { t, locale } = useLanguage();
   const [code, setCode] = useState('');
   const [redemption, setRedemption] = useState<PioneerRedemption | null>(null);
   const [loading, setLoading] = useState(true);
@@ -44,7 +46,7 @@ export function PioneerAccessScreen({ accessToken, onBack }: Props) {
           setError(
             caught instanceof Error
               ? caught.message
-              : 'Pioneer-status laden is mislukt.',
+              : t('integrations.account.pioneerLoadFailed'),
           );
         }
       })
@@ -74,7 +76,7 @@ export function PioneerAccessScreen({ accessToken, onBack }: Props) {
       setError(
         caught instanceof Error
           ? caught.message
-          : 'De Pioneer-code kon niet worden ingewisseld.',
+          : t('integrations.account.pioneerRedeemFailed'),
       );
     } finally {
       inFlightRef.current = false;
@@ -86,18 +88,18 @@ export function PioneerAccessScreen({ accessToken, onBack }: Props) {
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag" automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}>
-        <AppHeader title="WOMBO" onBack={onBack} backLabel="Profiel" landscape="ridges" />
+        <AppHeader title="WOMBO" onBack={onBack} backLabel={t('planning.profile')} landscape="ridges" />
         <Card elevated padding="form" style={{ gap: layout.fieldGroupGap }}>
-          <Text variant="supporting" tone="primary">PIONEER BETA</Text>
-          <Text variant="sectionTitle" accessibilityRole="header">Toegang met jouw code</Text>
-          <Text tone="textMuted">De server controleert geldigheid, vervaldatum, intrekking en eenmalig gebruik. Je code wordt niet in de app bewaard.</Text>
+          <Text variant="supporting" tone="primary">{t('integrations.account.pioneerBadge')}</Text>
+          <Text variant="sectionTitle" accessibilityRole="header">{t('integrations.account.pioneerTitle')}</Text>
+          <Text tone="textMuted">{t('integrations.account.pioneerBody')}</Text>
           {loading ? <ActivityIndicator color={colors.primary} /> : null}
-          {redemption ? <View accessibilityRole="summary"><Notice tone="success" title="Pioneer toegang actief">
-            {`Ingewisseld op ${new Date(redemption.redeemed_at).toLocaleString()}.`}
+          {redemption ? <View accessibilityRole="summary"><Notice tone="success" title={t('integrations.account.pioneerActive')}>
+            {t('integrations.account.pioneerRedeemedAt', { date: new Date(redemption.redeemed_at).toLocaleString(locale) })}
           </Notice></View> : <>
-            <Input autoCapitalize="characters" label="Pioneer access-code" maxLength={32}
+            <Input autoCapitalize="characters" label={t('integrations.account.pioneerCode')} maxLength={32}
               onChangeText={(value) => setCode(value.toUpperCase())} placeholder="PIONEER-XXXX" value={code} icon="document" />
-            <Button label="Code inwisselen" busy={submitting} disabled={submitting || code.trim().length < 8} onPress={() => void redeem()} />
+            <Button label={t('integrations.account.pioneerRedeem')} busy={submitting} disabled={submitting || code.trim().length < 8} onPress={() => void redeem()} />
           </>}
           {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error}><Notice tone="error">{error}</Notice></View> : null}
         </Card>

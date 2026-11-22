@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { AppState, Platform } from 'react-native';
 
+import { useLanguage } from '../i18n/LanguageProvider';
 import {
   getSupabaseClient,
   supabaseConfigurationError,
@@ -49,6 +50,7 @@ async function writeRefreshToken(refreshToken: string | null): Promise<void> {
 export function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (supabaseConfigurationError) {
@@ -109,7 +111,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     () => ({
       session,
       loading,
-      configurationError: supabaseConfigurationError,
+      configurationError: supabaseConfigurationError ? t(supabaseConfigurationError) : null,
       signOut: async () => {
         if (supabaseConfigurationError) {
           return;
@@ -123,7 +125,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         setSession(null);
       },
     }),
-    [loading, session],
+    [loading, session, t],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

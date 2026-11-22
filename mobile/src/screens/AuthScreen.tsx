@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Constants from 'expo-constants';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLanguage } from '../i18n/LanguageProvider';
 import { getSupabaseClient } from '../lib/supabase';
 import { AppHeader } from '../ui-v2/components/AppHeader';
 import { Button } from '../ui-v2/primitives/Button';
@@ -17,6 +18,7 @@ import { Text } from '../ui-v2/primitives/Text';
 import { colors, layout, space } from '../ui-v2/tokens';
 
 export function AuthScreen() {
+  const { t } = useLanguage();
   const verificationHost = 'r6-api-r6-staging.up.railway.app';
   const showVerificationBuild =
     process.env.EXPO_PUBLIC_VERIFICATION_BUILD === '1' &&
@@ -46,11 +48,11 @@ export function AuthScreen() {
 
   const submit = async () => {
     if (mode === 'sign-up' && password.length < 6) {
-      setError('Kies een wachtwoord van minimaal 6 tekens.');
+      setError(t('auth.passwordTooShort'));
       return;
     }
     if (mode === 'sign-up' && password !== passwordConfirmation) {
-      setError('De wachtwoorden zijn niet gelijk.');
+      setError(t('auth.passwordMismatch'));
       return;
     }
 
@@ -76,15 +78,13 @@ export function AuthScreen() {
         setMode('sign-in');
         setPassword('');
         setPasswordConfirmation('');
-        setNotice(
-          'Je account is aangemaakt. Controleer je e-mail en meld je daarna aan.',
-        );
+        setNotice(t('auth.accountCreated'));
       }
     } catch (caught) {
       setError(
         caught instanceof Error
           ? caught.message
-          : 'Aanmelden is niet gelukt.',
+          : t('auth.signInFailed'),
       );
     } finally {
       setLoading(false);
@@ -97,38 +97,38 @@ export function AuthScreen() {
         keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         {studioPresentation ? <TrackCover>
           <Wordmark inverse />
-          <Text variant="screenTitle" tone="textInverse" accessibilityRole="header">Train met richting.{'\n'}Beslis zelf.</Text>
+          <Text variant="screenTitle" tone="textInverse" accessibilityRole="header">{t('auth.tagline')}</Text>
         </TrackCover> : <>
           <AppHeader title="WOMBO" landscape="ridges" />
           <View style={{ gap: space[12] }}>
-            <Text variant="supporting" tone="primary">Train bewust</Text>
-            <Text variant="display">Train met richting.{'\n'}Beslis zelf.</Text>
+            <Text variant="supporting" tone="primary">{t('auth.eyebrow')}</Text>
+            <Text variant="display">{t('auth.tagline')}</Text>
             <Text tone="textMuted">{mode === 'sign-in'
-              ? 'Alles wat je nodig hebt voor een doordachte trainingsweek, afgestemd op jouw ritme.'
-              : 'Maak je persoonlijke trainingsruimte en bouw stap voor stap aan een plan dat bij je past.'}</Text>
+              ? t('auth.introSignIn')
+              : t('auth.introSignUp')}</Text>
           </View>
         </>}
         <FormSurface>
-          <SegmentedControl role="tab" accessibilityLabel="Account" disabled={loading}
-            options={[{value: 'sign-in', label: 'Aanmelden'}, {value: 'sign-up', label: 'Registreren'}]}
+          <SegmentedControl role="tab" accessibilityLabel={t('auth.modeLabel')} disabled={loading}
+            options={[{value: 'sign-in', label: t('auth.signIn')}, {value: 'sign-up', label: t('auth.signUp')}]}
             value={mode} onChange={selectMode} />
           {!studioPresentation && <View style={{ gap: space[4] }}>
-            <Text variant="supporting" tone="primary">{mode === 'sign-in' ? 'Welkom terug' : 'Klaar voor je start?'}</Text>
-            <Text variant="sectionTitle" accessibilityRole="header">{mode === 'sign-in' ? 'Aanmelden' : 'Account maken'}</Text>
+            <Text variant="supporting" tone="primary">{mode === 'sign-in' ? t('auth.welcomeBack') : t('auth.readyToStart')}</Text>
+            <Text variant="sectionTitle" accessibilityRole="header">{mode === 'sign-in' ? t('auth.signIn') : t('auth.createAccount')}</Text>
           </View>}
           <Input autoCapitalize="none" autoComplete="email" inputMode="email" keyboardType="email-address"
-            label="E-mailadres" onChangeText={setEmail} placeholder="jij@voorbeeld.nl" value={email} icon="profile" />
+            label={t('auth.email')} onChangeText={setEmail} placeholder={t('auth.emailPlaceholder')} value={email} icon="profile" />
           <Input autoCapitalize="none" autoComplete={mode === 'sign-in' ? 'current-password' : 'new-password'}
-            label="Wachtwoord" onChangeText={setPassword} placeholder="Minimaal 6 tekens" secureTextEntry value={password} />
-          {mode === 'sign-up' ? <Input autoCapitalize="none" autoComplete="new-password" label="Herhaal wachtwoord"
-            onChangeText={setPasswordConfirmation} placeholder="Nogmaals je wachtwoord" secureTextEntry value={passwordConfirmation} /> : null}
+            label={t('auth.password')} onChangeText={setPassword} placeholder={t('auth.passwordPlaceholder')} secureTextEntry value={password} />
+          {mode === 'sign-up' ? <Input autoCapitalize="none" autoComplete="new-password" label={t('auth.passwordRepeat')}
+            onChangeText={setPasswordConfirmation} placeholder={t('auth.passwordRepeatPlaceholder')} secureTextEntry value={passwordConfirmation} /> : null}
           {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error}><Notice tone="error">{error}</Notice></View> : null}
           {notice ? <View accessibilityLiveRegion="polite"><Notice tone="info">{notice}</Notice></View> : null}
-          <Button label={mode === 'sign-in' ? 'Aanmelden' : 'Account maken'} busy={loading} disabled={loading || !canSubmit} onPress={submit} />
+          <Button label={mode === 'sign-in' ? t('auth.signIn') : t('auth.createAccount')} busy={loading} disabled={loading || !canSubmit} onPress={submit} />
         </FormSurface>
-        <Notice>Je sessie blijft versleuteld op dit apparaat. Trainingswijzigingen worden nooit zonder jouw bevestiging toegepast.</Notice>
-        {showVerificationBuild ? <View accessibilityLabel="Staging build diagnostics" style={{ gap: space[4] }}>
-          <Text variant="caption" tone="textMuted">Staging candidate {Constants.expoConfig?.version ?? 'unknown'}
+        <Notice>{t('auth.sessionNotice')}</Notice>
+        {showVerificationBuild ? <View accessibilityLabel={t('auth.stagingDiagnostics')} style={{ gap: space[4] }}>
+          <Text variant="caption" tone="textMuted">{t('auth.stagingCandidate')} {Constants.expoConfig?.version ?? 'unknown'}
             {' · build '}{process.env.EXPO_PUBLIC_BUILD_NUMBER ?? 'unknown'}{' · '}{process.env.EXPO_PUBLIC_BUILD_GIT_SHA ?? 'unknown'}</Text>
           <Text variant="caption" tone="textMuted">API: {verificationHost}</Text>
         </View> : null}

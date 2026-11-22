@@ -1,3 +1,5 @@
+import * as SecureStore from 'expo-secure-store';
+import type { ReactElement } from 'react';
 import { studioPresentation } from '../ui-v3/presentation';
 import { Alert, Linking } from 'react-native';
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
@@ -5,10 +7,13 @@ import * as api from '../api/client';
 import type { PolarConnection, PolarImportRun } from '../api/types';
 import fixtures from '../../../docs/ui/evidence/final-visual-batch-12/public-fixtures.json';
 import { IntegrationsScreen } from './IntegrationsScreen';
+import { LanguageProvider } from '../i18n/LanguageProvider';
+jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(async () => null), setItemAsync: jest.fn(async () => undefined), WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'unlocked' }));
+const renderWithLanguage = (ui: ReactElement) => render(<LanguageProvider>{ui}</LanguageProvider>);
 jest.mock('../api/client', () => ({ disconnectPolar: jest.fn(), getPolarConnection: jest.fn(), importPolarHistory: jest.fn(), listPolarImports: jest.fn(), retryPolarImport: jest.fn(), startPolarOAuth: jest.fn() }));
 beforeEach(() => { jest.clearAllMocks(); jest.mocked(api.getPolarConnection).mockResolvedValue(null); jest.mocked(api.listPolarImports).mockResolvedValue([]); });
 afterEach(() => jest.restoreAllMocks());
-async function surface() { const back = jest.fn(); const activities = jest.fn(); const signOut = jest.fn(async () => undefined); const view = await render(<IntegrationsScreen accessToken="athlete-token" onBack={back} onOpenActivities={activities} onSignOut={signOut} />); await view.findByRole('button', { name: 'Status vernieuwen', disabled: false }); return { view, back, activities, signOut }; }
+async function surface() { const back = jest.fn(); const activities = jest.fn(); const signOut = jest.fn(async () => undefined); const view = await renderWithLanguage(<IntegrationsScreen accessToken="athlete-token" onBack={back} onOpenActivities={activities} onSignOut={signOut} />); await view.findByRole('button', { name: 'Status vernieuwen', disabled: false }); return { view, back, activities, signOut }; }
 test('unlinked and empty imports retain supported destinations and OAuth URL action', async () => {
   jest.mocked(api.startPolarOAuth).mockResolvedValue({ provider: 'polar', authorization_url: 'https://example.test/oauth', expires_at: '2026-10-09T09:00:00Z' });
   const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
@@ -60,4 +65,29 @@ test('reconnect and real provider failure preserve status, error and refresh', a
   await view.findByRole('alert');
   expect(view.getByText('Opnieuw koppelen')).toBeTruthy();
   expect(view.getByRole('button', { name: 'Status vernieuwen' })).toBeEnabled();
+});
+test('English preference translates status, history, imports, privacy and the disconnect dialog', async () => {
+  jest.mocked(SecureStore.getItemAsync).mockResolvedValueOnce('en');
+  jest.mocked(api.getPolarConnection).mockResolvedValue(fixtures.connection as PolarConnection);
+  jest.mocked(api.listPolarImports).mockResolvedValue(fixtures.imports as PolarImportRun[]);
+  const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => undefined);
+  const view = await renderWithLanguage(<IntegrationsScreen accessToken="athlete-token" onBack={jest.fn()} onOpenActivities={jest.fn()} onSignOut={jest.fn(async () => undefined)} />);
+  await view.findByRole('button', { name: 'Refresh status', disabled: false });
+  expect(view.getByText('Connected')).toBeTruthy();
+  expect(view.getByText('Import history')).toBeTruthy();
+  expect(view.getByRole('radio', { name: '14 days' })).toBeChecked();
+  expect(view.getByText('Imports')).toBeTruthy();
+  expect(view.getByText('2 imported · 1 skipped')).toBeTruthy();
+  expect(view.getByText('Webhook – activity')).toBeTruthy();
+  expect(view.getAllByRole('button', { name: 'Retry now' })).toHaveLength(1);
+  expect(view.getByRole('button', { name: 'View imported activities' })).toBeTruthy();
+  expect(view.getByRole('button', { name: 'Weekly plan' })).toBeTruthy();
+  expect(view.getByText(/Disconnecting stops new access/)).toBeTruthy();
+  const failed = fixtures.imports.filter(item => item.status === 'failed').length;
+  expect(view.getAllByText(studioPresentation ? 'Failed' : 'failed')).toHaveLength(failed);
+  await fireEvent.press(view.getByRole('button', { name: 'Disconnect' }));
+  expect(alert.mock.calls[0][0]).toBe('Disconnect Polar?');
+  expect(alert.mock.calls[0][1]).toContain('not deleted automatically');
+  expect(alert.mock.calls[0][2]!.map(item => item.text)).toEqual(['Cancel', 'Disconnect']);
+  expect(api.disconnectPolar).not.toHaveBeenCalled();
 });

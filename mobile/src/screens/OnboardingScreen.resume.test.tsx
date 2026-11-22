@@ -1,4 +1,4 @@
-import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, render as baseRender, waitFor } from '@testing-library/react-native';
 
 import {
   completeOnboarding,
@@ -11,6 +11,11 @@ import {
 } from '../api/client';
 import type { Discipline, OnboardingState } from '../api/types';
 import { OnboardingScreen } from './OnboardingScreen';
+import type { ReactElement } from 'react';
+import { LanguageProvider } from '../i18n/LanguageProvider';
+
+// Dutch is the default language; every render goes through the provider like the app does.
+const render = (ui: ReactElement) => baseRender(ui, { wrapper: LanguageProvider });
 
 jest.mock('../api/client', () => ({
   approveZoneProposal: jest.fn(),

@@ -1,3 +1,5 @@
+import * as SecureStore from 'expo-secure-store';
+import type { ReactElement } from 'react';
 import { studioPresentation } from '../ui-v3/presentation';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
@@ -10,6 +12,9 @@ import {
 } from '../api/client';
 import type { DisciplineSetup, OnboardingState, ZoneProfileSnapshot, ZoneProfileState } from '../api/types';
 import { ZoneProfileScreen } from './ZoneProfileScreen';
+import { LanguageProvider } from '../i18n/LanguageProvider';
+jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(async () => null), setItemAsync: jest.fn(async () => undefined), WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'unlocked' }));
+const renderWithLanguage = (ui: ReactElement) => render(<LanguageProvider>{ui}</LanguageProvider>);
 
 jest.mock('../api/client', () => ({
   approvePlanProposal: jest.fn(),
@@ -70,7 +75,7 @@ describe('field-test scheduling regression', () => {
 
   test('setup route is named in V3 and keeps its API code otherwise', async () => {
     jest.mocked(getZoneProfileState).mockResolvedValue(profile(['standalone']));
-    const screen = await render(
+    const screen = await renderWithLanguage(
       <ZoneProfileScreen accessToken="athlete-token" onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} planContext={null} />,
     );
     expect(await screen.findByText(studioPresentation ? 'Route: Veldtest' : 'Route: field_test')).toBeTruthy();
@@ -78,7 +83,7 @@ describe('field-test scheduling regression', () => {
 
   test('current server-advertised swim protocol schedules through the API', async () => {
     jest.mocked(getZoneProfileState).mockResolvedValue(profile(['standalone']));
-    const screen = await render(
+    const screen = await renderWithLanguage(
       <ZoneProfileScreen
         accessToken="athlete-token"
         onBack={jest.fn()}
@@ -105,7 +110,7 @@ describe('field-test scheduling regression', () => {
 
   test('historical setup cannot leak a scheduling action into a new session', async () => {
     jest.mocked(getZoneProfileState).mockResolvedValue(profile([]));
-    const screen = await render(
+    const screen = await renderWithLanguage(
       <ZoneProfileScreen
         accessToken="athlete-token"
         onBack={jest.fn()}
@@ -142,7 +147,7 @@ describe('Batch 11 Zones versions and decisions', () => {
     jest.mocked(getZoneProfileState).mockResolvedValue(pendingState());
     jest.mocked(approveZoneProposal).mockResolvedValue({} as never);
     jest.mocked(rejectZoneProposal).mockResolvedValue({} as never);
-    const screen = await render(<ZoneProfileScreen {...props} />);
+    const screen = await renderWithLanguage(<ZoneProfileScreen {...props} />);
     await screen.findByText('Nieuw voorstel');
     expect(screen.getByText('Actief profiel')).toBeTruthy();
     expect(screen.getByText('Versie 0 · superseded')).toBeTruthy();
@@ -159,12 +164,48 @@ describe('Batch 11 Zones versions and decisions', () => {
   });
   test('hidden values remain absent from the complete overview, including pending/history and accessibility', async () => {
     jest.mocked(getZoneProfileState).mockResolvedValue(pendingState(true));
-    const screen = await render(<ZoneProfileScreen {...props} />);
+    const screen = await renderWithLanguage(<ZoneProfileScreen {...props} />);
     await screen.findByText('Nieuw voorstel');
     const publicTree = JSON.stringify(screen.toJSON());
     expect(publicTree).not.toContain('172'); expect(publicTree).not.toContain('177');
     expect(screen.getAllByText(/Numerieke waarden blijven verborgen/)).toHaveLength(3);
     expect(screen.getByRole('button', { name: 'Zones goedkeuren' })).toBeTruthy();
     expect(screen.getByText('Versie 0 · superseded')).toBeTruthy();
+  });
+});
+
+describe('English zone profile', () => {
+  beforeEach(() => { jest.clearAllMocks(); jest.mocked(getOnboarding).mockResolvedValue({} as OnboardingState); });
+  const props = { accessToken: 'athlete-token', onBack: jest.fn(), onSignOut: jest.fn(async () => undefined), planContext: null };
+  test('setup, scheduling and validation copy follow the English preference', async () => {
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValueOnce('en');
+    jest.mocked(getZoneProfileState).mockResolvedValue(profile(['standalone']));
+    const screen = await renderWithLanguage(<ZoneProfileScreen {...props} />);
+    expect(await screen.findByText(studioPresentation ? 'Route: Field test' : 'Route: field_test')).toBeTruthy();
+    expect(screen.getByText('Swimming')).toBeTruthy();
+    expect(screen.getByText('RPE-guided')).toBeTruthy();
+    expect(screen.getByText('Personal profile')).toBeTruthy();
+    expect(screen.getByText('My disciplines')).toBeTruthy();
+    expect(screen.getByText('Plan linked')).toBeTruthy();
+    expect(screen.getByText('Schedule field test')).toBeTruthy();
+    expect(screen.getByText(/The CSS test stays standalone/)).toBeTruthy();
+    expect(screen.getByRole('radio', { name: 'Standalone test' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Change values or route' })).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'Create proposal' }));
+    expect(await screen.findByText('Use YYYY-MM-DD for the test date.')).toBeTruthy();
+    expect(scheduleFieldTest).not.toHaveBeenCalled();
+    expect(screen.queryByText('Veldtest plannen')).toBeNull();
+  });
+  test('active, pending and prior versions are labelled in English', async () => {
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValueOnce('en');
+    jest.mocked(getZoneProfileState).mockResolvedValue(pendingState());
+    const screen = await renderWithLanguage(<ZoneProfileScreen {...props} />);
+    await screen.findByText('New proposal');
+    expect(screen.getByText('Active profile')).toBeTruthy();
+    expect(screen.getByText('Previous values')).toBeTruthy();
+    expect(screen.getByText('Version 0 · superseded')).toBeTruthy();
+    expect(screen.getByText('Zone proposal awaiting confirmation')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Approve zones' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Reject' })).toBeTruthy();
   });
 });

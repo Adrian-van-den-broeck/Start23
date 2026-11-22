@@ -1,4 +1,6 @@
-import { fireEvent, render, waitFor, within } from '@testing-library/react-native';
+import type { ReactElement } from 'react';
+import { fireEvent, render as renderUi, waitFor, within } from '@testing-library/react-native';
+import * as SecureStore from 'expo-secure-store';
 
 import {
   approveZoneProposal,
@@ -19,7 +21,19 @@ import type {
   DisciplineSetup,
   OnboardingState,
 } from '../api/types';
+import { LanguageProvider } from '../i18n/LanguageProvider';
 import { CalibrationScreen } from './CalibrationScreen';
+
+// Dutch is the default language; the English test opts in through the stored preference.
+jest.mock('expo-secure-store', () => ({
+  getItemAsync: jest.fn(async () => null),
+  setItemAsync: jest.fn(async () => undefined),
+  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'unlocked',
+}));
+
+function render(ui: ReactElement) {
+  return renderUi(ui, { wrapper: LanguageProvider });
+}
 
 jest.mock('../api/client', () => ({
   approveZoneProposal: jest.fn(),
@@ -192,7 +206,8 @@ describe('CalibrationScreen Phase 15 flow', () => {
       />,
     );
 
-    expect(await screen.findByRole('alert', { name: 'Stop if you feel pain' })).toBeTruthy();
+    expect(await screen.findByRole('alert', { name: 'Stop als je pijn voelt' })).toBeTruthy();
+    expect(screen.queryByText('Stop if you feel pain')).toBeNull();
     expect(screen.getByLabelText('Totale duur')).toBeTruthy();
     expect(screen.queryByRole('button', { name: /feedback invullen/i })).toBeNull();
     expect(screen.queryByText(/Tijdzone uit je bevestigde profiel/i)).toBeNull();
@@ -244,7 +259,7 @@ describe('CalibrationScreen Phase 15 flow', () => {
       );
 
       expect(
-        await screen.findByRole('alert', { name: 'Stop if you feel pain' }),
+        await screen.findByRole('alert', { name: 'Stop als je pijn voelt' }),
       ).toBeTruthy();
     },
   );
@@ -477,5 +492,54 @@ describe('Batch 11 current source-backed protocol forms', () => {
     expect(screen.queryByRole('button', { name: 'Drempel bevestigen' })).toBeNull();
     expect(createActivity).not.toHaveBeenCalled();
     expect(evaluateCalibration).not.toHaveBeenCalled();
+  });
+});
+
+describe('CalibrationScreen in English', () => {
+  const props = { accessToken: 'athlete-token', onBack: jest.fn(), onSignOut: jest.fn(async () => undefined) };
+  beforeEach(() => {
+    jest.clearAllMocks();
+    arrange();
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValueOnce('en');
+  });
+
+  test('shows the feedback form, pain warning and RPE scale in English', async () => {
+    const screen = await render(<CalibrationScreen {...props} />);
+    expect(await screen.findByRole('alert', { name: 'Stop if you feel pain' })).toBeTruthy();
+    expect(screen.queryByText('Stop als je pijn voelt')).toBeNull();
+    expect(screen.getByRole('radio', { name: 'Running' })).toBeTruthy();
+    expect(screen.getByText('Week 1 run calibration')).toBeTruthy();
+    expect(screen.getByText('Submaximal')).toBeTruthy();
+    expect(screen.getByText('Reviewed v1')).toBeTruthy();
+    expect(screen.getByText('Guided by heart rate. Follow the blocks below and fill in your feedback right away.')).toBeTruthy();
+    expect(screen.getByText('Objective + how it felt')).toBeTruthy();
+    expect(screen.getByLabelText('Total duration')).toBeTruthy();
+    expect(within(screen.getByLabelText('How did the whole session feel?')).getByRole('radio', {
+      name: 'Hard, not quite in the red. (RPE 6)',
+    })).toBeTruthy();
+    expect(screen.getByLabelText('How did this block feel?')).toBeTruthy();
+    expect(screen.getByLabelText('Average heart rate')).toBeTruthy();
+    expect(screen.queryByText('Objectief + jouw gevoel')).toBeNull();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Save and evaluate deterministically' }));
+    expect(await screen.findByText('Session RPE must be a whole number from 1 to 10.')).toBeTruthy();
+    expect(createActivity).not.toHaveBeenCalled();
+  });
+
+  test('shows a prior result and threshold decision in English', async () => {
+    jest.mocked(getCalibrationStatus).mockResolvedValue({ setups: [setup], evaluations: [evaluation], threshold_decisions: [] });
+    const screen = await render(<CalibrationScreen {...props} />);
+    expect(await screen.findByText('1 earlier evaluation for this protocol.')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: /^View / }));
+    expect(screen.getByText('Result')).toBeTruthy();
+    expect(screen.getByText('Threshold estimated')).toBeTruthy();
+    expect(screen.getByText('Confidence: medium')).toBeTruthy();
+    expect(screen.getByText('Run LTHR (bpm)')).toBeTruthy();
+    expect(screen.getByText(/The threshold and calculated zones are waiting for your separate confirmations/)).toBeTruthy();
+    expect(screen.getByText(/Wombo creates a separate zone proposal that is not active yet/)).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Confirm threshold' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Reject threshold' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Drempel bevestigen' })).toBeNull();
+    expect(approveZoneProposal).not.toHaveBeenCalled();
   });
 });

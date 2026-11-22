@@ -20,6 +20,7 @@ import { FormField } from '../components/FormField';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { RpeChoiceList } from '../components/RpeChoiceList';
 import { StatusPill } from '../components/StatusPill';
+import { format } from '../i18n/dictionaries';
 import { type AppLanguage, useLanguage } from '../i18n/LanguageProvider';
 import { hasPartialObservedZoneTime } from '../lib/onboardingForms';
 import { rpeDescription } from '../lib/rpe';
@@ -33,11 +34,7 @@ type ActivityScreenProps = {
   onSignOut: () => Promise<void>;
 };
 
-const disciplineLabels: Record<Discipline, string> = {
-  swim: 'Zwemmen',
-  bike: 'Fietsen',
-  run: 'Lopen',
-};
+const disciplineOrder: Discipline[] = ['swim', 'bike', 'run'];
 
 export function ActivityMeasurementNotices({
   durationMinutes,
@@ -54,16 +51,12 @@ export function ActivityMeasurementNotices({
     <>
       {durationMinutes === null && distanceMeters ? (
         <Text style={styles.measurementNotice}>
-          {language === 'nl'
-            ? 'Afstand geregistreerd. Duur en tijd-in-zone zijn niet gemeten en worden niet aangevuld.'
-            : 'Distance recorded. Duration and time in zone were not measured and are not inferred.'}
+          {format(language, 'activities.distanceOnly')}
         </Text>
       ) : null}
       {hasPartialObservedZoneTime(durationMinutes, zoneMinutes) ? (
         <Text style={styles.measurementNotice}>
-          {language === 'nl'
-            ? 'Gedeeltelijke sensordekking: alleen gemeten zonetijd is gebruikt; ontbrekende minuten zijn niet geschat.'
-            : 'Partial sensor coverage: only observed zone time was used; missing minutes were not estimated.'}
+          {format(language, 'activities.partialCoverage')}
         </Text>
       ) : null}
     </>
@@ -71,40 +64,14 @@ export function ActivityMeasurementNotices({
 }
 
 function resultLabel(activity: CompletedActivity, language: AppLanguage): string {
-  const nl = {
-    awaiting_rpe: 'RPE nodig',
-    perfect_match: 'Goed aangesloten',
-    overshoot: 'Zwaarder dan gepland',
-    hidden_fatigue: 'Herstelsignaal',
-    deviation: 'Afwijkende uitvoering',
-    unplanned: 'Extra training',
-  } as const;
-  const en = {
-    awaiting_rpe: 'RPE needed',
-    perfect_match: 'Matched well',
-    overshoot: 'Harder than planned',
-    hidden_fatigue: 'Recovery signal',
-    deviation: 'Different execution',
-    unplanned: 'Extra workout',
-  } as const;
-  return (language === 'nl' ? nl : en)[activity.qualitative_result];
+  return format(language, `activity.result.${activity.qualitative_result}`);
 }
 
 function resultMessage(activity: CompletedActivity, language: AppLanguage): string {
   if (language === 'nl' || activity.qualitative_result === 'awaiting_rpe') {
     return activity.public_message;
   }
-  return {
-    perfect_match: 'The workout matched the planned effort well.',
-    overshoot:
-      'This workout was harder than planned. Any adjustment will remain a proposal first.',
-    hidden_fatigue:
-      'This easy workout felt notably harder than expected. Review any recovery proposal.',
-    deviation:
-      'The execution differed from the plan, but does not automatically require a correction.',
-    unplanned:
-      'This extra workout was not in your active plan. Any adjustment will remain a proposal first.',
-  }[activity.qualitative_result];
+  return format(language, `activity.message.${activity.qualitative_result}`);
 }
 
 export function ActivityScreen({
@@ -114,10 +81,11 @@ export function ActivityScreen({
   onSignOut,
 }: ActivityScreenProps) {
   const { language, locale, t } = useLanguage();
-  const localizedDisciplineLabels: Record<Discipline, string> =
-    language === 'nl'
-      ? disciplineLabels
-      : { swim: 'Swimming', bike: 'Cycling', run: 'Running' };
+  const localizedDisciplineLabels: Record<Discipline, string> = {
+    swim: t('common.swim'),
+    bike: t('common.bike'),
+    run: t('common.run'),
+  };
   const { activities, workouts, externalActivities, selectedWorkout, selectedExternal,
     discipline, setDiscipline, duration, setDuration, distance, setDistance, startedAt, setStartedAt,
     athleteTimezone, busy, error, heartRateByActivity, setHeartRateByActivity, pendingRpe,
@@ -187,7 +155,7 @@ export function ActivityScreen({
             <RpeChoiceList
               disabled={busy}
               discipline={activity.discipline}
-              label="Hoe voelde deze training?"
+              label={t('activityText.feelPrompt')}
               onSelect={(rpe) => void saveRpe(activity.id, rpe)}
             />
           </View>
@@ -253,7 +221,7 @@ export function ActivityScreen({
 
           {!selectedWorkout && !selectedExternal ? (
             <View style={styles.disciplineRow}>
-              {(Object.keys(disciplineLabels) as Discipline[]).map((value) => (
+              {disciplineOrder.map((value) => (
                 <Pressable
                   key={value}
                   onPress={() => setDiscipline(value)}
@@ -282,13 +250,13 @@ export function ActivityScreen({
             value={startedAt}
           />
           <Text style={styles.meta}>
-            {t('activity.timezone')}: {athleteTimezone || 'Niet bevestigd'}
+            {t('activity.timezone')}: {athleteTimezone || t('activityText.timezoneUnconfirmed')}
           </Text>
           <FormField
             inputMode="decimal"
             label={
               discipline === 'swim'
-                ? `${t('activity.duration')} (${language === 'nl' ? 'optioneel bij afstand' : 'optional with distance'})`
+                ? `${t('activity.duration')} (${t('activityText.optionalWithDistance')})`
                 : t('activity.duration')
             }
             onChangeText={setDuration}
@@ -350,7 +318,7 @@ export function ActivityScreen({
               <Text style={styles.body}>{resultMessage(activity, language)}</Text>
               {activity.discipline === 'run' && observedRunPace(activity.duration_minutes, activity.distance_meters) ? (
                 <Text style={styles.meta}>
-                  Gemiddeld tempo: {observedRunPace(activity.duration_minutes, activity.distance_meters)}
+                  {t('activities.pace', { value: observedRunPace(activity.duration_minutes, activity.distance_meters) ?? '' })}
                 </Text>
               ) : null}
               <ActivityMeasurementNotices
@@ -363,10 +331,9 @@ export function ActivityScreen({
               activity.processing_state === 'awaiting_rpe' &&
               suggestedWorkout(activity, workouts) ? (
                 <View style={styles.matchSuggestion}>
-                  <Text style={styles.choiceTitle}>Mogelijke geplande training</Text>
+                  <Text style={styles.choiceTitle}>{t('activities.matchHeading')}</Text>
                   <Text style={styles.body}>
-                    {suggestedWorkout(activity, workouts)?.name}. Wombo koppelt
-                    dit nooit automatisch.
+                    {t('activities.matchHint', { name: suggestedWorkout(activity, workouts)?.name ?? '' })}
                   </Text>
                   <Pressable
                     disabled={busy}
@@ -377,14 +344,13 @@ export function ActivityScreen({
                       }
                     }}
                   >
-                    <Text style={styles.link}>Koppeling expliciet bevestigen</Text>
+                    <Text style={styles.link}>{t('activities.confirmMatch')}</Text>
                   </Pressable>
                 </View>
               ) : null}
               {activity.correction_proposal_id ? (
                 <Text style={styles.proposalText}>
-                  Er staat een apart correctievoorstel klaar. Niets is automatisch
-                  aangepast.
+                  {t('activities.correctionProposal')}
                 </Text>
               ) : null}
               {activity.rpe !== null &&
@@ -405,7 +371,7 @@ export function ActivityScreen({
                     <RpeChoiceList
                       disabled={busy}
                       discipline={activity.discipline}
-                      label="Gecorrigeerd gevoel"
+                      label={t('activityText.correctedFeel')}
                       onSelect={(rpe) => {
                         setEditingRpeActivityId(null);
                         void saveRpe(activity.id, rpe);

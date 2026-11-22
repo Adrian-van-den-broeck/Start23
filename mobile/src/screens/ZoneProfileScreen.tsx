@@ -35,6 +35,7 @@ import type {
   ZoneSetupRoute,
 } from '../api/types';
 import { FadeInView } from '../components/FadeInView';
+import { type TranslationKey, useLanguage } from '../i18n/LanguageProvider';
 import { ZoneField as FormField } from '../ui-v2/components/ZoneField';
 import { ZoneStatusChip as StatusPill, ZoneInfoRow, ZoneProfileValues as ProfileValues } from '../ui-v2/components/ZoneVisuals';
 import { formatIsoDateInput } from '../lib/dateInput';
@@ -55,22 +56,22 @@ type Props = {
 };
 
 // V3 names the setup route instead of printing its API code.
-const routeNames: Record<ZoneSetupRoute, string> = {
-  known_values: 'Bekende waarden', field_test: 'Veldtest', calibration_week: 'Kalibratieweek', rpe_only: 'Alleen RPE',
+const routeNames: Record<ZoneSetupRoute, TranslationKey> = {
+  known_values: 'zones.route.known_values', field_test: 'zones.route.field_test', calibration_week: 'zones.route.calibration_week', rpe_only: 'zones.route.rpe_only',
 };
-const disciplineLabels: Record<Discipline, string> = {
-  swim: 'Zwemmen',
-  bike: 'Fietsen',
-  run: 'Lopen',
+const disciplineLabels: Record<Discipline, TranslationKey> = {
+  swim: 'common.swim',
+  bike: 'common.bike',
+  run: 'common.run',
 };
 const visibilityLabels: Record<
   DisciplineZoneProfile['numeric_zone_visibility'],
-  string
+  TranslationKey
 > = {
-  visible: 'Actieve zones',
-  rpe_guided: 'RPE-gestuurd',
-  week_2_evaluation_pending: 'Cijfers verborgen tot evaluatie na week 2',
-  proposal_confirmation_pending: 'Zonevoorstel wacht op bevestiging',
+  visible: 'zones.visibility.visible',
+  rpe_guided: 'zones.visibility.rpe_guided',
+  week_2_evaluation_pending: 'zones.visibility.week_2_evaluation_pending',
+  proposal_confirmation_pending: 'zones.visibility.proposal_confirmation_pending',
 };
 
 function ActionButton({
@@ -101,6 +102,7 @@ function AssignmentCard({
   onApprove: () => void;
   onReject: () => void;
 }) {
+  const { t } = useLanguage();
   const canDecide =
     assignment.state === 'pending_approval' &&
     (assignment.scheduling_mode === 'standalone' || canDecideIntegrated);
@@ -109,21 +111,21 @@ function AssignmentCard({
       <Text style={styles.valueTitle}>
         {assignment.scheduled_date} ·{' '}
         {assignment.scheduling_mode === 'standalone'
-          ? 'losse test'
-          : 'in weekplan'}
+          ? t('zones.assignment.standalone')
+          : t('zones.assignment.weeklyPlan')}
       </Text>
       <Text style={styles.hint}>
-        {assignment.protocol_id} · status {assignment.state}
+        {assignment.protocol_id} · {t('zones.assignment.status', { state: assignment.state })}
       </Text>
       {canDecide ? (
         <View style={styles.buttonRow}>
           <View style={styles.buttonCell}>
-            <ActionButton disabled={busy} label="Bevestigen" onPress={onApprove} />
+            <ActionButton disabled={busy} label={t('zones.confirm')} onPress={onApprove} />
           </View>
           <View style={styles.buttonCell}>
             <ActionButton
               disabled={busy}
-              label="Afwijzen"
+              label={t('zones.reject')}
               onPress={onReject}
               secondary
             />
@@ -140,6 +142,7 @@ export function ZoneProfileScreen({
   onSignOut,
   planContext,
 }: Props) {
+  const { t } = useLanguage();
   const { width, fontScale } = useWindowDimensions();
   const compact = width < 393 || fontScale > 1;
   const [profile, setProfile] = useState<ZoneProfileState | null>(null);
@@ -173,7 +176,7 @@ export function ZoneProfileScreen({
     load()
       .catch((caught) =>
         setError(
-          caught instanceof Error ? caught.message : 'Het zoneprofiel kon niet laden.',
+          caught instanceof Error ? caught.message : t('zones.loadFailed'),
         ),
       )
       .finally(() => setBusy(false));
@@ -189,7 +192,7 @@ export function ZoneProfileScreen({
       await load();
     } catch (caught) {
       setError(
-        caught instanceof Error ? caught.message : 'De wijziging is niet opgeslagen.',
+        caught instanceof Error ? caught.message : t('zones.saveFailed'),
       );
     } finally {
       setBusy(false);
@@ -217,11 +220,11 @@ export function ZoneProfileScreen({
     const scheduledDate = dates[state.discipline].trim();
     const mode = modes[state.discipline];
     if (!/^\d{4}-\d{2}-\d{2}$/.test(scheduledDate)) {
-      setError('Gebruik voor de testdatum JJJJ-MM-DD.');
+      setError(t('zones.dateInvalid'));
       return;
     }
     if (!state.setup?.protocol_id) {
-      setError('Kies eerst een beoordeeld veldtestprotocol.');
+      setError(t('zones.protocolMissing'));
       return;
     }
     void run(async () => {
@@ -257,7 +260,7 @@ export function ZoneProfileScreen({
         }
         return;
       }
-      if (!planContext) throw new Error('Open dit profiel vanuit het actieve weekplan.');
+      if (!planContext) throw new Error(t('zones.openFromPlan'));
       if (decision === 'approve') {
         await approvePlanProposal(
           accessToken,
@@ -284,24 +287,24 @@ export function ZoneProfileScreen({
         showsVerticalScrollIndicator={false}
         style={styles.scroll}
       >
-        <BrandedFormHeader caption="Mijn zones" onBack={onBack} onSignOut={onSignOut} />
+        <BrandedFormHeader caption={t('planning.myZones')} onBack={onBack} onSignOut={onSignOut} />
         {error ? <Notice tone="error">{error}</Notice> : null}
         {busy ? <ActivityIndicator color={colors.primary} /> : null}
         <FadeInView style={styles.intro}>
           <View style={[styles.heroHeading, compact && styles.stacked]}>
             <IconTile name="profile" size="focus" />
             <View style={[styles.heroCopy, compact && { flex: 0, width: '100%' }]}>
-              <Text variant="supporting" tone="primary" style={{ fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1 }}>Persoonlijk profiel</Text>
-              <Text variant="sectionTitle" style={styles.heroTitle}>Jouw zones, helder in beeld.</Text>
-              <Text tone="textMuted">Bekijk actieve en eerdere versies, wijzig bekende waarden of kies een nieuwe test. Geen wijziging wordt actief zonder jouw bevestiging.</Text>
+              <Text variant="supporting" tone="primary" style={{ fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1 }}>{t('zones.hero.eyebrow')}</Text>
+              <Text variant="sectionTitle" style={styles.heroTitle}>{t('zones.hero.title')}</Text>
+              <Text tone="textMuted">{t('zones.hero.body')}</Text>
             </View>
           </View>
           <View style={[styles.summaryRow, compact && styles.stacked]}>
-            {profile ? <View style={[styles.summaryItem, compact && styles.summaryItemCompact]}><IconTile name="intensity" /><View style={styles.heroCopy}><Text variant="sectionTitle">{profile.disciplines.length}</Text><Text tone="textMuted">Disciplines</Text></View></View> : null}
-            <View style={[styles.summaryItem, compact && styles.summaryItemCompact]}><IconTile name="document" /><View style={styles.heroCopy}><Text variant="sectionTitle">{planContext ? 'Ja' : 'Los'}</Text><Text tone="textMuted">Plan gekoppeld</Text></View></View>
+            {profile ? <View style={[styles.summaryItem, compact && styles.summaryItemCompact]}><IconTile name="intensity" /><View style={styles.heroCopy}><Text variant="sectionTitle">{profile.disciplines.length}</Text><Text tone="textMuted">{t('zones.summary.disciplines')}</Text></View></View> : null}
+            <View style={[styles.summaryItem, compact && styles.summaryItemCompact]}><IconTile name="document" /><View style={styles.heroCopy}><Text variant="sectionTitle">{planContext ? t('zones.summary.planLinkedYes') : t('zones.summary.planLinkedNo')}</Text><Text tone="textMuted">{t('zones.summary.planLinked')}</Text></View></View>
           </View>
         </FadeInView>
-        <View style={styles.section}><Text variant="sectionTitle" accessibilityRole="header">Mijn disciplines</Text><Text tone="textMuted">Stel per discipline je zones, routes en profielen in.</Text></View>
+        <View style={styles.section}><Text variant="sectionTitle" accessibilityRole="header">{t('zones.disciplines.title')}</Text><Text tone="textMuted">{t('zones.disciplines.body')}</Text></View>
 
         {profile?.disciplines.map((state, index) => {
           const pending = state.pending_profile;
@@ -317,15 +320,15 @@ export function ZoneProfileScreen({
               <View style={[styles.panelIdentity, compact && styles.stacked]}>
                 <IconTile name={state.discipline} size="focus" />
                 <View style={[styles.panelIdentityCopy, compact && styles.fullWidth]}>
-                  <Text variant="sectionTitle" accessibilityRole="header">{disciplineLabels[state.discipline]}</Text>
-                  <StatusPill label={visibilityLabels[state.numeric_zone_visibility]} pending={state.numeric_zone_visibility === 'proposal_confirmation_pending'} />
+                  <Text variant="sectionTitle" accessibilityRole="header">{t(disciplineLabels[state.discipline])}</Text>
+                  <StatusPill label={t(visibilityLabels[state.numeric_zone_visibility])} pending={state.numeric_zone_visibility === 'proposal_confirmation_pending'} />
                 </View>
               </View>
-              <ZoneInfoRow icon="location"><Text tone="textMuted">Route: {state.setup ? studioPresentation ? routeNames[state.setup.setup_route] : state.setup.setup_route : 'nog niet ingesteld'}</Text></ZoneInfoRow>
+              <ZoneInfoRow icon="location"><Text tone="textMuted">{t('zones.route', { route: state.setup ? studioPresentation ? t(routeNames[state.setup.setup_route]) : state.setup.setup_route : t('zones.route.notSet') })}</Text></ZoneInfoRow>
               {state.active_profile ? (
                 <View style={[styles.profileBlock, styles.profileBlockActive]}>
                   <View style={styles.profileBlockHeading}>
-                    <Text style={styles.valueTitle}>Actief profiel</Text>
+                    <Text style={styles.valueTitle}>{t('zones.activeProfile')}</Text>
                     <Text style={styles.versionLabel}>
                       v{state.active_profile.version}
                     </Text>
@@ -333,12 +336,12 @@ export function ZoneProfileScreen({
                   <ProfileValues profile={state.active_profile} />
                 </View>
               ) : (
-                <ZoneInfoRow icon="info"><Text tone="textMuted">Geen actief numeriek profiel; trainingen blijven RPE-gestuurd.</Text></ZoneInfoRow>
+                <ZoneInfoRow icon="info"><Text tone="textMuted">{t('zones.noActiveProfile')}</Text></ZoneInfoRow>
               )}
               {pending ? (
                 <View style={[styles.profileBlock, styles.profileBlockPending]}>
                   <View style={styles.profileBlockHeading}>
-                    <Text style={styles.valueTitle}>Nieuw voorstel</Text>
+                    <Text style={styles.valueTitle}>{t('zones.pendingProfile')}</Text>
                     <Text style={styles.pendingVersionLabel}>
                       v{pending.version}
                     </Text>
@@ -349,7 +352,7 @@ export function ZoneProfileScreen({
                       <View style={styles.buttonCell}>
                         <ActionButton
                           disabled={busy}
-                          label="Zones goedkeuren"
+                          label={t('zones.approve')}
                           onPress={() =>
                             void run(async () => {
                               await approveZoneProposal(
@@ -364,7 +367,7 @@ export function ZoneProfileScreen({
                       <View style={styles.buttonCell}>
                         <ActionButton
                           disabled={busy}
-                          label="Afwijzen"
+                          label={t('zones.reject')}
                           onPress={() =>
                             void run(async () => {
                               await rejectZoneProposal(
@@ -382,11 +385,11 @@ export function ZoneProfileScreen({
               ) : null}
               {state.prior_profiles.length > 0 ? (
                 <View style={styles.history}>
-                  <Text style={styles.valueTitle}>Eerdere waarden</Text>
+                  <Text style={styles.valueTitle}>{t('zones.priorValues')}</Text>
                   {state.prior_profiles.map((previous) => (
                     <View key={previous.id} style={styles.profileBlock}>
                       <Text style={styles.hint}>
-                        Versie {previous.version} · {previous.status}
+                        {t('zones.priorVersion', { version: previous.version, status: previous.status })}
                       </Text>
                       <ProfileValues profile={previous} />
                     </View>
@@ -396,11 +399,11 @@ export function ZoneProfileScreen({
 
               {state.available_test_scheduling_modes.length > 0 ? (
                 <View style={styles.schedulePanel}>
-                  <Text style={styles.valueTitle}>Veldtest plannen</Text>
+                  <Text style={styles.valueTitle}>{t('zones.schedule.title')}</Text>
                   <FormField
                     autoCapitalize="none"
                     inputMode="numeric"
-                    label="Lokale testdatum"
+                    label={t('zones.schedule.date')}
                     maxLength={10}
                     onChangeText={(value) =>
                       setDates((current) => ({
@@ -408,28 +411,25 @@ export function ZoneProfileScreen({
                         [state.discipline]: formatIsoDateInput(value),
                       }))
                     }
-                    placeholder="JJJJ-MM-DD"
+                    placeholder={t('zones.schedule.datePlaceholder')}
                     value={dates[state.discipline]}
                   />
                   <View style={styles.buttonRow}>
                     {state.available_test_scheduling_modes.map((mode) => {
                       const disabled = mode === 'weekly_plan' && !canIntegrate;
                       return (
-                        <ChoiceRow key={mode} label={mode === 'standalone' ? 'Losse test' : 'In weekplan'}
+                        <ChoiceRow key={mode} label={mode === 'standalone' ? t('zones.schedule.standalone') : t('zones.schedule.weeklyPlan')}
                           selected={modes[state.discipline] === mode} disabled={disabled}
                           onPress={() => setModes((current) => ({ ...current, [state.discipline]: mode }))} />
                       );
                     })}
                   </View>
                   {state.discipline === 'swim' ? (
-                    <Text style={styles.hint}>
-                      De CSS-test blijft los: er is nog geen goedgekeurde duur- en
-                      loaddefinitie voor veilige planintegratie.
-                    </Text>
+                    <Text style={styles.hint}>{t('zones.schedule.swimHint')}</Text>
                   ) : null}
                   <ActionButton
                     disabled={busy}
-                    label="Maak voorstel"
+                    label={t('zones.schedule.submit')}
                     onPress={() => schedule(state)}
                   />
                 </View>
@@ -452,8 +452,8 @@ export function ZoneProfileScreen({
                 disabled={busy}
                 label={
                   editingDiscipline === state.discipline
-                    ? 'Bewerken sluiten'
-                    : 'Waarden of route wijzigen'
+                    ? t('zones.edit.close')
+                    : t('zones.edit.open')
                 }
                 onPress={() =>
                   setEditingDiscipline((current) =>

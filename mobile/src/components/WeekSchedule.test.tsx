@@ -74,11 +74,11 @@ describe('WeekSchedule', () => {
     );
 
     await fireEvent.press(
-      screen.getByRole('button', { name: 'Andere datum kiezen' }),
+      screen.getByRole('button', { name: 'Choose another date' }),
     );
     await fireEvent.press(
       screen.getByRole('button', {
-        name: /Verplaats Rustige duurloop naar Wed/,
+        name: /Move Rustige duurloop to Wed/,
       }),
     );
 

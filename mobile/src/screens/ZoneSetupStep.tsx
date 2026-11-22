@@ -29,26 +29,27 @@ import { colors, layout, radius, shadows, space } from '../ui-v2/tokens';
 import { Text } from '../ui-v2/primitives/Text';
 import { Button } from '../ui-v2/primitives/Button';
 import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
+import { useLanguage, type TranslationKey } from '../i18n/LanguageProvider';
 
 type MetricOption = {
   kind: ZoneMetricKind;
-  label: string;
+  labelKey: TranslationKey;
   unit: string;
   guidance: Exclude<GuidanceMode, 'combined' | 'rpe_only'>;
   descending: boolean;
 };
 
-const disciplineLabels: Record<Discipline, string> = {
-  swim: 'zwemmen',
-  bike: 'fietsen',
-  run: 'hardlopen',
+const disciplineLabels: Record<Discipline, TranslationKey> = {
+  swim: 'onboarding.zoneSetup.discipline.swim',
+  bike: 'onboarding.zoneSetup.discipline.bike',
+  run: 'onboarding.zoneSetup.discipline.run',
 };
 
 const metricOptions: Record<Discipline, readonly MetricOption[]> = {
   swim: [
     {
       kind: 'swim_css_seconds_per_100m',
-      label: 'CSS',
+      labelKey: 'onboarding.zoneSetup.metric.css',
       unit: 'sec/100 m',
       guidance: 'pace',
       descending: true,
@@ -57,14 +58,14 @@ const metricOptions: Record<Discipline, readonly MetricOption[]> = {
   bike: [
     {
       kind: 'bike_ftp_watts',
-      label: 'FTP',
+      labelKey: 'onboarding.zoneSetup.metric.ftp',
       unit: 'watt',
       guidance: 'power',
       descending: false,
     },
     {
       kind: 'bike_threshold_heart_rate_bpm',
-      label: 'Drempelhartslag fiets',
+      labelKey: 'onboarding.zoneSetup.metric.bikeThresholdHeartRate',
       unit: 'bpm',
       guidance: 'heart_rate',
       descending: false,
@@ -73,14 +74,14 @@ const metricOptions: Record<Discipline, readonly MetricOption[]> = {
   run: [
     {
       kind: 'run_threshold_pace_seconds_per_km',
-      label: 'Drempeltempo',
+      labelKey: 'onboarding.zoneSetup.metric.runThresholdPace',
       unit: 'min/km',
       guidance: 'pace',
       descending: true,
     },
     {
       kind: 'run_lthr_bpm',
-      label: 'LTHR',
+      labelKey: 'onboarding.zoneSetup.metric.lthr',
       unit: 'bpm',
       guidance: 'heart_rate',
       descending: false,
@@ -88,28 +89,25 @@ const metricOptions: Record<Discipline, readonly MetricOption[]> = {
   ],
 };
 
-const routeDescriptions: Record<SelectableZoneSetupRoute, string> = {
-  known_values:
-    'Bevestig een bekende drempelwaarde. Wombo berekent een apart Zone 1-5-voorstel; bestaande grenzen kun je als override invoeren.',
-  field_test:
-    'Voer een beoordeelde maximale veldtest uit voor een drempelschatting.',
-  calibration_week:
-    'Voer de huidige submaximale kalibratie uit. De observatie levert deterministisch een drempelschatting en berekend zoneprofiel op, die pas na jouw aparte bevestiging actief worden.',
+const routeDescriptions: Record<SelectableZoneSetupRoute, TranslationKey> = {
+  known_values: 'onboarding.zoneSetup.route.knownValues',
+  field_test: 'onboarding.zoneSetup.route.fieldTest',
+  calibration_week: 'onboarding.zoneSetup.route.calibrationWeek',
 };
 
-const guidanceLabels: Record<GuidanceMode, string> = {
-  power: 'Vermogen',
-  heart_rate: 'Hartslag',
-  combined: 'Gecombineerd',
-  pace: 'Tempo',
-  rpe_only: 'Alleen RPE',
+const guidanceLabels: Record<GuidanceMode, TranslationKey> = {
+  power: 'onboarding.zoneSetup.guidance.power',
+  heart_rate: 'onboarding.zoneSetup.guidance.heartRate',
+  combined: 'onboarding.zoneSetup.guidance.combined',
+  pace: 'onboarding.zoneSetup.guidance.pace',
+  rpe_only: 'onboarding.zoneSetup.guidance.rpeOnly',
 };
 
-const protocolLabels: Record<string, string> = {
-  start23_run_threshold_30min_v1: '30 min loopdrempeltest',
-  start23_bike_ftp_30min_v1: '30 min FTP-test',
-  start23_bike_fthr_20min_v1: '20 min fietsdrempelhartslagtest',
-  start23_swim_css_400_200_v1: 'CSS 400/200 m-test',
+const protocolLabels: Record<string, TranslationKey> = {
+  start23_run_threshold_30min_v1: 'onboarding.zoneSetup.protocol.runThreshold30',
+  start23_bike_ftp_30min_v1: 'onboarding.zoneSetup.protocol.bikeFtp30',
+  start23_bike_fthr_20min_v1: 'onboarding.zoneSetup.protocol.bikeFthr20',
+  start23_swim_css_400_200_v1: 'onboarding.zoneSetup.protocol.swimCss',
 };
 
 function emptyBoundaries(): ZoneBoundary[] {
@@ -181,6 +179,7 @@ export function ZoneSetupStep({
   saving,
   onSave,
 }: Props) {
+  const { t } = useLanguage();
   const { width, fontScale } = useWindowDimensions();
   const compact = width < 393 || fontScale > 1;
   const configured = useMemo(
@@ -251,7 +250,7 @@ export function ZoneSetupStep({
         setChoiceError(
           caught instanceof Error
             ? caught.message
-            : 'De zonekeuzes konden niet worden geladen.',
+            : t('onboarding.zoneSetup.loadFailed'),
         );
       })
       .finally(() => {
@@ -394,12 +393,11 @@ export function ZoneSetupStep({
       <View>
         {/* V3 onboarding already shows this step above in its progress rail. */}
         {profileMode || !studioPresentation ? <Text style={styles.eyebrow}>
-          {profileMode ? 'Profiel bijwerken' : 'Stap 6 van 7'}
+          {profileMode ? t('onboarding.zoneSetup.eyebrowProfile') : t('onboarding.zoneSetup.eyebrowStep')}
         </Text> : null}
-        <Text style={styles.title}>Instellen voor {disciplineLabels[discipline]}</Text>
+        <Text style={styles.title}>{t('onboarding.zoneSetup.title', { discipline: t(disciplineLabels[discipline]) })}</Text>
         <Text style={styles.description}>
-          Kies één expliciete route. Drempels, voorlopige observaties en echte
-          Zone 1-5-profielen blijven verschillende statussen.
+          {t('onboarding.zoneSetup.description')}
         </Text>
       </View>
 
@@ -407,7 +405,7 @@ export function ZoneSetupStep({
         {requiredDisciplines.map((item) => (
           <ZoneStatusChip
             key={item}
-            label={`${configured.has(item) ? '✓ ' : ''}${disciplineLabels[item]}`}
+            label={`${configured.has(item) ? '✓ ' : ''}${t(disciplineLabels[item])}`}
 
           />
         ))}
@@ -420,7 +418,7 @@ export function ZoneSetupStep({
       ) : (
         <View accessibilityRole="radiogroup" style={styles.routeList}>
           {options.map((option) => (
-            <ChoiceRow key={option.setup_route} label={option.label} hint={routeDescriptions[option.setup_route]}
+            <ChoiceRow key={option.setup_route} label={option.label} hint={t(routeDescriptions[option.setup_route])}
               selected={route === option.setup_route} onPress={() => selectRoute(option.setup_route)} />
           ))}
         </View>
@@ -428,21 +426,18 @@ export function ZoneSetupStep({
 
       {route === 'known_values' ? (
         <View style={styles.panel}>
-          <Text style={styles.panelTitle}>Bekende waarden</Text>
+          <Text style={styles.panelTitle}>{t('onboarding.zoneSetup.known.title')}</Text>
           <Text style={styles.panelText}>
-            Vul minstens één bekende drempel in. Voor zwemmen is CSS verplicht;
-            voor fietsen en hardlopen kies je minstens één van de getoonde
-            waarden. Zonegrenzen blijven optioneel. De zones worden daarna eerst
-            een apart voorstel.
+            {t('onboarding.zoneSetup.known.text')}
           </Text>
           <View accessibilityRole="radiogroup" style={styles.chips}>
             <Chip
-              label="Zelf bekende waarde"
+              label={t('onboarding.zoneSetup.known.athleteEntered')}
               onPress={() => setKnownValueSource('athlete_entered')}
               selected={knownValueSource === 'athlete_entered'}
             />
             <Chip
-              label="Gemeten door arts/lab"
+              label={t('onboarding.zoneSetup.known.measuredLab')}
               onPress={() => setKnownValueSource('measured_lab')}
               selected={knownValueSource === 'measured_lab'}
             />
@@ -454,28 +449,30 @@ export function ZoneSetupStep({
                   ? invalidThresholds.includes(option)
                     ? option.descending
                       ? option.kind === 'run_threshold_pace_seconds_per_km'
-                        ? 'Gebruik min:sec per km, bijvoorbeeld 5:00.'
-                        : 'Vul een positief geheel aantal seconden in.'
-                      : 'Vul een positieve waarde in.'
+                        ? t('onboarding.paceFormat')
+                        : t('onboarding.zoneSetup.known.wholeSeconds')
+                      : t('onboarding.zoneSetup.known.positive')
                     : enteredThresholds.length === 0
                       ? availableMetrics.length === 1
-                        ? `${option.label} is verplicht.`
-                        : `Vul minstens ${availableMetrics
-                            .map((candidate) => candidate.label)
-                            .join(' of ')} in.`
+                        ? t('onboarding.zoneSetup.known.required', { label: t(option.labelKey) })
+                        : t('onboarding.zoneSetup.known.atLeast', {
+                            labels: availableMetrics
+                              .map((candidate) => t(candidate.labelKey))
+                              .join(t('onboarding.zoneSetup.known.or')),
+                          })
                       : undefined
                   : undefined
               }
               hint={
                 option.descending
                   ? option.kind === 'run_threshold_pace_seconds_per_km'
-                    ? 'Gebruik min:sec per km, bijvoorbeeld 5:00.'
-                    : 'Gebruik hele seconden in de canonieke eenheid.'
+                    ? t('onboarding.paceFormat')
+                    : t('onboarding.zoneSetup.known.canonicalHint')
                   : undefined
               }
               inputMode={option.kind === 'run_threshold_pace_seconds_per_km' ? 'text' : 'decimal'}
               key={option.kind}
-              label={option.label}
+              label={t(option.labelKey)}
               onChangeText={(value) => {
                 const nextValues = {
                   ...knownValues,
@@ -503,8 +500,8 @@ export function ZoneSetupStep({
                 option.kind === 'run_threshold_pace_seconds_per_km'
                   ? '5:00'
                   : availableMetrics.length === 1
-                  ? 'Verplicht'
-                  : 'Minstens één waarde vereist'
+                  ? t('onboarding.zoneSetup.known.placeholderRequired')
+                  : t('onboarding.zoneSetup.known.placeholderAtLeastOne')
               }
               required={availableMetrics.length === 1}
               suffix={<Text style={styles.unit}>{option.unit}</Text>}
@@ -514,17 +511,17 @@ export function ZoneSetupStep({
 
           {!wholePaceThresholds ? (
             <Text style={styles.error}>
-              CSS en drempeltempo gebruiken alleen hele seconden.
+              {t('onboarding.zoneSetup.known.wholePaceError')}
             </Text>
           ) : null}
 
           {knownValuesValidationAttempted && enteredThresholds.length === 0 ? (
             <Text accessibilityRole="alert" style={styles.error}>
-              Vul minstens één bekende drempelwaarde in voordat je bewaart.
+              {t('onboarding.zoneSetup.known.noneEntered')}
             </Text>
           ) : null}
 
-          <ChoiceRow mode="checkbox" label="Ik ken ook vijf zonegrenzen" selected={includeBoundaries}
+          <ChoiceRow mode="checkbox" label={t('onboarding.zoneSetup.known.includeBoundaries')} selected={includeBoundaries}
             onPress={() => setIncludeBoundaries((current) => !current)} />
 
           {includeBoundaries ? (
@@ -534,7 +531,7 @@ export function ZoneSetupStep({
                   {enteredThresholds.map((option) => (
                     <Chip
                       key={option.kind}
-                      label={option.label}
+                      label={t(option.labelKey)}
                       onPress={() => setBoundaryMetric(option.kind)}
                       selected={boundaryMetric === option.kind}
                     />
@@ -543,8 +540,8 @@ export function ZoneSetupStep({
               ) : null}
               <Text style={styles.panelText}>
                 {boundaryOption.descending
-                  ? 'Z1 is het langzaamst; de waarden dalen richting Z5.'
-                  : 'Iedere bovengrens sluit aan op de volgende ondergrens.'}
+                  ? t('onboarding.zoneSetup.known.descendingHint')
+                  : t('onboarding.zoneSetup.known.ascendingHint')}
               </Text>
               {boundaries.map((boundary, index) => (
                 <View key={boundary.zone_number} style={[styles.boundaryRow, compact && styles.stacked]}>
@@ -552,7 +549,7 @@ export function ZoneSetupStep({
                   <View style={[styles.boundaryInput, compact && styles.fullWidth]}>
                     <FormField
                       inputMode={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? 'text' : 'decimal'}
-                      label="Onder"
+                      label={t('onboarding.zoneSetup.known.lower')}
                       onChangeText={(value) =>
                         setBoundaries((current) =>
                           current.map((item, itemIndex) =>
@@ -569,7 +566,7 @@ export function ZoneSetupStep({
                   <View style={[styles.boundaryInput, compact && styles.fullWidth]}>
                     <FormField
                       inputMode={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? 'text' : 'decimal'}
-                      label="Boven"
+                      label={t('onboarding.zoneSetup.known.upper')}
                       onChangeText={(value) =>
                         setBoundaries((current) =>
                           current.map((item, itemIndex) =>
@@ -587,8 +584,7 @@ export function ZoneSetupStep({
               ))}
               {!boundariesValid ? (
                 <Text style={styles.error}>
-                  Vul vijf positieve, aaneengesloten grenzen in. Tempo gebruikt
-                  hele seconden en daalt van Z1 naar Z5.
+                  {t('onboarding.zoneSetup.known.boundariesError')}
                 </Text>
               ) : null}
             </View>
@@ -596,7 +592,7 @@ export function ZoneSetupStep({
 
           <SaveButton
             disabled={false}
-            label="Bekende waarden bewaren"
+            label={t('onboarding.zoneSetup.known.save')}
             onPress={submitKnownValues}
             saving={saving}
           />
@@ -605,16 +601,15 @@ export function ZoneSetupStep({
 
       {route === 'field_test' ? (
         <View style={styles.panel}>
-          <ZoneStatusChip label="Maximale veldtest" pending />
+          <ZoneStatusChip label={t('onboarding.zoneSetup.field.chip')} pending />
           <Text style={styles.panelText}>
-            Kies alleen een test die je veilig kunt uitvoeren en waarvoor de
-            genoemde meetbron beschikbaar is.
+            {t('onboarding.zoneSetup.field.text')}
           </Text>
           <View accessibilityRole="radiogroup" style={styles.chips}>
             {fieldTests.map((protocol) => (
               <Chip
                 key={protocol.protocol_id}
-                label={protocolLabels[protocol.protocol_id] ?? protocol.protocol_id}
+                label={protocolLabels[protocol.protocol_id] ? t(protocolLabels[protocol.protocol_id]) : protocol.protocol_id}
                 onPress={() => {
                   setSelectedProtocolId(protocol.protocol_id);
                   setGuidanceMode(protocol.guidance_modes[0]);
@@ -628,7 +623,7 @@ export function ZoneSetupStep({
               {selectedProtocol.guidance_modes.map((mode) => (
                 <Chip
                   key={mode}
-                  label={guidanceLabels[mode]}
+                  label={t(guidanceLabels[mode])}
                   onPress={() => setGuidanceMode(mode)}
                   selected={guidanceMode === mode}
                 />
@@ -638,25 +633,23 @@ export function ZoneSetupStep({
           {discipline === 'swim' ? (
             <View accessibilityRole="radiogroup" style={styles.chips}>
               <Chip
-                label="25 m-bad"
+                label={t('onboarding.zoneSetup.pool25')}
                 onPress={() => setPoolLength(25)}
                 selected={poolLength === 25}
               />
               <Chip
-                label="50 m-bad"
+                label={t('onboarding.zoneSetup.pool50')}
                 onPress={() => setPoolLength(50)}
                 selected={poolLength === 50}
               />
             </View>
           ) : null}
           <Text style={styles.safetyText}>
-            Een geldige test berekent een drempel en Zone 1-5-kandidaten. Je
-            bevestigt eerst de drempel en daarna het zoneprofiel; niets wordt
-            automatisch actief.
+            {t('onboarding.zoneSetup.field.safety')}
           </Text>
           <SaveButton
             disabled={!selectedProtocol}
-            label="Veldtest kiezen"
+            label={t('onboarding.zoneSetup.field.save')}
             onPress={submitFieldTest}
             saving={saving}
           />
@@ -665,17 +658,15 @@ export function ZoneSetupStep({
 
       {route === 'calibration_week' ? (
         <View style={styles.panel}>
-          <ZoneStatusChip label="Submaximaal"  />
+          <ZoneStatusChip label={t('onboarding.zoneSetup.calibration.chip')} />
           <Text style={styles.panelText}>
-            Deze rustige kalibratie bewaart de gemeten observatie uit hetzelfde
-            blok en berekent deterministisch een drempel en vijf zones. Die
-            blijven een voorstel totdat jij ze afzonderlijk bevestigt.
+            {t('onboarding.zoneSetup.calibration.text')}
           </Text>
           <View accessibilityRole="radiogroup" style={styles.chips}>
             {calibrationProtocol?.guidance_modes.map((mode) => (
               <Chip
                 key={mode}
-                label={guidanceLabels[mode]}
+                label={t(guidanceLabels[mode])}
                 onPress={() => setGuidanceMode(mode)}
                 selected={guidanceMode === mode}
               />
@@ -684,12 +675,12 @@ export function ZoneSetupStep({
           {discipline === 'swim' ? (
             <View accessibilityRole="radiogroup" style={styles.chips}>
               <Chip
-                label="25 m-bad"
+                label={t('onboarding.zoneSetup.pool25')}
                 onPress={() => setPoolLength(25)}
                 selected={poolLength === 25}
               />
               <Chip
-                label="50 m-bad"
+                label={t('onboarding.zoneSetup.pool50')}
                 onPress={() => setPoolLength(50)}
                 selected={poolLength === 50}
               />
@@ -697,7 +688,7 @@ export function ZoneSetupStep({
           ) : null}
           <SaveButton
             disabled={!calibrationProtocol}
-            label="Week-1-kalibratie kiezen"
+            label={t('onboarding.zoneSetup.calibration.save')}
             onPress={submitCalibration}
             saving={saving}
           />

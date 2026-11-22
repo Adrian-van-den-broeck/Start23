@@ -8,22 +8,25 @@ import { Button } from '../primitives/Button';
 import { Card } from '../primitives/Card';
 import { Text } from '../primitives/Text';
 import { layout, space } from '../tokens';
+import { useLanguage } from '../../i18n/LanguageProvider';
 
-export function BrandedFormHeader({ caption, onBack, onSignOut, children, backLabel = 'Week' }: {
+export function BrandedFormHeader({ caption, onBack, onSignOut, children, backLabel: backLabelProp }: {
   caption: string; backLabel?: string; onBack?: () => void; onSignOut: () => Promise<void>; children?: ReactNode;
 }) {
+  const { t } = useLanguage();
+  const backLabel = backLabelProp ?? t('shell.week');
   const { width, fontScale } = useWindowDimensions();
   const stacked = width < 393 || fontScale > 1 || backLabel.length > 8;
   if (studioPresentation) return <Masthead title={caption}
     leading={onBack ? <HeaderAction label={backLabel} onPress={onBack} /> : undefined}
-    trailing={<View style={styles.actions}>{children}<Button label="Uit" accessibilityLabel="Afmelden" onPress={onSignOut} variant="tertiary" trailingIcon="logout" /></View>} />;
+    trailing={<View style={styles.actions}>{children}<Button label={t('onboarding.header.signOutShort')} accessibilityLabel={t('activity.signOut')} onPress={onSignOut} variant="tertiary" trailingIcon="logout" /></View>} />;
   const brand = <View style={styles.brand}><Text variant="screenTitle" tone="primary">WOMBO</Text><Text tone="textMuted">{caption}</Text></View>;
   return <View style={{ gap: space[8] }}>
     {stacked ? brand : null}
     <View style={styles.utility}>
       {stacked ? (onBack ? <HeaderAction label={backLabel} onPress={onBack} /> : null) : <View style={styles.column}>{onBack ? <HeaderAction label={backLabel} onPress={onBack} /> : null}</View>}
       {!stacked ? <View style={styles.column}>{brand}</View> : null}
-      <View style={[styles.actions, !stacked && styles.column, styles.trailing]}>{children}<Button label="Uit" accessibilityLabel="Afmelden" onPress={onSignOut} variant="secondary" trailingIcon="logout" /></View>
+      <View style={[styles.actions, !stacked && styles.column, styles.trailing]}>{children}<Button label={t('onboarding.header.signOutShort')} accessibilityLabel={t('activity.signOut')} onPress={onSignOut} variant="secondary" trailingIcon="logout" /></View>
     </View>
     <View pointerEvents="none" style={styles.art}><HeaderLandscape /></View>
   </View>;

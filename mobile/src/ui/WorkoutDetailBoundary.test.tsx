@@ -60,7 +60,7 @@ test('one stable Modal, exact same snapshot/close callback, no I/O, and scroll s
   await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
   expect(view.getByTestId('workout-detail-scroll').props.contentOffset.y).toBe(245);
   await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
-  await fireEvent.press(view.getByRole('button', { name: 'Sluiten' }));
+  await fireEvent.press(view.getByRole('button', { name: 'Close' }));
   await fireEvent(view.getByTestId('workout-detail-modal'), 'requestClose');
   expect(close).toHaveBeenCalledTimes(2);
   expect(fetchSpy).not.toHaveBeenCalled();

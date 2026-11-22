@@ -536,3 +536,38 @@ describe('mobile API transport contracts', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('mobile API error language', () => {
+  test('safe error messages follow the active language when thrown; code, status and retryability are unchanged', async () => {
+    const { client, fetchMock } = loadClient();
+    // The freshly loaded client reads the runtime module from the same registry.
+    const runtime = jest.requireActual('../i18n/runtime') as typeof import('../i18n/runtime');
+    const immutable = () => response(409, {
+      error: {
+        code: 'average_heart_rate_immutable',
+        message: 'Average heart rate cannot change after load calculation.',
+      },
+    });
+    fetchMock.mockResolvedValueOnce(immutable()).mockResolvedValueOnce(immutable());
+    try {
+      runtime.setRuntimeLanguage('en');
+      await expect(
+        client.submitActivityRpe('athlete-token', 'activity-id', 6, 151, 5),
+      ).rejects.toMatchObject({
+        message: 'The average heart rate can no longer be changed once this workout has been processed.',
+        status: 409,
+        code: 'average_heart_rate_immutable',
+        retryable: false,
+      });
+      runtime.setRuntimeLanguage('nl');
+      await expect(
+        client.submitActivityRpe('athlete-token', 'activity-id', 6, 151, 5),
+      ).rejects.toMatchObject({
+        message: 'De gemiddelde hartslag kan niet meer worden gewijzigd nadat deze training is verwerkt.',
+        code: 'average_heart_rate_immutable',
+      });
+    } finally {
+      runtime.setRuntimeLanguage('nl');
+    }
+  });
+});

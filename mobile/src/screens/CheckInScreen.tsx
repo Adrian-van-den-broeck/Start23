@@ -27,6 +27,7 @@ import type {
   WeeklyCheckIn,
   WeeklyPlan,
 } from '../api/types';
+import { type TranslationKey, useLanguage } from '../i18n/LanguageProvider';
 import { Input as FormField } from '../ui-v2/primitives/Input';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
@@ -52,27 +53,36 @@ type RestrictionForm = {
 };
 
 const disciplines: Discipline[] = ['swim', 'bike', 'run'];
-const disciplineLabels: Record<Discipline, string> = {
-  swim: 'Zwemmen',
-  bike: 'Fietsen',
-  run: 'Lopen',
+const disciplineLabels: Record<Discipline, TranslationKey> = {
+  swim: 'common.swim',
+  bike: 'common.bike',
+  run: 'common.run',
 };
-const dayLabels = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'] as const;
-const fatigueLabels: Record<FatigueLevel, string> = {
-  none: 'Geen',
-  low: 'Licht',
-  moderate: 'Matig',
-  high: 'Hoog',
+const dayLabels: readonly TranslationKey[] = [
+  'checkin.day.mon', 'checkin.day.tue', 'checkin.day.wed', 'checkin.day.thu',
+  'checkin.day.fri', 'checkin.day.sat', 'checkin.day.sun',
+];
+const fatigueLabels: Record<FatigueLevel, TranslationKey> = {
+  none: 'checkin.fatigue.none',
+  low: 'checkin.fatigue.low',
+  moderate: 'checkin.fatigue.moderate',
+  high: 'checkin.fatigue.high',
 };
 const missedReasons = [
-  ['time_constraint', 'Tijd'],
-  ['fatigue', 'Vermoeidheid'],
-  ['injury', 'Blessure'],
-  ['illness', 'Ziekte'],
-  ['motivation', 'Motivatie'],
-  ['weather', 'Weer'],
-  ['other', 'Anders'],
-] as const;
+  ['time_constraint', 'checkin.reason.time_constraint'],
+  ['fatigue', 'checkin.reason.fatigue'],
+  ['injury', 'checkin.reason.injury'],
+  ['illness', 'checkin.reason.illness'],
+  ['motivation', 'checkin.reason.motivation'],
+  ['weather', 'checkin.reason.weather'],
+  ['other', 'checkin.reason.other'],
+] as const satisfies readonly (readonly [string, TranslationKey])[];
+const restrictionChoices = [
+  ['none', 'checkin.restriction.none'],
+  ['low', 'checkin.restriction.low'],
+  ['blocked', 'checkin.restriction.blocked'],
+  ['professional', 'checkin.restriction.professional'],
+] as const satisfies readonly (readonly [RestrictionChoice, TranslationKey])[];
 
 function isoDate(value: Date): string {
   const year = value.getFullYear();
@@ -114,6 +124,7 @@ function dayOffsetsForCandidate(
 function restrictionPayload(
   discipline: Discipline,
   form: RestrictionForm,
+  t: ReturnType<typeof useLanguage>['t'],
 ): {
   discipline: Discipline;
   status: RestrictionStatus;
@@ -125,7 +136,7 @@ function restrictionPayload(
   if (form.choice === 'professional') {
     if (!form.advice.trim()) {
       throw new Error(
-        `Vul het professionele advies voor ${disciplineLabels[discipline]} in.`,
+        t('checkin.adviceMissing', { discipline: t(disciplineLabels[discipline]) }),
       );
     }
     return {
@@ -169,6 +180,7 @@ function ActionButton({
 }
 
 export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
+  const { t, locale } = useLanguage();
   const [weekStart, setWeekStart] = useState(nextMonday);
   const [checkIn, setCheckIn] = useState<WeeklyCheckIn | null>(null);
   const [blockedDays, setBlockedDays] = useState<Set<number>>(() => new Set());
@@ -206,8 +218,8 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
   const isCompleted = checkIn?.status === 'completed';
   const expiryLabel = useMemo(() => {
     if (!checkIn?.context) return null;
-    return new Date(checkIn.context.expires_at).toLocaleString('nl-NL');
-  }, [checkIn]);
+    return new Date(checkIn.context.expires_at).toLocaleString(locale);
+  }, [checkIn, locale]);
 
   const run = async (operation: () => Promise<void>) => {
     setBusy(true);
@@ -215,7 +227,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
     try {
       await operation();
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'De check-in is mislukt.');
+      setError(caught instanceof Error ? caught.message : t('checkin.failed'));
     } finally {
       setBusy(false);
     }
@@ -247,11 +259,11 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
   const addExternalActivity = () => {
     const duration = Number(externalDuration);
     if (!externalName.trim() || !Number.isFinite(duration) || duration <= 0) {
-      setError('Vul voor de extra activiteit een naam en geldige duur in.');
+      setError(t('checkin.externalInvalid'));
       return;
     }
     if (Number.isNaN(new Date(externalScheduledAt).getTime())) {
-      setError('Gebruik een geldig ISO-tijdstip inclusief tijdzone.');
+      setError(t('checkin.externalInvalidTime'));
       return;
     }
     setExternalActivities((current) => [
@@ -309,7 +321,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
         recurring_activities_confirmed: recurringConfirmed,
         external_activities: externalActivities,
         restrictions: disciplines.map((discipline) =>
-          restrictionPayload(discipline, restrictions[discipline]),
+          restrictionPayload(discipline, restrictions[discipline], t),
         ),
         alarm_symptoms_acknowledged: alarmAcknowledged,
       });
@@ -374,87 +386,84 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
         showsVerticalScrollIndicator={false}
         style={styles.scroll}
       >
-        <BrandedFormHeader caption="Wekelijkse check-in" backLabel="Weekplanning" onBack={onBack} onSignOut={onSignOut} />
+        <BrandedFormHeader caption={t('checkin.caption')} backLabel={t('activity.back')} onBack={onBack} onSignOut={onSignOut} />
         {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error}><Notice tone="error">{error}</Notice></View> : null}
         {busy ? <ActivityIndicator color={colors.primary} /> : null}
 
         {!checkIn ? (
           <Card elevated padding="form" style={styles.panel}>
-            <View style={[styles.chip]}><Text variant="supporting" tone="primary">Zonder AI</Text></View>
-            <Text style={styles.title}>Bereid je volgende week voor</Text>
-            <Text style={styles.body}>
-              Je antwoorden worden gestructureerd opgeslagen. Pas na jouw aparte
-              bevestiging ontstaat een planvoorstel.
-            </Text>
+            <View style={[styles.chip]}><Text variant="supporting" tone="primary">{t('checkin.start.chip')}</Text></View>
+            <Text style={styles.title}>{t('checkin.start.title')}</Text>
+            <Text style={styles.body}>{t('checkin.start.body')}</Text>
             <FormField
               autoCapitalize="none"
-              label="Week start op maandag"
+              label={t('creation.weekStart')}
               onChangeText={setWeekStart}
               value={weekStart}
             />
-            <ActionButton disabled={busy} label="Start check-in" onPress={() => void begin()} />
+            <ActionButton disabled={busy} label={t('checkin.start.action')} onPress={() => void begin()} />
           </Card>
         ) : null}
 
         {checkIn && !isConfirmed && !isCompleted ? (
           <>
             <Card elevated padding="form" style={styles.panel}>
-              <View style={[styles.chip]}><Text variant="supporting" tone="primary">Gestructureerde bron</Text></View>
-              <Text style={styles.title}>Week van {checkIn.week_start}</Text>
+              <View style={[styles.chip]}><Text variant="supporting" tone="primary">{t('checkin.form.chip')}</Text></View>
+              <Text style={styles.title}>{t('checkin.form.title', { date: checkIn.week_start })}</Text>
               <FormField
-                label="Vertel kort wat er deze week speelt (optioneel)"
+                label={t('checkin.context.label')}
                 maxLength={1000}
                 multiline
                 onChangeText={setContextText}
-                placeholder="Bijvoorbeeld: woensdag kan ik niet en ik voel me behoorlijk vermoeid."
+                placeholder={t('checkin.context.placeholder')}
                 style={styles.contextInput}
                 value={contextText}
               />
               <ActionButton
                 disabled={busy || !contextText.trim()}
-                label="Maak invulvoorstel"
+                label={t('checkin.context.extract')}
                 onPress={extractContext}
                 secondary
               />
-              <Text style={styles.body}>
-                Dit maakt alleen een tijdelijk invulvoorstel. Controleer het en
-                bevestig daarna nog steeds het gestructureerde formulier.
-              </Text>
+              <Text style={styles.body}>{t('checkin.context.hint')}</Text>
               {contextCandidate ? (
                 <View style={styles.candidatePanel}>
-                  <Text style={styles.label}>Controleer het invulvoorstel</Text>
+                  <Text style={styles.label}>{t('checkin.candidate.title')}</Text>
                   <Text style={styles.body}>
-                    Geblokkeerde datums:{' '}
-                    {contextCandidate.candidate.blocked_dates.join(', ') || 'geen'}
-                    {'\n'}Vermoeidheid:{' '}
-                    {contextCandidate.candidate.fatigue_level
-                      ? fatigueLabels[contextCandidate.candidate.fatigue_level]
-                      : 'niet ingevuld'}
+                    {t('checkin.candidate.blockedDates', {
+                      dates: contextCandidate.candidate.blocked_dates.join(', ') || t('checkin.candidate.noDates'),
+                    })}
+                    {'\n'}
+                    {t('checkin.candidate.fatigue', {
+                      fatigue: contextCandidate.candidate.fatigue_level
+                        ? t(fatigueLabels[contextCandidate.candidate.fatigue_level])
+                        : t('checkin.candidate.noFatigue'),
+                    })}
                   </Text>
                   {contextCandidate.candidate.agenda_context.map((line) => (
                     <Text key={line} style={styles.body}>• {line}</Text>
                   ))}
                   {contextCandidate.candidate.possible_injury_disciplines.length > 0 ? (
-                    <Notice tone="warning">{`Mogelijke blessure genoemd voor: ${contextCandidate.candidate.possible_injury_disciplines.map((discipline) => disciplineLabels[discipline]).join(', ')}. Kies de beperking hieronder zelf; die wordt niet automatisch aangepast.`}</Notice>
+                    <Notice tone="warning">{t('checkin.candidate.injury', { disciplines: contextCandidate.candidate.possible_injury_disciplines.map((discipline) => t(disciplineLabels[discipline])).join(', ') })}</Notice>
                   ) : null}
                   {contextCandidate.candidate.clarifying_questions.map((question) => (
-                    <Notice key={question} tone="warning">{`Vraag: ${question}`}</Notice>
+                    <Notice key={question} tone="warning">{t('checkin.candidate.question', { question })}</Notice>
                   ))}
                   <ActionButton
-                    label="Neem datums, vermoeidheid en redenen over"
+                    label={t('checkin.candidate.use')}
                     onPress={useContextCandidate}
                   />
                   <ActionButton
-                    label="Negeer invulvoorstel"
+                    label={t('checkin.candidate.ignore')}
                     onPress={() => setContextCandidate(null)}
                     secondary
                   />
                 </View>
               ) : null}
-              <Text style={styles.body}>Welke dagen zijn volledig geblokkeerd?</Text>
+              <Text style={styles.body}>{t('checkin.blockedDays')}</Text>
               <View style={styles.rowWrap}>
                 {dayLabels.map((label, offset) => (
-                  <ChoiceRow key={label} label={label}  selected={blockedDays.has(offset)} mode="checkbox" onPress={() =>
+                  <ChoiceRow key={label} label={t(label)}  selected={blockedDays.has(offset)} mode="checkbox" onPress={() =>
                       setBlockedDays((current) => {
                         const next = new Set(current);
                         if (next.has(offset)) next.delete(offset);
@@ -464,16 +473,16 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                     } />
                 ))}
               </View>
-              <Text style={styles.label}>Vermoeidheid</Text>
+              <Text style={styles.label}>{t('checkin.fatigue')}</Text>
               <View style={styles.rowWrap}>
                 {(Object.keys(fatigueLabels) as FatigueLevel[]).map((value) => (
-                  <ChoiceRow key={value} label={fatigueLabels[value]}  selected={fatigue === value} mode="radio" onPress={() => setFatigue(value)} />
+                  <ChoiceRow key={value} label={t(fatigueLabels[value])}  selected={fatigue === value} mode="radio" onPress={() => setFatigue(value)} />
                 ))}
               </View>
-              <Text style={styles.label}>Redenen voor gemiste trainingen</Text>
+              <Text style={styles.label}>{t('checkin.missedReasons')}</Text>
               <View style={styles.rowWrap}>
                 {missedReasons.map(([value, label]) => (
-                  <ChoiceRow key={value} label={label}  selected={reasons.has(value)} mode="checkbox" onPress={() =>
+                  <ChoiceRow key={value} label={t(label)}  selected={reasons.has(value)} mode="checkbox" onPress={() =>
                       setReasons((current) => {
                         const next = new Set(current);
                         if (next.has(value)) next.delete(value);
@@ -486,24 +495,14 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
             </Card>
 
             <Card elevated padding="form" style={styles.panel}>
-              <Text style={styles.title}>Blessures en advies</Text>
-              <Text style={styles.body}>
-                Beoordeel elke discipline opnieuw. Een beperking wordt nooit
-                automatisch opgeheven.
-              </Text>
+              <Text style={styles.title}>{t('checkin.injuries.title')}</Text>
+              <Text style={styles.body}>{t('checkin.injuries.body')}</Text>
               {disciplines.map((discipline) => (
                 <View key={discipline} style={styles.subsection}>
-                  <Text style={styles.label}>{disciplineLabels[discipline]}</Text>
+                  <Text style={styles.label}>{t(disciplineLabels[discipline])}</Text>
                   <View style={styles.rowWrap}>
-                    {(
-                      [
-                        ['none', 'Vrij'],
-                        ['low', 'Alleen rustig'],
-                        ['blocked', 'Geblokkeerd'],
-                        ['professional', 'Professioneel advies'],
-                      ] as const
-                    ).map(([value, label]) => (
-                      <ChoiceRow key={value} label={label} accessibilityLabel={`${disciplineLabels[discipline]}: ${label}`} selected={restrictions[discipline].choice === value} mode="radio" onPress={() =>
+                    {restrictionChoices.map(([value, label]) => (
+                      <ChoiceRow key={value} label={t(label)} accessibilityLabel={`${t(disciplineLabels[discipline])}: ${t(label)}`} selected={restrictions[discipline].choice === value} mode="radio" onPress={() =>
                           setRestrictions((current) => ({
                             ...current,
                             [discipline]: { ...current[discipline], choice: value },
@@ -513,7 +512,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                   </View>
                   {restrictions[discipline].choice === 'professional' ? (
                     <FormField
-                      label="Advies en herleidbare bron"
+                      label={t('checkin.injuries.advice')}
                       onChangeText={(advice) =>
                         setRestrictions((current) => ({
                           ...current,
@@ -525,60 +524,58 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                   ) : null}
                 </View>
               ))}
-              <ChoiceRow  label="Ik begrijp dat alarmsymptomen medische beoordeling vragen en niet door dit plan worden beoordeeld."  selected={alarmAcknowledged} mode="checkbox" onPress={() => setAlarmAcknowledged((value) => !value)} />
+              <ChoiceRow  label={t('checkin.injuries.alarm')}  selected={alarmAcknowledged} mode="checkbox" onPress={() => setAlarmAcknowledged((value) => !value)} />
             </Card>
 
             <Card elevated padding="form" style={styles.panel}>
-              <Text style={styles.title}>Sport buiten Wombo</Text>
-              <ChoiceRow  label="Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd."  selected={recurringConfirmed} mode="checkbox" onPress={() => setRecurringConfirmed((value) => !value)} />
+              <Text style={styles.title}>{t('checkin.external.title')}</Text>
+              <ChoiceRow  label={t('checkin.external.recurringConfirmed')}  selected={recurringConfirmed} mode="checkbox" onPress={() => setRecurringConfirmed((value) => !value)} />
               {externalActivities.map((activity, index) => (
                 <View key={`${activity.scheduled_at}-${index}`} style={styles.activityRow}>
                   <Text style={styles.label}>{activity.name}</Text>
                   <Text style={styles.body}>
-                    {disciplineLabels[activity.discipline]} · {activity.duration_minutes} min
-                    {activity.strenuous ? ' · inspannend' : ''}
-                    {activity.recurring ? ' · terugkerend' : ''}
+                    {t(disciplineLabels[activity.discipline])} · {activity.duration_minutes} min
+                    {activity.strenuous ? ` · ${t('checkin.external.strenuousSuffix')}` : ''}
+                    {activity.recurring ? ` · ${t('checkin.external.recurringSuffix')}` : ''}
                   </Text>
-                  <QuickActionRow label="Verwijderen" icon="close" onAction={() =>
+                  <QuickActionRow label={t('checkin.external.remove')} icon="close" onAction={() =>
                       setExternalActivities((current) =>
                         current.filter((_, currentIndex) => currentIndex !== index),
                       )
                     } />
                 </View>
               ))}
-              <FormField label="Naam extra activiteit" onChangeText={setExternalName} value={externalName} />
+              <FormField label={t('checkin.external.name')} onChangeText={setExternalName} value={externalName} />
               <View style={styles.rowWrap}>
                 {disciplines.map((discipline) => (
-                  <ChoiceRow key={discipline} label={disciplineLabels[discipline]}  selected={externalDiscipline === discipline} mode="radio" onPress={() => setExternalDiscipline(discipline)} />
+                  <ChoiceRow key={discipline} label={t(disciplineLabels[discipline])}  selected={externalDiscipline === discipline} mode="radio" onPress={() => setExternalDiscipline(discipline)} />
                 ))}
               </View>
               <FormField
                 autoCapitalize="none"
-                label="Tijdstip (ISO inclusief tijdzone)"
+                label={t('checkin.external.time')}
                 onChangeText={setExternalScheduledAt}
                 value={externalScheduledAt}
               />
               <FormField
                 inputMode="decimal"
-                label="Geplande duur (minuten)"
+                label={t('checkin.external.duration')}
                 onChangeText={setExternalDuration}
                 value={externalDuration}
               />
               <View style={styles.rowWrap}>
-                <ChoiceRow  label="Inspannend"  selected={externalStrenuous} mode="checkbox" onPress={() => setExternalStrenuous((value) => !value)} />
-                <ChoiceRow  label="Terugkerend"  selected={externalRecurring} mode="checkbox" onPress={() => setExternalRecurring((value) => !value)} />
-                <ActionButton label="Toevoegen" onPress={addExternalActivity} secondary />
+                <ChoiceRow  label={t('checkin.external.strenuous')}  selected={externalStrenuous} mode="checkbox" onPress={() => setExternalStrenuous((value) => !value)} />
+                <ChoiceRow  label={t('checkin.external.recurring')}  selected={externalRecurring} mode="checkbox" onPress={() => setExternalRecurring((value) => !value)} />
+                <ActionButton label={t('checkin.external.add')} onPress={addExternalActivity} secondary />
               </View>
             </Card>
 
             <Card elevated padding="form" style={styles.panel}>
-              <ActionButton disabled={busy || !recurringConfirmed} label="Context opslaan" onPress={save} />
+              <ActionButton disabled={busy || !recurringConfirmed} label={t('checkin.save')} onPress={save} />
               {checkIn.context ? (
                 <>
-                  <Text style={styles.body}>
-                    Bron: gestructureerd formulier · geldig tot {expiryLabel}
-                  </Text>
-                  <ActionButton disabled={busy} label="Deze context bevestigen" onPress={confirm} />
+                  <Text style={styles.body}>{t('checkin.source', { expiry: expiryLabel ?? '' })}</Text>
+                  <ActionButton disabled={busy} label={t('checkin.confirm')} onPress={confirm} />
                 </>
               ) : null}
             </Card>
@@ -587,27 +584,25 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
 
         {checkIn && isConfirmed && !isCompleted ? (
           <Card elevated padding="form" style={styles.panel}>
-            <View style={[styles.chip]}><Text variant="supporting" tone="primary">Context bevestigd</Text></View>
-            <Text style={styles.title}>Klaar voor het voorstel</Text>
-            <Text style={styles.body}>
-              Alleen een nieuwe, nog goed te keuren planrevisie wordt gemaakt.
-            </Text>
-            <ActionButton disabled={busy} label="Maak planvoorstel" onPress={makeProposal} />
+            <View style={[styles.chip]}><Text variant="supporting" tone="primary">{t('checkin.confirmed.chip')}</Text></View>
+            <Text style={styles.title}>{t('checkin.confirmed.title')}</Text>
+            <Text style={styles.body}>{t('checkin.confirmed.body')}</Text>
+            <ActionButton disabled={busy} label={t('checkin.confirmed.action')} onPress={makeProposal} />
           </Card>
         ) : null}
 
         {proposalPlan ? (
           <Card elevated padding="form" style={styles.panel}>
-            <View style={[styles.chip, styles.pendingChip]}><Text variant="supporting" tone="warning">Wacht op jouw goedkeuring</Text></View>
-            <Text style={styles.title}>Voorstel voor {proposalPlan.week_start}</Text>
+            <View style={[styles.chip, styles.pendingChip]}><Text variant="supporting" tone="warning">{t('checkin.proposal.chip')}</Text></View>
+            <Text style={styles.title}>{t('checkin.proposal.title', { date: proposalPlan.week_start })}</Text>
             <Text style={styles.body}>
-              {proposalPlan.workouts.length} trainingen · {proposalPlan.rest_days.length} rustdagen
+              {t('checkin.proposal.summary', { workouts: proposalPlan.workouts.length, restDays: proposalPlan.rest_days.length })}
             </Text>
             {proposalPlan.warnings.map((warning) => (
               <Notice key={warning.id ?? warning.code} tone="warning">{warning.message}</Notice>
             ))}
-            <ActionButton disabled={busy} label="Voorstel goedkeuren" onPress={approve} />
-            <ActionButton label="Later beslissen" onPress={onBack} secondary />
+            <ActionButton disabled={busy} label={t('checkin.proposal.approve')} onPress={approve} />
+            <ActionButton label={t('checkin.proposal.later')} onPress={onBack} secondary />
           </Card>
         ) : null}
       </ScrollView>

@@ -42,7 +42,7 @@ export function AvailabilityScreen(props: TaskProps & {
       <Card padding="form" elevated style={styles.form}>
         <Input label={t('creation.weekStart')} icon="calendar" value={props.weekStart}
           onChangeText={(value) => props.onWeekStart(formatIsoDateInput(value))} disabled={props.busy}
-          inputMode="numeric" autoCapitalize="none" maxLength={10} placeholder="YYYY-MM-DD" />
+          inputMode="numeric" autoCapitalize="none" maxLength={10} placeholder={t('planning.datePlaceholder')} />
         <View style={styles.stack}>
           {Array.from({ length: 7 }, (_, offset) => {
             // Weekday labels remain available while the date input is incomplete.

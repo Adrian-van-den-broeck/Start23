@@ -35,6 +35,7 @@ import type {
   ZoneSetupOption,
   ZoneProfileState,
 } from './types';
+import { translate } from '../i18n/runtime';
 
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, '');
 
@@ -75,7 +76,7 @@ function validationMessage(body: ErrorEnvelope): string | null {
   const violations = body.error.details?.violations ?? [];
   if (violations.length === 0) return null;
   if (violations.some((violation) => violation.type === 'extra_forbidden')) {
-    return 'De app en de Wombo-server gebruiken verschillende versies. Probeer het later opnieuw.';
+    return translate('errors.versionMismatch');
   }
   const fields = new Set(
     violations
@@ -83,18 +84,18 @@ function validationMessage(body: ErrorEnvelope): string | null {
       .filter((part) => part !== 'body'),
   );
   if (fields.has('target_date')) {
-    return 'Gebruik een toekomstige racedatum in het formaat JJJJ-MM-DD.';
+    return translate('errors.invalidRaceDate');
   }
   if (fields.has('pool_length_meters')) {
-    return 'Kies een zwembadlengte van 25 of 50 meter.';
+    return translate('errors.invalidPoolLength');
   }
   if (fields.has('guidance_mode')) {
-    return 'Kies een geldige begeleidingsvorm voor deze discipline.';
+    return translate('errors.invalidGuidanceMode');
   }
   if (fields.has('setup_route')) {
-    return 'Kies opnieuw hoe je de trainingszones wilt instellen.';
+    return translate('errors.invalidSetupRoute');
   }
-  return 'Controleer de ingevulde velden en probeer opnieuw.';
+  return translate('errors.checkFields');
 }
 
 function deterministicErrorMessage(code: string | undefined): string | null {
@@ -102,31 +103,31 @@ function deterministicErrorMessage(code: string | undefined): string | null {
     case 'rest_or_anti_stack_unsatisfied':
     case 'swipe_draft_no_completion':
     case 'swipe_selection_invalid':
-      return 'Deze trainingscombinatie past niet veilig op de gekozen dagen. Kies extra beschikbare dagen, liefst verder uit elkaar, of kies een andere training.';
+      return translate('errors.unsafeCombination');
     case 'availability_required':
-      return 'Kies minstens één beschikbare trainingsdag.';
+      return translate('errors.availabilityRequired');
     case 'availability_outside_week':
     case 'swipe_date_unavailable':
     case 'fixed_date_unavailable':
-      return 'Kies alleen beschikbare dagen binnen deze planweek.';
+      return translate('errors.availabilityOutsideWeek');
     case 'previous_week_availability_unavailable':
-      return 'Er is geen bevestigde beschikbaarheid van vorige week. Kies de dagen voor deze week zelf.';
+      return translate('errors.previousWeekUnavailable');
     case 'swipe_draft_stale':
     case 'swipe_draft_context_stale':
     case 'swipe_draft_base_stale':
     case 'proposal_stale':
-      return 'Je weekplanning is intussen gewijzigd. Vernieuw de week en probeer opnieuw.';
+      return translate('errors.planChanged');
     case 'swipe_selection_incomplete':
     case 'swipe_layout_incomplete':
-      return 'Rond eerst alle trainingskeuzes en datums af.';
+      return translate('errors.selectionIncomplete');
     case 'catalog_coverage_unsatisfied':
     case 'catalog_phase_coverage_unavailable':
     case 'taper_catalog_coverage_unavailable':
-      return 'Voor deze week is nog geen volledige veilige trainingscombinatie beschikbaar. Pas je keuzes aan of probeer een andere week.';
+      return translate('errors.coverageUnavailable');
     case 'catalog_capacity_unsatisfied':
-      return 'De beschikbare trainingen vormen nog geen passend weekvoorstel voor je bevestigde trainingsgeschiedenis. Controleer je ingevulde uren of vraag om een beoordeeld trainingsvoorstel.';
+      return translate('errors.capacityUnsatisfied');
     case 'average_heart_rate_immutable':
-      return 'De gemiddelde hartslag kan niet meer worden gewijzigd nadat deze training is verwerkt.';
+      return translate('errors.heartRateImmutable');
     default:
       return null;
   }
@@ -138,7 +139,7 @@ async function request<T>(
   options: RequestInit = {},
 ): Promise<T> {
   if (!apiBaseUrl) {
-    throw new Error('Configureer EXPO_PUBLIC_API_BASE_URL.');
+    throw new Error(translate('errors.apiBaseUrlMissing'));
   }
   let response: Response;
   try {
@@ -153,7 +154,7 @@ async function request<T>(
     });
   } catch {
     throw new ApiRequestError(
-      'De Wombo-server is niet bereikbaar. Controleer je verbinding en probeer opnieuw.',
+      translate('errors.networkUnavailable'),
       null,
       'network_unavailable',
     );
@@ -164,12 +165,12 @@ async function request<T>(
       validationMessage(body) ??
       deterministicErrorMessage(body.error?.code) ??
       (response.status === 401
-        ? 'Je sessie is verlopen. Meld je opnieuw aan.'
+        ? translate('errors.sessionExpired')
         : response.status === 503
-          ? 'De Wombo-server is tijdelijk niet beschikbaar. Probeer het zo opnieuw.'
+          ? translate('errors.serverUnavailable')
           : response.status === 409
-            ? 'Deze wijziging is niet meer actueel. Vernieuw het scherm en probeer opnieuw.'
-            : 'De wijziging kon niet veilig worden opgeslagen. Probeer opnieuw.');
+            ? translate('errors.changeStale')
+            : translate('errors.saveFailed'));
     throw new ApiRequestError(
       message,
       response.status,
@@ -849,7 +850,7 @@ export async function submitActivityRpeWithRefresh(
 
     if (refreshed.rpe !== activity.rpe) {
       throw new ApiRequestError(
-        'De activiteit is intussen gewijzigd. Vernieuw en controleer de opgeslagen RPE.',
+        translate('errors.activityStale'),
         409,
         'activity_correction_stale',
       );

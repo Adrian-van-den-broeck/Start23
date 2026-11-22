@@ -119,7 +119,9 @@ describe('unplanned workout regression', () => {
     );
     await fireEvent.press(
       within(card!).getByRole('radio', {
-        name: 'Diepe ademhaling (10k wedstrijdtempo). (RPE 7)',
+        // English is selected, so the RPE scale wording is English too (was Dutch before
+        // the scale moved into the dictionaries).
+        name: 'Deep breathing (10k race pace). (RPE 7)',
       }),
     );
 

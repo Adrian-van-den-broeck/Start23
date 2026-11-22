@@ -22,6 +22,8 @@ import TrainingLayout from '../../app/(authenticated)/(training)/_layout';
 import ProfileRoute from '../../app/(authenticated)/profile';
 import TestsRoute from '../../app/(authenticated)/tests';
 import CalibrationRoute from '../../app/(authenticated)/calibration';
+// These tests run in English. RPE descriptions and activity validation used to stay Dutch in English;
+// they are now translated, so the assertions expect the English text.
 
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: jest.fn(), deleteItemAsync: jest.fn() }));
 jest.mock('../api/client', () => ({
@@ -155,7 +157,7 @@ test('Slice 5B real create pending reminder return and feedback retain one owner
   expect(view.getAllByText(reminder)).toHaveLength(1); await fireEvent.press(view.getByText(reminder)); await view.findByText('Activity feedback');
   expect(activityFlow.feedbackActivity?.id).toBe(pendingActivity.id);
   expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(reads);
-  await fireEvent.press(view.getByRole('radio', { name: 'Save RPE · Focus nodig, praten in zinnen. (RPE 4)' })); await view.findByTestId('v2-activities');
+  await fireEvent.press(view.getByRole('radio', { name: 'Save RPE · Focus needed, talking in sentences. (RPE 4)' })); await view.findByTestId('v2-activities');
   expect(view.queryByText(reminder)).toBeNull(); expect(api.createActivity).toHaveBeenCalledTimes(1); expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledWith('token-a', pendingActivity, 4, 151);
   expect(activityFlow.ensureActivitiesLoaded).toBe(activityOwner); expect(flow.setWeekStart).toBe(planningOwner); expect(calendar.loadCalendarRange).toBe(calendarOwner);
@@ -212,7 +214,7 @@ test('Slice 5B unresolved feedback save locks roots/reminder/version and never w
   jest.mocked(api.submitActivityRpeWithRefresh).mockImplementation(() => new Promise(resolve => { finish = resolve; }));
   const view = await renderRouter(routes, { initialUrl: '/activities' }); await view.findByTestId('activity-pending');
   await fireEvent.press(view.getByRole('button', { name: 'Complete feedback' }));
-  const choice = view.getByRole('radio', { name: 'Save RPE · Focus nodig, praten in zinnen. (RPE 4)' });
+  const choice = view.getByRole('radio', { name: 'Save RPE · Focus needed, talking in sentences. (RPE 4)' });
   await fireEvent.press(choice); await fireEvent.press(choice);
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
   expect(view.queryByTestId('training-root-navigation')).toBeNull(); expect(view.getByRole('button', { name: 'UI V1' })).toBeDisabled();
@@ -362,7 +364,7 @@ test('resumed draft and revisions survive tabs and safe V1/V2 navigator replacem
   await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
   await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: 'Week' }));
   await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
-  await view.findByText('Stel je week samen');
+  await view.findByText('Build your week');
   expect(view.queryByRole('tab', { name: 'Activities' })).toBeNull();
   await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
   await view.findByText('Choose your workouts');
@@ -532,7 +534,7 @@ test('sign-out removes the owner; another athlete gets new empty plan/calendar s
 test('requested V1 keeps the original internal Week/Calendar navigation with no root tabs', async () => {
   process.env.EXPO_PUBLIC_UI_VERSION = 'v1';
   const view = await renderRouter(routes, { initialUrl: '/planning' });
-  await view.findByText('Week van 2026-10-05');
+  await view.findByText('Week of 2026-10-05');
   expect(view.queryByRole('tab', { name: 'Activities' })).toBeNull();
   await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
   await view.findByText('Training calendar');
@@ -645,8 +647,8 @@ test('V1 swipe animation locks presentation switching before its deferred write'
     return timing(value, config);
   });
   const view = await renderRouter(routes, { initialUrl: '/planning' });
-  await view.findByText('Stel je week samen');
-  await fireEvent.press(view.getByRole('button', { name: 'Kiezen' }));
+  await view.findByText('Build your week');
+  await fireEvent.press(view.getByRole('button', { name: 'Choose' }));
   await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
   expect(navigation.rootVersion).toBe('v1'); expect(navigation.locked).toBe(true);
   expect(api.transitionSwipeWeekDraft).not.toHaveBeenCalled();
@@ -702,7 +704,7 @@ test.each([undefined, 'v1', 'v2', 'v3'])('release build %s has functional roots 
   else process.env.EXPO_PUBLIC_UI_VERSION = flag;
   try {
     const view = await renderRouter(routes, { initialUrl: '/planning' });
-    await view.findByText(flag === 'v1' ? 'Week van 2026-10-05' : 'Approved');
+    await view.findByText(flag === 'v1' ? 'Week of 2026-10-05' : 'Approved');
     const owner = flow.setWeekStart;
     const plan = flow.plan;
     expect(view.queryByRole('button', { name: /^UI V/ })).toBeNull();

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { PlannedWorkout } from '../api/types';
 import { usePlanningFlow } from '../features/planning/PlanningFlowProvider';
+import { useLanguage } from '../i18n/LanguageProvider';
 import { ProposalAlternativesScreen, ProposalReviewScreen } from '../ui-v2/screens/ProposalReviewScreens';
 import { proposalAlternativesViewModel, proposalReviewViewModel } from '../ui-v2/utils/proposalReviewViewModel';
 
@@ -8,6 +9,9 @@ export function PlanningProposalTask({ controls, busy, workoutId, onEdit, onBack
   controls: ReactNode; busy: boolean; workoutId: string | null; onEdit: (id: string | null) => void; onBack: () => void;
 }) {
   const flow = usePlanningFlow();
+  // Warning text in the review model is resolved at render; subscribing makes a
+  // language change re-render it instead of keeping the previous language.
+  useLanguage();
   // Retain only the render reference to detect a changed reviewed snapshot.
   const previousPlan = useRef(flow.plan);
   const changed = previousPlan.current !== flow.plan;
@@ -26,6 +30,7 @@ function PendingAlternativesTask({ controls, busy, workout, onBack }: {
   controls: ReactNode; busy: boolean; workout: PlannedWorkout; onBack: () => void;
 }) {
   const flow = usePlanningFlow();
+  useLanguage();
   const { load, apply, release } = flow.pendingWorkouts;
   const slot = flow.pendingWorkouts.editors[workout.id];
   const [selectedId, setSelectedId] = useState<string | null>(null);

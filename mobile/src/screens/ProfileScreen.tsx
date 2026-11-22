@@ -3,6 +3,7 @@ import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleShe
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getOnboarding, saveProfile } from '../api/client';
 import type { AthleteProfile } from '../api/types';
+import { useLanguage } from '../i18n/LanguageProvider';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { ProfileForm } from '../ui-v2/components/ProfileForm';
 import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
@@ -27,6 +28,7 @@ export function ProfileScreen({
   onOpenTests,
   onSignOut,
 }: Props) {
+  const { t } = useLanguage();
   const [profile, setProfile] = useState<AthleteProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -46,7 +48,7 @@ export function ProfileScreen({
       .catch((caught: unknown) => {
         if (mounted) {
           setError(
-            caught instanceof Error ? caught.message : 'Profiel laden is mislukt.',
+            caught instanceof Error ? caught.message : t('integrations.account.profileLoadFailed'),
           );
         }
       })
@@ -62,7 +64,7 @@ export function ProfileScreen({
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag" automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}>
-        <BrandedFormHeader caption="Mijn profiel" onBack={onBack} onSignOut={onSignOut} />
+        <BrandedFormHeader caption={t('integrations.account.profileTitle')} onBack={onBack} onSignOut={onSignOut} />
         {loading ? <ActivityIndicator color={colors.primary} /> : null}
         {error ? <Notice tone="error">{error}</Notice> : null}
         {!loading && profile ? <ProfileForm profile={profile} saving={saving}
@@ -76,16 +78,16 @@ export function ProfileScreen({
                 setError(
                   caught instanceof Error
                     ? caught.message
-                    : 'Profiel opslaan is mislukt.',
+                    : t('integrations.account.profileSaveFailed'),
                 );
               } finally {
                 setSaving(false);
               }
             }} /> : null}
         <Card elevated style={{ gap: space[16] }}>
-          <View style={{ gap: space[4] }}><QuickActionRow label="Testen en kalibratie" onAction={onOpenTests} icon="document" /><Text variant="supporting" tone="textMuted">Open de huidige, uitvoerbare protocollen.</Text></View>
+          <View style={{ gap: space[4] }}><QuickActionRow label={t('integrations.account.tests')} onAction={onOpenTests} icon="document" /><Text variant="supporting" tone="textMuted">{t('integrations.account.testsHint')}</Text></View>
           <Divider />
-          <View style={{ gap: space[4] }}><QuickActionRow label="Pioneer toegang" onAction={onOpenPioneerAccess} icon="profile" /><Text variant="supporting" tone="textMuted">Wissel je persoonlijke beta-code in.</Text></View>
+          <View style={{ gap: space[4] }}><QuickActionRow label={t('integrations.account.pioneer')} onAction={onOpenPioneerAccess} icon="profile" /><Text variant="supporting" tone="textMuted">{t('integrations.account.pioneerHint')}</Text></View>
         </Card>
       </ScrollView>
     </KeyboardAvoidingView>
