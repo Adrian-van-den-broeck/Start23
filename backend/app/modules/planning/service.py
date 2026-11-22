@@ -1,12 +1,15 @@
 """Application orchestration for deterministic weekly planning."""
 
+import asyncio
 import hashlib
 import json
 import logging
+from collections import OrderedDict
 from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from decimal import Decimal
+from functools import lru_cache
 from typing import Any, Protocol
 from uuid import UUID
 from zoneinfo import ZoneInfo
@@ -146,7 +149,7 @@ _RPE_GUIDANCE_PROTOCOL_BY_DISCIPLINE = {
 }
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True, slots=True, eq=False)
 class _SwipePlanningContext:
     """Exact private context used to recalculate every public draft transition."""
 
@@ -178,6 +181,12 @@ class PlanningService:
         self._repository = repository
         self._catalog_provider = catalog_provider
         self._weekly_plan_coach = weekly_plan_coach
+        self._swipe_contexts: OrderedDict[
+            tuple[str, tuple[WorkoutTemplate, ...]], _SwipePlanningContext
+        ] = OrderedDict()
+        self._next_swipe_candidate = lru_cache(maxsize=128)(
+            self._calculate_next_swipe_candidate
+        )
 
     @staticmethod
     def _deck_item(
@@ -557,14 +566,47 @@ class PlanningService:
         low_only_disciplines: frozenset[Discipline],
         cross_training_opt_ins: frozenset[Discipline] = frozenset(),
     ) -> _SwipePlanningContext:
-        """Rebuild the exact deterministic context and its non-sensitive hash."""
+        """Validate fresh context inputs and reuse identical calculations."""
 
         snapshot = self._planning_input(input_source)
         timezone_name, race_date, disciplines, capabilities = self._context_values(
             snapshot
         )
-        catalog = active_catalog(await self._catalog_provider.fetch_catalog())
-        history_rows = await self._repository.fetch_load_history(athlete_id, week_start)
+        catalog_rows, history_rows = await asyncio.gather(
+            self._catalog_provider.fetch_catalog(),
+            self._repository.fetch_load_history(athlete_id, week_start),
+        )
+        catalog = active_catalog(catalog_rows)
+        # Cache only the calculation. Each request still reads and validates
+        # ownership, plan binding, onboarding, load history and catalog.
+        cache_key = (
+            hashlib.sha256(
+                json.dumps(
+                    (
+                        str(athlete_id),
+                        input_source,
+                        str(initial_plan_request_id),
+                        str(plan_id),
+                        base_plan_revision,
+                        context_plan_revision,
+                        week_start,
+                        available_dates,
+                        availability_source,
+                        sorted(injuries),
+                        sorted(low_only_disciplines),
+                        sorted(cross_training_opt_ins),
+                        history_rows,
+                    ),
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    default=str,
+                ).encode()
+            ).hexdigest(),
+            catalog,
+        )
+        if cached := self._swipe_contexts.get(cache_key):
+            self._swipe_contexts.move_to_end(cache_key)
+            return cached
         prior_loads = self._load_samples(history_rows)
         automatic = build_weekly_plan(
             week_start=week_start,
@@ -644,7 +686,7 @@ class PlanningService:
                 default=str,
             ).encode()
         ).hexdigest()
-        return _SwipePlanningContext(
+        context = _SwipePlanningContext(
             source=dict(input_source),
             timezone_name=timezone_name,
             race_date=race_date,
@@ -662,6 +704,10 @@ class PlanningService:
             cross_training_opt_ins=cross_training_opt_ins,
             context_fingerprint=context_fingerprint,
         )
+        self._swipe_contexts[cache_key] = context
+        if len(self._swipe_contexts) > 32:
+            self._swipe_contexts.popitem(last=False)
+        return context
 
     @staticmethod
     def _swipe_history(row: Mapping[str, Any]) -> SwipeSelectionState:
@@ -716,12 +762,16 @@ class PlanningService:
         }
         # Prefer fresh templates after a pass. A later occurrence of the same
         # immutable template remains available when composition requires it.
-        for pool in (
-            tuple(
+        pools: tuple[tuple[WorkoutTemplate, ...], ...] = (context.eligible_deck,)
+        if passed_count:
+            fresh = tuple(
                 item for item in context.eligible_deck if item.id not in passed_count
-            ),
-            tuple(item for item in context.eligible_deck if maximum_uses[item.id] > 0),
-        ):
+            )
+            repeatable = tuple(
+                item for item in context.eligible_deck if maximum_uses[item.id] > 0
+            )
+            pools = (fresh, repeatable) if fresh != repeatable else (fresh,)
+        for pool in pools:
             if not pool and remaining_slots:
                 continue
             fitted = _bounded_selection(
@@ -782,7 +832,7 @@ class PlanningService:
             return selected_ids
         return None
 
-    def _next_swipe_candidate(
+    def _calculate_next_swipe_candidate(
         self,
         *,
         context: _SwipePlanningContext,
@@ -790,9 +840,9 @@ class PlanningService:
         available_dates: tuple[date, ...],
         injuries: frozenset[Discipline],
         low_only_disciplines: frozenset[Discipline],
-        selection: SwipeSelectionState,
+        accepted: tuple[UUID, ...],
+        passed: tuple[UUID, ...],
     ) -> UUID | None:
-        accepted = selection.accepted_template_ids
         completion = self._selection_has_completion(
             context=context,
             week_start=week_start,
@@ -800,7 +850,7 @@ class PlanningService:
             injuries=injuries,
             low_only_disciplines=low_only_disciplines,
             accepted_template_ids=accepted,
-            passed_template_ids=selection.passed_template_ids,
+            passed_template_ids=passed,
         )
         return (
             completion[len(accepted)]
@@ -1531,7 +1581,8 @@ class PlanningService:
             available_dates=available_dates,
             injuries=request.confirmed_injuries,
             low_only_disciplines=request.low_only_disciplines,
-            selection=selection,
+            accepted=selection.accepted_template_ids,
+            passed=selection.passed_template_ids,
         )
         if current is None and context.target_workout_count > 0:
             raise PlanningConstraintError(
@@ -1661,7 +1712,8 @@ class PlanningService:
                 available_dates=available_dates,
                 injuries=injuries,
                 low_only_disciplines=low_only,
-                selection=selection,
+                accepted=selection.accepted_template_ids,
+                passed=selection.passed_template_ids,
             )
             stored_current = (
                 UUID(str(row["current_template_id"]))
@@ -1718,7 +1770,8 @@ class PlanningService:
                 available_dates=available_dates,
                 injuries=injuries,
                 low_only_disciplines=low_only,
-                selection=selection,
+                accepted=selection.accepted_template_ids,
+                passed=selection.passed_template_ids,
             )
         updated = await self._repository.update_swipe_draft(
             athlete_id,

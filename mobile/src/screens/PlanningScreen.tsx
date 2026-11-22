@@ -18,16 +18,13 @@ import {
   BackHandler,
   Alert,
   Animated,
-  Easing,
   KeyboardAvoidingView,
-  PanResponder,
   Platform,
   ScrollView,
   type ScrollViewProps,
   StatusBar,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
 } from 'react-native';
 import {
@@ -64,6 +61,7 @@ import { useUiVersion } from '../ui/UiVersionProvider';
 import { Button as V2Button } from '../ui-v2/primitives/Button';
 import { WeekScreen } from '../ui-v2/screens/WeekScreen';
 import { CalendarScreen } from '../ui-v2/screens/CalendarScreen';
+import { useWorkoutSwipe } from '../components/useWorkoutSwipe';
 import { AvailabilityScreen, PlacementScreen, SelectionScreen } from '../ui-v2/screens/PlanningCreationScreens';
 import { PlanningProposalTask } from './PlanningProposalTask';
 import { planningCreationViewModel } from '../ui-v2/utils/planningCreationViewModel';
@@ -380,168 +378,18 @@ function SwipeDraftPanel({
   onSubmit: (mode: 'automatic' | 'manual') => void;
   onTransition: (
     action: 'accept' | 'pass' | 'undo' | 'reset_passed',
-  ) => void;
+  ) => void | Promise<void>;
 }) {
-  const candidate = draft.current_candidate;
-  const { width: windowWidth } = useWindowDimensions();
-  const swipePosition = useRef(new Animated.ValueXY()).current;
-  const swipeAnimation = useRef<Animated.CompositeAnimation | null>(null);
-  const animatingSwipe = useRef(false);
-  const [swipeInFlight, setSwipeInFlight] = useState(false);
+  const { t } = useLanguage();
   const { setTransientBusy } = usePlanningPresentation();
-  const useNativeDriver = Platform.OS !== 'web';
-
-  const resetSwipePosition = useCallback(
-    (animated = true) => {
-      swipeAnimation.current?.stop();
-      const animation = Animated.spring(swipePosition, {
-        damping: 18,
-        mass: 0.7,
-        stiffness: 220,
-        toValue: { x: 0, y: 0 },
-        useNativeDriver,
-      });
-      swipeAnimation.current = animation;
-      if (animated) {
-        animation.start(() => {
-          swipeAnimation.current = null;
-        });
-        return;
-      }
-      swipePosition.setValue({ x: 0, y: 0 });
-      swipeAnimation.current = null;
-    },
-    [swipePosition, useNativeDriver],
-  );
-
-  const completeSwipe = useCallback(
-    (action: 'accept' | 'pass', velocityX = 0, exitY = 0) => {
-      if (busy || !candidate || animatingSwipe.current) return;
-      const direction = action === 'accept' ? 1 : -1;
-      const exitDistance = Math.max(windowWidth * 1.25, 480);
-      const duration = Math.max(
-        160,
-        Math.min(260, 230 - Math.abs(velocityX) * 55),
-      );
-
-      animatingSwipe.current = true;
-      setTransientBusy(true);
-      setSwipeInFlight(true);
-      swipeAnimation.current?.stop();
-      const animation = Animated.timing(swipePosition, {
-        duration,
-        easing: Easing.out(Easing.cubic),
-        toValue: {
-          x: direction * exitDistance,
-          y: exitY,
-        },
-        useNativeDriver,
-      });
-      swipeAnimation.current = animation;
-      animation.start(({ finished }) => {
-        swipeAnimation.current = null;
-        if (!finished) {
-          animatingSwipe.current = false;
-          setSwipeInFlight(false);
-          setTransientBusy(false);
-          return;
-        }
-        onTransition(action);
-        setTransientBusy(false);
-      });
-    },
-    [busy, candidate, onTransition, swipePosition, useNativeDriver, windowWidth, setTransientBusy],
-  );
-
-  useEffect(() => {
-    animatingSwipe.current = false;
-    setSwipeInFlight(false);
-    resetSwipePosition(false);
-  }, [candidate?.id, resetSwipePosition]);
-
-  useEffect(() => {
-    if (!busy && animatingSwipe.current) {
-      animatingSwipe.current = false;
-      setSwipeInFlight(false);
-      resetSwipePosition();
-    }
-  }, [busy, resetSwipePosition]);
-
-  useEffect(
-    () => () => {
-      swipeAnimation.current?.stop();
-      setTransientBusy(false);
-    },
-    [setTransientBusy],
-  );
-
-  const panResponder = useMemo(
-    () =>
-      PanResponder.create({
-        onMoveShouldSetPanResponder: (_, gesture) =>
-          !busy &&
-          !swipeInFlight &&
-          candidate !== null &&
-          Math.abs(gesture.dx) > 14 &&
-          Math.abs(gesture.dx) > Math.abs(gesture.dy),
-        onPanResponderGrant: () => {
-          swipeAnimation.current?.stop();
-          swipePosition.setValue({ x: 0, y: 0 });
-        },
-        onPanResponderMove: (_, gesture) => {
-          swipePosition.setValue({ x: gesture.dx, y: gesture.dy * 0.18 });
-        },
-        onPanResponderRelease: (_, gesture) => {
-          if (gesture.dx <= -86 || gesture.vx <= -0.55) {
-            completeSwipe('pass', gesture.vx, gesture.dy * 0.18);
-            return;
-          }
-          if (gesture.dx >= 86 || gesture.vx >= 0.55) {
-            completeSwipe('accept', gesture.vx, gesture.dy * 0.18);
-            return;
-          }
-          resetSwipePosition();
-        },
-        onPanResponderTerminate: () => {
-          resetSwipePosition();
-        },
-      }),
-    [
-      busy,
-      candidate,
-      completeSwipe,
-      resetSwipePosition,
-      swipeInFlight,
-      swipePosition,
-    ],
-  );
-  const cardRotation = swipePosition.x.interpolate({
-    inputRange: [-windowWidth, 0, windowWidth],
-    outputRange: ['-11deg', '0deg', '11deg'],
-    extrapolate: 'clamp',
-  });
-  const acceptOpacity = swipePosition.x.interpolate({
-    inputRange: [20, 100],
-    outputRange: [0, 1],
-    extrapolate: 'clamp',
-  });
-  const passOpacity = swipePosition.x.interpolate({
-    inputRange: [-100, -20],
-    outputRange: [1, 0],
-    extrapolate: 'clamp',
-  });
-  const placementByOccurrence = useMemo(
-    () =>
-      new Map(
-        draft.placements.map((placement) => [
-          placement.occurrence_id,
-          placement.scheduled_date,
-        ]),
-      ),
-    [draft.placements],
-  );
-  const manualComplete =
-    draft.placements.length === draft.accepted_workouts.length;
+  const swipe = useWorkoutSwipe(draft.state === 'collecting' ? draft.current_candidate : null,
+    busy, onTransition, setTransientBusy);
+  const candidate = swipe.card;
+  const locked = busy || !!swipe.action;
+  const placementByOccurrence = useMemo(() => new Map(
+    draft.placements.map(placement => [placement.occurrence_id, placement.scheduled_date]),
+  ), [draft.placements]);
+  const manualComplete = draft.placements.length === draft.accepted_workouts.length;
   const zoneCalibrationWeek =
     candidate?.contributes_to_zone_calibration === true ||
     draft.accepted_workouts.some(
@@ -586,87 +434,85 @@ function SwipeDraftPanel({
         </View>
       ) : null}
 
-      {draft.state === 'collecting' && candidate ? (
+      {candidate ? (
         <>
-          <Animated.View
-            accessible
-            accessibilityLabel={`${candidate.name}. Swipe links om over te slaan of rechts om te kiezen.`}
-            {...panResponder.panHandlers}
-            style={[
-              styles.swipeDecisionCard,
-              {
-                transform: [
-                  { translateX: swipePosition.x },
-                  { translateY: swipePosition.y },
-                  { rotate: cardRotation },
-                ],
-              },
-            ]}
-          >
-            <Animated.View
-              pointerEvents="none"
-              style={[
-                styles.swipeDecisionBadge,
-                styles.swipeAcceptBadge,
-                { opacity: acceptOpacity },
-              ]}
-            >
-              <Text
-                style={[styles.swipeDecisionBadgeText, styles.swipeAcceptText]}
-              >
-                KIEZEN
-              </Text>
+          <View style={styles.swipeWindow}>
+            <Animated.View pointerEvents="none" accessibilityElementsHidden={!swipe.action}
+              importantForAccessibility={swipe.action ? 'auto' : 'no-hide-descendants'}
+              style={[StyleSheet.absoluteFill, styles.swipeLoading, { opacity: swipe.loadingOpacity }]}>
+              <Text style={styles.body} accessibilityLiveRegion="polite">{t('creation.nextCard')}</Text>
             </Animated.View>
             <Animated.View
-              pointerEvents="none"
-              style={[
-                styles.swipeDecisionBadge,
-                styles.swipePassBadge,
-                { opacity: passOpacity },
-              ]}
+              accessible
+              accessibilityLabel={`${candidate.name}. Swipe links om over te slaan of rechts om te kiezen.`}
+              {...swipe.panHandlers}
+              style={[styles.swipeDecisionCard, { transform: swipe.transform, opacity: swipe.opacity }]}
             >
-              <Text
-                style={[styles.swipeDecisionBadgeText, styles.swipePassText]}
+              <Animated.View
+                pointerEvents="none"
+                style={[
+                  styles.swipeDecisionBadge,
+                  styles.swipeAcceptBadge,
+                  { opacity: swipe.acceptOpacity },
+                ]}
               >
-                OVERSLAAN
+                <Text
+                  style={[styles.swipeDecisionBadgeText, styles.swipeAcceptText]}
+                >
+                  KIEZEN
+                </Text>
+              </Animated.View>
+              <Animated.View
+                pointerEvents="none"
+                style={[
+                  styles.swipeDecisionBadge,
+                  styles.swipePassBadge,
+                  { opacity: swipe.passOpacity },
+                ]}
+              >
+                <Text
+                  style={[styles.swipeDecisionBadgeText, styles.swipePassText]}
+                >
+                  OVERSLAAN
+                </Text>
+              </Animated.View>
+              <View style={styles.cardHeader}>
+                <StatusPill
+                  label={disciplineLabels[candidate.discipline]}
+                  tone={
+                    candidate.intensity_bucket === 'high' ? 'accent' : 'neutral'
+                  }
+                />
+                <Text style={styles.cardMeta}>
+                  {candidate.duration_minutes !== null
+                    ? `${Number(candidate.duration_minutes)} min`
+                    : `${candidate.distance_meters?.toLocaleString('nl-NL')} m · afstand`}
+                </Text>
+              </View>
+              <WorkoutSignals workout={candidate} />
+              <Text style={styles.cardTitle}>{candidate.name}</Text>
+              <Text style={styles.cardDescription}>
+                {workoutCardDescription(candidate.description)}
+              </Text>
+              <Text style={styles.swipeInstruction}>
+                ← overslaan · kiezen →
               </Text>
             </Animated.View>
-            <View style={styles.cardHeader}>
-              <StatusPill
-                label={disciplineLabels[candidate.discipline]}
-                tone={
-                  candidate.intensity_bucket === 'high' ? 'accent' : 'neutral'
-                }
-              />
-              <Text style={styles.cardMeta}>
-                {candidate.duration_minutes !== null
-                  ? `${Number(candidate.duration_minutes)} min`
-                  : `${candidate.distance_meters?.toLocaleString('nl-NL')} m · afstand`}
-              </Text>
-            </View>
-            <WorkoutSignals workout={candidate} />
-            <Text style={styles.cardTitle}>{candidate.name}</Text>
-            <Text style={styles.cardDescription}>
-              {workoutCardDescription(candidate.description)}
-            </Text>
-            <Text style={styles.swipeInstruction}>
-              ← overslaan · kiezen →
-            </Text>
-          </Animated.View>
+          </View>
           <View style={styles.decisionRow}>
             <View style={styles.decisionButton}>
               <ActionButton
-                disabled={busy || swipeInFlight}
+                disabled={locked}
                 label="Overslaan"
-                onPress={() => completeSwipe('pass')}
+                onPress={() => { void swipe.decide('pass'); }}
                 secondary
               />
             </View>
             <View style={styles.decisionButton}>
               <ActionButton
-                disabled={busy || swipeInFlight}
+                disabled={locked}
                 label="Kiezen"
-                onPress={() => completeSwipe('accept')}
+                onPress={() => { void swipe.decide('accept'); }}
               />
             </View>
           </View>
@@ -686,7 +532,7 @@ function SwipeDraftPanel({
         <View style={styles.decisionRow}>
           <View style={styles.decisionButton}>
             <ActionButton
-              disabled={busy || !draft.can_undo}
+              disabled={locked || !draft.can_undo}
               label="Ongedaan maken"
               onPress={() => onTransition('undo')}
               secondary
@@ -694,7 +540,7 @@ function SwipeDraftPanel({
           </View>
           <View style={styles.decisionButton}>
             <ActionButton
-              disabled={busy || draft.passed_count === 0}
+              disabled={locked || draft.passed_count === 0}
               label="Opnieuw bekijken"
               onPress={() => onTransition('reset_passed')}
               secondary
@@ -703,7 +549,7 @@ function SwipeDraftPanel({
         </View>
       ) : null}
 
-      {draft.state === 'placement' ? (
+      {draft.state === 'placement' && !swipe.action ? (
         <>
           <Text style={styles.body}>
             Laat Wombo de trainingen spreiden over je beschikbare dagen, of
@@ -806,7 +652,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
   const { effectiveVersion, requested } = useUiVersion();
   const { t } = useLanguage();
   const { rootVersion, setRootVersion, calendarVersion, setCalendarVersion, task, setTask,
-    detailWorkout, setDetailWorkout, weekScroll, calendarPositions, calendarNavigation, locked, activityBusy,
+    detailWorkout, setDetailWorkout, weekScroll, calendarPositions, calendarNavigation, locked, activityBusy, setTransientBusy,
     sheetOpen, setCalendarVisited, creationStep, setCreationStep, placementMode, setPlacementMode, reviewWorkoutId, setReviewWorkoutId, moveWorkoutId, setMoveWorkoutId } = usePlanningPresentation();
   const active = props.active ?? true;
   const previousRequest = useRef(requested);
@@ -932,7 +778,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
             onBack={returnToWeek} mode={placementMode} onMode={setPlacementMode}
             onPlace={flow.placeDraftWorkout} onSubmit={flow.submitDraft} onSelection={() => setCreationStep('selection')} />
           : <SelectionScreen model={planningCreationViewModel(flow.swipeDraft)} busy={locked} error={flow.error}
-            controls={controls} onBack={returnToWeek} onTransition={flow.transitionDraft}
+            controls={controls} onBack={returnToWeek} onTransition={flow.transitionDraft} setTransientBusy={setTransientBusy}
             onContinue={() => setCreationStep('placement')} />
         ) : <PlanningPresentation {...props} onOpenWorkout={setDetailWorkout}
           calendarNavigation={calendarNavigation} calendarScrollProps={calendarOpen ? calendarScrollProps : undefined}
@@ -1195,7 +1041,7 @@ function PlanningPresentation({
           style={styles.scroll}
         >
         {error ? <Text style={styles.error}>{error}</Text> : null}
-        {busy ? <ActivityIndicator color={colors.brand} /> : null}
+        {busy && (view !== 'deck' || !swipeDraft?.current_candidate) ? <ActivityIndicator color={colors.brand} /> : null}
 
         <FadeInView key={view} style={styles.viewContent}>
         {view === 'plan' ? (
@@ -1797,6 +1643,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.brandSoft,
     borderColor: colors.brand,
   },
+  swipeWindow: { overflow: 'hidden' },
+  swipeLoading: { alignItems: 'center', justifyContent: 'center' },
   swipeDecisionCard: {
     ...shadows.card,
     backgroundColor: colors.surfaceRaised,
