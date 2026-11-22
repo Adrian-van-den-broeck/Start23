@@ -5,8 +5,16 @@ from decimal import Decimal
 from typing import Annotated, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    field_serializer,
+    field_validator,
+    model_validator,
+)
 
+from app.core.i18n import LocalizedText, current_language
 from app.modules.calibration.domain import (
     Confidence,
     DataQuality,
@@ -130,6 +138,19 @@ class DisciplineSetupResponse(CalibrationPublicModel):
     updated_at: datetime
 
 
+SETUP_ROUTE_LABELS: dict[SetupRoute, LocalizedText] = {
+    SetupRoute.KNOWN_VALUES: {"nl": "Ik ken mijn waarden", "en": "I know my values"},
+    SetupRoute.FIELD_TEST: {
+        "nl": "Ik wil mijn waarden testen",
+        "en": "I want to test my values",
+    },
+    SetupRoute.CALIBRATION_WEEK: {
+        "nl": "Ik wil rustig beginnen en laten kalibreren",
+        "en": "I want to start easy and let my values calibrate",
+    },
+}
+
+
 class ZoneOptionResponse(CalibrationPublicModel):
     """One user-facing setup route."""
 
@@ -143,6 +164,10 @@ class ZoneOptionResponse(CalibrationPublicModel):
     creates_zones: bool
     requires_athlete_confirmation: bool
     activation_behavior: Literal["calculated_result_stays_pending"]
+
+    @field_serializer("label")
+    def word_label(self, label: str) -> str:
+        return SETUP_ROUTE_LABELS[self.setup_route][current_language()]
 
 
 class ProtocolSegmentResponse(CalibrationPublicModel):

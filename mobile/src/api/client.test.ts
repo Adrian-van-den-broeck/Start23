@@ -19,6 +19,7 @@ function loadClient() {
 
 const headers = {
   Accept: 'application/json',
+  'Accept-Language': 'nl',
   Authorization: 'Bearer athlete-token',
   'Content-Type': 'application/json',
 };
@@ -538,6 +539,22 @@ describe('mobile API transport contracts', () => {
 });
 
 describe('mobile API error language', () => {
+  test('asks the server for the chosen language on every request, Dutch by default', async () => {
+    const { client, fetchMock } = loadClient();
+    const runtime = jest.requireActual('../i18n/runtime') as typeof import('../i18n/runtime');
+    try {
+      await client.getOnboarding('athlete-token');
+      runtime.setRuntimeLanguage('en');
+      await client.getOnboarding('athlete-token');
+    } finally {
+      runtime.setRuntimeLanguage('nl');
+    }
+    const sentLanguages = fetchMock.mock.calls.map(
+      ([, init]) => (init?.headers as Record<string, string>)['Accept-Language'],
+    );
+    expect(sentLanguages).toEqual(['nl', 'en']);
+  });
+
   test('safe error messages follow the active language when thrown; code, status and retryability are unchanged', async () => {
     const { client, fetchMock } = loadClient();
     // The freshly loaded client reads the runtime module from the same registry.

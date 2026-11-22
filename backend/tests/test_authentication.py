@@ -129,7 +129,9 @@ def test_missing_token_is_rejected(
     auth_context: AuthenticationTestContext,
 ) -> None:
     """The current-user endpoint requires a bearer token."""
-    response = auth_context.client.get("/api/v1/me")
+    # English keeps the source message; the Dutch default is covered in
+    # test_athlete_language.py.
+    response = auth_context.client.get("/api/v1/me", headers={"Accept-Language": "en"})
 
     assert response.status_code == 401
     assert response.headers["www-authenticate"] == "Bearer"

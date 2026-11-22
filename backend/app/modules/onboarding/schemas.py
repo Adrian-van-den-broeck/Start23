@@ -11,10 +11,12 @@ from pydantic import (
     ConfigDict,
     Field,
     StringConstraints,
+    field_serializer,
     field_validator,
     model_validator,
 )
 
+from app.core.i18n import LocalizedText, current_language
 from app.modules.calibration.schemas import (
     CalculatedZoneBoundaryResponse,
     CalculatedZoneMetricProfileResponse,
@@ -277,6 +279,13 @@ GoalFamily = Literal[
     "muscle_gain",
 ]
 
+GOAL_FAMILY_LABELS: Mapping[GoalFamily, LocalizedText] = {
+    "race_event": {"nl": "Wedstrijd of evenement", "en": "Race or event"},
+    "general_fitness": {"nl": "Algemene fitheid", "en": "General fitness"},
+    "weight_loss": {"nl": "Gewichtsverlies", "en": "Weight loss"},
+    "muscle_gain": {"nl": "Spieropbouw", "en": "Muscle gain"},
+}
+
 
 class GoalPlanningOptionResponse(PublicModel):
     """One explicit Phase 12 planning mode and its fail-closed availability."""
@@ -288,6 +297,10 @@ class GoalPlanningOptionResponse(PublicModel):
     requires_target_date: bool
     cycle_anchor: Literal["race_date", "cycle_week_1"]
     unavailable_reason: Literal["deterministic_rules_not_approved"] | None
+
+    @field_serializer("label")
+    def word_label(self, label: str) -> TrimmedText:
+        return GOAL_FAMILY_LABELS[self.goal_family][current_language()]
 
 
 class ZoneBoundaryInput(PublicModel):

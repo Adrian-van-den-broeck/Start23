@@ -2,12 +2,13 @@
 
 import json
 from datetime import date
-from typing import Any, Literal, Protocol
+from typing import Annotated, Any, Literal, Protocol
 
 import httpx
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator
 
 from app.core.config import Settings
+from app.core.i18n import LocalizedText, current_language
 from app.modules.physiology.models import Discipline
 
 
@@ -33,6 +34,12 @@ class CheckInContextFacts(ContextCoachModel):
         if not normalized:
             raise ValueError("athlete_text must not be blank")
         return normalized
+
+
+FALLBACK_QUESTION: LocalizedText = {
+    "nl": "Welke dagen ben je niet beschikbaar en hoe vermoeid voel je je?",
+    "en": "Which days are you unavailable and how tired do you feel?",
+}
 
 
 class CheckInContextCandidate(ContextCoachModel):
@@ -64,6 +71,19 @@ class CheckInContextCandidate(ContextCoachModel):
             raise ValueError("Candidate text must contain 1 through 200 characters.")
         return normalized
 
+    @field_serializer("clarifying_questions")
+    def word_fallback_question(
+        self,
+        clarifying_questions: tuple[str, ...],
+    ) -> Annotated[tuple[str, ...], Field(max_length=3)]:
+        language = current_language()
+        return tuple(
+            FALLBACK_QUESTION[language]
+            if question == FALLBACK_QUESTION["nl"]
+            else question
+            for question in clarifying_questions
+        )
+
 
 class CheckInContextCoach(Protocol):
     async def extract(self, facts: CheckInContextFacts) -> CheckInContextCandidate:
@@ -82,9 +102,7 @@ def deterministic_context_fallback() -> CheckInContextCandidate:
         missed_workout_reasons=(),
         possible_injury_disciplines=(),
         agenda_context=(),
-        clarifying_questions=(
-            "Welke dagen ben je niet beschikbaar en hoe vermoeid voel je je?",
-        ),
+        clarifying_questions=(FALLBACK_QUESTION["nl"],),
     )
 
 

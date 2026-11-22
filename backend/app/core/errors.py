@@ -12,6 +12,9 @@ from pydantic import BaseModel, ConfigDict
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 
+from app.core.error_messages import DUTCH_ERROR_MESSAGES
+from app.core.i18n import Language, resolve_language
+
 RequestHandler = Callable[[Request], Awaitable[Response]]
 logger = logging.getLogger(__name__)
 
@@ -54,6 +57,22 @@ def _request_id(request: Request) -> str:
     return str(getattr(request.state, "request_id", uuid4()))
 
 
+def _localized_error_message(
+    *,
+    code: str,
+    status_code: int,
+    message: str,
+    language: Language,
+) -> str:
+    """Keep the English source message or return Dutch wording for the code."""
+    if language == "en":
+        return message
+    return DUTCH_ERROR_MESSAGES.get(code) or DUTCH_ERROR_MESSAGES.get(
+        _http_error_code(status_code),
+        DUTCH_ERROR_MESSAGES["request_failed"],
+    )
+
+
 def _error_response(
     request: Request,
     *,
@@ -67,7 +86,12 @@ def _error_response(
     payload = ErrorResponse(
         error=ErrorBody(
             code=code,
-            message=message,
+            message=_localized_error_message(
+                code=code,
+                status_code=status_code,
+                message=message,
+                language=resolve_language(request.headers.get("accept-language")),
+            ),
             details=details,
             request_id=request_id,
         )

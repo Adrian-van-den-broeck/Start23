@@ -35,7 +35,7 @@ import type {
   ZoneSetupOption,
   ZoneProfileState,
 } from './types';
-import { translate } from '../i18n/runtime';
+import { runtimeLanguage, translate } from '../i18n/runtime';
 
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, '');
 
@@ -147,6 +147,8 @@ async function request<T>(
       ...options,
       headers: {
         Accept: 'application/json',
+        // Server-written athlete text follows the chosen language; Dutch by default.
+        'Accept-Language': runtimeLanguage(),
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         ...options.headers,

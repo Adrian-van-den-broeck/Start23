@@ -6,8 +6,10 @@ from typing import Literal
 from uuid import UUID
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_serializer, model_validator
 
+from app.core.i18n import current_language
+from app.modules.activities.messages import activity_feedback_message
 from app.modules.physiology.models import Discipline
 
 
@@ -179,6 +181,14 @@ class ActivityResponse(PublicActivityModel):
     metrics: ActivityMetricResponse | None
     created_at: datetime
     updated_at: datetime
+
+    @field_serializer("public_message")
+    def word_public_message(self, public_message: str) -> str:
+        return activity_feedback_message(
+            public_message,
+            self.qualitative_result,
+            current_language(),
+        )
 
 
 class ActivityRpeSubmission(PublicActivityModel):

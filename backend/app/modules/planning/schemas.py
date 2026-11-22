@@ -6,9 +6,17 @@ from decimal import ROUND_HALF_UP, Decimal
 from typing import Any, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    field_serializer,
+    model_validator,
+)
 
+from app.core.i18n import current_language
 from app.modules.physiology.models import Discipline, IntensityBucket
+from app.modules.planning.messages import proposal_explanation, warning_message
 from app.modules.workouts.catalog import TrainingPhase
 from app.modules.workouts.schemas import (
     RpeZoneResponse,
@@ -146,6 +154,10 @@ class PlanWarningResponse(PublicPlanningModel):
     message: str
     planned_workout_id: UUID | None = None
 
+    @field_serializer("message")
+    def word_message(self, message: str) -> str:
+        return warning_message(self.code, current_language())
+
 
 class PlannedWorkoutResponse(PublicPlanningModel):
     """Immutable public workout snapshot within a plan revision."""
@@ -198,6 +210,10 @@ class ChangeProposalSummaryResponse(PublicPlanningModel):
     target_zone_profile_id: UUID | None = None
     base_zone_profile_id: UUID | None = None
     target_test_assignment_id: UUID | None = None
+
+    @field_serializer("public_explanation")
+    def word_explanation(self, public_explanation: str) -> str:
+        return proposal_explanation(public_explanation, current_language())
 
 
 class WeeklyPlanResponse(PublicPlanningModel):
