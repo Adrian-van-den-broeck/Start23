@@ -10,6 +10,8 @@ import { Button } from '../ui-v2/primitives/Button';
 import { Icon } from '../ui-v2/primitives/Icon';
 import { Text } from '../ui-v2/primitives/Text';
 import type { SelectionWorkout } from '../ui-v2/utils/planningCreationViewModel';
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
+import { cardPhoto } from './cardPhotos';
 import { identity, palette } from './tokens';
 
 type Decision = Extract<WorkoutDecision, 'accept' | 'pass'>;
@@ -180,19 +182,38 @@ export function CandidateDeck({ card, action, locked, stacked, decide }: Props) 
   </View>;
 }
 
+// Darkens the top for the sport label and melts the photo into the card body, so
+// the text below always sits on ink, whatever the photo shows.
+function Fade() {
+  return <Svg pointerEvents="none" accessible={false} style={StyleSheet.absoluteFill} preserveAspectRatio="none" viewBox="0 0 1 1">
+    <Defs>
+      <LinearGradient id="candidate-fade" x1="0" y1="0" x2="0" y2="1">
+        <Stop offset="0" stopColor={identity.ink} stopOpacity={0.45} />
+        <Stop offset="0.28" stopColor={identity.ink} stopOpacity={0} />
+        <Stop offset="0.55" stopColor={identity.ink} stopOpacity={0} />
+        <Stop offset="1" stopColor={identity.ink} stopOpacity={1} />
+      </LinearGradient>
+    </Defs>
+    <Rect x="0" y="0" width="1" height="1" fill="url(#candidate-fade)" />
+  </Svg>;
+}
+
 function CandidateFace({ workout, x }: { workout: SelectionWorkout; x: SharedValue<number> }) {
   const { t } = useLanguage();
   // The choose stamp takes the sport label's corner, so the label steps aside for it.
   const labelStyle = useAnimatedStyle(() => ({ opacity: 1 - ramp(x.value, 6, 30) }));
   const { discipline, durationMinutes, distanceMeters } = workout;
-  const run = discipline === 'run';
   return <View testID={`selection-occurrence-${workout.occurrenceId}`} style={styles.face}>
-    <View style={[styles.cover, { backgroundColor: palette.sport[discipline].text }, run && styles.trackCover]}>
-      {run ? <Image accessible={false} source={require('../../assets/wombo-track.jpg')} resizeMode="cover" style={styles.photo} /> : null}
-      <Animated.View style={[styles.sport, labelStyle]}>
-        <Icon name={discipline} size={20} color={palette.textInverse} />
-        <Text variant="label" tone="textInverse">{t(`common.${discipline}`)}</Text>
-      </Animated.View>
+    <View style={[styles.cover, { backgroundColor: palette.sport[discipline].text }]}>
+      <Image accessible={false} testID="candidate-photo" source={cardPhoto(discipline, workout.templateKey)}
+        resizeMode="cover" style={styles.photo} />
+      <Fade />
+      <View style={styles.coverContent}>
+        <Animated.View style={[styles.sport, labelStyle]}>
+          <Icon name={discipline} size={20} color={palette.textInverse} />
+          <Text variant="label" tone="textInverse">{t(`common.${discipline}`)}</Text>
+        </Animated.View>
+      </View>
     </View>
     <View style={styles.body}>
       <Text variant="display" tone="textInverse" accessibilityRole="header">{workout.name}</Text>
@@ -219,13 +240,15 @@ const styles = StyleSheet.create({
     backgroundColor: palette.primary, alignItems: 'center', justifyContent: 'center', padding: 24, transformOrigin: 'bottom' },
   card: { borderRadius: radius, backgroundColor: identity.ink, transformOrigin: 'bottom',
     shadowColor: identity.ink, shadowOpacity: 0.22, shadowOffset: { width: 0, height: 10 }, shadowRadius: 22, elevation: 8 },
-  face: { borderRadius: radius, overflow: 'hidden', minHeight: 280 },
-  cover: { minHeight: 84, justifyContent: 'flex-start', alignItems: 'flex-start', padding: 16 },
-  trackCover: { minHeight: 136 },
+  face: { borderRadius: radius, overflow: 'hidden', minHeight: 360 },
+  // No padding here: the photo fills this box exactly, the label carries its own inset.
+  cover: { aspectRatio: 1.4 },
+  coverContent: { alignItems: 'flex-start', padding: 16 },
   photo: { ...StyleSheet.absoluteFill, width: '100%', height: '100%' },
   sport: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 4,
     borderRadius: 8, backgroundColor: identity.ink },
-  body: { flex: 1, padding: 20, paddingTop: 18, gap: 10 },
+  // The title rises into the faded bottom of the photo.
+  body: { flex: 1, padding: 20, paddingTop: 0, marginTop: -44, gap: 10 },
   facts: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'baseline', columnGap: 14, rowGap: 4 },
   intensity: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   soft: { color: palette.primarySoft },
