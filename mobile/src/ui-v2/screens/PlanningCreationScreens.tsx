@@ -1,10 +1,10 @@
 import { studioPresentation } from '../../ui-v3/presentation';
-import { SwipeSurface } from '../../ui-v3/SwipeSurface';
 import { PlacementRail } from '../../ui-v3/PlacementRail';
 import { ChosenRow } from '../../ui-v3/ChosenRow';
 import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Animated, KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
 import type { Discipline } from '../../api/types';
+import { useWorkoutSwipe, type WorkoutDecision } from '../../components/useWorkoutSwipe';
 import { addDays } from '../../features/planning/planningDates';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { formatIsoDateInput, isValidIsoDateInput } from '../../lib/dateInput';
@@ -121,36 +121,57 @@ function SelectionSummary({ workout, focus = false }: { workout: SelectionWorkou
   </View>;
 }
 
-export function SelectionScreen({ model, onTransition, onContinue, ...task }: TaskProps & {
-  model: PlanningCreationModel; onTransition: (action: 'accept' | 'pass' | 'undo' | 'reset_passed') => void;
+export function SelectionScreen({ model, onTransition, onContinue, setTransientBusy, ...task }: TaskProps & {
+  model: PlanningCreationModel; onTransition: (action: WorkoutDecision) => void | Promise<void>;
   onContinue: () => void;
+  setTransientBusy?: (busy: boolean) => void;
 }) {
   const { t } = useLanguage();
   const { width, fontScale } = useWindowDimensions();
-  const candidate = model.state === 'collecting' ? model.candidate : null;
+  const swipe = useWorkoutSwipe(model.state === 'collecting' ? model.candidate : null, task.busy, onTransition, setTransientBusy);
+  const candidate = swipe.card;
+  const locked = task.busy || !!swipe.action;
   // Both history actions stack when labels cannot fit without shrinking.
-  const stacked = width < 393 || fontScale >= 1.5 || task.busy;
+  const stacked = width < 393 || fontScale >= 1.5;
   return <Screen title={t('creation.selection')} landscape="ridges" titleVariant="display"
-    onBack={task.onBack} backLabel={t('week.return')} backDisabled={task.busy}>
-    <CreationStatus busy={task.busy} error={task.error} />
+    onBack={task.onBack} backLabel={t('week.return')} backDisabled={locked}>
+    <CreationStatus busy={task.busy && !swipe.action} error={swipe.action ? null : task.error} />
     {model.warnings.map((warning, index) => <View key={index} style={styles.warning}>
       <Icon name="warning" color={colors.warning} />
       <View style={[styles.grow, styles.stack]}>
         <Text variant="label" tone="warning">{warning.title}</Text><Text tone="warning">{warning.message}</Text>
       </View>
     </View>)}
-    {candidate ? <SwipeSurface key={candidate.occurrenceId} disabled={task.busy} onSwipe={direction => onTransition(direction > 0 ? 'accept' : 'pass')}>
-      <Card padding="focus" elevated style={styles.form} testID="selection-candidate">
-        <SelectionSummary key={candidate.occurrenceId} workout={candidate} focus />
-        <View style={styles.stack}>
-          <Button label={t('creation.choose')} accessibilityLabel={`${t('creation.choose')} \u00b7 ${candidate.name}`}
-            trailingIcon="forward" busy={task.busy} onPress={() => onTransition('accept')} />
-          <Button label={t('creation.pass')} accessibilityLabel={`${t('creation.pass')} \u00b7 ${candidate.name}`}
-            variant="secondary" busy={task.busy} onPress={() => onTransition('pass')} />
-        </View>
-        {studioPresentation && <Text variant="caption" tone="textMuted">{t('creation.swipeChoice')}</Text>}
-      </Card>
-    </SwipeSurface> : model.state === 'collecting' ? <Card padding="focus" elevated style={styles.summary} testID="selection-empty">
+    {candidate ? <Card padding="focus" elevated style={styles.form} testID="selection-candidate">
+      <View style={styles.swipeWindow}>
+        <Animated.View pointerEvents="none" accessibilityElementsHidden={!swipe.action}
+          importantForAccessibility={swipe.action ? 'auto' : 'no-hide-descendants'}
+          style={[StyleSheet.absoluteFill, styles.swipeLoading, { opacity: swipe.loadingOpacity }]}>
+          <Text tone="textMuted" accessibilityLiveRegion="polite">{t('creation.nextCard')}</Text>
+        </Animated.View>
+        <Animated.View {...swipe.panHandlers} testID="workout-swipe-surface"
+          accessibilityElementsHidden={!!swipe.action}
+          importantForAccessibility={swipe.action ? 'no-hide-descendants' : 'auto'}
+          style={[styles.swipeCard, { transform: swipe.transform, opacity: swipe.opacity }]}>
+          <SelectionSummary key={candidate.occurrenceId} workout={candidate} focus />
+          <Text variant="supporting" tone="textMuted">{t('creation.swipeChoice')}</Text>
+          <Animated.View pointerEvents="none" accessible={false} importantForAccessibility="no-hide-descendants"
+            style={[styles.swipeBadge, styles.chooseBadge, { opacity: swipe.acceptOpacity }]}>
+            <Text variant="label" tone="primary">{t('creation.choose')}</Text>
+          </Animated.View>
+          <Animated.View pointerEvents="none" accessible={false} importantForAccessibility="no-hide-descendants"
+            style={[styles.swipeBadge, styles.passBadge, { opacity: swipe.passOpacity }]}>
+            <Text variant="label" tone="textMuted">{t('creation.pass')}</Text>
+          </Animated.View>
+        </Animated.View>
+      </View>
+      <View style={styles.stack}>
+        <Button label={t('creation.choose')} accessibilityLabel={`${t('creation.choose')} \u00b7 ${candidate.name}`}
+          trailingIcon="forward" disabled={locked} onPress={() => { void swipe.decide('accept'); }} />
+        <Button label={t('creation.pass')} accessibilityLabel={`${t('creation.pass')} \u00b7 ${candidate.name}`}
+          variant="secondary" disabled={locked} onPress={() => { void swipe.decide('pass'); }} />
+      </View>
+    </Card> : model.state === 'collecting' ? <Card padding="focus" elevated style={styles.summary} testID="selection-empty">
       {!model.exhausted && task.busy ? <View accessible={false} importantForAccessibility="no-hide-descendants" style={styles.stack}>
         <View style={styles.skeletonCircle} /><View style={styles.skeletonLine} /><View style={styles.skeletonLine} />
       </View> : null}
@@ -163,11 +184,11 @@ export function SelectionScreen({ model, onTransition, onContinue, ...task }: Ta
       </View>
       <View style={[styles.actions, stacked && styles.stackedActions]}>
         <View style={styles.action}>
-          <Button label={t('creation.undo')} trailingIcon="undo" variant="outline" busy={task.busy} disabled={!model.canUndo}
+          <Button label={t('creation.undo')} trailingIcon="undo" variant="outline" disabled={locked || !model.canUndo}
             onPress={() => onTransition('undo')} />
         </View>
         <View style={styles.action}>
-          <Button label={t('creation.reset')} trailingIcon="list" variant="outline" busy={task.busy} disabled={model.passedCount === 0}
+          <Button label={t('creation.reset')} trailingIcon="list" variant="outline" disabled={locked || model.passedCount === 0}
             onPress={() => onTransition('reset_passed')} />
         </View>
       </View>
@@ -180,7 +201,7 @@ export function SelectionScreen({ model, onTransition, onContinue, ...task }: Ta
         <SelectionSummary workout={workout} />
       </Card>)}
     </View>
-    <Button label={t('creation.continue')} trailingIcon="forward" busy={task.busy} disabled={model.state !== 'placement'} onPress={onContinue} />
+    <Button label={t('creation.continue')} trailingIcon="forward" disabled={locked || model.state !== 'placement'} onPress={onContinue} />
     {task.controls}
   </Screen>;
 }
@@ -259,6 +280,12 @@ const styles = StyleSheet.create({
   count: { flexShrink: 1 }, rule: { height: layout.decorativeLine, flex: 1, backgroundColor: colors.border },
   actions: { flexDirection: 'row', alignItems: 'stretch', gap: space[12] },
   stackedActions: { flexDirection: 'column' }, action: { flex: 1 },
+  swipeWindow: { overflow: 'hidden' },
+  swipeCard: { gap: space[16], backgroundColor: colors.surface },
+  swipeLoading: { alignItems: 'center', justifyContent: 'center' },
+  swipeBadge: { position: 'absolute', top: space[8], padding: space[8], borderRadius: radius.pill, backgroundColor: colors.surfaceSubtle },
+  chooseBadge: { left: space[8], backgroundColor: colors.primarySoft },
+  passBadge: { right: space[8] },
   skeletonCircle: { width: layout.iconDisc.focus, height: layout.iconDisc.focus, borderRadius: radius.pill, backgroundColor: colors.primarySoft },
   skeletonLine: { height: space[24], borderRadius: radius.inset, backgroundColor: colors.surfaceSubtle },
 });

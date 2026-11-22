@@ -1348,6 +1348,53 @@ def test_eight_hour_run_october_mobile_swipe_and_placement(
         assert "planned_load" not in str(submitted.json()).casefold()
 
 
+def test_swipe_reuses_calculations_but_still_rechecks_history(
+    planning_client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    history_changed = False
+    reads = 0
+
+    async def history(
+        _repository: MemoryPlanningRepository, _athlete_id: UUID, _before_week: date
+    ) -> tuple[JsonObject, ...]:
+        nonlocal reads
+        reads += 1
+        if history_changed:
+            return (
+                {
+                    "week_start": "2026-07-27",
+                    "phase": "base",
+                    "planned_tss": 60,
+                    "sick_week": True,
+                },
+            )
+        return ()
+
+    app = cast(FastAPI, planning_client.app)
+    planner = cast(PlanningService, app.state.planning_service)
+    monkeypatch.setattr(MemoryPlanningRepository, "fetch_load_history", history)
+    draft = _create_swipe_draft(planning_client)
+    candidate = draft["current_candidate"]
+    path = f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions"
+    payload = {
+        "expected_revision": draft["revision"],
+        "action": "pass",
+        "candidate_template_id": candidate["id"],
+        "candidate_occurrence_id": candidate["occurrence_id"],
+    }
+    passed = planning_client.post(path, headers=_headers(), json=payload)
+    assert passed.status_code == 200, passed.text
+    assert planner._next_swipe_candidate.cache_info().hits == 1
+    assert reads == 2
+    assert len(planner._swipe_contexts) == 1
+
+    history_changed = True
+    response = planning_client.post(path, headers=_headers(), json=payload)
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "swipe_draft_context_stale"
+    assert reads == 3
+
+
 def test_swipe_draft_is_owner_scoped_idempotent_and_submits_only_pending(
     planning_client: TestClient,
 ) -> None:

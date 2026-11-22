@@ -11,6 +11,6 @@ export default function IndexRoute() {
   if (configurationError) {
     return <ScreenState message={configurationError} title="Configuratie ontbreekt" />;
   }
-  if (session) return <Redirect href="/onboarding" />;
+  if (session) return <Redirect href="/planning" />;
   return <AuthScreen />;
 }
