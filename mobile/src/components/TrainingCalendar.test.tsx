@@ -2,6 +2,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
 import { LanguageProvider } from '../i18n/LanguageProvider';
 import { TrainingCalendar } from './TrainingCalendar';
+// These assertions are written in English; Dutch is now the default, so choose English explicitly.
+jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(async () => 'en'), setItemAsync: jest.fn(async () => undefined), WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'unlocked' }));
 
 test('rapid Month and Week switching keeps a seven-day week and requests its latest range', async () => {
   const onRangeChange = jest.fn();

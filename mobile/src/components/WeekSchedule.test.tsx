@@ -8,6 +8,8 @@ import {
   resolveWeekDragDate,
   WeekSchedule,
 } from './WeekSchedule';
+// These assertions are written in English; Dutch is now the default, so choose English explicitly.
+jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(async () => 'en'), setItemAsync: jest.fn(async () => undefined), WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'unlocked' }));
 
 const workout: PlannedWorkout = {
   id: 'workout-1',

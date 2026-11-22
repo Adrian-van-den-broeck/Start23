@@ -18,6 +18,8 @@ import type { CompletedActivity, OnboardingState } from '../api/types';
 import { LanguageProvider } from '../i18n/LanguageProvider';
 import { ActivityScreen } from './ActivityScreen';
 import { ActivityFlowProvider } from '../features/activities/ActivityFlowProvider';
+// These assertions are written in English; Dutch is now the default, so choose English explicitly.
+jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(async () => 'en'), setItemAsync: jest.fn(async () => undefined), WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'unlocked' }));
 
 jest.mock('../api/client', () => ({
   confirmActivityMatch: jest.fn(),

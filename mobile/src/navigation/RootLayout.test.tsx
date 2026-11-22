@@ -79,7 +79,8 @@ describe('RootLayout provider order', () => {
   test('keeps bottom-sheet profile content inside the language provider', async () => {
     const view = await render(<RootLayout />);
 
-    expect(view.getByText('bottom-sheet-language:system')).toBeTruthy();
+    // Dutch is the default until the athlete picks another language (was: follow the phone).
+    expect(view.getByText('bottom-sheet-language:nl')).toBeTruthy();
     expect(view.getByText('router-stack')).toBeTruthy();
     expect(view.getByText('stack-ui:' + initialUiVersion(process.env.EXPO_PUBLIC_UI_VERSION))).toBeTruthy();
   });
