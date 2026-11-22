@@ -14,13 +14,11 @@ from app.api.dependencies import (
 )
 from app.core.errors import ErrorResponse
 from app.core.security import AuthenticatedAthlete, AuthenticatedIdentity
-from app.modules.coach.weekly_plan import WeeklyPlanCoach
 from app.modules.physiology.specification import JOREN_PLANNING_RULESET_V2
 from app.modules.workouts.repository import PlanningCatalogUnavailableError
 
 from .domain import PlanningConstraintError
 from .repository import (
-    PlanningRepository,
     PlanningRepositoryConflictError,
     PlanningRepositoryError,
     PlanningRepositoryNotFoundError,
@@ -46,7 +44,6 @@ from .schemas import (
     WorkoutDeckResponse,
 )
 from .service import (
-    PlanningCatalogProvider,
     PlanningDomainError,
     PlanningService,
 )
@@ -61,37 +58,10 @@ error_responses: dict[int | str, dict[str, Any]] = {
 }
 
 
-def get_planning_repository(request: Request) -> PlanningRepository:
-    """Return the process-wide Phase 6 persistence adapter."""
-    repository: PlanningRepository = request.app.state.planning_repository
-    return repository
-
-
-def get_planning_catalog_provider(request: Request) -> PlanningCatalogProvider:
-    """Return the validated private catalog provider."""
-    provider: PlanningCatalogProvider = request.app.state.planning_catalog_provider
-    return provider
-
-
-def get_weekly_plan_coach(request: Request) -> WeeklyPlanCoach:
-    """Return the process-wide constrained qualitative coach."""
-    coach: WeeklyPlanCoach = request.app.state.weekly_plan_coach
-    return coach
-
-
-def get_planning_service(
-    repository: Annotated[PlanningRepository, Depends(get_planning_repository)],
-    catalog_provider: Annotated[
-        PlanningCatalogProvider,
-        Depends(get_planning_catalog_provider),
-    ],
-    weekly_plan_coach: Annotated[
-        WeeklyPlanCoach,
-        Depends(get_weekly_plan_coach),
-    ],
-) -> PlanningService:
-    """Build one request-scoped planning application service."""
-    return PlanningService(repository, catalog_provider, weekly_plan_coach)
+async def get_planning_service(request: Request) -> PlanningService:
+    """Return the application-scoped planner and its bounded calculation cache."""
+    service: PlanningService = request.app.state.planning_service
+    return service
 
 
 def raise_planning_error(error: Exception) -> NoReturn:

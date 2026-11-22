@@ -1,0 +1,23 @@
+{
+  "audit_branch": "audit/wombo-full-system-review",
+  "baseline": "aff74558d0a6511286a4a84a44ea25a03ca57549",
+  "remote_head_verified_at_start": "aff74558d0a6511286a4a84a44ea25a03ca57549",
+  "audit_status": [
+    "?? docs/audits/"
+  ],
+  "integration_status": [],
+  "original_status": [
+    " M .vscode/tasks.json",
+    " M backend/app/modules/coach/weekly_plan.py",
+    " M docs/deployment-tasks.md",
+    "?? %SystemDrive%/",
+    "?? .worktrees/",
+    "?? docs/implementation/garmin-integration-design.md",
+    "?? docs/privacy/",
+    "?? \"docs/requirements/AI Trainingsalgoritme Overzicht.pdf\"",
+    "?? docs/ui/",
+    "?? scripts/android-short-paths.gradle",
+    "?? scripts/run-start23-android.ps1",
+    "?? scripts/tests/"
+  ]
+}

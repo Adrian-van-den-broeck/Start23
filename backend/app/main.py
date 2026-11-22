@@ -51,6 +51,7 @@ from app.modules.planning.repository import (
 )
 from app.modules.planning.service import (
     PlanningCatalogProvider,
+    PlanningService,
     SupabasePlanningCatalogProvider,
 )
 from app.modules.workouts.repository import SupabaseWorkoutCatalogRepository
@@ -182,6 +183,9 @@ def create_app(
     )
     application.state.onboarding_repository = repository
     application.state.planning_repository = weekly_planning_repository
+    application.state.planning_service = PlanningService(
+        weekly_planning_repository, catalog_provider, coach
+    )
     application.state.planning_catalog_provider = catalog_provider
     application.state.activity_repository = completed_activity_repository
     application.state.checkin_repository = weekly_checkin_repository
