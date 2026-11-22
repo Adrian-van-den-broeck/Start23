@@ -1,0 +1,72 @@
+node :   console.error
+At line:2 char:17
++ ... :CI='true'; node node_modules/jest/bin/jest.js src/screens/PlanningPr ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (  console.error:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before makin
+g a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+  console.error
+    You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before makin
+g a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+  console.error
+    You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before makin
+g a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+  console.error
+    You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before makin
+g a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+  console.error
+    You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before makin
+g a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+  console.error
+    You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before makin
+g a new one.
+
+      at popActScope (../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:556:17)
+      at ../../wombo-ui-v2-activities/mobile/node_modules/react/cjs/react.development.js:844:17
+
+PASS src/screens/PlanningProposalBoundary.test.tsx (21.86 s)
+  √ review and Back preserve pending snapshot, all occurrences/warnings and active schedule without fetching editors or
+ deciding (4075 ms)
+  √ alternatives load only on open with exact revision; rerender/rapid opening does not duplicate; Back retains proposa
+l (420 ms)
+  √ replacement awaits acknowledgment, retains exact returned options transaction and returns to updated pending review
+ (342 ms)
+  √ server-enabled removal requires a separate confirmation and uses null replacement only in pending context (470 ms)
+  √ remove capability false never exposes a functional removal control (271 ms)
+  √ remove capability undefined never exposes a functional removal control (163 ms)
+  √ empty alternatives and safe error remain reviewable; explicit retry does not approve or recreate (278 ms)
+  √ approve is explicit once with exact ID and preserved follow-up read; returns to authoritative Week (391 ms)
+  √ reject is explicit once with exact ID and preserved follow-up read; returns to authoritative Week (276 ms)
+  √ stale decision keeps the same reviewed warning/snapshot and never silently reads, retries or transfers intent (236 
+ms)
+  √ distinct active and pending schedules stay separate before and after explicit approve (484 ms)
+  √ distinct active and pending schedules stay separate before and after explicit reject (342 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       12 passed, 12 total
+Snapshots:   0 total
+Time:        22.85 s
+Ran all test suites matching /src\\screens\\PlanningProposalBoundary.test.tsx/i.
+Test results written to: ..\docs\audits\evidence\proposal-frozen-results.json

@@ -1,0 +1,5 @@
+{
+  "command": "railway status --environment production --json",
+  "exit_code": 1,
+  "error": "Your saved login is no longer valid (grant request is invalid). Please run `railway login` again.\nUnauthorized. Please login with `railway login`\n"
+}

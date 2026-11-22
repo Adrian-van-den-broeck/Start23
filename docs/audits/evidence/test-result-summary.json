@@ -1,0 +1,30 @@
+{
+  "mobile-jest-canonical-results.json": {
+    "numPassedTestSuites": 67,
+    "numFailedTestSuites": 1,
+    "numPassedTests": 611,
+    "numFailedTests": 2,
+    "success": false
+  },
+  "proposal-repeat-results.json": {
+    "numPassedTestSuites": 0,
+    "numFailedTestSuites": 1,
+    "numPassedTests": 10,
+    "numFailedTests": 2,
+    "success": false
+  },
+  "proposal-frozen-results.json": {
+    "numPassedTestSuites": 1,
+    "numFailedTestSuites": 0,
+    "numPassedTests": 12,
+    "numFailedTests": 0,
+    "success": true
+  },
+  "audit-mobile-results.json": {
+    "numPassedTestSuites": 3,
+    "numFailedTestSuites": 0,
+    "numPassedTests": 11,
+    "numFailedTests": 0,
+    "success": true
+  }
+}
