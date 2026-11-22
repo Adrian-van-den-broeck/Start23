@@ -1,0 +1,19 @@
+{
+  "python": "3.10.10 (tags/v3.10.10:aad5f6a, Feb  7 2023, 17:20:36) [MSC v.1929 64 bit (AMD64)]",
+  "versions": {
+    "fastapi": "0.139.2",
+    "pydantic": "2.13.4",
+    "httpx": "0.28.1",
+    "PyJWT": "2.13.0",
+    "pytest": "8.4.2",
+    "ruff": "0.16.0",
+    "mypy": "1.20.2"
+  },
+  "counts": {
+    "backend_sources": 89,
+    "backend_test_files": 51,
+    "mobile_sources": 204,
+    "migrations": 47,
+    "database_test_suites": 27
+  }
+}

@@ -301,7 +301,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
       const candidateOccurrenceId = swipeDraft.current_candidate?.occurrence_id;
       if ((action === 'accept' || action === 'pass') &&
         (!candidateId || !candidateOccurrenceId)) return;
-      void run(async () => {
+      return run(async () => {
         const updated = await transitionSwipeWeekDraft(
           accessToken,
           swipeDraft.id,

@@ -227,7 +227,7 @@ test.each(['accept', 'pass', 'undo', 'reset_passed'] as const)('%s uses exact cu
   const view = await loadedDraft();
   const request = deferred<typeof draft>();
   jest.mocked(api.transitionSwipeWeekDraft).mockReturnValue(request.promise);
-  await act(() => flow.transitionDraft(action));
+  await act(() => { void flow.transitionDraft(action); });
   expect(flow.busy).toBe(true);
   await view.rerender(<Host />);
   expect(api.transitionSwipeWeekDraft).toHaveBeenCalledTimes(1);

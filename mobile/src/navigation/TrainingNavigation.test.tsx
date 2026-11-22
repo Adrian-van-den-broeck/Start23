@@ -2,7 +2,7 @@ import { act, fireEvent, render, waitFor, within } from '@testing-library/react-
 import { ExpoRoot } from 'expo-router/build/ExpoRoot';
 import { getMockContext } from 'expo-router/build/testing-library/mock-config';
 import { Stack, router, usePathname } from 'expo-router';
-import { Animated, Text, View } from 'react-native';
+import { AccessibilityInfo, Animated, Text, View } from 'react-native';
 import type { PropsWithChildren } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import * as api from '../api/client';
@@ -22,8 +22,7 @@ import TrainingLayout from '../../app/(authenticated)/(training)/_layout';
 import ProfileRoute from '../../app/(authenticated)/profile';
 import TestsRoute from '../../app/(authenticated)/tests';
 import CalibrationRoute from '../../app/(authenticated)/calibration';
-// These tests run in English. RPE descriptions and activity validation used to stay Dutch in English;
-// they are now translated, so the assertions expect the English text.
+import IndexRoute from '../../app/index';
 
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: jest.fn(), deleteItemAsync: jest.fn() }));
 jest.mock('../api/client', () => ({
@@ -128,6 +127,19 @@ beforeEach(() => {
   jest.mocked(api.getCalendar).mockImplementation(async (_token, from, to) => ({ from_date: from, to_date: to, workouts: [workout], rest_days: [] }));
 });
 afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.useRealTimers(); jest.restoreAllMocks(); });
+
+test('signed-in startup opens Week through the readiness gate and skips intake', async () => {
+  const view = await renderRouter({ ...routes, index: IndexRoute }, { initialUrl: '/' });
+  await view.findByText('Approved');
+  expect(view.queryByText('Existing onboarding resume')).toBeNull();
+  expect(api.getOnboarding).toHaveBeenCalledTimes(1);
+});
+
+test('signed-in startup still redirects an incomplete athlete to intake', async () => {
+  jest.mocked(api.getOnboarding).mockResolvedValue({ ...onboarding, current_step: 'profile' });
+  const view = await renderRouter({ ...routes, index: IndexRoute }, { initialUrl: '/' });
+  await view.findByText('Existing onboarding resume');
+});
 
 test('Slice 5B real create pending reminder return and feedback retain one owner and exact identity across roots', async () => {
   let activities: typeof pendingActivity[] = [];
@@ -306,7 +318,7 @@ test.each(['/planning', '/calendar', '/activities'])('incomplete/version-resume 
 test('failed readiness stays closed and retries without starting an owner', async () => {
   jest.mocked(api.getOnboarding).mockRejectedValueOnce(new Error('safe test failure'));
   const view = await renderRouter(routes, { initialUrl: '/calendar' });
-  await view.findByText('Could not check your onboarding');
+  await view.findByText('Could not load your training space');
   expect(api.getWeeklyPlan).not.toHaveBeenCalled();
   await fireEvent.press(view.getByRole('button', { name: 'Try again' }));
   await view.findByText('Training calendar');
@@ -637,10 +649,12 @@ test('changed approved revision invalidates Calendar; hidden Calendar does not r
   expect(flow.plan).toBe(updated);
 });
 
-test('V1 swipe animation locks presentation switching before its deferred write', async () => {
+test('V1 starts the write during the swipe animation and locks presentation switching', async () => {
   process.env.EXPO_PUBLIC_UI_VERSION = 'v1';
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) => key === 'start23.language-preference' ? 'en' : key === 'start23.latest-swipe-draft-id' ? draft.id : null);
   jest.mocked(api.getSwipeWeekDraft).mockResolvedValue(draft);
+  jest.mocked(api.transitionSwipeWeekDraft).mockImplementation(() => new Promise(() => {}));
+  jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(false);
   const timing = Animated.timing;
   jest.spyOn(Animated, 'timing').mockImplementation((value, config) => {
     if (typeof config.toValue === 'object' && 'x' in config.toValue) return { start: jest.fn(), stop: jest.fn(), reset: jest.fn() };
@@ -651,7 +665,7 @@ test('V1 swipe animation locks presentation switching before its deferred write'
   await fireEvent.press(view.getByRole('button', { name: 'Choose' }));
   await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
   expect(navigation.rootVersion).toBe('v1'); expect(navigation.locked).toBe(true);
-  expect(api.transitionSwipeWeekDraft).not.toHaveBeenCalled();
+  expect(api.transitionSwipeWeekDraft).toHaveBeenCalledTimes(1);
 });
 
 

@@ -1,0 +1,28 @@
+{
+  "required_documents": [
+    "WOMBO_FULL_SYSTEM_AUDIT.md",
+    "WOMBO_SECURITY_PRIVACY_AUDIT.md",
+    "WOMBO_END_TO_END_TEST_MATRIX.md",
+    "WOMBO_TECHNICAL_DEBT_AND_RISKS.md",
+    "WOMBO_JOREN_REVIEW_QUESTIONS.md",
+    "WOMBO_PRIORITIZED_FIX_PLAN.md"
+  ],
+  "findings": 20,
+  "severity_counts": {
+    "P0": 0,
+    "P1": 7,
+    "P2": 12,
+    "P3": 1
+  },
+  "markdown_sizes_words": {
+    "WOMBO_FULL_SYSTEM_AUDIT.md": 7788,
+    "WOMBO_SECURITY_PRIVACY_AUDIT.md": 1818,
+    "WOMBO_END_TO_END_TEST_MATRIX.md": 3344,
+    "WOMBO_TECHNICAL_DEBT_AND_RISKS.md": 2119,
+    "WOMBO_JOREN_REVIEW_QUESTIONS.md": 1202,
+    "WOMBO_PRIORITIZED_FIX_PLAN.md": 2356
+  },
+  "integration_tracked_changes": [],
+  "audit_tracked_changes": [],
+  "errors": []
+}

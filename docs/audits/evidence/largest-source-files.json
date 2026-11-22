@@ -1,0 +1,62 @@
+[
+  {
+    "file": "backend/app/modules/planning/service.py",
+    "lines": 2751
+  },
+  {
+    "file": "mobile/src/screens/PlanningScreen.tsx",
+    "lines": 1982
+  },
+  {
+    "file": "backend/app/modules/planning/domain.py",
+    "lines": 1816
+  },
+  {
+    "file": "mobile/src/screens/CalibrationScreen.tsx",
+    "lines": 1308
+  },
+  {
+    "file": "mobile/src/api/client.ts",
+    "lines": 1117
+  },
+  {
+    "file": "backend/app/modules/calibration/service.py",
+    "lines": 1111
+  },
+  {
+    "file": "backend/app/modules/workouts/catalog.py",
+    "lines": 1052
+  },
+  {
+    "file": "backend/app/modules/calibration/domain.py",
+    "lines": 1020
+  },
+  {
+    "file": "mobile/src/api/types.ts",
+    "lines": 850
+  },
+  {
+    "file": "mobile/src/screens/OnboardingScreen.tsx",
+    "lines": 800
+  },
+  {
+    "file": "backend/app/modules/physiology/zones.py",
+    "lines": 797
+  },
+  {
+    "file": "backend/app/modules/onboarding/service.py",
+    "lines": 757
+  },
+  {
+    "file": "backend/app/modules/planning/repository.py",
+    "lines": 753
+  },
+  {
+    "file": "mobile/src/screens/ZoneSetupStep.tsx",
+    "lines": 721
+  },
+  {
+    "file": "backend/app/modules/onboarding/repository.py",
+    "lines": 693
+  }
+]
