@@ -146,7 +146,7 @@ test('signed-in startup opens the first onboarding form with one status read', a
   });
   jest.mocked(api.getPhysiologyProfile).mockResolvedValue(null);
   const view = await renderRouter({ ...routes, index: IndexRoute, '(authenticated)/onboarding': OnboardingRoute }, { initialUrl: '/' });
-  await view.findByLabelText(/Geboortedatum/);
+  await view.findByLabelText(/Date of birth/);
   expect(api.getOnboarding).toHaveBeenCalledTimes(1);
   expect(api.getGoalPlanningOptions).not.toHaveBeenCalled();
 });
