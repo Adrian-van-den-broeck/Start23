@@ -1,7 +1,7 @@
 import { resolvePresentation } from './presentation';
 
 test.each([
-  [undefined, 'v2'],
+  [undefined, 'v3'],
   ['v2', 'v2'],
   ['v3', 'v3'],
   ['v1', 'v1'],
