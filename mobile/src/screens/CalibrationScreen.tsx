@@ -38,7 +38,7 @@ import { colors, layout, radius, shadows, space } from '../ui-v2/tokens';
 import { Text } from '../ui-v2/primitives/Text';
 import { Button } from '../ui-v2/primitives/Button';
 import { DurationPicker } from '../components/DurationPicker';
-import { StartTimePicker } from '../components/StartTimePicker';
+import { DayTimePicker } from '../components/DayTimePicker';
 import { RpeSelect } from '../ui-v2/components/RpeSelect';
 import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
 import { ToggleChip } from '../ui-v2/primitives/ToggleChip';
@@ -874,7 +874,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                   <Text style={styles.eyebrow}>{t('calibration.observation.eyebrow')}</Text>
                   <Text style={styles.pageTitle}>{t('calibration.observation.title')}</Text>
                   <Text style={styles.muted}>{t('calibration.observation.hint')}</Text>
-                  <StartTimePicker
+                  <DayTimePicker
                     label={t('calibration.field.startTime')}
                     onChange={setPerformedAt}
                     timeZone={timezone}

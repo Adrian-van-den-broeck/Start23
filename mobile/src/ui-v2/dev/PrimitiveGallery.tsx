@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DurationPicker } from '../../components/DurationPicker';
-import { StartTimePicker } from '../../components/StartTimePicker';
+import { DayTimePicker } from '../../components/DayTimePicker';
 import type { CanonicalRpe } from '../../lib/rpe';
 import { RpeSelect } from '../components/RpeSelect';
 import { Button } from '../primitives/Button';
@@ -80,7 +80,7 @@ export function PrimitiveGallery({ language = 'en', section = 'form' }: {
         <Input label={c.heart} icon="heartRate" value="58" unit="bpm" hint={c.helper} inputMode="numeric" />
         <Input label={c.readOnly} value="Alex" readOnly />
         <Input label={c.birth} value="08-10-1990" disabled disabledReason={c.disabled} />
-        <StartTimePicker label={c.start} timeZone="" valueIso={start} onChange={setStart} />
+        <DayTimePicker label={c.start} timeZone="" valueIso={start} onChange={setStart} />
         <DurationPicker label={c.target} valueSeconds={target} onChange={setTarget} />
         <DurationPicker label={c.pace} units={['minutes', 'seconds']} maxMinutes={20} suffix="/km" valueSeconds={pace} onChange={setPace} />
         <View style={[styles.facts, { flexWrap: 'wrap', gap: space[8] }]}>

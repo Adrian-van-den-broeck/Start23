@@ -1,10 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  type ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
+import { DayTimePicker } from '../components/DayTimePicker';
+import { DurationPicker } from '../components/DurationPicker';
 import { FormScrollView } from '../components/FormScrollView';
+import { fromWallClock } from '../lib/zonedTime';
+import { SelectField } from '../ui-v2/primitives/SelectField';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
@@ -94,6 +99,28 @@ function nextMonday(): string {
   value.setHours(12, 0, 0, 0);
   value.setDate(value.getDate() + ((8 - value.getDay()) % 7 || 7));
   return isoDate(value);
+}
+
+function upcomingMondays(count: number): string[] {
+  const first = new Date(`${nextMonday()}T12:00:00`);
+  return Array.from({ length: count }, (_, index) => {
+    const value = new Date(first);
+    value.setDate(first.getDate() + index * 7);
+    return isoDate(value);
+  });
+}
+
+function weekDays(weekStart: string) {
+  return Array.from({ length: 7 }, (_, offset) => {
+    const [year, month, day] = dateAtOffset(weekStart, offset).split('-').map(Number);
+    return { year: year!, month: month!, day: day! };
+  });
+}
+
+// Default for a new external activity: Monday of the check-in week, 18:00 local.
+function weekEvening(weekStart: string, timeZone: string): string {
+  const [year, month, day] = weekStart.split('-').map(Number);
+  return fromWallClock({ year: year!, month: month!, day: day!, hour: 18, minute: 0 }, timeZone).toISOString();
 }
 
 function dateAtOffset(weekStart: string, offset: number): string {
@@ -211,6 +238,16 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
     useState<CheckInContextCandidateResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const scroll = useRef<ScrollView>(null);
+  const weekOptions = useMemo(() => upcomingMondays(4).map((monday, index) => ({
+    value: monday,
+    label: `${index === 0 ? t('checkin.week.next') : t('checkin.week.later')} · ${new Date(`${monday}T12:00:00`).toLocaleDateString(locale, { day: 'numeric', month: 'long' })}`,
+  })), [locale, t]);
+
+  // Errors render at the top of a long form; bring them into view.
+  useEffect(() => {
+    if (error) scroll.current?.scrollTo({ y: 0, animated: true });
+  }, [error]);
 
   const isConfirmed = checkIn?.context?.state === 'confirmed';
   const isCompleted = checkIn?.status === 'completed';
@@ -235,6 +272,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
     run(async () => {
       const result = await startWeeklyCheckIn(accessToken, weekStart);
       setCheckIn(result);
+      setExternalScheduledAt(weekEvening(result.week_start, result.timezone));
       if (result.context) {
         setBlockedDays(
           new Set(
@@ -373,6 +411,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <FormScrollView
+        ref={scroll}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
         style={styles.scroll}
@@ -386,10 +425,11 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
             <View style={[styles.chip]}><Text variant="supporting" tone="primary">{t('checkin.start.chip')}</Text></View>
             <Text style={styles.title}>{t('checkin.start.title')}</Text>
             <Text style={styles.body}>{t('checkin.start.body')}</Text>
-            <FormField
-              autoCapitalize="none"
+            <SelectField
               label={t('creation.weekStart')}
-              onChangeText={setWeekStart}
+              onChange={setWeekStart}
+              options={weekOptions}
+              placeholder={t('checkin.week.choose')}
               value={weekStart}
             />
             <ActionButton disabled={busy} label={t('checkin.start.action')} onPress={() => void begin()} />
@@ -542,17 +582,20 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                   <ChoiceRow key={discipline} label={t(disciplineLabels[discipline])}  selected={externalDiscipline === discipline} mode="radio" onPress={() => setExternalDiscipline(discipline)} />
                 ))}
               </View>
-              <FormField
-                autoCapitalize="none"
+              <DayTimePicker
+                dayOptions={weekDays(checkIn.week_start)}
                 label={t('checkin.external.time')}
-                onChangeText={setExternalScheduledAt}
-                value={externalScheduledAt}
+                onChange={setExternalScheduledAt}
+                timeZone={checkIn.timezone}
+                valueIso={externalScheduledAt}
               />
-              <FormField
-                inputMode="decimal"
+              <DurationPicker
+                clearable={false}
                 label={t('checkin.external.duration')}
-                onChangeText={setExternalDuration}
-                value={externalDuration}
+                maxHours={12}
+                onChange={(seconds) => setExternalDuration(seconds === null ? '' : String(seconds / 60))}
+                units={['hours', 'minutes']}
+                valueSeconds={externalDuration === '' ? null : Math.round(Number(externalDuration) * 60)}
               />
               <View style={styles.rowWrap}>
                 <ChoiceRow  label={t('checkin.external.strenuous')}  selected={externalStrenuous} mode="checkbox" onPress={() => setExternalStrenuous((value) => !value)} />
@@ -563,6 +606,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
 
             <Card elevated padding="form" style={styles.panel}>
               <ActionButton disabled={busy || !recurringConfirmed} label={t('checkin.save')} onPress={save} />
+              {!recurringConfirmed ? <Text variant="supporting" tone="textMuted">{t('checkin.saveNeedsRecurring')}</Text> : null}
               {checkIn.context ? (
                 <>
                   <Text style={styles.body}>{t('checkin.source', { expiry: expiryLabel ?? '' })}</Text>

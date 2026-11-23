@@ -10,12 +10,16 @@ jest.mock('../api/client', () => ({ approvePlanProposal: jest.fn(), confirmWeekl
 const open = fixtures.open as WeeklyCheckIn;
 const saved = fixtures.saved as WeeklyCheckIn;
 const confirmed = fixtures.confirmed as WeeklyCheckIn;
+// Thursday before the fixture week, so the default week choice is the fixture's Monday 2026-10-12.
+// Only Date is faked; timers stay real for the async UI.
+beforeEach(() => { jest.useFakeTimers({ now: new Date('2026-10-08T10:00:00Z'), doNotFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'setImmediate', 'clearImmediate', 'queueMicrotask', 'nextTick', 'requestAnimationFrame', 'cancelAnimationFrame', 'performance', 'hrtime'] }); });
+afterEach(() => { jest.useRealTimers(); });
 beforeEach(() => { jest.clearAllMocks(); jest.mocked(SecureStore.getItemAsync).mockResolvedValue(null); jest.mocked(api.startWeeklyCheckIn).mockResolvedValue(open); jest.mocked(api.saveWeeklyCheckInContext).mockResolvedValue(saved); jest.mocked(api.confirmWeeklyCheckInContext).mockResolvedValue(confirmed); });
 async function surface(state = open) {
   jest.mocked(api.startWeeklyCheckIn).mockResolvedValue(state);
   const back = jest.fn(); const signOut = jest.fn(async () => undefined);
   const view = await render(<LanguageProvider><CheckInScreen accessToken="athlete-token" onBack={back} onSignOut={signOut} /></LanguageProvider>);
-  await fireEvent.changeText(view.getByLabelText('Week start op maandag'), open.week_start);
+  expect(view.getByRole('button', { name: 'Week start op maandag: Volgende week · 12 oktober' })).toBeTruthy();
   await fireEvent.press(view.getByRole('button', { name: 'Start check-in' }));
   await view.findByText(state.context?.state === 'confirmed' ? 'Klaar voor het voorstel' : 'Week van ' + open.week_start);
   return { view, back, signOut };
@@ -75,8 +79,14 @@ test('external sport retains time/duration/flags and explicit add/remove', async
   await fireEvent.press(view.getByRole('button', { name: 'Toevoegen' }));
   await view.findByRole('alert', { name: 'Vul voor de extra activiteit een naam en geldige duur in.' });
   await fireEvent.changeText(view.getByLabelText('Naam extra activiteit'), 'Clubtraining');
-  await fireEvent.changeText(view.getByLabelText('Tijdstip (ISO inclusief tijdzone)'), '2026-10-15T18:00:00+02:00');
-  await fireEvent.changeText(view.getByLabelText('Geplande duur (minuten)'), '75');
+  // Time and duration are touch pickers limited to the check-in week.
+  await fireEvent.press(view.getByRole('button', { name: 'Tijdstip: ma 12 okt · 18:00' }));
+  await fireEvent.press(view.getByRole('radio', { name: 'do 15 okt' }));
+  await fireEvent.press(view.getByRole('button', { name: 'Klaar' }));
+  expect(view.getByRole('button', { name: 'Tijdstip: do 15 okt · 18:00' })).toBeTruthy();
+  await fireEvent.press(view.getByRole('button', { name: 'Geplande duur: 01:00:00' }));
+  await fireEvent.press(view.getByRole('radio', { name: '15 min' }));
+  await fireEvent.press(view.getByRole('button', { name: 'Klaar' }));
   await fireEvent.press(view.getByRole('checkbox', { name: 'Terugkerend' }));
   await fireEvent.press(view.getByRole('button', { name: 'Toevoegen' }));
   await view.findByText('Clubtraining');
@@ -101,7 +111,7 @@ test('English preference translates the check-in form, choices and extra activit
   const view = await render(<LanguageProvider><CheckInScreen accessToken="athlete-token" onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} /></LanguageProvider>);
   await view.findByText('Prepare your next week');
   expect(view.getByText('Without AI')).toBeTruthy();
-  await fireEvent.changeText(view.getByLabelText('Week starts on Monday'), open.week_start);
+  expect(view.getByRole('button', { name: 'Week starts on Monday: Next week · 12 October' })).toBeTruthy();
   await fireEvent.press(view.getByRole('button', { name: 'Start check-in' }));
   await view.findByText('Week of ' + open.week_start);
   expect(view.getByText('Which days are fully blocked?')).toBeTruthy();
@@ -119,4 +129,13 @@ test('English preference translates the check-in form, choices and extra activit
   await fireEvent.press(view.getByRole('button', { name: 'Add' }));
   expect(await view.findByText('Running · 60 min · strenuous · recurring')).toBeTruthy();
   expect(view.queryByText('Bereid je volgende week voor')).toBeNull();
+});
+test('explains why saving the context waits for the recurring-activities check', async () => {
+  const { view } = await surface();
+  const hint = 'Vink eerst hierboven aan dat je je terugkerende sportactiviteiten hebt gecontroleerd.';
+  expect(view.getByRole('button', { name: 'Context opslaan' })).toBeDisabled();
+  expect(view.getByText(hint)).toBeTruthy();
+  await fireEvent.press(view.getByRole('checkbox', { name: 'Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd.' }));
+  expect(view.getByRole('button', { name: 'Context opslaan' })).toBeEnabled();
+  expect(view.queryByText(hint)).toBeNull();
 });

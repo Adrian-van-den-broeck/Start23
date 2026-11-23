@@ -23,6 +23,6 @@ describe('zonedTime', () => {
   });
 
   test('shifts calendar dates across month and year boundaries', () => {
-    expect(shiftDate({ year: 2027, month: 1, day: 1, hour: 0, minute: 0 }, 1)).toEqual({ year: 2026, month: 12, day: 31 });
+    expect(shiftDate({ year: 2027, month: 1, day: 1 }, 1)).toEqual({ year: 2026, month: 12, day: 31 });
   });
 });

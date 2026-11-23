@@ -3,6 +3,7 @@
  * in their confirmed profile zone while the API still receives an exact instant.
  */
 export type WallClock = { year: number; month: number; day: number; hour: number; minute: number };
+export type CalendarDate = Pick<WallClock, 'year' | 'month' | 'day'>;
 
 export function toWallClock(instant: Date, timeZone: string): WallClock {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -29,11 +30,11 @@ export function fromWallClock(clock: WallClock, timeZone: string): Date {
 }
 
 /** Calendar date `days` before the given wall-clock date, ignoring time of day. */
-export function shiftDate(clock: WallClock, days: number): Pick<WallClock, 'year' | 'month' | 'day'> {
+export function shiftDate(clock: CalendarDate, days: number): CalendarDate {
   const date = new Date(Date.UTC(clock.year, clock.month - 1, clock.day - days));
   return { year: date.getUTCFullYear(), month: date.getUTCMonth() + 1, day: date.getUTCDate() };
 }
 
-export function sameDate(a: Pick<WallClock, 'year' | 'month' | 'day'>, b: Pick<WallClock, 'year' | 'month' | 'day'>): boolean {
+export function sameDate(a: CalendarDate, b: CalendarDate): boolean {
   return a.year === b.year && a.month === b.month && a.day === b.day;
 }

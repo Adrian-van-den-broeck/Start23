@@ -3,7 +3,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useLanguage } from '../i18n/LanguageProvider';
 import { resolveDeviceTimezone } from '../lib/onboardingForms';
-import { fromWallClock, sameDate, shiftDate, toWallClock, type WallClock } from '../lib/zonedTime';
+import { fromWallClock, sameDate, shiftDate, toWallClock, type CalendarDate, type WallClock } from '../lib/zonedTime';
 import { BottomSheet } from '../ui-v2/primitives/BottomSheet';
 import { Button } from '../ui-v2/primitives/Button';
 import { PickerField } from '../ui-v2/primitives/PickerField';
@@ -11,27 +11,25 @@ import { Text } from '../ui-v2/primitives/Text';
 import { WheelColumn } from '../ui-v2/primitives/WheelColumn';
 import { colors, layout, radius, space } from '../ui-v2/tokens';
 
-type CalendarDate = Pick<WallClock, 'year' | 'month' | 'day'>;
-
-// Activities are logged after the fact, so the sheet offers the last two weeks.
+// Without explicit days the sheet offers the last two weeks (logging after the fact).
 const DAYS_BACK = 14;
 
 const pad = (value: number) => String(value).padStart(2, '0');
 
 /**
- * Pick the day and clock time an activity started, in the athlete's confirmed
- * profile time zone. The owner receives an ISO instant; nothing is saved here.
+ * Pick a day and clock time in the athlete's time zone. The owner receives an
+ * ISO instant; nothing is saved here.
  */
-export function StartTimePicker({ label, valueIso, timeZone, onChange, error, now = new Date() }: {
+export function DayTimePicker({ label, valueIso, timeZone, onChange, error, dayOptions, now = new Date() }: {
   label: string; valueIso: string; timeZone: string; onChange: (valueIso: string) => void;
-  error?: string; now?: Date;
+  error?: string; dayOptions?: readonly CalendarDate[]; now?: Date;
 }) {
   const { t, locale } = useLanguage();
   const zone = timeZone.trim() || resolveDeviceTimezone() || 'UTC';
   const [draft, setDraft] = useState<WallClock | null>(null);
   const today = toWallClock(now, zone);
   const value = Number.isNaN(new Date(valueIso).getTime()) ? null : toWallClock(new Date(valueIso), zone);
-  const days = Array.from({ length: DAYS_BACK }, (_, offset) => shiftDate(today, offset));
+  const days = dayOptions ?? Array.from({ length: DAYS_BACK }, (_, offset) => shiftDate(today, offset));
 
   const dayLabel = (date: CalendarDate) => {
     if (sameDate(date, today)) return t('datetime.today');
@@ -51,7 +49,7 @@ export function StartTimePicker({ label, valueIso, timeZone, onChange, error, no
         placeholder={t('datetime.placeholder')}
         spokenValue={display ?? t('onboarding.duration.notSetSpoken')}
         openHint={t('datetime.editHint')}
-        onOpen={() => setDraft(value ?? today)}
+        onOpen={() => setDraft(value ?? { ...(days[0] ?? today), hour: today.hour, minute: today.minute })}
         icon="calendar"
         error={error}
       />

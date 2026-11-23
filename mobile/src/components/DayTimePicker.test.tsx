@@ -2,7 +2,7 @@ import { useState, type ReactElement } from 'react';
 import { fireEvent, render as baseRender } from '@testing-library/react-native';
 
 import { LanguageProvider } from '../i18n/LanguageProvider';
-import { StartTimePicker } from './StartTimePicker';
+import { DayTimePicker } from './DayTimePicker';
 
 const render = (ui: ReactElement) => baseRender(ui, { wrapper: LanguageProvider });
 
@@ -11,11 +11,25 @@ const now = new Date('2026-08-15T10:00:00Z');
 
 function ControlledStart({ initial, onChange }: { initial: string; onChange: (value: string) => void }) {
   const [value, setValue] = useState(initial);
-  return <StartTimePicker label="Starttijd" now={now} timeZone="Europe/Amsterdam" valueIso={value}
+  return <DayTimePicker label="Starttijd" now={now} timeZone="Europe/Amsterdam" valueIso={value}
     onChange={(next) => { setValue(next); onChange(next); }} />;
 }
 
-describe('StartTimePicker', () => {
+describe('DayTimePicker', () => {
+  test('offers the given days, such as the seven days of a check-in week', async () => {
+    const onChange = jest.fn();
+    const screen = await render(<DayTimePicker label="Tijdstip" now={now} timeZone="Europe/Amsterdam"
+      valueIso="2026-08-17T16:00:00.000Z" onChange={onChange}
+      dayOptions={Array.from({ length: 7 }, (_, day) => ({ year: 2026, month: 8, day: 17 + day }))} />);
+
+    expect(screen.getByRole('button', { name: 'Tijdstip: ma 17 aug · 18:00' })).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: /^Tijdstip: / }));
+    expect(screen.queryByRole('radio', { name: 'Vandaag' })).toBeNull();
+    await fireEvent.press(screen.getByRole('radio', { name: 'wo 19 aug' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Klaar' }));
+    expect(onChange).toHaveBeenCalledWith('2026-08-19T16:00:00.000Z');
+  });
+
   test('shows the start as a day and clock time in the profile time zone', async () => {
     const screen = await render(<ControlledStart initial="2026-08-15T07:15:00.000Z" onChange={jest.fn()} />);
 
