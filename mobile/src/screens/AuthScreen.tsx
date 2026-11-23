@@ -4,7 +4,8 @@ import { Wordmark } from '../ui-v3/Masthead';
 import { studioPresentation } from '../ui-v3/presentation';
 import { useState } from 'react';
 import Constants from 'expo-constants';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Keyboard, StyleSheet, View } from 'react-native';
+import { FormScrollView } from '../components/FormScrollView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { getSupabaseClient } from '../lib/supabase';
@@ -56,6 +57,7 @@ export function AuthScreen() {
       return;
     }
 
+    Keyboard.dismiss();
     setLoading(true);
     setError(null);
     setNotice(null);
@@ -92,9 +94,7 @@ export function AuthScreen() {
   };
 
   return <SafeAreaView style={styles.safeArea}>
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-      <ScrollView automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'} contentContainerStyle={styles.content}
-        keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+    <FormScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {studioPresentation ? <TrackCover>
           <Wordmark inverse />
           <Text variant="screenTitle" tone="textInverse" accessibilityRole="header">{t('auth.tagline')}</Text>
@@ -132,8 +132,7 @@ export function AuthScreen() {
             {' · build '}{process.env.EXPO_PUBLIC_BUILD_NUMBER ?? 'unknown'}{' · '}{process.env.EXPO_PUBLIC_BUILD_GIT_SHA ?? 'unknown'}</Text>
           <Text variant="caption" tone="textMuted">API: {verificationHost}</Text>
         </View> : null}
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </FormScrollView>
   </SafeAreaView>;
 }
 function FormSurface({ children }: { children: ReactNode }) {

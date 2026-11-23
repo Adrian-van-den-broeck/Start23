@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
 } from 'react-native';
+import { FormScrollView } from '../components/FormScrollView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
@@ -63,6 +61,7 @@ const stepLabelKeys: Array<{ step: OnboardingStep; labelKey: TranslationKey }> =
 type OnboardingScreenProps = {
   accessToken: string;
   active?: boolean;
+  takeOnboardingSnapshot?: () => OnboardingState | undefined;
   onOpenCalibration: () => void;
   onOpenPlanning: () => void;
   onSignOut: () => Promise<void>;
@@ -341,6 +340,7 @@ function ReviewRow({ label, value }: { label: string; value: string }) {
 export function OnboardingScreen({
   accessToken,
   active = true,
+  takeOnboardingSnapshot,
   onOpenCalibration,
   onOpenPlanning,
   onSignOut,
@@ -358,12 +358,19 @@ export function OnboardingScreen({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const reload = useCallback(async () => {
-    const [next, nextGoalOptions, nextPhysiologyProfile] = await Promise.all([
-      getOnboarding(accessToken),
-      getGoalPlanningOptions(accessToken),
+  const load = useCallback(async (snapshot?: OnboardingState) => {
+    const nextState = snapshot ?? getOnboarding(accessToken);
+    const [next, nextPhysiologyProfile, nextGoalOptions] = await Promise.all([
+      nextState,
       getPhysiologyProfile(accessToken),
+      Promise.resolve(nextState).then((state) =>
+        state.current_step === 'goal' ? getGoalPlanningOptions(accessToken) : [],
+      ),
     ]);
+    return { next, nextGoalOptions, nextPhysiologyProfile };
+  }, [accessToken]);
+
+  const apply = useCallback(({ next, nextGoalOptions, nextPhysiologyProfile }: Awaited<ReturnType<typeof load>>) => {
     if (next.current_step === 'completed') {
       onOpenPlanning();
       return;
@@ -371,7 +378,11 @@ export function OnboardingScreen({
     setState(next);
     setGoalOptions(nextGoalOptions);
     setPhysiologyProfile(nextPhysiologyProfile);
-  }, [accessToken, onOpenPlanning]);
+  }, [onOpenPlanning]);
+
+  const reload = useCallback(async () => {
+    apply(await load());
+  }, [apply, load]);
 
   const retryLoad = useCallback(async () => {
     setLoading(true);
@@ -392,20 +403,10 @@ export function OnboardingScreen({
   useEffect(() => {
     if (!active) return;
     let mounted = true;
-    Promise.all([
-      getOnboarding(accessToken),
-      getGoalPlanningOptions(accessToken),
-      getPhysiologyProfile(accessToken),
-    ])
-      .then(([next, nextGoalOptions, nextPhysiologyProfile]) => {
+    load(takeOnboardingSnapshot?.())
+      .then((result) => {
         if (mounted) {
-          if (next.current_step === 'completed') {
-            onOpenPlanning();
-            return;
-          }
-          setState(next);
-          setGoalOptions(nextGoalOptions);
-          setPhysiologyProfile(nextPhysiologyProfile);
+          apply(result);
           setError(null);
         }
       })
@@ -426,7 +427,7 @@ export function OnboardingScreen({
     return () => {
       mounted = false;
     };
-  }, [accessToken, active, onOpenPlanning]);
+  }, [active, apply, load, takeOnboardingSnapshot]);
 
   const mutate = async (
     operation: () => Promise<unknown>,
@@ -519,12 +520,8 @@ export function OnboardingScreen({
       : state.current_step;
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboard}
-      >
-        <ScrollView automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'} contentContainerStyle={styles.scrollContent}
-          keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} style={styles.scroll}>
+      <View style={styles.keyboard}>
+        <FormScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} style={styles.scroll}>
           <BrandedFormHeader caption={t('onboarding.headerCaption')} onSignOut={onSignOut}>
             {state.discipline_setups.some((setup) => setup.protocol_id) ? <Button label={t('onboarding.openCalibration')} variant="secondary" onPress={onOpenCalibration} /> : null}
           </BrandedFormHeader>
@@ -705,8 +702,8 @@ export function OnboardingScreen({
               state={state}
             />
           ) : null}
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </FormScrollView>
+      </View>
     </SafeAreaView>
   );
 }

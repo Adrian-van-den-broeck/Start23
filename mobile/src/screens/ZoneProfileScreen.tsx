@@ -2,13 +2,11 @@ import { studioPresentation } from '../ui-v3/presentation';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { FormScrollView } from '../components/FormScrollView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
@@ -275,15 +273,8 @@ export function ZoneProfileScreen({
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboard}
-      >
-      <ScrollView
-        automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
+      <FormScrollView
         contentContainerStyle={styles.content}
-        keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         style={styles.scroll}
       >
@@ -477,14 +468,13 @@ export function ZoneProfileScreen({
             </FadeInView>
           );
         })}
-      </ScrollView>
-      </KeyboardAvoidingView>
+      </FormScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: { backgroundColor: colors.background, flex: 1 }, keyboard: { flex: 1 }, scroll: { flex: 1 },
+  safeArea: { backgroundColor: colors.background, flex: 1 }, scroll: { flex: 1 },
   content: { alignSelf: 'center', gap: space[24], maxWidth: layout.readingWidth, padding: layout.phoneGutter, paddingBottom: space[48], width: '100%' },
   intro: { ...shadows.card, backgroundColor: colors.surface, borderRadius: radius.card, gap: space[24], padding: space[16] },
   heroHeading: { flexDirection: 'row', alignItems: 'flex-start', gap: space[16] },

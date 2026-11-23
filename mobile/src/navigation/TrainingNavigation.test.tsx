@@ -22,12 +22,13 @@ import TrainingLayout from '../../app/(authenticated)/(training)/_layout';
 import ProfileRoute from '../../app/(authenticated)/profile';
 import TestsRoute from '../../app/(authenticated)/tests';
 import CalibrationRoute from '../../app/(authenticated)/calibration';
+import OnboardingRoute from '../../app/(authenticated)/onboarding';
 import IndexRoute from '../../app/index';
 
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(), setItemAsync: jest.fn(), deleteItemAsync: jest.fn() }));
 jest.mock('../api/client', () => ({
   listActivities: jest.fn(), listPlannedExternalActivities: jest.fn(), createActivity: jest.fn(), submitActivityRpeWithRefresh: jest.fn(), confirmActivityMatch: jest.fn(), approvePlanProposal: jest.fn(), createSwipeWeekDraft: jest.fn(), editPendingWorkout: jest.fn(),
-  getCalendar: jest.fn(), getOnboarding: jest.fn(), getPendingWorkoutAlternatives: jest.fn(), getSwipeWeekDraft: jest.fn(),
+  getCalendar: jest.fn(), getOnboarding: jest.fn(), getPhysiologyProfile: jest.fn(), getGoalPlanningOptions: jest.fn(), getPendingWorkoutAlternatives: jest.fn(), getSwipeWeekDraft: jest.fn(),
   getWeeklyPlan: jest.fn(), markGoalAchieved: jest.fn(), movePlannedWorkout: jest.fn(), placeSwipeWeekWorkout: jest.fn(),
   rejectPlanProposal: jest.fn(), submitSwipeWeekDraft: jest.fn(), transitionSwipeWeekDraft: jest.fn(), validatePlanLayout: jest.fn(),
 }));
@@ -135,10 +136,19 @@ test('signed-in startup opens Week through the readiness gate and skips intake',
   expect(api.getOnboarding).toHaveBeenCalledTimes(1);
 });
 
-test('signed-in startup still redirects an incomplete athlete to intake', async () => {
-  jest.mocked(api.getOnboarding).mockResolvedValue({ ...onboarding, current_step: 'profile' });
-  const view = await renderRouter({ ...routes, index: IndexRoute }, { initialUrl: '/' });
-  await view.findByText('Existing onboarding resume');
+test('signed-in startup opens the first onboarding form with one status read', async () => {
+  jest.mocked(api.getOnboarding).mockResolvedValue({
+    ...onboarding,
+    current_step: 'profile',
+    completed_steps: [],
+    profile: null,
+    discipline_setups: [],
+  });
+  jest.mocked(api.getPhysiologyProfile).mockResolvedValue(null);
+  const view = await renderRouter({ ...routes, index: IndexRoute, '(authenticated)/onboarding': OnboardingRoute }, { initialUrl: '/' });
+  await view.findByLabelText(/Geboortedatum/);
+  expect(api.getOnboarding).toHaveBeenCalledTimes(1);
+  expect(api.getGoalPlanningOptions).not.toHaveBeenCalled();
 });
 
 test('Slice 5B real create pending reminder return and feedback retain one owner and exact identity across roots', async () => {

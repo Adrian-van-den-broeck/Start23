@@ -1,5 +1,5 @@
 import { Redirect } from 'expo-router';
-import { createContext, useCallback, useContext, useEffect, useState, type PropsWithChildren } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type PropsWithChildren } from 'react';
 import { View } from 'react-native';
 import { getOnboarding } from '../api/client';
 import type { OnboardingState } from '../api/types';
@@ -10,7 +10,16 @@ import { Button } from '../ui-v2/primitives/Button';
 import { PlanningPresentationProvider } from './PlanningPresentationProvider';
 
 type Gate = 'idle' | 'loading' | 'ready' | 'onboarding' | 'failed';
-const GateContext = createContext<{ gate: Gate; retry: () => void; requestTraining: () => void; } | null>(null);
+const GateContext = createContext<{
+  gate: Gate;
+  retry: () => void;
+  requestTraining: () => void;
+  takeOnboardingSnapshot: () => OnboardingState | undefined;
+} | null>(null);
+
+export function useOnboardingSnapshot() {
+  return useContext(GateContext)?.takeOnboardingSnapshot;
+}
 
 // Retained above the authenticated Stack after first ready training entry.
 // The authenticated layout keys this host by athlete identity, never by token.
@@ -19,6 +28,12 @@ export function TrainingFlowHost({ accessToken, athleteIdentity, children }: Pro
 }>) {
   const [gate, setGate] = useState<Gate>('idle');
   const [readySnapshot, setReadySnapshot] = useState<OnboardingState | null>(null);
+  const onboardingSnapshot = useRef<{ token: string; state: OnboardingState } | null>(null);
+  const takeOnboardingSnapshot = useCallback(() => {
+    const snapshot = onboardingSnapshot.current;
+    onboardingSnapshot.current = null;
+    return snapshot?.token === accessToken ? snapshot.state : undefined;
+  }, [accessToken]);
   const [attempt, setAttempt] = useState(0);
   const [trainingRequested, setTrainingRequested] = useState(false);
   const requestTraining = useCallback(() => {
@@ -28,10 +43,12 @@ export function TrainingFlowHost({ accessToken, athleteIdentity, children }: Pro
   useEffect(() => {
     if (!trainingRequested || gate === 'ready') return;
     let current = true;
+    onboardingSnapshot.current = null;
     setGate('loading');
     getOnboarding(accessToken).then((state) => {
       if (current) {
         if (state.current_step === 'completed') setReadySnapshot(state);
+        else onboardingSnapshot.current = { token: accessToken, state };
         setGate(state.current_step === 'completed' ? 'ready' : 'onboarding');
       }
     }).catch(() => { if (current) setGate('failed'); });
@@ -40,7 +57,7 @@ export function TrainingFlowHost({ accessToken, athleteIdentity, children }: Pro
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trainingRequested, accessToken, attempt]);
 
-  return <GateContext.Provider value={{ gate, requestTraining, retry: () => setAttempt((value) => value + 1) }}>
+  return <GateContext.Provider value={{ gate, requestTraining, takeOnboardingSnapshot, retry: () => setAttempt((value) => value + 1) }}>
     {gate === 'ready' ? <PlanningFlowProvider accessToken={accessToken} athleteIdentity={athleteIdentity} initialOnboarding={readySnapshot ?? undefined}>
       <PlanningPresentationProvider>{children}</PlanningPresentationProvider>
     </PlanningFlowProvider> : children}

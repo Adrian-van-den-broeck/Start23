@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { FormScrollView } from '../components/FormScrollView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getPioneerRedemption, redeemPioneerAccess } from '../api/client';
 import type { PioneerRedemption } from '../api/types';
@@ -85,9 +86,7 @@ export function PioneerAccessScreen({ accessToken, onBack }: Props) {
   };
 
   return <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag" automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}>
+    <FormScrollView contentContainerStyle={styles.content}>
         <AppHeader title="WOMBO" onBack={onBack} backLabel={t('planning.profile')} landscape="ridges" />
         <Card elevated padding="form" style={{ gap: layout.fieldGroupGap }}>
           <Text variant="supporting" tone="primary">{t('integrations.account.pioneerBadge')}</Text>
@@ -103,8 +102,7 @@ export function PioneerAccessScreen({ accessToken, onBack }: Props) {
           </>}
           {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error}><Notice tone="error">{error}</Notice></View> : null}
         </Card>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </FormScrollView>
   </SafeAreaView>;
 }
 const styles = StyleSheet.create({

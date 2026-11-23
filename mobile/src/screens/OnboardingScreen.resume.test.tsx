@@ -93,6 +93,37 @@ describe('OnboardingScreen resume behavior', () => {
     jest.mocked(saveDisciplineSetup).mockResolvedValue(undefined as never);
   });
 
+  test('uses the routing snapshot for the first step and fetches fresh state on resume', async () => {
+    const snapshot: OnboardingState = {
+      ...state,
+      current_step: 'profile',
+      completed_steps: [],
+      status: 'in_progress',
+      upgrade_required: false,
+      missing_upgrade_steps: [],
+    };
+    const takeOnboardingSnapshot = jest.fn<OnboardingState | undefined, []>()
+      .mockReturnValueOnce(snapshot);
+    jest.mocked(getOnboarding).mockResolvedValue(state);
+    const props = {
+      accessToken: 'athlete-token',
+      takeOnboardingSnapshot,
+      onOpenCalibration: jest.fn(),
+      onOpenPlanning: jest.fn(),
+      onSignOut: jest.fn(async () => undefined),
+    };
+    const screen = await render(<OnboardingScreen {...props} />);
+    await screen.findByLabelText(/Geboortedatum/);
+    expect(takeOnboardingSnapshot).toHaveBeenCalledTimes(1);
+    expect(getOnboarding).not.toHaveBeenCalled();
+    expect(getGoalPlanningOptions).not.toHaveBeenCalled();
+
+    await screen.rerender(<OnboardingScreen {...props} active={false} />);
+    await screen.rerender(<OnboardingScreen {...props} active />);
+    await screen.findByText('Bevestig je tijdzone');
+    expect(getOnboarding).toHaveBeenCalledTimes(1);
+  });
+
   test('renders the server-selected upgrade step without restarting history', async () => {
     jest.mocked(getOnboarding).mockResolvedValue(state);
     jest.mocked(getGoalPlanningOptions).mockResolvedValue([]);

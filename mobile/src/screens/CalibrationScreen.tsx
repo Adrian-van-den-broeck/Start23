@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
+import { FormScrollView } from '../components/FormScrollView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
@@ -797,15 +795,9 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboard}
-      >
-        <ScrollView
-          automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
+      <View style={styles.keyboard}>
+        <FormScrollView
           contentContainerStyle={styles.content}
-          keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
           style={styles.scroll}
         >
@@ -1266,8 +1258,8 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
               ) : null}
             </>
           )}
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </FormScrollView>
+      </View>
     </SafeAreaView>
   );
 }

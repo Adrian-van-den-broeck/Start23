@@ -2,8 +2,6 @@ import { FlashList } from '@shopify/flash-list';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
   StyleSheet,
   Text,
   View,
@@ -17,6 +15,7 @@ import type {
   Discipline,
 } from '../api/types';
 import { FormField } from '../components/FormField';
+import { FormScrollView } from '../components/FormScrollView';
 import { MotionPressable as Pressable } from '../components/MotionPressable';
 import { RpeChoiceList } from '../components/RpeChoiceList';
 import { StatusPill } from '../components/StatusPill';
@@ -113,11 +112,9 @@ export function ActivityScreen({
         </Pressable>
       </View>
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboard}
-      >
+      <View style={styles.listFrame}>
       <FlashList
+        renderScrollComponent={FormScrollView}
         contentContainerStyle={styles.content}
         data={activities}
         extraData={{ busy, editingRpeActivityId, heartRateByActivity }}
@@ -384,14 +381,14 @@ export function ActivityScreen({
             </View>
         )}
       />
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.canvas, flex: 1 },
-  keyboard: { flex: 1 },
+  listFrame: { flex: 1 },
   header: {
     alignItems: 'center',
     flexDirection: 'row',

@@ -3,7 +3,7 @@ import { PlacementRail } from '../../ui-v3/PlacementRail';
 import { ChosenRow } from '../../ui-v3/ChosenRow';
 import { CandidateDeck } from '../../ui-v3/CandidateDeck';
 import type { ReactNode } from 'react';
-import { Animated, KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Animated, StyleSheet, useWindowDimensions, View } from 'react-native';
 import type { Discipline } from '../../api/types';
 import { useWorkoutSwipe, type WorkoutDecision } from '../../components/useWorkoutSwipe';
 import { addDays } from '../../features/planning/planningDates';
@@ -34,10 +34,8 @@ export function AvailabilityScreen(props: TaskProps & {
 }) {
   const { t, locale } = useLanguage();
   const validDate = isValidIsoDateInput(props.weekStart);
-  return <KeyboardAvoidingView style={styles.frame} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-    <Screen title={t('creation.availability')} landscape="ridges" titleVariant="display"
-      onBack={props.onBack} backLabel={t('week.return')} backDisabled={props.busy}
-      scrollProps={{ keyboardShouldPersistTaps: 'handled', automaticallyAdjustKeyboardInsets: true }}>
+  return <Screen keyboardAware title={t('creation.availability')} landscape="ridges" titleVariant="display"
+      onBack={props.onBack} backLabel={t('week.return')} backDisabled={props.busy}>
       <CreationStatus busy={props.busy} error={props.error} />
       <Text tone="textMuted">{t('creation.availabilityHint')}</Text>
       <Card padding="form" elevated style={styles.form}>
@@ -79,8 +77,7 @@ export function AvailabilityScreen(props: TaskProps & {
           onPress={props.onCreate} />
       </Card>
       {props.controls}
-    </Screen>
-  </KeyboardAvoidingView>;
+    </Screen>;
 }
 
 function AcceptedList({ accepted }: { accepted: readonly SelectionWorkout[] }) {

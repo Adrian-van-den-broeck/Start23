@@ -18,8 +18,6 @@ import {
   BackHandler,
   Alert,
   Animated,
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
   type ScrollViewProps,
   StatusBar,
@@ -27,6 +25,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { FormScrollView } from '../components/FormScrollView';
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -1018,16 +1017,10 @@ function PlanningPresentation({
         </Pressable>
       </View>
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboard}
-      >
-        <ScrollView
+      <View style={styles.keyboard}>
+        <FormScrollView
           {...calendarScrollProps}
-          automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
           contentContainerStyle={styles.content}
-          keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
           style={styles.scroll}
         >
@@ -1364,8 +1357,8 @@ function PlanningPresentation({
           </View>
         ) : null}
         </FadeInView>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </FormScrollView>
+      </View>
     </SafeAreaView>
   );
 }

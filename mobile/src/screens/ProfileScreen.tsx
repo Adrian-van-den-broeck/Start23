@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { FormScrollView } from '../components/FormScrollView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getOnboarding, saveProfile } from '../api/client';
 import type { AthleteProfile } from '../api/types';
@@ -61,9 +62,7 @@ export function ProfileScreen({
   }, [accessToken]);
 
   return <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag" automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}>
+    <FormScrollView contentContainerStyle={styles.content}>
         <BrandedFormHeader caption={t('integrations.account.profileTitle')} onBack={onBack} onSignOut={onSignOut} />
         {loading ? <ActivityIndicator color={colors.primary} /> : null}
         {error ? <Notice tone="error">{error}</Notice> : null}
@@ -89,8 +88,7 @@ export function ProfileScreen({
           <Divider />
           <View style={{ gap: space[4] }}><QuickActionRow label={t('integrations.account.pioneer')} onAction={onOpenPioneerAccess} icon="profile" /><Text variant="supporting" tone="textMuted">{t('integrations.account.pioneerHint')}</Text></View>
         </Card>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </FormScrollView>
   </SafeAreaView>;
 }
 const styles = StyleSheet.create({

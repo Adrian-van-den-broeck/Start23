@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import type { Discipline } from '../../api/types';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { Button } from '../primitives/Button';
@@ -23,9 +23,8 @@ export function ActivityEntryScreen(props: {
 }) {
   const { t } = useLanguage();
   const [choosing, setChoosing] = useState(false);
-  return <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-    <Screen title={t('activity.register')} landscape="ridges" titleVariant="display" onBack={props.onBack} backLabel={t('activities.return')} backDisabled={props.busy}
-      scrollProps={{ keyboardShouldPersistTaps: 'handled', testID: 'activity-entry-scroll' }}>
+  return <Screen keyboardAware title={t('activity.register')} landscape="ridges" titleVariant="display" onBack={props.onBack} backLabel={t('activities.return')} backDisabled={props.busy}
+      scrollProps={{ testID: 'activity-entry-scroll' }}>
       <ActivityStatus busy={props.busy} error={props.error} />
       <Text>{t('activity.registerHint')}</Text>
       <Card elevated padding="form" style={styles.stack}>
@@ -61,7 +60,6 @@ export function ActivityEntryScreen(props: {
           onPress={props.onSave} />
       </Card>
       {props.controls}
-    </Screen>
-  </KeyboardAvoidingView>;
+    </Screen>;
 }
 const styles = StyleSheet.create({ stack: { gap: space[16] }, fields: { gap: space[24] } });

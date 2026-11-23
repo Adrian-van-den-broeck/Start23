@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { View } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import type { CanonicalRpe } from '../../lib/rpe';
 import { ActivitySummary } from '../components/ActivitySummary';
@@ -16,9 +16,8 @@ export function ActivityFeedbackScreen({ activity, heartRate, busy, error, contr
   onHeartRate: (value: string) => void; onSelect: (value: CanonicalRpe) => Promise<void>; onBack: () => void;
 }) {
   const { t } = useLanguage();
-  return <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-    <Screen title={t('activities.feedback')} titleVariant="screenTitle" onBack={onBack} backLabel={t('activities.return')} backDisabled={busy}
-      scrollProps={{ keyboardShouldPersistTaps: 'handled', testID: 'activity-feedback-scroll' }}>
+  return <Screen keyboardAware title={t('activities.feedback')} titleVariant="screenTitle" onBack={onBack} backLabel={t('activities.return')} backDisabled={busy}
+      scrollProps={{ testID: 'activity-feedback-scroll' }}>
       <ActivityStatus busy={busy} error={error} />
       <Card elevated><ActivitySummary activity={activity} /></Card>
       <Card elevated padding="form">
@@ -29,6 +28,5 @@ export function ActivityFeedbackScreen({ activity, heartRate, busy, error, contr
         <RpeChoices discipline={activity.discipline} selectedValue={activity.rpe} busy={busy} onSelect={onSelect} />
       </Card>
       <View style={{ gap: space[24] }}>{controls}</View>
-    </Screen>
-  </KeyboardAvoidingView>;
+    </Screen>;
 }

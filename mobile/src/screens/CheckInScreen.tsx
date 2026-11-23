@@ -1,12 +1,10 @@
 import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
+import { FormScrollView } from '../components/FormScrollView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
@@ -374,15 +372,8 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboard}
-      >
-      <ScrollView
-        automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
+      <FormScrollView
         contentContainerStyle={styles.content}
-        keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         style={styles.scroll}
       >
@@ -605,15 +596,14 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
             <ActionButton label={t('checkin.proposal.later')} onPress={onBack} secondary />
           </Card>
         ) : null}
-      </ScrollView>
-      </KeyboardAvoidingView>
+      </FormScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.background, flex: 1 },
-  keyboard: { flex: 1 }, scroll: { flex: 1 },
+  scroll: { flex: 1 },
   content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },
   panel: { gap: layout.fieldGroupGap },
   subsection: { borderTopColor: colors.border, borderTopWidth: layout.decorativeLine, gap: space[12], paddingTop: space[16] },
