@@ -1,3 +1,5 @@
+import { studioPresentation } from '../../ui-v3/presentation';
+import { Masthead } from '../../ui-v3/Masthead';
 import type { RefObject } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { HeaderLandscape } from '../assets/HeaderLandscape';
@@ -12,6 +14,8 @@ export function WeekHeader({ title, profileLabel, onProfile, disabled, titleRef,
 }) {
   const { width, fontScale } = useWindowDimensions();
   const stacked = width < 360 || fontScale >= 1.5;
+  if (studioPresentation) return <Masthead title={title} titleRef={titleRef} onTitleLayout={onTitleLayout} titleTestID="week-header-title"
+    trailing={<ProfileAction label={profileLabel} onPress={onProfile} disabled={disabled} />} />;
   return <View style={[styles.header, { minHeight: stacked ? 96 : 140 }]}>
     <View pointerEvents="none" style={styles.art}><HeaderLandscape behindText={stacked} /></View>
     <View style={[styles.row, stacked && styles.stacked]}>

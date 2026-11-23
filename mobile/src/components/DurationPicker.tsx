@@ -12,6 +12,7 @@ import { Icon } from '../ui-v2/primitives/Icon';
 import { formatClockDuration } from '../lib/onboardingForms';
 import { colors, radius, spacing } from '../theme/tokens';
 import { colors as finalColors, layout, radius as finalRadius, space, typography } from '../ui-v2/tokens';
+import { useLanguage, type TranslationKey } from '../i18n/LanguageProvider';
 
 type DurationUnit = 'hours' | 'minutes' | 'seconds';
 
@@ -29,11 +30,11 @@ type DurationPickerProps = {
 
 const unitCopy: Record<
   DurationUnit,
-  { label: string; singular: string; short: string }
+  { label: TranslationKey; singular: TranslationKey; short: TranslationKey }
 > = {
-  hours: { label: 'uren', singular: 'uur', short: 'uur' },
-  minutes: { label: 'minuten', singular: 'minuut', short: 'min' },
-  seconds: { label: 'seconden', singular: 'seconde', short: 'sec' },
+  hours: { label: 'onboarding.duration.unit.hours', singular: 'onboarding.duration.singular.hours', short: 'onboarding.duration.short.hours' },
+  minutes: { label: 'onboarding.duration.unit.minutes', singular: 'onboarding.duration.singular.minutes', short: 'onboarding.duration.short.minutes' },
+  seconds: { label: 'onboarding.duration.unit.seconds', singular: 'onboarding.duration.singular.seconds', short: 'onboarding.duration.short.seconds' },
 };
 
 function parts(valueSeconds: number | null) {
@@ -56,6 +57,7 @@ export function DurationPicker({
   appearance = 'default',
   focusRef,
 }: DurationPickerProps) {
+  const { t } = useLanguage();
   const [focusedControl, setFocusedControl] = useState<string | null>(null);
   const [pressedControl, setPressedControl] = useState<string | null>(null);
   const controlProps = (key: string) => ({ onPressIn: () => setPressedControl(key), onPressOut: () => setPressedControl(null), ...(appearance === 'final' ? {
@@ -100,12 +102,12 @@ export function DurationPicker({
         {!required && valueSeconds !== null ? (
           <Pressable
             {...controlProps('clear')}
-            accessibilityLabel={`${label} wissen`}
+            accessibilityLabel={t('onboarding.duration.clearLabel', { label })}
             accessibilityRole="button"
             onPress={() => onChange(null)}
             style={styles.clearButton}
           >
-            <Text style={styles.clearText}>Wissen</Text>{focusRing('clear')}
+            <Text style={styles.clearText}>{t('onboarding.duration.clear')}</Text>{focusRing('clear')}
           </Pressable>
         ) : null}
       </View>
@@ -113,24 +115,24 @@ export function DurationPicker({
       <Text
         accessibilityLabel={`${label}: ${
           valueSeconds === null
-            ? 'nog niet ingesteld'
+            ? t('onboarding.duration.notSetSpoken')
             : formatClockDuration(valueSeconds)
         }`}
         style={[styles.result, error ? styles.resultError : null]}
       >
         {valueSeconds === null
-          ? 'Nog niet ingesteld'
+          ? t('onboarding.duration.notSet')
           : formatClockDuration(valueSeconds)}
       </Text>
 
       <View style={styles.units}>
         {(Object.keys(unitCopy) as DurationUnit[]).map((unit) => (
           <View key={unit} style={styles.unitCard}>
-            <Text style={styles.unitLabel}>{unitCopy[unit].label}</Text>
+            <Text style={styles.unitLabel}>{t(unitCopy[unit].label)}</Text>
             <View style={styles.stepper}>
               <Pressable
                 {...controlProps(unit + '-decrease')}
-                accessibilityLabel={`Verlaag ${unitCopy[unit].label} voor ${label}`}
+                accessibilityLabel={t('onboarding.duration.decrease', { unit: t(unitCopy[unit].label), label })}
                 accessibilityRole="button"
                 disabled={value[unit] === 0}
                 onPress={() => adjust(unit, -1)}
@@ -145,7 +147,7 @@ export function DurationPicker({
               <Pressable
                 ref={unit === 'hours' ? focusRef : undefined}
                 {...controlProps(unit + '-choose')}
-                accessibilityLabel={`Kies ${unitCopy[unit].label} voor ${label}`}
+                accessibilityLabel={t('onboarding.duration.choose', { unit: t(unitCopy[unit].label), label })}
                 accessibilityRole="button"
                 onPress={() => setOpenUnit(unit)}
                 style={[
@@ -159,7 +161,7 @@ export function DurationPicker({
               </Pressable>
               <Pressable
                 {...controlProps(unit + '-increase')}
-                accessibilityLabel={`Verhoog ${unitCopy[unit].label} voor ${label}`}
+                accessibilityLabel={t('onboarding.duration.increase', { unit: t(unitCopy[unit].label), label })}
                 accessibilityRole="button"
                 disabled={
                   atMaximumDuration ||
@@ -198,27 +200,27 @@ export function DurationPicker({
           <View style={styles.modalCard}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>
-                Kies {openUnit ? unitCopy[openUnit].label : ''}
+                {t('onboarding.duration.modalTitle', { unit: openUnit ? t(unitCopy[openUnit].label) : '' })}
               </Text>
               <Pressable
                 {...controlProps('close')}
-                accessibilityLabel="Duurkeuze sluiten"
+                accessibilityLabel={t('onboarding.duration.closeLabel')}
                 accessibilityRole="button"
                 onPress={() => setOpenUnit(null)}
                 style={styles.closeButton}
               >
-                <Text style={styles.closeText}>Sluiten</Text>{focusRing('close')}
+                <Text style={styles.closeText}>{t('common.close')}</Text>{focusRing('close')}
               </Pressable>
             </View>
             <ScrollView contentContainerStyle={styles.optionGrid}>
               {openUnit
                 ? options.map((option) => {
                     const selected = value[openUnit] === option;
-                    const copy = `${option} ${
+                    const copy = `${option} ${t(
                       option === 1
                         ? unitCopy[openUnit].singular
-                        : unitCopy[openUnit].short
-                    }`;
+                        : unitCopy[openUnit].short,
+                    )}`;
                     return (
                       <Pressable
                         {...controlProps('option-' + option)}

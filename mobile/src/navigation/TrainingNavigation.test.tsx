@@ -169,7 +169,7 @@ test('Slice 5B real create pending reminder return and feedback retain one owner
   expect(view.getAllByText(reminder)).toHaveLength(1); await fireEvent.press(view.getByText(reminder)); await view.findByText('Activity feedback');
   expect(activityFlow.feedbackActivity?.id).toBe(pendingActivity.id);
   expect(jest.mocked(api.listActivities).mock.calls.filter(call => !call[1])).toHaveLength(reads);
-  await fireEvent.press(view.getByRole('radio', { name: 'Save RPE · Focus nodig, praten in zinnen. (RPE 4)' })); await view.findByTestId('v2-activities');
+  await fireEvent.press(view.getByRole('radio', { name: 'Save RPE · Focus needed, talking in sentences. (RPE 4)' })); await view.findByTestId('v2-activities');
   expect(view.queryByText(reminder)).toBeNull(); expect(api.createActivity).toHaveBeenCalledTimes(1); expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledWith('token-a', pendingActivity, 4, 151);
   expect(activityFlow.ensureActivitiesLoaded).toBe(activityOwner); expect(flow.setWeekStart).toBe(planningOwner); expect(calendar.loadCalendarRange).toBe(calendarOwner);
@@ -226,7 +226,7 @@ test('Slice 5B unresolved feedback save locks roots/reminder/version and never w
   jest.mocked(api.submitActivityRpeWithRefresh).mockImplementation(() => new Promise(resolve => { finish = resolve; }));
   const view = await renderRouter(routes, { initialUrl: '/activities' }); await view.findByTestId('activity-pending');
   await fireEvent.press(view.getByRole('button', { name: 'Complete feedback' }));
-  const choice = view.getByRole('radio', { name: 'Save RPE · Focus nodig, praten in zinnen. (RPE 4)' });
+  const choice = view.getByRole('radio', { name: 'Save RPE · Focus needed, talking in sentences. (RPE 4)' });
   await fireEvent.press(choice); await fireEvent.press(choice);
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
   expect(view.queryByTestId('training-root-navigation')).toBeNull(); expect(view.getByRole('button', { name: 'UI V1' })).toBeDisabled();
@@ -376,7 +376,7 @@ test('resumed draft and revisions survive tabs and safe V1/V2 navigator replacem
   await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
   await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: 'Week' }));
   await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
-  await view.findByText('Stel je week samen');
+  await view.findByText('Build your week');
   expect(view.queryByRole('tab', { name: 'Activities' })).toBeNull();
   await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
   await view.findByText('Choose your workouts');
@@ -546,7 +546,7 @@ test('sign-out removes the owner; another athlete gets new empty plan/calendar s
 test('requested V1 keeps the original internal Week/Calendar navigation with no root tabs', async () => {
   process.env.EXPO_PUBLIC_UI_VERSION = 'v1';
   const view = await renderRouter(routes, { initialUrl: '/planning' });
-  await view.findByText('Week van 2026-10-05');
+  await view.findByText('Week of 2026-10-05');
   expect(view.queryByRole('tab', { name: 'Activities' })).toBeNull();
   await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
   await view.findByText('Training calendar');
@@ -661,8 +661,8 @@ test('V1 starts the write during the swipe animation and locks presentation swit
     return timing(value, config);
   });
   const view = await renderRouter(routes, { initialUrl: '/planning' });
-  await view.findByText('Stel je week samen');
-  await fireEvent.press(view.getByRole('button', { name: 'Kiezen' }));
+  await view.findByText('Build your week');
+  await fireEvent.press(view.getByRole('button', { name: 'Choose' }));
   await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
   expect(navigation.rootVersion).toBe('v1'); expect(navigation.locked).toBe(true);
   expect(api.transitionSwipeWeekDraft).toHaveBeenCalledTimes(1);
@@ -711,46 +711,29 @@ test('Slice 4B editor write locks shell and comparison, then explicit approval r
 });
 
 
-test('release users default to V1 and can round-trip V2 roots without replacing the training owner', async () => {
+test.each([undefined, 'v1', 'v2', 'v3'])('release build %s has functional roots and no presentation selector', async flag => {
   const originalDev = __DEV__;
   Object.assign(globalThis, { __DEV__: false });
-  delete process.env.EXPO_PUBLIC_UI_VERSION;
+  if (flag === undefined) delete process.env.EXPO_PUBLIC_UI_VERSION;
+  else process.env.EXPO_PUBLIC_UI_VERSION = flag;
   try {
     const view = await renderRouter(routes, { initialUrl: '/planning' });
-    await view.findByText('Week van 2026-10-05');
-    expect(view.queryByTestId('training-root-navigation')).toBeNull();
+    await view.findByText(flag === 'v1' ? 'Week of 2026-10-05' : 'Approved');
     const owner = flow.setWeekStart;
     const plan = flow.plan;
-    await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
-    await view.findByText('Approved');
-    expect(view.getByTestId('training-root-navigation')).toBeTruthy();
-    await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
-    await view.findByText('Training calendar');
-    expect(view.getByRole('button', { name: 'UI V1' })).toBeEnabled();
-    await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: 'Week' }));
-    await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
-    await view.findByText('Your training week');
-    expect(view.queryByTestId('training-root-navigation')).toBeNull();
+    expect(view.queryByRole('button', { name: /^UI V/ })).toBeNull();
+    if (flag !== 'v1') {
+      await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
+      await view.findByText('Training calendar');
+      expect(view.queryByRole('button', { name: /^UI V/ })).toBeNull();
+      await fireEvent.press(within(view.getByTestId('training-root-navigation')).getByRole('tab', { name: 'Week' }));
+      await act(() => navigation.setActivityBusy(true));
+      expect(view.queryByRole('button', { name: /^UI V/ })).toBeNull();
+    }
     expect(flow.setWeekStart).toBe(owner);
     expect(flow.plan).toBe(plan);
     expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
     expect(api.approvePlanProposal).not.toHaveBeenCalled();
-    await view.unmount();
-  } finally { Object.assign(globalThis, { __DEV__: originalDev }); }
-});
-
-test('release version switching stays disabled during an in-flight activity operation', async () => {
-  const originalDev = __DEV__;
-  Object.assign(globalThis, { __DEV__: false });
-  try {
-    const view = await renderRouter(routes, { initialUrl: '/planning' });
-    await view.findByText('Approved');
-    await act(() => navigation.setActivityBusy(true));
-    expect(view.getByRole('button', { name: 'UI V1' })).toBeDisabled();
-    await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
-    expect(navigation.rootVersion).toBe('v2');
-    await act(() => navigation.setActivityBusy(false));
-    expect(view.getByRole('button', { name: 'UI V1' })).toBeEnabled();
     await view.unmount();
   } finally { Object.assign(globalThis, { __DEV__: originalDev }); }
 });

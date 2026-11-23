@@ -1,7 +1,11 @@
-import { useState } from 'react';
-import { fireEvent, render } from '@testing-library/react-native';
+import { useState, type ReactElement } from 'react';
+import { fireEvent, render as baseRender } from '@testing-library/react-native';
 
 import { DurationPicker } from './DurationPicker';
+import { LanguageProvider } from '../i18n/LanguageProvider';
+
+// Dutch is the default language; every render goes through the provider like the app does.
+const render = (ui: ReactElement) => baseRender(ui, { wrapper: LanguageProvider });
 
 function ControlledDuration({ initial, appearance }: { initial: number | null; appearance: 'default' | 'final' }) {
   const [value, setValue] = useState(initial);

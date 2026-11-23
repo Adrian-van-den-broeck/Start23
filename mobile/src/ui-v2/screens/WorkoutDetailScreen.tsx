@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Modal, StyleSheet, View, type ScrollViewProps } from 'react-native';
 import type { PlannedWorkout } from '../../api/types';
 import { useLanguage } from '../../i18n/LanguageProvider';
+import { studioPresentation } from '../../ui-v3/presentation';
+import { SessionLead } from '../../ui-v3/SessionLead';
 import { WorkoutSummary } from '../components/WorkoutSummary';
 import { RpeIndicator } from '../components/RpeIndicator';
 import { SessionSequence } from '../components/SessionSequence';
@@ -19,13 +21,16 @@ export function WorkoutDetailScreen({ workout, onClose, embedded = false, scroll
   workout: PlannedWorkout | null; onClose: () => void;
   embedded?: boolean; scrollProps?: ScrollViewProps; focusHeading?: boolean;
 }) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [referenceExpanded, setReferenceExpanded] = useState(false);
   const model = workout ? workoutDetailViewModel(workout) : null;
   const content = model ? <Screen title={t('detail.title')} onBack={onClose} scrollProps={scrollProps} topInsetOwned={embedded} focusHeading={focusHeading}>
     <ContentTransition>
       <View style={styles.content}>
-        <WorkoutSummary summary={model.summary} showDescription={false} variant="focus" />
+        {studioPresentation ? <SessionLead summary={model.summary} statusInKicker showDescription={false} headingTestID="workout-detail-heading"
+          heading={t(`detail.status.${model.summary.status}`)}
+          date={model.summary.date ? new Date(`${model.summary.date}T12:00:00`).toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : ''} />
+          : <WorkoutSummary summary={model.summary} showDescription={false} variant="focus" />}
         <Card style={styles.prescription}>
           {model.description ? <><Text>{model.description}</Text><Divider /></> : null}
           <View style={styles.expected}>

@@ -75,7 +75,7 @@ test('root V1/V2 changes keep one bootstrap and never mount both roots or mutate
   await view.findByText('Approved');
   expect(view.queryByRole('tab', { name: 'Calendar' })).toBeNull();
   await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
-  await view.findByText('Week van 2026-10-05');
+  await view.findByText('Week of 2026-10-05');
   expect(view.queryByTestId('week-home-scroll')).toBeNull();
   await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
   await view.findByText('Approved');
@@ -171,7 +171,7 @@ test('goal entry preserves the existing V1 explicit achievement confirmation sur
   });
   const view = await render(presentation());
   await fireEvent.press(await view.findByRole('button', { name: 'Goal · Known race' }));
-  await view.findByRole('button', { name: 'Markeer “Known race” als behaald' });
+  await view.findByRole('button', { name: 'Mark “Known race” as achieved' });
   expect(api.markGoalAchieved).not.toHaveBeenCalled();
   expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
 });
@@ -255,7 +255,7 @@ test('Calendar entered from V1 retains the V1 origin across safe Calendar V2 com
   restore('plan'); jest.mocked(api.getWeeklyPlan).mockResolvedValue(activePlan);
   process.env.EXPO_PUBLIC_UI_VERSION = 'v1';
   const view = await render(presentation());
-  await view.findByText('Week van 2026-10-05');
+  await view.findByText('Week of 2026-10-05');
   await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
   await waitFor(() => expect(api.getCalendar).toHaveBeenCalledTimes(1));
   await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
@@ -263,7 +263,7 @@ test('Calendar entered from V1 retains the V1 origin across safe Calendar V2 com
   expect(view.queryByTestId('week-home-scroll')).toBeNull();
   expect(api.getCalendar).toHaveBeenCalledTimes(1);
   await fireEvent.press(view.getByRole('button', { name: 'Back to Week' }));
-  await view.findByText('Week van 2026-10-05');
+  await view.findByText('Week of 2026-10-05');
   expect(view.queryByTestId('calendar-scroll')).toBeNull();
   expect(api.getWeeklyPlan).toHaveBeenCalledTimes(1);
 });

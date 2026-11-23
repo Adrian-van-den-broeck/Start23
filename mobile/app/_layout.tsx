@@ -1,3 +1,4 @@
+import { useMotionPolicy } from '@/ui-v2/motion/useMotionPolicy';
 import '../global.css';
 
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -15,6 +16,7 @@ import { UiVersionProvider } from '@/ui/UiVersionProvider';
 import { colors } from '@/theme/tokens';
 
 export default function RootLayout() {
+  const { reducedMotion } = useMotionPolicy();
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
@@ -25,7 +27,7 @@ export default function RootLayout() {
               <UiVersionProvider>
                 <Stack
                   screenOptions={{
-                    animation: 'fade_from_bottom',
+                    animation: reducedMotion ? 'none' : 'fade_from_bottom',
                     animationDuration: 240,
                     contentStyle: { backgroundColor: colors.canvas },
                     headerShown: false,

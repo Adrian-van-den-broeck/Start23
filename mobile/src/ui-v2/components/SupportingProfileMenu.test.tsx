@@ -22,3 +22,11 @@ test('exclusive language preference persists and localizes the same supporting c
   await fireEvent.press(view.getByRole('radio', { name: 'Automatic' }));
   await waitFor(() => expect(SecureStore.setItemAsync).toHaveBeenCalledWith('start23.language-preference', 'system', { keychainAccessible: 'device-only' }));
 });
+test('English preference translates the menu destinations', async () => {
+  jest.mocked(SecureStore.getItemAsync).mockResolvedValue('en');
+  const view = await render(<LanguageProvider><SupportingProfileMenu onOpenProfile={jest.fn()} onOpenIntegrations={jest.fn()} onSignOut={jest.fn()} /></LanguageProvider>);
+  await view.findByText('Everything about your setup');
+  expect(view.getByRole('button', { name: 'Intake profile' })).toBeTruthy();
+  expect(view.getByRole('button', { name: 'Integrations' })).toBeTruthy();
+  expect(view.queryByRole('button', { name: 'Intakeprofiel' })).toBeNull();
+});

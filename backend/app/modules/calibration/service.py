@@ -27,6 +27,7 @@ from app.modules.calibration.domain import (
 )
 from app.modules.calibration.repository import CalibrationRepository, JsonObject
 from app.modules.calibration.schemas import (
+    SETUP_ROUTE_LABELS,
     CalibrationEvaluationRequest,
     CalibrationEvaluationResponse,
     CalibrationObservationCreate,
@@ -206,7 +207,7 @@ class CalibrationService:
         options = [
             ZoneOptionResponse(
                 setup_route=SetupRoute.KNOWN_VALUES,
-                label="Ik ken mijn waarden",
+                label=SETUP_ROUTE_LABELS[SetupRoute.KNOWN_VALUES]["nl"],
                 creates_threshold=False,
                 creates_zones=True,
                 requires_athlete_confirmation=True,
@@ -214,7 +215,7 @@ class CalibrationService:
             ),
             ZoneOptionResponse(
                 setup_route=SetupRoute.CALIBRATION_WEEK,
-                label="Ik wil rustig beginnen en laten kalibreren",
+                label=SETUP_ROUTE_LABELS[SetupRoute.CALIBRATION_WEEK]["nl"],
                 creates_threshold=True,
                 creates_zones=True,
                 requires_athlete_confirmation=True,
@@ -229,7 +230,7 @@ class CalibrationService:
                 1,
                 ZoneOptionResponse(
                     setup_route=SetupRoute.FIELD_TEST,
-                    label="Ik wil mijn waarden testen",
+                    label=SETUP_ROUTE_LABELS[SetupRoute.FIELD_TEST]["nl"],
                     creates_threshold=True,
                     creates_zones=True,
                     requires_athlete_confirmation=True,

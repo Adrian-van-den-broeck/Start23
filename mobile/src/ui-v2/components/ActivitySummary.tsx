@@ -1,25 +1,38 @@
+import { studioPresentation } from '../../ui-v3/presentation';
 import { StyleSheet, View } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { Text } from '../primitives/Text';
 import { Divider } from '../primitives/Divider';
 import { IconTile } from '../primitives/IconTile';
 import { Notice } from '../primitives/Notice';
-import type { IconName } from '../primitives/Icon';
-import { space } from '../tokens';
+import { Icon, type IconName } from '../primitives/Icon';
+import { colors, space } from '../tokens';
 import type { ActivityViewModel } from '../utils/activityViewModel';
 import { SportIndicator } from './SportIndicator';
 
 export function ActivitySummary({ activity }: { activity: ActivityViewModel }) {
   const { t } = useLanguage();
   return <View style={styles.stack} testID={`activity-summary-${activity.id}`}>
-    <SportIndicator discipline={activity.discipline}>
-      <Text tone="textMuted">{activity.date}</Text>
-    </SportIndicator>
-    <Divider />
+    {studioPresentation ? <View style={styles.header}>
+      <View style={[styles.tile, { backgroundColor: colors.sport[activity.discipline].soft }]}>
+        <Icon name={activity.discipline} color={colors.sport[activity.discipline].text} />
+      </View>
+      <View style={styles.headerText}>
+        <Text variant="caption" tone="textMuted">{t(`common.${activity.discipline}`)}</Text>
+        <Text variant="label">{activity.date}</Text>
+      </View>
+    </View> : <>
+      <SportIndicator discipline={activity.discipline}>
+        <Text tone="textMuted">{activity.date}</Text>
+      </SportIndicator>
+      <Divider />
+    </>}
+    <View style={studioPresentation ? styles.measures : styles.stack}>
     {activity.durationMinutes !== null ? <ActivityFact icon="clock" label={t('common.durationMinutes', { minutes: activity.durationMinutes })}
       accessibilityLabel={t('detail.minutesSpoken', { value: activity.durationMinutes })} /> : null}
     {activity.distanceMeters !== null ? <ActivityFact icon="location" label={t('detail.meters', { value: activity.distanceMeters })}
       accessibilityLabel={t('detail.metersSpoken', { value: activity.distanceMeters })} /> : null}
+    </View>
     {activity.pace !== null ? <ActivityFact icon="clock" label={t('activities.pace', { value: activity.pace })} /> : null}
     {activity.source ? <ActivityFact icon="activities" label={t('activities.source')} /> : null}
     <Divider />
@@ -38,9 +51,15 @@ export function ActivitySummary({ activity }: { activity: ActivityViewModel }) {
   </View>;
 }
 function ActivityFact({ icon, label, accessibilityLabel }: { icon: IconName; label: string; accessibilityLabel?: string }) {
+  if (studioPresentation) return <View style={styles.compactFact}><Icon name={icon} size={20} /><Text variant={accessibilityLabel ? 'numericCompact' : 'supporting'} accessibilityLabel={accessibilityLabel} style={{ flexShrink: 1 }}>{label}</Text></View>;
   return <View style={styles.fact}>
     <IconTile name={icon} size="field" />
     <Text accessibilityLabel={accessibilityLabel} style={styles.copy}>{label}</Text>
   </View>;
 }
-const styles = StyleSheet.create({ stack: { gap: space[16] }, fact: { flexDirection: 'row', alignItems: 'center', gap: space[12] }, copy: { flex: 1, gap: space[8] } });
+const styles = StyleSheet.create({
+  header: { flexDirection: 'row', alignItems: 'center', gap: space[12] }, headerText: { flex: 1, gap: 2 },
+  tile: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  measures: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space[24] },
+  compactFact: { flexDirection: 'row', alignItems: 'center', gap: space[8], flexShrink: 1 },
+  stack: { gap: space[16] }, fact: { flexDirection: 'row', alignItems: 'center', gap: space[12] }, copy: { flex: 1, gap: space[8] } });

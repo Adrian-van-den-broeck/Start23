@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { fireEvent, render as baseRender, waitFor } from '@testing-library/react-native';
 
 import {
   getZoneSetupOptions,
@@ -6,6 +6,18 @@ import {
 } from '../api/client';
 import type { OnboardingState } from '../api/types';
 import { ZoneSetupStep } from './ZoneSetupStep';
+import type { ReactElement } from 'react';
+import * as SecureStore from 'expo-secure-store';
+import { LanguageProvider } from '../i18n/LanguageProvider';
+
+// Dutch is the default language; every render goes through the provider like the app does.
+const render = (ui: ReactElement) => baseRender(ui, { wrapper: LanguageProvider });
+
+jest.mock('expo-secure-store', () => ({
+  getItemAsync: jest.fn(async () => null),
+  setItemAsync: jest.fn(async () => undefined),
+  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'unlocked',
+}));
 
 jest.mock('../api/client', () => ({
   getZoneSetupOptions: jest.fn(),
@@ -38,6 +50,7 @@ const state: OnboardingState = {
 
 describe('ZoneSetupStep', () => {
   beforeEach(() => {
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue(null);
     getOptions.mockResolvedValue([
       {
         setup_route: 'known_values',
@@ -172,3 +185,25 @@ describe('ZoneSetupStep', () => {
       thresholds: [{ metric_kind: 'run_threshold_pace_seconds_per_km', value: '300' }],
     })));
   });
+
+test('known-values route is shown in English when the athlete chose English', async () => {
+  jest.mocked(SecureStore.getItemAsync).mockResolvedValue('en');
+  const screen = await render(
+    <ZoneSetupStep
+      accessToken="athlete-token"
+      onSave={jest.fn(async () => undefined)}
+      saving={false}
+      state={{ ...state, required_disciplines: ['bike'] }}
+    />,
+  );
+
+  expect(await screen.findByText('Set up for cycling')).toBeTruthy();
+  // Route labels come from the server and stay as delivered.
+  await fireEvent.press(screen.getByRole('radio', { name: /Bekende waarden/ }));
+  expect(screen.getByText('Known values')).toBeTruthy();
+  expect(screen.getByText('Measured by doctor/lab')).toBeTruthy();
+  expect(screen.getByText('Bike threshold heart rate')).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: 'Save known values' }));
+  expect(screen.getByText('Enter at least one known threshold value before saving.')).toBeTruthy();
+  expect(screen.getAllByText('Enter at least FTP or Bike threshold heart rate.').length).toBeGreaterThan(0);
+});

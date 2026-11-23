@@ -3,6 +3,7 @@ import { useCallback, useRef, useState, type MutableRefObject } from 'react';
 
 import { editPendingWorkout, getPendingWorkoutAlternatives } from '../../api/client';
 import type { PendingWorkoutAlternatives, WeeklyPlan } from '../../api/types';
+import { translate } from '../../i18n/runtime';
 
 type PendingEditor = { options: PendingWorkoutAlternatives | null; loading: boolean; };
 
@@ -50,7 +51,7 @@ export function usePendingWorkoutActions(
       }
       return false;
     } catch (caught) {
-      if ((lifetimes.current[workoutId] ?? 0) === lifetime && currentPlan.current === plan) onError(caught instanceof Error ? caught.message : 'De vervangingen konden niet worden geladen.');
+      if ((lifetimes.current[workoutId] ?? 0) === lifetime && currentPlan.current === plan) onError(caught instanceof Error ? caught.message : translate('errors.alternativesLoadFailed'));
       return false;
     } finally {
       if (requests.current[workoutId] === request) {
@@ -89,7 +90,7 @@ export function usePendingWorkoutActions(
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
       return true;
     } catch (caught) {
-      if (currentPlan.current === plan) onError(caught instanceof Error ? caught.message : 'De wijziging kon niet als nieuw voorstel worden opgeslagen.');
+      if (currentPlan.current === plan) onError(caught instanceof Error ? caught.message : translate('errors.proposalSaveFailed'));
       return false;
     } finally {
       mutationLock.current = false;

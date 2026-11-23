@@ -28,6 +28,18 @@ All API errors use a stable `{"error": ...}` envelope and include a generated
 request ID in both the response body and `X-Request-ID` header. Request-provided
 correlation IDs are not trusted.
 
+Server-written athlete text is Dutch by default. A request with
+`Accept-Language: en` gets English; any other or missing value gets Dutch, and
+responses carry `Content-Language`. The language changes wording only: error
+codes, details, warning codes, option keys and stored records are identical in
+both languages. Error messages are written in English at the source; Dutch
+wording comes from `app/core/error_messages.py` by error code. Planning
+warnings, activity feedback, server-written proposal explanations and option
+labels are worded by their stable key when a public model is serialized, so
+stored text from older revisions follows the requested language too. Text from
+the optional language model and coach-authored catalog content are returned as
+stored.
+
 ## Requirements
 
 - Python 3.10 or newer

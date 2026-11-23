@@ -1,5 +1,9 @@
+import { focusHeading as focusScreenHeading } from '../../ui-v3/focusHeading';
+import { studioPresentation } from '../../ui-v3/presentation';
+import { ToolGrid } from '../../ui-v3/ToolGrid';
+import { WeekStrip } from '../../ui-v3/WeekStrip';
 import { useRef, useState, type ReactNode } from 'react';
-import { AccessibilityInfo, ScrollView, StyleSheet, View, type ScrollViewProps } from 'react-native';
+import { ScrollView, StyleSheet, View, type ScrollViewProps } from 'react-native';
 import { ShellSafeArea } from '../components/ShellInsets';
 import { WeekHeader } from '../components/WeekHeader';
 import { useLanguage } from '../../i18n/LanguageProvider';
@@ -44,7 +48,7 @@ export function WeekScreen({ model, error, busy, onAction, onOpenWorkout, onProf
     <ScrollView testID="week-home-scroll" {...scrollProps} contentContainerStyle={styles.content}>
       <WeekHeader title={t('planning.week')} onProfile={onProfile} profileLabel={t('planning.profile')}
         disabled={busy} titleRef={heading} onTitleLayout={() => {
-          if (!focused.current && heading.current) { focused.current = true; AccessibilityInfo.sendAccessibilityEvent(heading.current, 'focus'); }
+          if (!focused.current && heading.current) { focused.current = true; focusScreenHeading(heading.current); }
         }} />
       <View style={styles.context}><WeekContext model={model} showStatus={!task || model.state === 'active' || model.state === 'activePending'} /></View>
       {initialLoading ? <><Text accessibilityLiveRegion="polite">{t('common.loading')}</Text><Skeleton /></> : <ContentTransition>
@@ -57,27 +61,33 @@ export function WeekScreen({ model, error, busy, onAction, onOpenWorkout, onProf
             ? <Text variant="supporting" tone="textMuted">{t(`week.empty.${model.empty}`)}</Text>
             : <Card padding="focus" elevated><Text variant="body">{t(`week.empty.${model.empty}`)}</Text></Card> : null}
           {task && action ? <WeekTaskCard {...task} icon={action === 'review' ? 'document' : action === 'draft' ? 'list' : 'week'} actionLabel={t(`week.action.${action}`)} disabled={busy} onAction={() => onAction(action)} /> : null}
-          <View style={styles.navigation}>
+          {studioPresentation && model.progress && model.days.length ? <WeekStrip days={model.days} progress={model.progress}
+            disabled={busy} onOpen={() => onAction('calendar')} /> : <View style={styles.navigation}>
             {model.progress ? <Text variant="supporting" tone="textMuted">{t(model.progress.planned === 1 ? 'week.progress.one' : 'week.progress', model.progress)}</Text> : null}
             <QuickActionRow icon="calendar" label={t('week.action.calendar')} disabled={busy} onAction={() => onAction('calendar')} />
-          </View>
+          </View>}
           {attentionGroup}
           <View style={styles.tools} testID="week-training-tools">
             <Text variant="sectionTitle" accessibilityRole="header">{t('week.tools')}</Text>
-            <Card elevated>
+            {studioPresentation ? <ToolGrid disabled={busy} tools={[
+              { key: 'activities', icon: 'activities', label: t('week.activities'), onPress: onActivities },
+              { key: 'checkIn', icon: 'document', label: t('week.checkIn'), onPress: onCheckIn },
+              { key: 'zones', icon: 'intensity', label: t('planning.myZones'), onPress: onZones },
+              ...(model.mainAction !== 'prepare' ? [{ key: 'prepare', icon: 'week' as const, label: t('week.action.prepare'), onPress: () => onAction('prepare') }] : []),
+            ]} /> : <Card elevated>
               <QuickActionRow icon="activities" label={t('week.activities')} disabled={busy} onAction={onActivities} />
               <View style={styles.rowDivider}><Divider /></View>
               <QuickActionRow icon="document" label={t('week.checkIn')} disabled={busy} onAction={onCheckIn} />
               <View style={styles.rowDivider}><Divider /></View>
               <QuickActionRow icon="intensity" label={t('planning.myZones')} disabled={busy} onAction={onZones} />
               {model.mainAction !== 'prepare' ? <><View style={styles.rowDivider}><Divider /></View><QuickActionRow icon="week" label={t('week.action.prepare')} disabled={busy} onAction={() => onAction('prepare')} /></> : null}
-            </Card>
+            </Card>}
           </View>
           {goalName ? <Card elevated style={styles.goal}><GoalSummaryRow label={t('week.goalLabel')} name={goalName}
             accessibilityLabel={t('week.goal', { name: goalName })} disabled={busy} onAction={onGoal} /></Card> : null}
         </View>
       </ContentTransition>}
-      {controls ? <View testID="week-version-controls" style={styles.development}><Divider /><View style={styles.developmentControls}>{controls}</View></View> : null}
+      {__DEV__ && controls ? <View testID="week-version-controls" style={styles.development}><Divider /><View style={styles.developmentControls}>{controls}</View></View> : null}
     </ScrollView>
   </ShellSafeArea>;
 }

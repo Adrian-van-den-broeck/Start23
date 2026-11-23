@@ -98,7 +98,7 @@ function DraggableWorkout({
   weekStart: string;
   workout: PlannedWorkout;
 }) {
-  const { locale } = useLanguage();
+  const { locale, t } = useLanguage();
   const [showDateChoices, setShowDateChoices] = useState(false);
   const [dragging, setDragging] = useState(false);
   const dragY = useRef(new Animated.Value(0)).current;
@@ -149,11 +149,11 @@ function DraggableWorkout({
     <View style={styles.workoutBlock}>
       <Animated.View
         accessibilityActions={[
-          { name: 'decrement', label: 'Een dag eerder' },
-          { name: 'increment', label: 'Een dag later' },
+          { name: 'decrement', label: t('planning.schedule.dayEarlier') },
+          { name: 'increment', label: t('planning.schedule.dayLater') },
         ]}
-        accessibilityHint="Sleep verticaal naar een andere datum in deze week."
-        accessibilityLabel={`${workout.name}, gepland op ${workout.scheduled_date}`}
+        accessibilityHint={t('planning.schedule.dragHint')}
+        accessibilityLabel={t('planning.schedule.workoutLabel', { name: workout.name, date: workout.scheduled_date })}
         accessibilityRole="adjustable"
         accessible
         onAccessibilityAction={(event) => {
@@ -164,12 +164,12 @@ function DraggableWorkout({
       >
         <View style={styles.workoutHeader}>
           <StatusPill
-            label={workout.intensity_bucket === 'high' ? 'Intensief' : 'Rustig'}
+            label={t(workout.intensity_bucket === 'high' ? 'detail.intensity.high' : 'detail.intensity.low')}
             tone={workout.intensity_bucket === 'high' ? 'accent' : 'neutral'}
           />
-          <View accessibilityLabel={`Sleep ${workout.name} naar een andere dag`}
+          <View accessibilityLabel={t('planning.schedule.dragLabel', { name: workout.name })}
             accessibilityRole="button" style={styles.dragHandle} {...panResponder.panHandlers}>
-            <Text style={styles.dragHint}>↕ Sleep hier</Text>
+            <Text style={styles.dragHint}>{t('planning.schedule.dragHandle')}</Text>
           </View>
         </View>
         <Pressable accessibilityRole="button" onPress={() => onOpenWorkout(workout)}>
@@ -186,10 +186,10 @@ function DraggableWorkout({
         onPress={() => setShowDateChoices((current) => !current)}
         style={styles.chooseDateButton}
       >
-        <Text style={styles.chooseDateText}>Andere datum kiezen</Text>
+        <Text style={styles.chooseDateText}>{t('planning.schedule.chooseOtherDate')}</Text>
       </Pressable>
       {showDateChoices ? (
-        <View accessibilityLabel="Datum kiezen" style={styles.dateChoices}>
+        <View accessibilityLabel={t('planning.schedule.chooseDate')} style={styles.dateChoices}>
           {weekDates.map((date) => {
             const selected = date === workout.scheduled_date;
             const label = parseDate(date).toLocaleDateString(locale, {
@@ -198,7 +198,7 @@ function DraggableWorkout({
             });
             return (
               <Pressable
-                accessibilityLabel={`Verplaats ${workout.name} naar ${label}`}
+                accessibilityLabel={t('planning.schedule.moveTo', { name: workout.name, date: label })}
                 accessibilityRole="button"
                 accessibilityState={{ disabled: selected }}
                 disabled={busy || selected}
@@ -231,7 +231,7 @@ export function WeekSchedule({
   weekStart: string;
   workouts: PlannedWorkout[];
 }) {
-  const { locale } = useLanguage();
+  const { locale, t } = useLanguage();
   const weekDates = useMemo(
     () => Array.from({ length: 7 }, (_, index) => addDays(weekStart, index)),
     [weekStart],
@@ -242,17 +242,14 @@ export function WeekSchedule({
 
   return (
     <View style={styles.board}>
-      <Text style={styles.boardTitle}>Weekplanning</Text>
-      <Text style={styles.boardHint}>
-        Sleep via de greep op de training naar een andere dag. Alleen de datum verandert;
-        Wombo controleert de volledige week eerst op de server.
-      </Text>
+      <Text style={styles.boardTitle}>{t('planning.schedule.title')}</Text>
+      <Text style={styles.boardHint}>{t('planning.schedule.hint')}</Text>
       {weekDates.map((date) => {
         const dayWorkouts = workouts.filter(
           (workout) => workout.scheduled_date === date,
         );
         return (
-          <View accessibilityLabel={`Planning voor ${date}`} key={date} style={styles.dayRow}
+          <View accessibilityLabel={t('planning.schedule.dayLabel', { date })} key={date} style={styles.dayRow}
             onLayout={(event) => {
               const { y, height } = event.nativeEvent.layout;
               dayCenters.current.set(date, y + height / 2);
@@ -280,7 +277,7 @@ export function WeekSchedule({
                   />
                 ))
               ) : (
-                <Text style={styles.empty}>Geen training</Text>
+                <Text style={styles.empty}>{t('planning.schedule.noWorkout')}</Text>
               )}
             </View>
           </View>

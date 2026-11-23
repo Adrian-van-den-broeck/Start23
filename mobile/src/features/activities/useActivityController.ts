@@ -4,6 +4,7 @@ import {
   listActivities, listPlannedExternalActivities, submitActivityRpeWithRefresh,
 } from '../../api/client';
 import type { CompletedActivity, Discipline, PlannedExternalActivity, PlannedWorkout } from '../../api/types';
+import { translate } from '../../i18n/runtime';
 import { activityCreateInput, newIdempotencyKey } from './activityCreateInput';
 
 function isoDate(value: Date): string {
@@ -73,7 +74,7 @@ export function useActivityController(accessToken: string) {
       setWorkouts(calendar.workouts.filter(workout => workout.status === 'scheduled'));
       setExternalActivities(plannedExternal.filter(activity => activity.status === 'planned'));
       if (!onboarding.profile?.timezone_confirmed_at || !onboarding.profile.timezone) {
-        throw new Error('Bevestig eerst je tijdzone in de intake voordat je activiteiten registreert.');
+        throw new Error(translate('activityText.timezoneRequiredToRecord'));
       }
       setAthleteTimezone(onboarding.profile.timezone);
       historyLoaded.current = true;
@@ -93,7 +94,7 @@ export function useActivityController(accessToken: string) {
     }
     setBusy(true);
     try { await load(); }
-    catch (caught) { if (alive.current) setError(caught instanceof Error ? caught.message : 'Laden is mislukt.'); }
+    catch (caught) { if (alive.current) setError(caught instanceof Error ? caught.message : translate('activityText.loadFailed')); }
     finally { if (alive.current) setBusy(false); }
   }, [load]);
 
@@ -145,7 +146,7 @@ export function useActivityController(accessToken: string) {
     try {
       // A completed POST followed by a failed refresh must not create again.
       if (createdActivityId) { await load(access); return; }
-      if (pendingRpe.length > 0) throw new Error('Rond eerst de RPE van de opgeslagen activiteit af.');
+      if (pendingRpe.length > 0) throw new Error(translate('activityText.finishPendingRpe'));
       const created = await createActivity(access, idempotencyKey, activityCreateInput({
         selectedWorkout, selectedExternal, discipline, duration, distance, startedAt, athleteTimezone,
       }));
@@ -156,7 +157,7 @@ export function useActivityController(accessToken: string) {
       setStartedAt(new Date().toISOString());
       await load(access);
     } catch (caught) {
-      if (alive.current) setError(caught instanceof Error ? caught.message : 'De activiteit kon niet worden opgeslagen.');
+      if (alive.current) setError(caught instanceof Error ? caught.message : translate('activityText.saveFailed'));
     } finally {
       createInFlightRef.current = false;
       if (alive.current) setBusy(false);
@@ -173,10 +174,10 @@ export function useActivityController(accessToken: string) {
       const rawHeartRate = heartRateByActivity[activityId]?.trim() ?? '';
       const averageHeartRate = rawHeartRate ? Number(rawHeartRate) : undefined;
       if (averageHeartRate !== undefined && (!Number.isInteger(averageHeartRate) || averageHeartRate < 20 || averageHeartRate > 260)) {
-        throw new Error('Vul een gemiddelde hartslag tussen 20 en 260 bpm in.');
+        throw new Error(translate('activityText.heartRateRange'));
       }
       const activity = activities.find(candidate => candidate.id === activityId);
-      if (!activity) throw new Error('De activiteit is niet meer beschikbaar.');
+      if (!activity) throw new Error(translate('activityText.unavailable'));
       await submitActivityRpeWithRefresh(access, activity, rpe, averageHeartRate);
       if (!alive.current) return;
       if (createdActivityId === activityId) {
@@ -186,7 +187,7 @@ export function useActivityController(accessToken: string) {
       setHeartRateByActivity(current => { const next = { ...current }; delete next[activityId]; return next; });
       await load(access);
     } catch (caught) {
-      if (alive.current) setError(caught instanceof Error ? caught.message : 'RPE opslaan is mislukt.');
+      if (alive.current) setError(caught instanceof Error ? caught.message : translate('activityText.rpeSaveFailed'));
     } finally {
       rpeInFlightRef.current.delete(activityId);
       if (alive.current) setBusy(false);
@@ -199,7 +200,7 @@ export function useActivityController(accessToken: string) {
     setBusy(true);
     setError(null);
     try { await confirmActivityMatch(access, activityId, workoutId); if (alive.current) await load(access); }
-    catch (caught) { if (alive.current) setError(caught instanceof Error ? caught.message : 'De koppeling kon niet worden bevestigd.'); }
+    catch (caught) { if (alive.current) setError(caught instanceof Error ? caught.message : translate('activityText.matchFailed')); }
     finally { if (alive.current) setBusy(false); }
   };
 

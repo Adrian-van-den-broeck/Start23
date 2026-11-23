@@ -1,3 +1,5 @@
+import { studioPresentation } from '../../ui-v3/presentation';
+import { Masthead } from '../../ui-v3/Masthead';
 import { useState, type RefObject } from 'react';
 import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { HeaderLandscape, type HeaderLandscapeProps } from '../assets/HeaderLandscape';
@@ -31,6 +33,9 @@ export function AppHeader({ title, onBack, backLabel, backDisabled, onProfile, p
 }) {
   const { width, fontScale } = useWindowDimensions();
   const stacked = width < 360 || fontScale >= 1.5;
+  if (studioPresentation) return <Masthead title={title} titleRef={titleRef} onTitleLayout={onTitleLayout} titleTestID={titleTestID}
+    leading={onBack ? <HeaderAction label={backLabel ?? title} onPress={onBack} disabled={backDisabled} icon={backIcon} /> : undefined}
+    trailing={onProfile ? <ProfileAction label={profileLabel ?? title} onPress={onProfile} disabled={profileDisabled} /> : undefined} />;
   return <View testID="app-header" style={styles.header}>
     {(onBack || onProfile) ? <View style={[styles.utility, stacked && styles.stacked]}>
       {onBack ? <HeaderAction label={backLabel ?? title} onPress={onBack} disabled={backDisabled} icon={backIcon} /> : <View style={styles.spacer} />}

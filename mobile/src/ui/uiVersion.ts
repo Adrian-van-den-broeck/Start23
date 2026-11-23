@@ -1,10 +1,12 @@
+import { resolvePresentation } from '../ui-v3/presentation';
+
 export type UiVersion = 'v1' | 'v2';
 
 export const implementedSlices = { workoutDetail: true, week: true, calendar: true, planningCreation: true, proposalReview: true, activities: true } as const;
 
-// V1 remains the default/rollback presentation. Explicit V2 works in release builds too.
+// V3 shares the existing controller-backed V2 route adapters.
 export function initialUiVersion(flag?: string): UiVersion {
-  return flag === 'v2' ? 'v2' : 'v1';
+  return resolvePresentation(flag) === 'v1' ? 'v1' : 'v2';
 }
 
 export function effectiveUiVersion(requested: UiVersion, slice: string): UiVersion {

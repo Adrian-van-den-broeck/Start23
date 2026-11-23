@@ -1636,10 +1636,12 @@ def test_fallback_is_unvalidated_and_not_available_for_swim(
 def test_swim_zones_reject_numeric_order_opposite_to_intensity(
     onboarding_context: tuple[TestClient, UUID, UUID],
 ) -> None:
+    # The specific reason is the English source message; Dutch, the default,
+    # words uncoded errors generically (see test_athlete_language.py).
     client, _, _ = onboarding_context
     response = client.put(
         "/api/v1/me/zones/swim",
-        headers=_headers(),
+        headers={**_headers(), "Accept-Language": "en"},
         json={
             "setup_method": "manual",
             "confirmed": True,

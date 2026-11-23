@@ -1,4 +1,7 @@
-export const typography = {
+import { studioPresentation } from '../../ui-v3/presentation';
+import { typeScale } from '../../ui-v3/tokens';
+
+const legacy = {
   display: { fontSize: 36, lineHeight: 42, fontWeight: '800' },
   screenTitle: { fontSize: 30, lineHeight: 36, fontWeight: '800' },
   sectionTitle: { fontSize: 24, lineHeight: 30, fontWeight: '700' },
@@ -12,3 +15,5 @@ export const typography = {
   numeric: { fontSize: 28, lineHeight: 34, fontWeight: '600', fontVariant: ['tabular-nums'] },
   numericCompact: { fontSize: 20, lineHeight: 26, fontWeight: '600', fontVariant: ['tabular-nums'] },
 } as const;
+
+export const typography = studioPresentation ? typeScale : legacy;

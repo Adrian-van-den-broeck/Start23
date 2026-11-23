@@ -113,7 +113,7 @@ test.each(['cancel', 'back'] as const)('warning %s clears reviewed intent withou
   jest.mocked(api.validatePlanLayout).mockResolvedValue({ valid_for_generated_schedule: false, warnings: [warning, { ...warning, code: 'exact-public-copy', message: 'Supplied second warning' }] });
   await fireEvent.press(view.getByRole('button', { name: 'Review move' }));
   await view.findByRole('header', { name: 'Review this move' });
-  expect(view.getByText('Supplied second warning')).toBeTruthy(); expect(view.getByText('Weekcombinatie vraagt aandacht')).toBeTruthy();
+  expect(view.getByText('Supplied second warning')).toBeTruthy(); expect(view.getByText('Week combination needs attention')).toBeTruthy();
   expect(within(view.getByTestId('workout-move-modal')).getByRole('button', { name: 'UI V1' })).toBeDisabled(); expect(api.movePlannedWorkout).not.toHaveBeenCalled();
   if (dismissal === 'cancel') await fireEvent.press(view.getAllByRole('button', { name: 'Cancel' })[1]);
   else await fireEvent(view.getByTestId('workout-move-modal'), 'requestClose');

@@ -1,3 +1,7 @@
+import { studioPresentation } from '../../ui-v3/presentation';
+import { PlacementRail } from '../../ui-v3/PlacementRail';
+import { ChosenRow } from '../../ui-v3/ChosenRow';
+import { CandidateDeck } from '../../ui-v3/CandidateDeck';
 import type { ReactNode } from 'react';
 import { Animated, KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
 import type { Discipline } from '../../api/types';
@@ -39,7 +43,7 @@ export function AvailabilityScreen(props: TaskProps & {
       <Card padding="form" elevated style={styles.form}>
         <Input label={t('creation.weekStart')} icon="calendar" value={props.weekStart}
           onChangeText={(value) => props.onWeekStart(formatIsoDateInput(value))} disabled={props.busy}
-          inputMode="numeric" autoCapitalize="none" maxLength={10} placeholder="YYYY-MM-DD" />
+          inputMode="numeric" autoCapitalize="none" maxLength={10} placeholder={t('planning.datePlaceholder')} />
         <View style={styles.stack}>
           {Array.from({ length: 7 }, (_, offset) => {
             // Weekday labels remain available while the date input is incomplete.
@@ -81,10 +85,10 @@ export function AvailabilityScreen(props: TaskProps & {
 
 function AcceptedList({ accepted }: { accepted: readonly SelectionWorkout[] }) {
   const { t } = useLanguage();
-  return <View style={styles.summary} testID="accepted-occurrences">
+  return <View style={studioPresentation ? styles.chosen : styles.summary} testID="accepted-occurrences">
     <Text variant="sectionTitle" accessibilityRole="header">{t('creation.accepted')}</Text>
     {accepted.length === 0 ? <Text tone="textMuted">{t('creation.acceptedEmpty')}</Text> : null}
-    {accepted.map((workout, index) => <Card key={workout.occurrenceId} elevated style={styles.summary}>
+    {accepted.map((workout, index) => studioPresentation ? <ChosenRow key={workout.occurrenceId} {...workout} position={index + 1} /> : <Card key={workout.occurrenceId} elevated style={styles.summary}>
       <Text variant="label" tone="textMuted">{t('creation.choiceNumber', { number: index + 1 })}</Text>
       <SelectionSummary workout={workout} />
     </Card>)}
@@ -139,7 +143,9 @@ export function SelectionScreen({ model, onTransition, onContinue, setTransientB
         <Text variant="label" tone="warning">{warning.title}</Text><Text tone="warning">{warning.message}</Text>
       </View>
     </View>)}
-    {candidate ? <Card padding="focus" elevated style={styles.form} testID="selection-candidate">
+    {candidate && studioPresentation ? <View testID="selection-candidate">
+      <CandidateDeck card={candidate} action={swipe.action} locked={locked} stacked={width < 340 || fontScale >= 1.5} decide={swipe.decide} />
+    </View> : candidate ? <Card padding="focus" elevated style={styles.form} testID="selection-candidate">
       <View style={styles.swipeWindow}>
         <Animated.View pointerEvents="none" accessibilityElementsHidden={!swipe.action}
           importantForAccessibility={swipe.action ? 'auto' : 'no-hide-descendants'}
@@ -151,7 +157,7 @@ export function SelectionScreen({ model, onTransition, onContinue, setTransientB
           importantForAccessibility={swipe.action ? 'no-hide-descendants' : 'auto'}
           style={[styles.swipeCard, { transform: swipe.transform, opacity: swipe.opacity }]}>
           <SelectionSummary key={candidate.occurrenceId} workout={candidate} focus />
-          <Text variant="supporting" tone="textMuted">{t('creation.swipeHint')}</Text>
+          <Text variant="supporting" tone="textMuted">{t('creation.swipeChoice')}</Text>
           <Animated.View pointerEvents="none" accessible={false} importantForAccessibility="no-hide-descendants"
             style={[styles.swipeBadge, styles.chooseBadge, { opacity: swipe.acceptOpacity }]}>
             <Text variant="label" tone="primary">{t('creation.choose')}</Text>
@@ -181,19 +187,19 @@ export function SelectionScreen({ model, onTransition, onContinue, setTransientB
       </View>
       <View style={[styles.actions, stacked && styles.stackedActions]}>
         <View style={styles.action}>
-          <Button label={t('creation.undo')} trailingIcon="undo" variant="outline" disabled={locked || !model.canUndo}
+          <Button label={t('creation.undo')} trailingIcon="undo" variant={studioPresentation ? 'tertiary' : 'outline'} disabled={locked || !model.canUndo}
             onPress={() => onTransition('undo')} />
         </View>
         <View style={styles.action}>
-          <Button label={t('creation.reset')} trailingIcon="list" variant="outline" disabled={locked || model.passedCount === 0}
+          <Button label={t('creation.reset')} trailingIcon="list" variant={studioPresentation ? 'tertiary' : 'outline'} disabled={locked || model.passedCount === 0}
             onPress={() => onTransition('reset_passed')} />
         </View>
       </View>
     </View>
-    <View style={styles.summary} testID="accepted-occurrences">
+    <View style={studioPresentation ? styles.chosen : styles.summary} testID="accepted-occurrences">
       <Text variant="sectionTitle" accessibilityRole="header">{t('creation.accepted')}</Text>
       {model.accepted.length === 0 ? <Text tone="textMuted">{t('creation.acceptedEmpty')}</Text> : null}
-      {model.accepted.map((workout, index) => <Card key={workout.occurrenceId} elevated style={styles.summary}>
+      {model.accepted.map((workout, index) => studioPresentation ? <ChosenRow key={workout.occurrenceId} {...workout} position={index + 1} /> : <Card key={workout.occurrenceId} elevated style={styles.summary}>
         <Text variant="label" tone="textMuted">{t('creation.choiceNumber', { number: index + 1 })}</Text>
         <SelectionSummary workout={workout} />
       </Card>)}
@@ -229,19 +235,30 @@ export function PlacementScreen({ model, mode, onMode, onPlace, onSubmit, onSele
       <AcceptedList accepted={model.accepted} />
     </> : <View style={styles.summary}>
       <Text tone="textMuted">{t('creation.manualHint')}</Text>
-      {model.accepted.map((workout, index) => <Card key={workout.occurrenceId} elevated style={styles.summary}>
+      {model.accepted.map((workout, index) => <Card key={workout.occurrenceId} elevated style={[styles.summary, studioPresentation && styles.placementGroup]}>
         <Text variant="label" tone="textMuted">{t('creation.choiceNumber', { number: index + 1 })}</Text>
-        <SelectionSummary workout={workout} />
-        <Divider />
-        {model.availableDates.map((date) => {
-          const label = new Date(`${date}T12:00:00`).toLocaleDateString(locale, {
-            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-          });
-          return <ChoiceRow key={date} label={label}
-            accessibilityLabel={`${t('creation.choiceNumber', { number: index + 1 })} · ${workout.name} · ${label}`}
-            selected={placements.get(workout.occurrenceId) === date} disabled={task.busy}
-            onPress={() => onPlace(workout.occurrenceId, date)} />;
-        })}
+        <PlacementRail workout={studioPresentation ? <View testID={`selection-occurrence-${workout.occurrenceId}`} style={styles.stack}>
+          <View style={styles.placementSport}><Icon name={workout.discipline} size={20} color={colors.primary} />
+            <Text variant="caption" tone="primary">{t(`common.${workout.discipline}`)}</Text></View>
+          <Text variant="cardTitle" accessibilityRole="header">{workout.name}</Text>
+          <View style={styles.placementSport}>
+            {workout.durationMinutes !== null && <Text variant="label">{t('common.durationMinutes', { minutes: workout.durationMinutes })}</Text>}
+            {workout.distanceMeters !== null && <Text variant="label">{t('detail.meters', { value: workout.distanceMeters })}</Text>}
+            <Text variant="supporting" tone="textMuted">{t(`detail.intensity.${workout.intensity}`)}</Text>
+          </View>
+          {workout.description ? <Text variant="supporting" tone="textMuted">{workout.description}</Text> : null}
+        </View> : <><SelectionSummary workout={workout} /><Divider /></>} label={t('creation.choiceNumber', { number: index + 1 }) + ' \u00b7 ' + workout.name} dates={model.availableDates} selected={placements.get(workout.occurrenceId)} disabled={task.busy}
+          onSelect={date => onPlace(workout.occurrenceId, date)}>
+          {model.availableDates.map((date) => {
+            const label = new Date(`${date}T12:00:00`).toLocaleDateString(locale, {
+              weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+            });
+            return <ChoiceRow key={date} label={label}
+              accessibilityLabel={`${t('creation.choiceNumber', { number: index + 1 })} · ${workout.name} · ${label}`}
+              selected={placements.get(workout.occurrenceId) === date} disabled={task.busy}
+              onPress={() => onPlace(workout.occurrenceId, date)} />;
+          })}
+        </PlacementRail>
       </Card>)}
     </View>}
     <Button label={t(mode === 'automatic' ? 'creation.submitAutomatic' : 'creation.submitManual')}
@@ -254,7 +271,9 @@ export function PlacementScreen({ model, mode, onMode, onPlace, onSubmit, onSele
 }
 
 const styles = StyleSheet.create({
-  stack: { gap: space[12] },
+  stack: { gap: space[12] }, chosen: { gap: space[8] },
+  placementGroup: { borderWidth: 0, padding: 0, backgroundColor: 'transparent', gap: 8 },
+  placementSport: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space[8] },
   frame: { flex: 1 }, grow: { flex: 1 },
   form: { gap: space[24] }, summary: { gap: space[16] },
   error: { flexDirection: 'row', alignItems: 'flex-start', gap: space[12], padding: space[16], borderRadius: radius.inset, backgroundColor: colors.destructiveSoft },

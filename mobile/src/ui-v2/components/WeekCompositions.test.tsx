@@ -1,3 +1,4 @@
+import { studioPresentation } from '../../ui-v3/presentation';
 import { fireEvent, render } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { colors, layout } from '../tokens';
@@ -9,7 +10,8 @@ test('task groups supplied facts and the existing action in one responsive ivory
   const action = jest.fn();
   const view = await render(<WeekTaskCard status="Supplied status" heading="Supplied task" supporting="Supplied fact" actionLabel="Continue" onAction={action} />);
   const card = view.getByTestId('week-task-card');
-  expect(StyleSheet.flatten(card.props.style)).toMatchObject({ backgroundColor: colors.surface, borderRadius: 20 });
+  if (studioPresentation) expect(view.getByTestId('track-cover')).toBeTruthy();
+  else expect(StyleSheet.flatten(card.props.style)).toMatchObject({ backgroundColor: colors.surface, borderRadius: 20 });
   expect(StyleSheet.flatten(card.props.style).height).toBeUndefined();
   expect(view.getByRole('header', { name: 'Supplied task' })).toBeTruthy();
   expect(view.getByText('Supplied fact')).toBeTruthy();

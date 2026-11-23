@@ -45,6 +45,8 @@ import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
 import { IconTile } from '../ui-v2/primitives/IconTile';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { Notice } from '../ui-v2/primitives/Notice';
+import { type TranslationKey, useLanguage } from '../i18n/LanguageProvider';
+import { translate } from '../i18n/runtime';
 
 type Props = {
   accessToken: string;
@@ -74,73 +76,76 @@ type SegmentDraft = {
   repetitionRests: string;
 };
 
-const disciplineLabels: Record<Discipline, string> = {
-  swim: 'Zwemmen',
-  bike: 'Fietsen',
-  run: 'Hardlopen',
+type Translate = ReturnType<typeof useLanguage>['t'];
+
+const disciplineLabels: Record<Discipline, TranslationKey> = {
+  swim: 'calibration.discipline.swim',
+  bike: 'calibration.discipline.bike',
+  run: 'calibration.discipline.run',
 };
 
-const protocolLabels: Record<string, string> = {
-  start23_run_threshold_30min_v1: '30 min loopdrempeltest',
-  start23_bike_ftp_30min_v1: '30 min FTP-test',
-  start23_bike_fthr_20min_v1: '20 min fietsdrempelhartslagtest',
-  start23_swim_css_400_200_v1: 'CSS 400/200 m-test',
-  start23_week1_run_calibration_v1: 'Week-1-loopkalibratie',
-  start23_week1_bike_calibration_v1: 'Week-1-fietskalibratie',
-  start23_week1_swim_calibration_v1: 'Week-1-zwemkalibratie',
+const protocolLabels: Partial<Record<string, TranslationKey>> = {
+  start23_run_threshold_30min_v1: 'calibration.protocol.runThreshold30',
+  start23_bike_ftp_30min_v1: 'calibration.protocol.bikeFtp30',
+  start23_bike_fthr_20min_v1: 'calibration.protocol.bikeFthr20',
+  start23_swim_css_400_200_v1: 'calibration.protocol.swimCss',
+  start23_week1_run_calibration_v1: 'calibration.protocol.week1Run',
+  start23_week1_bike_calibration_v1: 'calibration.protocol.week1Bike',
+  start23_week1_swim_calibration_v1: 'calibration.protocol.week1Swim',
 };
 
-const purposeLabels: Record<string, string> = {
-  prepare: 'Opwarming/voorbereiding',
-  valid_test_segment: 'Geldig testblok',
-  recovery: 'Herstel/cooling-down',
-  recovery_between_tests: 'Actief herstel',
-  calibration_observation: 'Kalibratieblok',
-  optional_calibration_observation: 'Optioneel kalibratieblok',
+const purposeLabels: Partial<Record<string, TranslationKey>> = {
+  prepare: 'calibration.purpose.prepare',
+  valid_test_segment: 'calibration.purpose.validTestSegment',
+  recovery: 'calibration.purpose.recovery',
+  recovery_between_tests: 'calibration.purpose.recoveryBetweenTests',
+  calibration_observation: 'calibration.purpose.calibrationObservation',
+  optional_calibration_observation: 'calibration.purpose.optionalCalibrationObservation',
 };
 
-const guidanceLabels: Record<GuidanceMode, string> = {
-  power: 'vermogen',
-  heart_rate: 'hartslag',
-  combined: 'hartslag en vermogen/tempo',
-  pace: 'tempo',
-  rpe_only: 'alleen RPE',
+const guidanceLabels: Record<GuidanceMode, TranslationKey> = {
+  power: 'calibration.guidance.power',
+  heart_rate: 'calibration.guidance.heartRate',
+  combined: 'calibration.guidance.combined',
+  pace: 'calibration.guidance.pace',
+  rpe_only: 'calibration.guidance.rpeOnly',
 };
 
-const metricLabels: Record<ZoneMetricKind, string> = {
-  swim_css_seconds_per_100m: 'CSS (sec/100 m)',
-  bike_ftp_watts: 'FTP (watt)',
-  bike_threshold_heart_rate_bpm: 'Fietsdrempelhartslag (bpm)',
-  run_threshold_pace_seconds_per_km: 'Loopdrempeltempo (min/km)',
-  run_lthr_bpm: 'Loop-LTHR (bpm)',
+const metricLabels: Record<ZoneMetricKind, TranslationKey> = {
+  swim_css_seconds_per_100m: 'calibration.metric.swimCss',
+  bike_ftp_watts: 'calibration.metric.bikeFtp',
+  bike_threshold_heart_rate_bpm: 'calibration.metric.bikeThresholdHr',
+  run_threshold_pace_seconds_per_km: 'calibration.metric.runThresholdPace',
+  run_lthr_bpm: 'calibration.metric.runLthr',
 };
 
-const resultLabels: Record<CalibrationEvaluation['status'], string> = {
-  insufficient_data: 'Meer of betere gegevens nodig',
-  insufficient_protocol: 'Protocolregel ontbreekt',
-  rpe_only: 'Veilig als RPE-only opgeslagen',
-  provisionally_calibrated: 'Historisch: voorlopig gekalibreerd',
-  threshold_estimated: 'Drempel geschat',
+const resultLabels: Record<CalibrationEvaluation['status'], TranslationKey> = {
+  insufficient_data: 'calibration.result.insufficientData',
+  insufficient_protocol: 'calibration.result.insufficientProtocol',
+  rpe_only: 'calibration.result.rpeOnly',
+  provisionally_calibrated: 'calibration.result.provisionallyCalibrated',
+  threshold_estimated: 'calibration.result.thresholdEstimated',
 };
 
-const reasonLabels: Record<string, string> = {
-  calculated_threshold_unusually_low:
-    "De berekende drempel lijkt ongewoon laag. Controleer het resultaat voordat je het zonevoorstel goedkeurt.",
-  zone_profile_pending_athlete_confirmation:
-    'De drempel en berekende zones wachten op jouw afzonderlijke bevestigingen.',
+const reasonLabels: Partial<Record<string, TranslationKey>> = {
+  calculated_threshold_unusually_low: 'calibration.reason.thresholdUnusuallyLow',
+  zone_profile_pending_athlete_confirmation: 'calibration.reason.zonePendingConfirmation',
   threshold_not_permitted_from_submaximal_calibration:
-    'Historische evaluatie: deze oudere protocolversie produceerde nog geen drempel.',
-  sensor_data_missing:
-    'Er waren geen bruikbare sensorgegevens; de RPE-observatie blijft wel bewaard.',
-  missing_session_rpe: 'De sessie-RPE ontbreekt.',
-  missing_block_rpe: 'Een verplichte blok-RPE ontbreekt.',
-  sensor_quality_insufficient: 'De meetkwaliteit was onvoldoende.',
-  required_segment_missing: 'Een verplicht protocolblok ontbreekt.',
-  test_segment_incomplete: 'Een verplicht blok is niet voltooid.',
-  interrupted: 'Een verplicht blok is onderbroken.',
-  pace_rounding_rule_not_approved:
-    'Het resultaat vraagt een nog niet goedgekeurde afrondingsregel.',
+    'calibration.reason.thresholdNotPermittedSubmaximal',
+  sensor_data_missing: 'calibration.reason.sensorDataMissing',
+  missing_session_rpe: 'calibration.reason.missingSessionRpe',
+  missing_block_rpe: 'calibration.reason.missingBlockRpe',
+  sensor_quality_insufficient: 'calibration.reason.sensorQualityInsufficient',
+  required_segment_missing: 'calibration.reason.requiredSegmentMissing',
+  test_segment_incomplete: 'calibration.reason.testSegmentIncomplete',
+  interrupted: 'calibration.reason.interrupted',
+  pace_rounding_rule_not_approved: 'calibration.reason.paceRoundingNotApproved',
 };
+
+// Server/protocol identifiers without a local label are shown as-is.
+function labelOr(t: Translate, key: TranslationKey | undefined, fallback: string): string {
+  return key ? t(key) : fallback;
+}
 
 function newIdempotencyKey(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (value) => {
@@ -191,37 +196,38 @@ function protocolDistance(protocol: CalibrationProtocol): number | undefined {
   return meters > 0 ? meters : undefined;
 }
 
-function parseRpe(value: string, label: string): number {
+function parseRpe(t: Translate, value: string, label: string): number {
   const parsed = Number(value);
   if (!Number.isInteger(parsed) || parsed < 1 || parsed > 10) {
-    throw new Error(`${label} moet een heel getal van 1 tot en met 10 zijn.`);
+    throw new Error(t('calibration.error.rpeRange', { label }));
   }
   return parsed;
 }
 
-function parsePositive(value: string, label: string): string {
+function parsePositive(t: Translate, value: string, label: string): string {
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed <= 0) {
-    throw new Error(`${label} moet positief zijn.`);
+    throw new Error(t('calibration.error.positive', { label }));
   }
   return String(parsed);
 }
 
-function parseRunPaceRequired(value: string): string {
+function parseRunPaceRequired(t: Translate, value: string): string {
   const seconds = parseRunPace(value);
-  if (seconds === null) throw new Error('Vul looptempo in als min:sec per km, bijvoorbeeld 5:00.');
+  if (seconds === null) throw new Error(t('calibration.error.runPace'));
   return String(seconds);
 }
 
-function parseCompleteness(value: string): string {
+function parseCompleteness(t: Translate, value: string): string {
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed < 0 || parsed > 100) {
-    throw new Error('Meetdekking moet tussen 0 en 100 procent liggen.');
+    throw new Error(t('calibration.error.completeness'));
   }
   return String(parsed / 100);
 }
 
 function parseCsvNumbers(
+  t: Translate,
   value: string,
   label: string,
   allowZero: boolean,
@@ -234,7 +240,7 @@ function parseCsvNumbers(
       (part) => !Number.isFinite(part) || (allowZero ? part < 0 : part <= 0),
     )
   ) {
-    throw new Error(`${label} vereist precies vier komma-gescheiden waarden.`);
+    throw new Error(t('calibration.error.fourValues', { label }));
   }
   return values;
 }
@@ -304,6 +310,7 @@ function objectiveMetricsPresent(draft: SegmentDraft): boolean {
 }
 
 export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
+  const { t, locale } = useLanguage();
   const { width, fontScale } = useWindowDimensions();
   const compact = width < 480 || fontScale > 1;
   const [setups, setSetups] = useState<DisciplineSetup[]>([]);
@@ -343,9 +350,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
       !onboarding.profile?.timezone_confirmed_at ||
       !onboarding.profile.timezone
     ) {
-      throw new Error(
-        'Bevestig eerst je tijdzone in de intake voordat je een kalibratie uitvoert.',
-      );
+      throw new Error(translate('calibration.error.timezoneUnconfirmed'));
     }
     setTimezone(onboarding.profile.timezone);
     const protocolSetups = status.setups.filter((setup) => setup.protocol_id);
@@ -379,7 +384,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
           setError(
             caught instanceof Error
               ? caught.message
-              : 'De kalibratiestatus kon niet worden geladen.',
+              : translate('calibration.error.loadFailed'),
           );
         }
       })
@@ -452,68 +457,64 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
     protocol: CalibrationProtocol,
   ) => {
     if (Number.isNaN(new Date(performedAt).getTime())) {
-      throw new Error('Gebruik een geldig ISO 8601-tijdstip.');
+      throw new Error(t('calibration.error.invalidTimestamp'));
     }
-    if (!timezone.trim()) throw new Error('Vul een IANA-tijdzone in.');
-    parsePositive(durationMinutes, 'Totale duur');
-    parseRpe(sessionRpe, 'Sessie-RPE');
+    if (!timezone.trim()) throw new Error(t('calibration.error.timezoneMissing'));
+    parsePositive(t, durationMinutes, t('calibration.field.totalDuration'));
+    parseRpe(t, sessionRpe, t('calibration.field.sessionRpe'));
     if (needsSwimConditions(protocol) && !swimConditionsConfirmed) {
-      throw new Error(
-        'Bevestig badlengte, vrije slag en trainen zonder hulpmiddelen.',
-      );
+      throw new Error(t('calibration.error.swimConditions'));
     }
     for (const segment of protocol.segments) {
       const draft = drafts[segment.segment_id];
       if (!draft || !draft.included) continue;
       if (isMainSegment(segment)) {
-        parseRpe(draft.blockRpe, `Blok-RPE voor ${segment.segment_id}`);
+        parseRpe(t, draft.blockRpe, t('calibration.field.blockRpe', { segment: segment.segment_id }));
       }
       if (!draft.completed) continue;
       if (
         protocol.protocol_id === 'start23_run_threshold_30min_v1' &&
         segment.segment_id === 'test_30min'
       ) {
-        parseRunPaceRequired(draft.averagePace);
-        parseCompleteness(draft.completenessPercent);
+        parseRunPaceRequired(t, draft.averagePace);
+        parseCompleteness(t, draft.completenessPercent);
         if (!draft.stableSegment) {
-          throw new Error('Bevestig dat het looptestblok stabiel is uitgevoerd.');
+          throw new Error(t('calibration.error.runStable'));
         }
       }
       if (
         protocol.protocol_id === 'start23_bike_ftp_30min_v1' &&
         segment.segment_id === 'test_30min'
       ) {
-        parsePositive(draft.last20Power, 'Vermogen over de laatste 20 minuten');
-        parseCompleteness(draft.completenessPercent);
+        parsePositive(t, draft.last20Power, t('calibration.field.last20Power'));
+        parseCompleteness(t, draft.completenessPercent);
         if (!draft.stableSegment || !draft.calibratedPowerSource) {
-          throw new Error(
-            'Bevestig een stabiel testblok en een gekalibreerde vermogensbron.',
-          );
+          throw new Error(t('calibration.error.bikeStable'));
         }
       }
       if (
         protocol.protocol_id === 'start23_bike_fthr_20min_v1' &&
         segment.segment_id === 'test_20min'
       ) {
-        parsePositive(draft.averageHeartRate, 'Gemiddelde hartslag');
-        parseCompleteness(draft.completenessPercent);
+        parsePositive(t, draft.averageHeartRate, t('calibration.field.averageHeartRate'));
+        parseCompleteness(t, draft.completenessPercent);
       }
       if (
         protocol.protocol_id === 'start23_swim_css_400_200_v1' &&
         ['tt_400m', 'tt_200m'].includes(segment.segment_id)
       ) {
-        parsePositive(draft.elapsedTime, 'Zwemtesttijd');
+        parsePositive(t, draft.elapsedTime, t('calibration.field.swimTestTime'));
       }
       if (
         protocol.protocol_type === 'submaximal_calibration' &&
         isMainSegment(segment)
       ) {
         if (protocol.discipline === 'swim') {
-          parsePositive(draft.elapsedTime, 'Gemeten totale zwemtijd');
-          parseCsvNumbers(draft.repetitionTimes, 'Herhalingstijden', false);
-          parseCsvNumbers(draft.repetitionRests, 'Rusttijden', true);
+          parsePositive(t, draft.elapsedTime, t('calibration.field.swimTotalTime'));
+          parseCsvNumbers(t, draft.repetitionTimes, t('calibration.field.repetitionTimes'), false);
+          parseCsvNumbers(t, draft.repetitionRests, t('calibration.field.restTimes'), true);
         } else {
-          parsePositive(draft.averageHeartRate, 'Gemiddelde hartslag');
+          parsePositive(t, draft.averageHeartRate, t('calibration.field.averageHeartRate'));
         }
       }
     }
@@ -546,55 +547,62 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
     };
     if (isMainSegment(segment)) {
       input.reported_block_rpe = parseRpe(
+        t,
         draft.blockRpe,
-        `Blok-RPE voor ${segment.segment_id}`,
+        t('calibration.field.blockRpe', { segment: segment.segment_id }),
       );
       input.steady_execution = draft.steadyExecution;
     }
     if (segment.segment_id === 'cooldown') {
-      input.reported_session_rpe = parseRpe(sessionRpe, 'Sessie-RPE');
+      input.reported_session_rpe = parseRpe(t, sessionRpe, t('calibration.field.sessionRpe'));
     }
     if (draft.averageHeartRate) {
       input.average_heart_rate_bpm = parsePositive(
+        t,
         draft.averageHeartRate,
-        'Gemiddelde hartslag',
+        t('calibration.field.averageHeartRate'),
       );
     }
     if (draft.endingHeartRate) {
       input.ending_heart_rate_bpm = parsePositive(
+        t,
         draft.endingHeartRate,
-        'Eindhartslag',
+        t('calibration.field.endingHeartRate'),
       );
     }
     if (draft.last20HeartRate) {
       input.average_heart_rate_last_20min_bpm = parsePositive(
+        t,
         draft.last20HeartRate,
-        'Hartslag over de laatste 20 minuten',
+        t('calibration.field.last20HeartRate'),
       );
     }
     if (draft.averagePower) {
       input.average_power_watts = parsePositive(
+        t,
         draft.averagePower,
-        'Gemiddeld vermogen',
+        t('calibration.field.averagePower'),
       );
     }
     if (draft.last20Power) {
       input.average_power_last_20min_watts = parsePositive(
+        t,
         draft.last20Power,
-        'Vermogen over de laatste 20 minuten',
+        t('calibration.field.last20Power'),
       );
     }
     if (draft.averagePace) {
-      input.average_pace_seconds_per_km = parseRunPaceRequired(draft.averagePace);
+      input.average_pace_seconds_per_km = parseRunPaceRequired(t, draft.averagePace);
     }
     if (draft.elapsedTime) {
       input.elapsed_time_seconds = parsePositive(
+        t,
         draft.elapsedTime,
-        'Verstreken tijd',
+        t('calibration.field.elapsedTime'),
       );
     }
     if (hasMetrics && draft.completenessPercent) {
-      input.data_completeness = parseCompleteness(draft.completenessPercent);
+      input.data_completeness = parseCompleteness(t, draft.completenessPercent);
     }
     if (draft.stableSegment) input.stable_segment = true;
     if (draft.calibratedPowerSource) input.power_source_calibrated = true;
@@ -607,13 +615,15 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
         isMainSegment(segment)
       ) {
         const times = parseCsvNumbers(
+          t,
           draft.repetitionTimes,
-          'Herhalingstijden',
+          t('calibration.field.repetitionTimes'),
           false,
         );
         const rests = parseCsvNumbers(
+          t,
           draft.repetitionRests,
-          'Rusttijden',
+          t('calibration.field.restTimes'),
           true,
         );
         const repetitionDistance = segment.segment_id.startsWith('4x200')
@@ -642,7 +652,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
           discipline: selectedProtocol.discipline,
           started_at: new Date(performedAt).toISOString(),
           timezone: timezone.trim(),
-          duration_minutes: parsePositive(durationMinutes, 'Totale duur'),
+          duration_minutes: parsePositive(t, durationMinutes, t('calibration.field.totalDuration')),
           ...(protocolDistance(selectedProtocol) === undefined
             ? {}
             : { distance_meters: protocolDistance(selectedProtocol) }),
@@ -655,19 +665,20 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
         selectedProtocol.discipline !== 'swim'
           ? Number(
               parsePositive(
+                t,
                 drafts[
                   selectedProtocol.segments.find(
                     (segment) => isMainSegment(segment) && !segment.optional,
                   )?.segment_id ?? ''
                 ]?.averageHeartRate ?? '',
-                'Gemiddelde hartslag',
+                t('calibration.field.averageHeartRate'),
               ),
             )
           : undefined;
       await submitActivityRpe(
         accessToken,
         savedActivityId,
-        parseRpe(sessionRpe, 'Sessie-RPE'),
+        parseRpe(t, sessionRpe, t('calibration.field.sessionRpe')),
         calibrationHeartRate,
       );
       for (const segment of selectedProtocol.segments) {
@@ -696,7 +707,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
       setError(
         caught instanceof Error
           ? caught.message
-          : 'De protocolfeedback kon niet worden verwerkt.',
+          : t('calibration.error.submitFailed'),
       );
     } finally {
       setBusy(false);
@@ -715,7 +726,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
       setError(
         caught instanceof Error
           ? caught.message
-          : 'De drempel kon niet worden bevestigd.',
+          : t('calibration.error.confirmFailed'),
       );
     } finally {
       setBusy(false);
@@ -734,7 +745,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
       setError(
         caught instanceof Error
           ? caught.message
-          : 'De drempel kon niet worden afgewezen.',
+          : t('calibration.error.rejectFailed'),
       );
     } finally {
       setBusy(false);
@@ -757,7 +768,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
       setError(
         caught instanceof Error
           ? caught.message
-          : 'Het zonevoorstel kon niet worden bevestigd.',
+          : t('calibration.error.zonesFailed'),
       );
     } finally {
       setBusy(false);
@@ -768,7 +779,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
     return (
       <SafeAreaView style={styles.centered}>
         <ActivityIndicator color={colors.primary} size="large" />
-        <Text style={styles.muted}>Protocolstatus laden…</Text>
+        <Text style={styles.muted}>{t('calibration.loading')}</Text>
       </SafeAreaView>
     );
   }
@@ -787,24 +798,21 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
           showsVerticalScrollIndicator={false}
           style={styles.scroll}
         >
-          <BrandedFormHeader caption="Test & kalibratie" backLabel="Terug" onBack={onBack} onSignOut={onSignOut} />
+          <BrandedFormHeader caption={t('calibration.caption')} backLabel={t('calibration.back')} onBack={onBack} onSignOut={onSignOut} />
           {error ? <Notice tone="error">{error}</Notice> : null}
 
           {setups.length === 0 ? (
             <View style={styles.card}>
               <IconTile name="document" size="focus" />
-              <Text style={styles.cardTitle}>Geen protocol gekozen</Text>
-              <Text style={styles.muted}>
-                Kies tijdens de intake eerst een veldtest of Week-1-kalibratie.
-                RPE-only en bekende waarden hebben geen protocoluitvoering.
-              </Text>
-              <ActionButton label="Terug naar intake" onPress={onBack} />
+              <Text style={styles.cardTitle}>{t('calibration.empty.title')}</Text>
+              <Text style={styles.muted}>{t('calibration.empty.body')}</Text>
+              <ActionButton label={t('calibration.empty.backToIntake')} onPress={onBack} />
             </View>
           ) : (
             <>
               <View accessibilityRole="radiogroup" style={styles.selectorRow}>
                 {setups.map((setup) => (
-                  <ChoiceRow key={setup.discipline + ':' + setup.protocol_id} label={disciplineLabels[setup.discipline]}
+                  <ChoiceRow key={setup.discipline + ':' + setup.protocol_id} label={t(disciplineLabels[setup.discipline])}
                     selected={selectedProtocolId === setup.protocol_id} onPress={() => setSelectedProtocolId(setup.protocol_id)} />
                 ))}
               </View>
@@ -812,30 +820,28 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
               {selectedProtocol && selectedSetup && stage === 'feedback' ? (
                 <View style={styles.card}>
                   <View
-                    accessibilityLabel="Stop if you feel pain"
+                    accessibilityLabel={t('calibration.painWarning')}
                     accessibilityRole="alert"
                     accessible
                     style={styles.painWarning}
                   >
-                    <Text style={styles.painWarningText}>Stop if you feel pain</Text>
+                    <Text style={styles.painWarningText}>{t('calibration.painWarning')}</Text>
                   </View>
                   <View style={styles.badges}>
                     <ZoneStatusChip
                       label={
                         selectedProtocol.protocol_type === 'field_test'
-                          ? 'Veldtest'
-                          : 'Submaximaal'
+                          ? t('calibration.type.fieldTest')
+                          : t('calibration.type.submaximal')
                       }
                     />
-                    <ZoneStatusChip label={'Beoordeeld v' + selectedProtocol.version} />
+                    <ZoneStatusChip label={t('calibration.reviewedVersion', { version: selectedProtocol.version })} />
                   </View>
                   <Text style={styles.pageTitle}>
-                    {protocolLabels[selectedProtocol.protocol_id] ??
-                      selectedProtocol.protocol_id}
+                    {labelOr(t, protocolLabels[selectedProtocol.protocol_id], selectedProtocol.protocol_id)}
                   </Text>
                   <Text style={styles.muted}>
-                    Uitvoering op {guidanceLabels[selectedSetup.guidance_mode]}.
-                    Volg de blokken hieronder en vul je feedback direct in.
+                    {t('calibration.guidanceIntro', { guidance: t(guidanceLabels[selectedSetup.guidance_mode]) })}
                   </Text>
                   <View style={styles.segmentList}>
                     {selectedProtocol.segments.map((segment) => (
@@ -845,8 +851,8 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                         </View>
                         <View style={styles.segmentBody}>
                           <Text style={styles.segmentTitle}>
-                            {purposeLabels[segment.purpose] ?? segment.purpose}
-                            {segment.optional ? ' · optioneel' : ''}
+                            {labelOr(t, purposeLabels[segment.purpose], segment.purpose)}
+                            {segment.optional ? ' · ' + t('calibration.optional') : ''}
                           </Text>
                           <Text style={styles.muted}>
                             {segment.duration_seconds
@@ -861,31 +867,28 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                       </View>
                     ))}
                   </View>
-                  <ZoneInfoRow icon="document"><Text variant="supporting" tone="textMuted">Protocol: {selectedProtocol.protocol_id} · v{selectedProtocol.version} · {selectedProtocol.review_status}</Text></ZoneInfoRow>
-                  <Text style={styles.eyebrow}>Observatie</Text>
-                  <Text style={styles.pageTitle}>Objectief + jouw gevoel</Text>
-                  <Text style={styles.muted}>
-                    Ontbrekende sensordata blokkeert de activiteit niet. Laat
-                    velden leeg als je ze niet betrouwbaar hebt.
-                  </Text>
+                  <ZoneInfoRow icon="document"><Text variant="supporting" tone="textMuted">{t('calibration.protocolProvenance', { id: selectedProtocol.protocol_id, version: selectedProtocol.version, status: selectedProtocol.review_status })}</Text></ZoneInfoRow>
+                  <Text style={styles.eyebrow}>{t('calibration.observation.eyebrow')}</Text>
+                  <Text style={styles.pageTitle}>{t('calibration.observation.title')}</Text>
+                  <Text style={styles.muted}>{t('calibration.observation.hint')}</Text>
                   <FormField
                     autoCapitalize="none"
-                    label="Starttijd (ISO 8601)"
+                    label={t('calibration.field.startTime')}
                     onChangeText={setPerformedAt}
                     placeholder="2026-08-15T09:00:00+02:00"
                     value={performedAt}
                   />
                   <FormField
                     inputMode="decimal"
-                    label="Totale duur"
+                    label={t('calibration.field.totalDuration')}
                     onChangeText={setDurationMinutes}
-                    placeholder="minuten"
+                    placeholder={t('calibration.placeholder.minutes')}
                     value={durationMinutes}
                   />
                   <RpeChoiceList
                     disabled={busy}
                     discipline={selectedProtocol.discipline}
-                    label="Hoe voelde de volledige sessie?"
+                    label={t('calibration.sessionFeel')}
                     onSelect={(value) => setSessionRpe(String(value))}
                     selectedValue={Number(sessionRpe) || null}
                   />
@@ -893,7 +896,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                   {needsSwimConditions(selectedProtocol) ? (
                     <Toggle
                       checked={swimConditionsConfirmed}
-                      label={`${selectedSetup.pool_length_meters} m-bad, vrije slag en zonder paddles/vliezen/pull buoy`}
+                      label={t('calibration.swimConditions', { pool: String(selectedSetup.pool_length_meters) })}
                       onPress={() =>
                         setSwimConditionsConfirmed((current) => !current)
                       }
@@ -927,12 +930,12 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                       <View key={segment.segment_id} style={styles.segmentCard}>
                         <Text style={styles.segmentTitle}>
                           {segment.order}.{' '}
-                          {purposeLabels[segment.purpose] ?? segment.purpose}
+                          {labelOr(t, purposeLabels[segment.purpose], segment.purpose)}
                         </Text>
                         {segment.optional ? (
                           <Toggle
                             checked={draft.included}
-                            label="Optioneel blok uitgevoerd"
+                            label={t('calibration.optionalPerformed')}
                             onPress={() =>
                               updateDraft(segment.segment_id, {
                                 included: !draft.included,
@@ -946,7 +949,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                               <View style={[styles.column, compact && styles.fullWidth]}>
                                 <Toggle
                                   checked={draft.completed}
-                                  label="Voltooid"
+                                  label={t('calibration.completed')}
                                   onPress={() =>
                                     updateDraft(segment.segment_id, {
                                       completed: !draft.completed,
@@ -957,7 +960,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                               <View style={[styles.column, compact && styles.fullWidth]}>
                                 <Toggle
                                   checked={draft.interrupted}
-                                  label="Onderbroken"
+                                  label={t('calibration.interrupted')}
                                   onPress={() =>
                                     updateDraft(segment.segment_id, {
                                       interrupted: !draft.interrupted,
@@ -970,7 +973,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                               <RpeChoiceList
                                 disabled={busy}
                                 discipline={selectedProtocol.discipline}
-                                label="Hoe voelde dit blok?"
+                                label={t('calibration.blockFeel')}
                                 onSelect={(value) =>
                                   updateDraft(segment.segment_id, {
                                     blockRpe: String(value),
@@ -983,18 +986,18 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                               <>
                                 <FormField
                                   inputMode="decimal"
-                                  label="Gemiddeld tempo testblok"
+                                  label={t('calibration.field.runAveragePace')}
                                   onChangeText={(value) =>
                                     updateDraft(segment.segment_id, {
                                       averagePace: value,
                                     })
                                   }
-                                  placeholder="bijv. 5:00 min/km"
+                                  placeholder={t('calibration.placeholder.pace')}
                                   value={draft.averagePace}
                                 />
                                 <FormField
                                   inputMode="decimal"
-                                  label="Gem. HR laatste 20 min (optioneel)"
+                                  label={t('calibration.field.last20HeartRateOptional')}
                                   onChangeText={(value) =>
                                     updateDraft(segment.segment_id, {
                                       last20HeartRate: value,
@@ -1005,7 +1008,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                                 />
                                 <Toggle
                                   checked={draft.stableSegment}
-                                  label="Tempo was stabiel"
+                                  label={t('calibration.paceStable')}
                                   onPress={() =>
                                     updateDraft(segment.segment_id, {
                                       stableSegment: !draft.stableSegment,
@@ -1018,18 +1021,18 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                               <>
                                 <FormField
                                   inputMode="decimal"
-                                  label="Gem. vermogen laatste 20 min"
+                                  label={t('calibration.field.last20PowerShort')}
                                   onChangeText={(value) =>
                                     updateDraft(segment.segment_id, {
                                       last20Power: value,
                                     })
                                   }
-                                  placeholder="watt"
+                                  placeholder={t('calibration.placeholder.watt')}
                                   value={draft.last20Power}
                                 />
                                 <Toggle
                                   checked={draft.calibratedPowerSource}
-                                  label="Vermogensbron was gekalibreerd"
+                                  label={t('calibration.powerCalibrated')}
                                   onPress={() =>
                                     updateDraft(segment.segment_id, {
                                       calibratedPowerSource:
@@ -1039,7 +1042,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                                 />
                                 <Toggle
                                   checked={draft.stableSegment}
-                                  label="Vermogen was stabiel"
+                                  label={t('calibration.powerStable')}
                                   onPress={() =>
                                     updateDraft(segment.segment_id, {
                                       stableSegment: !draft.stableSegment,
@@ -1051,7 +1054,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                             {bikeHr ? (
                               <FormField
                                 inputMode="decimal"
-                                label="Gemiddelde hartslag testblok"
+                                label={t('calibration.field.bikeTestHeartRate')}
                                 onChangeText={(value) =>
                                   updateDraft(segment.segment_id, {
                                     averageHeartRate: value,
@@ -1064,20 +1067,20 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                             {swimTest ? (
                               <FormField
                                 inputMode="decimal"
-                                label={`Tijd ${segment.distance_meters} m`}
+                                label={t('calibration.field.swimDistanceTime', { distance: String(segment.distance_meters) })}
                                 onChangeText={(value) =>
                                   updateDraft(segment.segment_id, {
                                     elapsedTime: value,
                                   })
                                 }
-                                placeholder="seconden"
+                                placeholder={t('calibration.placeholder.seconds')}
                                 value={draft.elapsedTime}
                               />
                             ) : null}
                             {(runTest || bikeFtp || bikeHr) ? (
                               <FormField
                                 inputMode="decimal"
-                                label="Meetdekking"
+                                label={t('calibration.field.coverage')}
                                 onChangeText={(value) =>
                                   updateDraft(segment.segment_id, {
                                     completenessPercent: value,
@@ -1094,43 +1097,43 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                                   <>
                                     <FormField
                                       inputMode="decimal"
-                                      label="Gemeten totale tijd van dit blok"
+                                      label={t('calibration.field.blockTotalTime')}
                                       onChangeText={(value) =>
                                         updateDraft(segment.segment_id, {
                                           elapsedTime: value,
                                         })
                                       }
-                                      placeholder="seconden"
+                                      placeholder={t('calibration.placeholder.seconds')}
                                       value={draft.elapsedTime}
                                     />
                                     <FormField
                                       inputMode="decimal"
-                                      label="Vier herhalingstijden"
+                                      label={t('calibration.field.fourRepetitionTimes')}
                                       onChangeText={(value) =>
                                         updateDraft(segment.segment_id, {
                                           repetitionTimes: value,
                                         })
                                       }
-                                      placeholder="bijv. 210, 212, 211, 213"
+                                      placeholder={t('calibration.placeholder.repetitionTimes')}
                                       value={draft.repetitionTimes}
                                     />
                                     <FormField
                                       inputMode="decimal"
-                                      label="Vier rusttijden"
+                                      label={t('calibration.field.fourRestTimes')}
                                       onChangeText={(value) =>
                                         updateDraft(segment.segment_id, {
                                           repetitionRests: value,
                                         })
                                       }
-                                      placeholder="seconden, komma-gescheiden"
+                                      placeholder={t('calibration.placeholder.restTimes')}
                                       value={draft.repetitionRests}
                                     />
                                   </>
                                 ) : (
                                   <FormField
-                                    hint="Verplicht voor de deterministische drempel- en zoneberekening."
+                                    hint={t('calibration.averageHeartRateHint')}
                                     inputMode="decimal"
-                                    label="Gemiddelde hartslag"
+                                    label={t('calibration.field.averageHeartRate')}
                                     onChangeText={(value) =>
                                       updateDraft(segment.segment_id, {
                                         averageHeartRate: value,
@@ -1149,26 +1152,22 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                   })}
 
                   {activityId ? (
-                    <Text style={styles.safety}>
-                      De activiteit is al opgeslagen. Een retry gebruikt exact
-                      dezelfde activiteit en immutable segmentidentiteiten.
-                    </Text>
+                    <Text style={styles.safety}>{t('calibration.retryNotice')}</Text>
                   ) : null}
                   <ActionButton
-                    label="Opslaan en deterministisch evalueren"
+                    label={t('calibration.submit')}
                     loading={busy}
                     onPress={() => void submit()}
                   />
                   {priorResults.length > 0 ? (
                     <View style={styles.segmentList}>
                       <Text style={styles.historyText}>
-                        {priorResults.length} eerdere evaluatie
-                        {priorResults.length === 1 ? '' : 's'} voor dit protocol.
+                        {t(priorResults.length === 1 ? 'calibration.priorOne' : 'calibration.priorMany', { count: priorResults.length })}
                       </Text>
                       {priorResults.slice(0, 3).map((evaluation) => (
                         <ActionButton
                           key={evaluation.id}
-                          label={`Bekijk ${new Date(evaluation.created_at).toLocaleDateString('nl-NL')}`}
+                          label={t('calibration.viewResult', { date: new Date(evaluation.created_at).toLocaleDateString(locale) })}
                           onPress={() => openPriorResult(evaluation)}
                           secondary
                         />
@@ -1180,16 +1179,16 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
 
               {stage === 'result' && result ? (
                 <View style={styles.card}>
-                  <Text style={styles.eyebrow}>Resultaat</Text>
-                  <Text style={styles.pageTitle}>{resultLabels[result.status]}</Text>
+                  <Text style={styles.eyebrow}>{t('calibration.result.eyebrow')}</Text>
+                  <Text style={styles.pageTitle}>{t(resultLabels[result.status])}</Text>
                   <View style={styles.badges}>
-                    <ZoneStatusChip label={`Vertrouwen: ${result.confidence}`} />
-                    <ZoneStatusChip label={`Zones: ${result.zone_status}`} pending />
+                    <ZoneStatusChip label={t('calibration.confidence', { value: result.confidence })} />
+                    <ZoneStatusChip label={t('calibration.zoneStatus', { value: result.zone_status })} pending />
                   </View>
                   {result.thresholds.map((threshold) => (
                     <View key={threshold.metric_kind} style={styles.resultMetric}>
                       <Text style={styles.resultMetricLabel}>
-                        {metricLabels[threshold.metric_kind]}
+                        {t(metricLabels[threshold.metric_kind])}
                       </Text>
                       <Text style={styles.resultMetricValue}>
                         {zoneValue(threshold.metric_kind, threshold.value)}
@@ -1199,33 +1198,30 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                   {result.zone_profiles.map((profile) => (
                     <View key={profile.metric_kind} style={styles.resultMetric}>
                       <Text style={styles.resultMetricLabel}>
-                        {metricLabels[profile.metric_kind]}
-                        {profile.is_primary ? ' · primair' : ' · secundair'}
+                        {t(metricLabels[profile.metric_kind])}
+                        {' · ' + t(profile.is_primary ? 'calibration.primary' : 'calibration.secondary')}
                       </Text>
                       <ZoneTable boundaries={profile.boundaries} metricKind={profile.metric_kind} />
                       <Text variant="supporting" tone="textMuted">{profile.boundary_source} · {profile.zone_model_version}</Text>
                     </View>
                   ))}
-                  <ZoneInfoRow icon="document"><Text variant="supporting" tone="textMuted">Regels: {result.ruleset_version}{result.zone_model_version ? ' · Model: ' + result.zone_model_version : ''}</Text></ZoneInfoRow>
+                  <ZoneInfoRow icon="document"><Text variant="supporting" tone="textMuted">{t('calibration.rulesProvenance', { version: result.ruleset_version })}{result.zone_model_version ? ' · ' + t('calibration.modelProvenance', { version: result.zone_model_version }) : ''}</Text></ZoneInfoRow>
                   {result.reason_codes.map((reason) => (
                     <Text key={reason} style={styles.reason}>
-                      • {reasonLabels[reason] ?? reason.replaceAll('_', ' ')}
+                      • {labelOr(t, reasonLabels[reason], reason.replaceAll('_', ' '))}
                     </Text>
                   ))}
                   {result.requires_athlete_confirmation && !thresholdDecision ? (
                     <>
-                      <Text style={styles.safety}>
-                        Controleer eerst de gemeten drempel. Na bevestiging maakt
-                        Wombo een afzonderlijk, nog niet actief zonevoorstel.
-                      </Text>
+                      <Text style={styles.safety}>{t('calibration.confirmHint')}</Text>
                       <ActionButton
-                        label="Drempel bevestigen"
+                        label={t('calibration.confirmThreshold')}
                         loading={busy}
                         onPress={() => void confirmThreshold()}
                       />
                       <ActionButton
                         disabled={busy}
-                        label="Drempel afwijzen"
+                        label={t('calibration.rejectThreshold')}
                         onPress={() => void rejectThreshold()}
                         secondary
                       />
@@ -1235,42 +1231,29 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                   thresholdDecision.zone_proposal_state === 'pending' &&
                   !zonesActivated ? (
                     <>
-                      <Text style={styles.safety}>
-                        De drempel is bevestigd. De berekende zones staan nog als
-                        voorstel klaar en wijzigen je actieve profiel niet.
-                      </Text>
+                      <Text style={styles.safety}>{t('calibration.thresholdAccepted')}</Text>
                       <ActionButton
-                        label="Zones bevestigen"
+                        label={t('calibration.confirmZones')}
                         loading={busy}
                         onPress={() => void activateZones()}
                       />
                     </>
                   ) : null}
                   {thresholdDecision?.state === 'rejected' ? (
-                    <Text style={styles.safety}>
-                      Je hebt de drempel afgewezen. Er is geen zoneprofiel
-                      aangemaakt of geactiveerd.
-                    </Text>
+                    <Text style={styles.safety}>{t('calibration.thresholdRejected')}</Text>
                   ) : null}
                   {thresholdDecision?.state === 'accepted' &&
                   thresholdDecision.zone_proposal_state === 'rejected' ? (
-                    <Text style={styles.safety}>
-                      Je hebt de gemeten drempel behouden en het bijbehorende
-                      zonevoorstel afgewezen. Je eerdere actieve zones zijn niet
-                      gewijzigd.
-                    </Text>
+                    <Text style={styles.safety}>{t('calibration.zoneProposalRejected')}</Text>
                   ) : null}
                   {zonesActivated ? (
-                    <Text style={styles.safety}>
-                      Je bevestigde zoneprofiel is nu actief. De vorige versie is
-                      immutable bewaard als die bestond.
-                    </Text>
+                    <Text style={styles.safety}>{t('calibration.zonesActive')}</Text>
                   ) : null}
                   <ActionButton
-                    label="Nieuwe uitvoering"
+                    label={t('calibration.newAttempt')}
                     onPress={() => setStage('feedback')}
                   />
-                  <ActionButton label="Terug" onPress={onBack} secondary />
+                  <ActionButton label={t('calibration.back')} onPress={onBack} secondary />
                 </View>
               ) : null}
             </>

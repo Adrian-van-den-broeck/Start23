@@ -563,11 +563,13 @@ def test_historical_run_field_test_is_not_newly_selectable_or_schedulable(
 def test_historical_integrated_test_is_rejected_before_planning_service_call(
     calibration_context: tuple[TestClient, UUID, UUID],
 ) -> None:
+    # The specific reason is the English source message; Dutch, the default,
+    # words uncoded errors generically (see test_athlete_language.py).
     client, _, _ = calibration_context
 
     response = client.post(
         "/api/v1/calibration/test-assignments",
-        headers=_headers(),
+        headers={**_headers(), "Accept-Language": "en"},
         json={
             "discipline": "run",
             "protocol_id": "start23_run_threshold_30min_v1",
@@ -621,11 +623,13 @@ def test_current_swim_field_test_schedules_standalone_and_stays_pending(
 def test_current_swim_integrated_mode_fails_deterministically_before_planning(
     calibration_context: tuple[TestClient, UUID, UUID],
 ) -> None:
+    # The specific reason is the English source message; Dutch, the default,
+    # words uncoded errors generically (see test_athlete_language.py).
     client, _, _ = calibration_context
 
     response = client.post(
         "/api/v1/calibration/test-assignments",
-        headers=_headers(),
+        headers={**_headers(), "Accept-Language": "en"},
         json={
             "discipline": "swim",
             "protocol_id": "start23_swim_css_400_200_v1",
@@ -655,12 +659,14 @@ def test_new_historical_observation_and_evaluation_are_rejected(
     segment_id: str,
     target_rpe: int,
 ) -> None:
+    # The specific reason is the English source message; Dutch, the default,
+    # words uncoded errors generically (see test_athlete_language.py).
     client, _, _ = calibration_context
     activity_id = uuid4()
 
     observation = client.post(
         "/api/v1/calibration/observations",
-        headers=_headers(),
+        headers={**_headers(), "Accept-Language": "en"},
         json={
             **_segment_payload(activity_id, segment_id, target_rpe),
             "protocol_id": protocol_id,
@@ -669,7 +675,7 @@ def test_new_historical_observation_and_evaluation_are_rejected(
     )
     evaluation = client.post(
         "/api/v1/calibration/evaluate",
-        headers=_headers(),
+        headers={**_headers(), "Accept-Language": "en"},
         json={"activity_id": str(activity_id), "protocol_id": protocol_id},
     )
 

@@ -1,7 +1,12 @@
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { fireEvent, render as renderView, waitFor } from '@testing-library/react-native';
+import * as SecureStore from 'expo-secure-store';
+import type { ReactElement } from 'react';
+import { LanguageProvider } from '../i18n/LanguageProvider';
 import { getSupabaseClient } from '../lib/supabase';
 import { AuthScreen } from './AuthScreen';
 jest.mock('../lib/supabase', () => ({ getSupabaseClient: jest.fn() }));
+jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(async () => null), setItemAsync: jest.fn(async () => undefined), WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'unlocked' }));
+const render = (ui: ReactElement) => renderView(<LanguageProvider>{ui}</LanguageProvider>);
 const signIn = jest.fn(); const signUp = jest.fn();
 beforeEach(() => { jest.clearAllMocks(); jest.mocked(getSupabaseClient).mockReturnValue({ auth: { signInWithPassword: signIn, signUp } } as unknown as ReturnType<typeof getSupabaseClient>); });
 async function fill(view: Awaited<ReturnType<typeof render>>, password = 'password123') {
@@ -50,4 +55,21 @@ test('auth/config errors remain errors and mode selection clears current feedbac
   await view.findByRole('alert', { name: 'Supabase configuration unavailable' });
   await fireEvent.press(view.getByRole('tab', { name: 'Registreren' }));
   expect(view.queryByRole('alert')).toBeNull(); expect(signIn).not.toHaveBeenCalled();
+});
+test('English preference translates the form, validation and confirmation notice', async () => {
+  jest.mocked(SecureStore.getItemAsync).mockResolvedValueOnce('en');
+  signUp.mockResolvedValue({ data: { session: null }, error: null });
+  const view = await render(<AuthScreen />);
+  await fireEvent.press(await view.findByRole('tab', { name: 'Sign up' }));
+  await fireEvent.changeText(view.getByLabelText('Email address'), 'athlete@example.com');
+  await fireEvent.changeText(view.getByLabelText('Password'), '123');
+  await fireEvent.changeText(view.getByLabelText('Repeat password'), '123');
+  await fireEvent.press(view.getByRole('button', { name: 'Create account' }));
+  await view.findByRole('alert', { name: 'Choose a password of at least 6 characters.' });
+  await fireEvent.changeText(view.getByLabelText('Password'), 'password123');
+  await fireEvent.changeText(view.getByLabelText('Repeat password'), 'password123');
+  await fireEvent.press(view.getByRole('button', { name: 'Create account' }));
+  await view.findByText('Your account has been created. Check your email, then sign in.');
+  expect(view.getByRole('tab', { name: 'Sign in' })).toBeSelected();
+  expect(view.queryByText('Aanmelden')).toBeNull();
 });

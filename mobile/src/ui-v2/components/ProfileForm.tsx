@@ -6,6 +6,7 @@ import { Button } from '../primitives/Button';
 import { Input } from '../primitives/Input';
 import { layout } from '../tokens';
 import { FormComposition } from './FormComposition';
+import { useLanguage } from '../../i18n/LanguageProvider';
 
 type ProfileFormProps = {
   profile: AthleteProfile | null;
@@ -19,6 +20,8 @@ type ProfileFormProps = {
 };
 
 export function ProfileForm({ profile, saving, onSave }: ProfileFormProps) {
+  const { t } = useLanguage();
+  const optional = t('onboarding.optional');
   const [firstName, setFirstName] = useState(profile?.first_name ?? '');
   const [lastName, setLastName] = useState(profile?.last_name ?? '');
   const [dateOfBirth, setDateOfBirth] = useState(profile?.date_of_birth ?? '');
@@ -31,32 +34,32 @@ export function ProfileForm({ profile, saving, onSave }: ProfileFormProps) {
 
   return (
     <FormComposition
-      description="Deze gegevens ondersteunen alleen goedgekeurde, deterministische berekeningen. Er worden geen medische grenzen afgedwongen."
-      title="Jouw basis"
+      description={t('onboarding.profile.description')}
+      title={t('onboarding.profile.title')}
     >
       <View style={{ gap: layout.fieldGroupGap }}>
         <Input
-          label="Voornaam"
-          optionalLabel="(optioneel)"
+          label={t('onboarding.profile.firstName')}
+          optionalLabel={optional}
           icon="profile"
-          accessibilityLabel="Voornaam (optioneel)"
+          accessibilityLabel={`${t('onboarding.profile.firstName')} ${optional}`}
           onChangeText={setFirstName}
-          placeholder="Voornaam"
+          placeholder={t('onboarding.profile.firstName')}
           value={firstName}
         />
         <Input
-          label="Achternaam"
-          optionalLabel="(optioneel)"
+          label={t('onboarding.profile.lastName')}
+          optionalLabel={optional}
           icon="profile"
-          accessibilityLabel="Achternaam (optioneel)"
+          accessibilityLabel={`${t('onboarding.profile.lastName')} ${optional}`}
           onChangeText={setLastName}
-          placeholder="Achternaam"
+          placeholder={t('onboarding.profile.lastName')}
           value={lastName}
         />
         <Input
-          hint="Gebruik JJJJ-MM-DD. De streepjes verschijnen automatisch."
+          hint={t('onboarding.profile.dateOfBirthHint')}
           inputMode="numeric"
-          label="Geboortedatum"
+          label={t('onboarding.profile.dateOfBirth')}
           icon="calendar"
           maxLength={10}
           onChangeText={(value) => setDateOfBirth(formatIsoDateInput(value))}
@@ -65,18 +68,18 @@ export function ProfileForm({ profile, saving, onSave }: ProfileFormProps) {
         />
         <Input
           inputMode="numeric"
-          label="Rusthartslag"
+          label={t('onboarding.profile.restingHeartRate')}
           icon="heartRate"
           onChangeText={setRestingHeartRate}
           placeholder="52"
           unit="bpm"
-          accessibilityLabel="Rusthartslag"
+          accessibilityLabel={t('onboarding.profile.restingHeartRate')}
           value={restingHeartRate}
         />
       </View>
       <Button
         disabled={!valid}
-        label="Profiel opslaan"
+        label={t('onboarding.profile.save')}
         trailingIcon="forward"
         busy={saving}
         onPress={() =>

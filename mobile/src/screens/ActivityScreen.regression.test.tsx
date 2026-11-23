@@ -18,6 +18,8 @@ import type { CompletedActivity, OnboardingState } from '../api/types';
 import { LanguageProvider } from '../i18n/LanguageProvider';
 import { ActivityScreen } from './ActivityScreen';
 import { ActivityFlowProvider } from '../features/activities/ActivityFlowProvider';
+// These assertions are written in English; Dutch is now the default, so choose English explicitly.
+jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(async () => 'en'), setItemAsync: jest.fn(async () => undefined), WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'unlocked' }));
 
 jest.mock('../api/client', () => ({
   confirmActivityMatch: jest.fn(),
@@ -117,7 +119,9 @@ describe('unplanned workout regression', () => {
     );
     await fireEvent.press(
       within(card!).getByRole('radio', {
-        name: 'Diepe ademhaling (10k wedstrijdtempo). (RPE 7)',
+        // English is selected, so the RPE scale wording is English too (was Dutch before
+        // the scale moved into the dictionaries).
+        name: 'Deep breathing (10k race pace). (RPE 7)',
       }),
     );
 

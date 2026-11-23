@@ -12,11 +12,13 @@ import { Input, type InputProps } from '../primitives/Input';
 import { Notice } from '../primitives/Notice';
 import { Text } from '../primitives/Text';
 import { colors, layout, radius, space, typography } from '../tokens';
+import { useLanguage } from '../../i18n/LanguageProvider';
 
-function GoalInput({ required = false, label, ...props }: InputProps & { required?: boolean }) {
-  const optional = label.endsWith(' (optioneel)');
-  return <Input {...props} optionalLabel={optional ? '(optioneel)' : undefined}
-    label={(optional ? label.slice(0, -11) : label) + (required ? ' *' : '')} accessibilityLabel={props.accessibilityLabel ?? label} />;
+function GoalInput({ required = false, optional = false, label, ...props }: InputProps & { required?: boolean; optional?: boolean }) {
+  const { t } = useLanguage();
+  const optionalLabel = optional ? t('onboarding.optional') : undefined;
+  return <Input {...props} optionalLabel={optionalLabel}
+    label={label + (required ? ' *' : '')} accessibilityLabel={props.accessibilityLabel ?? (optionalLabel ? `${label} ${optionalLabel}` : label)} />;
 }
 
 type GoalStepProps = {
@@ -64,6 +66,7 @@ function normalizeRaceDate(value: string): string | null {
 }
 
 export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
+  const { t } = useLanguage();
   const nameRef = useRef<TextInput>(null);
   const dateRef = useRef<TextInput>(null);
   const paceRef = useRef<TextInput>(null);
@@ -134,9 +137,9 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
       return [
         discipline,
         !value
-          ? 'Afstand is verplicht.'
+          ? t('onboarding.goal.distanceRequired')
           : parsedDistances[discipline] === null
-            ? 'Vul een positief aantal meters in.'
+            ? t('onboarding.goal.distanceInvalid')
             : null,
       ];
     }),
@@ -146,40 +149,40 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
       discipline,
       disciplineTimeSeconds[discipline] !== null &&
       disciplineTimeSeconds[discipline] <= 0
-        ? 'Kies een tijd langer dan 00:00:00 of wis deze optionele tijd.'
+        ? t('onboarding.goal.splitInvalid')
         : null,
     ]),
   ) as Record<Discipline, string | null>;
   const goalValidationMessages = [
-    !raceName.trim() ? 'naam van de race' : null,
+    !raceName.trim() ? t('onboarding.goal.missing.raceName') : null,
     !targetDate.trim()
-      ? 'racedatum'
+      ? t('onboarding.goal.missing.raceDate')
       : !normalizedTargetDate
-        ? 'geldige toekomstige racedatum'
+        ? t('onboarding.goal.missing.validRaceDate')
         : null,
     ...disciplines.map((discipline) =>
       distanceErrors[discipline]
-        ? `afstand ${
+        ? t(
             discipline === 'swim'
-              ? 'zwemmen'
+              ? 'onboarding.goal.missing.distance.swim'
               : discipline === 'bike'
-                ? 'fietsen'
-                : 'lopen'
-          }`
+                ? 'onboarding.goal.missing.distance.bike'
+                : 'onboarding.goal.missing.distance.run',
+          )
         : null,
     ),
     effectiveTotalTimeSeconds === null
-      ? raceType === 'run' && runGoalInput === 'pace' ? 'geldig richttempo' : 'totale richttijd'
+      ? raceType === 'run' && runGoalInput === 'pace' ? t('onboarding.goal.missing.validPace') : t('onboarding.goal.missing.totalTime')
       : effectiveTotalTimeSeconds <= 0
-        ? 'geldige totale richttijd'
+        ? t('onboarding.goal.missing.validTotalTime')
         : null,
     ...disciplines.map((discipline) =>
       disciplineTimeErrors[discipline]
-        ? `geldige richttijd ${discipline}`
+        ? t('onboarding.goal.missing.validSplit', { discipline: t(`common.${discipline}`).toLowerCase() })
         : null,
     ),
     effectiveTotalTimeSeconds !== null && individualTotal > effectiveTotalTimeSeconds
-      ? 'een totale richttijd die niet korter is dan de onderdeeltijden'
+      ? t('onboarding.goal.missing.totalNotShorter')
       : null,
   ].filter((message): message is string => message !== null);
   const raceOption = options.find(
@@ -191,44 +194,44 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
 
   return (
     <FormComposition
-      description="Een wedstrijdplan rekent terug vanaf een racedatum. Een persoonlijk doel krijgt een eigen cyclus vanaf week 1 en gebruikt nooit stilzwijgend wedstrijdregels."
-      title="Kies je trainingsdoel"
+      description={t('onboarding.goal.description')}
+      title={t('onboarding.goal.title')}
     >
-      <View accessibilityRole="radiogroup" accessibilityLabel="Trainingsdoel" style={styles.goalModeList}>
-        <ChoiceRow label={(raceOption?.label ?? 'Wedstrijd of evenement') + ' · Beschikbaar'}
-          accessibilityLabel={raceOption?.label ?? 'Wedstrijd of evenement'}
-          hint="Verplichte racedatum; de trainingscyclus wordt vanaf die datum teruggerekend."
+      <View accessibilityRole="radiogroup" accessibilityLabel={t('onboarding.goal.groupLabel')} style={styles.goalModeList}>
+        <ChoiceRow label={t('onboarding.goal.available', { label: raceOption?.label ?? t('onboarding.goal.raceEvent') })}
+          accessibilityLabel={raceOption?.label ?? t('onboarding.goal.raceEvent')}
+          hint={t('onboarding.goal.raceHint')}
           selected={selectedKind === 'race_event'} disabled={raceOption?.availability !== 'available'} onPress={() => setSelectedKind('race_event')} />
-        <ChoiceRow label="Persoonlijk doel · Komt later" accessibilityLabel="Persoonlijk doel"
-          hint="Begint bij cyclusweek 1 en krijgt eigen doelregels zodra die zijn beoordeeld. Toont persoonlijke doelen die nog niet beschikbaar zijn."
+        <ChoiceRow label={t('onboarding.goal.personalComingLater')} accessibilityLabel={t('onboarding.goal.personal')}
+          hint={t('onboarding.goal.personalHint')}
           selected={selectedKind === 'personal_goal'} onPress={() => setSelectedKind('personal_goal')} />
       </View>
       {selectedKind === 'race_event' ? (
         <>
           <View style={styles.form}>
-            <Text style={styles.cardTitle}>Type wedstrijd</Text>
+            <Text style={styles.cardTitle}>{t('onboarding.goal.raceType')}</Text>
             <View style={styles.goalModeList}>
               {(
                 [
-                  ['run', 'Lopen'],
-                  ['bike', 'Fietsen'],
-                  ['swim', 'Zwemmen'],
-                  ['triathlon', 'Triatlon'],
-                  ['duathlon', 'Duatlon'],
+                  ['run', 'common.run'],
+                  ['bike', 'common.bike'],
+                  ['swim', 'common.swim'],
+                  ['triathlon', 'onboarding.goal.raceType.triathlon'],
+                  ['duathlon', 'onboarding.goal.raceType.duathlon'],
                 ] as const
-              ).map(([value, label]) => (
-                <ChoiceRow key={value} label={label} selected={raceType === value} onPress={() => setRaceType(value)} />
+              ).map(([value, labelKey]) => (
+                <ChoiceRow key={value} label={t(labelKey)} selected={raceType === value} onPress={() => setRaceType(value)} />
               ))}
             </View>
             <GoalInput
               error={
                 validationAttempted && !raceName.trim()
-                  ? 'Naam van de race is verplicht.'
+                  ? t('onboarding.goal.raceNameRequired')
                   : undefined
               }
               inputRef={nameRef}
               icon="goal"
-              label="Naam van de race"
+              label={t('onboarding.goal.raceName')}
               onChangeText={setRaceName}
               placeholder="Amsterdam Olympic Triathlon"
               value={raceName}
@@ -239,17 +242,17 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
               error={
                 validationAttempted
                   ? !targetDate.trim()
-                    ? 'Racedatum is verplicht.'
+                    ? t('onboarding.goal.raceDateRequired')
                     : !normalizedTargetDate
-                      ? 'Gebruik een geldige toekomstige datum.'
+                      ? t('onboarding.goal.raceDateInvalid')
                       : undefined
                   : undefined
               }
-              hint="JJJJ-MM-DD"
+              hint={t('onboarding.goal.dateFormat')}
               inputMode="numeric"
               inputRef={dateRef}
               icon="calendar"
-              label="Racedatum"
+              label={t('onboarding.goal.raceDate')}
               maxLength={10}
               onChangeText={(value) =>
                 setTargetDate(formatIsoDateInput(value))
@@ -261,11 +264,11 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
             {disciplines.map((discipline) => (
               <View key={discipline} style={styles.disciplineCard}>
                 <Text style={styles.cardTitle}>
-                  {discipline === 'swim'
-                    ? 'Zwemmen'
+                  {t(discipline === 'swim'
+                    ? 'common.swim'
                     : discipline === 'bike'
-                      ? 'Fietsen'
-                      : 'Lopen'}
+                      ? 'common.bike'
+                      : 'common.run')}
                 </Text>
                 <GoalInput
                   error={
@@ -276,7 +279,7 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                   inputMode="numeric"
                   inputRef={distanceRefs[discipline]}
                   icon={discipline}
-                  label="Afstand"
+                  label={t('onboarding.goal.distance')}
                   onChangeText={(value) =>
                     setDistances((current) => ({
                       ...current,
@@ -294,9 +297,9 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                       ? disciplineTimeErrors[discipline] ?? undefined
                       : undefined
                   }
-                  hint="Optioneel. Kies uren, minuten en seconden zonder toetsenbord."
+                  hint={t('onboarding.goal.splitHint')}
                   focusRef={splitRefs[discipline]}
-                  label="Richttijd onderdeel"
+                  label={t('onboarding.goal.splitLabel')}
                   onChange={(value) =>
                     setDisciplineTimeSeconds((current) => ({
                       ...current,
@@ -309,53 +312,54 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
             ))}
             {raceType === 'run' ? (
               <View accessibilityRole="radiogroup" style={styles.goalModeList}>
-                <ChoiceRow label="Richttijd" selected={runGoalInput === 'time'} onPress={() => setRunGoalInput('time')} />
-                <ChoiceRow label="Richttempo (min/km)" selected={runGoalInput === 'pace'} onPress={() => {
+                <ChoiceRow label={t('onboarding.goal.targetTime')} selected={runGoalInput === 'time'} onPress={() => setRunGoalInput('time')} />
+                <ChoiceRow label={t('onboarding.goal.targetPaceOption')} selected={runGoalInput === 'pace'} onPress={() => {
                   setRunGoalInput('pace');
                   setDisciplineTimeSeconds((current) => ({ ...current, run: null }));
                 }} />
               </View>
             ) : null}
             {raceType === 'run' && runGoalInput === 'pace' ? (
-              <GoalInput inputRef={paceRef} icon="clock" label="Richttempo" inputMode="text" placeholder="5:00"
+              <GoalInput inputRef={paceRef} icon="clock" label={t('onboarding.goal.targetPace')} inputMode="text" placeholder="5:00"
                 hint="min:sec per km" value={runGoalPace} onChangeText={setRunGoalPace}
-                error={validationAttempted && paceSeconds === null ? 'Gebruik min:sec per km, bijvoorbeeld 5:00.' : undefined}
+                error={validationAttempted && paceSeconds === null ? t('onboarding.paceFormat') : undefined}
                 required />
             ) : <DurationPicker appearance="final"
               error={
                 validationAttempted
                   ? effectiveTotalTimeSeconds === null
-                    ? 'Totale richttijd is verplicht.'
+                    ? t('onboarding.goal.totalRequired')
                     : effectiveTotalTimeSeconds <= 0
-                      ? 'Kies een tijd langer dan 00:00:00.'
+                      ? t('onboarding.goal.totalPositive')
                       : individualTotal > effectiveTotalTimeSeconds
-                        ? 'De totale richttijd mag niet korter zijn dan de onderdeeltijden samen.'
+                        ? t('onboarding.goal.totalTooShort')
                         : undefined
                   : undefined
               }
-              hint="Verplicht. Kies uren, minuten en seconden zonder toetsenbord."
+              hint={t('onboarding.goal.totalHint')}
               focusRef={totalRef}
-              label="Totale richttijd"
+              label={t('onboarding.goal.totalLabel')}
               onChange={setTotalTimeSeconds}
               valueSeconds={totalTimeSeconds}
               required
             />}
             <GoalInput
-              label="Specifieke focus (optioneel)"
+              label={t('onboarding.goal.focus')}
+              optional
               multiline
               onChangeText={setSpecificFocus}
-              placeholder="Bijvoorbeeld: extra aandacht voor het zwemonderdeel."
+              placeholder={t('onboarding.goal.focusPlaceholder')}
               style={styles.multiline}
               value={specificFocus}
             />
           </View>
           {validationAttempted && goalValidationMessages.length > 0 ? (
             <Notice tone="error">
-              {'Vul de gemarkeerde verplichte velden in: ' + goalValidationMessages.join(', ') + '.'}
+              {t('onboarding.goal.missingFields', { fields: goalValidationMessages.join(', ') })}
             </Notice>
           ) : null}
           <Button
-            label="A-doel opslaan"
+            label={t('onboarding.goal.save')}
             trailingIcon="forward"
             busy={saving}
             onPress={() => {
@@ -404,18 +408,16 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
       {selectedKind === 'personal_goal' ? (
         <View style={styles.personalGoalsPanel}>
           <Text style={styles.personalGoalsTitle}>
-            Persoonlijke planningsmodi komen later
+            {t('onboarding.goal.personalTitle')}
           </Text>
           <Text style={styles.personalGoalsText}>
-            De deterministische macrocycli, intensiteitsdoelen en herstelregels
-            zijn nog niet beoordeeld. Daarom kan Wombo deze doelen nog niet
-            opslaan of als wedstrijdplan behandelen.
+            {t('onboarding.goal.personalText')}
           </Text>
           <View style={styles.personalGoalList}>
             {personalOptions.map((option) => (
               <View key={option.goal_family} style={styles.personalGoalRow}>
                 <Text style={styles.personalGoalLabel}>{option.label}</Text>
-                <Text style={styles.comingLaterBadge}>Komt later</Text>
+                <Text style={styles.comingLaterBadge}>{t('onboarding.goal.comingLater')}</Text>
               </View>
             ))}
           </View>

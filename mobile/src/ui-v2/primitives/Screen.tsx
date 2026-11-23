@@ -1,5 +1,6 @@
+import { focusHeading as focusScreenHeading } from '../../ui-v3/focusHeading';
 import { useRef, type ReactNode } from 'react';
-import { AccessibilityInfo, ScrollView, StyleSheet, View, type ScrollViewProps } from 'react-native';
+import { ScrollView, StyleSheet, View, type ScrollViewProps } from 'react-native';
 import { ShellSafeArea } from '../components/ShellInsets';
 import { AppHeader } from '../components/AppHeader';
 import { useLanguage } from '../../i18n/LanguageProvider';
@@ -12,12 +13,12 @@ export function Screen({ title, children, onBack, scrollProps, topInsetOwned = f
   const heading = useRef<View>(null);
   const focused = useRef(false);
   return <ShellSafeArea independent={topInsetOwned} style={styles.frame}>
-    <ScrollView testID="workout-detail-scroll" {...scrollProps} style={styles.scroll} contentContainerStyle={styles.content}>
+    <ScrollView testID="workout-detail-scroll" keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" {...scrollProps} style={styles.scroll} contentContainerStyle={styles.content}>
       <AppHeader title={title} task backIcon={backLabel ? 'back' : 'close'} onBack={onBack} backLabel={backLabel ?? t('common.close')} backDisabled={backDisabled}
         landscape={landscape} titleVariant={titleVariant} titleRef={heading} onTitleLayout={() => {
           if (focusHeading && !focused.current && heading.current) {
             focused.current = true;
-            AccessibilityInfo.sendAccessibilityEvent(heading.current, 'focus');
+            focusScreenHeading(heading.current);
           }
         }} />
       {children}

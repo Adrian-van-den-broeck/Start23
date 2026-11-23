@@ -1,5 +1,6 @@
 import type { createActivity } from '../../api/client';
 import type { Discipline, PlannedExternalActivity, PlannedWorkout } from '../../api/types';
+import { translate } from '../../i18n/runtime';
 
 export function newIdempotencyKey(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (value) => {
@@ -14,7 +15,7 @@ export function activityCreateInput({ discipline, duration, distance, startedAt,
   selectedWorkout: PlannedWorkout | null; selectedExternal: PlannedExternalActivity | null;
 }): Parameters<typeof createActivity>[2] {
   if (!athleteTimezone) {
-    throw new Error('Bevestig eerst je tijdzone in de intake.');
+    throw new Error(translate('activities.timezoneMissing'));
   }
   const numericDuration = duration.trim() === '' ? null : Number(duration);
   const numericDistance = distance ? Number(distance) : undefined;
@@ -23,16 +24,16 @@ export function activityCreateInput({ discipline, duration, distance, startedAt,
       ? discipline !== 'swim' || numericDistance === undefined
       : !Number.isFinite(numericDuration) || numericDuration <= 0
   ) {
-    throw new Error('Vul een geldige duur in minuten in.');
+    throw new Error(translate('activityText.invalidDuration'));
   }
   if (
     numericDistance !== undefined &&
     (!Number.isInteger(numericDistance) || numericDistance <= 0)
   ) {
-    throw new Error('Vul afstand in hele meters in.');
+    throw new Error(translate('activityText.invalidDistance'));
   }
   if (Number.isNaN(new Date(startedAt).getTime())) {
-    throw new Error('Gebruik een geldig werkelijk starttijdstip in ISO-formaat.');
+    throw new Error(translate('activityText.invalidStartedAt'));
   }
   return {
     ...(selectedWorkout

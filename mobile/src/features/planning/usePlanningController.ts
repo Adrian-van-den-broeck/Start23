@@ -19,6 +19,7 @@ import {
 } from '../../api/client';
 import type { Discipline, OnboardingState, PlanWarning, PlannedWorkout, PrimaryRaceGoal, SwipeWeekDraft, WeeklyPlan } from '../../api/types';
 import { isDateInWeek } from '../../components/WeekSchedule';
+import { translate } from '../../i18n/runtime';
 import { availableDatesFor, dayOffsetsFor, isoDate, nextMonday } from './planningDates';
 import { latestPlanIdKey, latestSwipeDraftIdKey, rememberPlanId, rememberSwipeDraftId } from './planningResume';
 import { usePendingWorkoutActions } from './usePendingWorkoutActions';
@@ -202,7 +203,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
       setError(
         caught instanceof Error
           ? caught.message
-          : 'De planningsactie is niet gelukt.',
+          : translate('errors.planningActionFailed'),
       );
     } finally {
       mutationInFlight.current = false;
@@ -247,7 +248,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     run(async () => {
       const dates = availableDatesFor(weekStart, selectedDays);
       if (!reusePreviousWeek && dates.length === 0) {
-        throw new Error('Kies minstens één beschikbare trainingsdag.');
+        throw new Error(translate('errors.availabilityRequired'));
       }
       const boundPlan = plan?.revision_state === 'active' ? plan : null;
       const result = await createSwipeWeekDraft(accessToken, {
@@ -386,7 +387,7 @@ export function usePlanningController(accessToken: string, initialOnboarding?: O
     if (!moveOwnerAlive.current || currentPlan.current !== plan || plan?.revision_state !== 'active' || !plan.active_revision ||
       currentMove.current || !plan.workouts.some(item => item.id === workout.id && item.status === 'scheduled' && item.scheduled_date === workout.scheduled_date)) return;
     if (!isDateInWeek(scheduledDate, plan.week_start)) {
-      setError('Gebruik een geldige datum binnen deze planweek (JJJJ-MM-DD).');
+      setError(translate('errors.invalidPlanWeekDate'));
       return;
     }
     void run(async () => {

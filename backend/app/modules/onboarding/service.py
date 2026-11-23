@@ -14,6 +14,7 @@ from app.modules.onboarding.eligibility import (
 )
 from app.modules.onboarding.repository import JsonObject, OnboardingRepository
 from app.modules.onboarding.schemas import (
+    GOAL_FAMILY_LABELS,
     AthleteIdentifyingProfileResponse,
     AthleteIdentifyingProfileUpdate,
     AthleteOperationalProfileResponse,
@@ -73,7 +74,7 @@ class OnboardingService:
             GoalPlanningOptionResponse(
                 goal_kind="race_event",
                 goal_family="race_event",
-                label="Wedstrijd of evenement",
+                label=GOAL_FAMILY_LABELS["race_event"]["nl"],
                 availability="available",
                 requires_target_date=True,
                 cycle_anchor="race_date",
@@ -82,7 +83,7 @@ class OnboardingService:
             GoalPlanningOptionResponse(
                 goal_kind="personal_goal",
                 goal_family="general_fitness",
-                label="Algemene fitheid",
+                label=GOAL_FAMILY_LABELS["general_fitness"]["nl"],
                 availability="coming_later",
                 requires_target_date=False,
                 cycle_anchor="cycle_week_1",
@@ -91,7 +92,7 @@ class OnboardingService:
             GoalPlanningOptionResponse(
                 goal_kind="personal_goal",
                 goal_family="weight_loss",
-                label="Gewichtsverlies",
+                label=GOAL_FAMILY_LABELS["weight_loss"]["nl"],
                 availability="coming_later",
                 requires_target_date=False,
                 cycle_anchor="cycle_week_1",
@@ -100,7 +101,7 @@ class OnboardingService:
             GoalPlanningOptionResponse(
                 goal_kind="personal_goal",
                 goal_family="muscle_gain",
-                label="Spieropbouw",
+                label=GOAL_FAMILY_LABELS["muscle_gain"]["nl"],
                 availability="coming_later",
                 requires_target_date=False,
                 cycle_anchor="cycle_week_1",

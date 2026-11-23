@@ -1799,6 +1799,8 @@ def test_plan_generation_requires_authentication(
 def test_planner_rejects_legacy_or_incomplete_onboarding_before_generation(
     planning_client: TestClient,
 ) -> None:
+    # The specific reason is the English source message; Dutch, the default,
+    # words uncoded errors generically (see test_athlete_language.py).
     app = cast(FastAPI, planning_client.app)
     repository = cast(MemoryPlanningRepository, app.state.planning_repository)
     owner = repository._owner("athlete-a")
@@ -1809,7 +1811,7 @@ def test_planner_rejects_legacy_or_incomplete_onboarding_before_generation(
 
     proposal = planning_client.post(
         "/api/v1/weekly-plans/proposals",
-        headers=_headers(),
+        headers={**_headers(), "Accept-Language": "en"},
         json={
             "week_start": "2026-08-03",
             "available_dates": _availability_payload(),
@@ -1818,7 +1820,7 @@ def test_planner_rejects_legacy_or_incomplete_onboarding_before_generation(
     )
     swipe = planning_client.post(
         "/api/v1/weekly-plans/swipe-drafts",
-        headers=_headers(),
+        headers={**_headers(), "Accept-Language": "en"},
         json={
             "week_start": "2026-08-03",
             "available_dates": _availability_payload(),
@@ -1839,6 +1841,8 @@ def test_planner_rechecks_r4_profile_prerequisites_from_snapshot(
     planning_client: TestClient,
     missing_profile_field: str,
 ) -> None:
+    # The specific reason is the English source message; Dutch, the default,
+    # words uncoded errors generically (see test_athlete_language.py).
     app = cast(FastAPI, planning_client.app)
     repository = cast(MemoryPlanningRepository, app.state.planning_repository)
     owner = repository._owner("athlete-a")
@@ -1848,7 +1852,7 @@ def test_planner_rechecks_r4_profile_prerequisites_from_snapshot(
 
     proposal = planning_client.post(
         "/api/v1/weekly-plans/proposals",
-        headers=_headers(),
+        headers={**_headers(), "Accept-Language": "en"},
         json={
             "week_start": "2026-08-03",
             "available_dates": _availability_payload(),

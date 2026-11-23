@@ -1,0 +1,39 @@
+import { defineDictionary } from './define';
+
+// Keys are namespaced 'activityText.*' (base already owns 'activity.*' and
+// 'activities.*'). Dutch first; English must cover every key.
+export default defineDictionary({
+  'activityText.feelPrompt': 'Hoe voelde deze training?',
+  'activityText.correctedFeel': 'Gecorrigeerd gevoel',
+  'activityText.timezoneUnconfirmed': 'Niet bevestigd',
+  'activityText.optionalWithDistance': 'optioneel bij afstand',
+  'activityText.invalidPace': 'ongeldig tempo',
+  'activityText.timezoneRequiredToRecord': 'Bevestig eerst je tijdzone in de intake voordat je activiteiten registreert.',
+  'activityText.finishPendingRpe': 'Rond eerst de RPE van de opgeslagen activiteit af.',
+  'activityText.heartRateRange': 'Vul een gemiddelde hartslag tussen 20 en 260 bpm in.',
+  'activityText.unavailable': 'De activiteit is niet meer beschikbaar.',
+  'activityText.loadFailed': 'Laden is mislukt.',
+  'activityText.saveFailed': 'De activiteit kon niet worden opgeslagen.',
+  'activityText.rpeSaveFailed': 'RPE opslaan is mislukt.',
+  'activityText.matchFailed': 'De koppeling kon niet worden bevestigd.',
+  'activityText.invalidDuration': 'Vul een geldige duur in minuten in.',
+  'activityText.invalidDistance': 'Vul afstand in hele meters in.',
+  'activityText.invalidStartedAt': 'Gebruik een geldig werkelijk starttijdstip in ISO-formaat.',
+}, {
+  'activityText.feelPrompt': 'How did this workout feel?',
+  'activityText.correctedFeel': 'Corrected feel',
+  'activityText.timezoneUnconfirmed': 'Not confirmed',
+  'activityText.optionalWithDistance': 'optional with distance',
+  'activityText.invalidPace': 'invalid pace',
+  'activityText.timezoneRequiredToRecord': 'Confirm your time zone in onboarding before you record activities.',
+  'activityText.finishPendingRpe': 'Finish the RPE for the saved activity first.',
+  'activityText.heartRateRange': 'Enter an average heart rate between 20 and 260 bpm.',
+  'activityText.unavailable': 'This activity is no longer available.',
+  'activityText.loadFailed': 'Loading failed.',
+  'activityText.saveFailed': 'The activity could not be saved.',
+  'activityText.rpeSaveFailed': 'Saving RPE failed.',
+  'activityText.matchFailed': 'The match could not be confirmed.',
+  'activityText.invalidDuration': 'Enter a valid duration in minutes.',
+  'activityText.invalidDistance': 'Enter the distance in whole metres.',
+  'activityText.invalidStartedAt': 'Use a valid actual start time in ISO format.',
+});

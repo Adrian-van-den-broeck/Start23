@@ -1,11 +1,12 @@
 import { Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import type { PlannedWorkout, WorkoutSegment } from '../api/types';
+import { translate } from '../i18n/runtime';
 import { colors, radius, spacing } from '../theme/tokens';
 import { MotionPressable as Pressable } from './MotionPressable';
 
 function segmentTarget(segment: WorkoutSegment): string {
-  if (segment.zone_target !== null) return `Zone ${segment.zone_target}`;
+  if (segment.zone_target !== null) return translate('detail.zone', { value: segment.zone_target });
   const target = segment.rpe_target ?? segment.protocol_target;
   if (target) {
     const range = target.target_rpe_min === target.target_rpe_max
@@ -16,6 +17,8 @@ function segmentTarget(segment: WorkoutSegment): string {
   return `RPE ${segment.expected_rpe}`;
 }
 
+// WorkoutDetailBoundary calls this as a plain function, so it must stay hook-free:
+// text uses the runtime translator, which follows the provider's current language.
 export function WorkoutDetail({ workout, onClose }: {
   workout: PlannedWorkout | null;
   onClose: () => void;
@@ -25,7 +28,7 @@ export function WorkoutDetail({ workout, onClose }: {
       {workout ? (
         <View style={styles.page}>
           <Pressable accessibilityRole="button" onPress={onClose} style={styles.close}>
-            <Text style={styles.closeText}>Sluiten</Text>
+            <Text style={styles.closeText}>{translate('common.close')}</Text>
           </Pressable>
           <ScrollView contentContainerStyle={styles.content}>
             <Text style={styles.title}>{workout.name}</Text>
@@ -33,7 +36,7 @@ export function WorkoutDetail({ workout, onClose }: {
             <Text style={styles.meta}>
               {workout.duration_minutes !== null
                 ? `${Number(workout.duration_minutes)} min`
-                : `${workout.distance_meters} m · afstandgestuurd`}
+                : translate('planning.distanceBased', { distance: String(workout.distance_meters) })}
               {' · '}RPE {workout.expected_rpe_min}
               {workout.expected_rpe_max === workout.expected_rpe_min
                 ? '' : `–${workout.expected_rpe_max}`}
@@ -49,7 +52,7 @@ export function WorkoutDetail({ workout, onClose }: {
                       ? `${segment.distance_meters} m`
                       : ''}
                   {' · '}{segmentTarget(segment)}
-                  {segment.is_swim_technique ? ' · techniek' : ''}
+                  {segment.is_swim_technique ? ` · ${translate('planning.detail.technique')}` : ''}
                 </Text>
               </View>
             ))}

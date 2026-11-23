@@ -3,6 +3,7 @@ import { getCalendar } from '../../api/client';
 import type { PlannedWorkout, RestDay, WeeklyPlan } from '../../api/types';
 import { isDateInWeek } from '../../components/WeekSchedule';
 import type { CalendarRange } from './calendarDates';
+import { format } from '../../i18n/dictionaries';
 
 export function useCalendarController(
   accessToken: string,
@@ -37,9 +38,7 @@ export function useCalendarController(
           setError(
             caught instanceof Error
               ? caught.message
-              : language === 'nl'
-                ? 'De kalender kon niet worden geladen.'
-                : 'The calendar could not be loaded.',
+              : format(language, 'errors.calendarLoadFailed'),
           );
         })
         .finally(() => {

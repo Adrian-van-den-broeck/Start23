@@ -1,63 +1,94 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import type { PlanWarning } from '../api/types';
+import { type TranslationKey, useLanguage } from '../i18n/LanguageProvider';
+import { translate } from '../i18n/runtime';
 import { colors, radius, spacing } from '../theme/tokens';
 import { MotionPressable as Pressable } from './MotionPressable';
 
-const warningCopy: Record<string, { message: string; title: string }> = {
+const warningCodes = [
+  'all_disciplines_blocked_rest_only',
+  'anti_stack_violation',
+  'cross_training_choice_available',
+  'distance_only_swim_excluded_from_time_ratio',
+  'injury_replacement_capacity_limited',
+  'injured_disciplines_excluded',
+  'manual_review_required',
+  'outside_confirmed_availability',
+  'realized_intensity_debt_applied',
+  'restricted_disciplines_low_only',
+  'target_outside_catalog_capacity',
+  'workouts_consolidated_on_available_dates',
+] as const;
+type WarningCode = (typeof warningCodes)[number];
+
+const warningCopy: Record<WarningCode, { message: TranslationKey; title: TranslationKey }> = {
   all_disciplines_blocked_rest_only: {
-    title: 'Rustweek voorgesteld',
-    message:
-      'Alle disciplines zijn momenteel geblokkeerd. Daarom bevat dit voorstel alleen rust.',
+    title: 'planning.warning.all_disciplines_blocked_rest_only.title',
+    message: 'planning.warning.all_disciplines_blocked_rest_only.message',
   },
   anti_stack_violation: {
-    title: 'Meer herstel nodig',
-    message:
-      'Tussen deze intensieve trainingen is extra herstel nodig. Kies een andere datum.',
+    title: 'planning.warning.anti_stack_violation.title',
+    message: 'planning.warning.anti_stack_violation.message',
   },
   injured_disciplines_excluded: {
-    title: 'Blessure verwerkt',
-    message:
-      'Trainingen voor de bevestigde geblesseerde disciplines zijn niet opgenomen.',
+    title: 'planning.warning.injured_disciplines_excluded.title',
+    message: 'planning.warning.injured_disciplines_excluded.message',
   },
   manual_review_required: {
-    title: 'Extra controle nodig',
-    message:
-      'Er was geen veilig regulier weekdoel beschikbaar. Controleer dit herstelvoorstel extra zorgvuldig.',
+    title: 'planning.warning.manual_review_required.title',
+    message: 'planning.warning.manual_review_required.message',
   },
   outside_confirmed_availability: {
-    title: 'Datum niet beschikbaar',
-    message:
-      'Een training valt buiten je bevestigde beschikbare dagen. Kies een beschikbare datum.',
+    title: 'planning.warning.outside_confirmed_availability.title',
+    message: 'planning.warning.outside_confirmed_availability.message',
   },
   realized_intensity_debt_applied: {
-    title: 'Rustiger weekdoel',
-    message:
-      'Je recente trainingsgegevens verlagen de intensieve tijd voor deze week.',
+    title: 'planning.warning.realized_intensity_debt_applied.title',
+    message: 'planning.warning.realized_intensity_debt_applied.message',
   },
   restricted_disciplines_low_only: {
-    title: 'Alleen rustige training',
-    message:
-      'Voor een beperkte discipline zijn alleen rustige trainingen opgenomen.',
+    title: 'planning.warning.restricted_disciplines_low_only.title',
+    message: 'planning.warning.restricted_disciplines_low_only.message',
   },
   target_outside_catalog_capacity: {
-    title: 'Weekcombinatie vraagt aandacht',
-    message:
-      'De gekozen trainingen sluiten niet precies aan op dit weekvoorstel. Controleer de combinatie voor goedkeuring.',
+    title: 'planning.warning.target_outside_catalog_capacity.title',
+    message: 'planning.warning.target_outside_catalog_capacity.message',
   },
   workouts_consolidated_on_available_dates: {
-    title: 'Trainingen gecombineerd',
-    message:
-      'Er staan meerdere trainingen op dezelfde beschikbare dag. Plan voldoende herstel tussen de sessies.',
+    title: 'planning.warning.workouts_consolidated_on_available_dates.title',
+    message: 'planning.warning.workouts_consolidated_on_available_dates.message',
+  },  // The server words these three in one language only; the app shows them in the chosen one.
+  cross_training_choice_available: {
+    title: 'planning.warning.cross_training_choice_available.title',
+    message: 'planning.warning.cross_training_choice_available.message',
+  },
+  distance_only_swim_excluded_from_time_ratio: {
+    title: 'planning.warning.distance_only_swim_excluded_from_time_ratio.title',
+    message: 'planning.warning.distance_only_swim_excluded_from_time_ratio.message',
+  },
+  injury_replacement_capacity_limited: {
+    title: 'planning.warning.injury_replacement_capacity_limited.title',
+    message: 'planning.warning.injury_replacement_capacity_limited.message',
   },
 };
 
+function isWarningCode(code: string): code is WarningCode {
+  return (warningCodes as readonly string[]).includes(code);
+}
+
+// Called from render paths and view models alike, so it reads the language the
+// provider last applied. Unknown codes keep the server's own message.
 export function warningPresentation(warning: PlanWarning): {
   message: string;
   title: string;
 } {
-  return warningCopy[warning.code] ?? {
-    title: 'Aandachtspunt',
+  if (isWarningCode(warning.code)) {
+    const copy = warningCopy[warning.code];
+    return { title: translate(copy.title), message: translate(copy.message) };
+  }
+  return {
+    title: translate('planning.warning.fallbackTitle'),
     message: warning.message,
   };
 }
@@ -93,9 +124,10 @@ export function MoveWarningPanel({
   onConfirm: () => void;
   warnings: PlanWarning[];
 }) {
+  const { t } = useLanguage();
   return (
     <View accessibilityRole="alert" style={styles.panel}>
-      <Text style={styles.title}>Controleer deze verplaatsing</Text>
+      <Text style={styles.title}>{t('move.warning')}</Text>
       {warnings.map((warning) => {
         const presentation = warningPresentation(warning);
         return (
@@ -105,16 +137,13 @@ export function MoveWarningPanel({
           </View>
         );
       })}
-      <Text style={styles.body}>
-        De server blijft leidend. Bevestig alleen als je deze kwalitatieve
-        aandachtspunten hebt beoordeeld.
-      </Text>
+      <Text style={styles.body}>{t('planning.move.serverAuthoritative')}</Text>
       <View style={styles.actions}>
         <View style={styles.actionCell}>
-          <Button label="Toch verplaatsen" onPress={onConfirm} />
+          <Button label={t('move.confirm')} onPress={onConfirm} />
         </View>
         <View style={styles.actionCell}>
-          <Button label="Annuleren" onPress={onCancel} secondary />
+          <Button label={t('move.cancel')} onPress={onCancel} secondary />
         </View>
       </View>
     </View>

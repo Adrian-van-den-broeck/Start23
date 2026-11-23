@@ -63,7 +63,7 @@ test.each(['Week', 'Calendar'])('%s opens exact owned snapshot; comparison and d
     onSignOut={jest.fn(async () => undefined)} onBackToOnboarding={jest.fn()} onOpenActivities={jest.fn()}
     onOpenCheckIn={jest.fn()} onOpenIntegrations={jest.fn()} onOpenProfile={jest.fn()} onOpenZoneProfile={jest.fn()} />
   </UiVersionProvider></LanguageProvider></SafeAreaProvider>);
-  await view.findByText('Week van 2026-09-21');
+  await view.findByText('Week of 2026-09-21');
   if (origin === 'Calendar') {
     await fireEvent.press(view.getByRole('tab', { name: 'Calendar' }));
     await view.findByText('Training calendar');

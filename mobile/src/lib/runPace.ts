@@ -1,3 +1,5 @@
+import { translate } from '../i18n/runtime';
+
 /** Canonical run pace is a whole number of seconds per kilometre. */
 export function parseRunPace(value: string): number | null {
   const match = /^(\d{1,2}):([0-5]\d)$/.exec(value.trim());
@@ -10,7 +12,7 @@ export function formatRunPace(value: string | number | null): string {
   if (value === null) return 'open';
   const seconds = Number(value);
   if (!Number.isInteger(seconds) || seconds <= 0 || seconds > 3600) {
-    return 'ongeldig tempo';
+    return translate('activityText.invalidPace');
   }
   return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')} /km`;
 }

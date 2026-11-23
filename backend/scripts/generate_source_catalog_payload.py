@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -101,5 +102,15 @@ def generate_payload() -> list[dict[str, object]]:
     return payload
 
 
+def render_payload() -> str:
+    """Serialize the payload, refusing text that was already decoded incorrectly."""
+    text = json.dumps(generate_payload(), ensure_ascii=False, separators=(",", ":"))
+    if "\ufffd" in text:
+        raise ValueError("catalog payload contains U+FFFD replacement characters")
+    return text
+
+
 if __name__ == "__main__":
-    print(json.dumps(generate_payload(), ensure_ascii=False, separators=(",", ":")))
+    # Write UTF-8 bytes: a Windows console code page would otherwise replace the
+    # middle dot separators with U+FFFD, as happened in 20260903074359.
+    sys.stdout.buffer.write(render_payload().encode("utf-8") + b"\n")

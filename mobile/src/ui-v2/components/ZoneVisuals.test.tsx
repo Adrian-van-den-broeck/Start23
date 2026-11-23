@@ -1,6 +1,11 @@
-import { render } from '@testing-library/react-native';
+import { render as baseRender } from '@testing-library/react-native';
 import type { ZoneMetricKind, ZoneProfileSnapshot } from '../../api/types';
 import { ZoneProfileValues } from './ZoneVisuals';
+import type { ReactElement } from 'react';
+import { LanguageProvider } from '../../i18n/LanguageProvider';
+
+// Dutch is the default language; every render goes through the provider like the app does.
+const render = (ui: ReactElement) => baseRender(ui, { wrapper: LanguageProvider });
 
 function snapshot(kind: ZoneMetricKind): ZoneProfileSnapshot {
   return {

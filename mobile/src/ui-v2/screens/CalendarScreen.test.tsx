@@ -1,3 +1,5 @@
+import { colors } from '../tokens';
+import { studioPresentation } from '../../ui-v3/presentation';
 import { fireEvent, render, within } from '@testing-library/react-native';
 import * as Native from 'react-native';
 import * as SecureStore from 'expo-secure-store';
@@ -35,7 +37,13 @@ test.each(['en', 'nl'] as const)('Week renders seven complete date sections, sou
   expect(day.getByText(language === 'en' ? 'Rest due to a confirmed restriction.' : 'Rust vanwege een bevestigde beperking.')).toBeTruthy();
   const buttons = day.getAllByRole('button'); for (const button of buttons) await fireEvent.press(button);
   expect(callbacks.onOpenWorkout.mock.calls).toEqual([[workout.id], ['second']]);
-  expect(within(view.getByTestId('calendar-day-2026-10-11')).getByText(language === 'en' ? 'No workout planned.' : 'Geen training gepland.')).toBeTruthy();
+  const empty = within(view.getByTestId('calendar-day-2026-10-11'));
+  const emptyText = language === 'en' ? 'No workout planned.' : 'Geen training gepland.';
+  if (studioPresentation) {
+    // V3 drops the sentence repeated on every empty day; the day heading still announces zero workouts.
+    expect(empty.queryByText(emptyText)).toBeNull();
+    expect(empty.getByRole('header').props.accessibilityLabel).toContain(language === 'en' ? '0 workouts' : '0 trainingen');
+  } else expect(empty.getByText(emptyText)).toBeTruthy();
 });
 test.each(['2026-10-06', '2026-10-07'])('Month selected date %s keeps empty/populated readable details below orientation grid', async (date) => {
   dimensions(412, 1);
@@ -110,11 +118,13 @@ test.each([393, 412])('Month keeps >=48 grid targets at default text/%sdp, with 
   dimensions(width, 1);
   const view = await render(screen('month'));
   expect(view.getByTestId('calendar-month-grid')).toBeTruthy();
-  expect(view.getByText('Number = workout count')).toBeTruthy();
+  // The icon grid labels only multi-session totals. V2 still prints a count on every date.
+  expect(view.getByText(studioPresentation ? '\u00d72 = 2 workouts' : 'Number = workout count')).toBeTruthy();
+  if (studioPresentation) expect(within(view.getByTestId('calendar-date-2026-10-07')).getByText('\u00d72')).toBeTruthy();
   const selected = view.getByTestId('calendar-date-2026-10-07');
   const today = view.getByTestId('calendar-date-2026-10-05');
-  expect(Native.StyleSheet.flatten(selected.props.style)).toMatchObject({ minWidth: 48, minHeight: 64, backgroundColor: '#E7EFE8', borderColor: '#124D43' });
-  expect(Native.StyleSheet.flatten(today.props.style)).toMatchObject({ backgroundColor: '#F8EED6' });
+  expect(Native.StyleSheet.flatten(selected.props.style)).toMatchObject({ minWidth: 48, minHeight: studioPresentation ? 50 : 64, backgroundColor: colors.primarySoft, borderColor: colors.primary });
+  expect(Native.StyleSheet.flatten(today.props.style)).toMatchObject({ backgroundColor: colors.warningSoft });
   expect(selected.props.accessibilityLabel).toContain('Rest day');
   expect(today.props.accessibilityState.selected).toBe(false);
 });

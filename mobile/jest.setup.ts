@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler/jestSetup';
+
 jest.mock('expo-haptics', () => ({
   ImpactFeedbackStyle: { Light: 'light' },
   NotificationFeedbackType: { Success: 'success' },
@@ -29,11 +31,18 @@ jest.mock('react-native-reanimated', () => {
       _input: number[],
       output: string[],
     ) => output[0],
+    useEvent: (callback: unknown) => callback,
     useAnimatedStyle: (factory: () => unknown) => factory(),
     useReducedMotion: () => true,
     useSharedValue: (value: unknown) => ({ value }),
     withDelay: (_delay: number, value: unknown) => value,
     withSpring: (value: unknown) => value,
     withTiming: (value: unknown) => value,
+    withSequence: (...values: unknown[]) => values[values.length - 1],
   };
 });
+
+// Jest has no native worklet VM. Deliver the completed gesture on the test thread.
+jest.mock('react-native-worklets', () => ({
+  scheduleOnRN: (callback: (...args: unknown[]) => void, ...args: unknown[]) => callback(...args),
+}));

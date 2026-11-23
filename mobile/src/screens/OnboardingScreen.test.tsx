@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { fireEvent, render as baseRender, waitFor } from '@testing-library/react-native';
 
 import type {
   GoalPlanningOption,
@@ -14,6 +14,26 @@ import {
   ReviewStep,
   TimezoneStep,
 } from './OnboardingScreen';
+import type { ReactElement } from 'react';
+import * as SecureStore from 'expo-secure-store';
+import { LanguageProvider } from '../i18n/LanguageProvider';
+import { setRuntimeLanguage } from '../i18n/runtime';
+
+// No stored preference by default, so the app falls back to Dutch. The English
+// tests below store 'en' as the athlete's choice.
+jest.mock('expo-secure-store', () => ({
+  getItemAsync: jest.fn(async () => null),
+  setItemAsync: jest.fn(async () => undefined),
+  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'unlocked',
+}));
+
+// Dutch is the default language; every render goes through the provider like the app does.
+const render = (ui: ReactElement) => baseRender(ui, { wrapper: LanguageProvider });
+
+beforeEach(() => {
+  jest.mocked(SecureStore.getItemAsync).mockResolvedValue(null);
+  setRuntimeLanguage('nl');
+});
 
 function state(overrides: Partial<OnboardingState> = {}): OnboardingState {
   return {
@@ -378,5 +398,65 @@ describe('onboarding components', () => {
     expect(screen.getByText('0/1 disciplines')).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Zones bevestigen' }));
     expect(onApproveZone).toHaveBeenCalledWith('proposal-id', null);
+  });
+});
+
+describe('onboarding components in English', () => {
+  beforeEach(() => {
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue('en');
+  });
+
+  test('profile form shows its labels, hints and actions in English', async () => {
+    const screen = await render(
+      <ProfileStep onSave={jest.fn(async () => undefined)} profile={null} saving={false} />,
+    );
+
+    expect(await screen.findByText('Your basics')).toBeTruthy();
+    expect(screen.getByLabelText('First name (optional)')).toBeTruthy();
+    expect(screen.getByLabelText('Last name (optional)')).toBeTruthy();
+    expect(screen.getByText('Use YYYY-MM-DD. The dashes appear automatically.')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Save profile' })).toBeTruthy();
+    expect(screen.queryByText('Jouw basis')).toBeNull();
+  });
+
+  test('goal form keeps server option labels but translates its own copy', async () => {
+    const screen = await render(
+      <GoalStep goal={null} onSave={jest.fn(async () => undefined)} options={goalOptions} saving={false} />,
+    );
+
+    expect(await screen.findByText('Choose your training goal')).toBeTruthy();
+    // The race option label comes from the server and is shown as delivered.
+    await fireEvent.press(screen.getByRole('radio', { name: 'Wedstrijd of evenement' }));
+    expect(screen.getByText('Wedstrijd of evenement · Available')).toBeTruthy();
+    expect(screen.getByText('Race type')).toBeTruthy();
+    expect(screen.getByRole('radio', { name: 'Triathlon' })).toBeTruthy();
+    expect(screen.getByLabelText('Specific focus (optional)')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Increase hours for Total target time' })).toBeTruthy();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Save A goal' }));
+
+    expect(screen.getByText('Race name is required.')).toBeTruthy();
+    expect(screen.getByText('Total target time is required.')).toBeTruthy();
+    expect(
+      screen.getByText(/^Fill in the highlighted required fields: race name, race date, swim distance/),
+    ).toBeTruthy();
+  });
+
+  test('review step summarises progress in English', async () => {
+    const screen = await render(
+      <ReviewStep
+        onApproveZone={jest.fn(async () => undefined)}
+        onComplete={jest.fn(async () => undefined)}
+        onRejectZone={jest.fn(async () => undefined)}
+        saving={false}
+        state={state()}
+      />,
+    );
+
+    expect(await screen.findByText('Ready for your first proposal')).toBeTruthy();
+    expect(screen.getByText('A goal')).toBeTruthy();
+    expect(screen.getAllByText('Missing')).toHaveLength(2);
+    expect(screen.getByText('You stay in control')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Finish onboarding' })).toBeTruthy();
   });
 });

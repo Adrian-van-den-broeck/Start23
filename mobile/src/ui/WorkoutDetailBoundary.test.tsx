@@ -1,4 +1,4 @@
-import { act, fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 import * as SecureStore from 'expo-secure-store';
 import * as legacy from '../components/WorkoutDetail';
 import { LanguageProvider } from '../i18n/LanguageProvider';
@@ -60,7 +60,7 @@ test('one stable Modal, exact same snapshot/close callback, no I/O, and scroll s
   await fireEvent.press(view.getByRole('button', { name: 'UI V2' }));
   expect(view.getByTestId('workout-detail-scroll').props.contentOffset.y).toBe(245);
   await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
-  await fireEvent.press(view.getByRole('button', { name: 'Sluiten' }));
+  await fireEvent.press(view.getByRole('button', { name: 'Close' }));
   await fireEvent(view.getByTestId('workout-detail-modal'), 'requestClose');
   expect(close).toHaveBeenCalledTimes(2);
   expect(fetchSpy).not.toHaveBeenCalled();
@@ -68,20 +68,14 @@ test('one stable Modal, exact same snapshot/close callback, no I/O, and scroll s
   expect(SecureStore.setItemAsync).not.toHaveBeenCalled();
 });
 
-test('release users can switch V1 to V2 and back within one detail modal', async () => {
+test.each(['v1', 'v2', 'v3'])('release detail for %s opens without version controls', async flag => {
   Object.defineProperty(globalThis, '__DEV__', { value: false, configurable: true });
-  delete process.env.EXPO_PUBLIC_UI_VERSION;
+  process.env.EXPO_PUBLIC_UI_VERSION = flag;
   const view = await render(<LanguageProvider><UiVersionProvider>
     <WorkoutDetailBoundary workout={sourceWorkout} onClose={jest.fn()} />
   </UiVersionProvider></LanguageProvider>);
-  const modal = view.getByTestId('workout-detail-modal');
-  expect(view.getByRole('button', { name: 'UI V1' }).props.accessibilityState.selected).toBe(true);
-  await act(async () => { await fireEvent.press(view.getByRole('button', { name: 'UI V2' })); });
-  expect(view.getByRole('button', { name: 'UI V2' }).props.accessibilityState.selected).toBe(true);
-  expect(view.getByTestId('workout-detail-modal')).toBe(modal);
-  await fireEvent.press(view.getByRole('button', { name: 'UI V1' }));
-  expect(view.getByRole('button', { name: 'UI V1' }).props.accessibilityState.selected).toBe(true);
-  expect(view.getByTestId('workout-detail-modal')).toBe(modal);
+  expect(view.getByTestId('workout-detail-modal')).toBeTruthy();
+  expect(view.queryByRole('button', { name: /^UI V/ })).toBeNull();
 });
 
 test('null and new selected snapshots reset only detail offset', async () => {

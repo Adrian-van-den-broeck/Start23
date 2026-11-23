@@ -10,6 +10,7 @@ from fastapi import FastAPI
 from app.api.router import api_router
 from app.core.config import Settings, get_settings
 from app.core.errors import configure_error_handling
+from app.core.i18n import LanguageMiddleware
 from app.core.logging import configure_logging
 from app.core.security import AccessTokenVerifier, SupabaseAccessTokenVerifier
 from app.modules.activities.repository import (
@@ -196,6 +197,7 @@ def create_app(
     application.state.athlete_identity_repository = identity_repository
     application.state.pioneer_repository = beta_access_repository
     configure_error_handling(application)
+    application.add_middleware(LanguageMiddleware)
     application.include_router(health_router)
     application.include_router(
         api_router,

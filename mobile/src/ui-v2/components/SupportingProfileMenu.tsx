@@ -21,10 +21,10 @@ export function SupportingProfileMenu({ onOpenProfile, onOpenIntegrations, onSig
       </View>
     </View>
     <View style={{ gap: space[8] }}>
-      <QuickActionRow label="Intakeprofiel" icon="profile" onAction={onOpenProfile} />
+      <QuickActionRow label={t('integrations.account.intakeProfile')} icon="profile" onAction={onOpenProfile} />
       <Text variant="supporting" tone="textMuted">{t('planning.profileData')}</Text>
       <Divider />
-      <QuickActionRow label="Integraties" icon="activities" onAction={onOpenIntegrations} />
+      <QuickActionRow label={t('integrations.title')} icon="activities" onAction={onOpenIntegrations} />
       <Text variant="supporting" tone="textMuted">{t('planning.profileIntegrations')}</Text>
     </View>
     <Divider />

@@ -68,8 +68,8 @@ import { planningCreationViewModel } from '../ui-v2/utils/planningCreationViewMo
 import { calendarViewModel } from '../ui-v2/utils/calendarViewModel';
 import { type CalendarNavigation } from '../features/calendar/useCalendarNavigation';
 import { weekHomeViewModel, type WeekAction } from '../ui-v2/utils/weekHomeViewModel';
-import { UiVersionControl } from '../ui/UiVersionControl';
-import { useLanguage } from '../i18n/LanguageProvider';
+import { showUiVersionControl, UiVersionControl } from '../ui/UiVersionControl';
+import { type TranslationKey, useLanguage } from '../i18n/LanguageProvider';
 import { formatIsoDateInput } from '../lib/dateInput';
 import { workoutCardDescription } from '../lib/workoutPresentation';
 import { createDeferredDismissAction } from '../lib/navigation';
@@ -91,22 +91,24 @@ type PlanningScreenProps = {
   onOpenZoneProfile: (planId?: string, revision?: number) => void;
 };
 
-const disciplineLabels: Record<Discipline, string> = {
-  swim: 'Zwemmen',
-  bike: 'Fietsen',
-  run: 'Lopen',
+const disciplineLabels: Record<Discipline, TranslationKey> = {
+  swim: 'common.swim',
+  bike: 'common.bike',
+  run: 'common.run',
 };
-const disciplineTrainingLabels: Record<Discipline, string> = {
-  swim: 'zwemtraining',
-  bike: 'fietstraining',
-  run: 'looptraining',
+const disciplineChooseLabels: Record<Discipline, TranslationKey> = {
+  swim: 'planning.editor.choose.swim',
+  bike: 'planning.editor.choose.bike',
+  run: 'planning.editor.choose.run',
 };
-function coachExplanation(value: string): string {
+type Translate = (key: TranslationKey, values?: Record<string, string | number>) => string;
+// Only the two known server sentences get local copy; any other explanation is shown as sent.
+function coachExplanation(value: string, t: Translate): string {
   if (value === 'A deterministic weekly plan is ready for review.') {
-    return 'Je persoonlijke weekvoorstel staat klaar om te controleren.';
+    return t('planning.coach.weeklyReady');
   }
   if (value === 'A rest-only weekly revision is ready for review.') {
-    return 'Je herstelvoorstel met alleen rust staat klaar om te controleren.';
+    return t('planning.coach.restOnlyReady');
   }
   return value;
 }
@@ -147,17 +149,13 @@ function ActionButton({
 }
 
 function WorkoutCard({ workout }: { workout: PlannedWorkout }) {
-  const { language, locale, t } = useLanguage();
+  const { locale, t } = useLanguage();
   const scheduled = new Date(`${workout.scheduled_date}T12:00:00`);
-  const localizedDisciplines: Record<Discipline, string> =
-    language === 'nl'
-      ? disciplineLabels
-      : { swim: 'Swimming', bike: 'Cycling', run: 'Running' };
   return (
     <View style={styles.workoutCard}>
       <View style={styles.cardHeader}>
         <StatusPill
-          label={localizedDisciplines[workout.discipline]}
+          label={t(disciplineLabels[workout.discipline])}
           tone={workout.intensity_bucket === 'high' ? 'accent' : 'neutral'}
         />
         <Text style={styles.cardMeta}>
@@ -176,7 +174,7 @@ function WorkoutCard({ workout }: { workout: PlannedWorkout }) {
           ? t('common.durationMinutes', {
               minutes: Number(workout.duration_minutes),
             })
-          : `${workout.distance_meters?.toLocaleString(locale)} m · afstandgestuurd`}
+          : t('planning.distanceBased', { distance: String(workout.distance_meters?.toLocaleString(locale)) })}
       </Text>
     </View>
   );
@@ -206,6 +204,7 @@ function deckItemFor(workout: PlannedWorkout): WorkoutDeckItem {
 }
 
 function WorkoutSignals({ workout }: { workout: WorkoutDeckItem }) {
+  const { t } = useLanguage();
   if (
     workout.workout_kind !== 'calibration' &&
     !workout.contributes_to_zone_calibration
@@ -217,19 +216,19 @@ function WorkoutSignals({ workout }: { workout: WorkoutDeckItem }) {
     <View style={styles.workoutSignals}>
       {workout.workout_kind === 'calibration' ? (
         <View
-          accessibilityLabel="Kalibratietraining"
+          accessibilityLabel={t('planning.signal.calibration')}
           style={styles.calibrationSignal}
         >
           <View style={styles.calibrationLogo}>
             <Text style={styles.calibrationLogoText}>CAL</Text>
           </View>
-          <Text style={styles.calibrationSignalText}>Kalibratietraining</Text>
+          <Text style={styles.calibrationSignalText}>{t('planning.signal.calibration')}</Text>
         </View>
       ) : null}
       {workout.contributes_to_zone_calibration ? (
         <View style={styles.zoneEvidenceSignal}>
           <Text style={styles.zoneEvidenceSignalText}>
-            Telt mee voor zone-inzicht
+            {t('planning.signal.zoneEvidence')}
           </Text>
         </View>
       ) : null}
@@ -248,6 +247,7 @@ function PendingWorkoutEditor({
   slotIndex: number;
   workout: PlannedWorkout;
 }) {
+  const { locale, t } = useLanguage();
   const { pendingWorkouts } = usePlanningFlow();
   const { load, apply, release } = pendingWorkouts;
   const { options, loading } = pendingWorkouts.editors[workout.id] ?? { options: null, loading: false };
@@ -281,18 +281,15 @@ function PendingWorkoutEditor({
       <View style={styles.slotHeading}>
         <View>
           <Text style={styles.slotEyebrow}>
-            Training {slotIndex + 1} van {plan.workouts.length}
+            {t('planning.editor.slot', { index: slotIndex + 1, total: plan.workouts.length })}
           </Text>
           <Text style={styles.fieldLabel}>
-            Kies je {disciplineTrainingLabels[workout.discipline]}
+            {t(disciplineChooseLabels[workout.discipline])}
           </Text>
         </View>
         {loading ? <ActivityIndicator color={colors.brand} size="small" /> : null}
       </View>
-      <Text style={styles.hint}>
-        Veeg horizontaal door de geldige opties. Na iedere keuze controleert
-        Wombo de volledige weekcombinatie opnieuw.
-      </Text>
+      <Text style={styles.hint}>{t('planning.editor.hint')}</Text>
       <Carousel
         animation={{ type: 'spring', damping: 18, stiffness: 190 }}
         data={candidates}
@@ -313,16 +310,16 @@ function PendingWorkoutEditor({
           const isCurrent = item.id === workout.template_id;
           return (
             <View
-              accessibilityLabel={`Training ${index + 1} van ${candidates.length}: ${item.name}`}
+              accessibilityLabel={t('planning.editor.option', { index: index + 1, total: candidates.length, name: item.name })}
               style={[styles.swipeCard, isCurrent && styles.swipeCardCurrent]}
             >
               <View style={styles.cardHeader}>
                 <StatusPill
-                  label={item.intensity_bucket === 'high' ? 'Intensief' : 'Rustig'}
+                  label={t(item.intensity_bucket === 'high' ? 'detail.intensity.high' : 'detail.intensity.low')}
                   tone={item.intensity_bucket === 'high' ? 'accent' : 'neutral'}
                 />
                 {isCurrent ? (
-                  <Text style={styles.selectedLabel}>Gekozen</Text>
+                  <Text style={styles.selectedLabel}>{t('planning.editor.selected')}</Text>
                 ) : null}
               </View>
               <WorkoutSignals workout={item} />
@@ -332,8 +329,8 @@ function PendingWorkoutEditor({
               </Text>
               <Text style={styles.cardMeta}>
                 {item.duration_minutes !== null
-                  ? `${Number(item.duration_minutes)} min`
-                  : `${item.distance_meters?.toLocaleString('nl-NL')} m · afstandgestuurd`}{' · '}
+                  ? t('common.durationMinutes', { minutes: Number(item.duration_minutes) })
+                  : t('planning.distanceBased', { distance: String(item.distance_meters?.toLocaleString(locale)) })}{' · '}
                 {index + 1}/{candidates.length}
               </Text>
             </View>
@@ -344,22 +341,20 @@ function PendingWorkoutEditor({
       {candidates.length > 1 ? (
         <View style={styles.decisionRow}>
           <View style={styles.decisionButton}>
-            <ActionButton label="Vorige" onPress={() => moveSelection(-1)} secondary />
+            <ActionButton label={t('common.previous')} onPress={() => moveSelection(-1)} secondary />
           </View>
           <View style={styles.decisionButton}>
-            <ActionButton label="Volgende" onPress={() => moveSelection(1)} secondary />
+            <ActionButton label={t('common.next')} onPress={() => moveSelection(1)} secondary />
           </View>
         </View>
       ) : null}
       <ActionButton
         disabled={busy || loading || selectedIsCurrent || !options}
-        label={selectedIsCurrent ? 'Deze training is gekozen' : 'Kies deze training'}
+        label={t(selectedIsCurrent ? 'planning.editor.isSelected' : 'planning.editor.select')}
         onPress={() => void apply(workout.id, selected.id)}
       />
       {options && candidates.length === 1 ? (
-        <Text style={styles.hint}>
-          Voor dit trainingsslot is momenteel geen andere combinatie geldig.
-        </Text>
+        <Text style={styles.hint}>{t('planning.editor.noAlternatives')}</Text>
       ) : null}
     </View>
   );
@@ -380,7 +375,7 @@ function SwipeDraftPanel({
     action: 'accept' | 'pass' | 'undo' | 'reset_passed',
   ) => void | Promise<void>;
 }) {
-  const { t } = useLanguage();
+  const { locale, t } = useLanguage();
   const { setTransientBusy } = usePlanningPresentation();
   const swipe = useWorkoutSwipe(draft.state === 'collecting' ? draft.current_candidate : null,
     busy, onTransition, setTransientBusy);
@@ -406,30 +401,30 @@ function SwipeDraftPanel({
   return (
     <View style={styles.panel}>
       <StatusPill
-        label={draft.state === 'collecting' ? 'Kiezen' : 'Inplannen'}
+        label={t(draft.state === 'collecting' ? 'planning.choose' : 'planning.draft.placing')}
         tone="brand"
       />
-      <Text style={styles.title}>Stel je week samen</Text>
+      <Text style={styles.title}>{t('planning.composeWeek')}</Text>
       <View style={styles.selectionProgress}>
         <Text style={styles.selectionProgressValue}>
-          {draft.accepted_workouts.length} van {draft.target_workout_count} gekozen
+          {t('planning.chosenProgress', { accepted: draft.accepted_workouts.length, target: draft.target_workout_count })}
         </Text>
         <Text style={styles.selectionProgressLabel}>
-          Doel: {draft.target_composition.swim} zwemmen ·{' '}
-          {draft.target_composition.bike} fietsen · {draft.target_composition.run}{' '}
-          lopen
+          {t('planning.draft.target', {
+            swim: draft.target_composition.swim,
+            bike: draft.target_composition.bike,
+            run: draft.target_composition.run,
+          })}
         </Text>
       </View>
 
       {zoneCalibrationWeek ? (
         <View style={styles.calibrationNotice}>
           <Text style={styles.calibrationNoticeTitle}>
-            Deze week helpt je zones verfijnen
+            {t('planning.draft.calibrationTitle')}
           </Text>
           <Text style={styles.calibrationNoticeText}>
-            Elke gekozen en afgeronde training levert RPE- en
-            hartslagobservaties. Numerieke zones wijzigen alleen via een apart
-            voorstel dat jij bevestigt.
+            {t('planning.draft.calibrationText')}
           </Text>
         </View>
       ) : null}
@@ -444,7 +439,7 @@ function SwipeDraftPanel({
             </Animated.View>
             <Animated.View
               accessible
-              accessibilityLabel={`${candidate.name}. Swipe links om over te slaan of rechts om te kiezen.`}
+              accessibilityLabel={t('planning.draft.swipeLabel', { name: candidate.name })}
               {...swipe.panHandlers}
               style={[styles.swipeDecisionCard, { transform: swipe.transform, opacity: swipe.opacity }]}
             >
@@ -459,7 +454,7 @@ function SwipeDraftPanel({
                 <Text
                   style={[styles.swipeDecisionBadgeText, styles.swipeAcceptText]}
                 >
-                  KIEZEN
+                  {t('planning.draft.badgeChoose')}
                 </Text>
               </Animated.View>
               <Animated.View
@@ -473,20 +468,20 @@ function SwipeDraftPanel({
                 <Text
                   style={[styles.swipeDecisionBadgeText, styles.swipePassText]}
                 >
-                  OVERSLAAN
+                  {t('planning.draft.badgePass')}
                 </Text>
               </Animated.View>
               <View style={styles.cardHeader}>
                 <StatusPill
-                  label={disciplineLabels[candidate.discipline]}
+                  label={t(disciplineLabels[candidate.discipline])}
                   tone={
                     candidate.intensity_bucket === 'high' ? 'accent' : 'neutral'
                   }
                 />
                 <Text style={styles.cardMeta}>
                   {candidate.duration_minutes !== null
-                    ? `${Number(candidate.duration_minutes)} min`
-                    : `${candidate.distance_meters?.toLocaleString('nl-NL')} m · afstand`}
+                    ? t('common.durationMinutes', { minutes: Number(candidate.duration_minutes) })
+                    : t('planning.distanceShort', { distance: String(candidate.distance_meters?.toLocaleString(locale)) })}
                 </Text>
               </View>
               <WorkoutSignals workout={candidate} />
@@ -495,7 +490,7 @@ function SwipeDraftPanel({
                 {workoutCardDescription(candidate.description)}
               </Text>
               <Text style={styles.swipeInstruction}>
-                ← overslaan · kiezen →
+                {t('planning.draft.swipeInstruction')}
               </Text>
             </Animated.View>
           </View>
@@ -503,7 +498,7 @@ function SwipeDraftPanel({
             <View style={styles.decisionButton}>
               <ActionButton
                 disabled={locked}
-                label="Overslaan"
+                label={t('creation.pass')}
                 onPress={() => { void swipe.decide('pass'); }}
                 secondary
               />
@@ -511,7 +506,7 @@ function SwipeDraftPanel({
             <View style={styles.decisionButton}>
               <ActionButton
                 disabled={locked}
-                label="Kiezen"
+                label={t('creation.choose')}
                 onPress={() => { void swipe.decide('accept'); }}
               />
             </View>
@@ -521,9 +516,9 @@ function SwipeDraftPanel({
 
       {draft.state === 'collecting' && !candidate ? (
         <View style={styles.warning}>
-          <Text style={styles.warningTitle}>Geen nieuwe geldige kaarten</Text>
+          <Text style={styles.warningTitle}>{t('planning.draft.exhaustedTitle')}</Text>
           <Text style={styles.warningText}>
-            Zet overgeslagen kaarten terug of maak je laatste keuze ongedaan.
+            {t('planning.draft.exhaustedText')}
           </Text>
         </View>
       ) : null}
@@ -533,7 +528,7 @@ function SwipeDraftPanel({
           <View style={styles.decisionButton}>
             <ActionButton
               disabled={locked || !draft.can_undo}
-              label="Ongedaan maken"
+              label={t('creation.undo')}
               onPress={() => onTransition('undo')}
               secondary
             />
@@ -541,7 +536,7 @@ function SwipeDraftPanel({
           <View style={styles.decisionButton}>
             <ActionButton
               disabled={locked || draft.passed_count === 0}
-              label="Opnieuw bekijken"
+              label={t('planning.draft.reviewPassed')}
               onPress={() => onTransition('reset_passed')}
               secondary
             />
@@ -551,11 +546,7 @@ function SwipeDraftPanel({
 
       {draft.state === 'placement' && !swipe.action ? (
         <>
-          <Text style={styles.body}>
-            Laat Wombo de trainingen spreiden over je beschikbare dagen, of
-            kies zelf per training een datum. Je mag dezelfde datum voor
-            meerdere trainingen kiezen.
-          </Text>
+          <Text style={styles.body}>{t('planning.draft.placementBody')}</Text>
           {draft.warnings.map((warning) => {
             const presentation = warningPresentation(warning);
             return (
@@ -567,7 +558,7 @@ function SwipeDraftPanel({
           })}
           <ActionButton
             disabled={busy}
-            label="Verspreid over beschikbare dagen"
+            label={t('planning.draft.spread')}
             onPress={() => onSubmit('automatic')}
           />
           {draft.accepted_workouts.map((workout) => (
@@ -575,7 +566,7 @@ function SwipeDraftPanel({
               <View style={styles.cardHeader}>
                 <Text style={styles.cardTitle}>{workout.name}</Text>
                 <StatusPill
-                  label={disciplineLabels[workout.discipline]}
+                  label={t(disciplineLabels[workout.discipline])}
                   tone="neutral"
                 />
               </View>
@@ -609,7 +600,7 @@ function SwipeDraftPanel({
                         ]}
                       >
                         {new Date(`${scheduledDate}T12:00:00`).toLocaleDateString(
-                          'nl-NL',
+                          locale,
                           { day: 'numeric', weekday: 'short' },
                         )}
                       </Text>
@@ -621,13 +612,13 @@ function SwipeDraftPanel({
           ))}
           <ActionButton
             disabled={busy || !manualComplete}
-            label="Controleer handmatige planning"
+            label={t('planning.draft.reviewManual')}
             onPress={() => onSubmit('manual')}
             secondary
           />
           <ActionButton
             disabled={busy || !draft.can_undo}
-            label="Terug naar kiezen"
+            label={t('planning.draft.backToChoosing')}
             onPress={() => onTransition('undo')}
             secondary
           />
@@ -712,7 +703,7 @@ export function PlanningBoundary(props: Omit<PlanningScreenProps, 'accessToken' 
       kind === 'draft' || (kind === 'prepare' && flow.swipeDraft) ? 'creation' : kind === 'review' ? 'review' : 'existing');
     if (kind === 'review') setReviewWorkoutId(null);
   };
-  const controls = <UiVersionControl disabled={locked || activityBusy || sheetOpen} onSelect={(version) => {
+  const controls = showUiVersionControl() && <UiVersionControl disabled={locked || activityBusy || sheetOpen} onSelect={(version) => {
     if (!locked && !activityBusy && !sheetOpen && !detailWorkout) {
       if (calendarOpen) { setCalendarVersion(effectiveUiVersion(version, 'calendar')); if (props.destination && !task) { if (version === 'v1') flow.openCalendar(); setRootVersion(effectiveUiVersion(version, 'week')); } }
       else if (!task) {
@@ -874,12 +865,12 @@ function PlanningPresentation({
   const confirmGoalAchievement = () => {
     if (!primaryGoal) return;
     Alert.alert(
-      'Doel behaald?',
-      'Nieuwe voorstellen gaan naar onderhoud: geen opbouw, wel het 4+1-ritme en de rustige/intensieve verdeling.',
+      t('planning.goal.confirmTitle'),
+      t('planning.goal.confirmMessage'),
       [
-        { text: 'Annuleren', style: 'cancel' },
+        { text: t('planning.cancel'), style: 'cancel' },
         {
-          text: 'Bevestigen',
+          text: t('planning.confirm'),
           onPress: markGoalAchievement,
         },
       ],
@@ -900,7 +891,7 @@ function PlanningPresentation({
           </View>
         </View>
         <Pressable
-          accessibilityLabel="Profielmenu"
+          accessibilityLabel={t('planning.profileMenuLabel')}
           accessibilityRole="button"
           accessibilityState={{ expanded: profileMenuOpen }}
           haptic="selection"
@@ -911,7 +902,7 @@ function PlanningPresentation({
           ]}
         >
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>JIJ</Text>
+            <Text style={styles.avatarText}>{t('planning.avatar')}</Text>
           </View>
           <View style={styles.profileControlCopy}>
             <Text style={styles.profileControlTitle}>{t('planning.profile')}</Text>
@@ -960,7 +951,7 @@ function PlanningPresentation({
           <View style={styles.quickActionIcon}>
             <Text style={styles.quickActionIconText}>C</Text>
           </View>
-          <Text style={styles.quickActionText}>Check-in</Text>
+          <Text style={styles.quickActionText}>{t('week.checkIn')}</Text>
         </Pressable>
         <Pressable
           accessibilityRole="button"
@@ -1048,22 +1039,18 @@ function PlanningPresentation({
           <>
             {!plan || prepareWeek ? (
               <View style={styles.panel}>
-                <StatusPill label="Jij bevestigt" tone="brand" />
-                <Text style={styles.title}>Wanneer kun je trainen?</Text>
-                <Text style={styles.body}>
-                  Kies één dag om alle trainingen op die dag te plannen, of
-                  meerdere dagen om ze zo gelijk mogelijk te spreiden. Het
-                  resultaat blijft een voorstel totdat jij het goedkeurt.
-                </Text>
+                <StatusPill label={t('planning.prepare.pill')} tone="brand" />
+                <Text style={styles.title}>{t('creation.availability')}</Text>
+                <Text style={styles.body}>{t('planning.prepare.body')}</Text>
                 <FormField
                   autoCapitalize="none"
                   inputMode="numeric"
-                  label="Week start op maandag"
+                  label={t('creation.weekStart')}
                   maxLength={10}
                   onChangeText={(value) =>
                     setWeekStart(formatIsoDateInput(value))
                   }
-                  placeholder="JJJJ-MM-DD"
+                  placeholder={t('planning.datePlaceholder')}
                   value={weekStart}
                 />
                 <View style={styles.dayRow}>
@@ -1104,14 +1091,11 @@ function PlanningPresentation({
                       reusePreviousWeek && styles.choiceTextActive,
                     ]}
                   >
-                    Zelfde beschikbare dagen als vorige week
+                    {t('creation.reuse')}
                   </Text>
                 </Pressable>
-                <Text style={styles.hint}>
-                  Hergebruik gebeurt alleen na deze expliciete keuze; ontbrekende
-                  vorige-weekdata wordt niet geraden.
-                </Text>
-                <Text style={styles.fieldLabel}>Bevestigde blessure</Text>
+                <Text style={styles.hint}>{t('planning.prepare.reuseHint')}</Text>
+                <Text style={styles.fieldLabel}>{t('creation.injuries')}</Text>
                 <View style={styles.choiceRow}>
                   {(['swim', 'bike', 'run'] as const).map((discipline) => (
                     <Pressable
@@ -1125,7 +1109,7 @@ function PlanningPresentation({
                       ]}
                     >
                       <Text style={styles.choiceText}>
-                        {disciplineLabels[discipline]}
+                        {t(disciplineLabels[discipline])}
                       </Text>
                     </Pressable>
                   ))}
@@ -1133,12 +1117,10 @@ function PlanningPresentation({
                 {injuries.size > 0 ? (
                   <>
                     <Text style={styles.fieldLabel}>
-                      Vrijwillige alternatieve training
+                      {t('creation.crossTraining')}
                     </Text>
                     <Text style={styles.hint}>
-                      Kies fietsen of zwemmen alleen als je dit als alternatief
-                      wilt gebruiken. Een keuze voegt geen training toe zonder
-                      veilige, bekende opbouwruimte.
+                      {t('planning.prepare.crossTrainingHint')}
                     </Text>
                     <View style={styles.choiceRow}>
                       {(['bike', 'swim'] as const)
@@ -1158,7 +1140,7 @@ function PlanningPresentation({
                             ]}
                           >
                             <Text style={styles.choiceText}>
-                              {disciplineLabels[discipline]}
+                              {t(disciplineLabels[discipline])}
                             </Text>
                           </Pressable>
                         ))}
@@ -1169,11 +1151,11 @@ function PlanningPresentation({
                   disabled={
                     busy || (!reusePreviousWeek && availableDates.length === 0)
                   }
-                  label="Maak weekvoorstel"
+                  label={t('planning.prepare.create')}
                   onPress={() => void generate()}
                 />
                 <ActionButton
-                  label="Terug naar intake"
+                  label={t('planning.prepare.backToOnboarding')}
                   onPress={onBackToOnboarding}
                   secondary
                 />
@@ -1185,38 +1167,37 @@ function PlanningPresentation({
                     <StatusPill
                       label={
                         plan.revision_state === 'active'
-                          ? 'Actief'
+                          ? t('common.active')
                           : plan.revision_state === 'pending_approval'
-                            ? 'Wacht op jou'
+                            ? t('planning.plan.waiting')
                             : plan.revision_state
                       }
                       tone={
                         plan.revision_state === 'active' ? 'brand' : 'accent'
                       }
                     />
-                    <Text style={styles.cardMeta}>Revisie {plan.revision}</Text>
+                    <Text style={styles.cardMeta}>{t('planning.plan.revision', { revision: plan.revision })}</Text>
                   </View>
-                  <Text style={styles.title}>Week van {plan.week_start}</Text>
+                  <Text style={styles.title}>{t('planning.plan.weekOf', { date: plan.week_start })}</Text>
                   <Text style={styles.body}>
                     {Number(plan.total_duration_minutes) > 0
-                      ? `${Number(plan.total_duration_minutes)} minuten met tijdsduur · `
+                      ? t('planning.plan.timedMinutes', { minutes: Number(plan.total_duration_minutes) })
                       : ''}
-                    {plan.workouts.length} trainingen · fase {plan.phase}
+                    {t('planning.plan.summary', { count: plan.workouts.length, phase: plan.phase })}
                   </Text>
                   <Text style={styles.body}>
                     {Number(plan.total_duration_minutes) > 0
-                      ? `${plan.display_low_intensity_percent}% rustig / ${plan.display_high_intensity_percent}% intensief op tijd`
-                      : 'Geen tijdverdeling voor uitsluitend afstandsgestuurde trainingen'}
+                      ? t('planning.plan.timeSplit', { low: plan.display_low_intensity_percent, high: plan.display_high_intensity_percent })
+                      : t('planning.plan.noTimeSplit')}
                   </Text>
                   {Number(plan.total_duration_minutes) > 0 ? (
                     <Text style={styles.hint}>
-                      {Number(plan.low_intensity_minutes)} min rustig ·{' '}
-                      {Number(plan.high_intensity_minutes)} min intensief
+                      {t('planning.plan.intensityMinutes', { low: Number(plan.low_intensity_minutes), high: Number(plan.high_intensity_minutes) })}
                     </Text>
                   ) : null}
                   <View style={styles.selectionProgress}>
                     <Text style={styles.selectionProgressValue}>
-                      {plan.workouts.length} van {plan.workouts.length} gekozen
+                      {t('planning.chosenProgress', { accepted: plan.workouts.length, target: plan.workouts.length })}
                     </Text>
                     <Text style={styles.selectionProgressLabel}>
                       {plan.warnings.some(
@@ -1224,25 +1205,27 @@ function PlanningPresentation({
                           warning.code ===
                           'target_outside_catalog_capacity',
                       )
-                        ? 'Weekdoel vraagt aandacht'
-                        : 'Weekcombinatie compleet'}
+                        ? t('planning.plan.targetAttention')
+                        : t('planning.plan.complete')}
                     </Text>
                   </View>
                   <Text style={styles.hint}>
-                    Beschikbare datums: {plan.available_dates.join(', ')} · bron:{' '}
-                    {plan.availability_source === 'previous_week'
-                      ? 'expliciet hergebruikt'
-                      : plan.availability_source === 'checkin'
-                        ? 'bevestigde check-in'
-                        : 'zelf gekozen'}
+                    {t('planning.plan.availability', {
+                      dates: plan.available_dates.join(', '),
+                      source: t(plan.availability_source === 'previous_week'
+                        ? 'planning.plan.source.previousWeek'
+                        : plan.availability_source === 'checkin'
+                          ? 'planning.plan.source.checkin'
+                          : 'planning.plan.source.selected'),
+                    })}
                   </Text>
                   {primaryGoal ? (
                     <ActionButton
                       disabled={busy || maintenanceMarked}
                       label={
                         maintenanceMarked
-                          ? 'Onderhoudsmodus bevestigd'
-                          : `Markeer “${primaryGoal.race_name}” als behaald`
+                          ? t('planning.goal.maintenanceConfirmed')
+                          : t('planning.goal.markAchieved', { name: primaryGoal.race_name })
                       }
                       onPress={confirmGoalAchievement}
                       secondary
@@ -1263,15 +1246,15 @@ function PlanningPresentation({
                   })}
                   {plan.proposal ? (
                     <View style={styles.warning}>
-                      <Text style={styles.warningTitle}>Coachuitleg</Text>
+                      <Text style={styles.warningTitle}>{t('planning.plan.coachExplanation')}</Text>
                       <Text style={styles.warningText}>
-                        {coachExplanation(plan.proposal.public_explanation)}
+                        {coachExplanation(plan.proposal.public_explanation, t)}
                       </Text>
                     </View>
                   ) : null}
                   {['rejected', 'expired'].includes(plan.revision_state) ? (
                     <ActionButton
-                      label="Nieuw voorstel voorbereiden"
+                      label={t('planning.plan.prepareNew')}
                       onPress={clearPlan}
                       secondary
                     />
@@ -1281,13 +1264,9 @@ function PlanningPresentation({
                 plan.proposal?.state === 'pending' ? (
                   <View style={styles.swipeIntro}>
                     <Text style={styles.swipeIntroTitle}>
-                      Stel je week samen
+                      {t('planning.composeWeek')}
                     </Text>
-                    <Text style={styles.body}>
-                      Swipe per training door de geldige opties. Fietsen, lopen
-                      en zwemmen blijven aparte keuzes; de totale combinatie
-                      wordt na elke wijziging opnieuw gecontroleerd.
-                    </Text>
+                    <Text style={styles.body}>{t('planning.plan.swipeIntro')}</Text>
                   </View>
                 ) : null}
                 {plan.revision_state === 'active' ? (
@@ -1326,23 +1305,20 @@ function PlanningPresentation({
                 )}
                 {plan.proposal?.state === 'pending' ? (
                   <View style={styles.approvalPanel}>
-                    <Text style={styles.approvalTitle}>Klaar met kiezen?</Text>
-                    <Text style={styles.body}>
-                      Controleer de combinatie hierboven. Je week wordt pas
-                      actief nadat je dit voorstel uitdrukkelijk goedkeurt.
-                    </Text>
+                    <Text style={styles.approvalTitle}>{t('planning.plan.doneTitle')}</Text>
+                    <Text style={styles.body}>{t('planning.plan.doneBody')}</Text>
                     <View style={styles.decisionRow}>
                       <View style={styles.decisionButton}>
                         <ActionButton
                           disabled={busy}
-                          label="Week goedkeuren"
+                          label={t('review.approve')}
                           onPress={approve}
                         />
                       </View>
                       <View style={styles.decisionButton}>
                         <ActionButton
                           disabled={busy}
-                          label="Afwijzen"
+                          label={t('planning.plan.reject')}
                           onPress={reject}
                           secondary
                         />
@@ -1366,13 +1342,10 @@ function PlanningPresentation({
             />
           ) : (
             <View style={styles.panel}>
-              <StatusPill label="Nieuwe week" tone="brand" />
-              <Text style={styles.title}>Nog geen open keuzeronde</Text>
-              <Text style={styles.body}>
-                Start op de Week-tab. Daarna toont Wombo telkens precies één
-                server-gecontroleerde training.
-              </Text>
-              <ActionButton label="Naar Week" onPress={() => setView('plan')} />
+              <StatusPill label={t('planning.deck.pill')} tone="brand" />
+              <Text style={styles.title}>{t('planning.deck.emptyTitle')}</Text>
+              <Text style={styles.body}>{t('planning.deck.emptyBody')}</Text>
+              <ActionButton label={t('planning.deck.toWeek')} onPress={() => setView('plan')} />
             </View>
           )
         ) : null}
