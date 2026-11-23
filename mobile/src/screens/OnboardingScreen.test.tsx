@@ -59,6 +59,16 @@ function state(overrides: Partial<OnboardingState> = {}): OnboardingState {
   };
 }
 
+// The race type is one compact field; its options live in the sheet it opens.
+async function chooseRaceType(
+  screen: Awaited<ReturnType<typeof render>>,
+  label: string,
+  field: RegExp = /^Type wedstrijd: /,
+) {
+  await fireEvent.press(screen.getByRole('button', { name: field }));
+  await fireEvent.press(screen.getByRole('radio', { name: label }));
+}
+
 const goalOptions: GoalPlanningOption[] = [
   {
     goal_kind: 'race_event',
@@ -135,13 +145,49 @@ describe('onboarding components', () => {
     );
 
     expect(screen.getAllByText('Europe/Amsterdam').length).toBeGreaterThan(0);
-    await fireEvent.press(
-      screen.getByRole('button', { name: /Gedetecteerd op dit apparaat/ }),
-    );
+    const detected = screen.getByRole('radio', {
+      name: 'Gedetecteerd op dit apparaat: Europe/Amsterdam',
+    });
+    // Detection alone never selects or stores the value.
+    expect(detected.props.accessibilityState.checked).toBe(false);
+    expect(
+      screen.getByRole('button', { name: 'Tijdzone expliciet bevestigen' })
+        .props.accessibilityState.disabled,
+    ).toBe(true);
+    await fireEvent.press(detected);
     await fireEvent.press(
       screen.getByRole('button', { name: 'Tijdzone expliciet bevestigen' }),
     );
     expect(onSave).toHaveBeenCalledWith('Europe/Amsterdam', 'device');
+    resolvedOptions.mockRestore();
+  });
+
+  test('a common timezone is chosen from one compact list and saved as a manual choice', async () => {
+    const resolvedOptions = jest.spyOn(
+      Intl.DateTimeFormat.prototype,
+      'resolvedOptions',
+    );
+    resolvedOptions.mockReturnValue({
+      timeZone: 'Europe/Amsterdam',
+    } as Intl.ResolvedDateTimeFormatOptions);
+    const onSave = jest.fn(async () => undefined);
+    const screen = await render(
+      <TimezoneStep onSave={onSave} profile={null} saving={false} />,
+    );
+
+    // The list stays closed until asked for, so the step is not a wall of rows.
+    expect(screen.queryByRole('radio', { name: 'Europe/Brussels' })).toBeNull();
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'Veelgebruikte tijdzones: Kies een tijdzone' }),
+    );
+    await fireEvent.press(screen.getByRole('radio', { name: 'Europe/Brussels' }));
+    expect(
+      screen.getByRole('button', { name: 'Veelgebruikte tijdzones: Europe/Brussels' }),
+    ).toBeTruthy();
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'Tijdzone expliciet bevestigen' }),
+    );
+    expect(onSave).toHaveBeenCalledWith('Europe/Brussels', 'manual');
     resolvedOptions.mockRestore();
   });
 
@@ -177,10 +223,12 @@ describe('onboarding components', () => {
     const screen = await render(
       <HistoryStep onSave={onSave} saving={false} state={state()} />,
     );
-    const inputs = screen.getAllByLabelText('Gemiddelde uren per week, uur/week');
-    await fireEvent.changeText(inputs[0], '2');
-    await fireEvent.changeText(inputs[1], '4');
-    await fireEvent.changeText(inputs[2], '3');
+    await fireEvent.changeText(
+      screen.getByLabelText('Zwemmen, Gemiddelde uren per week, uur/week'), '2');
+    await fireEvent.changeText(
+      screen.getByLabelText('Fietsen, Gemiddelde uren per week, uur/week'), '4');
+    await fireEvent.changeText(
+      screen.getByLabelText('Hardlopen, Gemiddelde uren per week, uur/week'), '3');
     await fireEvent.press(
       screen.getByRole('button', { name: 'Trainingshistorie opslaan' }),
     );
@@ -201,7 +249,7 @@ describe('onboarding components', () => {
     await fireEvent.press(
       screen.getByRole('radio', { name: /Wedstrijd of evenement/ }),
     );
-    await fireEvent.press(screen.getByRole('radio', { name: 'Lopen' }));
+    await chooseRaceType(screen, 'Lopen');
     await fireEvent.changeText(screen.getByLabelText('Naam van de race'), '10K');
     await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
     await fireEvent.changeText(screen.getByLabelText('Afstand, meter'), '10000');
@@ -225,7 +273,7 @@ describe('onboarding components', () => {
       <GoalStep goal={null} onSave={onSave} options={goalOptions} saving={false} />,
     );
     await fireEvent.press(screen.getByRole('radio', { name: /Wedstrijd of evenement/ }));
-    await fireEvent.press(screen.getByRole('radio', { name: 'Lopen' }));
+    await chooseRaceType(screen, 'Lopen');
     await fireEvent.changeText(screen.getByLabelText('Naam van de race'), '10K');
     await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
     await fireEvent.changeText(screen.getByLabelText('Afstand, meter'), '10000');
@@ -307,7 +355,7 @@ describe('onboarding components', () => {
       await fireEvent.press(
         screen.getByRole('radio', { name: /Wedstrijd of evenement/ }),
       );
-      await fireEvent.press(screen.getByRole('radio', { name: raceLabel }));
+      await chooseRaceType(screen, raceLabel);
       await fireEvent.changeText(
         screen.getByLabelText('Naam van de race'),
         'Bewaarde race',
@@ -423,7 +471,8 @@ describe('onboarding components in English', () => {
     await fireEvent.press(screen.getByRole('radio', { name: 'Wedstrijd of evenement' }));
     expect(screen.getByText('Wedstrijd of evenement · Available')).toBeTruthy();
     expect(screen.getByText('Race type')).toBeTruthy();
-    expect(screen.getByRole('radio', { name: 'Triathlon' })).toBeTruthy();
+    await chooseRaceType(screen, 'Triathlon', /^Race type: /);
+    expect(screen.getByRole('button', { name: 'Race type: Triathlon' })).toBeTruthy();
     expect(screen.getByLabelText('Specific focus (optional)')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Total target time: not set yet' })).toBeTruthy();
 

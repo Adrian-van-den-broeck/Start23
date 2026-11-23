@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  BackHandler,
   StyleSheet,
-  Text,
   View,
-  useWindowDimensions,
+  type ScrollView,
 } from 'react-native';
 import { FormScrollView } from '../components/FormScrollView';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -34,14 +34,18 @@ import type {
 } from '../api/types';
 import { GoalStep } from '../ui-v2/screens/GoalForm';
 export { GoalStep } from '../ui-v2/screens/GoalForm';
-import { colors, layout, radius, space, typography } from '../ui-v2/tokens';
-import { BrandedFormHeader, FormComposition } from '../ui-v2/components/FormComposition';
+import { colors, layout, radius, space } from '../ui-v2/tokens';
+import { BrandedFormHeader, FormComposition, formGap } from '../ui-v2/components/FormComposition';
 import { ProfileForm } from '../ui-v2/components/ProfileForm';
 import { StepProgress } from '../ui-v2/components/StepProgress';
 import { Button } from '../ui-v2/primitives/Button';
-import { Input } from '../ui-v2/primitives/Input';
 import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
+import { Icon } from '../ui-v2/primitives/Icon';
+import { Input } from '../ui-v2/primitives/Input';
 import { Notice } from '../ui-v2/primitives/Notice';
+import { SelectField } from '../ui-v2/primitives/SelectField';
+import { Text } from '../ui-v2/primitives/Text';
+import { StepNav } from '../ui-v3/onboarding/StepNav';
 import {
   resolveDeviceTimezone,
 } from '../lib/onboardingForms';
@@ -57,6 +61,13 @@ const stepLabelKeys: Array<{ step: OnboardingStep; labelKey: TranslationKey }> =
   { step: 'zones', labelKey: 'onboarding.step.zones' },
   { step: 'review', labelKey: 'onboarding.step.review' },
 ];
+
+const stepOrder = stepLabelKeys.map((item) => item.step);
+
+function stepIndex(step: OnboardingStep): number {
+  const index = stepOrder.indexOf(step);
+  return index === -1 ? stepOrder.length : index;
+}
 
 type OnboardingScreenProps = {
   accessToken: string;
@@ -89,12 +100,9 @@ export function HeartRateMonitorStep({ saving, onSave }: ConfirmationStepProps) 
       description={t('onboarding.heartRate.description')}
       title={t('onboarding.heartRate.title')}
     >
-      <View style={styles.approvalNotice}>
-        <Text style={styles.approvalTitle}>{t('onboarding.heartRate.rpeOnlyTitle')}</Text>
-        <Text style={styles.approvalText}>
-          {t('onboarding.heartRate.rpeOnlyText')}
-        </Text>
-      </View>
+      <Notice title={t('onboarding.heartRate.rpeOnlyTitle')}>
+        {t('onboarding.heartRate.rpeOnlyText')}
+      </Notice>
       <ActionButton
         label={t('onboarding.heartRate.confirm')}
         loading={saving}
@@ -121,6 +129,8 @@ const fallbackTimezones = [
   'Australia/Sydney',
 ] as const;
 
+const timezoneOptions = fallbackTimezones.map((value) => ({ value, label: value }));
+
 export function TimezoneStep({ profile, saving, onSave }: TimezoneStepProps) {
   const { t } = useLanguage();
   const detected = useMemo(resolveDeviceTimezone, []);
@@ -130,6 +140,7 @@ export function TimezoneStep({ profile, saving, onSave }: TimezoneStepProps) {
   const [source, setSource] = useState<'device' | 'manual'>(
     profile?.timezone_source ?? (detected ? 'device' : 'manual'),
   );
+  const listed = fallbackTimezones.find((value) => value === timezone) ?? null;
 
   return (
     <StepFrame
@@ -137,17 +148,25 @@ export function TimezoneStep({ profile, saving, onSave }: TimezoneStepProps) {
       title={t('onboarding.timezone.title')}
     >
       {detected ? (
-        <Button label={t('onboarding.timezone.detected', { timezone: detected })} variant="secondary" onPress={() => { setTimezone(detected); setSource('device'); }} />
+        <View style={styles.detected}>
+          <Text variant="caption" tone="textMuted">{t('onboarding.timezone.detectedHint')}</Text>
+          <ChoiceRow
+            accessibilityLabel={t('onboarding.timezone.detected', { timezone: detected })}
+            label={detected}
+            onPress={() => { setTimezone(detected); setSource('device'); }}
+            selected={source === 'device' && timezone === detected}
+          />
+        </View>
       ) : (
-        <Text style={styles.fieldError}>
-          {t('onboarding.timezone.noDetection')}
-        </Text>
+        <Notice>{t('onboarding.timezone.noDetection')}</Notice>
       )}
-      <View style={styles.goalModeList}>
-        {fallbackTimezones.map((value) => (
-          <ChoiceRow key={value} label={value} selected={timezone === value} onPress={() => { setTimezone(value); setSource('manual'); }} />
-        ))}
-      </View>
+      <SelectField
+        label={t('onboarding.timezone.listLabel')}
+        onChange={(value) => { setTimezone(value); setSource('manual'); }}
+        options={timezoneOptions}
+        placeholder={t('onboarding.timezone.listPlaceholder')}
+        value={source === 'manual' ? listed : null}
+      />
       <Input
         autoCapitalize="none"
         hint={t('onboarding.timezone.otherHint')}
@@ -196,27 +215,52 @@ export function HistoryStep({ state, saving, onSave }: HistoryStepProps) {
       description={t('onboarding.history.description')}
       title={t('onboarding.history.title')}
     >
-      <View style={styles.form}>
-        {(['swim', 'bike', 'run'] as const).map((discipline) => (
-          <View key={discipline} style={styles.disciplineCard}>
-            <Text style={styles.cardTitle}>
-              {t(discipline === 'swim' ? 'common.swim' : discipline === 'bike' ? 'common.bike' : 'onboarding.history.run')}
-            </Text>
-            <Input
-              inputMode="decimal"
-              label={t('onboarding.history.hoursLabel')}
-              onChangeText={(value) => setValues((current) => ({ ...current, [discipline]: value }))}
-              placeholder="0"
-              unit={t('onboarding.history.hoursUnit')}
-              accessibilityLabel={t('onboarding.history.hoursLabel')}
-              value={values[discipline]}
-            />
-          </View>
-        ))}
-      </View>
+      {(['swim', 'bike', 'run'] as const).map((discipline) => {
+        const name = t(discipline === 'swim' ? 'common.swim' : discipline === 'bike' ? 'common.bike' : 'onboarding.history.run');
+        return (
+          <Input
+            accessibilityLabel={`${name}, ${t('onboarding.history.hoursLabel')}`}
+            icon={discipline}
+            inputMode="decimal"
+            key={discipline}
+            label={name}
+            onChangeText={(value) => setValues((current) => ({ ...current, [discipline]: value }))}
+            placeholder="0"
+            unit={t('onboarding.history.hoursUnit')}
+            value={values[discipline]}
+          />
+        );
+      })}
       <ActionButton disabled={!valid} label={t('onboarding.history.save')} loading={saving}
         onPress={() => void onSave(values)} />
     </StepFrame>
+  );
+}
+
+type ZoneProposalProps = {
+  title: string;
+  text: string;
+  approveLabel: string;
+  rejectLabel: string;
+  disabled: boolean;
+  onApprove: () => void;
+  onReject: () => void;
+};
+
+// A calculated zone proposal that waits for the athlete's own decision.
+function ZoneProposal({ title, text, approveLabel, rejectLabel, disabled, onApprove, onReject }: ZoneProposalProps) {
+  return (
+    <View style={styles.proposal}>
+      <View style={styles.proposalFact}>
+        <Icon name="document" color={colors.primary} />
+        <View style={styles.proposalCopy}>
+          <Text variant="label" tone="primary">{title}</Text>
+          <Text variant="supporting" tone="primary">{text}</Text>
+        </View>
+      </View>
+      <Button disabled={disabled} label={approveLabel} onPress={onApprove} trailingIcon="forward" />
+      <Button disabled={disabled} label={rejectLabel} onPress={onReject} variant="outline" />
+    </View>
   );
 }
 
@@ -250,20 +294,20 @@ export function ReviewStep({
       description={t('onboarding.review.description')}
       title={t('onboarding.review.title')}
     >
-      <View style={styles.reviewCard}>
-        <ReviewRow
+      <View style={styles.summary}>
+        <SummaryRow
           label={t('onboarding.step.profile')}
           value={state.profile?.timezone ?? t('onboarding.review.missing')}
         />
-        <ReviewRow
+        <SummaryRow
           label={t('onboarding.step.history')}
           value={t('onboarding.review.disciplineCount', { done: state.training_history.length, total: 3 })}
         />
-        <ReviewRow
+        <SummaryRow
           label={t('onboarding.review.goal')}
           value={state.primary_goal?.race_name ?? t('onboarding.review.missing')}
         />
-        <ReviewRow
+        <SummaryRow
           label={t('onboarding.review.activeZones')}
           value={t('onboarding.review.disciplineCount', {
             done: new Set(
@@ -280,42 +324,30 @@ export function ReviewStep({
         />
       </View>
       {pendingZones.map((zone) => (
-        <View key={zone.id} style={styles.approvalNotice}>
-          <Text style={styles.approvalTitle}>
-            {t('onboarding.review.zoneProposal', { discipline: zone.discipline })}
-          </Text>
-          <Text style={styles.approvalText}>
-            {t('onboarding.review.zoneProposalText', {
-              subject: zone.metric_profiles.length > 1
-                ? t('onboarding.review.metricRepresentations', { count: zone.metric_profiles.length })
-                : zone.metric?.metric_kind ?? t('onboarding.review.calculatedZones'),
-              version: zone.zone_model_version ?? '',
-            })}
-          </Text>
-          <ActionButton
-            disabled={saving}
-            label={t('onboarding.review.approveZones')}
-            onPress={() =>
-              void onApproveZone(
-                zone.proposal_id!,
-                zone.base_zone_profile_id,
-              )
-            }
-          />
-          <ActionButton
-            disabled={saving}
-            label={t('onboarding.review.rejectZones')}
-            onPress={() => void onRejectZone(zone.proposal_id!)}
-            secondary
-          />
-        </View>
+        <ZoneProposal
+          approveLabel={t('onboarding.review.approveZones')}
+          disabled={saving}
+          key={zone.id}
+          onApprove={() =>
+            void onApproveZone(
+              zone.proposal_id!,
+              zone.base_zone_profile_id,
+            )
+          }
+          onReject={() => void onRejectZone(zone.proposal_id!)}
+          rejectLabel={t('onboarding.review.rejectZones')}
+          text={t('onboarding.review.zoneProposalText', {
+            subject: zone.metric_profiles.length > 1
+              ? t('onboarding.review.metricRepresentations', { count: zone.metric_profiles.length })
+              : zone.metric?.metric_kind ?? t('onboarding.review.calculatedZones'),
+            version: zone.zone_model_version ?? '',
+          })}
+          title={t('onboarding.review.zoneProposal', { discipline: zone.discipline })}
+        />
       ))}
-      <View style={styles.approvalNotice}>
-        <Text style={styles.approvalTitle}>{t('onboarding.review.controlTitle')}</Text>
-        <Text style={styles.approvalText}>
-          {t('onboarding.review.controlText')}
-        </Text>
-      </View>
+      <Notice title={t('onboarding.review.controlTitle')}>
+        {t('onboarding.review.controlText')}
+      </Notice>
       <ActionButton
         disabled={!state.can_complete}
         label={t('onboarding.review.complete')}
@@ -326,13 +358,12 @@ export function ReviewStep({
   );
 }
 
-function ReviewRow({ label, value }: { label: string; value: string }) {
-  const { width, fontScale } = useWindowDimensions();
-  const compact = width < 393 || fontScale > 1;
+// The value moves below its label by itself when the two do not fit on one line.
+function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
-    <View style={[styles.reviewRow, compact && { flexDirection: 'column', alignItems: 'stretch' }]}>
-      <Text style={styles.reviewLabel}>{label}</Text>
-      <Text style={[styles.reviewValue, compact && { textAlign: 'left' }]}>{value}</Text>
+    <View style={styles.summaryRow}>
+      <Text variant="supporting" tone="textMuted">{label}</Text>
+      <Text variant="label" style={styles.summaryValue}>{value}</Text>
     </View>
   );
 }
@@ -353,10 +384,17 @@ export function OnboardingScreen({
   const [state, setState] = useState<OnboardingState | null>(null);
   const [physiologyProfile, setPhysiologyProfile] =
     useState<AthletePhysiologyProfile | null>(null);
-  const [goalOptions, setGoalOptions] = useState<GoalPlanningOption[]>([]);
+  // Only the goal step needs these, so they stay null until that step is shown.
+  const [goalOptions, setGoalOptions] = useState<GoalPlanningOption[] | null>(null);
+  const [goalOptionsError, setGoalOptionsError] = useState<string | null>(null);
+  const goalOptionsRequested = useRef(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Earlier step the athlete navigated back to. The server stays authoritative
+  // for progress: this never moves the view past the server's current step.
+  const [viewedStep, setViewedStep] = useState<OnboardingStep | null>(null);
+  const scroll = useRef<ScrollView>(null);
 
   const load = useCallback(async (snapshot?: OnboardingState) => {
     const nextState = snapshot ?? getOnboarding(accessToken);
@@ -364,7 +402,7 @@ export function OnboardingScreen({
       nextState,
       getPhysiologyProfile(accessToken),
       Promise.resolve(nextState).then((state) =>
-        state.current_step === 'goal' ? getGoalPlanningOptions(accessToken) : [],
+        state.current_step === 'goal' ? getGoalPlanningOptions(accessToken) : null,
       ),
     ]);
     return { next, nextGoalOptions, nextPhysiologyProfile };
@@ -376,7 +414,11 @@ export function OnboardingScreen({
       return;
     }
     setState(next);
-    setGoalOptions(nextGoalOptions);
+    // A load for another step fetches no goal options; keep the ones already shown.
+    if (nextGoalOptions) {
+      setGoalOptions(nextGoalOptions);
+      setGoalOptionsError(null);
+    }
     setPhysiologyProfile(nextPhysiologyProfile);
   }, [onOpenPlanning]);
 
@@ -483,20 +525,121 @@ export function OnboardingScreen({
     }, [physiologyProfile, state?.completed_steps],
   );
 
+  const physiologyProfileComplete =
+    physiologyProfile?.date_of_birth !== null &&
+    physiologyProfile?.date_of_birth !== undefined &&
+    physiologyProfile.resting_heart_rate_bpm !== null;
+  const serverStep: OnboardingStep | null = state
+    ? state.current_step === 'profile' && physiologyProfileComplete
+      ? 'heart_rate_monitor'
+      : state.current_step
+    : null;
+  const revisiting =
+    serverStep !== null &&
+    viewedStep !== null &&
+    stepIndex(viewedStep) < stepIndex(serverStep);
+  const step = revisiting ? viewedStep : serverStep;
+  const previousStep =
+    step !== null && stepIndex(step) > 0 && stepIndex(step) < stepOrder.length
+      ? stepOrder[stepIndex(step) - 1]
+      : null;
+  const nextStep =
+    revisiting && step !== null ? stepOrder[stepIndex(step) + 1] ?? null : null;
+
+  const showStep = useCallback(
+    (target: OnboardingStep | null) => {
+      setError(null);
+      setViewedStep(
+        target !== null &&
+          serverStep !== null &&
+          stepIndex(target) < stepIndex(serverStep)
+          ? target
+          : null,
+      );
+    },
+    [serverStep],
+  );
+
+  useEffect(() => {
+    if (!active || previousStep === null) return;
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (!saving) showStep(previousStep);
+        return true;
+      },
+    );
+    return () => subscription.remove();
+  }, [active, previousStep, saving, showStep]);
+
+  // The first load only fetches goal options when the server is on the goal
+  // step. Going back to that step from a later one fetches them here.
+  const loadGoalOptions = useCallback(async () => {
+    if (goalOptionsRequested.current) return;
+    goalOptionsRequested.current = true;
+    setGoalOptionsError(null);
+    try {
+      setGoalOptions(await getGoalPlanningOptions(accessToken));
+    } catch (caught) {
+      setGoalOptionsError(
+        caught instanceof Error
+          ? caught.message
+          : t('onboarding.goal.loadFailed'),
+      );
+    } finally {
+      goalOptionsRequested.current = false;
+    }
+  }, [accessToken, t]);
+
+  const goalOptionsMissing =
+    step === 'goal' && goalOptions === null && goalOptionsError === null;
+  useEffect(() => {
+    if (active && goalOptionsMissing) void loadGoalOptions();
+  }, [active, goalOptionsMissing, loadGoalOptions]);
+
+  // Each step starts at its top, and a save error shown there is not missed
+  // below a long form.
+  useEffect(() => {
+    scroll.current?.scrollTo?.({ y: 0, animated: false });
+  }, [step]);
+  useEffect(() => {
+    if (error) scroll.current?.scrollTo?.({ y: 0, animated: true });
+  }, [error]);
+
+  // After saving a step the athlete went back to, walk forward one step so
+  // they can review the following answers; the server step still caps this.
+  const saveStep = (
+    operation: () => Promise<unknown>,
+    options: { reloadAfter?: boolean; onSuccess?: () => void } = {},
+  ) => {
+    const savedStep = step;
+    return mutate(operation, {
+      ...options,
+      onSuccess: () => {
+        if (revisiting && savedStep !== null) {
+          setViewedStep(stepOrder[stepIndex(savedStep) + 1] ?? null);
+        }
+        options.onSuccess?.();
+      },
+    });
+  };
+
   if (loading) {
     return (
       <SafeAreaView style={styles.centered}>
         <ActivityIndicator color={colors.primary} size="large" />
-        <Text style={styles.loadingText}>{t('onboarding.loading')}</Text>
+        <Text variant="supporting" tone="textMuted">{t('onboarding.loading')}</Text>
       </SafeAreaView>
     );
   }
 
-  if (!state) {
+  if (!state || step === null) {
     return (
       <SafeAreaView style={styles.centered}>
-        <Text style={styles.errorTitle}>{t('onboarding.loadFailedTitle')}</Text>
-        {error ? <Text style={styles.centeredError}>{error}</Text> : null}
+        <Text variant="sectionTitle" accessibilityRole="header" style={styles.centeredText}>
+          {t('onboarding.loadFailedTitle')}
+        </Text>
+        {error ? <Text tone="destructive" style={styles.centeredText}>{error}</Text> : null}
         <ActionButton
           label={t('shell.retry')}
           onPress={() => void retryLoad()}
@@ -510,33 +653,49 @@ export function OnboardingScreen({
     );
   }
 
-  const physiologyProfileComplete =
-    physiologyProfile?.date_of_birth !== null &&
-    physiologyProfile?.date_of_birth !== undefined &&
-    physiologyProfile.resting_heart_rate_bpm !== null;
-  const step =
-    state.current_step === 'profile' && physiologyProfileComplete
-      ? 'heart_rate_monitor'
-      : state.current_step;
+  const stepName = (target: OnboardingStep) =>
+    stepLabels.find((item) => item.step === target)?.label ?? target;
+
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.keyboard}>
-        <FormScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} style={styles.scroll}>
+        <FormScrollView contentContainerStyle={styles.scrollContent} ref={scroll} showsVerticalScrollIndicator={false} style={styles.scroll}>
           <BrandedFormHeader caption={t('onboarding.headerCaption')} onSignOut={onSignOut}>
             {state.discipline_setups.some((setup) => setup.protocol_id) ? <Button label={t('onboarding.openCalibration')} variant="secondary" onPress={onOpenCalibration} /> : null}
           </BrandedFormHeader>
           {state.upgrade_required ? <Notice title={t('onboarding.upgrade.title')}>{t('onboarding.upgrade.text', {
             version: state.current_onboarding_version,
-            steps: state.missing_upgrade_steps.length ? state.missing_upgrade_steps.map((missing) => stepLabels.find((item) => item.step === missing)?.label ?? missing).join(', ') : t('onboarding.upgrade.reviewOnly'),
+            steps: state.missing_upgrade_steps.length ? state.missing_upgrade_steps.map(stepName).join(', ') : t('onboarding.upgrade.reviewOnly'),
           })}</Notice> : null}
-          <StepProgress current={step} steps={stepLabels} completed={completed} />
-          {error ? <Notice tone="error">{error}</Notice> : null}
+          <StepProgress
+            completed={completed}
+            current={step}
+            navigation={
+              <StepNav
+                disabled={saving}
+                next={nextStep ? {
+                  label: t('onboarding.nav.next'),
+                  accessibilityLabel: t('onboarding.nav.nextLabel'),
+                  hint: t('onboarding.nav.nextHint', { step: stepName(nextStep) }),
+                  onPress: () => showStep(nextStep),
+                } : undefined}
+                previous={previousStep ? {
+                  label: t('onboarding.nav.previous'),
+                  accessibilityLabel: t('onboarding.nav.previousLabel'),
+                  hint: t('onboarding.nav.previousHint', { step: stepName(previousStep) }),
+                  onPress: () => showStep(previousStep),
+                } : undefined}
+              />
+            }
+            steps={stepLabels}
+          />
+          {error ? <View accessibilityLiveRegion="polite"><Notice tone="error">{error}</Notice></View> : null}
 
           {step === 'profile' ? (
             <ProfileStep
               key={state.profile?.revision ?? 0}
               onSave={(input) =>
-                mutate(() => saveProfile(accessToken, input))
+                saveStep(() => saveProfile(accessToken, input))
               }
               profile={state.profile}
               saving={saving}
@@ -545,7 +704,7 @@ export function OnboardingScreen({
           {step === 'heart_rate_monitor' ? (
             <HeartRateMonitorStep
               onSave={() =>
-                mutate(() =>
+                saveStep(() =>
                   saveOperationalProfile(accessToken, {
                     heart_rate_monitor_confirmed: true,
                   }),
@@ -557,7 +716,7 @@ export function OnboardingScreen({
           {step === 'timezone' ? (
             <TimezoneStep
               onSave={(timezone, source) =>
-                mutate(() =>
+                saveStep(() =>
                   saveOperationalProfile(accessToken, {
                     timezone,
                     timezone_source: source,
@@ -575,7 +734,7 @@ export function OnboardingScreen({
                 .map((entry) => entry.updated_at)
                 .join(':')}
               onSave={(values) =>
-                mutate(() =>
+                saveStep(() =>
                   saveTrainingHistory(
                     accessToken,
                     (['swim', 'bike', 'run'] as const).map((discipline) => ({
@@ -589,13 +748,13 @@ export function OnboardingScreen({
               state={state}
             />
           ) : null}
-          {step === 'goal' ? (
+          {step === 'goal' && goalOptions ? (
             <GoalStep
               goal={state.primary_goal}
               key={state.primary_goal?.revision ?? 0}
               options={goalOptions}
               onSave={(input) =>
-                mutate(() =>
+                saveStep(() =>
                   savePrimaryGoal(
                     accessToken,
                     input,
@@ -605,6 +764,18 @@ export function OnboardingScreen({
               }
               saving={saving}
             />
+          ) : null}
+          {step === 'goal' && !goalOptions ? (
+            goalOptionsError ? (
+              <Notice
+                action={{ label: t('shell.retry'), onPress: loadGoalOptions }}
+                tone="error"
+              >
+                {goalOptionsError}
+              </Notice>
+            ) : (
+              <ActivityIndicator accessibilityLabel={t('common.loading')} color={colors.primary} />
+            )
           ) : null}
           {step === 'zones' ? (
             <>
@@ -617,7 +788,7 @@ export function OnboardingScreen({
                   ),
                 ].join(':')}
                 onSave={(discipline, input: DisciplineSetupInput) =>
-                  mutate(
+                  saveStep(
                     async () => {
                       if (input.setup_route === 'known_values') {
                         await saveCalculatedZones(accessToken, discipline, {
@@ -647,37 +818,28 @@ export function OnboardingScreen({
                     zone.proposal_id !== null,
                 )
                 .map((zone) => (
-                  <View key={zone.id} style={styles.approvalNotice}>
-                    <Text style={styles.approvalTitle}>
-                      {t('onboarding.zones.pendingTitle', { discipline: zone.discipline })}
-                    </Text>
-                    <Text style={styles.approvalText}>
-                      {t('onboarding.zones.pendingText')}
-                    </Text>
-                    <ActionButton
-                      disabled={saving}
-                      label={t('onboarding.zones.approve', { discipline: zone.discipline })}
-                      onPress={() =>
-                        void mutate(() =>
-                          approveZoneProposal(
-                            accessToken,
-                            zone.proposal_id!,
-                            zone.base_zone_profile_id,
-                          ),
-                        )
-                      }
-                    />
-                    <ActionButton
-                      disabled={saving}
-                      label={t('onboarding.zones.reject', { discipline: zone.discipline })}
-                      onPress={() =>
-                        void mutate(() =>
-                          rejectZoneProposal(accessToken, zone.proposal_id!),
-                        )
-                      }
-                      secondary
-                    />
-                  </View>
+                  <ZoneProposal
+                    approveLabel={t('onboarding.zones.approve', { discipline: zone.discipline })}
+                    disabled={saving}
+                    key={zone.id}
+                    onApprove={() =>
+                      void mutate(() =>
+                        approveZoneProposal(
+                          accessToken,
+                          zone.proposal_id!,
+                          zone.base_zone_profile_id,
+                        ),
+                      )
+                    }
+                    onReject={() =>
+                      void mutate(() =>
+                        rejectZoneProposal(accessToken, zone.proposal_id!),
+                      )
+                    }
+                    rejectLabel={t('onboarding.zones.reject', { discipline: zone.discipline })}
+                    text={t('onboarding.zones.pendingText')}
+                    title={t('onboarding.zones.pendingTitle', { discipline: zone.discipline })}
+                  />
                 ))}
             </>
           ) : null}
@@ -708,8 +870,7 @@ export function OnboardingScreen({
   );
 }
 
-const styles = StyleSheet.create(
-{
+const styles = StyleSheet.create({
   safeArea: {
     backgroundColor: colors.background,
     flex: 1,
@@ -728,82 +889,51 @@ const styles = StyleSheet.create(
     justifyContent: 'center',
     padding: space[24],
   },
-  loadingText: {
-    color: colors.textMuted,
-    fontSize: 14,
-  },
-  errorTitle: {
-    color: colors.text,
-    fontSize: 20,
-    fontWeight: '800',
-    textAlign: 'center',
-  },
-  centeredError: {
-    color: colors.destructive,
-    lineHeight: 20,
+  centeredText: {
     textAlign: 'center',
   },
   scrollContent: {
     alignSelf: 'center',
     maxWidth: layout.readingWidth,
     padding: layout.phoneGutter,
-    gap: space[24],
+    gap: formGap,
     paddingBottom: space[48],
     width: '100%',
   },
-  fieldError: {
-    color: colors.destructive,
-    ...typography.supporting,
-  },
-  form: {
-    gap: layout.fieldGroupGap,
-  },
-  goalModeList: {
+  detected: {
     gap: space[8],
   },
-  disciplineCard: { gap: space[16] },
-  cardTitle: {
-    color: colors.text,
-    ...typography.cardTitle,
-  },
-  reviewCard: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.control,
-    padding: space[16],
-  },
-  reviewRow: {
-    alignItems: 'center',
+  summary: {
     borderBottomColor: colors.border,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    gap: space[16],
-    justifyContent: 'space-between',
-    paddingVertical: space[16],
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  reviewLabel: {
-    color: colors.textMuted,
-    ...typography.label,
+  summaryRow: {
+    alignItems: 'baseline',
+    borderTopColor: colors.border,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    columnGap: space[16],
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    paddingVertical: space[12],
+    rowGap: space[4],
+  },
+  summaryValue: {
     flexShrink: 1,
   },
-  reviewValue: {
-    color: colors.text,
-    flex: 1,
-    ...typography.body,
-    fontWeight: '600',
-    textAlign: 'right',
-  },
-  approvalNotice: {
+  proposal: {
     backgroundColor: colors.primarySoft,
-    borderRadius: radius.control,
-    gap: space[4],
+    borderRadius: radius.card,
+    gap: space[12],
     padding: space[16],
   },
-  approvalTitle: {
-    color: colors.primary,
-    ...typography.label,
+  proposalFact: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: space[12],
   },
-  approvalText: {
-    color: colors.primary,
-    ...typography.body,
-  }
+  proposalCopy: {
+    flex: 1,
+    gap: space[4],
+  },
 });

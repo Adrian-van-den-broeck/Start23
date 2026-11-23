@@ -4,8 +4,7 @@ import type { AthleteProfile } from '../../api/types';
 import { formatIsoDateInput, isPastIsoDateInput } from '../../lib/dateInput';
 import { Button } from '../primitives/Button';
 import { Input } from '../primitives/Input';
-import { layout } from '../tokens';
-import { FormComposition } from './FormComposition';
+import { FormComposition, formGap } from './FormComposition';
 import { useLanguage } from '../../i18n/LanguageProvider';
 
 type ProfileFormProps = {
@@ -37,7 +36,7 @@ export function ProfileForm({ profile, saving, onSave }: ProfileFormProps) {
       description={t('onboarding.profile.description')}
       title={t('onboarding.profile.title')}
     >
-      <View style={{ gap: layout.fieldGroupGap }}>
+      <View style={{ gap: formGap }}>
         <Input
           label={t('onboarding.profile.firstName')}
           optionalLabel={optional}

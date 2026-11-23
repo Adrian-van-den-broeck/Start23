@@ -1,18 +1,20 @@
-import { useState, useRef } from 'react';
+import { Fragment, useState, useRef } from 'react';
 import { StyleSheet, View, type TextInput } from 'react-native';
 import type { Discipline, GoalPlanningOption, PrimaryRaceGoal, RaceType } from '../../api/types';
 import { DurationPicker } from '../../components/DurationPicker';
 import { formatIsoDateInput } from '../../lib/dateInput';
 import { parseRunPace } from '../../lib/runPace';
 import { parsePositiveInteger, raceDisciplines } from '../../lib/onboardingForms';
-import { FormComposition } from '../components/FormComposition';
+import { FormComposition, FormSection } from '../components/FormComposition';
 import { Button } from '../primitives/Button';
 import { ChoiceRow } from '../primitives/ChoiceRow';
 import { Input, type InputProps } from '../primitives/Input';
 import { Notice } from '../primitives/Notice';
+import { SelectField, type SelectOption } from '../primitives/SelectField';
 import { Text } from '../primitives/Text';
-import { colors, layout, radius, space, typography } from '../tokens';
+import { colors, layout, radius, space } from '../tokens';
 import { useLanguage } from '../../i18n/LanguageProvider';
+import { ChoiceChips } from '../../ui-v3/screens/support';
 
 function GoalInput({ required = false, optional = false, label, ...props }: InputProps & { required?: boolean; optional?: boolean }) {
   const { t } = useLanguage();
@@ -192,12 +194,23 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
     (option) => option.goal_kind === 'personal_goal',
   );
 
+  const raceTypeOptions: SelectOption<RaceType>[] = [
+    { value: 'run', label: t('common.run') },
+    { value: 'bike', label: t('common.bike') },
+    { value: 'swim', label: t('common.swim') },
+    { value: 'triathlon', label: t('onboarding.goal.raceType.triathlon') },
+    { value: 'duathlon', label: t('onboarding.goal.raceType.duathlon') },
+  ];
+  // Several legs each get their own titled group; a single leg needs no heading.
+  const grouped = disciplines.length > 1;
+  const Closing = grouped ? FormSection : Fragment;
+
   return (
     <FormComposition
       description={t('onboarding.goal.description')}
       title={t('onboarding.goal.title')}
     >
-      <View accessibilityRole="radiogroup" accessibilityLabel={t('onboarding.goal.groupLabel')} style={styles.goalModeList}>
+      <View accessibilityRole="radiogroup" accessibilityLabel={t('onboarding.goal.groupLabel')} style={styles.choices}>
         <ChoiceRow label={t('onboarding.goal.available', { label: raceOption?.label ?? t('onboarding.goal.raceEvent') })}
           accessibilityLabel={raceOption?.label ?? t('onboarding.goal.raceEvent')}
           hint={t('onboarding.goal.raceHint')}
@@ -208,68 +221,54 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
       </View>
       {selectedKind === 'race_event' ? (
         <>
-          <View style={styles.form}>
-            <Text style={styles.cardTitle}>{t('onboarding.goal.raceType')}</Text>
-            <View style={styles.goalModeList}>
-              {(
-                [
-                  ['run', 'common.run'],
-                  ['bike', 'common.bike'],
-                  ['swim', 'common.swim'],
-                  ['triathlon', 'onboarding.goal.raceType.triathlon'],
-                  ['duathlon', 'onboarding.goal.raceType.duathlon'],
-                ] as const
-              ).map(([value, labelKey]) => (
-                <ChoiceRow key={value} label={t(labelKey)} selected={raceType === value} onPress={() => setRaceType(value)} />
-              ))}
-            </View>
-            <GoalInput
-              error={
-                validationAttempted && !raceName.trim()
-                  ? t('onboarding.goal.raceNameRequired')
-                  : undefined
-              }
-              inputRef={nameRef}
-              icon="goal"
-              label={t('onboarding.goal.raceName')}
-              onChangeText={setRaceName}
-              placeholder="Amsterdam Olympic Triathlon"
-              value={raceName}
-              required
-            />
-            <GoalInput
-              autoCapitalize="none"
-              error={
-                validationAttempted
-                  ? !targetDate.trim()
-                    ? t('onboarding.goal.raceDateRequired')
-                    : !normalizedTargetDate
-                      ? t('onboarding.goal.raceDateInvalid')
-                      : undefined
-                  : undefined
-              }
-              hint={t('onboarding.goal.dateFormat')}
-              inputMode="numeric"
-              inputRef={dateRef}
-              icon="calendar"
-              label={t('onboarding.goal.raceDate')}
-              maxLength={10}
-              onChangeText={(value) =>
-                setTargetDate(formatIsoDateInput(value))
-              }
-              placeholder="2027-06-15"
-              value={targetDate}
-              required
-            />
-            {disciplines.map((discipline) => (
-              <View key={discipline} style={styles.disciplineCard}>
-                <Text style={styles.cardTitle}>
-                  {t(discipline === 'swim'
-                    ? 'common.swim'
-                    : discipline === 'bike'
-                      ? 'common.bike'
-                      : 'common.run')}
-                </Text>
+          <SelectField
+            label={t('onboarding.goal.raceType')}
+            onChange={setRaceType}
+            options={raceTypeOptions}
+            placeholder={t('onboarding.goal.raceTypePlaceholder')}
+            value={raceType}
+          />
+          <GoalInput
+            error={
+              validationAttempted && !raceName.trim()
+                ? t('onboarding.goal.raceNameRequired')
+                : undefined
+            }
+            inputRef={nameRef}
+            icon="goal"
+            label={t('onboarding.goal.raceName')}
+            onChangeText={setRaceName}
+            placeholder="Amsterdam Olympic Triathlon"
+            value={raceName}
+            required
+          />
+          <GoalInput
+            autoCapitalize="none"
+            error={
+              validationAttempted
+                ? !targetDate.trim()
+                  ? t('onboarding.goal.raceDateRequired')
+                  : !normalizedTargetDate
+                    ? t('onboarding.goal.raceDateInvalid')
+                    : undefined
+                : undefined
+            }
+            hint={t('onboarding.goal.dateFormat')}
+            inputMode="numeric"
+            inputRef={dateRef}
+            icon="calendar"
+            label={t('onboarding.goal.raceDate')}
+            maxLength={10}
+            onChangeText={(value) =>
+              setTargetDate(formatIsoDateInput(value))
+            }
+            placeholder="2027-06-15"
+            value={targetDate}
+            required
+          />
+          {disciplines.map((discipline) => {
+            const fields = (
+              <>
                 <GoalInput
                   error={
                     validationAttempted
@@ -308,16 +307,27 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                   }
                   valueSeconds={disciplineTimeSeconds[discipline]}
                 /> : null}
-              </View>
-            ))}
+              </>
+            );
+            return grouped
+              ? <FormSection key={discipline} title={t(`common.${discipline}`)}>{fields}</FormSection>
+              : <Fragment key={discipline}>{fields}</Fragment>;
+          })}
+          <Closing>
             {raceType === 'run' ? (
-              <View accessibilityRole="radiogroup" style={styles.goalModeList}>
-                <ChoiceRow label={t('onboarding.goal.targetTime')} selected={runGoalInput === 'time'} onPress={() => setRunGoalInput('time')} />
-                <ChoiceRow label={t('onboarding.goal.targetPaceOption')} selected={runGoalInput === 'pace'} onPress={() => {
-                  setRunGoalInput('pace');
-                  setDisciplineTimeSeconds((current) => ({ ...current, run: null }));
-                }} />
-              </View>
+              <ChoiceChips
+                accessibilityLabel={t('onboarding.goal.targetMode')}
+                isSelected={(mode) => mode === runGoalInput}
+                mode="radio"
+                onPress={(mode) => {
+                  setRunGoalInput(mode);
+                  if (mode === 'pace') setDisciplineTimeSeconds((current) => ({ ...current, run: null }));
+                }}
+                options={[
+                  { value: 'time' as const, label: t('onboarding.goal.targetTime') },
+                  { value: 'pace' as const, label: t('onboarding.goal.targetPaceOption') },
+                ]}
+              />
             ) : null}
             {raceType === 'run' && runGoalInput === 'pace' ? (
               <GoalInput inputRef={paceRef} icon="clock" label={t('onboarding.goal.targetPace')} inputMode="text" placeholder="5:00"
@@ -352,7 +362,7 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
               style={styles.multiline}
               value={specificFocus}
             />
-          </View>
+          </Closing>
           {validationAttempted && goalValidationMessages.length > 0 ? (
             <Notice tone="error">
               {t('onboarding.goal.missingFields', { fields: goalValidationMessages.join(', ') })}
@@ -406,39 +416,36 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
         </>
       ) : null}
       {selectedKind === 'personal_goal' ? (
-        <View style={styles.personalGoalsPanel}>
-          <Text style={styles.personalGoalsTitle}>
-            {t('onboarding.goal.personalTitle')}
-          </Text>
-          <Text style={styles.personalGoalsText}>
-            {t('onboarding.goal.personalText')}
-          </Text>
-          <View style={styles.personalGoalList}>
-            {personalOptions.map((option) => (
-              <View key={option.goal_family} style={styles.personalGoalRow}>
-                <Text style={styles.personalGoalLabel}>{option.label}</Text>
-                <Text style={styles.comingLaterBadge}>{t('onboarding.goal.comingLater')}</Text>
-              </View>
-            ))}
+        <FormSection>
+          <View style={styles.copy}>
+            <Text variant="label" accessibilityRole="header">{t('onboarding.goal.personalTitle')}</Text>
+            <Text variant="supporting" tone="textMuted">{t('onboarding.goal.personalText')}</Text>
           </View>
-        </View>
+          {personalOptions.length > 0 ? (
+            <View>
+              {personalOptions.map((option) => (
+                <View key={option.goal_family} style={styles.personalRow}>
+                  <Text variant="label" style={styles.personalLabel}>{option.label}</Text>
+                  <View style={styles.badge}>
+                    <Text variant="caption" tone="warning">{t('onboarding.goal.comingLater')}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ) : null}
+        </FormSection>
       ) : null}
     </FormComposition>
   );
 }
 
-
 const styles = StyleSheet.create({
-  form: { gap: layout.fieldGroupGap },
-  goalModeList: { gap: space[12] },
-  disciplineCard: { gap: space[16] },
-  cardTitle: { ...typography.cardTitle },
+  choices: { gap: space[8] },
+  copy: { gap: space[4] },
   multiline: { minHeight: layout.multilineFieldHeight, textAlignVertical: 'top' },
-  personalGoalsPanel: { gap: space[16] },
-  personalGoalList: { gap: space[12] },
-  personalGoalRow: { gap: space[4] },
-  personalGoalsTitle: { ...typography.cardTitle },
-  personalGoalsText: { ...typography.body, color: colors.textMuted },
-  personalGoalLabel: { ...typography.label },
-  comingLaterBadge: { ...typography.supporting, color: colors.warning, backgroundColor: colors.warningSoft, paddingHorizontal: space[12], paddingVertical: space[4], borderRadius: radius.control, alignSelf: 'flex-start' },
+  personalRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between',
+    columnGap: space[12], rowGap: space[4], paddingVertical: space[12],
+    borderTopWidth: StyleSheet.hairlineWidth, borderColor: colors.border },
+  personalLabel: { flexShrink: 1 },
+  badge: { backgroundColor: colors.warningSoft, paddingHorizontal: space[8], paddingVertical: space[4], borderRadius: radius.inset },
 });

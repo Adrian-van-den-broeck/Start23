@@ -121,9 +121,10 @@ describe('ZoneSetupStep', () => {
   });
 
   test.each([
-    ['run', 'LTHR', '171', 'run_lthr_bpm', 'heart_rate'],
-    ['bike', 'FTP', '245', 'bike_ftp_watts', 'power'],
-    ['swim', 'CSS', '105', 'swim_css_seconds_per_100m', 'pace'],
+    // The unit sits inside the field, so the field name carries it too.
+    ['run', 'LTHR, bpm', '171', 'run_lthr_bpm', 'heart_rate'],
+    ['bike', 'FTP, watt', '245', 'bike_ftp_watts', 'power'],
+    ['swim', 'CSS, sec/100 m', '105', 'swim_css_seconds_per_100m', 'pace'],
   ] as const)(
     '%s known-values route explains the required threshold and saves a valid value',
     async (discipline, fieldLabel, value, metricKind, guidanceMode) => {
@@ -179,7 +180,7 @@ describe('ZoneSetupStep', () => {
         saving={false} state={state} />,
     );
     await fireEvent.press(screen.getByRole('radio', { name: /Bekende waarden/ }));
-    await fireEvent.changeText(screen.getByLabelText('Drempeltempo'), '5:00');
+    await fireEvent.changeText(screen.getByLabelText('Drempeltempo, min/km'), '5:00');
     await fireEvent.press(screen.getByRole('button', { name: 'Bekende waarden bewaren' }));
     await waitFor(() => expect(onSave).toHaveBeenCalledWith('run', expect.objectContaining({
       thresholds: [{ metric_kind: 'run_threshold_pace_seconds_per_km', value: '300' }],
@@ -202,7 +203,8 @@ test('known-values route is shown in English when the athlete chose English', as
   await fireEvent.press(screen.getByRole('radio', { name: /Bekende waarden/ }));
   expect(screen.getByText('Known values')).toBeTruthy();
   expect(screen.getByText('Measured by doctor/lab')).toBeTruthy();
-  expect(screen.getByText('Bike threshold heart rate')).toBeTruthy();
+  expect(screen.getByLabelText('Bike threshold heart rate, bpm')).toBeTruthy();
+  expect(screen.getByLabelText('Source of the value').props.accessibilityRole).toBe('radiogroup');
   await fireEvent.press(screen.getByRole('button', { name: 'Save known values' }));
   expect(screen.getByText('Enter at least one known threshold value before saving.')).toBeTruthy();
   expect(screen.getAllByText('Enter at least FTP or Bike threshold heart rate.').length).toBeGreaterThan(0);

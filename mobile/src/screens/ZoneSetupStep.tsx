@@ -22,14 +22,17 @@ import type {
   ZoneMetricKind,
   ZoneSetupOption,
 } from '../api/types';
-import { ZoneField as FormField } from '../ui-v2/components/ZoneField';
+import { FormSection, formGap } from '../ui-v2/components/FormComposition';
 import { ZoneStatusChip } from '../ui-v2/components/ZoneVisuals';
 import { parseRunPace } from '../lib/runPace';
-import { colors, layout, radius, shadows, space } from '../ui-v2/tokens';
+import { colors, layout, space } from '../ui-v2/tokens';
 import { Text } from '../ui-v2/primitives/Text';
 import { Button } from '../ui-v2/primitives/Button';
 import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
+import { Input } from '../ui-v2/primitives/Input';
+import { Notice } from '../ui-v2/primitives/Notice';
 import { useLanguage, type TranslationKey } from '../i18n/LanguageProvider';
+import { ChoiceChips } from '../ui-v3/screens/support';
 
 type MetricOption = {
   kind: ZoneMetricKind;
@@ -133,16 +136,36 @@ function metricValue(option: MetricOption, raw?: string): number {
     : Number(raw);
 }
 
-function Chip({
+// One labelled choice inside a route. A single option leaves nothing to choose,
+// so it reads as a plain fact instead of a control.
+function OptionGroup<T extends string>({
   label,
-  selected,
-  onPress,
+  options,
+  value,
+  onChange,
 }: {
   label: string;
-  selected: boolean;
-  onPress: () => void;
+  options: readonly { value: T; label: string }[];
+  value: T;
+  onChange: (value: T) => void;
 }) {
-  return <ChoiceRow label={label} selected={selected} onPress={onPress} />;
+  if (options.length === 0) return null;
+  return (
+    <View style={styles.group}>
+      <Text variant="label">{label}</Text>
+      {options.length === 1 ? (
+        <Text tone="textMuted">{options[0].label}</Text>
+      ) : (
+        <ChoiceChips
+          accessibilityLabel={label}
+          isSelected={(option) => option === value}
+          mode="radio"
+          onPress={onChange}
+          options={options}
+        />
+      )}
+    </View>
+  );
 }
 
 function SaveButton({
@@ -181,7 +204,9 @@ export function ZoneSetupStep({
 }: Props) {
   const { t } = useLanguage();
   const { width, fontScale } = useWindowDimensions();
-  const compact = width < 393 || fontScale > 1;
+  // Two boundary fields fit beside the zone number on a phone; only very
+  // narrow screens and large text stack them.
+  const compact = width < 340 || fontScale > 1.3;
   const configured = useMemo(
     () =>
       new Set<Discipline>(
@@ -204,6 +229,9 @@ export function ZoneSetupStep({
     disciplineOverride ??
     requiredDisciplines.find((candidate) => !started.has(candidate)) ??
     requiredDisciplines.find((candidate) => !configured.has(candidate)) ??
+    // Everything is configured when the athlete comes back from a later step;
+    // stay on a discipline the goal actually requires.
+    requiredDisciplines[0] ??
     'run';
   const availableMetrics = metricOptions[discipline];
   const [options, setOptions] = useState<ZoneSetupOption[]>([]);
@@ -388,33 +416,48 @@ export function ZoneSetupStep({
     });
   };
 
+  const guidanceOptions = (modes: readonly GuidanceMode[]) =>
+    modes.map((mode) => ({ value: mode, label: t(guidanceLabels[mode]) }));
+  const poolChoice = discipline === 'swim' ? (
+    <OptionGroup
+      label={t('onboarding.zoneSetup.poolLabel')}
+      onChange={(value) => setPoolLength(value === '50' ? 50 : 25)}
+      options={[
+        { value: '25', label: t('onboarding.zoneSetup.pool25') },
+        { value: '50', label: t('onboarding.zoneSetup.pool50') },
+      ]}
+      value={String(poolLength)}
+    />
+  ) : null;
+
   return (
     <View style={styles.step}>
-      <View>
+      <View style={styles.heading}>
         {/* V3 onboarding already shows this step above in its progress rail. */}
-        {profileMode || !studioPresentation ? <Text style={styles.eyebrow}>
+        {profileMode || !studioPresentation ? <Text variant="caption" tone="primary" style={styles.eyebrow}>
           {profileMode ? t('onboarding.zoneSetup.eyebrowProfile') : t('onboarding.zoneSetup.eyebrowStep')}
         </Text> : null}
-        <Text style={styles.title}>{t('onboarding.zoneSetup.title', { discipline: t(disciplineLabels[discipline]) })}</Text>
-        <Text style={styles.description}>
+        <Text variant="sectionTitle" accessibilityRole="header">{t('onboarding.zoneSetup.title', { discipline: t(disciplineLabels[discipline]) })}</Text>
+        <Text variant={studioPresentation ? 'supporting' : 'body'} tone="textMuted">
           {t('onboarding.zoneSetup.description')}
         </Text>
       </View>
 
-      <View style={styles.progressRow}>
-        {requiredDisciplines.map((item) => (
-          <ZoneStatusChip
-            key={item}
-            label={`${configured.has(item) ? '✓ ' : ''}${t(disciplineLabels[item])}`}
-
-          />
-        ))}
-      </View>
+      {requiredDisciplines.length > 1 ? (
+        <View style={styles.progressRow}>
+          {requiredDisciplines.map((item) => (
+            <ZoneStatusChip
+              key={item}
+              label={`${configured.has(item) ? '✓ ' : ''}${t(disciplineLabels[item])}`}
+            />
+          ))}
+        </View>
+      ) : null}
 
       {loadingChoices ? (
-        <ActivityIndicator color={colors.primary} />
+        <ActivityIndicator accessibilityLabel={t('common.loading')} color={colors.primary} />
       ) : choiceError ? (
-        <Text style={styles.error}>{choiceError}</Text>
+        <Notice tone="error">{choiceError}</Notice>
       ) : (
         <View accessibilityRole="radiogroup" style={styles.routeList}>
           {options.map((option) => (
@@ -425,25 +468,25 @@ export function ZoneSetupStep({
       )}
 
       {route === 'known_values' ? (
-        <View style={styles.panel}>
-          <Text style={styles.panelTitle}>{t('onboarding.zoneSetup.known.title')}</Text>
-          <Text style={styles.panelText}>
-            {t('onboarding.zoneSetup.known.text')}
-          </Text>
-          <View accessibilityRole="radiogroup" style={styles.chips}>
-            <Chip
-              label={t('onboarding.zoneSetup.known.athleteEntered')}
-              onPress={() => setKnownValueSource('athlete_entered')}
-              selected={knownValueSource === 'athlete_entered'}
-            />
-            <Chip
-              label={t('onboarding.zoneSetup.known.measuredLab')}
-              onPress={() => setKnownValueSource('measured_lab')}
-              selected={knownValueSource === 'measured_lab'}
-            />
+        <FormSection>
+          <View style={styles.copy}>
+            <Text variant="label" accessibilityRole="header">{t('onboarding.zoneSetup.known.title')}</Text>
+            <Text variant="supporting" tone="textMuted">
+              {t('onboarding.zoneSetup.known.text')}
+            </Text>
           </View>
+          <OptionGroup
+            label={t('onboarding.zoneSetup.known.sourceLabel')}
+            onChange={setKnownValueSource}
+            options={[
+              { value: 'athlete_entered', label: t('onboarding.zoneSetup.known.athleteEntered') },
+              { value: 'measured_lab', label: t('onboarding.zoneSetup.known.measuredLab') },
+            ]}
+            value={knownValueSource}
+          />
           {availableMetrics.map((option) => (
-            <FormField
+            <Input
+              accessibilityLabel={t(option.labelKey)}
               error={
                 knownValuesValidationAttempted
                   ? invalidThresholds.includes(option)
@@ -472,7 +515,7 @@ export function ZoneSetupStep({
               }
               inputMode={option.kind === 'run_threshold_pace_seconds_per_km' ? 'text' : 'decimal'}
               key={option.kind}
-              label={t(option.labelKey)}
+              label={availableMetrics.length === 1 ? `${t(option.labelKey)} *` : t(option.labelKey)}
               onChangeText={(value) => {
                 const nextValues = {
                   ...knownValues,
@@ -503,20 +546,19 @@ export function ZoneSetupStep({
                   ? t('onboarding.zoneSetup.known.placeholderRequired')
                   : t('onboarding.zoneSetup.known.placeholderAtLeastOne')
               }
-              required={availableMetrics.length === 1}
-              suffix={<Text style={styles.unit}>{option.unit}</Text>}
+              unit={option.unit}
               value={knownValues[option.kind] ?? ''}
             />
           ))}
 
           {!wholePaceThresholds ? (
-            <Text style={styles.error}>
+            <Text variant="supporting" tone="destructive">
               {t('onboarding.zoneSetup.known.wholePaceError')}
             </Text>
           ) : null}
 
           {knownValuesValidationAttempted && enteredThresholds.length === 0 ? (
-            <Text accessibilityRole="alert" style={styles.error}>
+            <Text accessibilityRole="alert" variant="supporting" tone="destructive">
               {t('onboarding.zoneSetup.known.noneEntered')}
             </Text>
           ) : null}
@@ -525,65 +567,48 @@ export function ZoneSetupStep({
             onPress={() => setIncludeBoundaries((current) => !current)} />
 
           {includeBoundaries ? (
-            <View style={styles.boundaryPanel}>
+            <View style={styles.boundaries}>
               {enteredThresholds.length > 1 ? (
-                <View style={styles.chips}>
-                  {enteredThresholds.map((option) => (
-                    <Chip
-                      key={option.kind}
-                      label={t(option.labelKey)}
-                      onPress={() => setBoundaryMetric(option.kind)}
-                      selected={boundaryMetric === option.kind}
-                    />
-                  ))}
-                </View>
+                <OptionGroup
+                  label={t('onboarding.zoneSetup.known.boundaryMetricLabel')}
+                  onChange={setBoundaryMetric}
+                  options={enteredThresholds.map((option) => ({ value: option.kind, label: t(option.labelKey) }))}
+                  value={boundaryMetric}
+                />
               ) : null}
-              <Text style={styles.panelText}>
+              <Text variant="supporting" tone="textMuted">
                 {boundaryOption.descending
                   ? t('onboarding.zoneSetup.known.descendingHint')
                   : t('onboarding.zoneSetup.known.ascendingHint')}
               </Text>
               {boundaries.map((boundary, index) => (
                 <View key={boundary.zone_number} style={[styles.boundaryRow, compact && styles.stacked]}>
-                  <Text style={styles.zoneLabel}>Z{boundary.zone_number}</Text>
-                  <View style={[styles.boundaryInput, compact && styles.fullWidth]}>
-                    <FormField
-                      inputMode={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? 'text' : 'decimal'}
-                      label={t('onboarding.zoneSetup.known.lower')}
-                      onChangeText={(value) =>
-                        setBoundaries((current) =>
-                          current.map((item, itemIndex) =>
-                            itemIndex === index
-                              ? { ...item, lower_value: value }
-                              : item,
-                          ),
-                        )
-                      }
-                      placeholder={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? '5:00' : '0'}
-                      value={boundary.lower_value}
-                    />
+                  <View style={compact ? undefined : styles.zoneLabel}>
+                    <Text variant="label" tone="primary">Z{boundary.zone_number}</Text>
                   </View>
-                  <View style={[styles.boundaryInput, compact && styles.fullWidth]}>
-                    <FormField
-                      inputMode={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? 'text' : 'decimal'}
-                      label={t('onboarding.zoneSetup.known.upper')}
-                      onChangeText={(value) =>
-                        setBoundaries((current) =>
-                          current.map((item, itemIndex) =>
-                            itemIndex === index
-                              ? { ...item, upper_value: value }
-                              : item,
-                          ),
-                        )
-                      }
-                      placeholder={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? '5:00' : '0'}
-                      value={boundary.upper_value}
-                    />
-                  </View>
+                  {(['lower_value', 'upper_value'] as const).map((edge) => (
+                    <View key={edge} style={compact ? styles.fullWidth : styles.boundaryInput}>
+                      <Input
+                        inputMode={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? 'text' : 'decimal'}
+                        label={t(edge === 'lower_value' ? 'onboarding.zoneSetup.known.lower' : 'onboarding.zoneSetup.known.upper')}
+                        onChangeText={(value) =>
+                          setBoundaries((current) =>
+                            current.map((item, itemIndex) =>
+                              itemIndex === index
+                                ? { ...item, [edge]: value }
+                                : item,
+                            ),
+                          )
+                        }
+                        placeholder={boundaryMetric === 'run_threshold_pace_seconds_per_km' ? '5:00' : '0'}
+                        value={boundary[edge]}
+                      />
+                    </View>
+                  ))}
                 </View>
               ))}
               {!boundariesValid ? (
-                <Text style={styles.error}>
+                <Text variant="supporting" tone="destructive">
                   {t('onboarding.zoneSetup.known.boundariesError')}
                 </Text>
               ) : null}
@@ -596,103 +621,72 @@ export function ZoneSetupStep({
             onPress={submitKnownValues}
             saving={saving}
           />
-        </View>
+        </FormSection>
       ) : null}
 
       {route === 'field_test' ? (
-        <View style={styles.panel}>
-          <ZoneStatusChip label={t('onboarding.zoneSetup.field.chip')} pending />
-          <Text style={styles.panelText}>
-            {t('onboarding.zoneSetup.field.text')}
-          </Text>
-          <View accessibilityRole="radiogroup" style={styles.chips}>
-            {fieldTests.map((protocol) => (
-              <Chip
-                key={protocol.protocol_id}
-                label={protocolLabels[protocol.protocol_id] ? t(protocolLabels[protocol.protocol_id]) : protocol.protocol_id}
-                onPress={() => {
-                  setSelectedProtocolId(protocol.protocol_id);
-                  setGuidanceMode(protocol.guidance_modes[0]);
-                }}
-                selected={selectedProtocolId === protocol.protocol_id}
-              />
-            ))}
+        <FormSection>
+          <View style={styles.copy}>
+            <ZoneStatusChip label={t('onboarding.zoneSetup.field.chip')} pending />
+            <Text variant="supporting" tone="textMuted">
+              {t('onboarding.zoneSetup.field.text')}
+            </Text>
           </View>
+          <OptionGroup
+            label={t('onboarding.zoneSetup.field.protocolLabel')}
+            onChange={(protocolId) => {
+              const protocol = fieldTests.find((candidate) => candidate.protocol_id === protocolId);
+              if (!protocol) return;
+              setSelectedProtocolId(protocol.protocol_id);
+              setGuidanceMode(protocol.guidance_modes[0]);
+            }}
+            options={fieldTests.map((protocol) => ({
+              value: protocol.protocol_id,
+              label: protocolLabels[protocol.protocol_id] ? t(protocolLabels[protocol.protocol_id]) : protocol.protocol_id,
+            }))}
+            value={selectedProtocolId ?? ''}
+          />
           {selectedProtocol ? (
-            <View accessibilityRole="radiogroup" style={styles.chips}>
-              {selectedProtocol.guidance_modes.map((mode) => (
-                <Chip
-                  key={mode}
-                  label={t(guidanceLabels[mode])}
-                  onPress={() => setGuidanceMode(mode)}
-                  selected={guidanceMode === mode}
-                />
-              ))}
-            </View>
+            <OptionGroup
+              label={t('onboarding.zoneSetup.guidanceLabel')}
+              onChange={setGuidanceMode}
+              options={guidanceOptions(selectedProtocol.guidance_modes)}
+              value={guidanceMode}
+            />
           ) : null}
-          {discipline === 'swim' ? (
-            <View accessibilityRole="radiogroup" style={styles.chips}>
-              <Chip
-                label={t('onboarding.zoneSetup.pool25')}
-                onPress={() => setPoolLength(25)}
-                selected={poolLength === 25}
-              />
-              <Chip
-                label={t('onboarding.zoneSetup.pool50')}
-                onPress={() => setPoolLength(50)}
-                selected={poolLength === 50}
-              />
-            </View>
-          ) : null}
-          <Text style={styles.safetyText}>
-            {t('onboarding.zoneSetup.field.safety')}
-          </Text>
+          {poolChoice}
+          <Notice>{t('onboarding.zoneSetup.field.safety')}</Notice>
           <SaveButton
             disabled={!selectedProtocol}
             label={t('onboarding.zoneSetup.field.save')}
             onPress={submitFieldTest}
             saving={saving}
           />
-        </View>
+        </FormSection>
       ) : null}
 
       {route === 'calibration_week' ? (
-        <View style={styles.panel}>
-          <ZoneStatusChip label={t('onboarding.zoneSetup.calibration.chip')} />
-          <Text style={styles.panelText}>
-            {t('onboarding.zoneSetup.calibration.text')}
-          </Text>
-          <View accessibilityRole="radiogroup" style={styles.chips}>
-            {calibrationProtocol?.guidance_modes.map((mode) => (
-              <Chip
-                key={mode}
-                label={t(guidanceLabels[mode])}
-                onPress={() => setGuidanceMode(mode)}
-                selected={guidanceMode === mode}
-              />
-            ))}
+        <FormSection>
+          <View style={styles.copy}>
+            <ZoneStatusChip label={t('onboarding.zoneSetup.calibration.chip')} />
+            <Text variant="supporting" tone="textMuted">
+              {t('onboarding.zoneSetup.calibration.text')}
+            </Text>
           </View>
-          {discipline === 'swim' ? (
-            <View accessibilityRole="radiogroup" style={styles.chips}>
-              <Chip
-                label={t('onboarding.zoneSetup.pool25')}
-                onPress={() => setPoolLength(25)}
-                selected={poolLength === 25}
-              />
-              <Chip
-                label={t('onboarding.zoneSetup.pool50')}
-                onPress={() => setPoolLength(50)}
-                selected={poolLength === 50}
-              />
-            </View>
-          ) : null}
+          <OptionGroup
+            label={t('onboarding.zoneSetup.guidanceLabel')}
+            onChange={setGuidanceMode}
+            options={guidanceOptions(calibrationProtocol?.guidance_modes ?? [])}
+            value={guidanceMode}
+          />
+          {poolChoice}
           <SaveButton
             disabled={!calibrationProtocol}
             label={t('onboarding.zoneSetup.calibration.save')}
             onPress={submitCalibration}
             saving={saving}
           />
-        </View>
+        </FormSection>
       ) : null}
 
     </View>
@@ -700,15 +694,18 @@ export function ZoneSetupStep({
 }
 
 const styles = StyleSheet.create({
-  step: { gap: space[24] }, eyebrow: { color: colors.primary, fontSize: 12, fontWeight: '600', letterSpacing: 1.2, textTransform: 'uppercase' },
-  title: { color: colors.text, fontSize: 28, fontWeight: '600', letterSpacing: -0.5, lineHeight: 34, marginTop: space[8] },
-  description: { color: colors.textMuted, fontSize: 16, lineHeight: 24, marginTop: space[8] },
-  progressRow: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8] }, routeList: { gap: space[16] },
-  panel: { ...shadows.card, backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.card, borderWidth: 1, gap: layout.fieldGroupGap, padding: space[16] },
-  panelTitle: { color: colors.text, fontSize: 22, fontWeight: '600', lineHeight: 28 }, panelText: { color: colors.textMuted, fontSize: 16, lineHeight: 24 },
-  safetyText: { backgroundColor: colors.primarySoft, borderRadius: radius.control, color: colors.text, fontSize: 16, lineHeight: 24, padding: space[16] },
-  chips: { gap: space[12] }, boundaryPanel: { gap: space[24] }, boundaryRow: { alignItems: 'center', flexDirection: 'row', gap: space[12] },
-  stacked: { flexDirection: 'column', alignItems: 'flex-start' }, fullWidth: { flex: 0, width: '100%' },
-  zoneLabel: { color: colors.primary, fontSize: 18, fontWeight: '600' }, boundaryInput: { flex: 1 }, unit: { color: colors.textMuted, fontSize: 14, lineHeight: 20 },
-  error: { color: colors.destructive, fontSize: 14, lineHeight: 20 },
+  step: { gap: formGap },
+  heading: { gap: space[8] },
+  eyebrow: { textTransform: 'uppercase', letterSpacing: 1 },
+  copy: { gap: space[8] },
+  progressRow: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8] },
+  routeList: { gap: space[8] },
+  group: { gap: layout.labelFieldGap },
+  boundaries: { gap: formGap },
+  boundaryRow: { alignItems: 'flex-end', flexDirection: 'row', gap: space[12] },
+  stacked: { flexDirection: 'column', alignItems: 'stretch' },
+  fullWidth: { alignSelf: 'stretch' },
+  // Centres the zone number on the field beside it; field labels sit above.
+  zoneLabel: { height: layout.fieldHeight, justifyContent: 'center', minWidth: space[32] },
+  boundaryInput: { flex: 1 },
 });

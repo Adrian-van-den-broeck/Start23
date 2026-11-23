@@ -7,7 +7,7 @@ import { HeaderAction } from './AppHeader';
 import { Button } from '../primitives/Button';
 import { Card } from '../primitives/Card';
 import { Text } from '../primitives/Text';
-import { layout, space } from '../tokens';
+import { colors, layout, space } from '../tokens';
 import { useLanguage } from '../../i18n/LanguageProvider';
 
 export function BrandedFormHeader({ caption, onBack, onSignOut, children, backLabel: backLabelProp }: {
@@ -32,15 +32,31 @@ export function BrandedFormHeader({ caption, onBack, onSignOut, children, backLa
   </View>;
 }
 
+// Vertical rhythm between the fields of one form. V3 forms sit directly on the
+// page instead of inside a card, so they read tighter.
+export const formGap = studioPresentation ? space[16] : layout.fieldGroupGap;
+
 export function FormComposition({ title, description, children, progress }: {
   title: string; description: string; children: ReactNode; progress?: ReactNode;
 }) {
-  return <View style={{ gap: space[24] }}>
+  return <View style={{ gap: formGap }}>
     {progress}
-    <View style={{ gap: space[8] }}><Text variant={studioPresentation ? 'sectionTitle' : 'display'} accessibilityRole="header">{title}</Text><Text tone="textMuted">{description}</Text></View>
+    <View style={{ gap: space[8] }}>
+      <Text variant={studioPresentation ? 'sectionTitle' : 'display'} accessibilityRole="header">{title}</Text>
+      <Text variant={studioPresentation ? 'supporting' : 'body'} tone="textMuted">{description}</Text>
+    </View>
     {studioPresentation
-      ? <View style={{ gap: layout.fieldGroupGap }}>{children}</View>
-      : <Card padding="form" elevated style={{ gap: layout.fieldGroupGap }}>{children}</Card>}
+      ? <View style={{ gap: formGap }}>{children}</View>
+      : <Card padding="form" elevated style={{ gap: formGap }}>{children}</Card>}
+  </View>;
+}
+
+// A group of related fields inside a form, set apart by a hairline instead of
+// a nested card.
+export function FormSection({ title, children }: { title?: string; children: ReactNode }) {
+  return <View style={styles.section}>
+    {title ? <Text variant="caption" tone="primary" accessibilityRole="header" style={styles.sectionTitle}>{title}</Text> : null}
+    {children}
   </View>;
 }
 const styles = StyleSheet.create({
@@ -50,4 +66,6 @@ const styles = StyleSheet.create({
   brand: { alignItems: 'center', flexShrink: 1 },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8], flexShrink: 1 },
   art: { marginHorizontal: -layout.phoneGutter, marginBottom: -space[48] },
+  section: { gap: formGap, paddingTop: space[16], borderTopWidth: StyleSheet.hairlineWidth, borderColor: colors.border },
+  sectionTitle: { textTransform: 'uppercase', letterSpacing: 1 },
 });
