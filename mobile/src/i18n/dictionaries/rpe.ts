@@ -4,6 +4,7 @@ import { defineDictionary } from './define';
 // Approved RPE scale descriptions per discipline: 'rpe.<discipline>.<value>'.
 // The values 1-10 and their order are fixed; only the wording is translated.
 export default defineDictionary({
+  'rpe.choose': 'Kies je RPE',
   'rpe.swim.1': 'Gevoelloos door het water glijden.',
   'rpe.swim.2': 'Ontspannen slag, rustige ademhaling.',
   'rpe.swim.3': 'Vlotte, ritmische slag.',
@@ -35,6 +36,7 @@ export default defineDictionary({
   'rpe.run.9': 'Naar adem happen, zware benen.',
   'rpe.run.10': 'Volle sprint, snel moeten stoppen.',
 }, {
+  'rpe.choose': 'Choose your RPE',
   'rpe.swim.1': 'Gliding through the water without effort.',
   'rpe.swim.2': 'Relaxed stroke, calm breathing.',
   'rpe.swim.3': 'Smooth, rhythmic stroke.',

@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { DurationPicker } from '../../components/DurationPicker';
+import { StartTimePicker } from '../../components/StartTimePicker';
+import type { CanonicalRpe } from '../../lib/rpe';
+import { RpeSelect } from '../components/RpeSelect';
 import { Button } from '../primitives/Button';
 import { Card } from '../primitives/Card';
 import { ChoiceRow } from '../primitives/ChoiceRow';
@@ -11,6 +15,7 @@ import { Notice } from '../primitives/Notice';
 import { SegmentedControl } from '../primitives/SegmentedControl';
 import { Skeleton } from '../primitives/Skeleton';
 import { Text } from '../primitives/Text';
+import { ToggleChip } from '../primitives/ToggleChip';
 import { colors, layout, radius, space } from '../tokens';
 import { sourceWorkout } from '../utils/workout.test-fixtures';
 
@@ -28,6 +33,7 @@ const copy = {
     warningBody: 'Read this explanation before deciding how to continue.',
     errorBody: 'The entered value needs attention. Your input remains available.',
     successBody: 'The example result has an explicit label and icon.', icons: 'Icon circles',
+    target: 'Target time', start: 'Start time', pace: 'Average pace', feel: 'How did this block feel?', completed: 'Completed', interrupted: 'Interrupted',
   },
   nl: { form: 'Formuliervelden', workout: 'Trainingskaart', states: 'Bedieningsstatussen', notices: 'Meldingen',
     name: 'Voornaam', optional: '(optioneel)', birth: 'Geboortedatum', heart: 'Rusthartslag',
@@ -42,6 +48,7 @@ const copy = {
     warningBody: 'Lees deze toelichting voordat je beslist hoe je verdergaat.',
     errorBody: 'De ingevulde waarde vraagt aandacht. Je invoer blijft beschikbaar.',
     successBody: 'Het voorbeeldresultaat heeft een expliciet label en pictogram.', icons: 'Pictogramcirkels',
+    target: 'Richttijd', start: 'Starttijd', pace: 'Gemiddeld tempo', feel: 'Hoe voelde dit blok?', completed: 'Voltooid', interrupted: 'Onderbroken',
   },
 };
 export type ReviewSection = 'form' | 'workout' | 'states' | 'notices';
@@ -57,6 +64,11 @@ export function PrimitiveGallery({ language = 'en', section = 'form' }: {
   const [name, setName] = useState('Alex');
   const [day, setDay] = useState('monday');
   const [mode, setMode] = useState('week');
+  const [target, setTarget] = useState<number | null>(2400);
+  const [start, setStart] = useState(() => new Date().toISOString());
+  const [pace, setPace] = useState<number | null>(300);
+  const [rpe, setRpe] = useState<CanonicalRpe | null>(null);
+  const [status, setStatus] = useState({ completed: true, interrupted: false });
   if (!__DEV__) return null;
   return <SafeAreaView style={styles.screen}>
     <ScrollView key={`${section}-${language}`} keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>
@@ -68,6 +80,14 @@ export function PrimitiveGallery({ language = 'en', section = 'form' }: {
         <Input label={c.heart} icon="heartRate" value="58" unit="bpm" hint={c.helper} inputMode="numeric" />
         <Input label={c.readOnly} value="Alex" readOnly />
         <Input label={c.birth} value="08-10-1990" disabled disabledReason={c.disabled} />
+        <StartTimePicker label={c.start} timeZone="" valueIso={start} onChange={setStart} />
+        <DurationPicker label={c.target} valueSeconds={target} onChange={setTarget} />
+        <DurationPicker label={c.pace} units={['minutes', 'seconds']} maxMinutes={20} suffix="/km" valueSeconds={pace} onChange={setPace} />
+        <View style={[styles.facts, { flexWrap: 'wrap', gap: space[8] }]}>
+          <ToggleChip label={c.completed} checked={status.completed} onPress={() => setStatus((s) => ({ ...s, completed: !s.completed }))} />
+          <ToggleChip label={c.interrupted} checked={status.interrupted} onPress={() => setStatus((s) => ({ ...s, interrupted: !s.interrupted }))} />
+        </View>
+        <RpeSelect discipline="swim" label={c.feel} selectedValue={rpe} onSelect={setRpe} />
         <Button label={c.continue} trailingIcon="forward" onPress={noop} />
       </Card> : null}
       {section === 'workout' ? <Card padding="focus" elevated style={{ gap: space[16] }}>

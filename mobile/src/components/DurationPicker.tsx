@@ -1,20 +1,19 @@
-import { useMemo, useState, type RefObject } from 'react';
-import {
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { useState, type RefObject } from 'react';
+import { StyleSheet, View } from 'react-native';
 
-import { Icon } from '../ui-v2/primitives/Icon';
-import { formatClockDuration } from '../lib/onboardingForms';
-import { colors, radius, spacing } from '../theme/tokens';
-import { colors as finalColors, layout, radius as finalRadius, space, typography } from '../ui-v2/tokens';
 import { useLanguage, type TranslationKey } from '../i18n/LanguageProvider';
+import { formatClockDuration } from '../lib/onboardingForms';
+import { BottomSheet } from '../ui-v2/primitives/BottomSheet';
+import { Button } from '../ui-v2/primitives/Button';
+import { PickerField } from '../ui-v2/primitives/PickerField';
+import { Text } from '../ui-v2/primitives/Text';
+import { WheelColumn } from '../ui-v2/primitives/WheelColumn';
+import { space } from '../ui-v2/tokens';
 
-type DurationUnit = 'hours' | 'minutes' | 'seconds';
+export type DurationUnit = 'hours' | 'minutes' | 'seconds';
+type DurationParts = Record<DurationUnit, number>;
+
+const ALL_UNITS: readonly DurationUnit[] = ['hours', 'minutes', 'seconds'];
 
 type DurationPickerProps = {
   label: string;
@@ -23,27 +22,40 @@ type DurationPickerProps = {
   error?: string;
   hint?: string;
   required?: boolean;
+  // Defaults to optional fields only; turn off where a clear button would crowd a small cell.
+  clearable?: boolean;
+  // Wheels to show, largest first. Without hours, minutes may exceed 59 (e.g. swim times).
+  units?: readonly DurationUnit[];
   maxHours?: number;
-  appearance?: 'default' | 'final';
+  maxMinutes?: number;
+  // Shown after the value, e.g. "/km" for a pace.
+  suffix?: string;
+  icon?: boolean;
   focusRef?: RefObject<View | null>;
 };
 
-const unitCopy: Record<
-  DurationUnit,
-  { label: TranslationKey; singular: TranslationKey; short: TranslationKey }
-> = {
-  hours: { label: 'onboarding.duration.unit.hours', singular: 'onboarding.duration.singular.hours', short: 'onboarding.duration.short.hours' },
-  minutes: { label: 'onboarding.duration.unit.minutes', singular: 'onboarding.duration.singular.minutes', short: 'onboarding.duration.short.minutes' },
-  seconds: { label: 'onboarding.duration.unit.seconds', singular: 'onboarding.duration.singular.seconds', short: 'onboarding.duration.short.seconds' },
+const unitCopy: Record<DurationUnit, { short: TranslationKey; singular: TranslationKey }> = {
+  hours: { short: 'onboarding.duration.short.hours', singular: 'onboarding.duration.singular.hours' },
+  minutes: { short: 'onboarding.duration.short.minutes', singular: 'onboarding.duration.singular.minutes' },
+  seconds: { short: 'onboarding.duration.short.seconds', singular: 'onboarding.duration.singular.seconds' },
 };
 
-function parts(valueSeconds: number | null) {
-  const safe = Math.max(0, valueSeconds ?? 0);
-  return {
-    hours: Math.floor(safe / 3600),
-    minutes: Math.floor((safe % 3600) / 60),
-    seconds: safe % 60,
-  };
+function split(valueSeconds: number | null, units: readonly DurationUnit[]): DurationParts {
+  const safe = Math.max(0, Math.round(valueSeconds ?? 0));
+  const hours = units.includes('hours') ? Math.floor(safe / 3600) : 0;
+  const minutes = units.includes('minutes') ? Math.floor((safe - hours * 3600) / 60) : 0;
+  const seconds = units.includes('seconds') ? safe - hours * 3600 - minutes * 60 : 0;
+  return { hours, minutes, seconds };
+}
+
+function join(parts: DurationParts): number {
+  return parts.hours * 3600 + parts.minutes * 60 + parts.seconds;
+}
+
+function format(valueSeconds: number, units: readonly DurationUnit[]): string {
+  if (units.includes('hours')) return formatClockDuration(valueSeconds);
+  const minutes = Math.floor(valueSeconds / 60);
+  return `${minutes}:${String(valueSeconds % 60).padStart(2, '0')}`;
 }
 
 export function DurationPicker({
@@ -53,353 +65,68 @@ export function DurationPicker({
   error,
   hint,
   required = false,
+  clearable = !required,
+  units = ALL_UNITS,
   maxHours = 168,
-  appearance = 'default',
+  maxMinutes = 59,
+  suffix,
+  icon = true,
   focusRef,
 }: DurationPickerProps) {
   const { t } = useLanguage();
-  const [focusedControl, setFocusedControl] = useState<string | null>(null);
-  const [pressedControl, setPressedControl] = useState<string | null>(null);
-  const controlProps = (key: string) => ({ onPressIn: () => setPressedControl(key), onPressOut: () => setPressedControl(null), ...(appearance === 'final' ? {
-    onFocus: () => setFocusedControl(key), onBlur: () => setFocusedControl(null),
-  } : {}) });
-  const focusRing = (key: string) => appearance === 'final' && focusedControl === key ?
-    <View pointerEvents="none" accessible={false} importantForAccessibility="no-hide-descendants" style={finalStyles.focus} /> : null;
-  const styles = appearance === 'final' ? finalStyles : legacyStyles;
-  const [openUnit, setOpenUnit] = useState<DurationUnit | null>(null);
-  const value = parts(valueSeconds);
-  const atMaximumDuration = (valueSeconds ?? 0) >= maxHours * 3600;
-  const options = useMemo(
-    () =>
-      openUnit === 'hours'
-        ? Array.from({ length: maxHours + 1 }, (_, index) => index)
-        : Array.from({ length: 60 }, (_, index) => index),
-    [maxHours, openUnit],
-  );
-
-  const setPart = (unit: DurationUnit, nextValue: number) => {
-    const next = { ...value, [unit]: nextValue };
-    onChange(
-      Math.min(
-        maxHours * 3600,
-        next.hours * 3600 + next.minutes * 60 + next.seconds,
-      ),
-    );
-  };
-
-  const adjust = (unit: DurationUnit, delta: number) => {
-    const maximum = unit === 'hours' ? maxHours : 59;
-    setPart(unit, Math.min(maximum, Math.max(0, value[unit] + delta)));
-  };
+  // The sheet edits a draft; the owner only hears about the value on "Done".
+  const [draft, setDraft] = useState<DurationParts | null>(null);
+  const hasHours = units.includes('hours');
+  const draftTotal = draft ? (hasHours ? Math.min(maxHours * 3600, join(draft)) : join(draft)) : 0;
+  const withSuffix = (text: string) => (suffix ? `${text} ${suffix}` : text);
+  const display = valueSeconds === null ? null : withSuffix(format(Math.round(valueSeconds), units));
 
   return (
-    <View style={styles.group}>
-      <View style={styles.labelRow}>
-        <Text style={styles.label}>
-          {label}
-          {required ? ' *' : ''}
-        </Text>
-        {!required && valueSeconds !== null ? (
-          <Pressable
-            {...controlProps('clear')}
-            accessibilityLabel={t('onboarding.duration.clearLabel', { label })}
-            accessibilityRole="button"
-            onPress={() => onChange(null)}
-            style={styles.clearButton}
-          >
-            <Text style={styles.clearText}>{t('onboarding.duration.clear')}</Text>{focusRing('clear')}
-          </Pressable>
-        ) : null}
-      </View>
-
-      <Text
-        accessibilityLabel={`${label}: ${
-          valueSeconds === null
-            ? t('onboarding.duration.notSetSpoken')
-            : formatClockDuration(valueSeconds)
-        }`}
-        style={[styles.result, error ? styles.resultError : null]}
+    <View>
+      <PickerField
+        label={label}
+        required={required}
+        display={display}
+        placeholder={t('onboarding.duration.placeholder')}
+        spokenValue={display ?? t('onboarding.duration.notSetSpoken')}
+        openHint={t('onboarding.duration.editHint')}
+        onOpen={() => setDraft(split(valueSeconds, units))}
+        clearLabel={t('onboarding.duration.clearLabel', { label })}
+        onClear={clearable && valueSeconds !== null ? () => onChange(null) : undefined}
+        icon={icon ? 'clock' : undefined}
+        error={error}
+        hint={hint}
+        focusRef={focusRef}
+      />
+      <BottomSheet
+        visible={draft !== null}
+        title={label}
+        closeLabel={t('onboarding.duration.closeLabel')}
+        onClose={() => setDraft(null)}
+        scroll={false}
+        footer={<Button label={t('common.done')} onPress={() => { onChange(draftTotal); setDraft(null); }} />}
       >
-        {valueSeconds === null
-          ? t('onboarding.duration.notSet')
-          : formatClockDuration(valueSeconds)}
-      </Text>
-
-      <View style={styles.units}>
-        {(Object.keys(unitCopy) as DurationUnit[]).map((unit) => (
-          <View key={unit} style={styles.unitCard}>
-            <Text style={styles.unitLabel}>{t(unitCopy[unit].label)}</Text>
-            <View style={styles.stepper}>
-              <Pressable
-                {...controlProps(unit + '-decrease')}
-                accessibilityLabel={t('onboarding.duration.decrease', { unit: t(unitCopy[unit].label), label })}
-                accessibilityRole="button"
-                disabled={value[unit] === 0}
-                onPress={() => adjust(unit, -1)}
-                style={[
-                  styles.stepButton,
-                  value[unit] === 0 && styles.disabled,
-                  pressedControl === (unit + '-decrease') && styles.pressed,
-                ]}
-              >
-                {appearance === 'final' ? <Icon name="minus" /> : <Text style={styles.stepButtonText}>-</Text>}{focusRing(unit + '-decrease')}
-              </Pressable>
-              <Pressable
-                ref={unit === 'hours' ? focusRef : undefined}
-                {...controlProps(unit + '-choose')}
-                accessibilityLabel={t('onboarding.duration.choose', { unit: t(unitCopy[unit].label), label })}
-                accessibilityRole="button"
-                onPress={() => setOpenUnit(unit)}
-                style={[
-                  styles.valueButton,
-                  pressedControl === (unit + '-choose') && styles.pressed,
-                ]}
-              >
-                <Text style={styles.valueText}>
-                  {String(value[unit]).padStart(2, '0')}
-                </Text>{focusRing(unit + '-choose')}
-              </Pressable>
-              <Pressable
-                {...controlProps(unit + '-increase')}
-                accessibilityLabel={t('onboarding.duration.increase', { unit: t(unitCopy[unit].label), label })}
-                accessibilityRole="button"
-                disabled={
-                  atMaximumDuration ||
-                  value[unit] === (unit === 'hours' ? maxHours : 59)
-                }
-                onPress={() => adjust(unit, 1)}
-                style={[
-                  styles.stepButton,
-                  (atMaximumDuration ||
-                    value[unit] === (unit === 'hours' ? maxHours : 59)) &&
-                    styles.disabled,
-                  pressedControl === (unit + '-increase') && styles.pressed,
-                ]}
-              >
-                {appearance === 'final' ? <Icon name="add" /> : <Text style={styles.stepButtonText}>+</Text>}{focusRing(unit + '-increase')}
-              </Pressable>
-            </View>
-          </View>
-        ))}
-      </View>
-
-      {error ? (
-        <Text accessibilityRole="alert" style={styles.error}>
-          {error}
+        <Text variant="numeric" tone="primary" accessibilityLiveRegion="polite" style={styles.preview}>
+          {withSuffix(format(draftTotal, units))}
         </Text>
-      ) : null}
-      {hint ? <Text style={styles.hint}>{hint}</Text> : null}
-
-      <Modal
-        animationType="slide"
-        onRequestClose={() => setOpenUnit(null)}
-        transparent
-        visible={openUnit !== null}
-      >
-        <View style={styles.modalBackdrop}>
-          <View style={styles.modalCard}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>
-                {t('onboarding.duration.modalTitle', { unit: openUnit ? t(unitCopy[openUnit].label) : '' })}
-              </Text>
-              <Pressable
-                {...controlProps('close')}
-                accessibilityLabel={t('onboarding.duration.closeLabel')}
-                accessibilityRole="button"
-                onPress={() => setOpenUnit(null)}
-                style={styles.closeButton}
-              >
-                <Text style={styles.closeText}>{t('common.close')}</Text>{focusRing('close')}
-              </Pressable>
-            </View>
-            <ScrollView contentContainerStyle={styles.optionGrid}>
-              {openUnit
-                ? options.map((option) => {
-                    const selected = value[openUnit] === option;
-                    const copy = `${option} ${t(
-                      option === 1
-                        ? unitCopy[openUnit].singular
-                        : unitCopy[openUnit].short,
-                    )}`;
-                    return (
-                      <Pressable
-                        {...controlProps('option-' + option)}
-                        accessibilityRole="radio"
-                        accessibilityState={{ selected }}
-                        key={option}
-                        onPress={() => {
-                          setPart(openUnit, option);
-                          setOpenUnit(null);
-                        }}
-                        style={[
-                          styles.option,
-                          selected && styles.optionSelected,
-                          pressedControl === ('option-' + option) && styles.pressed,
-                        ]}
-                      >
-                        <Text
-                          style={[
-                            styles.optionText,
-                            selected && styles.optionTextSelected,
-                          ]}
-                        >
-                          {copy}
-                        </Text>{focusRing('option-' + option)}
-                      </Pressable>
-                    );
-                  })
-                : null}
-            </ScrollView>
-          </View>
+        <View style={styles.wheels}>
+          {draft ? units.map((unit) => (
+            <WheelColumn
+              key={unit}
+              caption={t(unitCopy[unit].short)}
+              count={unit === 'hours' ? maxHours + 1 : unit === 'minutes' && !hasHours ? maxMinutes + 1 : 60}
+              value={draft[unit]}
+              spoken={(n) => `${n} ${t(n === 1 ? unitCopy[unit].singular : unitCopy[unit].short)}`}
+              onChange={(n) => setDraft((current) => (current ? { ...current, [unit]: n } : current))}
+            />
+          )) : null}
         </View>
-      </Modal>
+      </BottomSheet>
     </View>
   );
 }
 
-const legacyStyles = StyleSheet.create({
-  group: { gap: spacing.xs },
-  labelRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  label: { color: colors.ink, fontSize: 13, fontWeight: '700' },
-  clearButton: { paddingHorizontal: spacing.sm, paddingVertical: spacing.xs },
-  clearText: { color: colors.accentDark, fontSize: 13, fontWeight: '800' },
-  result: {
-    backgroundColor: colors.brandSoft,
-    borderColor: colors.lineStrong,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    color: colors.brandDeep,
-    fontSize: 25,
-    fontVariant: ['tabular-nums'],
-    fontWeight: '900',
-    letterSpacing: 1.5,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    textAlign: 'center',
-  },
-  resultError: { borderColor: colors.danger, borderWidth: 2 },
-  units: { gap: spacing.xs },
-  unitCard: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  unitLabel: {
-    color: colors.inkMuted,
-    fontSize: 11,
-    fontWeight: '800',
-    width: 72,
-    textTransform: 'uppercase',
-  },
-  stepper: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'row',
-    gap: spacing.xs,
-  },
-  stepButton: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.sm,
-    height: 48,
-    justifyContent: 'center',
-    width: 48,
-  },
-  stepButtonText: { color: colors.brandDeep, fontSize: 23, fontWeight: '900' },
-  valueButton: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceRaised,
-    borderColor: colors.lineStrong,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    flex: 1,
-    height: 48,
-    justifyContent: 'center',
-  },
-  valueText: {
-    color: colors.ink,
-    fontSize: 17,
-    fontVariant: ['tabular-nums'],
-    fontWeight: '900',
-  },
-  disabled: { opacity: 0.35 },
-  pressed: { opacity: 0.72 },
-  error: { color: colors.danger, fontSize: 12, lineHeight: 17 },
-  hint: { color: colors.inkMuted, fontSize: 12, lineHeight: 17 },
-  modalBackdrop: {
-    backgroundColor: 'rgba(8, 46, 42, 0.45)',
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  modalCard: {
-    backgroundColor: colors.surface,
-    borderTopLeftRadius: radius.lg,
-    borderTopRightRadius: radius.lg,
-    maxHeight: '72%',
-    padding: spacing.md,
-  },
-  modalHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: spacing.md,
-  },
-  modalTitle: { color: colors.ink, fontSize: 20, fontWeight: '900' },
-  closeButton: { padding: spacing.sm },
-  closeText: { color: colors.brand, fontSize: 14, fontWeight: '900' },
-  optionGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-    paddingBottom: spacing.xl,
-  },
-  option: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.pill,
-    minHeight: 48,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.md,
-  },
-  optionSelected: { backgroundColor: colors.brand },
-  optionText: { color: colors.ink, fontSize: 14, fontWeight: '700' },
-  optionTextSelected: { color: colors.white },
-});
-
-const finalStyles = StyleSheet.create({
-  focus: { ...StyleSheet.absoluteFill, borderColor: finalColors.focus, borderWidth: layout.focusOutline, borderRadius: finalRadius.control },
-  ...legacyStyles,
-  group: { gap: space[8] },
-  labelRow: { gap: space[8] },
-  label: { ...typography.label, color: finalColors.text },
-  clearButton: { minWidth: layout.touch, minHeight: layout.touch, justifyContent: 'center', padding: space[8], borderRadius: finalRadius.control },
-  clearText: { ...typography.label, color: finalColors.primary },
-  result: { ...typography.body, fontWeight: '600', fontVariant: ['tabular-nums'], color: finalColors.primary, backgroundColor: finalColors.primarySoft, borderColor: finalColors.borderControl, borderWidth: layout.controlEdge, borderRadius: finalRadius.control, padding: space[12] },
-  resultError: { borderColor: finalColors.destructive, borderWidth: layout.focusOutline },
-  units: { gap: space[16] },
-  unitCard: { gap: space[8] },
-  unitLabel: { ...typography.label, color: finalColors.textMuted },
-  stepper: { flexDirection: 'row', alignItems: 'center', gap: space[8] },
-  stepButton: { minWidth: layout.touch, minHeight: layout.touch, alignItems: 'center', justifyContent: 'center', backgroundColor: finalColors.primarySoft, borderRadius: finalRadius.control, padding: space[8] },
-  stepButtonText: { ...typography.button, color: finalColors.primary },
-  valueButton: { flex: 1, minWidth: layout.touch, minHeight: layout.touch, alignItems: 'center', justifyContent: 'center', padding: space[8], backgroundColor: finalColors.surface, borderColor: finalColors.borderControl, borderWidth: layout.controlEdge, borderRadius: finalRadius.control },
-  valueText: { ...typography.numericCompact, fontVariant: ['tabular-nums'], color: finalColors.text },
-  disabled: { backgroundColor: finalColors.surfaceSubtle },
-  error: { ...typography.supporting, color: finalColors.destructive },
-  hint: { ...typography.supporting, color: finalColors.textMuted },
-  modalBackdrop: { backgroundColor: finalColors.scrim, flex: 1, justifyContent: 'flex-end' },
-  modalCard: { backgroundColor: finalColors.surface, borderTopLeftRadius: finalRadius.sheet, borderTopRightRadius: finalRadius.sheet, maxHeight: '80%', padding: space[16] },
-  modalHeader: { gap: space[8], marginBottom: space[16] },
-  modalTitle: { ...typography.sectionTitle, color: finalColors.text },
-  closeButton: { minWidth: layout.touch, minHeight: layout.touch, justifyContent: 'center', padding: space[12], backgroundColor: finalColors.primarySoft, borderRadius: finalRadius.button },
-  closeText: { ...typography.button, color: finalColors.primary },
-  optionGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8], paddingBottom: space[32] },
-  option: { minWidth: layout.touch, minHeight: layout.touch, padding: space[12], justifyContent: 'center', alignItems: 'center', backgroundColor: finalColors.primarySoft, borderRadius: finalRadius.control },
-  optionSelected: { backgroundColor: finalColors.primary },
-  optionText: { ...typography.label, color: finalColors.text },
-  optionTextSelected: { color: finalColors.textInverse },
+const styles = StyleSheet.create({
+  preview: { textAlign: 'center' },
+  wheels: { flexDirection: 'row', gap: space[8], paddingTop: space[8] },
 });

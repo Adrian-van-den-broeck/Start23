@@ -109,8 +109,7 @@ export default defineDictionary({
   'calibration.observation.title': 'Objectief + jouw gevoel',
   'calibration.observation.hint':
     'Ontbrekende sensordata blokkeert de activiteit niet. Laat velden leeg als je ze niet betrouwbaar hebt.',
-  'calibration.field.startTime': 'Starttijd (ISO 8601)',
-  'calibration.placeholder.minutes': 'minuten',
+  'calibration.field.startTime': 'Starttijd',
   'calibration.sessionFeel': 'Hoe voelde de volledige sessie?',
   'calibration.swimConditions':
     '{pool} m-bad, vrije slag en zonder paddles/vliezen/pull buoy',
@@ -119,7 +118,6 @@ export default defineDictionary({
   'calibration.interrupted': 'Onderbroken',
   'calibration.blockFeel': 'Hoe voelde dit blok?',
   'calibration.field.runAveragePace': 'Gemiddeld tempo testblok',
-  'calibration.placeholder.pace': 'bijv. 5:00 min/km',
   'calibration.field.last20HeartRateOptional': 'Gem. HR laatste 20 min (optioneel)',
   'calibration.paceStable': 'Tempo was stabiel',
   'calibration.field.last20PowerShort': 'Gem. vermogen laatste 20 min',
@@ -128,13 +126,12 @@ export default defineDictionary({
   'calibration.powerStable': 'Vermogen was stabiel',
   'calibration.field.bikeTestHeartRate': 'Gemiddelde hartslag testblok',
   'calibration.field.swimDistanceTime': 'Tijd {distance} m',
-  'calibration.placeholder.seconds': 'seconden',
   'calibration.field.coverage': 'Meetdekking',
   'calibration.field.blockTotalTime': 'Gemeten totale tijd van dit blok',
   'calibration.field.fourRepetitionTimes': 'Vier herhalingstijden',
-  'calibration.placeholder.repetitionTimes': 'bijv. 210, 212, 211, 213',
   'calibration.field.fourRestTimes': 'Vier rusttijden',
-  'calibration.placeholder.restTimes': 'seconden, komma-gescheiden',
+  'calibration.field.repetitionN': 'Herhaling {n}',
+  'calibration.field.restN': 'Rust {n}',
   'calibration.averageHeartRateHint':
     'Verplicht voor de deterministische drempel- en zoneberekening.',
   'calibration.retryNotice':
@@ -272,8 +269,7 @@ export default defineDictionary({
   'calibration.observation.title': 'Objective + how it felt',
   'calibration.observation.hint':
     'Missing sensor data does not block the activity. Leave fields empty if you do not have reliable values.',
-  'calibration.field.startTime': 'Start time (ISO 8601)',
-  'calibration.placeholder.minutes': 'minutes',
+  'calibration.field.startTime': 'Start time',
   'calibration.sessionFeel': 'How did the whole session feel?',
   'calibration.swimConditions':
     '{pool} m pool, freestyle and no paddles/fins/pull buoy',
@@ -282,7 +278,6 @@ export default defineDictionary({
   'calibration.interrupted': 'Interrupted',
   'calibration.blockFeel': 'How did this block feel?',
   'calibration.field.runAveragePace': 'Average pace of test block',
-  'calibration.placeholder.pace': 'e.g. 5:00 min/km',
   'calibration.field.last20HeartRateOptional': 'Avg. HR last 20 min (optional)',
   'calibration.paceStable': 'Pace was steady',
   'calibration.field.last20PowerShort': 'Avg. power last 20 min',
@@ -291,13 +286,12 @@ export default defineDictionary({
   'calibration.powerStable': 'Power was steady',
   'calibration.field.bikeTestHeartRate': 'Average heart rate of test block',
   'calibration.field.swimDistanceTime': 'Time {distance} m',
-  'calibration.placeholder.seconds': 'seconds',
   'calibration.field.coverage': 'Data coverage',
   'calibration.field.blockTotalTime': 'Measured total time of this block',
   'calibration.field.fourRepetitionTimes': 'Four repetition times',
-  'calibration.placeholder.repetitionTimes': 'e.g. 210, 212, 211, 213',
   'calibration.field.fourRestTimes': 'Four rest times',
-  'calibration.placeholder.restTimes': 'seconds, comma-separated',
+  'calibration.field.repetitionN': 'Repetition {n}',
+  'calibration.field.restN': 'Rest {n}',
   'calibration.averageHeartRateHint':
     'Required for the deterministic threshold and zone calculation.',
   'calibration.retryNotice':

@@ -5,7 +5,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  useWindowDimensions,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -35,13 +34,16 @@ import type {
   ZoneMetricKind,
 } from '../api/types';
 import { ZoneField as FormField } from '../ui-v2/components/ZoneField';
-import { rpeChoices, type CanonicalRpe } from '../lib/rpe';
 import { ZoneStatusChip, ZoneTable, zoneValue, ZoneInfoRow } from '../ui-v2/components/ZoneVisuals';
 import { parseRunPace } from '../lib/runPace';
 import { colors, layout, radius, shadows, space } from '../ui-v2/tokens';
 import { Text } from '../ui-v2/primitives/Text';
 import { Button } from '../ui-v2/primitives/Button';
+import { DurationPicker } from '../components/DurationPicker';
+import { StartTimePicker } from '../components/StartTimePicker';
+import { RpeSelect } from '../ui-v2/components/RpeSelect';
 import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
+import { ToggleChip } from '../ui-v2/primitives/ToggleChip';
 import { IconTile } from '../ui-v2/primitives/IconTile';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { Notice } from '../ui-v2/primitives/Notice';
@@ -257,15 +259,26 @@ function Toggle({
   return <ChoiceRow mode="checkbox" label={label} selected={checked} onPress={onPress} />;
 }
 
-// Calibration choices edit the observation draft; only explicit submission saves it.
-function RpeChoiceList({ disabled = false, discipline, label, onSelect, selectedValue = null }: {
-  disabled?: boolean; discipline: Discipline; label: string; onSelect: (value: CanonicalRpe) => void; selectedValue?: number | null;
+function secondsOrNull(value: string): number | null {
+  return value.trim() === '' ? null : Math.round(Number(value));
+}
+
+// Four swim times as touch pickers. The draft keeps its comma-separated
+// form, so validation and submission are unchanged.
+function FourTimes({ label, itemLabel, value, maxMinutes, onChange }: {
+  label: string; itemLabel: (n: number) => string; value: string; maxMinutes: number;
+  onChange: (value: string) => void;
 }) {
-  return <View style={{ gap: space[12] }}><Text variant="label">{label}</Text>
-    <View accessibilityRole="radiogroup" accessibilityLabel={label} style={{ gap: space[12] }}>
-      {rpeChoices(discipline).map(choice => <ChoiceRow key={choice.value} label={choice.value + ' · ' + choice.description}
-        accessibilityLabel={choice.description + ' (RPE ' + choice.value + ')'} selected={selectedValue === choice.value}
-        disabled={disabled} onPress={() => onSelect(choice.value)} />)}
+  const parts = Array.from({ length: 4 }, (_, index) => value.split(',')[index]?.trim() ?? '');
+  return <View style={styles.fourTimes}>
+    <Text variant="label">{label}</Text>
+    <View style={styles.timeGrid}>
+      {parts.map((part, index) => <View key={index} style={styles.timeCell}>
+        <DurationPicker clearable={false} icon={false} label={itemLabel(index + 1)} maxMinutes={maxMinutes}
+          units={['minutes', 'seconds']} valueSeconds={secondsOrNull(part)}
+          onChange={(seconds) => onChange(parts.map((current, at) =>
+            at === index ? (seconds === null ? '' : String(seconds)) : current).join(', '))} />
+      </View>)}
     </View>
   </View>;
 }
@@ -311,8 +324,6 @@ function objectiveMetricsPresent(draft: SegmentDraft): boolean {
 
 export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
   const { t, locale } = useLanguage();
-  const { width, fontScale } = useWindowDimensions();
-  const compact = width < 480 || fontScale > 1;
   const [setups, setSetups] = useState<DisciplineSetup[]>([]);
   const [protocols, setProtocols] = useState<Record<string, CalibrationProtocol>>(
     {},
@@ -871,21 +882,21 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                   <Text style={styles.eyebrow}>{t('calibration.observation.eyebrow')}</Text>
                   <Text style={styles.pageTitle}>{t('calibration.observation.title')}</Text>
                   <Text style={styles.muted}>{t('calibration.observation.hint')}</Text>
-                  <FormField
-                    autoCapitalize="none"
+                  <StartTimePicker
                     label={t('calibration.field.startTime')}
-                    onChangeText={setPerformedAt}
-                    placeholder="2026-08-15T09:00:00+02:00"
-                    value={performedAt}
+                    onChange={setPerformedAt}
+                    timeZone={timezone}
+                    valueIso={performedAt}
                   />
-                  <FormField
-                    inputMode="decimal"
+                  <DurationPicker
                     label={t('calibration.field.totalDuration')}
-                    onChangeText={setDurationMinutes}
-                    placeholder={t('calibration.placeholder.minutes')}
-                    value={durationMinutes}
+                    maxHours={24}
+                    onChange={(seconds) => setDurationMinutes(seconds === null ? '' : String(seconds / 60))}
+                    units={['hours', 'minutes']}
+                    required
+                    valueSeconds={durationMinutes === '' ? null : Math.round(Number(durationMinutes) * 60)}
                   />
-                  <RpeChoiceList
+                  <RpeSelect
                     disabled={busy}
                     discipline={selectedProtocol.discipline}
                     label={t('calibration.sessionFeel')}
@@ -945,32 +956,28 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                         ) : null}
                         {draft.included ? (
                           <>
-                            <View style={[styles.twoColumns, compact && styles.stacked]}>
-                              <View style={[styles.column, compact && styles.fullWidth]}>
-                                <Toggle
-                                  checked={draft.completed}
-                                  label={t('calibration.completed')}
-                                  onPress={() =>
-                                    updateDraft(segment.segment_id, {
-                                      completed: !draft.completed,
-                                    })
-                                  }
-                                />
-                              </View>
-                              <View style={[styles.column, compact && styles.fullWidth]}>
-                                <Toggle
-                                  checked={draft.interrupted}
-                                  label={t('calibration.interrupted')}
-                                  onPress={() =>
-                                    updateDraft(segment.segment_id, {
-                                      interrupted: !draft.interrupted,
-                                    })
-                                  }
-                                />
-                              </View>
+                            <View style={styles.chipRow}>
+                              <ToggleChip
+                                checked={draft.completed}
+                                label={t('calibration.completed')}
+                                onPress={() =>
+                                  updateDraft(segment.segment_id, {
+                                    completed: !draft.completed,
+                                  })
+                                }
+                              />
+                              <ToggleChip
+                                checked={draft.interrupted}
+                                label={t('calibration.interrupted')}
+                                onPress={() =>
+                                  updateDraft(segment.segment_id, {
+                                    interrupted: !draft.interrupted,
+                                  })
+                                }
+                              />
                             </View>
                             {main ? (
-                              <RpeChoiceList
+                              <RpeSelect
                                 disabled={busy}
                                 discipline={selectedProtocol.discipline}
                                 label={t('calibration.blockFeel')}
@@ -984,16 +991,17 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                             ) : null}
                             {runTest ? (
                               <>
-                                <FormField
-                                  inputMode="decimal"
+                                <DurationPicker
                                   label={t('calibration.field.runAveragePace')}
-                                  onChangeText={(value) =>
+                                  maxMinutes={20}
+                                  onChange={(seconds) =>
                                     updateDraft(segment.segment_id, {
-                                      averagePace: value,
+                                      averagePace: seconds === null ? '' : `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`,
                                     })
                                   }
-                                  placeholder={t('calibration.placeholder.pace')}
-                                  value={draft.averagePace}
+                                  suffix="/km"
+                                  units={['minutes', 'seconds']}
+                                  valueSeconds={parseRunPace(draft.averagePace)}
                                 />
                                 <FormField
                                   inputMode="decimal"
@@ -1065,16 +1073,16 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                               />
                             ) : null}
                             {swimTest ? (
-                              <FormField
-                                inputMode="decimal"
+                              <DurationPicker
                                 label={t('calibration.field.swimDistanceTime', { distance: String(segment.distance_meters) })}
-                                onChangeText={(value) =>
+                                maxMinutes={30}
+                                onChange={(seconds) =>
                                   updateDraft(segment.segment_id, {
-                                    elapsedTime: value,
+                                    elapsedTime: seconds === null ? '' : String(seconds),
                                   })
                                 }
-                                placeholder={t('calibration.placeholder.seconds')}
-                                value={draft.elapsedTime}
+                                units={['minutes', 'seconds']}
+                                valueSeconds={secondsOrNull(draft.elapsedTime)}
                               />
                             ) : null}
                             {(runTest || bikeFtp || bikeHr) ? (
@@ -1095,37 +1103,37 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                               <>
                                 {selectedProtocol.discipline === 'swim' ? (
                                   <>
-                                    <FormField
-                                      inputMode="decimal"
+                                    <DurationPicker
                                       label={t('calibration.field.blockTotalTime')}
-                                      onChangeText={(value) =>
+                                      maxMinutes={90}
+                                      onChange={(seconds) =>
                                         updateDraft(segment.segment_id, {
-                                          elapsedTime: value,
+                                          elapsedTime: seconds === null ? '' : String(seconds),
                                         })
                                       }
-                                      placeholder={t('calibration.placeholder.seconds')}
-                                      value={draft.elapsedTime}
+                                      units={['minutes', 'seconds']}
+                                      valueSeconds={secondsOrNull(draft.elapsedTime)}
                                     />
-                                    <FormField
-                                      inputMode="decimal"
+                                    <FourTimes
+                                      itemLabel={(n) => t('calibration.field.repetitionN', { n: String(n) })}
                                       label={t('calibration.field.fourRepetitionTimes')}
-                                      onChangeText={(value) =>
+                                      maxMinutes={10}
+                                      onChange={(value) =>
                                         updateDraft(segment.segment_id, {
                                           repetitionTimes: value,
                                         })
                                       }
-                                      placeholder={t('calibration.placeholder.repetitionTimes')}
                                       value={draft.repetitionTimes}
                                     />
-                                    <FormField
-                                      inputMode="decimal"
+                                    <FourTimes
+                                      itemLabel={(n) => t('calibration.field.restN', { n: String(n) })}
                                       label={t('calibration.field.fourRestTimes')}
-                                      onChangeText={(value) =>
+                                      maxMinutes={5}
+                                      onChange={(value) =>
                                         updateDraft(segment.segment_id, {
                                           repetitionRests: value,
                                         })
                                       }
-                                      placeholder={t('calibration.placeholder.restTimes')}
                                       value={draft.repetitionRests}
                                     />
                                   </>
@@ -1281,9 +1289,12 @@ const styles = StyleSheet.create({
   safety: { backgroundColor: colors.primarySoft, borderRadius: radius.control, color: colors.text, fontSize: 16, lineHeight: 24, padding: space[16] },
   painWarning: { backgroundColor: colors.destructiveSoft, borderColor: colors.destructive, borderRadius: radius.control, borderWidth: 1, padding: space[16] },
   painWarningText: { color: colors.destructive, fontSize: 20, lineHeight: 28, fontWeight: '600' },
-  historyText: { color: colors.textMuted, fontSize: 14, lineHeight: 20 }, twoColumns: { flexDirection: 'row', gap: space[12] }, column: { flex: 1 },
-  stacked: { flexDirection: 'column' }, fullWidth: { flex: 0, width: '100%' },
-  segmentCard: { borderColor: colors.border, borderRadius: radius.control, borderWidth: 1, gap: space[24], padding: space[16] },
+  historyText: { color: colors.textMuted, fontSize: 14, lineHeight: 20 },
+  segmentCard: { borderColor: colors.border, borderRadius: radius.control, borderWidth: 1, gap: space[16], padding: space[16] },
+  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8] },
+  fourTimes: { gap: space[8] },
+  timeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8] },
+  timeCell: { flexGrow: 1, flexBasis: '45%', minWidth: 120 },
   unit: { color: colors.textMuted, fontSize: 14, lineHeight: 20 },
   resultMetric: { backgroundColor: colors.primarySoft, borderRadius: radius.control, gap: space[8], padding: space[16] },
   resultMetricLabel: { color: colors.textMuted, fontSize: 14, lineHeight: 20 }, resultMetricValue: { color: colors.primary, fontSize: 24, lineHeight: 30, fontWeight: '600' },

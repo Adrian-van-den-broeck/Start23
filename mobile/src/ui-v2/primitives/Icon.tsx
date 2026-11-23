@@ -4,6 +4,7 @@ import Calendar from 'lucide-react-native/icons/calendar';
 import CalendarDays from 'lucide-react-native/icons/calendar-days';
 import ChartNoAxesColumnIncreasing from 'lucide-react-native/icons/chart-no-axes-column-increasing';
 import Check from 'lucide-react-native/icons/check';
+import ChevronDown from 'lucide-react-native/icons/chevron-down';
 import ChevronLeft from 'lucide-react-native/icons/chevron-left';
 import ChevronRight from 'lucide-react-native/icons/chevron-right';
 import Clock from 'lucide-react-native/icons/clock';
@@ -34,6 +35,7 @@ const glyphs = {
   forward: ArrowRight,
   chevron: ChevronRight,
   chevronLeft: ChevronLeft,
+  chevronDown: ChevronDown,
   week: CalendarDays,
   calendar: Calendar,
   activities: ChartNoAxesColumnIncreasing,

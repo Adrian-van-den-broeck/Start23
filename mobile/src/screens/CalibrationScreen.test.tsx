@@ -208,7 +208,7 @@ describe('CalibrationScreen Phase 15 flow', () => {
 
     expect(await screen.findByRole('alert', { name: 'Stop als je pijn voelt' })).toBeTruthy();
     expect(screen.queryByText('Stop if you feel pain')).toBeNull();
-    expect(screen.getByLabelText('Totale duur')).toBeTruthy();
+    expect(screen.getByLabelText('Totale duur: 00:40:00')).toBeTruthy();
     expect(screen.queryByRole('button', { name: /feedback invullen/i })).toBeNull();
     expect(screen.queryByText(/Tijdzone uit je bevestigde profiel/i)).toBeNull();
   });
@@ -274,11 +274,17 @@ describe('CalibrationScreen Phase 15 flow', () => {
     );
     await screen.findByText('Objectief + jouw gevoel');
 
+    // RPE is a compact field; the scale opens in a sheet and closes on choice.
+    await fireEvent.press(screen.getByRole('button', { name: 'Hoe voelde de volledige sessie?: Kies je RPE' }));
     await fireEvent.press(
       within(screen.getByLabelText('Hoe voelde de volledige sessie?')).getByRole('radio', {
         name: 'Zwaar, net niet in het rood. (RPE 6)',
       }),
     );
+    expect(screen.getByRole('button', {
+      name: 'Hoe voelde de volledige sessie?: Zwaar, net niet in het rood. (RPE 6)',
+    })).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'Hoe voelde dit blok?: Kies je RPE' }));
     await fireEvent.press(
       within(screen.getByLabelText('Hoe voelde dit blok?')).getByRole('radio', {
         name: 'Focus nodig, praten in zinnen. (RPE 4)',
@@ -474,7 +480,7 @@ describe('Batch 11 current source-backed protocol forms', () => {
     await fireEvent.press(optional);
     expect(optional.props.accessibilityState.checked).toBe(true);
     expect(screen.getAllByLabelText('Gemiddelde hartslag')).toHaveLength(2);
-    expect(screen.getAllByLabelText('Hoe voelde dit blok?')).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: 'Hoe voelde dit blok?: Kies je RPE' })).toHaveLength(2);
     expect(createActivity).not.toHaveBeenCalled();
     expect(evaluateCalibration).not.toHaveBeenCalled();
   });
@@ -485,9 +491,16 @@ describe('Batch 11 current source-backed protocol forms', () => {
     const screen = await render(<CalibrationScreen accessToken="athlete-token" onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} />);
     const pool = await screen.findByRole('checkbox', { name: '25 m-bad, vrije slag en zonder paddles/vliezen/pull buoy' });
     expect(pool.props.accessibilityState.checked).toBe(false);
-    expect(screen.getAllByLabelText('Gemeten totale tijd van dit blok')).toHaveLength(2);
-    expect(screen.getAllByLabelText('Vier herhalingstijden')).toHaveLength(2);
-    expect(screen.getAllByLabelText('Vier rusttijden')).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: 'Gemeten totale tijd van dit blok: nog niet ingesteld' })).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: 'Herhaling 4: nog niet ingesteld' })).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: 'Rust 4: 0:00' })).toHaveLength(2);
+    // Each repetition time is picked on its own wheel; the others keep their values.
+    await fireEvent.press(screen.getAllByRole('button', { name: 'Herhaling 2: nog niet ingesteld' })[0]!);
+    await fireEvent.press(screen.getByRole('radio', { name: '3 min' }));
+    await fireEvent.press(screen.getByRole('radio', { name: '30 sec' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Klaar' }));
+    expect(screen.getByRole('button', { name: 'Herhaling 2: 3:30' })).toBeTruthy();
+    expect(screen.getAllByRole('button', { name: 'Herhaling 1: nog niet ingesteld' })).toHaveLength(2);
     expect(screen.getByText('Beoordeeld v' + current.version)).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Drempel bevestigen' })).toBeNull();
     expect(createActivity).not.toHaveBeenCalled();
@@ -513,11 +526,13 @@ describe('CalibrationScreen in English', () => {
     expect(screen.getByText('Reviewed v1')).toBeTruthy();
     expect(screen.getByText('Guided by heart rate. Follow the blocks below and fill in your feedback right away.')).toBeTruthy();
     expect(screen.getByText('Objective + how it felt')).toBeTruthy();
-    expect(screen.getByLabelText('Total duration')).toBeTruthy();
+    expect(screen.getByLabelText('Total duration: 00:40:00')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'How did the whole session feel?: Choose your RPE' }));
     expect(within(screen.getByLabelText('How did the whole session feel?')).getByRole('radio', {
       name: 'Hard, not quite in the red. (RPE 6)',
     })).toBeTruthy();
-    expect(screen.getByLabelText('How did this block feel?')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'Close' }));
+    expect(screen.getByRole('button', { name: 'How did this block feel?: Choose your RPE' })).toBeTruthy();
     expect(screen.getByLabelText('Average heart rate')).toBeTruthy();
     expect(screen.queryByText('Objectief + jouw gevoel')).toBeNull();
 

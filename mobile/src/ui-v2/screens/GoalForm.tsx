@@ -291,7 +291,7 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                   value={distances[discipline]}
                   required
                 />
-                {raceType !== 'run' ? <DurationPicker appearance="final"
+                {raceType !== 'run' ? <DurationPicker
                   error={
                     validationAttempted
                       ? disciplineTimeErrors[discipline] ?? undefined
@@ -324,7 +324,7 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                 hint="min:sec per km" value={runGoalPace} onChangeText={setRunGoalPace}
                 error={validationAttempted && paceSeconds === null ? t('onboarding.paceFormat') : undefined}
                 required />
-            ) : <DurationPicker appearance="final"
+            ) : <DurationPicker
               error={
                 validationAttempted
                   ? effectiveTotalTimeSeconds === null

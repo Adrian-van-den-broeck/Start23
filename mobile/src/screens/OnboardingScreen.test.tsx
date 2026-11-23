@@ -205,12 +205,9 @@ describe('onboarding components', () => {
     await fireEvent.changeText(screen.getByLabelText('Naam van de race'), '10K');
     await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
     await fireEvent.changeText(screen.getByLabelText('Afstand, meter'), '10000');
-    await fireEvent.press(
-      screen.getByRole('button', {
-        name: 'Kies uren voor Totale richttijd',
-      }),
-    );
+    await fireEvent.press(screen.getByRole('button', { name: 'Totale richttijd: nog niet ingesteld' }));
     await fireEvent.press(screen.getByRole('radio', { name: '1 uur' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Klaar' }));
     await fireEvent.press(screen.getByRole('button', { name: 'A-doel opslaan' }));
 
     expect(onSave).toHaveBeenCalledWith({
@@ -334,12 +331,9 @@ describe('onboarding components', () => {
       ).toBeTruthy();
 
       await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
-      await fireEvent.press(
-        screen.getByRole('button', {
-          name: 'Kies uren voor Totale richttijd',
-        }),
-      );
+      await fireEvent.press(screen.getByRole('button', { name: 'Totale richttijd: nog niet ingesteld' }));
       await fireEvent.press(screen.getByRole('radio', { name: '3 uur' }));
+      await fireEvent.press(screen.getByRole('button', { name: 'Klaar' }));
       const distanceFields = screen.getAllByLabelText('Afstand, meter');
       for (const field of distanceFields) {
         await fireEvent.changeText(field, '1000');
@@ -431,7 +425,7 @@ describe('onboarding components in English', () => {
     expect(screen.getByText('Race type')).toBeTruthy();
     expect(screen.getByRole('radio', { name: 'Triathlon' })).toBeTruthy();
     expect(screen.getByLabelText('Specific focus (optional)')).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Increase hours for Total target time' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Total target time: not set yet' })).toBeTruthy();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Save A goal' }));
 
