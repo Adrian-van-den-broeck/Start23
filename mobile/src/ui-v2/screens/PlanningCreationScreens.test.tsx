@@ -199,3 +199,17 @@ test('placement-ready selection continues only through the existing callback', a
   await fireEvent.press(view.getByRole('button', { name: 'Continue to placement' }));
   expect(onContinue).toHaveBeenCalledTimes(1);
 });
+
+test('shows the server-previewed next card while the decision is still saving', async () => {
+  let finish: () => void = () => undefined;
+  const transition = jest.fn(() => new Promise<void>((resolve) => { finish = resolve; }));
+  const next = { ...occurrence, id: 'next-template', name: 'Previewed next workout' };
+  const { occurrence_id: _unused, ...nextItem } = next;
+  const model = planningCreationViewModel({ ...draft, upcoming_candidates: { after_accept: null, after_pass: nextItem } });
+  const view = await render(host(<SelectionScreen {...task} model={model} onTransition={transition} onContinue={jest.fn()} />));
+  await view.findByText('Choose your workouts');
+  await fireEvent.press(view.getByRole('button', { name: `Pass · ${occurrence.name}` }));
+  expect(transition).toHaveBeenCalledWith('pass');
+  expect(await view.findByText('Previewed next workout')).toBeTruthy();
+  finish();
+});

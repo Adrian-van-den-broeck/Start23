@@ -446,6 +446,17 @@ class SwipeDraftPlacementResponse(PublicPlanningModel):
     scheduled_date: date
 
 
+class SwipeUpcomingCandidatesResponse(PublicPlanningModel):
+    """Read-only preview of the next card after each decision on the current card.
+
+    Lets the app show the next card while the transition is saved. The
+    transition itself stays authoritative: it recalculates and may differ.
+    """
+
+    after_accept: WorkoutDeckItemResponse | None
+    after_pass: WorkoutDeckItemResponse | None
+
+
 class SwipeWeekDraftResponse(PublicPlanningModel):
     """Owner-visible draft projection with one current candidate at a time."""
 
@@ -460,6 +471,7 @@ class SwipeWeekDraftResponse(PublicPlanningModel):
     cross_training_opt_ins: frozenset[Discipline] = frozenset()
     accepted_workouts: tuple[SwipeWorkoutOccurrenceResponse, ...]
     current_candidate: SwipeWorkoutOccurrenceResponse | None
+    upcoming_candidates: SwipeUpcomingCandidatesResponse | None = None
     placements: tuple[SwipeDraftPlacementResponse, ...]
     warnings: tuple[PlanWarningResponse, ...] = ()
     passed_count: int = Field(ge=0)

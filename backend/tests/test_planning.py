@@ -1348,6 +1348,48 @@ def test_eight_hour_run_october_mobile_swipe_and_placement(
         assert "planned_load" not in str(submitted.json()).casefold()
 
 
+def test_swipe_preview_matches_the_card_each_transition_returns(
+    planning_client: TestClient,
+) -> None:
+    """The app shows the previewed card while saving; it must be the real next card."""
+
+    draft = _create_swipe_draft(planning_client)
+    path = f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions"
+    checked = 0
+    for action in ("pass", "accept", "pass", "accept"):
+        if draft["state"] != "collecting" or draft["current_candidate"] is None:
+            break
+        upcoming = draft["upcoming_candidates"]
+        assert upcoming is not None
+        assert set(upcoming) == {"after_accept", "after_pass"}
+        preview = upcoming[f"after_{action}"]
+        candidate = draft["current_candidate"]
+        response = planning_client.post(
+            path,
+            headers=_headers(),
+            json={
+                "expected_revision": draft["revision"],
+                "action": action,
+                "candidate_template_id": candidate["id"],
+                "candidate_occurrence_id": candidate["occurrence_id"],
+            },
+        )
+        assert response.status_code == 200, response.text
+        draft = response.json()
+        current = draft["current_candidate"]
+        if preview is None:
+            assert current is None or draft["state"] != "collecting"
+        else:
+            assert current is not None
+            assert current["id"] == preview["id"]
+            assert "occurrence_id" not in preview
+            assert {
+                key: value for key, value in current.items() if key != "occurrence_id"
+            } == preview
+        checked += 1
+    assert checked >= 2
+
+
 def test_swipe_reuses_calculations_but_still_rechecks_history(
     planning_client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1384,7 +1426,9 @@ def test_swipe_reuses_calculations_but_still_rechecks_history(
     }
     passed = planning_client.post(path, headers=_headers(), json=payload)
     assert passed.status_code == 200, passed.text
-    assert planner._next_swipe_candidate.cache_info().hits == 1
+    # One hit re-checks the current card; the other is the next card that the
+    # draft's preview already calculated.
+    assert planner._next_swipe_candidate.cache_info().hits == 2
     assert reads == 2
     assert len(planner._swipe_contexts) == 1
 

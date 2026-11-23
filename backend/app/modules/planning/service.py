@@ -88,6 +88,7 @@ from .schemas import (
     SwipeDraftSubmitRequest,
     SwipeDraftTransitionRequest,
     SwipeTargetComposition,
+    SwipeUpcomingCandidatesResponse,
     SwipeWeekDraftResponse,
     SwipeWorkoutOccurrenceResponse,
     WeeklyPlanProposalRequest,
@@ -899,6 +900,76 @@ class PlanningService:
             "proposal_id": str(proposal_id) if proposal_id is not None else None,
         }
 
+    def _swipe_upcoming(
+        self,
+        row: Mapping[str, Any],
+        context: _SwipePlanningContext,
+        selection: SwipeSelectionState,
+        current_id: UUID,
+    ) -> SwipeUpcomingCandidatesResponse:
+        """Preview the next card for each decision with the same cached calculation.
+
+        The transition repeats this calculation (a cache hit) and stays
+        authoritative. Completing the target leads to placement, so accepting
+        the last card previews no further card.
+        """
+
+        week_start = date.fromisoformat(str(row["week_start"]))
+        available_dates = tuple(
+            date.fromisoformat(str(value)) for value in row["available_dates"]
+        )
+        injuries = frozenset(
+            Discipline(str(value)) for value in row["confirmed_injuries"]
+        )
+        low_only = frozenset(
+            Discipline(str(value)) for value in row["low_only_disciplines"]
+        )
+        occurrence_id = UUID(str(row["current_occurrence_id"]))
+        by_id = {template.id: template for template in context.eligible_deck}
+
+        def after(action: SwipeDecisionKind) -> WorkoutDeckItemResponse | None:
+            if (
+                action is SwipeDecisionKind.ACCEPT
+                and len(selection.accepted_template_ids) + 1
+                >= context.target_workout_count
+            ):
+                return None
+            try:
+                decided = apply_swipe_decision(
+                    selection,
+                    action=action,
+                    current_template_id=current_id,
+                    expected_template_id=current_id,
+                    current_occurrence_id=occurrence_id,
+                    expected_occurrence_id=occurrence_id,
+                    target_workout_count=context.target_workout_count,
+                )
+            except PlanningConstraintError:
+                return None
+            next_id = self._next_swipe_candidate(
+                context=context,
+                week_start=week_start,
+                available_dates=available_dates,
+                injuries=injuries,
+                low_only_disciplines=low_only,
+                accepted=decided.accepted_template_ids,
+                passed=decided.passed_template_ids,
+            )
+            if next_id is None or next_id not in by_id:
+                return None
+            template = by_id[next_id]
+            return self._deck_item(
+                template,
+                contributes_to_zone_calibration=context.capabilities[
+                    template.discipline
+                ].calibration_evidence,
+            )
+
+        return SwipeUpcomingCandidatesResponse(
+            after_accept=after(SwipeDecisionKind.ACCEPT),
+            after_pass=after(SwipeDecisionKind.PASS),
+        )
+
     def _swipe_response(
         self,
         row: Mapping[str, Any],
@@ -948,6 +1019,11 @@ class PlanningService:
                     }
                 )
                 if current_id
+                else None
+            )
+            upcoming = (
+                self._swipe_upcoming(row, context, selection, current_id)
+                if current_id is not None and str(row["state"]) == "collecting"
                 else None
             )
             raw_placements = row.get("placements", {})
@@ -1034,6 +1110,7 @@ class PlanningService:
                 target_composition=composition,
                 accepted_workouts=accepted,
                 current_candidate=current,
+                upcoming_candidates=upcoming,
                 placements=placements,
                 warnings=public_warnings,
                 passed_count=len(selection.passed_template_ids),

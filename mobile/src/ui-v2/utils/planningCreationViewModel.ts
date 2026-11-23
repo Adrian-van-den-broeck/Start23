@@ -1,4 +1,4 @@
-import type { SwipeWeekDraft, SwipeWorkoutOccurrence } from '../../api/types';
+import type { SwipeWeekDraft, SwipeWorkoutOccurrence, WorkoutDeckItem } from '../../api/types';
 import { workoutCardDescription } from '../../lib/workoutPresentation';
 import { warningPresentation } from '../../components/MoveWarningPanel';
 
@@ -19,6 +19,11 @@ export function selectionWorkoutViewModel(workout: SwipeWorkoutOccurrence) {
 }
 export type SelectionWorkout = ReturnType<typeof selectionWorkoutViewModel>;
 
+// A previewed card has no occurrence yet; the saved transition assigns one.
+function previewWorkoutViewModel(workout: WorkoutDeckItem | null | undefined): SelectionWorkout | null {
+  return workout ? selectionWorkoutViewModel({ ...workout, occurrence_id: `preview:${workout.id}` }) : null;
+}
+
 export function planningCreationViewModel(draft: SwipeWeekDraft) {
   return {
     id: draft.id,
@@ -27,6 +32,10 @@ export function planningCreationViewModel(draft: SwipeWeekDraft) {
     weekStart: draft.week_start,
     availableDates: [...draft.available_dates],
     candidate: draft.current_candidate ? selectionWorkoutViewModel(draft.current_candidate) : null,
+    upcoming: {
+      accept: previewWorkoutViewModel(draft.upcoming_candidates?.after_accept),
+      pass: previewWorkoutViewModel(draft.upcoming_candidates?.after_pass),
+    },
     accepted: draft.accepted_workouts.map(selectionWorkoutViewModel),
     placements: draft.placements.map((placement) => ({
       occurrenceId: placement.occurrence_id, date: placement.scheduled_date,

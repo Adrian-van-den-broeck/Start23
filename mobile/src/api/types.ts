@@ -663,6 +663,8 @@ export type SwipeWeekDraft = {
   cross_training_opt_ins: Discipline[];
   accepted_workouts: SwipeWorkoutOccurrence[];
   current_candidate: SwipeWorkoutOccurrence | null;
+  // Server preview of the next card after each decision; the transition stays authoritative.
+  upcoming_candidates?: { after_accept: WorkoutDeckItem | null; after_pass: WorkoutDeckItem | null } | null;
   placements: SwipeDraftPlacement[];
   warnings: PlanWarning[];
   passed_count: number;

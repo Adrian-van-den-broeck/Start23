@@ -126,7 +126,8 @@ export function SelectionScreen({ model, onTransition, onContinue, setTransientB
 }) {
   const { t } = useLanguage();
   const { width, fontScale } = useWindowDimensions();
-  const swipe = useWorkoutSwipe(model.state === 'collecting' ? model.candidate : null, task.busy, onTransition, setTransientBusy);
+  const swipe = useWorkoutSwipe(model.state === 'collecting' ? model.candidate : null, task.busy, onTransition, setTransientBusy,
+    (decision) => model.upcoming[decision]);
   const candidate = swipe.card;
   const locked = task.busy || !!swipe.action;
   // Both history actions stack when labels cannot fit without shrinking.

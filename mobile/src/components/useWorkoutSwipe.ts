@@ -7,6 +7,9 @@ type SwipeDecision = Extract<WorkoutDecision, 'accept' | 'pass'>;
 export function useWorkoutSwipe<T>(candidate: T | null, busy: boolean,
   onTransition: (decision: WorkoutDecision) => void | Promise<void>,
   setTransientBusy?: (busy: boolean) => void,
+  // The server's preview of the next card for a decision. Shown once the
+  // outgoing card has left while the decision is still being saved.
+  preview?: (decision: SwipeDecision) => T | null,
 ) {
   const { width } = useWindowDimensions();
   const motion = useRef(new Animated.ValueXY()).current;
@@ -15,7 +18,7 @@ export function useWorkoutSwipe<T>(candidate: T | null, busy: boolean,
   const inFlight = useRef(false);
   const mounted = useRef(true);
   const reducedMotion = useRef(false);
-  const [departing, setDeparting] = useState<{ card: T; action: SwipeDecision } | null>(null);
+  const [departing, setDeparting] = useState<{ card: T; action?: SwipeDecision } | null>(null);
   const useNativeDriver = Platform.OS !== 'web';
 
   useEffect(() => {
@@ -49,6 +52,17 @@ export function useWorkoutSwipe<T>(candidate: T | null, busy: boolean,
     setDeparting({ card: candidate, action });
     setTransientBusy?.(true);
     animation.current?.stop();
+    // Puts the card surface back in place with a short fade, for the next card.
+    let shown = false;
+    const bringIn = () => {
+      if (shown) return;
+      shown = true;
+      if (!reducedMotion.current) {
+        opacity.setValue(0.75);
+        Animated.timing(opacity, { toValue: 1, duration: 150, useNativeDriver }).start();
+      }
+      motion.setValue({ x: 0, y: 0 });
+    };
     const exit = reducedMotion.current ? Promise.resolve() : new Promise<void>(resolve => {
       animation.current = Animated.timing(motion, {
         duration: Math.max(150, Math.min(220, 200 - Math.abs(velocity) * 35)),
@@ -59,22 +73,29 @@ export function useWorkoutSwipe<T>(candidate: T | null, busy: boolean,
       animation.current.start(() => resolve());
     });
     // Persist and look up the next card while the outgoing card is moving.
+    let saved = false;
+    const next = preview?.(action) ?? null;
+    if (next !== null) {
+      void exit.then(() => {
+        // Still saving: show the previewed card (locked by `busy`) instead of an empty deck.
+        if (saved || !mounted.current) return;
+        bringIn();
+        setDeparting({ card: next });
+      });
+    }
     try {
       await onTransition(action);
     } finally {
+      saved = true;
       await exit;
       if (mounted.current) {
-        if (!reducedMotion.current) {
-          opacity.setValue(0.75);
-          Animated.timing(opacity, { toValue: 1, duration: 150, useNativeDriver }).start();
-        }
-        motion.setValue({ x: 0, y: 0 });
+        bringIn();
         setDeparting(null);
         inFlight.current = false;
         setTransientBusy?.(false);
       }
     }
-  }, [busy, candidate, motion, onTransition, opacity, setTransientBusy, useNativeDriver, width]);
+  }, [busy, candidate, motion, onTransition, opacity, preview, setTransientBusy, useNativeDriver, width]);
 
   const pan = useMemo(() => PanResponder.create({
     onMoveShouldSetPanResponder: (_, gesture) => !busy && !inFlight.current && candidate !== null &&
