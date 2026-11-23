@@ -23,13 +23,12 @@ import { type TranslationKey, useLanguage } from '../i18n/LanguageProvider';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
 import { Button } from '../ui-v2/primitives/Button';
-import { Card } from '../ui-v2/primitives/Card';
-import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
 import { IconTile } from '../ui-v2/primitives/IconTile';
 import { Notice } from '../ui-v2/primitives/Notice';
 import { Text } from '../ui-v2/primitives/Text';
 
-import { colors, layout, radius, space } from '../ui-v2/tokens';
+import { colors, layout, space } from '../ui-v2/tokens';
+import { ChoiceChips, Group, Heading, LinkRow, Panel, screenGap, Tag } from '../ui-v3/screens/support';
 
 type IntegrationsScreenProps = {
   accessToken: string;
@@ -133,49 +132,58 @@ export function IntegrationsScreen({
     );
   };
 
+  const status = connection?.status;
   return <SafeAreaView edges={['top']} style={styles.safeArea}>
     <ScrollView contentContainerStyle={styles.content}>
       <BrandedFormHeader caption={t('integrations.title')} backLabel={t('activity.back')} onBack={onBack} onSignOut={onSignOut} />
       {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error}><Notice tone="error">{error}</Notice></View> : null}
       {busy ? <ActivityIndicator color={colors.primary} /> : null}
-      <Card elevated padding="form" style={styles.panel}>
-        <View style={styles.identity}><IconTile name="activities" /><Text variant="sectionTitle" accessibilityRole="header">Polar</Text></View>
-        <View style={styles.chip}><Text variant="supporting" tone="primary">{t(statusLabel(connection))}</Text></View>
-        <Notice>{t('integrations.polar.notice')}</Notice>
-        {connection?.status === 'connected' ? <>
-          <Text variant="label">{t('integrations.history.title')}</Text>
-          <View accessibilityRole="radiogroup" accessibilityLabel={t('integrations.history.title')} style={{ gap: space[12] }}>
-            {([7, 14, 30] as const).map(value => <ChoiceRow key={value} label={t('integrations.history.days', { days: value })} selected={days === value} onPress={() => setDays(value)} />)}
-          </View>
-          <Text variant="supporting" tone="textMuted">{t('integrations.history.hint')}</Text>
+      <Panel divided={false}>
+        <View style={styles.identity}>
+          <IconTile name="activities" size={studioPresentation ? 'field' : 'row'} />
+          <Text variant="sectionTitle" accessibilityRole="header" style={styles.grow}>Polar</Text>
+          <Tag label={t(statusLabel(connection))} tone={status === 'connected' ? 'success' : status === 'reconnect_required' || status === 'error' ? 'warning' : 'neutral'} />
+        </View>
+        {studioPresentation ? <Text variant="supporting" tone="textMuted">{t('integrations.polar.notice')}</Text> : <Notice>{t('integrations.polar.notice')}</Notice>}
+        {status === 'connected' ? <>
+          <Group label={t('integrations.history.title')} hint={t('integrations.history.hint')}>
+            <ChoiceChips mode="radio" accessibilityLabel={t('integrations.history.title')} isSelected={value => days === value} onPress={setDays}
+              options={([7, 14, 30] as const).map(value => ({ value, label: t('integrations.history.days', { days: value }) }))} />
+          </Group>
           <Button label={t('integrations.history.start')} disabled={busy} onPress={() => void run(() => importPolarHistory(accessToken, newIdempotencyKey(), days))} />
           <Button label={t('integrations.disconnect.confirm')} variant="outline" onPress={disconnect} />
-        </> : <Button label={connection?.status === 'reconnect_required' ? t('integrations.reconnect') : t('integrations.connect')} disabled={busy} onPress={() => void connect()} />}
-        <QuickActionRow label={t('integrations.refresh')} icon="refresh" disabled={busy} onAction={() => void run(load)} />
-      </Card>
-      <Card elevated style={styles.panel}>
-        <Text variant="sectionTitle" accessibilityRole="header">{t('integrations.imports.title')}</Text>
-        {imports.length === 0 ? <Text tone="textMuted">{t('integrations.imports.empty')}</Text> : null}
+        </> : <Button label={status === 'reconnect_required' ? t('integrations.reconnect') : t('integrations.connect')} disabled={busy} onPress={() => void connect()} />}
+        {studioPresentation ? <Button label={t('integrations.refresh')} variant="tertiary" trailingIcon="refresh" disabled={busy} onPress={() => void run(load)} />
+          : <QuickActionRow label={t('integrations.refresh')} icon="refresh" disabled={busy} onAction={() => void run(load)} />}
+      </Panel>
+      <Panel>
+        <Heading title={t('integrations.imports.title')} />
+        {imports.length === 0 ? <Text variant={studioPresentation ? 'supporting' : 'body'} tone="textMuted">{t('integrations.imports.empty')}</Text> : null}
         {imports.map(item => <View key={item.id} style={styles.importRow}>
-          <Text variant="label">{item.range_start ?? t('integrations.imports.webhook')} – {item.range_end ?? t('integrations.imports.activity')}</Text>
-          <View style={styles.chip}><Text variant="supporting">{studioPresentation ? t(importStatusNames[item.status]) : item.status}</Text></View>
+          <View style={styles.identity}>
+            <Text variant="label" style={styles.grow}>{item.range_start ?? t('integrations.imports.webhook')} – {item.range_end ?? t('integrations.imports.activity')}</Text>
+            <Tag label={studioPresentation ? t(importStatusNames[item.status]) : item.status}
+              tone={item.status === 'failed' ? 'destructive' : item.status === 'completed' ? 'success' : 'neutral'} />
+          </View>
           <Text variant="supporting" tone="textMuted">{t('integrations.imports.counts', { imported: item.imported_count, skipped: item.skipped_count })}</Text>
-          {item.status === 'failed' && item.failure_code !== 'reconnect_required' && item.retry_count < item.max_attempts - 1 ?
-            <QuickActionRow label={t('integrations.imports.retry')} icon="refresh" disabled={busy} onAction={() => void run(() => retryPolarImport(accessToken, item.id))} /> : null}
+          {item.status === 'failed' && item.failure_code !== 'reconnect_required' && item.retry_count < item.max_attempts - 1
+            ? studioPresentation
+              ? <Button label={t('integrations.imports.retry')} variant="secondary" trailingIcon="refresh" disabled={busy} onPress={() => void run(() => retryPolarImport(accessToken, item.id))} />
+              : <QuickActionRow label={t('integrations.imports.retry')} icon="refresh" disabled={busy} onAction={() => void run(() => retryPolarImport(accessToken, item.id))} />
+            : null}
         </View>)}
-        <QuickActionRow label={t('integrations.imports.view')} icon="activities" onAction={onOpenActivities} />
-      </Card>
-      <Card elevated style={styles.panel}>
-        <Text variant="sectionTitle" accessibilityRole="header">{t('integrations.privacy.title')}</Text>
-        <Text tone="textMuted">{t('integrations.privacy.body')}</Text>
-      </Card>
+        <LinkRow icon="activities" label={t('integrations.imports.view')} onPress={onOpenActivities} />
+      </Panel>
+      <Panel>
+        <Heading title={t('integrations.privacy.title')} description={t('integrations.privacy.body')} />
+      </Panel>
     </ScrollView>
   </SafeAreaView>;
 }
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.background, flex: 1 },
-  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },
-  panel: { gap: space[16] }, identity: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space[12] },
-  chip: { alignSelf: 'flex-start', backgroundColor: colors.primarySoft, borderRadius: radius.pill, paddingHorizontal: space[12], paddingVertical: space[4] },
-  importRow: { borderTopColor: colors.border, borderTopWidth: layout.decorativeLine, gap: space[8], paddingTop: space[16] },
+  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: screenGap, padding: layout.phoneGutter, paddingBottom: space[48] },
+  grow: { flex: 1, minWidth: 0 },
+  identity: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space[12] },
+  importRow: { borderTopColor: colors.border, borderTopWidth: StyleSheet.hairlineWidth, gap: space[8], paddingTop: space[12] },
 });

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 import { FormScrollView } from '../components/FormScrollView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getOnboarding, saveProfile } from '../api/client';
@@ -7,12 +7,10 @@ import type { AthleteProfile } from '../api/types';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { ProfileForm } from '../ui-v2/components/ProfileForm';
-import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
 import { Divider } from '../ui-v2/primitives/Divider';
-import { Card } from '../ui-v2/primitives/Card';
 import { Notice } from '../ui-v2/primitives/Notice';
-import { Text } from '../ui-v2/primitives/Text';
 import { colors, layout, space } from '../ui-v2/tokens';
+import { LinkRow, Panel, screenGap } from '../ui-v3/screens/support';
 
 type Props = {
   accessToken: string;
@@ -83,15 +81,16 @@ export function ProfileScreen({
                 setSaving(false);
               }
             }} /> : null}
-        <Card elevated style={{ gap: space[16] }}>
-          <View style={{ gap: space[4] }}><QuickActionRow label={t('integrations.account.tests')} onAction={onOpenTests} icon="document" /><Text variant="supporting" tone="textMuted">{t('integrations.account.testsHint')}</Text></View>
+        <Panel style={styles.links}>
+          <LinkRow icon="document" label={t('integrations.account.tests')} hint={t('integrations.account.testsHint')} onPress={onOpenTests} />
           <Divider />
-          <View style={{ gap: space[4] }}><QuickActionRow label={t('integrations.account.pioneer')} onAction={onOpenPioneerAccess} icon="profile" /><Text variant="supporting" tone="textMuted">{t('integrations.account.pioneerHint')}</Text></View>
-        </Card>
+          <LinkRow icon="profile" label={t('integrations.account.pioneer')} hint={t('integrations.account.pioneerHint')} onPress={onOpenPioneerAccess} />
+        </Panel>
       </FormScrollView>
   </SafeAreaView>;
 }
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.background, flex: 1 },
-  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },
+  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: screenGap, padding: layout.phoneGutter, paddingBottom: space[48] },
+  links: { gap: space[4] },
 });

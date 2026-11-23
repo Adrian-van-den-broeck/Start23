@@ -7,11 +7,12 @@ import type { PioneerRedemption } from '../api/types';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { AppHeader } from '../ui-v2/components/AppHeader';
 import { Button } from '../ui-v2/primitives/Button';
-import { Card } from '../ui-v2/primitives/Card';
 import { Input } from '../ui-v2/primitives/Input';
 import { Notice } from '../ui-v2/primitives/Notice';
 import { Text } from '../ui-v2/primitives/Text';
 import { colors, layout, space } from '../ui-v2/tokens';
+import { studioPresentation } from '../ui-v3/presentation';
+import { Kicker, Panel, screenGap } from '../ui-v3/screens/support';
 
 type Props = {
   accessToken: string;
@@ -87,11 +88,12 @@ export function PioneerAccessScreen({ accessToken, onBack }: Props) {
 
   return <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
     <FormScrollView contentContainerStyle={styles.content}>
-        <AppHeader title="WOMBO" onBack={onBack} backLabel={t('planning.profile')} landscape="ridges" />
-        <Card elevated padding="form" style={{ gap: layout.fieldGroupGap }}>
-          <Text variant="supporting" tone="primary">{t('integrations.account.pioneerBadge')}</Text>
-          <Text variant="sectionTitle" accessibilityRole="header">{t('integrations.account.pioneerTitle')}</Text>
-          <Text tone="textMuted">{t('integrations.account.pioneerBody')}</Text>
+        {/* V3 names the page in the masthead, so the title is not repeated below it. */}
+        <AppHeader title={studioPresentation ? t('integrations.account.pioneerTitle') : 'WOMBO'} onBack={onBack} backLabel={t('planning.profile')} landscape="ridges" />
+        <Panel divided={false}>
+          <Kicker>{t('integrations.account.pioneerBadge')}</Kicker>
+          {studioPresentation ? null : <Text variant="sectionTitle" accessibilityRole="header">{t('integrations.account.pioneerTitle')}</Text>}
+          <Text variant={studioPresentation ? 'supporting' : 'body'} tone="textMuted">{t('integrations.account.pioneerBody')}</Text>
           {loading ? <ActivityIndicator color={colors.primary} /> : null}
           {redemption ? <View accessibilityRole="summary"><Notice tone="success" title={t('integrations.account.pioneerActive')}>
             {t('integrations.account.pioneerRedeemedAt', { date: new Date(redemption.redeemed_at).toLocaleString(locale) })}
@@ -101,11 +103,11 @@ export function PioneerAccessScreen({ accessToken, onBack }: Props) {
             <Button label={t('integrations.account.pioneerRedeem')} busy={submitting} disabled={submitting || code.trim().length < 8} onPress={() => void redeem()} />
           </>}
           {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error}><Notice tone="error">{error}</Notice></View> : null}
-        </Card>
+        </Panel>
       </FormScrollView>
   </SafeAreaView>;
 }
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.background, flex: 1 },
-  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },
+  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: screenGap, padding: layout.phoneGutter, paddingBottom: space[48] },
 });

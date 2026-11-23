@@ -35,15 +35,16 @@ import type {
 import { FadeInView } from '../components/FadeInView';
 import { type TranslationKey, useLanguage } from '../i18n/LanguageProvider';
 import { ZoneField as FormField } from '../ui-v2/components/ZoneField';
-import { ZoneStatusChip as StatusPill, ZoneInfoRow, ZoneProfileValues as ProfileValues } from '../ui-v2/components/ZoneVisuals';
+import { ZoneProfileValues as ProfileValues } from '../ui-v2/components/ZoneVisuals';
 import { formatIsoDateInput } from '../lib/dateInput';
 import { colors, layout, radius, shadows, space } from '../ui-v2/tokens';
 import { Text } from '../ui-v2/primitives/Text';
 import { Button } from '../ui-v2/primitives/Button';
-import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
+import type { IconName } from '../ui-v2/primitives/Icon';
 import { IconTile } from '../ui-v2/primitives/IconTile';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { Notice } from '../ui-v2/primitives/Notice';
+import { ChoiceChips, Heading, Kicker, screenGap, SportTile, Tag } from '../ui-v3/screens/support';
 import { ZoneSetupStep } from './ZoneSetupStep';
 
 type Props = {
@@ -105,14 +106,14 @@ function AssignmentCard({
     assignment.state === 'pending_approval' &&
     (assignment.scheduling_mode === 'standalone' || canDecideIntegrated);
   return (
-    <View style={styles.assignment}>
-      <Text style={styles.valueTitle}>
+    <View style={styles.block}>
+      <Text variant="label">
         {assignment.scheduled_date} ·{' '}
         {assignment.scheduling_mode === 'standalone'
           ? t('zones.assignment.standalone')
           : t('zones.assignment.weeklyPlan')}
       </Text>
-      <Text style={styles.hint}>
+      <Text variant="supporting" tone="textMuted">
         {assignment.protocol_id} · {t('zones.assignment.status', { state: assignment.state })}
       </Text>
       {canDecide ? (
@@ -130,6 +131,18 @@ function AssignmentCard({
           </View>
         </View>
       ) : null}
+    </View>
+  );
+}
+
+function Stat({ icon, value, label }: { icon: IconName; value: string | number; label: string }) {
+  return (
+    <View style={styles.stat}>
+      {studioPresentation ? null : <IconTile name={icon} />}
+      <View style={styles.statCopy}>
+        <Text variant={studioPresentation ? 'numericCompact' : 'sectionTitle'}>{value}</Text>
+        <Text variant={studioPresentation ? 'caption' : 'body'} tone="textMuted">{label}</Text>
+      </View>
     </View>
   );
 }
@@ -282,20 +295,27 @@ export function ZoneProfileScreen({
         {error ? <Notice tone="error">{error}</Notice> : null}
         {busy ? <ActivityIndicator color={colors.primary} /> : null}
         <FadeInView style={styles.intro}>
-          <View style={[styles.heroHeading, compact && styles.stacked]}>
-            <IconTile name="profile" size="focus" />
-            <View style={[styles.heroCopy, compact && { flex: 0, width: '100%' }]}>
-              <Text variant="supporting" tone="primary" style={{ fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1 }}>{t('zones.hero.eyebrow')}</Text>
-              <Text variant="sectionTitle" style={styles.heroTitle}>{t('zones.hero.title')}</Text>
-              <Text tone="textMuted">{t('zones.hero.body')}</Text>
+          {studioPresentation ? (
+            <View style={styles.heroCopy}>
+              <Kicker>{t('zones.hero.eyebrow')}</Kicker>
+              <Text variant="supporting" tone="textMuted">{t('zones.hero.body')}</Text>
             </View>
-          </View>
-          <View style={[styles.summaryRow, compact && styles.stacked]}>
-            {profile ? <View style={[styles.summaryItem, compact && styles.summaryItemCompact]}><IconTile name="intensity" /><View style={styles.heroCopy}><Text variant="sectionTitle">{profile.disciplines.length}</Text><Text tone="textMuted">{t('zones.summary.disciplines')}</Text></View></View> : null}
-            <View style={[styles.summaryItem, compact && styles.summaryItemCompact]}><IconTile name="document" /><View style={styles.heroCopy}><Text variant="sectionTitle">{planContext ? t('zones.summary.planLinkedYes') : t('zones.summary.planLinkedNo')}</Text><Text tone="textMuted">{t('zones.summary.planLinked')}</Text></View></View>
+          ) : (
+            <View style={[styles.heroHeading, compact && styles.stacked]}>
+              <IconTile name="profile" size="focus" />
+              <View style={[styles.heroCopy, compact && styles.fullWidth]}>
+                <Kicker>{t('zones.hero.eyebrow')}</Kicker>
+                <Text variant="sectionTitle">{t('zones.hero.title')}</Text>
+                <Text tone="textMuted">{t('zones.hero.body')}</Text>
+              </View>
+            </View>
+          )}
+          <View style={styles.summaryRow}>
+            {profile ? <Stat icon="intensity" value={profile.disciplines.length} label={t('zones.summary.disciplines')} /> : null}
+            <Stat icon="document" value={planContext ? t('zones.summary.planLinkedYes') : t('zones.summary.planLinkedNo')} label={t('zones.summary.planLinked')} />
           </View>
         </FadeInView>
-        <View style={styles.section}><Text variant="sectionTitle" accessibilityRole="header">{t('zones.disciplines.title')}</Text><Text tone="textMuted">{t('zones.disciplines.body')}</Text></View>
+        <Heading title={t('zones.disciplines.title')} description={t('zones.disciplines.body')} />
 
         {profile?.disciplines.map((state, index) => {
           const pending = state.pending_profile;
@@ -308,39 +328,35 @@ export function ZoneProfileScreen({
               key={state.discipline}
               style={styles.panel}
             >
-              <View style={[styles.panelIdentity, compact && styles.stacked]}>
-                <IconTile name={state.discipline} size="focus" />
-                <View style={[styles.panelIdentityCopy, compact && styles.fullWidth]}>
-                  <Text variant="sectionTitle" accessibilityRole="header">{t(disciplineLabels[state.discipline])}</Text>
-                  <StatusPill label={t(visibilityLabels[state.numeric_zone_visibility])} pending={state.numeric_zone_visibility === 'proposal_confirmation_pending'} />
+              <View style={styles.panelIdentity}>
+                {studioPresentation ? <SportTile discipline={state.discipline} /> : <IconTile name={state.discipline} size="focus" />}
+                <View style={styles.panelIdentityCopy}>
+                  <Text variant={studioPresentation ? 'cardTitle' : 'sectionTitle'} accessibilityRole="header">{t(disciplineLabels[state.discipline])}</Text>
+                  <Tag label={t(visibilityLabels[state.numeric_zone_visibility])} tone={state.numeric_zone_visibility === 'proposal_confirmation_pending' ? 'warning' : 'primary'} />
                 </View>
               </View>
-              <ZoneInfoRow icon="location"><Text tone="textMuted">{t('zones.route', { route: state.setup ? studioPresentation ? t(routeNames[state.setup.setup_route]) : state.setup.setup_route : t('zones.route.notSet') })}</Text></ZoneInfoRow>
+              <Text variant="supporting" tone="textMuted">{t('zones.route', { route: state.setup ? studioPresentation ? t(routeNames[state.setup.setup_route]) : state.setup.setup_route : t('zones.route.notSet') })}</Text>
               {state.active_profile ? (
-                <View style={[styles.profileBlock, styles.profileBlockActive]}>
-                  <View style={styles.profileBlockHeading}>
-                    <Text style={styles.valueTitle}>{t('zones.activeProfile')}</Text>
-                    <Text style={styles.versionLabel}>
-                      v{state.active_profile.version}
-                    </Text>
+                <View style={styles.block}>
+                  <View style={styles.blockHeading}>
+                    <Text variant="label" style={styles.grow}>{t('zones.activeProfile')}</Text>
+                    <Tag label={`v${state.active_profile.version}`} tone="neutral" />
                   </View>
                   <ProfileValues profile={state.active_profile} />
                 </View>
               ) : (
-                <ZoneInfoRow icon="info"><Text tone="textMuted">{t('zones.noActiveProfile')}</Text></ZoneInfoRow>
+                <Text variant="supporting" tone="textMuted">{t('zones.noActiveProfile')}</Text>
               )}
               {pending ? (
-                <View style={[styles.profileBlock, styles.profileBlockPending]}>
-                  <View style={styles.profileBlockHeading}>
-                    <Text style={styles.valueTitle}>{t('zones.pendingProfile')}</Text>
-                    <Text style={styles.pendingVersionLabel}>
-                      v{pending.version}
-                    </Text>
+                <View style={styles.pending}>
+                  <View style={styles.blockHeading}>
+                    <Text variant="label" style={styles.grow}>{t('zones.pendingProfile')}</Text>
+                    <Text variant="caption" tone="warning">v{pending.version}</Text>
                   </View>
                   <ProfileValues profile={pending} />
                   {pending.proposal_id ? (
-                    <View style={styles.buttonRow}>
-                      <View style={styles.buttonCell}>
+                    <View style={[styles.buttonRow, !compact && styles.buttonRowWide]}>
+                      <View style={[styles.buttonCell, !compact && styles.grow]}>
                         <ActionButton
                           disabled={busy}
                           label={t('zones.approve')}
@@ -355,7 +371,7 @@ export function ZoneProfileScreen({
                           }
                         />
                       </View>
-                      <View style={styles.buttonCell}>
+                      <View style={[styles.buttonCell, !compact && styles.grow]}>
                         <ActionButton
                           disabled={busy}
                           label={t('zones.reject')}
@@ -375,11 +391,11 @@ export function ZoneProfileScreen({
                 </View>
               ) : null}
               {state.prior_profiles.length > 0 ? (
-                <View style={styles.history}>
-                  <Text style={styles.valueTitle}>{t('zones.priorValues')}</Text>
+                <View style={styles.block}>
+                  <Text variant="label">{t('zones.priorValues')}</Text>
                   {state.prior_profiles.map((previous) => (
-                    <View key={previous.id} style={styles.profileBlock}>
-                      <Text style={styles.hint}>
+                    <View key={previous.id} style={styles.prior}>
+                      <Text variant="caption" tone="textMuted">
                         {t('zones.priorVersion', { version: previous.version, status: previous.status })}
                       </Text>
                       <ProfileValues profile={previous} />
@@ -389,8 +405,8 @@ export function ZoneProfileScreen({
               ) : null}
 
               {state.available_test_scheduling_modes.length > 0 ? (
-                <View style={styles.schedulePanel}>
-                  <Text style={styles.valueTitle}>{t('zones.schedule.title')}</Text>
+                <View style={styles.block}>
+                  <Text variant="label" accessibilityRole="header">{t('zones.schedule.title')}</Text>
                   <FormField
                     autoCapitalize="none"
                     inputMode="numeric"
@@ -405,18 +421,18 @@ export function ZoneProfileScreen({
                     placeholder={t('zones.schedule.datePlaceholder')}
                     value={dates[state.discipline]}
                   />
-                  <View style={styles.buttonRow}>
-                    {state.available_test_scheduling_modes.map((mode) => {
-                      const disabled = mode === 'weekly_plan' && !canIntegrate;
-                      return (
-                        <ChoiceRow key={mode} label={mode === 'standalone' ? t('zones.schedule.standalone') : t('zones.schedule.weeklyPlan')}
-                          selected={modes[state.discipline] === mode} disabled={disabled}
-                          onPress={() => setModes((current) => ({ ...current, [state.discipline]: mode }))} />
-                      );
-                    })}
-                  </View>
+                  <ChoiceChips
+                    isSelected={(mode) => modes[state.discipline] === mode}
+                    mode="radio"
+                    onPress={(mode) => setModes((current) => ({ ...current, [state.discipline]: mode }))}
+                    options={state.available_test_scheduling_modes.map((mode) => ({
+                      value: mode,
+                      label: mode === 'standalone' ? t('zones.schedule.standalone') : t('zones.schedule.weeklyPlan'),
+                      disabled: mode === 'weekly_plan' && !canIntegrate,
+                    }))}
+                  />
                   {state.discipline === 'swim' ? (
-                    <Text style={styles.hint}>{t('zones.schedule.swimHint')}</Text>
+                    <Text variant="supporting" tone="textMuted">{t('zones.schedule.swimHint')}</Text>
                   ) : null}
                   <ActionButton
                     disabled={busy}
@@ -439,7 +455,7 @@ export function ZoneProfileScreen({
                 />
               ))}
 
-              <ActionButton
+              <Button
                 disabled={busy}
                 label={
                   editingDiscipline === state.discipline
@@ -451,6 +467,8 @@ export function ZoneProfileScreen({
                     current === state.discipline ? null : state.discipline,
                   )
                 }
+                trailingIcon={studioPresentation ? undefined : 'forward'}
+                variant={studioPresentation ? 'secondary' : 'primary'}
               />
               {editingDiscipline === state.discipline && onboarding ? (
                 <FadeInView distance={8} duration={300}>
@@ -473,25 +491,30 @@ export function ZoneProfileScreen({
   );
 }
 
+const hairline = { borderTopColor: colors.border, borderTopWidth: StyleSheet.hairlineWidth } as const;
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.background, flex: 1 }, scroll: { flex: 1 },
-  content: { alignSelf: 'center', gap: space[24], maxWidth: layout.readingWidth, padding: layout.phoneGutter, paddingBottom: space[48], width: '100%' },
-  intro: { ...shadows.card, backgroundColor: colors.surface, borderRadius: radius.card, gap: space[24], padding: space[16] },
+  content: { alignSelf: 'center', gap: screenGap, maxWidth: layout.readingWidth, padding: layout.phoneGutter, paddingBottom: space[48], width: '100%' },
+  grow: { flex: 1, minWidth: 0 },
+  // V3 states the profile on the page itself; V2 keeps its hero card.
+  intro: studioPresentation ? { gap: space[12] }
+    : { ...shadows.card, backgroundColor: colors.surface, borderRadius: radius.card, gap: space[24], padding: space[16] },
   heroHeading: { flexDirection: 'row', alignItems: 'flex-start', gap: space[16] },
   stacked: { flexDirection: 'column', flexWrap: 'nowrap', alignItems: 'flex-start' },
-  heroCopy: { flex: 1, minWidth: 0, gap: space[8] }, heroTitle: { fontSize: 24, lineHeight: 30 },
-  summaryRow: { flexDirection: 'row', flexWrap: 'wrap', gap: space[24], borderTopWidth: 1, borderTopColor: colors.border, paddingTop: space[24] },
-  summaryItem: { flexDirection: 'row', gap: space[12], alignItems: 'center', flexGrow: 1, flexBasis: 150 },
-  summaryItemCompact: { flexGrow: 0, flexBasis: 'auto', width: '100%' }, fullWidth: { flex: 0, width: '100%' },
-  section: { gap: space[8] }, body: { color: colors.textMuted, fontSize: 16, lineHeight: 24 }, hint: { color: colors.textMuted, fontSize: 14, lineHeight: 20 },
-  panel: { ...shadows.card, backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.card, borderWidth: 1, gap: space[16], padding: space[16] },
-  panelIdentity: { alignItems: 'center', flexDirection: 'row', gap: space[16] }, panelIdentityCopy: { flex: 1, minWidth: 0, gap: space[8] },
-  profileBlock: { borderTopColor: colors.border, borderTopWidth: 1, gap: space[16], paddingTop: space[16] },
-  profileBlockActive: { gap: space[16] }, profileBlockPending: { backgroundColor: colors.warningSoft, borderRadius: radius.inset, padding: space[16] },
-  profileBlockHeading: { alignItems: 'flex-start', flexDirection: 'row', flexWrap: 'wrap', gap: space[8], justifyContent: 'space-between' },
-  versionLabel: { backgroundColor: colors.primarySoft, borderRadius: radius.inset, color: colors.primary, fontSize: 14, paddingHorizontal: space[8], paddingVertical: space[4] },
-  pendingVersionLabel: { color: colors.warning, fontSize: 14 }, valueTitle: { color: colors.text, fontSize: 18, fontWeight: '600', lineHeight: 26 },
-  history: { gap: space[16] }, schedulePanel: { backgroundColor: colors.primarySoft, borderRadius: radius.control, gap: space[24], padding: space[16] },
-  assignment: { borderColor: colors.border, borderRadius: radius.control, borderWidth: 1, gap: space[16], padding: space[16] },
-  buttonRow: { gap: space[12] }, buttonCell: { width: '100%' },
+  heroCopy: { flex: studioPresentation ? undefined : 1, minWidth: 0, gap: space[8] },
+  fullWidth: { flex: 0, width: '100%' },
+  summaryRow: studioPresentation ? { flexDirection: 'row', flexWrap: 'wrap', gap: 10 }
+    : { flexDirection: 'row', flexWrap: 'wrap', gap: space[24], borderTopWidth: 1, borderTopColor: colors.border, paddingTop: space[24] },
+  stat: studioPresentation ? { flexGrow: 1, flexBasis: 130, backgroundColor: colors.surface, borderRadius: radius.card, padding: 14 }
+    : { flexDirection: 'row', gap: space[12], alignItems: 'center', flexGrow: 1, flexBasis: 150 },
+  statCopy: { flexShrink: 1, minWidth: 0, gap: studioPresentation ? 2 : space[8] },
+  panel: { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.card, gap: space[16], padding: space[16],
+    ...(studioPresentation ? { borderWidth: StyleSheet.hairlineWidth } : { ...shadows.card, borderWidth: 1 }) },
+  panelIdentity: { alignItems: 'center', flexDirection: 'row', gap: studioPresentation ? space[12] : space[16] },
+  panelIdentityCopy: { flex: 1, minWidth: 0, gap: studioPresentation ? space[4] : space[8] },
+  block: { ...hairline, gap: space[12], paddingTop: space[16] },
+  blockHeading: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: space[8] },
+  pending: { backgroundColor: colors.warningSoft, borderRadius: radius.control, gap: space[12], padding: space[12] },
+  prior: { gap: space[8] },
+  buttonRow: { gap: space[12] }, buttonRowWide: { flexDirection: 'row' }, buttonCell: { minWidth: 0 },
 });

@@ -33,14 +33,13 @@ import type {
 import { type TranslationKey, useLanguage } from '../i18n/LanguageProvider';
 import { Input as FormField } from '../ui-v2/primitives/Input';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
-import { QuickActionRow } from '../ui-v2/components/QuickActionRow';
 import { Button } from '../ui-v2/primitives/Button';
-import { Card } from '../ui-v2/primitives/Card';
 import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
 import { Notice } from '../ui-v2/primitives/Notice';
 import { Text } from '../ui-v2/primitives/Text';
-
-import { colors, layout, radius, space, typography } from '../ui-v2/tokens';
+import { studioPresentation } from '../ui-v3/presentation';
+import { ChoiceChips, DayToggleStrip, Group, Heading, IconAction, Panel, screenGap, SportTile } from '../ui-v3/screens/support';
+import { colors, layout, radius, space } from '../ui-v2/tokens';
 
 type Props = {
   accessToken: string;
@@ -408,6 +407,14 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
     });
   };
 
+  const toggleBlockedDay = (offset: number) =>
+    setBlockedDays((current) => {
+      const next = new Set(current);
+      if (next.has(offset)) next.delete(offset);
+      else next.add(offset);
+      return next;
+    });
+
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <FormScrollView
@@ -421,10 +428,8 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
         {busy ? <ActivityIndicator color={colors.primary} /> : null}
 
         {!checkIn ? (
-          <Card elevated padding="form" style={styles.panel}>
-            <View style={[styles.chip]}><Text variant="supporting" tone="primary">{t('checkin.start.chip')}</Text></View>
-            <Text style={styles.title}>{t('checkin.start.title')}</Text>
-            <Text style={styles.body}>{t('checkin.start.body')}</Text>
+          <Panel divided={false}>
+            <Heading kicker={t('checkin.start.chip')} title={t('checkin.start.title')} description={t('checkin.start.body')} />
             <SelectField
               label={t('creation.weekStart')}
               onChange={setWeekStart}
@@ -433,15 +438,15 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
               value={weekStart}
             />
             <ActionButton disabled={busy} label={t('checkin.start.action')} onPress={() => void begin()} />
-          </Card>
+          </Panel>
         ) : null}
 
         {checkIn && !isConfirmed && !isCompleted ? (
           <>
-            <Card elevated padding="form" style={styles.panel}>
-              <View style={[styles.chip]}><Text variant="supporting" tone="primary">{t('checkin.form.chip')}</Text></View>
-              <Text style={styles.title}>{t('checkin.form.title', { date: checkIn.week_start })}</Text>
+            <Panel divided={false}>
+              <Heading kicker={t('checkin.form.chip')} title={t('checkin.form.title', { date: checkIn.week_start })} />
               <FormField
+                hint={t('checkin.context.hint')}
                 label={t('checkin.context.label')}
                 maxLength={1000}
                 multiline
@@ -456,11 +461,10 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                 onPress={extractContext}
                 secondary
               />
-              <Text style={styles.body}>{t('checkin.context.hint')}</Text>
               {contextCandidate ? (
                 <View style={styles.candidatePanel}>
-                  <Text style={styles.label}>{t('checkin.candidate.title')}</Text>
-                  <Text style={styles.body}>
+                  <Text variant="label" accessibilityRole="header">{t('checkin.candidate.title')}</Text>
+                  <Text variant="supporting">
                     {t('checkin.candidate.blockedDates', {
                       dates: contextCandidate.candidate.blocked_dates.join(', ') || t('checkin.candidate.noDates'),
                     })}
@@ -472,7 +476,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                     })}
                   </Text>
                   {contextCandidate.candidate.agenda_context.map((line) => (
-                    <Text key={line} style={styles.body}>• {line}</Text>
+                    <Text key={line} variant="supporting">• {line}</Text>
                   ))}
                   {contextCandidate.candidate.possible_injury_disciplines.length > 0 ? (
                     <Notice tone="warning">{t('checkin.candidate.injury', { disciplines: contextCandidate.candidate.possible_injury_disciplines.map((discipline) => t(disciplineLabels[discipline])).join(', ') })}</Notice>
@@ -491,56 +495,63 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                   />
                 </View>
               ) : null}
-              <Text style={styles.body}>{t('checkin.blockedDays')}</Text>
-              <View style={styles.rowWrap}>
-                {dayLabels.map((label, offset) => (
-                  <ChoiceRow key={label} label={t(label)}  selected={blockedDays.has(offset)} mode="checkbox" onPress={() =>
-                      setBlockedDays((current) => {
-                        const next = new Set(current);
-                        if (next.has(offset)) next.delete(offset);
-                        else next.add(offset);
-                        return next;
-                      })
-                    } />
-                ))}
-              </View>
-              <Text style={styles.label}>{t('checkin.fatigue')}</Text>
-              <View style={styles.rowWrap}>
-                {(Object.keys(fatigueLabels) as FatigueLevel[]).map((value) => (
-                  <ChoiceRow key={value} label={t(fatigueLabels[value])}  selected={fatigue === value} mode="radio" onPress={() => setFatigue(value)} />
-                ))}
-              </View>
-              <Text style={styles.label}>{t('checkin.missedReasons')}</Text>
-              <View style={styles.rowWrap}>
-                {missedReasons.map(([value, label]) => (
-                  <ChoiceRow key={value} label={t(label)}  selected={reasons.has(value)} mode="checkbox" onPress={() =>
-                      setReasons((current) => {
-                        const next = new Set(current);
-                        if (next.has(value)) next.delete(value);
-                        else next.add(value);
-                        return next;
-                      })
-                    } />
-                ))}
-              </View>
-            </Card>
+              <Group label={t('checkin.blockedDays')}>
+                {studioPresentation ? (
+                  <DayToggleStrip
+                    days={weekDays(checkIn.week_start).map((day, offset) => ({ label: t(dayLabels[offset]!), date: day.day }))}
+                    isMarked={(offset) => blockedDays.has(offset)}
+                    onToggle={toggleBlockedDay}
+                  />
+                ) : (
+                  <ChoiceChips
+                    isSelected={(offset) => blockedDays.has(offset)}
+                    mode="checkbox"
+                    onPress={toggleBlockedDay}
+                    options={dayLabels.map((label, offset) => ({ value: offset, label: t(label) }))}
+                  />
+                )}
+              </Group>
+              <Group label={t('checkin.fatigue')}>
+                <ChoiceChips
+                  isSelected={(value) => fatigue === value}
+                  mode="radio"
+                  onPress={setFatigue}
+                  options={(Object.keys(fatigueLabels) as FatigueLevel[]).map((value) => ({ value, label: t(fatigueLabels[value]) }))}
+                />
+              </Group>
+              <Group label={t('checkin.missedReasons')}>
+                <ChoiceChips
+                  isSelected={(value) => reasons.has(value)}
+                  mode="checkbox"
+                  onPress={(value) =>
+                    setReasons((current) => {
+                      const next = new Set(current);
+                      if (next.has(value)) next.delete(value);
+                      else next.add(value);
+                      return next;
+                    })
+                  }
+                  options={missedReasons.map(([value, label]) => ({ value, label: t(label) }))}
+                />
+              </Group>
+            </Panel>
 
-            <Card elevated padding="form" style={styles.panel}>
-              <Text style={styles.title}>{t('checkin.injuries.title')}</Text>
-              <Text style={styles.body}>{t('checkin.injuries.body')}</Text>
+            <Panel>
+              <Heading title={t('checkin.injuries.title')} description={t('checkin.injuries.body')} />
               {disciplines.map((discipline) => (
                 <View key={discipline} style={styles.subsection}>
-                  <Text style={styles.label}>{t(disciplineLabels[discipline])}</Text>
-                  <View style={styles.rowWrap}>
-                    {restrictionChoices.map(([value, label]) => (
-                      <ChoiceRow key={value} label={t(label)} accessibilityLabel={`${t(disciplineLabels[discipline])}: ${t(label)}`} selected={restrictions[discipline].choice === value} mode="radio" onPress={() =>
-                          setRestrictions((current) => ({
-                            ...current,
-                            [discipline]: { ...current[discipline], choice: value },
-                          }))
-                        } />
-                    ))}
-                  </View>
+                  <SelectField
+                    label={t(disciplineLabels[discipline])}
+                    onChange={(value) =>
+                      setRestrictions((current) => ({
+                        ...current,
+                        [discipline]: { ...current[discipline], choice: value },
+                      }))
+                    }
+                    options={restrictionChoices.map(([value, label]) => ({ value, label: t(label) }))}
+                    placeholder={t('checkin.restriction.none')}
+                    value={restrictions[discipline].choice}
+                  />
                   {restrictions[discipline].choice === 'professional' ? (
                     <FormField
                       label={t('checkin.injuries.advice')}
@@ -555,21 +566,24 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                   ) : null}
                 </View>
               ))}
-              <ChoiceRow  label={t('checkin.injuries.alarm')}  selected={alarmAcknowledged} mode="checkbox" onPress={() => setAlarmAcknowledged((value) => !value)} />
-            </Card>
+              <ChoiceRow label={t('checkin.injuries.alarm')} selected={alarmAcknowledged} mode="checkbox" onPress={() => setAlarmAcknowledged((value) => !value)} />
+            </Panel>
 
-            <Card elevated padding="form" style={styles.panel}>
-              <Text style={styles.title}>{t('checkin.external.title')}</Text>
-              <ChoiceRow  label={t('checkin.external.recurringConfirmed')}  selected={recurringConfirmed} mode="checkbox" onPress={() => setRecurringConfirmed((value) => !value)} />
+            <Panel>
+              <Heading title={t('checkin.external.title')} />
+              <ChoiceRow label={t('checkin.external.recurringConfirmed')} selected={recurringConfirmed} mode="checkbox" onPress={() => setRecurringConfirmed((value) => !value)} />
               {externalActivities.map((activity, index) => (
                 <View key={`${activity.scheduled_at}-${index}`} style={styles.activityRow}>
-                  <Text style={styles.label}>{activity.name}</Text>
-                  <Text style={styles.body}>
-                    {t(disciplineLabels[activity.discipline])} · {activity.duration_minutes} min
-                    {activity.strenuous ? ` · ${t('checkin.external.strenuousSuffix')}` : ''}
-                    {activity.recurring ? ` · ${t('checkin.external.recurringSuffix')}` : ''}
-                  </Text>
-                  <QuickActionRow label={t('checkin.external.remove')} icon="close" onAction={() =>
+                  {studioPresentation ? <SportTile discipline={activity.discipline} /> : null}
+                  <View style={styles.activityCopy}>
+                    <Text variant="label">{activity.name}</Text>
+                    <Text variant="supporting" tone="textMuted">
+                      {t(disciplineLabels[activity.discipline])} · {activity.duration_minutes} min
+                      {activity.strenuous ? ` · ${t('checkin.external.strenuousSuffix')}` : ''}
+                      {activity.recurring ? ` · ${t('checkin.external.recurringSuffix')}` : ''}
+                    </Text>
+                  </View>
+                  <IconAction icon="close" label={t('checkin.external.remove')} onPress={() =>
                       setExternalActivities((current) =>
                         current.filter((_, currentIndex) => currentIndex !== index),
                       )
@@ -577,11 +591,12 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                 </View>
               ))}
               <FormField label={t('checkin.external.name')} onChangeText={setExternalName} value={externalName} />
-              <View style={styles.rowWrap}>
-                {disciplines.map((discipline) => (
-                  <ChoiceRow key={discipline} label={t(disciplineLabels[discipline])}  selected={externalDiscipline === discipline} mode="radio" onPress={() => setExternalDiscipline(discipline)} />
-                ))}
-              </View>
+              <ChoiceChips
+                isSelected={(value) => externalDiscipline === value}
+                mode="radio"
+                onPress={setExternalDiscipline}
+                options={disciplines.map((discipline) => ({ value: discipline, label: t(disciplineLabels[discipline]) }))}
+              />
               <DayTimePicker
                 dayOptions={weekDays(checkIn.week_start)}
                 label={t('checkin.external.time')}
@@ -597,48 +612,56 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                 units={['hours', 'minutes']}
                 valueSeconds={externalDuration === '' ? null : Math.round(Number(externalDuration) * 60)}
               />
-              <View style={styles.rowWrap}>
-                <ChoiceRow  label={t('checkin.external.strenuous')}  selected={externalStrenuous} mode="checkbox" onPress={() => setExternalStrenuous((value) => !value)} />
-                <ChoiceRow  label={t('checkin.external.recurring')}  selected={externalRecurring} mode="checkbox" onPress={() => setExternalRecurring((value) => !value)} />
-                <ActionButton label={t('checkin.external.add')} onPress={addExternalActivity} secondary />
-              </View>
-            </Card>
+              <ChoiceChips
+                isSelected={(value) => (value === 'strenuous' ? externalStrenuous : externalRecurring)}
+                mode="checkbox"
+                onPress={(value) =>
+                  value === 'strenuous'
+                    ? setExternalStrenuous((current) => !current)
+                    : setExternalRecurring((current) => !current)
+                }
+                options={[
+                  { value: 'strenuous', label: t('checkin.external.strenuous') },
+                  { value: 'recurring', label: t('checkin.external.recurring') },
+                ] as const}
+              />
+              <ActionButton label={t('checkin.external.add')} onPress={addExternalActivity} secondary />
+            </Panel>
 
-            <Card elevated padding="form" style={styles.panel}>
+            <Panel>
               <ActionButton disabled={busy || !recurringConfirmed} label={t('checkin.save')} onPress={save} />
               {!recurringConfirmed ? <Text variant="supporting" tone="textMuted">{t('checkin.saveNeedsRecurring')}</Text> : null}
               {checkIn.context ? (
                 <>
-                  <Text style={styles.body}>{t('checkin.source', { expiry: expiryLabel ?? '' })}</Text>
+                  <Text variant="supporting" tone="textMuted">{t('checkin.source', { expiry: expiryLabel ?? '' })}</Text>
                   <ActionButton disabled={busy} label={t('checkin.confirm')} onPress={confirm} />
                 </>
               ) : null}
-            </Card>
+            </Panel>
           </>
         ) : null}
 
         {checkIn && isConfirmed && !isCompleted ? (
-          <Card elevated padding="form" style={styles.panel}>
-            <View style={[styles.chip]}><Text variant="supporting" tone="primary">{t('checkin.confirmed.chip')}</Text></View>
-            <Text style={styles.title}>{t('checkin.confirmed.title')}</Text>
-            <Text style={styles.body}>{t('checkin.confirmed.body')}</Text>
+          <Panel divided={false}>
+            <Heading kicker={t('checkin.confirmed.chip')} title={t('checkin.confirmed.title')} description={t('checkin.confirmed.body')} />
             <ActionButton disabled={busy} label={t('checkin.confirmed.action')} onPress={makeProposal} />
-          </Card>
+          </Panel>
         ) : null}
 
         {proposalPlan ? (
-          <Card elevated padding="form" style={styles.panel}>
-            <View style={[styles.chip, styles.pendingChip]}><Text variant="supporting" tone="warning">{t('checkin.proposal.chip')}</Text></View>
-            <Text style={styles.title}>{t('checkin.proposal.title', { date: proposalPlan.week_start })}</Text>
-            <Text style={styles.body}>
-              {t('checkin.proposal.summary', { workouts: proposalPlan.workouts.length, restDays: proposalPlan.rest_days.length })}
-            </Text>
+          <Panel divided={false}>
+            <Heading
+              description={t('checkin.proposal.summary', { workouts: proposalPlan.workouts.length, restDays: proposalPlan.rest_days.length })}
+              kicker={t('checkin.proposal.chip')}
+              kickerTone="warning"
+              title={t('checkin.proposal.title', { date: proposalPlan.week_start })}
+            />
             {proposalPlan.warnings.map((warning) => (
               <Notice key={warning.id ?? warning.code} tone="warning">{warning.message}</Notice>
             ))}
             <ActionButton disabled={busy} label={t('checkin.proposal.approve')} onPress={approve} />
             <ActionButton label={t('checkin.proposal.later')} onPress={onBack} secondary />
-          </Card>
+          </Panel>
         ) : null}
       </FormScrollView>
     </SafeAreaView>
@@ -648,14 +671,10 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.background, flex: 1 },
   scroll: { flex: 1 },
-  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },
-  panel: { gap: layout.fieldGroupGap },
-  subsection: { borderTopColor: colors.border, borderTopWidth: layout.decorativeLine, gap: space[12], paddingTop: space[16] },
+  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: screenGap, padding: layout.phoneGutter, paddingBottom: space[48] },
+  subsection: { gap: space[8] },
   contextInput: { minHeight: layout.multilineFieldHeight, textAlignVertical: 'top' },
-  candidatePanel: { backgroundColor: colors.primarySoft, borderRadius: radius.inset, gap: space[16], padding: space[16] },
-  title: { ...typography.sectionTitle }, body: { color: colors.textMuted }, label: { ...typography.label },
-  rowWrap: { gap: space[12] },
-  activityRow: { borderTopColor: colors.border, borderTopWidth: layout.decorativeLine, gap: space[8], paddingTop: space[16] },
-  chip: { alignSelf: 'flex-start', backgroundColor: colors.primarySoft, borderRadius: radius.pill, paddingHorizontal: space[12], paddingVertical: space[4] },
-  pendingChip: { backgroundColor: colors.warningSoft },
+  candidatePanel: { backgroundColor: colors.primarySoft, borderRadius: radius.card, gap: space[12], padding: space[16] },
+  activityRow: { flexDirection: 'row', alignItems: 'center', gap: space[12] },
+  activityCopy: { flex: 1, minWidth: 0, gap: 2 },
 });

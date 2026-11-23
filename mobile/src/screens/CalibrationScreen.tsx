@@ -32,9 +32,9 @@ import type {
   ZoneMetricKind,
 } from '../api/types';
 import { ZoneField as FormField } from '../ui-v2/components/ZoneField';
-import { ZoneStatusChip, ZoneTable, zoneValue, ZoneInfoRow } from '../ui-v2/components/ZoneVisuals';
+import { ZoneTable, zoneValue } from '../ui-v2/components/ZoneVisuals';
 import { parseRunPace } from '../lib/runPace';
-import { colors, layout, radius, shadows, space } from '../ui-v2/tokens';
+import { colors, layout, radius, space } from '../ui-v2/tokens';
 import { Text } from '../ui-v2/primitives/Text';
 import { Button } from '../ui-v2/primitives/Button';
 import { DurationPicker } from '../components/DurationPicker';
@@ -42,7 +42,11 @@ import { DayTimePicker } from '../components/DayTimePicker';
 import { RpeSelect } from '../ui-v2/components/RpeSelect';
 import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
 import { ToggleChip } from '../ui-v2/primitives/ToggleChip';
+import { Icon } from '../ui-v2/primitives/Icon';
 import { IconTile } from '../ui-v2/primitives/IconTile';
+import { studioPresentation } from '../ui-v3/presentation';
+import { ChoiceChips, Heading, Panel, screenGap, Tag } from '../ui-v3/screens/support';
+import { isVerificationBuild } from '../ui-v3/screens/verificationBuild';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { Notice } from '../ui-v2/primitives/Notice';
 import { type TranslationKey, useLanguage } from '../i18n/LanguageProvider';
@@ -788,10 +792,16 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
     return (
       <SafeAreaView style={styles.centered}>
         <ActivityIndicator color={colors.primary} size="large" />
-        <Text style={styles.muted}>{t('calibration.loading')}</Text>
+        <Text tone="textMuted">{t('calibration.loading')}</Text>
       </SafeAreaView>
     );
   }
+
+  // A decision that is still open stays the one primary action of the result.
+  const decisionOpen = result !== null && (
+    (result.requires_athlete_confirmation && !thresholdDecision) ||
+    (thresholdDecision?.state === 'accepted' && thresholdDecision.zone_proposal_state === 'pending' && !zonesActivated)
+  );
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
@@ -805,363 +815,373 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
           {error ? <Notice tone="error">{error}</Notice> : null}
 
           {setups.length === 0 ? (
-            <View style={styles.card}>
-              <IconTile name="document" size="focus" />
-              <Text style={styles.cardTitle}>{t('calibration.empty.title')}</Text>
-              <Text style={styles.muted}>{t('calibration.empty.body')}</Text>
+            <Panel divided={false}>
+              <IconTile name="document" size={studioPresentation ? 'row' : 'focus'} />
+              <Heading title={t('calibration.empty.title')} description={t('calibration.empty.body')} />
               <ActionButton label={t('calibration.empty.backToIntake')} onPress={onBack} />
-            </View>
+            </Panel>
           ) : (
             <>
-              <View accessibilityRole="radiogroup" style={styles.selectorRow}>
-                {setups.map((setup) => (
-                  <ChoiceRow key={setup.discipline + ':' + setup.protocol_id} label={t(disciplineLabels[setup.discipline])}
-                    selected={selectedProtocolId === setup.protocol_id} onPress={() => setSelectedProtocolId(setup.protocol_id)} />
-                ))}
-              </View>
+              <ChoiceChips
+                isSelected={(protocolId) => selectedProtocolId === protocolId}
+                mode="radio"
+                onPress={setSelectedProtocolId}
+                options={setups.flatMap((setup) => setup.protocol_id
+                  ? [{ value: setup.protocol_id, label: t(disciplineLabels[setup.discipline]) }]
+                  : [])}
+              />
 
               {selectedProtocol && selectedSetup && stage === 'feedback' ? (
-                <View style={styles.card}>
-                  <View
-                    accessibilityLabel={t('calibration.painWarning')}
-                    accessibilityRole="alert"
-                    accessible
-                    style={styles.painWarning}
-                  >
-                    <Text style={styles.painWarningText}>{t('calibration.painWarning')}</Text>
-                  </View>
-                  <View style={styles.badges}>
-                    <ZoneStatusChip
-                      label={
-                        selectedProtocol.protocol_type === 'field_test'
-                          ? t('calibration.type.fieldTest')
-                          : t('calibration.type.submaximal')
-                      }
+                <>
+                  <Panel divided={false}>
+                    <View
+                      accessibilityLabel={t('calibration.painWarning')}
+                      accessibilityRole="alert"
+                      accessible
+                      style={styles.painWarning}
+                    >
+                      <Icon name="warning" color={colors.destructive} />
+                      <Text variant="label" tone="destructive" style={styles.grow}>{t('calibration.painWarning')}</Text>
+                    </View>
+                    <View style={styles.badges}>
+                      <Tag
+                        label={
+                          selectedProtocol.protocol_type === 'field_test'
+                            ? t('calibration.type.fieldTest')
+                            : t('calibration.type.submaximal')
+                        }
+                      />
+                      <Tag label={t('calibration.reviewedVersion', { version: selectedProtocol.version })} tone="neutral" />
+                    </View>
+                    <Heading
+                      description={t('calibration.guidanceIntro', { guidance: t(guidanceLabels[selectedSetup.guidance_mode]) })}
+                      title={labelOr(t, protocolLabels[selectedProtocol.protocol_id], selectedProtocol.protocol_id)}
                     />
-                    <ZoneStatusChip label={t('calibration.reviewedVersion', { version: selectedProtocol.version })} />
-                  </View>
-                  <Text style={styles.pageTitle}>
-                    {labelOr(t, protocolLabels[selectedProtocol.protocol_id], selectedProtocol.protocol_id)}
-                  </Text>
-                  <Text style={styles.muted}>
-                    {t('calibration.guidanceIntro', { guidance: t(guidanceLabels[selectedSetup.guidance_mode]) })}
-                  </Text>
-                  <View style={styles.segmentList}>
-                    {selectedProtocol.segments.map((segment) => (
-                      <View key={segment.segment_id} style={styles.segmentSummary}>
-                        <View style={styles.segmentNumber}>
-                          <Text style={styles.segmentNumberText}>{segment.order}</Text>
+                    <View style={styles.steps}>
+                      {selectedProtocol.segments.map((segment) => (
+                        <View key={segment.segment_id} style={styles.step}>
+                          <View style={styles.stepNumber}>
+                            <Text variant="caption" tone="primary">{segment.order}</Text>
+                          </View>
+                          <View style={styles.stepBody}>
+                            <Text variant="label">
+                              {labelOr(t, purposeLabels[segment.purpose], segment.purpose)}
+                              {segment.optional ? ' · ' + t('calibration.optional') : ''}
+                            </Text>
+                            <Text variant="supporting">
+                              {segment.duration_seconds
+                                ? `${segment.duration_seconds / 60} min`
+                                : `${segment.distance_meters} m`}
+                              {' · '}{segment.rpe_display_label} · {segment.rpe_training_type}
+                            </Text>
+                            <Text variant="supporting" tone="textMuted">{segment.rpe_description}</Text>
+                          </View>
                         </View>
-                        <View style={styles.segmentBody}>
-                          <Text style={styles.segmentTitle}>
-                            {labelOr(t, purposeLabels[segment.purpose], segment.purpose)}
-                            {segment.optional ? ' · ' + t('calibration.optional') : ''}
-                          </Text>
-                          <Text style={styles.muted}>
-                            {segment.duration_seconds
-                              ? `${segment.duration_seconds / 60} min`
-                              : `${segment.distance_meters} m`}
-                          </Text>
-                          <Text style={styles.muted}>
-                            {segment.rpe_display_label} · {segment.rpe_training_type}
-                          </Text>
-                          <Text style={styles.muted}>{segment.rpe_description}</Text>
-                        </View>
-                      </View>
-                    ))}
-                  </View>
-                  <ZoneInfoRow icon="document"><Text variant="supporting" tone="textMuted">{t('calibration.protocolProvenance', { id: selectedProtocol.protocol_id, version: selectedProtocol.version, status: selectedProtocol.review_status })}</Text></ZoneInfoRow>
-                  <Text style={styles.eyebrow}>{t('calibration.observation.eyebrow')}</Text>
-                  <Text style={styles.pageTitle}>{t('calibration.observation.title')}</Text>
-                  <Text style={styles.muted}>{t('calibration.observation.hint')}</Text>
-                  <DayTimePicker
-                    label={t('calibration.field.startTime')}
-                    onChange={setPerformedAt}
-                    timeZone={timezone}
-                    valueIso={performedAt}
-                  />
-                  <DurationPicker
-                    label={t('calibration.field.totalDuration')}
-                    maxHours={24}
-                    onChange={(seconds) => setDurationMinutes(seconds === null ? '' : String(seconds / 60))}
-                    units={['hours', 'minutes']}
-                    required
-                    valueSeconds={durationMinutes === '' ? null : Math.round(Number(durationMinutes) * 60)}
-                  />
-                  <RpeSelect
-                    disabled={busy}
-                    discipline={selectedProtocol.discipline}
-                    label={t('calibration.sessionFeel')}
-                    onSelect={(value) => setSessionRpe(String(value))}
-                    selectedValue={Number(sessionRpe) || null}
-                  />
+                      ))}
+                    </View>
+                    {isVerificationBuild() ? (
+                      <Text variant="caption" tone="textMuted">{t('calibration.protocolProvenance', { id: selectedProtocol.protocol_id, version: selectedProtocol.version, status: selectedProtocol.review_status })}</Text>
+                    ) : null}
+                  </Panel>
 
-                  {needsSwimConditions(selectedProtocol) ? (
-                    <Toggle
-                      checked={swimConditionsConfirmed}
-                      label={t('calibration.swimConditions', { pool: String(selectedSetup.pool_length_meters) })}
-                      onPress={() =>
-                        setSwimConditionsConfirmed((current) => !current)
-                      }
+                  <Panel>
+                    <Heading
+                      description={t('calibration.observation.hint')}
+                      kicker={t('calibration.observation.eyebrow')}
+                      title={t('calibration.observation.title')}
                     />
-                  ) : null}
+                    <DayTimePicker
+                      label={t('calibration.field.startTime')}
+                      onChange={setPerformedAt}
+                      timeZone={timezone}
+                      valueIso={performedAt}
+                    />
+                    <DurationPicker
+                      label={t('calibration.field.totalDuration')}
+                      maxHours={24}
+                      onChange={(seconds) => setDurationMinutes(seconds === null ? '' : String(seconds / 60))}
+                      units={['hours', 'minutes']}
+                      required
+                      valueSeconds={durationMinutes === '' ? null : Math.round(Number(durationMinutes) * 60)}
+                    />
+                    <RpeSelect
+                      disabled={busy}
+                      discipline={selectedProtocol.discipline}
+                      label={t('calibration.sessionFeel')}
+                      onSelect={(value) => setSessionRpe(String(value))}
+                      selectedValue={Number(sessionRpe) || null}
+                    />
 
-                  {selectedProtocol.segments.map((segment) => {
-                    const draft = drafts[segment.segment_id];
-                    if (!draft) return null;
-                    const main = isMainSegment(segment);
-                    const runTest =
-                      selectedProtocol.protocol_id ===
-                        'start23_run_threshold_30min_v1' &&
-                      segment.segment_id === 'test_30min';
-                    const bikeFtp =
-                      selectedProtocol.protocol_id ===
-                        'start23_bike_ftp_30min_v1' &&
-                      segment.segment_id === 'test_30min';
-                    const bikeHr =
-                      selectedProtocol.protocol_id ===
-                        'start23_bike_fthr_20min_v1' &&
-                      segment.segment_id === 'test_20min';
-                    const swimTest =
-                      selectedProtocol.protocol_id ===
-                        'start23_swim_css_400_200_v1' &&
-                      ['tt_400m', 'tt_200m'].includes(segment.segment_id);
-                    const calibrationMain =
-                      selectedProtocol.protocol_type ===
-                        'submaximal_calibration' && main;
-                    return (
-                      <View key={segment.segment_id} style={styles.segmentCard}>
-                        <Text style={styles.segmentTitle}>
-                          {segment.order}.{' '}
-                          {labelOr(t, purposeLabels[segment.purpose], segment.purpose)}
-                        </Text>
-                        {segment.optional ? (
-                          <Toggle
-                            checked={draft.included}
-                            label={t('calibration.optionalPerformed')}
-                            onPress={() =>
-                              updateDraft(segment.segment_id, {
-                                included: !draft.included,
-                              })
-                            }
-                          />
-                        ) : null}
-                        {draft.included ? (
-                          <>
-                            <View style={styles.chipRow}>
-                              <ToggleChip
-                                checked={draft.completed}
-                                label={t('calibration.completed')}
-                                onPress={() =>
-                                  updateDraft(segment.segment_id, {
-                                    completed: !draft.completed,
-                                  })
-                                }
-                              />
-                              <ToggleChip
-                                checked={draft.interrupted}
-                                label={t('calibration.interrupted')}
-                                onPress={() =>
-                                  updateDraft(segment.segment_id, {
-                                    interrupted: !draft.interrupted,
-                                  })
-                                }
-                              />
+                    {needsSwimConditions(selectedProtocol) ? (
+                      <Toggle
+                        checked={swimConditionsConfirmed}
+                        label={t('calibration.swimConditions', { pool: String(selectedSetup.pool_length_meters) })}
+                        onPress={() =>
+                          setSwimConditionsConfirmed((current) => !current)
+                        }
+                      />
+                    ) : null}
+
+                    {selectedProtocol.segments.map((segment) => {
+                      const draft = drafts[segment.segment_id];
+                      if (!draft) return null;
+                      const main = isMainSegment(segment);
+                      const runTest =
+                        selectedProtocol.protocol_id ===
+                          'start23_run_threshold_30min_v1' &&
+                        segment.segment_id === 'test_30min';
+                      const bikeFtp =
+                        selectedProtocol.protocol_id ===
+                          'start23_bike_ftp_30min_v1' &&
+                        segment.segment_id === 'test_30min';
+                      const bikeHr =
+                        selectedProtocol.protocol_id ===
+                          'start23_bike_fthr_20min_v1' &&
+                        segment.segment_id === 'test_20min';
+                      const swimTest =
+                        selectedProtocol.protocol_id ===
+                          'start23_swim_css_400_200_v1' &&
+                        ['tt_400m', 'tt_200m'].includes(segment.segment_id);
+                      const calibrationMain =
+                        selectedProtocol.protocol_type ===
+                          'submaximal_calibration' && main;
+                      return (
+                        <View key={segment.segment_id} style={styles.segmentBlock}>
+                          <View style={styles.segmentHeading}>
+                            <View style={styles.stepNumber}>
+                              <Text variant="caption" tone="primary">{segment.order}</Text>
                             </View>
-                            {main ? (
-                              <RpeSelect
-                                disabled={busy}
-                                discipline={selectedProtocol.discipline}
-                                label={t('calibration.blockFeel')}
-                                onSelect={(value) =>
-                                  updateDraft(segment.segment_id, {
-                                    blockRpe: String(value),
-                                  })
-                                }
-                                selectedValue={Number(draft.blockRpe) || null}
-                              />
-                            ) : null}
-                            {runTest ? (
-                              <>
-                                <DurationPicker
-                                  label={t('calibration.field.runAveragePace')}
-                                  maxMinutes={20}
-                                  onChange={(seconds) =>
-                                    updateDraft(segment.segment_id, {
-                                      averagePace: seconds === null ? '' : `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`,
-                                    })
-                                  }
-                                  suffix="/km"
-                                  units={['minutes', 'seconds']}
-                                  valueSeconds={parseRunPace(draft.averagePace)}
-                                />
-                                <FormField
-                                  inputMode="decimal"
-                                  label={t('calibration.field.last20HeartRateOptional')}
-                                  onChangeText={(value) =>
-                                    updateDraft(segment.segment_id, {
-                                      last20HeartRate: value,
-                                    })
-                                  }
-                                  placeholder="bpm"
-                                  value={draft.last20HeartRate}
-                                />
-                                <Toggle
-                                  checked={draft.stableSegment}
-                                  label={t('calibration.paceStable')}
+                            <Text variant="label" accessibilityRole="header" style={styles.grow}>
+                              {labelOr(t, purposeLabels[segment.purpose], segment.purpose)}
+                            </Text>
+                          </View>
+                          {segment.optional ? (
+                            <Toggle
+                              checked={draft.included}
+                              label={t('calibration.optionalPerformed')}
+                              onPress={() =>
+                                updateDraft(segment.segment_id, {
+                                  included: !draft.included,
+                                })
+                              }
+                            />
+                          ) : null}
+                          {draft.included ? (
+                            <>
+                              <View style={styles.chipRow}>
+                                <ToggleChip
+                                  checked={draft.completed}
+                                  label={t('calibration.completed')}
                                   onPress={() =>
                                     updateDraft(segment.segment_id, {
-                                      stableSegment: !draft.stableSegment,
+                                      completed: !draft.completed,
                                     })
                                   }
                                 />
-                              </>
-                            ) : null}
-                            {bikeFtp ? (
-                              <>
-                                <FormField
-                                  inputMode="decimal"
-                                  label={t('calibration.field.last20PowerShort')}
-                                  onChangeText={(value) =>
-                                    updateDraft(segment.segment_id, {
-                                      last20Power: value,
-                                    })
-                                  }
-                                  placeholder={t('calibration.placeholder.watt')}
-                                  value={draft.last20Power}
-                                />
-                                <Toggle
-                                  checked={draft.calibratedPowerSource}
-                                  label={t('calibration.powerCalibrated')}
+                                <ToggleChip
+                                  checked={draft.interrupted}
+                                  label={t('calibration.interrupted')}
                                   onPress={() =>
                                     updateDraft(segment.segment_id, {
-                                      calibratedPowerSource:
-                                        !draft.calibratedPowerSource,
+                                      interrupted: !draft.interrupted,
                                     })
                                   }
                                 />
-                                <Toggle
-                                  checked={draft.stableSegment}
-                                  label={t('calibration.powerStable')}
-                                  onPress={() =>
+                              </View>
+                              {main ? (
+                                <RpeSelect
+                                  disabled={busy}
+                                  discipline={selectedProtocol.discipline}
+                                  label={t('calibration.blockFeel')}
+                                  onSelect={(value) =>
                                     updateDraft(segment.segment_id, {
-                                      stableSegment: !draft.stableSegment,
+                                      blockRpe: String(value),
                                     })
                                   }
+                                  selectedValue={Number(draft.blockRpe) || null}
                                 />
-                              </>
-                            ) : null}
-                            {bikeHr ? (
-                              <FormField
-                                inputMode="decimal"
-                                label={t('calibration.field.bikeTestHeartRate')}
-                                onChangeText={(value) =>
-                                  updateDraft(segment.segment_id, {
-                                    averageHeartRate: value,
-                                  })
-                                }
-                                placeholder="bpm"
-                                value={draft.averageHeartRate}
-                              />
-                            ) : null}
-                            {swimTest ? (
-                              <DurationPicker
-                                label={t('calibration.field.swimDistanceTime', { distance: String(segment.distance_meters) })}
-                                maxMinutes={30}
-                                onChange={(seconds) =>
-                                  updateDraft(segment.segment_id, {
-                                    elapsedTime: seconds === null ? '' : String(seconds),
-                                  })
-                                }
-                                units={['minutes', 'seconds']}
-                                valueSeconds={secondsOrNull(draft.elapsedTime)}
-                              />
-                            ) : null}
-                            {(runTest || bikeFtp || bikeHr) ? (
-                              <FormField
-                                inputMode="decimal"
-                                label={t('calibration.field.coverage')}
-                                onChangeText={(value) =>
-                                  updateDraft(segment.segment_id, {
-                                    completenessPercent: value,
-                                  })
-                                }
-                                placeholder="95–100"
-                                suffix={<Text style={styles.unit}>%</Text>}
-                                value={draft.completenessPercent}
-                              />
-                            ) : null}
-                            {calibrationMain ? (
-                              <>
-                                {selectedProtocol.discipline === 'swim' ? (
-                                  <>
-                                    <DurationPicker
-                                      label={t('calibration.field.blockTotalTime')}
-                                      maxMinutes={90}
-                                      onChange={(seconds) =>
-                                        updateDraft(segment.segment_id, {
-                                          elapsedTime: seconds === null ? '' : String(seconds),
-                                        })
-                                      }
-                                      units={['minutes', 'seconds']}
-                                      valueSeconds={secondsOrNull(draft.elapsedTime)}
-                                    />
-                                    <FourTimes
-                                      itemLabel={(n) => t('calibration.field.repetitionN', { n: String(n) })}
-                                      label={t('calibration.field.fourRepetitionTimes')}
-                                      maxMinutes={10}
-                                      onChange={(value) =>
-                                        updateDraft(segment.segment_id, {
-                                          repetitionTimes: value,
-                                        })
-                                      }
-                                      value={draft.repetitionTimes}
-                                    />
-                                    <FourTimes
-                                      itemLabel={(n) => t('calibration.field.restN', { n: String(n) })}
-                                      label={t('calibration.field.fourRestTimes')}
-                                      maxMinutes={5}
-                                      onChange={(value) =>
-                                        updateDraft(segment.segment_id, {
-                                          repetitionRests: value,
-                                        })
-                                      }
-                                      value={draft.repetitionRests}
-                                    />
-                                  </>
-                                ) : (
+                              ) : null}
+                              {runTest ? (
+                                <>
+                                  <DurationPicker
+                                    label={t('calibration.field.runAveragePace')}
+                                    maxMinutes={20}
+                                    onChange={(seconds) =>
+                                      updateDraft(segment.segment_id, {
+                                        averagePace: seconds === null ? '' : `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`,
+                                      })
+                                    }
+                                    suffix="/km"
+                                    units={['minutes', 'seconds']}
+                                    valueSeconds={parseRunPace(draft.averagePace)}
+                                  />
                                   <FormField
-                                    hint={t('calibration.averageHeartRateHint')}
                                     inputMode="decimal"
-                                    label={t('calibration.field.averageHeartRate')}
+                                    label={t('calibration.field.last20HeartRateOptional')}
                                     onChangeText={(value) =>
                                       updateDraft(segment.segment_id, {
-                                        averageHeartRate: value,
+                                        last20HeartRate: value,
                                       })
                                     }
                                     placeholder="bpm"
-                                    value={draft.averageHeartRate}
+                                    value={draft.last20HeartRate}
                                   />
-                                )}
-                              </>
-                            ) : null}
-                          </>
-                        ) : null}
-                      </View>
-                    );
-                  })}
+                                  <Toggle
+                                    checked={draft.stableSegment}
+                                    label={t('calibration.paceStable')}
+                                    onPress={() =>
+                                      updateDraft(segment.segment_id, {
+                                        stableSegment: !draft.stableSegment,
+                                      })
+                                    }
+                                  />
+                                </>
+                              ) : null}
+                              {bikeFtp ? (
+                                <>
+                                  <FormField
+                                    inputMode="decimal"
+                                    label={t('calibration.field.last20PowerShort')}
+                                    onChangeText={(value) =>
+                                      updateDraft(segment.segment_id, {
+                                        last20Power: value,
+                                      })
+                                    }
+                                    placeholder={t('calibration.placeholder.watt')}
+                                    value={draft.last20Power}
+                                  />
+                                  <Toggle
+                                    checked={draft.calibratedPowerSource}
+                                    label={t('calibration.powerCalibrated')}
+                                    onPress={() =>
+                                      updateDraft(segment.segment_id, {
+                                        calibratedPowerSource:
+                                          !draft.calibratedPowerSource,
+                                      })
+                                    }
+                                  />
+                                  <Toggle
+                                    checked={draft.stableSegment}
+                                    label={t('calibration.powerStable')}
+                                    onPress={() =>
+                                      updateDraft(segment.segment_id, {
+                                        stableSegment: !draft.stableSegment,
+                                      })
+                                    }
+                                  />
+                                </>
+                              ) : null}
+                              {bikeHr ? (
+                                <FormField
+                                  inputMode="decimal"
+                                  label={t('calibration.field.bikeTestHeartRate')}
+                                  onChangeText={(value) =>
+                                    updateDraft(segment.segment_id, {
+                                      averageHeartRate: value,
+                                    })
+                                  }
+                                  placeholder="bpm"
+                                  value={draft.averageHeartRate}
+                                />
+                              ) : null}
+                              {swimTest ? (
+                                <DurationPicker
+                                  label={t('calibration.field.swimDistanceTime', { distance: String(segment.distance_meters) })}
+                                  maxMinutes={30}
+                                  onChange={(seconds) =>
+                                    updateDraft(segment.segment_id, {
+                                      elapsedTime: seconds === null ? '' : String(seconds),
+                                    })
+                                  }
+                                  units={['minutes', 'seconds']}
+                                  valueSeconds={secondsOrNull(draft.elapsedTime)}
+                                />
+                              ) : null}
+                              {(runTest || bikeFtp || bikeHr) ? (
+                                <FormField
+                                  inputMode="decimal"
+                                  label={t('calibration.field.coverage')}
+                                  onChangeText={(value) =>
+                                    updateDraft(segment.segment_id, {
+                                      completenessPercent: value,
+                                    })
+                                  }
+                                  placeholder="95–100"
+                                  unit="%"
+                                  value={draft.completenessPercent}
+                                />
+                              ) : null}
+                              {calibrationMain ? (
+                                <>
+                                  {selectedProtocol.discipline === 'swim' ? (
+                                    <>
+                                      <DurationPicker
+                                        label={t('calibration.field.blockTotalTime')}
+                                        maxMinutes={90}
+                                        onChange={(seconds) =>
+                                          updateDraft(segment.segment_id, {
+                                            elapsedTime: seconds === null ? '' : String(seconds),
+                                          })
+                                        }
+                                        units={['minutes', 'seconds']}
+                                        valueSeconds={secondsOrNull(draft.elapsedTime)}
+                                      />
+                                      <FourTimes
+                                        itemLabel={(n) => t('calibration.field.repetitionN', { n: String(n) })}
+                                        label={t('calibration.field.fourRepetitionTimes')}
+                                        maxMinutes={10}
+                                        onChange={(value) =>
+                                          updateDraft(segment.segment_id, {
+                                            repetitionTimes: value,
+                                          })
+                                        }
+                                        value={draft.repetitionTimes}
+                                      />
+                                      <FourTimes
+                                        itemLabel={(n) => t('calibration.field.restN', { n: String(n) })}
+                                        label={t('calibration.field.fourRestTimes')}
+                                        maxMinutes={5}
+                                        onChange={(value) =>
+                                          updateDraft(segment.segment_id, {
+                                            repetitionRests: value,
+                                          })
+                                        }
+                                        value={draft.repetitionRests}
+                                      />
+                                    </>
+                                  ) : (
+                                    <FormField
+                                      hint={t('calibration.averageHeartRateHint')}
+                                      inputMode="decimal"
+                                      label={t('calibration.field.averageHeartRate')}
+                                      onChangeText={(value) =>
+                                        updateDraft(segment.segment_id, {
+                                          averageHeartRate: value,
+                                        })
+                                      }
+                                      placeholder="bpm"
+                                      value={draft.averageHeartRate}
+                                    />
+                                  )}
+                                </>
+                              ) : null}
+                            </>
+                          ) : null}
+                        </View>
+                      );
+                    })}
 
-                  {activityId ? (
-                    <Text style={styles.safety}>{t('calibration.retryNotice')}</Text>
-                  ) : null}
-                  <ActionButton
-                    label={t('calibration.submit')}
-                    loading={busy}
-                    onPress={() => void submit()}
-                  />
+                    {activityId ? <Notice>{t('calibration.retryNotice')}</Notice> : null}
+                    <ActionButton
+                      label={t('calibration.submit')}
+                      loading={busy}
+                      onPress={() => void submit()}
+                    />
+                  </Panel>
+
                   {priorResults.length > 0 ? (
-                    <View style={styles.segmentList}>
-                      <Text style={styles.historyText}>
+                    <Panel style={styles.history}>
+                      <Text variant="supporting" tone="textMuted">
                         {t(priorResults.length === 1 ? 'calibration.priorOne' : 'calibration.priorMany', { count: priorResults.length })}
                       </Text>
                       {priorResults.slice(0, 3).map((evaluation) => (
@@ -1172,48 +1192,51 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                           secondary
                         />
                       ))}
-                    </View>
+                    </Panel>
                   ) : null}
-                </View>
+                </>
               ) : null}
 
               {stage === 'result' && result ? (
-                <View style={styles.card}>
-                  <Text style={styles.eyebrow}>{t('calibration.result.eyebrow')}</Text>
-                  <Text style={styles.pageTitle}>{t(resultLabels[result.status])}</Text>
+                <Panel divided={false}>
+                  <Heading kicker={t('calibration.result.eyebrow')} title={t(resultLabels[result.status])} />
                   <View style={styles.badges}>
-                    <ZoneStatusChip label={t('calibration.confidence', { value: result.confidence })} />
-                    <ZoneStatusChip label={t('calibration.zoneStatus', { value: result.zone_status })} pending />
+                    <Tag label={t('calibration.confidence', { value: result.confidence })} />
+                    <Tag label={t('calibration.zoneStatus', { value: result.zone_status })} tone="warning" />
                   </View>
                   {result.thresholds.map((threshold) => (
                     <View key={threshold.metric_kind} style={styles.resultMetric}>
-                      <Text style={styles.resultMetricLabel}>
+                      <Text variant="supporting" tone="textMuted">
                         {t(metricLabels[threshold.metric_kind])}
                       </Text>
-                      <Text style={styles.resultMetricValue}>
+                      <Text variant="numeric" tone="primary">
                         {zoneValue(threshold.metric_kind, threshold.value)}
                       </Text>
                     </View>
                   ))}
                   {result.zone_profiles.map((profile) => (
                     <View key={profile.metric_kind} style={styles.resultMetric}>
-                      <Text style={styles.resultMetricLabel}>
+                      <Text variant="supporting" tone="textMuted">
                         {t(metricLabels[profile.metric_kind])}
                         {' · ' + t(profile.is_primary ? 'calibration.primary' : 'calibration.secondary')}
                       </Text>
                       <ZoneTable boundaries={profile.boundaries} metricKind={profile.metric_kind} />
-                      <Text variant="supporting" tone="textMuted">{profile.boundary_source} · {profile.zone_model_version}</Text>
+                      <Text variant="caption" tone="textMuted">{profile.boundary_source} · {profile.zone_model_version}</Text>
                     </View>
                   ))}
-                  <ZoneInfoRow icon="document"><Text variant="supporting" tone="textMuted">{t('calibration.rulesProvenance', { version: result.ruleset_version })}{result.zone_model_version ? ' · ' + t('calibration.modelProvenance', { version: result.zone_model_version }) : ''}</Text></ZoneInfoRow>
-                  {result.reason_codes.map((reason) => (
-                    <Text key={reason} style={styles.reason}>
-                      • {labelOr(t, reasonLabels[reason], reason.replaceAll('_', ' '))}
-                    </Text>
-                  ))}
+                  <Text variant="caption" tone="textMuted">{t('calibration.rulesProvenance', { version: result.ruleset_version })}{result.zone_model_version ? ' · ' + t('calibration.modelProvenance', { version: result.zone_model_version }) : ''}</Text>
+                  {result.reason_codes.length > 0 ? (
+                    <View style={styles.reasons}>
+                      {result.reason_codes.map((reason) => (
+                        <Text key={reason} variant="supporting" tone="textMuted">
+                          • {labelOr(t, reasonLabels[reason], reason.replaceAll('_', ' '))}
+                        </Text>
+                      ))}
+                    </View>
+                  ) : null}
                   {result.requires_athlete_confirmation && !thresholdDecision ? (
                     <>
-                      <Text style={styles.safety}>{t('calibration.confirmHint')}</Text>
+                      <Notice>{t('calibration.confirmHint')}</Notice>
                       <ActionButton
                         label={t('calibration.confirmThreshold')}
                         loading={busy}
@@ -1231,7 +1254,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                   thresholdDecision.zone_proposal_state === 'pending' &&
                   !zonesActivated ? (
                     <>
-                      <Text style={styles.safety}>{t('calibration.thresholdAccepted')}</Text>
+                      <Notice>{t('calibration.thresholdAccepted')}</Notice>
                       <ActionButton
                         label={t('calibration.confirmZones')}
                         loading={busy}
@@ -1240,21 +1263,22 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                     </>
                   ) : null}
                   {thresholdDecision?.state === 'rejected' ? (
-                    <Text style={styles.safety}>{t('calibration.thresholdRejected')}</Text>
+                    <Notice>{t('calibration.thresholdRejected')}</Notice>
                   ) : null}
                   {thresholdDecision?.state === 'accepted' &&
                   thresholdDecision.zone_proposal_state === 'rejected' ? (
-                    <Text style={styles.safety}>{t('calibration.zoneProposalRejected')}</Text>
+                    <Notice>{t('calibration.zoneProposalRejected')}</Notice>
                   ) : null}
                   {zonesActivated ? (
-                    <Text style={styles.safety}>{t('calibration.zonesActive')}</Text>
+                    <Notice tone="success">{t('calibration.zonesActive')}</Notice>
                   ) : null}
                   <ActionButton
                     label={t('calibration.newAttempt')}
                     onPress={() => setStage('feedback')}
+                    secondary={decisionOpen}
                   />
-                  <ActionButton label={t('calibration.back')} onPress={onBack} secondary />
-                </View>
+                  <Button label={t('calibration.back')} onPress={onBack} variant={studioPresentation ? 'tertiary' : 'outline'} />
+                </Panel>
               ) : null}
             </>
           )}
@@ -1267,28 +1291,21 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.background, flex: 1 }, keyboard: { flex: 1 }, scroll: { flex: 1 },
   centered: { alignItems: 'center', backgroundColor: colors.background, flex: 1, gap: space[16], justifyContent: 'center' },
-  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },
-  selectorRow: { gap: space[12] },
-  card: { ...shadows.card, backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.card, borderWidth: 1, gap: space[24], padding: space[16] },
-  cardTitle: { color: colors.text, fontSize: 22, fontWeight: '600', lineHeight: 28 },
-  eyebrow: { color: colors.primary, fontSize: 12, fontWeight: '600', letterSpacing: 1.2, textTransform: 'uppercase' },
-  pageTitle: { color: colors.text, fontSize: 24, fontWeight: '600', letterSpacing: -0.5, lineHeight: 30 },
-  muted: { color: colors.textMuted, fontSize: 16, lineHeight: 24 }, badges: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8] },
-  segmentList: { gap: space[16] }, segmentSummary: { alignItems: 'flex-start', backgroundColor: colors.primarySoft, borderRadius: radius.control, flexDirection: 'row', gap: space[12], padding: space[12] },
-  segmentNumber: { alignItems: 'center', backgroundColor: colors.primary, borderRadius: radius.pill, height: 40, justifyContent: 'center', width: 40 },
-  segmentNumberText: { color: colors.textInverse, fontWeight: '600' }, segmentBody: { flex: 1, minWidth: 0, gap: space[4] },
-  segmentTitle: { color: colors.text, fontSize: 18, lineHeight: 26, fontWeight: '600' },
-  safety: { backgroundColor: colors.primarySoft, borderRadius: radius.control, color: colors.text, fontSize: 16, lineHeight: 24, padding: space[16] },
-  painWarning: { backgroundColor: colors.destructiveSoft, borderColor: colors.destructive, borderRadius: radius.control, borderWidth: 1, padding: space[16] },
-  painWarningText: { color: colors.destructive, fontSize: 20, lineHeight: 28, fontWeight: '600' },
-  historyText: { color: colors.textMuted, fontSize: 14, lineHeight: 20 },
-  segmentCard: { borderColor: colors.border, borderRadius: radius.control, borderWidth: 1, gap: space[16], padding: space[16] },
+  content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: screenGap, padding: layout.phoneGutter, paddingBottom: space[48] },
+  grow: { flex: 1, minWidth: 0 },
+  badges: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8] },
+  painWarning: { flexDirection: 'row', alignItems: 'center', gap: space[12], backgroundColor: colors.destructiveSoft, borderRadius: radius.inset, padding: space[12] },
+  steps: { gap: space[12] },
+  step: { alignItems: 'flex-start', flexDirection: 'row', gap: space[12] },
+  stepNumber: { alignItems: 'center', backgroundColor: colors.primarySoft, borderRadius: radius.pill, justifyContent: 'center', minHeight: 24, minWidth: 24 },
+  stepBody: { flex: 1, minWidth: 0, gap: 2 },
+  segmentBlock: { borderTopColor: colors.border, borderTopWidth: StyleSheet.hairlineWidth, gap: space[12], paddingTop: space[16] },
+  segmentHeading: { alignItems: 'center', flexDirection: 'row', gap: space[8] },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8] },
   fourTimes: { gap: space[8] },
   timeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: space[8] },
   timeCell: { flexGrow: 1, flexBasis: '45%', minWidth: 120 },
-  unit: { color: colors.textMuted, fontSize: 14, lineHeight: 20 },
-  resultMetric: { backgroundColor: colors.primarySoft, borderRadius: radius.control, gap: space[8], padding: space[16] },
-  resultMetricLabel: { color: colors.textMuted, fontSize: 14, lineHeight: 20 }, resultMetricValue: { color: colors.primary, fontSize: 24, lineHeight: 30, fontWeight: '600' },
-  reason: { color: colors.textMuted, fontSize: 16, lineHeight: 24 },
+  history: { gap: space[12] },
+  resultMetric: { borderTopColor: colors.border, borderTopWidth: StyleSheet.hairlineWidth, gap: space[8], paddingTop: space[12] },
+  reasons: { gap: space[4] },
 });

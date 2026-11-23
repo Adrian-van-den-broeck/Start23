@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import type { CanonicalRpe } from '../../lib/rpe';
+import { Surface } from '../../ui-v3/screens/support';
 import { ActivitySummary } from '../components/ActivitySummary';
 import { RpeChoices } from '../components/RpeChoices';
 import { Input } from '../primitives/Input';
@@ -20,13 +21,13 @@ export function ActivityFeedbackScreen({ activity, heartRate, busy, error, contr
       scrollProps={{ testID: 'activity-feedback-scroll' }}>
       <ActivityStatus busy={busy} error={error} />
       <Card elevated><ActivitySummary activity={activity} /></Card>
-      <Card elevated padding="form">
+      <Surface padding="form">
         <Input icon="heartRate" label={t('activity.heartRate')} hint={t('activity.heartRateHint')} inputMode="numeric"
           value={heartRate} onChangeText={onHeartRate} disabled={busy} />
-      </Card>
-      <Card elevated padding="form">
+      </Surface>
+      <Surface padding="form">
         <RpeChoices discipline={activity.discipline} selectedValue={activity.rpe} busy={busy} onSelect={onSelect} />
-      </Card>
+      </Surface>
       <View style={{ gap: space[24] }}>{controls}</View>
     </Screen>;
 }

@@ -26,7 +26,7 @@ export type ActivityRow = Readonly<{
 export function ActivityStatus({ busy, error }: { busy: boolean; error: string | null }) {
   const { t } = useLanguage();
   return <>
-    {busy ? <Text accessibilityLiveRegion="polite" accessibilityState={{ busy: true }}>{t('common.loading')}</Text> : null}
+    {busy ? <Text tone={studioPresentation ? 'textMuted' : 'text'} accessibilityLiveRegion="polite" accessibilityState={{ busy: true }}>{t('common.loading')}</Text> : null}
     {error ? <View accessible accessibilityRole="alert" accessibilityLabel={error} accessibilityLiveRegion="polite">
       <Notice tone="error">{error}</Notice>
     </View> : null}
@@ -44,7 +44,7 @@ export function ActivitiesScreen({ rows, pending, busy, error, controls, onBack,
   return <ShellSafeArea style={styles.frame} testID="v2-activities">
     <FlashList data={rows} keyExtractor={row => row.activity.id} keyboardShouldPersistTaps="handled"
       contentContainerStyle={styles.content} extraData={busy}
-      ItemSeparatorComponent={() => <View style={{ height: space[16] }} />}
+      ItemSeparatorComponent={() => <View style={styles.separator} />}
       ListHeaderComponent={<View style={styles.stack}>
         {studioPresentation ? <Masthead title={t('shell.activities')}
           trailing={<ProfileAction label={t('planning.profile')} onPress={onProfile} disabled={busy} />} /> : <View>
@@ -56,25 +56,28 @@ export function ActivitiesScreen({ rows, pending, busy, error, controls, onBack,
         </View>}
         <ActivityStatus busy={busy} error={error} />
         {pending ? <Card elevated style={styles.card} testID="activity-pending">
-          <Text variant="sectionTitle" accessibilityRole="header">{t('rpe.awaiting')}</Text>
+          <Text variant={studioPresentation ? 'cardTitle' : 'sectionTitle'} accessibilityRole="header">{t('rpe.awaiting')}</Text>
           <ActivitySummary activity={pending} />
           <Button label={t('activities.continueFeedback')} trailingIcon="forward" busy={busy} onPress={onFeedback} />
         </Card> : null}
         <AddActivityBanner label={t('activities.add')} disabled={busy || !!pending}
           disabledReason={pending ? t('activities.blocked') : undefined} onPress={onAdd} />
         <Text variant="sectionTitle" accessibilityRole="header">{t('activity.recent')}</Text>
-        {!busy && !error && rows.length === 0 ? <Card elevated><Text tone="textMuted">{t('activity.noRecent')}</Text></Card> : null}
+        {!busy && !error && rows.length === 0 ? studioPresentation
+          ? <Text variant="supporting" tone="textMuted">{t('activity.noRecent')}</Text>
+          : <Card elevated><Text tone="textMuted">{t('activity.noRecent')}</Text></Card> : null}
       </View>}
       renderItem={({ item: row }) => <Card elevated style={styles.card} testID={`activity-row-${row.activity.id}`}>
         <ActivitySummary activity={row.activity} />
         {row.match ? <><Divider />
           <Text variant="label">{t('activities.matchHeading')}</Text>
-          <Text>{t('activities.matchHint', { name: row.match.name })}</Text>
+          <Text variant={studioPresentation ? 'supporting' : 'body'}>{t('activities.matchHint', { name: row.match.name })}</Text>
           <Button label={t('activities.confirmMatch')} busy={busy} variant="secondary"
             accessibilityLabel={`${t('activities.confirmMatch')} · ${row.match.name} · ${row.activity.date}`}
             onPress={() => row.match ? onMatch(row.activity.id, row.match.id) : Promise.resolve()} />
         </> : null}
         {row.canCorrect ? <Button label={t('activity.correction')} trailingIcon="forward" disabled={busy}
+          variant={studioPresentation ? 'secondary' : 'primary'}
           accessibilityLabel={`${t('activity.correction')} · ${t(`common.${row.activity.discipline}`)} · ${row.activity.date}`}
           onPress={() => onCorrect(row.activity.id)} /> : null}
       </Card>}
@@ -106,7 +109,8 @@ function AddActivityBanner({ label, disabled, disabledReason, onPress }: {
 const styles = StyleSheet.create({
   frame: { flex: 1, backgroundColor: colors.background },
   content: { padding: layout.phoneGutter, paddingBottom: space[32], maxWidth: layout.readingWidth, alignSelf: 'center', width: '100%' },
-  stack: { gap: space[24], paddingBottom: space[16] }, card: { gap: space[16] },
+  stack: { gap: studioPresentation ? space[16] : space[24], paddingBottom: studioPresentation ? space[12] : space[16] },
+  card: { gap: studioPresentation ? space[12] : space[16] }, separator: { height: studioPresentation ? space[12] : space[16] },
   heading: { flexDirection: 'row', alignItems: 'center', gap: space[8], zIndex: 1, backgroundColor: colors.background }, stacked: { flexDirection: 'column', alignItems: 'stretch' },
   title: { flex: 1 }, landscape: { marginHorizontal: -layout.phoneGutter, marginTop: -space[24], marginBottom: -space[24] },
   footer: { gap: space[24], paddingTop: space[24] },

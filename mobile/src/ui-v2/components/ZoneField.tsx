@@ -5,7 +5,7 @@ import { space } from '../tokens';
 
 // Retain existing field names, units, validation and callbacks in the real forms.
 export function ZoneField({ label, required = false, suffix, ...props }: TextInputProps & {
-  label: string; hint?: string; error?: string; required?: boolean; suffix?: ReactNode;
+  label: string; hint?: string; error?: string; required?: boolean; suffix?: ReactNode; unit?: string;
 }) {
   return <View style={{ gap: space[4] }}>
     <Input {...props} label={required ? label + ' *' : label} accessibilityLabel={label}

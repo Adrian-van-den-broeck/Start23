@@ -1,11 +1,12 @@
 import { PlacementRail } from '../../ui-v3/PlacementRail';
+import { studioPresentation } from '../../ui-v3/presentation';
+import { CardDivider, Surface } from '../../ui-v3/screens/support';
 import { useState, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { addDays, isoDate } from '../../features/planning/planningDates';
 import { parseCalendarDate } from '../../features/calendar/calendarDates';
 import { Button } from '../primitives/Button';
-import { Card } from '../primitives/Card';
 import { Divider } from '../primitives/Divider';
 import { Screen } from '../primitives/Screen';
 import { Text } from '../primitives/Text';
@@ -42,7 +43,7 @@ export function WorkoutMoveScreen({ summary, currentDate, weekStart, targetDate,
     {warnings ? <>
       {warnings.map((warning, index) => <Notice key={index} tone="warning" title={warning.title}>{warning.message}</Notice>)}
     </> : <>
-      <Card elevated padding="form" style={styles.dates}>
+      <Surface padding="form" style={styles.dates}>
         <Text variant="sectionTitle" accessibilityRole="header">{t('move.newDate')}</Text>
         <PlacementRail showDate={false} dates={choices} selected={selectedDate} disabled={busy || !available} onSelect={setSelectedDate} label={t('move.newDate')}>
           {choices.map(date =>
@@ -50,17 +51,17 @@ export function WorkoutMoveScreen({ summary, currentDate, weekStart, targetDate,
               label={`${fullDate(date)}${date === currentDate ? ` · ${t('move.current')}` : ''}`}
               disabled={busy || !available} onPress={() => setSelectedDate(date)} />)}
         </PlacementRail>
-        <Divider />
-        <Text tone="textMuted">{t('move.targetDate', { date: fullDate(selectedDate) })}</Text>
-      </Card>
+        <CardDivider />
+        <Text variant={studioPresentation ? 'supporting' : 'body'} tone="textMuted">{t('move.targetDate', { date: fullDate(selectedDate) })}</Text>
+      </Surface>
     </>}
-    <Card elevated padding="form" style={styles.actions}>
+    <Surface padding="form" style={styles.actions}>
       {warnings ? <Button label={t('move.confirm')} trailingIcon="forward" busy={busy} disabled={!available} onPress={onConfirm} />
         : <Button label={t('move.review')} trailingIcon="forward" busy={busy} disabled={!available || selectedDate === currentDate} onPress={() => onReview(selectedDate)} />}
-      <Divider />
+      <CardDivider />
       <Button label={t('move.cancel')} variant="secondary" busy={busy} onPress={onCancel} />
-    </Card>
+    </Surface>
     {controls}
   </Screen>;
 }
-const styles = StyleSheet.create({ dates: { gap: space[12] }, actions: { gap: space[16] } });
+const styles = StyleSheet.create({ dates: { gap: space[12] }, actions: { gap: studioPresentation ? space[12] : space[16] } });

@@ -12,6 +12,9 @@ import { SportIndicator } from './SportIndicator';
 
 export function ActivitySummary({ activity }: { activity: ActivityViewModel }) {
   const { t } = useLanguage();
+  const message = activity.publicMessage ?? (activity.result === 'awaiting_rpe' ? t('rpe.awaiting') : t(`activity.message.${activity.result}`));
+  const outcome = t(`activity.result.${activity.result}`);
+  const feedback = activity.rpe !== null ? `${activity.rpeDescription} (RPE ${activity.rpe})` : null;
   return <View style={styles.stack} testID={`activity-summary-${activity.id}`}>
     {studioPresentation ? <View style={styles.header}>
       <View style={[styles.tile, { backgroundColor: colors.sport[activity.discipline].soft }]}>
@@ -35,18 +38,29 @@ export function ActivitySummary({ activity }: { activity: ActivityViewModel }) {
     </View>
     {activity.pace !== null ? <ActivityFact icon="clock" label={t('activities.pace', { value: activity.pace })} /> : null}
     {activity.source ? <ActivityFact icon="activities" label={t('activities.source')} /> : null}
-    <Divider />
-    <View style={styles.fact}>
-      <IconTile name="document" size="field" />
-      <View style={styles.copy}>
-        <Text variant="cardTitle" accessibilityRole="header">{t(`activity.result.${activity.result}`)}</Text>
-        {activity.rpe !== null ? <Text tone="textMuted">{`${activity.rpeDescription} (RPE ${activity.rpe})`}</Text> : null}
+    {/* V3 reads the outcome as plain lines under one rule; V2 keeps its icon row and notices. */}
+    {studioPresentation ? <View style={styles.outcome}>
+      <Text variant="label" accessibilityRole="header">{outcome}</Text>
+      {feedback ? <Text variant="supporting" tone="textMuted">{feedback}</Text> : null}
+      {activity.averageHeartRate !== null ? <ActivityFact icon="heartRate" label={t('activities.storedHeartRate', { value: activity.averageHeartRate })} /> : null}
+      {/* An activity that only waits for RPE has the same words as its outcome; say them once. */}
+      {message !== outcome ? <Text variant="supporting" tone="textMuted">{message}</Text> : null}
+      {activity.distanceOnly ? <Text variant="supporting" tone="textMuted">{t('activities.distanceOnly')}</Text> : null}
+      {activity.partialCoverage ? <Text variant="supporting" tone="textMuted">{t('activities.partialCoverage')}</Text> : null}
+    </View> : <>
+      <Divider />
+      <View style={styles.fact}>
+        <IconTile name="document" size="field" />
+        <View style={styles.copy}>
+          <Text variant="cardTitle" accessibilityRole="header">{outcome}</Text>
+          {feedback ? <Text tone="textMuted">{feedback}</Text> : null}
+        </View>
       </View>
-    </View>
-    {activity.averageHeartRate !== null ? <ActivityFact icon="heartRate" label={t('activities.storedHeartRate', { value: activity.averageHeartRate })} /> : null}
-    <Notice>{activity.publicMessage ?? (activity.result === 'awaiting_rpe' ? t('rpe.awaiting') : t(`activity.message.${activity.result}`))}</Notice>
-    {activity.distanceOnly ? <Notice>{t('activities.distanceOnly')}</Notice> : null}
-    {activity.partialCoverage ? <Notice>{t('activities.partialCoverage')}</Notice> : null}
+      {activity.averageHeartRate !== null ? <ActivityFact icon="heartRate" label={t('activities.storedHeartRate', { value: activity.averageHeartRate })} /> : null}
+      <Notice>{message}</Notice>
+      {activity.distanceOnly ? <Notice>{t('activities.distanceOnly')}</Notice> : null}
+      {activity.partialCoverage ? <Notice>{t('activities.partialCoverage')}</Notice> : null}
+    </>}
     {activity.correctionProposal ? <Notice>{t('activities.correctionProposal')}</Notice> : null}
   </View>;
 }
@@ -62,4 +76,5 @@ const styles = StyleSheet.create({
   tile: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   measures: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space[24] },
   compactFact: { flexDirection: 'row', alignItems: 'center', gap: space[8], flexShrink: 1 },
-  stack: { gap: space[16] }, fact: { flexDirection: 'row', alignItems: 'center', gap: space[12] }, copy: { flex: 1, gap: space[8] } });
+  outcome: { gap: space[4], paddingTop: space[12], borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
+  stack: { gap: studioPresentation ? space[12] : space[16] }, fact: { flexDirection: 'row', alignItems: 'center', gap: space[12] }, copy: { flex: 1, gap: space[8] } });

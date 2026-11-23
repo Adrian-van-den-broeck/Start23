@@ -38,7 +38,10 @@ test('choices stay drafts; exact structured revision payload precedes separate c
   await fireEvent.press(view.getByRole('checkbox', { name: 'Wo' }));
   await fireEvent.press(view.getByRole('radio', { name: 'Hoog' }));
   await fireEvent.press(view.getByRole('checkbox', { name: 'Vermoeidheid' }));
-  await fireEvent.press(view.getByRole('radio', { name: 'Lopen: Professioneel advies' }));
+  // Each discipline's restriction is a compact select: open it, then choose.
+  await fireEvent.press(view.getByRole('button', { name: 'Lopen: Vrij' }));
+  await fireEvent.press(view.getByRole('radio', { name: 'Professioneel advies' }));
+  expect(view.getByRole('button', { name: 'Lopen: Professioneel advies' })).toBeTruthy();
   await fireEvent.changeText(view.getByLabelText('Advies en herleidbare bron'), 'Fysiotherapeut: alleen rustig');
   await fireEvent.press(view.getByRole('checkbox', { name: 'Ik heb mijn terugkerende sportactiviteiten voor deze week gecontroleerd.' }));
   expect(api.saveWeeklyCheckInContext).not.toHaveBeenCalled();
@@ -71,7 +74,8 @@ test('temporary extraction only copies candidate drafts and never chooses an inj
   await fireEvent.press(view.getByRole('button', { name: 'Neem datums, vermoeidheid en redenen over' }));
   expect(view.getByRole('checkbox', { name: 'Wo' })).toBeChecked();
   expect(view.getByRole('radio', { name: 'Hoog' })).toBeChecked();
-  expect(view.getByRole('radio', { name: 'Lopen: Vrij' })).toBeChecked();
+  expect(view.getByRole('button', { name: 'Lopen: Vrij' })).toBeTruthy();
+  expect(view.queryByRole('button', { name: /^Lopen: (Alleen rustig|Geblokkeerd|Professioneel advies)$/ })).toBeNull();
   expect(api.saveWeeklyCheckInContext).not.toHaveBeenCalled(); expect(api.confirmWeeklyCheckInContext).not.toHaveBeenCalled();
 });
 test('external sport retains time/duration/flags and explicit add/remove', async () => {
@@ -118,7 +122,10 @@ test('English preference translates the check-in form, choices and extra activit
   expect(view.getByRole('checkbox', { name: 'Wed' })).toBeTruthy();
   expect(view.getByRole('radio', { name: 'Moderate' })).toBeTruthy();
   expect(view.getByRole('checkbox', { name: 'Weather' })).toBeTruthy();
-  expect(view.getByRole('radio', { name: 'Running: Professional advice' })).toBeTruthy();
+  await fireEvent.press(view.getByRole('button', { name: 'Running: Unrestricted' }));
+  expect(view.getByRole('radio', { name: 'Unrestricted' })).toBeChecked();
+  expect(view.getByRole('radio', { name: 'Professional advice' })).toBeTruthy();
+  await fireEvent.press(view.getByRole('button', { name: 'Close' }));
   expect(view.getByRole('button', { name: 'Suggest answers' })).toBeTruthy();
   expect(view.getByRole('button', { name: 'Save context' })).toBeDisabled();
   expect(view.getByRole('button', { name: 'Weekly plan' })).toBeTruthy();

@@ -213,6 +213,27 @@ describe('CalibrationScreen Phase 15 flow', () => {
     expect(screen.queryByText(/Tijdzone uit je bevestigde profiel/i)).toBeNull();
   });
 
+  // Owner decision: the internal protocol provenance line is for staging candidates only.
+  test('protocol provenance stays out of regular builds and shows in a staging candidate', async () => {
+    const keys = ['EXPO_PUBLIC_VERIFICATION_BUILD', 'EXPO_PUBLIC_API_BASE_URL', 'EXPO_PUBLIC_SUPABASE_URL'] as const;
+    const saved = keys.map((key) => process.env[key]);
+    const provenance = 'Protocol: start23_week1_run_calibration_v1 · v1 · approved_active';
+    try {
+      const regular = await render(<CalibrationScreen accessToken="athlete-token" onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} />);
+      await regular.findByRole('alert', { name: 'Stop als je pijn voelt' });
+      expect(regular.queryByText(provenance)).toBeNull();
+      expect(regular.getByText('Beoordeeld v1')).toBeTruthy();
+      await regular.unmount();
+      process.env.EXPO_PUBLIC_VERIFICATION_BUILD = '1';
+      process.env.EXPO_PUBLIC_API_BASE_URL = 'https://r6-api-r6-staging.up.railway.app';
+      process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://isfumhgqphieoayqahjv.supabase.co';
+      const staging = await render(<CalibrationScreen accessToken="athlete-token" onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} />);
+      expect(await staging.findByText(provenance)).toBeTruthy();
+    } finally {
+      keys.forEach((key, index) => { if (saved[index] === undefined) delete process.env[key]; else process.env[key] = saved[index]; });
+    }
+  });
+
   test.each([
     ['swim', 'start23_swim_css_400_200_v1', 'field_test'],
     ['run', 'start23_week1_run_calibration_v1', 'submaximal_calibration'],

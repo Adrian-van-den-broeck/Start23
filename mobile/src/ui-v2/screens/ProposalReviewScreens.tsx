@@ -1,12 +1,13 @@
 import { useState, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useLanguage } from '../../i18n/LanguageProvider';
+import { studioPresentation } from '../../ui-v3/presentation';
+import { CardDivider, Kicker, SportTile, Surface } from '../../ui-v3/screens/support';
 import { SportIndicator } from '../components/SportIndicator';
 import { WorkoutSummary } from '../components/WorkoutSummary';
 import { WorkoutFacts } from '../components/WorkoutFacts';
 import { Button } from '../primitives/Button';
 import { Card } from '../primitives/Card';
-import { Divider } from '../primitives/Divider';
 import { ChoiceRow } from '../primitives/ChoiceRow';
 import { Notice } from '../primitives/Notice';
 import { Screen } from '../primitives/Screen';
@@ -39,12 +40,13 @@ export function ProposalReviewScreen({ model, onEdit, onApprove, onReject, ...ta
   return <Screen title={t('review.title')} landscape="ridges" titleVariant="display"
     onBack={task.onBack} backLabel={t('week.return')} backDisabled={task.busy}>
     <Status {...task} />
-    <Card padding="focus" elevated style={styles.overview}>
-      <Text variant="label" tone="primary">{t('review.revision', { revision: model.revision })}</Text>
-      <Text variant="cardTitle" accessibilityRole="header">{date}</Text>
-      <Text>{t(model.pending ? 'review.pending' : 'review.unavailable')}</Text>
-      {model.explanation ? <><Divider /><Text tone="textMuted">{model.explanation}</Text></> : null}
-    </Card>
+    <Surface padding="focus" style={styles.overview}>
+      {studioPresentation ? <Kicker>{t('review.revision', { revision: model.revision })}</Kicker>
+        : <Text variant="label" tone="primary">{t('review.revision', { revision: model.revision })}</Text>}
+      <Text variant={studioPresentation ? 'sectionTitle' : 'cardTitle'} accessibilityRole="header">{date}</Text>
+      <Text variant={studioPresentation ? 'supporting' : 'body'}>{t(model.pending ? 'review.pending' : 'review.unavailable')}</Text>
+      {model.explanation ? <><CardDivider /><Text variant={studioPresentation ? 'supporting' : 'body'} tone="textMuted">{model.explanation}</Text></> : null}
+    </Surface>
     {model.activeRevision !== null ? <Notice title={t('common.active')}>{t('review.activeSeparate')}</Notice> : null}
     <Warnings warnings={model.warnings} />
     <Text variant="sectionTitle" accessibilityRole="header">{t('review.workouts')}</Text>
@@ -59,12 +61,12 @@ export function ProposalReviewScreen({ model, onEdit, onApprove, onReject, ...ta
             onPress={() => onEdit(workout.id)} /> : null}
         </View>} />
     </View>)}
-    <Card padding="form" elevated style={styles.stack}>
-      <Text tone="textMuted">{t('review.decisionHint')}</Text>
+    <Surface padding="form" style={styles.stack}>
+      <Text variant={studioPresentation ? 'supporting' : 'body'} tone="textMuted">{t('review.decisionHint')}</Text>
       <Button label={t('review.approve')} trailingIcon="check" busy={task.busy} disabled={!model.pending} onPress={onApprove} />
-      <Divider />
+      <CardDivider />
       <Button label={t('review.reject')} variant="secondary" busy={task.busy} disabled={!model.pending} onPress={onReject} />
-    </Card>
+    </Surface>
     {task.controls}
   </Screen>;
 }
@@ -87,11 +89,17 @@ export function ProposalAlternativesScreen({ model, workout, options, loading, o
     {options ? <>
       {options.alternatives.length === 0 ? <Notice title={t('review.alternatives')}>{t('review.noAlternatives')}</Notice> : null}
       {options.alternatives.map((item, index) => <Card key={item.id} elevated padding="focus" style={styles.overview}>
-        <SportIndicator discipline={item.discipline} size="focus" tone="primary">
+        {studioPresentation ? <View style={styles.identity}>
+          <SportTile discipline={item.discipline} />
+          <View style={styles.identityCopy}>
+            <Text variant="caption" tone="textMuted">{t(`common.${item.discipline}`)}</Text>
+            <Text variant="label" accessibilityRole="header">{item.name}</Text>
+          </View>
+        </View> : <SportIndicator discipline={item.discipline} size="focus" tone="primary">
           <Text variant="cardTitle" accessibilityRole="header">{item.name}</Text>
-        </SportIndicator>
+        </SportIndicator>}
         <WorkoutFacts variant="focus" measures={{ durationMinutes: item.durationMinutes, distanceMeters: item.distanceMeters }} intensity={item.intensity} />
-        {item.description ? <Text tone="textMuted">{item.description}</Text> : null}
+        {item.description ? <Text variant={studioPresentation ? 'supporting' : 'body'} tone="textMuted">{item.description}</Text> : null}
         <ChoiceRow label={t('review.select')}
           accessibilityLabel={`${t('review.select')} · ${index + 1} · ${item.name}`}
           selected={selectedId === item.id} disabled={!model.pending || blocked}
@@ -99,7 +107,7 @@ export function ProposalAlternativesScreen({ model, workout, options, loading, o
       </Card>)}
       <Button label={t('review.replace')} trailingIcon="forward" busy={blocked}
         disabled={!model.pending || !options.alternatives.some((item) => item.id === selectedId)} onPress={onReplace} />
-      {options.canRemove && model.pending ? <Card elevated style={styles.stack}>
+      {options.canRemove && model.pending ? <Surface style={styles.stack}>
         <Notice tone={confirmRemove ? 'error' : 'warning'} title={t('review.remove')}>
           {t('review.removeHint', { name: workout.summary.name })}
         </Notice>
@@ -107,12 +115,13 @@ export function ProposalAlternativesScreen({ model, workout, options, loading, o
           <Button label={t('review.confirmRemove')} variant="destructive" busy={blocked} onPress={onRemove} />
           <Button label={t('review.keep')} variant="secondary" busy={blocked} onPress={() => setConfirmRemove(false)} />
         </> : <Button label={t('review.remove')} variant="secondary" busy={blocked} onPress={() => setConfirmRemove(true)} />}
-      </Card> : null}
+      </Surface> : null}
     </> : null}
     {task.controls}
   </Screen>;
 }
 
 const styles = StyleSheet.create({
-  overview: { gap: space[16] }, stack: { gap: space[12] },
+  overview: { gap: studioPresentation ? space[8] : space[16] }, stack: { gap: space[12] },
+  identity: { flexDirection: 'row', alignItems: 'center', gap: space[12] }, identityCopy: { flex: 1, minWidth: 0, gap: 2 },
 });

@@ -2,15 +2,17 @@ import { useState, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { Discipline } from '../../api/types';
 import { useLanguage } from '../../i18n/LanguageProvider';
+import { studioPresentation } from '../../ui-v3/presentation';
+import { CardDivider, ChoiceChips, Group, Panel } from '../../ui-v3/screens/support';
 import { Button } from '../primitives/Button';
-import { Card } from '../primitives/Card';
 import { ChoiceRow } from '../primitives/ChoiceRow';
-import { Divider } from '../primitives/Divider';
 import { Input } from '../primitives/Input';
 import { Screen } from '../primitives/Screen';
 import { Text } from '../primitives/Text';
 import { space } from '../tokens';
 import { ActivityStatus } from './ActivitiesScreen';
+
+const sports = ['swim', 'bike', 'run'] as const;
 
 export type ActivityChoice = Readonly<{ id: string; kind: 'workout' | 'external'; name: string; date: string; discipline: Discipline }>;
 export function ActivityEntryScreen(props: {
@@ -26,12 +28,12 @@ export function ActivityEntryScreen(props: {
   return <Screen keyboardAware title={t('activity.register')} landscape="ridges" titleVariant="display" onBack={props.onBack} backLabel={t('activities.return')} backDisabled={props.busy}
       scrollProps={{ testID: 'activity-entry-scroll' }}>
       <ActivityStatus busy={props.busy} error={props.error} />
-      <Text>{t('activity.registerHint')}</Text>
-      <Card elevated padding="form" style={styles.stack}>
+      <Text variant={studioPresentation ? 'supporting' : 'body'} tone={studioPresentation ? 'textMuted' : 'text'}>{t('activity.registerHint')}</Text>
+      <Panel divided={false} style={styles.stack}>
         <Text variant="sectionTitle" accessibilityRole="header">{props.selectedName ?? t('activity.unplanned')}</Text>
         <Button label={t('activities.chooseContext')} variant="secondary" trailingIcon="chevron" disabled={props.busy}
           accessibilityState={{ expanded: choosing }} onPress={() => setChoosing(value => !value)} />
-        {choosing ? <View style={styles.stack} accessibilityRole="radiogroup" accessibilityLabel={t('activities.chooseContext')}>
+        {choosing ? <View style={styles.choices} accessibilityRole="radiogroup" accessibilityLabel={t('activities.chooseContext')}>
           <ChoiceRow label={t('activity.unplanned')} selected={props.selectedId === null}
             disabled={props.busy} onPress={() => { props.onChoose(null); setChoosing(false); }} />
           {props.choices.map(choice => <ChoiceRow key={`${choice.kind}:${choice.id}`}
@@ -39,14 +41,13 @@ export function ActivityEntryScreen(props: {
             selected={props.selectedId === choice.id}
             disabled={props.busy} onPress={() => { props.onChoose(choice); setChoosing(false); }} />)}
         </View> : null}
-        {props.selectedId === null ? <View style={styles.stack} accessibilityRole="radiogroup" accessibilityLabel={t('activities.sport')}>
-          <Text variant="label">{t('activities.sport')}</Text>
-          {(['swim', 'bike', 'run'] as const).map(sport => <ChoiceRow key={sport}
-            label={t(`common.${sport}`)} selected={props.discipline === sport}
-            disabled={props.busy} onPress={() => props.onDiscipline(sport)} />)}
-        </View> : null}
-      </Card>
-      <Card elevated padding="form" style={styles.fields}>
+        {props.selectedId === null ? <Group label={t('activities.sport')}>
+          <ChoiceChips mode="radio" accessibilityLabel={t('activities.sport')} disabled={props.busy}
+            isSelected={sport => props.discipline === sport} onPress={props.onDiscipline}
+            options={sports.map(sport => ({ value: sport, label: t(`common.${sport}`) }))} />
+        </Group> : null}
+      </Panel>
+      <Panel style={styles.fields}>
         <Input label={t('activity.startedAt')} value={props.startedAt} onChangeText={props.onStartedAt}
           icon="calendar" autoCapitalize="none" disabled={props.busy} />
         <Text variant="supporting" tone="textMuted">{`${t('activity.timezone')}: ${props.timezone || t('activities.timezoneMissing')}`}</Text>
@@ -54,12 +55,15 @@ export function ActivityEntryScreen(props: {
           icon="clock" inputMode="decimal" value={props.duration} onChangeText={props.onDuration} disabled={props.busy} />
         <Input label={t('activity.distance')} icon="location" inputMode="numeric" value={props.distance}
           onChangeText={props.onDistance} disabled={props.busy} />
-        <Divider />
+        <CardDivider />
         <Button label={t('activity.save')} trailingIcon="forward" busy={props.busy} disabled={!props.timezone || props.blocked}
           disabledReason={props.blocked ? t('activities.blocked') : !props.timezone ? t('activities.timezoneMissing') : undefined}
           onPress={props.onSave} />
-      </Card>
+      </Panel>
       {props.controls}
     </Screen>;
 }
-const styles = StyleSheet.create({ stack: { gap: space[16] }, fields: { gap: space[24] } });
+const styles = StyleSheet.create({
+  stack: { gap: space[16] }, choices: { gap: space[12] },
+  fields: { gap: studioPresentation ? space[16] : space[24] },
+});

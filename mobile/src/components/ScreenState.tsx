@@ -9,18 +9,23 @@ import { Text } from '../ui-v2/primitives/Text';
 import { colors, layout, space } from '../ui-v2/tokens';
 type ScreenStateProps = { loading?: boolean; message?: string; title: string; };
 export function ScreenState({ loading = false, message, title }: ScreenStateProps) {
+  const state = <>
+    {loading ? <View accessibilityState={{ busy: true }}><ActivityIndicator color={colors.primary} size="large" /></View> : null}
+    {message ? <Notice>{message}</Notice> : null}
+  </>;
   return <SafeAreaView style={styles.safeArea}>
     <ScrollView contentContainerStyle={styles.content}>
       {studioPresentation ? <Masthead title={title} /> : <AppHeader title="WOMBO" landscape="ridges" />}
-      <Card elevated padding="form" style={{ gap: space[24] }}>
-        {!studioPresentation && <Text variant="sectionTitle" accessibilityRole="header">{title}</Text>}
-        {loading ? <View accessibilityState={{ busy: true }}><ActivityIndicator color={colors.primary} size="large" /></View> : null}
-        {message ? <Notice>{message}</Notice> : null}
-      </Card>
+      {/* V3 states loading and messages on the page; V2 keeps its card. */}
+      {studioPresentation ? <View style={styles.state}>{state}</View> : <Card elevated padding="form" style={{ gap: space[24] }}>
+        <Text variant="sectionTitle" accessibilityRole="header">{title}</Text>
+        {state}
+      </Card>}
     </ScrollView>
   </SafeAreaView>;
 }
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: colors.background },
   content: { alignSelf: 'center', width: '100%', maxWidth: layout.readingWidth, gap: space[24], padding: layout.phoneGutter, paddingBottom: space[48] },
+  state: { gap: space[16] },
 });
