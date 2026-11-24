@@ -1,11 +1,23 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import type { AthleteProfile } from '../../api/types';
-import { formatIsoDateInput, isPastIsoDateInput } from '../../lib/dateInput';
+import { DatePicker } from '../../components/DatePicker';
+import { isPastIsoDateInput } from '../../lib/dateInput';
 import { Button } from '../primitives/Button';
 import { Input } from '../primitives/Input';
 import { FormComposition, formGap } from './FormComposition';
 import { useLanguage } from '../../i18n/LanguageProvider';
+
+const pad = (value: number) => String(value).padStart(2, '0');
+
+// The birth date must lie in the past (the server enforces the same), so the
+// wheels stop at yesterday. They go back a century and open on a typical adult
+// birth year instead of on yesterday.
+function birthDateBounds(today = new Date()) {
+  const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+  const max = `${yesterday.getFullYear()}-${pad(yesterday.getMonth() + 1)}-${pad(yesterday.getDate())}`;
+  return { min: `${today.getFullYear() - 100}-01-01`, max, openAt: `${today.getFullYear() - 30}-01-01` };
+}
 
 type ProfileFormProps = {
   profile: AthleteProfile | null;
@@ -27,6 +39,7 @@ export function ProfileForm({ profile, saving, onSave }: ProfileFormProps) {
   const [restingHeartRate, setRestingHeartRate] = useState(
     profile?.resting_heart_rate_bpm?.toString() ?? '',
   );
+  const birthBounds = birthDateBounds();
   const valid =
     isPastIsoDateInput(dateOfBirth) &&
     Number(restingHeartRate) > 0;
@@ -55,14 +68,12 @@ export function ProfileForm({ profile, saving, onSave }: ProfileFormProps) {
           placeholder={t('onboarding.profile.lastName')}
           value={lastName}
         />
-        <Input
-          hint={t('onboarding.profile.dateOfBirthHint')}
-          inputMode="numeric"
+        <DatePicker
           label={t('onboarding.profile.dateOfBirth')}
-          icon="calendar"
-          maxLength={10}
-          onChangeText={(value) => setDateOfBirth(formatIsoDateInput(value))}
-          placeholder="1990-05-20"
+          min={birthBounds.min}
+          max={birthBounds.max}
+          openAt={birthBounds.openAt}
+          onChange={setDateOfBirth}
           value={dateOfBirth}
         />
         <Input

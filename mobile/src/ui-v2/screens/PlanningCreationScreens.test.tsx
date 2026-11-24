@@ -18,11 +18,14 @@ const availability = {
   onWeekStart: jest.fn(), onToggleDay: jest.fn(), onReuse: jest.fn(), onInjury: jest.fn(),
   onCrossTraining: jest.fn(), onCreate: jest.fn(async () => undefined),
 };
-beforeEach(() => jest.clearAllMocks());
+// Thursday 1 October 2026: the offered Mondays run from 28 September to 26 October.
+beforeEach(() => { jest.clearAllMocks(); jest.useFakeTimers({ now: new Date('2026-10-01T10:00:00Z'), doNotFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'setImmediate', 'clearImmediate', 'queueMicrotask', 'nextTick', 'requestAnimationFrame', 'cancelAnimationFrame', 'performance', 'hrtime'] }); });
+afterEach(() => { jest.useRealTimers(); });
 
 test('availability shows Monday through Sunday with checked defaults, reuse, injury and opt-ins', async () => {
   const view = await render(host(<AvailabilityScreen {...availability} />));
   await view.findByText('When can you train?');
+  expect(view.getByRole('button', { name: 'Week starts on Monday: Next week · 5 October' })).toBeTruthy();
   expect(view.getByRole('checkbox', { name: 'Monday · 5 October' })).toBeChecked();
   expect(view.getByRole('checkbox', { name: 'Sunday · 11 October' })).not.toBeChecked();
   expect(view.getByRole('checkbox', { name: 'Confirmed injury · Running' })).toBeChecked();
@@ -45,19 +48,31 @@ test('empty dates disable create; explicit reuse permits create with no locally 
   await fireEvent.press(view.getByRole('button', { name: 'Start choosing workouts' }));
   expect(availability.onCreate).toHaveBeenCalledTimes(1);
 });
-test('incomplete date typing retains weekday choices, uses existing parser, and invents no date repair', async () => {
+// The week start used to be typed as YYYY-MM-DD; it is now chosen from Mondays, so no text can be mistyped.
+test('week start is chosen from this and the next four Mondays; without a valid week the weekday choices remain', async () => {
   const view = await render(host(<AvailabilityScreen {...availability} weekStart="2026-10" />));
   await view.findByText('When can you train?');
   expect(view.getByRole('checkbox', { name: 'Monday' })).toBeChecked();
-  await fireEvent.changeText(view.getByLabelText('Week starts on Monday'), '20261012');
+  expect(view.queryByDisplayValue('2026-10')).toBeNull();
+  await fireEvent.press(view.getByRole('button', { name: 'Week starts on Monday: Choose a week' }));
+  expect(view.getAllByRole('radio').map((option) => option.props.accessibilityLabel)).toEqual([
+    'This week · 28 September', 'Next week · 5 October', 'Week of 12 October', 'Week of 19 October', 'Week of 26 October']);
+  await fireEvent.press(view.getByRole('radio', { name: 'Week of 12 October' }));
   expect(availability.onWeekStart).toHaveBeenCalledWith('2026-10-12');
+});
+test('a restored week outside the offered Mondays stays selected and visible', async () => {
+  const view = await render(host(<AvailabilityScreen {...availability} weekStart="2026-08-03" />));
+  await view.findByText('When can you train?');
+  expect(view.getByRole('button', { name: 'Week starts on Monday: Week of 3 August' })).toBeTruthy();
+  expect(view.getByRole('checkbox', { name: 'Monday · 3 August' })).toBeChecked();
+  expect(availability.onWeekStart).not.toHaveBeenCalled();
 });
 test('busy availability announces saving and disables all inputs and back', async () => {
   const view = await render(host(<AvailabilityScreen {...availability} busy />));
   await view.findByText('Saving action…');
   for (const control of view.getAllByRole('checkbox')) expect(control).toBeDisabled();
   expect(view.getByRole('button', { name: 'Back to Week' })).toBeDisabled();
-  expect(view.getByLabelText('Week starts on Monday').props.editable).toBe(false);
+  expect(view.getByRole('button', { name: /^Week starts on Monday: / })).toBeDisabled();
 });
 test.each([['Choose', 'accept'], ['Pass', 'pass'], ['Undo', 'undo'], ['Reset passed workouts', 'reset_passed']] as const)(
   '%s uses the authoritative transition callback', async (label, action) => {

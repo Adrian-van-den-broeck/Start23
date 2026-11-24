@@ -1,8 +1,8 @@
 import { Fragment, useState, useRef } from 'react';
 import { StyleSheet, View, type TextInput } from 'react-native';
 import type { Discipline, GoalPlanningOption, PrimaryRaceGoal, RaceType } from '../../api/types';
+import { DatePicker } from '../../components/DatePicker';
 import { DurationPicker } from '../../components/DurationPicker';
-import { formatIsoDateInput } from '../../lib/dateInput';
 import { parseRunPace } from '../../lib/runPace';
 import { parsePositiveInteger, raceDisciplines } from '../../lib/onboardingForms';
 import { FormComposition, FormSection } from '../components/FormComposition';
@@ -67,10 +67,22 @@ function normalizeRaceDate(value: string): string | null {
   return normalized > localToday ? normalized : null;
 }
 
+const RACE_HORIZON_YEARS = 10;
+
+// The race must be after today (the server enforces the same and sets no upper
+// limit), so the wheels start tomorrow. The picker needs an end: the last day of
+// the year ten years ahead, far beyond any race an athlete can enter now.
+function raceDateBounds(today = new Date()) {
+  const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  const min = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(
+    tomorrow.getDate(),
+  ).padStart(2, '0')}`;
+  return { min, max: `${today.getFullYear() + RACE_HORIZON_YEARS}-12-31` };
+}
+
 export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
   const { t } = useLanguage();
   const nameRef = useRef<TextInput>(null);
-  const dateRef = useRef<TextInput>(null);
   const paceRef = useRef<TextInput>(null);
   const totalRef = useRef<View>(null);
   const distanceRefs = { swim: useRef<TextInput>(null), bike: useRef<TextInput>(null), run: useRef<TextInput>(null) };
@@ -103,6 +115,7 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
     run: goal?.run_target_time_seconds ?? null,
   });
   const normalizedTargetDate = normalizeRaceDate(targetDate);
+  const raceBounds = raceDateBounds();
   const disciplines = raceDisciplines[raceType];
   const parsedDistances = Object.fromEntries(
     disciplines.map((discipline) => [
@@ -242,8 +255,7 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
             value={raceName}
             required
           />
-          <GoalInput
-            autoCapitalize="none"
+          <DatePicker
             error={
               validationAttempted
                 ? !targetDate.trim()
@@ -253,16 +265,11 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                     : undefined
                 : undefined
             }
-            hint={t('onboarding.goal.dateFormat')}
-            inputMode="numeric"
-            inputRef={dateRef}
-            icon="calendar"
             label={t('onboarding.goal.raceDate')}
-            maxLength={10}
-            onChangeText={(value) =>
-              setTargetDate(formatIsoDateInput(value))
-            }
-            placeholder="2027-06-15"
+            min={raceBounds.min}
+            max={raceBounds.max}
+            openAt={raceBounds.min}
+            onChange={setTargetDate}
             value={targetDate}
             required
           />
@@ -378,7 +385,8 @@ export function GoalStep({ goal, options, saving, onSave }: GoalStepProps) {
                 const distance = disciplines.find((discipline) => distanceErrors[discipline]);
                 const split = disciplines.find((discipline) => disciplineTimeErrors[discipline]);
                 if (!raceName.trim()) nameRef.current?.focus();
-                else if (!normalizedTargetDate) dateRef.current?.focus();
+                // The date picker has no focus target; its error is shown at the field.
+                else if (!normalizedTargetDate) return;
                 else if (distance) distanceRefs[distance].current?.focus();
                 else if (raceType === 'run' && runGoalInput === 'pace' && paceSeconds === null) paceRef.current?.focus();
                 else if (split) splitRefs[split].current?.focus();

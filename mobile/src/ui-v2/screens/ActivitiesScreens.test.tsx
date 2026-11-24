@@ -67,12 +67,38 @@ test('matching is explicit, exact IDs; separate correction proposal remains pend
 });
 test('initial entry offers only existing supported fields; sport checked; no editable pace/HR at create', async () => {
   const view = await render(host(<ActivityEntryScreen {...entry} />)); await view.findByText('Record a workout');
-  expect(view.getByRole('radio', { name: 'Running' })).toBeChecked(); expect(view.getByLabelText('Actual duration (minutes)').props.value).toBe('45');
-  expect(view.getByLabelText('Actual start (ISO including time zone)').props.value).toBe(entry.startedAt);
+  expect(view.getByRole('radio', { name: 'Running' })).toBeChecked(); expect(view.getByRole('button', { name: 'Actual duration: 00:45:00' })).toBeTruthy();
+  expect(view.getByRole('button', { name: /^Actual start: Tue,? 6 Oct · 12:00$/ })).toBeTruthy();
+  expect(view.queryByDisplayValue(entry.startedAt)).toBeNull(); expect(view.queryByDisplayValue('45')).toBeNull();
   expect(view.queryByLabelText(/pace|heart rate/i)).toBeNull();
   await fireEvent.changeText(view.getByLabelText('Distance (metres, optional)'), '5000'); expect(entry.onDistance).toHaveBeenCalledWith('5000');
   await fireEvent.press(view.getByRole('radio', { name: 'Swimming' })); expect(entry.onDiscipline).toHaveBeenCalledWith('swim');
   await fireEvent.press(view.getByRole('button', { name: 'Save activity' })); expect(entry.onSave).toHaveBeenCalledTimes(1);
+});
+test('start and duration are picked, never typed, and reach the owner as an instant and minutes', async () => {
+  // Thursday 8 October 2026, 12:00 in Amsterdam.
+  jest.useFakeTimers({ now: new Date('2026-10-08T10:00:00Z'), doNotFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'setImmediate', 'clearImmediate', 'queueMicrotask', 'nextTick', 'requestAnimationFrame', 'cancelAnimationFrame', 'performance', 'hrtime'] });
+  try {
+    const view = await render(host(<ActivityEntryScreen {...entry} />)); await view.findByText('Record a workout');
+    await fireEvent.press(view.getByRole('button', { name: /^Actual start: / }));
+    await fireEvent.press(view.getByRole('radio', { name: 'Yesterday' }));
+    await fireEvent.press(view.getByRole('radio', { name: '18 h' })); await fireEvent.press(view.getByRole('radio', { name: '30 min' }));
+    expect(entry.onStartedAt).not.toHaveBeenCalled();
+    await fireEvent.press(view.getByRole('button', { name: 'Done' }));
+    expect(entry.onStartedAt).toHaveBeenCalledWith('2026-10-07T16:30:00.000Z');
+    await fireEvent.press(view.getByRole('button', { name: 'Actual duration: 00:45:00' }));
+    await fireEvent.press(view.getByRole('radio', { name: '1 hour' })); await fireEvent.press(view.getByRole('radio', { name: '30 min' }));
+    await fireEvent.press(view.getByRole('button', { name: 'Done' }));
+    expect(entry.onDuration).toHaveBeenCalledWith('90');
+    expect(view.queryByRole('button', { name: /^Clear Actual duration/ })).toBeNull();
+  } finally { jest.useRealTimers(); }
+});
+test('swim duration is optional: an empty value shows as not set and a set value can be cleared', async () => {
+  const view = await render(host(<ActivityEntryScreen {...entry} discipline="swim" duration="" />)); await view.findByText('Record a workout');
+  expect(view.getByRole('button', { name: 'Actual duration (optional with distance): not set yet' })).toBeTruthy();
+  await view.rerender(host(<ActivityEntryScreen {...entry} discipline="swim" duration="30" />));
+  await fireEvent.press(view.getByRole('button', { name: 'Clear Actual duration (optional with distance)' }));
+  expect(entry.onDuration).toHaveBeenCalledWith('');
 });
 test('planned/external selector preserves exact occurrence ID and source context', async () => {
   const choices = [{ id: 'occurrence-a', kind: 'workout' as const, name: 'Same template', date: 'Tuesday, 6 October 2026', discipline: 'run' as const }, { id: 'occurrence-b', kind: 'workout' as const, name: 'Same template', date: 'Wednesday, 7 October 2026', discipline: 'run' as const }];
@@ -83,7 +109,7 @@ test('planned/external selector preserves exact occurrence ID and source context
 test.each([{ busy: true, blocked: false, timezone: entry.timezone }, { busy: false, blocked: true, timezone: entry.timezone }, { busy: false, blocked: false, timezone: '' }])('submit blocked by shared state %j', async state => {
   const view = await render(host(<ActivityEntryScreen {...entry} {...state} error="Safe validation error" />)); await view.findByRole('alert');
   expect(view.getByRole('button', { name: 'Save activity' })).toBeDisabled();
-  if (state.busy) { expect(view.getByRole('button', { name: 'Back to Activities' })).toBeDisabled(); expect(view.getByLabelText('Actual duration (minutes)').props.editable).toBe(false); }
+  if (state.busy) { expect(view.getByRole('button', { name: 'Back to Activities' })).toBeDisabled(); expect(view.getByRole('button', { name: /^Actual duration: / })).toBeDisabled(); expect(view.getByRole('button', { name: /^Actual start: / })).toBeDisabled(); }
 });
 test('Back on an unsaved form is presentation-only', async () => {
   const view = await render(host(<ActivityEntryScreen {...entry} />)); await view.findByText('Record a workout');

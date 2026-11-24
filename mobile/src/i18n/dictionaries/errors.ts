@@ -3,7 +3,7 @@ import { defineDictionary } from './define';
 // Keys are namespaced 'errors.*'. Dutch first; English must cover every key.
 export default defineDictionary({
   'errors.versionMismatch': 'De app en de Wombo-server gebruiken verschillende versies. Probeer het later opnieuw.',
-  'errors.invalidRaceDate': 'Gebruik een toekomstige racedatum in het formaat JJJJ-MM-DD.',
+  'errors.invalidRaceDate': 'Kies een racedatum in de toekomst.',
   'errors.invalidPoolLength': 'Kies een zwembadlengte van 25 of 50 meter.',
   'errors.invalidGuidanceMode': 'Kies een geldige begeleidingsvorm voor deze discipline.',
   'errors.invalidSetupRoute': 'Kies opnieuw hoe je de trainingszones wilt instellen.',
@@ -33,7 +33,7 @@ export default defineDictionary({
   'errors.calendarLoadFailed': 'De kalender kon niet worden geladen.',
 }, {
   'errors.versionMismatch': 'The app and the Wombo server are using different versions. Please try again later.',
-  'errors.invalidRaceDate': 'Use a future race date in the format YYYY-MM-DD.',
+  'errors.invalidRaceDate': 'Choose a race date in the future.',
   'errors.invalidPoolLength': 'Choose a pool length of 25 or 50 metres.',
   'errors.invalidGuidanceMode': 'Choose a valid guidance mode for this discipline.',
   'errors.invalidSetupRoute': 'Choose again how you want to set up your training zones.',

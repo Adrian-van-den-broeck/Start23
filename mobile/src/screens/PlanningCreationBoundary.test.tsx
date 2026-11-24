@@ -56,7 +56,15 @@ beforeEach(() => {
   jest.mocked(api.getCalendar).mockResolvedValue({ from_date: '2026-10-05', to_date: '2026-10-12', workouts: [workout], rest_days: [] });
   jest.mocked(api.getPendingWorkoutAlternatives).mockResolvedValue({ plan_id: pendingPlan.id, revision: 3, proposal_id: proposal.id, workout_id: workout.id, alternatives: [], can_remove: false });
 });
-afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.restoreAllMocks(); });
+afterEach(() => { delete process.env.EXPO_PUBLIC_UI_VERSION; jest.restoreAllMocks(); jest.useRealTimers(); });
+// The week start is chosen from Mondays relative to today, so these tests pin Thursday 1 October 2026.
+function pinToday() {
+  jest.useFakeTimers({ now: new Date('2026-10-01T10:00:00Z'), doNotFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'setImmediate', 'clearImmediate', 'queueMicrotask', 'nextTick', 'requestAnimationFrame', 'cancelAnimationFrame', 'performance', 'hrtime'] });
+}
+async function chooseWeek(view: Awaited<ReturnType<typeof render>>, label: string) {
+  await fireEvent.press(view.getByRole('button', { name: /^Week starts on Monday: / }));
+  await fireEvent.press(view.getByRole('radio', { name: label }));
+}
 function restore(kind: 'plan' | 'draft') {
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async (key) =>
     key === 'start23.language-preference' ? 'en' :
@@ -73,13 +81,16 @@ async function enterDraft(value = draft) {
 }
 
 test('availability uses exact defaults, explicit dates, injuries and cross-training create payload', async () => {
+  pinToday();
   jest.mocked(api.createSwipeWeekDraft).mockResolvedValue(draft);
   const view = await render(presentation());
   await view.findByText('Prepare your training week');
   await fireEvent.press(view.getByRole('button', { name: 'Prepare week' }));
   await view.findByText('When can you train?');
   expect(flow.selectedDays).toEqual(new Set([0, 2, 5]));
-  await fireEvent.changeText(view.getByLabelText('Week starts on Monday'), '2026-10-05');
+  await chooseWeek(view, 'Week of 12 October');
+  expect(flow.weekStart).toBe('2026-10-12');
+  await chooseWeek(view, 'Next week · 5 October');
   await fireEvent.press(view.getByRole('checkbox', { name: 'Confirmed injury · Running' }));
   await fireEvent.press(view.getByRole('checkbox', { name: 'Optional alternative training · Cycling' }));
   await fireEvent.press(view.getByRole('button', { name: 'Start choosing workouts' }));
@@ -109,6 +120,7 @@ test('reuse forwards only reuse_previous_week and retains active-plan binding', 
 });
 
 test('empty availability cannot create; invalid week error remains availability without recreation', async () => {
+  pinToday();
   const view = await render(presentation());
   await view.findByText('Prepare your training week');
   await fireEvent.press(view.getByRole('button', { name: 'Prepare week' }));
@@ -117,14 +129,15 @@ test('empty availability cannot create; invalid week error remains availability 
   expect(view.getByRole('button', { name: 'Start choosing workouts' })).toBeDisabled();
   expect(api.createSwipeWeekDraft).not.toHaveBeenCalled();
   await fireEvent.press(view.getByRole('checkbox', { name: /Monday ·/ }));
-  await fireEvent.changeText(view.getByLabelText('Week starts on Monday'), '2026-10-06');
+  // A non-Monday can no longer be entered; the server still decides whether the chosen week is accepted.
+  await chooseWeek(view, 'Week of 12 October');
   jest.mocked(api.createSwipeWeekDraft).mockRejectedValue(new Error('Check your week start'));
   await fireEvent.press(view.getByRole('button', { name: 'Start choosing workouts' }));
   await view.findByText('Check your week start');
   expect(flow.swipeDraft).toBeNull();
   await view.rerender(presentation());
   expect(api.createSwipeWeekDraft).toHaveBeenCalledTimes(1);
-  expect(jest.mocked(api.createSwipeWeekDraft).mock.calls[0][1].week_start).toBe('2026-10-06');
+  expect(jest.mocked(api.createSwipeWeekDraft).mock.calls[0][1].week_start).toBe('2026-10-12');
 });
 
 test('rapid create remains locked across rerender, Back and version switch until draft storage settles', async () => {

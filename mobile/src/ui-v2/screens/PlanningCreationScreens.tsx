@@ -2,16 +2,16 @@ import { studioPresentation } from '../../ui-v3/presentation';
 import { PlacementRail } from '../../ui-v3/PlacementRail';
 import { ChosenRow } from '../../ui-v3/ChosenRow';
 import { CandidateDeck } from '../../ui-v3/CandidateDeck';
-import type { ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { Animated, StyleSheet, useWindowDimensions, View } from 'react-native';
 import type { Discipline } from '../../api/types';
 import { useWorkoutSwipe, type WorkoutDecision } from '../../components/useWorkoutSwipe';
-import { addDays } from '../../features/planning/planningDates';
+import { addDays, isoDate, nextMonday } from '../../features/planning/planningDates';
 import { useLanguage } from '../../i18n/LanguageProvider';
-import { formatIsoDateInput, isValidIsoDateInput } from '../../lib/dateInput';
+import { isValidIsoDateInput } from '../../lib/dateInput';
 import { WorkoutFacts } from '../components/WorkoutFacts';
 import { ChoiceRow } from '../primitives/ChoiceRow';
-import { Input } from '../primitives/Input';
+import { SelectField } from '../primitives/SelectField';
 import { Icon } from '../primitives/Icon';
 import { Notice } from '../primitives/Notice';
 import { SportIndicator } from '../components/SportIndicator';
@@ -22,6 +22,10 @@ import { Screen } from '../primitives/Screen';
 import { Text } from '../primitives/Text';
 import { colors, layout, radius, space } from '../tokens';
 import type { PlanningCreationModel, SelectionWorkout } from '../utils/planningCreationViewModel';
+
+// The server accepts any Monday as a week start and sets no past or future
+// limit. Offered: the running week (to start right away) and the next four.
+const UPCOMING_WEEKS = 4;
 
 type TaskProps = { busy: boolean; error: string | null; onBack: () => void; controls: ReactNode };
 
@@ -34,17 +38,28 @@ export function AvailabilityScreen(props: TaskProps & {
 }) {
   const { t, locale } = useLanguage();
   const validDate = isValidIsoDateInput(props.weekStart);
+  const weekOptions = useMemo(() => {
+    const next = nextMonday();
+    const mondays = Array.from({ length: UPCOMING_WEEKS + 1 }, (_, index) => isoDate(addDays(next, (index - 1) * 7)));
+    // A restored draft or plan keeps its own week, also when it is not one of the offered Mondays.
+    const all = validDate && !mondays.includes(props.weekStart) ? [...mondays, props.weekStart].sort() : mondays;
+    return all.map((monday) => {
+      const date = addDays(monday, 0).toLocaleDateString(locale, { day: 'numeric', month: 'long' });
+      const label = monday === next ? `${t('planning.week.next')} \u00b7 ${date}`
+        : monday === mondays[0] ? `${t('planning.week.current')} \u00b7 ${date}` : `${t('planning.week.later')} ${date}`;
+      return { value: monday, label };
+    });
+  }, [locale, props.weekStart, t, validDate]);
   return <Screen keyboardAware title={t('creation.availability')} landscape="ridges" titleVariant="display"
       onBack={props.onBack} backLabel={t('week.return')} backDisabled={props.busy}>
       <CreationStatus busy={props.busy} error={props.error} />
       <Text tone="textMuted">{t('creation.availabilityHint')}</Text>
       <Card padding="form" elevated style={styles.form}>
-        <Input label={t('creation.weekStart')} icon="calendar" value={props.weekStart}
-          onChangeText={(value) => props.onWeekStart(formatIsoDateInput(value))} disabled={props.busy}
-          inputMode="numeric" autoCapitalize="none" maxLength={10} placeholder={t('planning.datePlaceholder')} />
+        <SelectField label={t('creation.weekStart')} value={validDate ? props.weekStart : null} options={weekOptions}
+          onChange={props.onWeekStart} disabled={props.busy} placeholder={t('planning.week.choose')} />
         <View style={styles.stack}>
           {Array.from({ length: 7 }, (_, offset) => {
-            // Weekday labels remain available while the date input is incomplete.
+            // Weekday labels remain available while no valid week is chosen.
             const weekday = new Date(2026, 7, 3 + offset, 12).toLocaleDateString(locale, { weekday: 'long' });
             const date = validDate ? addDays(props.weekStart, offset).toLocaleDateString(locale, { day: 'numeric', month: 'long' }) : '';
             return <ChoiceRow key={offset} mode="checkbox" label={`${weekday}${date ? ` \u00b7 ${date}` : ''}`}

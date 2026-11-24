@@ -81,7 +81,6 @@ export default defineDictionary({
   'onboarding.profile.firstName': 'Voornaam',
   'onboarding.profile.lastName': 'Achternaam',
   'onboarding.profile.dateOfBirth': 'Geboortedatum',
-  'onboarding.profile.dateOfBirthHint': 'Gebruik JJJJ-MM-DD. De streepjes verschijnen automatisch.',
   'onboarding.profile.restingHeartRate': 'Rusthartslag',
   'onboarding.profile.save': 'Profiel opslaan',
 
@@ -105,7 +104,6 @@ export default defineDictionary({
   'onboarding.goal.raceDate': 'Racedatum',
   'onboarding.goal.raceDateRequired': 'Racedatum is verplicht.',
   'onboarding.goal.raceDateInvalid': 'Gebruik een geldige toekomstige datum.',
-  'onboarding.goal.dateFormat': 'JJJJ-MM-DD',
   'onboarding.goal.distance': 'Afstand',
   'onboarding.goal.distanceRequired': 'Afstand is verplicht.',
   'onboarding.goal.distanceInvalid': 'Vul een positief aantal meters in.',
@@ -306,7 +304,6 @@ export default defineDictionary({
   'onboarding.profile.firstName': 'First name',
   'onboarding.profile.lastName': 'Last name',
   'onboarding.profile.dateOfBirth': 'Date of birth',
-  'onboarding.profile.dateOfBirthHint': 'Use YYYY-MM-DD. The dashes appear automatically.',
   'onboarding.profile.restingHeartRate': 'Resting heart rate',
   'onboarding.profile.save': 'Save profile',
 
@@ -330,7 +327,6 @@ export default defineDictionary({
   'onboarding.goal.raceDate': 'Race date',
   'onboarding.goal.raceDateRequired': 'Race date is required.',
   'onboarding.goal.raceDateInvalid': 'Use a valid future date.',
-  'onboarding.goal.dateFormat': 'YYYY-MM-DD',
   'onboarding.goal.distance': 'Distance',
   'onboarding.goal.distanceRequired': 'Distance is required.',
   'onboarding.goal.distanceInvalid': 'Enter a positive number of metres.',

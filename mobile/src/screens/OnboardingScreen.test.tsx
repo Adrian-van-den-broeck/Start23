@@ -60,6 +60,23 @@ function state(overrides: Partial<OnboardingState> = {}): OnboardingState {
 }
 
 // The race type is one compact field; its options live in the sheet it opens.
+// Dates are chosen on wheels: open the field, press day, month and year, confirm.
+// The race must lie in the future and inside the picker's horizon, so its year follows today.
+const raceYear = new Date().getFullYear() + 2;
+async function pickDate(
+  screen: Awaited<ReturnType<typeof render>>,
+  field: RegExp,
+  day: number,
+  month: string,
+  year: number,
+) {
+  await fireEvent.press(screen.getByRole('button', { name: field }));
+  await fireEvent.press(screen.getByRole('radio', { name: `Dag ${day}` }));
+  await fireEvent.press(screen.getByRole('radio', { name: month }));
+  await fireEvent.press(screen.getByRole('radio', { name: String(year) }));
+  await fireEvent.press(screen.getByRole('button', { name: 'Klaar' }));
+}
+
 async function chooseRaceType(
   screen: Awaited<ReturnType<typeof render>>,
   label: string,
@@ -102,7 +119,9 @@ describe('onboarding components', () => {
       screen.getByLabelText('Achternaam (optioneel)'),
       'Lovelace',
     );
-    await fireEvent.changeText(screen.getByLabelText('Geboortedatum'), '19900520');
+    expect(screen.getByRole('button', { name: 'Geboortedatum: nog niet ingesteld' })).toBeTruthy();
+    await pickDate(screen, /^Geboortedatum: /, 20, 'mei', 1990);
+    expect(screen.getByRole('button', { name: 'Geboortedatum: 20 mei 1990' })).toBeTruthy();
     await fireEvent.changeText(screen.getByLabelText('Rusthartslag, bpm'), '52');
     await fireEvent.press(screen.getByRole('button', { name: 'Profiel opslaan' }));
 
@@ -251,7 +270,7 @@ describe('onboarding components', () => {
     );
     await chooseRaceType(screen, 'Lopen');
     await fireEvent.changeText(screen.getByLabelText('Naam van de race'), '10K');
-    await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
+    await pickDate(screen, /^Racedatum: /, 15, 'jun', raceYear);
     await fireEvent.changeText(screen.getByLabelText('Afstand, meter'), '10000');
     await fireEvent.press(screen.getByRole('button', { name: 'Totale richttijd: nog niet ingesteld' }));
     await fireEvent.press(screen.getByRole('radio', { name: '1 uur' }));
@@ -261,7 +280,7 @@ describe('onboarding components', () => {
     expect(onSave).toHaveBeenCalledWith({
       race_type: 'run',
       race_name: '10K',
-      race_date: '2099-06-15',
+      race_date: `${raceYear}-06-15`,
       run_distance_meters: 10000,
       total_target_time_seconds: 3600,
     });
@@ -275,13 +294,13 @@ describe('onboarding components', () => {
     await fireEvent.press(screen.getByRole('radio', { name: /Wedstrijd of evenement/ }));
     await chooseRaceType(screen, 'Lopen');
     await fireEvent.changeText(screen.getByLabelText('Naam van de race'), '10K');
-    await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
+    await pickDate(screen, /^Racedatum: /, 15, 'jun', raceYear);
     await fireEvent.changeText(screen.getByLabelText('Afstand, meter'), '10000');
     await fireEvent.press(screen.getByRole('radio', { name: 'Richttempo (min/km)' }));
     await fireEvent.changeText(screen.getByLabelText('Richttempo'), '5:00');
     await fireEvent.press(screen.getByRole('button', { name: 'A-doel opslaan' }));
     expect(onSave).toHaveBeenCalledWith({
-      race_type: 'run', race_name: '10K', race_date: '2099-06-15',
+      race_type: 'run', race_name: '10K', race_date: `${raceYear}-06-15`,
       run_distance_meters: 10000, total_target_time_seconds: 3000,
     });
   });
@@ -292,7 +311,7 @@ describe('onboarding components', () => {
       id: 'goal-id',
       race_type: 'triathlon',
       race_name: 'Bewaarde triatlon',
-      race_date: '2099-06-15',
+      race_date: `${raceYear}-06-15`,
       swim_distance_meters: 1500,
       bike_distance_meters: 40000,
       run_distance_meters: 10000,
@@ -378,7 +397,7 @@ describe('onboarding components', () => {
         screen.getByText(/Vul de gemarkeerde verplichte velden in/),
       ).toBeTruthy();
 
-      await fireEvent.changeText(screen.getByLabelText('Racedatum'), '20990615');
+      await pickDate(screen, /^Racedatum: /, 15, 'jun', raceYear);
       await fireEvent.press(screen.getByRole('button', { name: 'Totale richttijd: nog niet ingesteld' }));
       await fireEvent.press(screen.getByRole('radio', { name: '3 uur' }));
       await fireEvent.press(screen.getByRole('button', { name: 'Klaar' }));
@@ -395,7 +414,7 @@ describe('onboarding components', () => {
         expect.objectContaining({
           race_type: raceType,
           race_name: 'Bewaarde race',
-          race_date: '2099-06-15',
+          race_date: `${raceYear}-06-15`,
           total_target_time_seconds: 10800,
           ...Object.fromEntries(
             disciplines.map((discipline) => [
@@ -456,7 +475,9 @@ describe('onboarding components in English', () => {
     expect(await screen.findByText('Your basics')).toBeTruthy();
     expect(screen.getByLabelText('First name (optional)')).toBeTruthy();
     expect(screen.getByLabelText('Last name (optional)')).toBeTruthy();
-    expect(screen.getByText('Use YYYY-MM-DD. The dashes appear automatically.')).toBeTruthy();
+    // The birth date is picked on wheels, so no typing format is explained any more.
+    expect(screen.getByRole('button', { name: 'Date of birth: not set yet' })).toBeTruthy();
+    expect(screen.queryByText(/YYYY-MM-DD/)).toBeNull();
     expect(screen.getByRole('button', { name: 'Save profile' })).toBeTruthy();
     expect(screen.queryByText('Jouw basis')).toBeNull();
   });

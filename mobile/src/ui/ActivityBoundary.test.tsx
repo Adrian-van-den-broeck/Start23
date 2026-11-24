@@ -50,7 +50,7 @@ beforeEach(() => {
 afterEach(async () => {
   // Settle FlashList's deferred layout callback inside the test transaction.
   await act(() => new Promise<void>(resolve => setTimeout(resolve, 20)));
-  delete process.env.EXPO_PUBLIC_UI_VERSION;
+  delete process.env.EXPO_PUBLIC_UI_VERSION; jest.useRealTimers();
 });
 async function openEntry() {
   const view = await render(<Host />); await view.findByText('No activities recorded yet.');
@@ -59,11 +59,15 @@ async function openEntry() {
 const rpeFour = 'Save RPE · Focus needed, talking in sentences. (RPE 4)';
 
 test('V2 create validates existing fields, calls exact shared payload, then same pending feedback and one authoritative save', async () => {
-  const view = await openEntry(); await fireEvent.changeText(view.getByLabelText('Actual start (ISO including time zone)'), '2026-10-06T10:00:00Z');
+  // Thursday 8 October 2026, 12:00 in Amsterdam; the start is picked as a day and clock time in the profile zone.
+  jest.useFakeTimers({ now: new Date('2026-10-08T10:00:00Z'), doNotFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'setImmediate', 'clearImmediate', 'queueMicrotask', 'nextTick', 'requestAnimationFrame', 'cancelAnimationFrame', 'performance', 'hrtime'] });
+  const view = await openEntry(); await fireEvent.press(view.getByRole('button', { name: /^Actual start: / }));
+  await fireEvent.press(view.getByRole('radio', { name: /^Tue,? 6 Oct$/ })); await fireEvent.press(view.getByRole('radio', { name: '12 h' }));
+  await fireEvent.press(view.getByRole('radio', { name: '0 min' })); await fireEvent.press(view.getByRole('button', { name: 'Done' }));
   await fireEvent.changeText(view.getByLabelText('Distance (metres, optional)'), '5000');
   await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
   await view.findByText('Activity feedback'); expect(flow.feedbackActivity?.id).toBe(pendingActivity.id);
-  expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.stringMatching(/^[\da-f-]{36}$/), { discipline: 'run', duration_minutes: '45', distance_meters: 5000, started_at: '2026-10-06T10:00:00Z', timezone: 'Europe/Amsterdam' });
+  expect(api.createActivity).toHaveBeenCalledWith('token-a', expect.stringMatching(/^[\da-f-]{36}$/), { discipline: 'run', duration_minutes: '45', distance_meters: 5000, started_at: '2026-10-06T10:00:00.000Z', timezone: 'Europe/Amsterdam' });
   expect(api.submitActivityRpeWithRefresh).not.toHaveBeenCalled(); expect(view.getAllByRole('radio')).toHaveLength(10); expect(view.getAllByTestId('activity-feedback-scroll')).toHaveLength(1);
   await fireEvent.changeText(view.getByLabelText('Average heart rate (bpm)'), '151');
   await fireEvent.press(view.getByRole('radio', { name: rpeFour })); await view.findByTestId('v2-activities');
@@ -71,9 +75,23 @@ test('V2 create validates existing fields, calls exact shared payload, then same
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1); expect(flow.pendingRpe).toEqual([]);
   expect(api.listActivities).toHaveBeenCalledTimes(3); expect(api.createActivity).toHaveBeenCalledTimes(1);
 });
-test.each([['Actual duration (minutes)', '0', 'Enter a valid duration in minutes.'], ['Distance (metres, optional)', '1.5', 'Enter the distance in whole metres.'], ['Actual start (ISO including time zone)', 'invalid', 'Use a valid actual start time in ISO format.']])('invalid %s stays populated; no mutation', async (field, value, message) => {
-  const view = await openEntry(); await fireEvent.changeText(view.getByLabelText(field), value); await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
-  expect(view.getByRole('alert')).toHaveTextContent(message); expect(view.getByLabelText(field).props.value).toBe(value); expect(api.createActivity).not.toHaveBeenCalled();
+test('invalid Distance (metres, optional) stays populated; no mutation', async () => {
+  const field = 'Distance (metres, optional)';
+  const view = await openEntry(); await fireEvent.changeText(view.getByLabelText(field), '1.5'); await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
+  expect(view.getByRole('alert')).toHaveTextContent('Enter the distance in whole metres.'); expect(view.getByLabelText(field).props.value).toBe('1.5'); expect(api.createActivity).not.toHaveBeenCalled();
+});
+test('a picked duration of zero stays populated; no mutation', async () => {
+  const view = await openEntry(); await fireEvent.press(view.getByRole('button', { name: 'Actual duration: 00:45:00' }));
+  await fireEvent.press(view.getByRole('radio', { name: '0 min' })); await fireEvent.press(view.getByRole('button', { name: 'Done' }));
+  await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
+  expect(view.getByRole('alert')).toHaveTextContent('Enter a valid duration.'); expect(view.getByRole('button', { name: 'Actual duration: 00:00:00' })).toBeTruthy();
+  expect(flow.duration).toBe('0'); expect(api.createActivity).not.toHaveBeenCalled();
+});
+test('an invalid start cannot be picked; the shared owner still rejects one without mutation', async () => {
+  const view = await openEntry(); await act(() => { flow.setStartedAt('invalid'); });
+  expect(view.getByRole('button', { name: 'Actual start: not set yet' })).toBeTruthy();
+  await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
+  expect(view.getByRole('alert')).toHaveTextContent('Enter a valid start time.'); expect(flow.startedAt).toBe('invalid'); expect(api.createActivity).not.toHaveBeenCalled();
 });
 test('double press/rerender while create unresolved gives one create and shared disabled navigation/switch', async () => {
   const request = deferred<CompletedActivity>(); jest.mocked(api.createActivity).mockReturnValue(request.promise);
@@ -165,7 +183,7 @@ test('V2 planned external selection uses its exact identity and existing duratio
   const view = await openEntry();
   await fireEvent.press(view.getByRole('button', { name: 'Choose a planned or extra workout' }));
   await fireEvent.press(view.getByRole('radio', { name: /Exact external ride.*Cycling.*Outside Wombo/ }));
-  expect(view.getByLabelText('Actual duration (minutes)').props.value).toBe('60');
+  expect(view.getByRole('button', { name: 'Actual duration: 01:00:00' })).toBeTruthy();
   expect(view.queryByRole('radio', { name: 'Running' })).toBeNull();
   await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
   const payload = jest.mocked(api.createActivity).mock.calls[0][2];
@@ -176,7 +194,7 @@ test('V2 planned external selection uses its exact identity and existing duratio
 test('V2 swim distance-only entry preserves null duration without estimating time', async () => {
   const view = await openEntry();
   await fireEvent.press(view.getByRole('radio', { name: 'Swimming' }));
-  await fireEvent.changeText(view.getByLabelText('Actual duration (minutes, optional with distance)'), '');
+  await fireEvent.press(view.getByRole('button', { name: 'Clear Actual duration (optional with distance)' }));
   await fireEvent.changeText(view.getByLabelText('Distance (metres, optional)'), '1500');
   await fireEvent.press(view.getByRole('button', { name: 'Save activity' }));
   expect(api.createActivity).toHaveBeenCalledTimes(1);

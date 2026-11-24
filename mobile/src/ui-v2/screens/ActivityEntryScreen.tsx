@@ -1,6 +1,8 @@
 import { useState, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { Discipline } from '../../api/types';
+import { DayTimePicker } from '../../components/DayTimePicker';
+import { DurationPicker } from '../../components/DurationPicker';
 import { useLanguage } from '../../i18n/LanguageProvider';
 import { studioPresentation } from '../../ui-v3/presentation';
 import { CardDivider, ChoiceChips, Group, Panel } from '../../ui-v3/screens/support';
@@ -13,6 +15,14 @@ import { space } from '../tokens';
 import { ActivityStatus } from './ActivitiesScreen';
 
 const sports = ['swim', 'bike', 'run'] as const;
+// The server accepts at most 1440 minutes for one activity.
+const MAX_DURATION_HOURS = 24;
+
+// The controller keeps the duration as a text of minutes; the picker works in seconds.
+function durationSeconds(minutes: string): number | null {
+  const value = minutes.trim() === '' ? Number.NaN : Number(minutes);
+  return Number.isFinite(value) && value >= 0 ? Math.round(value * 60) : null;
+}
 
 export type ActivityChoice = Readonly<{ id: string; kind: 'workout' | 'external'; name: string; date: string; discipline: Discipline }>;
 export function ActivityEntryScreen(props: {
@@ -48,11 +58,16 @@ export function ActivityEntryScreen(props: {
         </Group> : null}
       </Panel>
       <Panel style={styles.fields}>
-        <Input label={t('activity.startedAt')} value={props.startedAt} onChangeText={props.onStartedAt}
-          icon="calendar" autoCapitalize="none" disabled={props.busy} />
-        <Text variant="supporting" tone="textMuted">{`${t('activity.timezone')}: ${props.timezone || t('activities.timezoneMissing')}`}</Text>
-        <Input label={props.discipline === 'swim' ? t('activities.swimDuration') : t('activity.duration')}
-          icon="clock" inputMode="decimal" value={props.duration} onChangeText={props.onDuration} disabled={props.busy} />
+        {/* The pickers have no disabled state of their own; a busy form blocks them here. */}
+        <View pointerEvents={props.busy ? 'none' : 'auto'} accessibilityState={{ disabled: props.busy }} style={styles.fields}>
+          <DayTimePicker label={t('activityText.startedAt')} valueIso={props.startedAt} timeZone={props.timezone}
+            onChange={props.onStartedAt} />
+          <Text variant="supporting" tone="textMuted">{`${t('activity.timezone')}: ${props.timezone || t('activities.timezoneMissing')}`}</Text>
+          <DurationPicker label={props.discipline === 'swim' ? t('activityText.swimDuration') : t('activityText.duration')}
+            units={['hours', 'minutes']} maxHours={MAX_DURATION_HOURS} clearable={props.discipline === 'swim'}
+            valueSeconds={durationSeconds(props.duration)}
+            onChange={(seconds) => props.onDuration(seconds === null ? '' : String(seconds / 60))} />
+        </View>
         <Input label={t('activity.distance')} icon="location" inputMode="numeric" value={props.distance}
           onChangeText={props.onDistance} disabled={props.busy} />
         <CardDivider />
