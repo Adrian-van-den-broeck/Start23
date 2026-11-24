@@ -448,6 +448,34 @@ insert into phase_4_tap_results (result) select is(
   'the pending planning snapshot follows the current goal revision'
 );
 
+-- Two input writes inside one statement share statement_timestamp(). The
+-- snapshot must still follow the second write (approve_zone_proposal
+-- supersedes and then activates a zone within one RPC call).
+reset role;
+do $$
+begin
+  update public.goals
+  set race_name = 'First write in one statement'
+  where athlete_id = '30000000-0000-0000-0000-000000000003'
+    and status = 'active';
+  update public.goals
+  set race_name = 'Second write in one statement'
+  where athlete_id = '30000000-0000-0000-0000-000000000003'
+    and status = 'active';
+end;
+$$;
+
+insert into phase_4_tap_results (result) select is(
+  (
+    select input_snapshot #>> '{goal,race_name}'
+    from public.initial_plan_requests
+    where athlete_id = '30000000-0000-0000-0000-000000000003'
+  ),
+  'Second write in one statement',
+  'the pending planning snapshot follows the last input write of one statement'
+);
+set local role authenticated;
+
 select set_config('start23.critical_write', '', true);
 select set_config(
   'request.jwt.claims',

@@ -221,6 +221,18 @@ actual service-role draft creation. All 18 assertions pass against the linked
 hosted database, and local/remote migration history matches. Real-token
 two-user isolation and physical-device validation remain release gates.
 
+`20261124210000_refresh_planning_snapshot_on_every_input_write` fixes a
+production diagnosis from 2026-11-24: an athlete with current onboarding got
+422 "Complete the current onboarding upgrade before planning" because the
+pending planning snapshot had an empty zone list while a run zone was active.
+`approve_zone_proposal()` supersedes the old zone and activates the new one in
+one RPC statement; the row-trigger refresh used `statement_timestamp()`, so the
+second write did not rebuild the snapshot. The refresh now uses the same
+distinct marker as the goal RPC fix (`20260914173500`), and the migration
+rebuilds every pending snapshot once. Consumed and cancelled requests keep
+their recorded snapshot. `phase_4_onboarding_rls_test.sql` asserts that two
+writes in one statement leave the snapshot on the last write.
+
 ## Workflow
 
 Start23 uses reviewed imperative Supabase migrations:
