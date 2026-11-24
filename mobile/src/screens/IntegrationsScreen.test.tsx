@@ -79,7 +79,7 @@ test('English preference translates status, history, imports, privacy and the di
   expect(view.getByRole('radio', { name: '14 days' })).toBeChecked();
   expect(view.getByText('Imports')).toBeTruthy();
   expect(view.getByText('2 imported · 1 skipped')).toBeTruthy();
-  expect(view.getByText('Webhook – activity')).toBeTruthy();
+  expect(view.getByText('Automatically imported activity')).toBeTruthy();
   expect(view.getAllByRole('button', { name: 'Retry now' })).toHaveLength(1);
   expect(view.getByRole('button', { name: 'View imported activities' })).toBeTruthy();
   expect(view.getByRole('button', { name: 'Weekly plan' })).toBeTruthy();

@@ -57,7 +57,7 @@ test('loading and safe error are announced; all alternatives/actions stay locked
 test.each(['approve', 'reject'] as const)('pending and active context coexist; %s requires its explicit button', async (decision) => {
   const view = await render(host(<ProposalReviewScreen {...task} {...actions} model={model} />));
   expect(view.getByText('Your approved plan remains active until you approve this proposal.')).toBeTruthy();
-  expect(view.getByText('Proposed revision 3')).toBeTruthy();
+  expect(view.getByText('Proposal, version 3')).toBeTruthy();
   expect(actions.onApprove).not.toHaveBeenCalled();
   expect(actions.onReject).not.toHaveBeenCalled();
   await fireEvent.press(view.getByRole('button', { name: decision === 'approve' ? 'Approve week' : 'Reject proposal' }));

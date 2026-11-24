@@ -183,7 +183,8 @@ test('Slice 5B real create pending reminder return and feedback retain one owner
   expect(view.queryByText(reminder)).toBeNull(); expect(api.createActivity).toHaveBeenCalledTimes(1); expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledTimes(1);
   expect(api.submitActivityRpeWithRefresh).toHaveBeenCalledWith('token-a', pendingActivity, 4, 151);
   expect(activityFlow.ensureActivitiesLoaded).toBe(activityOwner); expect(flow.setWeekStart).toBe(planningOwner); expect(calendar.loadCalendarRange).toBe(calendarOwner);
-});
+// A full router walk through three roots; it can pass 5 s when every suite runs in parallel.
+}, 15_000);
 
 test('Slice 5B V1 V2 navigator replacement from Activities retains task draft and pending HR without history reread', async () => {
   jest.mocked(api.listActivities).mockResolvedValue([pendingActivity]);

@@ -264,7 +264,7 @@ describe('OnboardingScreen back navigation', () => {
     expect(await screen.findByText('Bevestig je tijdzone')).toBeTruthy();
 
     await fireEvent.press(
-      screen.getByRole('button', { name: 'Tijdzone expliciet bevestigen' }),
+      screen.getByRole('button', { name: 'Tijdzone bevestigen' }),
     );
 
     await waitFor(() => {

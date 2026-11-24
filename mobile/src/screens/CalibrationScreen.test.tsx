@@ -317,7 +317,7 @@ describe('CalibrationScreen Phase 15 flow', () => {
     );
     await fireEvent.press(
       screen.getByRole('button', {
-        name: 'Opslaan en deterministisch evalueren',
+        name: 'Opslaan en resultaat berekenen',
       }),
     );
 
@@ -443,7 +443,7 @@ describe('Batch 11 calibration lifecycle separation', () => {
     jest.mocked(listCalibrationProtocols).mockResolvedValue([]);
     const screen = await render(<CalibrationScreen {...props} />);
     expect(await screen.findByText('Geen protocol gekozen')).toBeTruthy();
-    expect(screen.queryByRole('button', { name: 'Opslaan en deterministisch evalueren' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Opslaan en resultaat berekenen' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Zones bevestigen' })).toBeNull();
     expect(createActivity).not.toHaveBeenCalled();
     expect(evaluateCalibration).not.toHaveBeenCalled();
@@ -562,7 +562,7 @@ describe('CalibrationScreen in English', () => {
     expect(screen.getByLabelText('Average heart rate')).toBeTruthy();
     expect(screen.queryByText('Objectief + jouw gevoel')).toBeNull();
 
-    await fireEvent.press(screen.getByRole('button', { name: 'Save and evaluate deterministically' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Save and calculate result' }));
     expect(await screen.findByText('Session RPE must be a whole number from 1 to 10.')).toBeTruthy();
     expect(createActivity).not.toHaveBeenCalled();
   });

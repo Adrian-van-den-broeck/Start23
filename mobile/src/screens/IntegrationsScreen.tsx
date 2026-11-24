@@ -134,10 +134,13 @@ export function IntegrationsScreen({
 
   const status = connection?.status;
   const shortDate = (value: string) => formatDate(value, locale, { day: 'numeric', month: 'short', year: 'numeric' });
-  // A webhook import covers one activity and has no date range.
-  const importTitle = (item: PolarImportRun) => item.range_start && item.range_end
-    ? t('integrations.imports.range', { start: shortDate(item.range_start), end: shortDate(item.range_end) })
-    : `${item.range_start ? shortDate(item.range_start) : t('integrations.imports.webhook')} – ${item.range_end ? shortDate(item.range_end) : t('integrations.imports.activity')}`;
+  // An automatic (webhook) import covers one activity and has no date range.
+  const importTitle = (item: PolarImportRun) => item.range_start || item.range_end
+    ? t('integrations.imports.range', {
+      start: item.range_start ? shortDate(item.range_start) : '…',
+      end: item.range_end ? shortDate(item.range_end) : '…',
+    })
+    : t('integrations.imports.automatic');
   return <SafeAreaView edges={['top']} style={styles.safeArea}>
     <ScrollView contentContainerStyle={styles.content}>
       <BrandedFormHeader caption={t('integrations.title')} backLabel={t('activity.back')} onBack={onBack} onSignOut={onSignOut} />

@@ -170,12 +170,12 @@ describe('onboarding components', () => {
     // Detection alone never selects or stores the value.
     expect(detected.props.accessibilityState.checked).toBe(false);
     expect(
-      screen.getByRole('button', { name: 'Tijdzone expliciet bevestigen' })
+      screen.getByRole('button', { name: 'Tijdzone bevestigen' })
         .props.accessibilityState.disabled,
     ).toBe(true);
     await fireEvent.press(detected);
     await fireEvent.press(
-      screen.getByRole('button', { name: 'Tijdzone expliciet bevestigen' }),
+      screen.getByRole('button', { name: 'Tijdzone bevestigen' }),
     );
     expect(onSave).toHaveBeenCalledWith('Europe/Amsterdam', 'device');
     resolvedOptions.mockRestore();
@@ -204,7 +204,7 @@ describe('onboarding components', () => {
       screen.getByRole('button', { name: 'Veelgebruikte tijdzones: Europe/Brussels' }),
     ).toBeTruthy();
     await fireEvent.press(
-      screen.getByRole('button', { name: 'Tijdzone expliciet bevestigen' }),
+      screen.getByRole('button', { name: 'Tijdzone bevestigen' }),
     );
     expect(onSave).toHaveBeenCalledWith('Europe/Brussels', 'manual');
     resolvedOptions.mockRestore();
@@ -227,11 +227,11 @@ describe('onboarding components', () => {
       screen.getByText(/Automatische detectie is niet beschikbaar/),
     ).toBeTruthy();
     await fireEvent.changeText(
-      screen.getByLabelText('Andere IANA-tijdzone'),
+      screen.getByLabelText('Andere tijdzone'),
       'Europe/Brussels',
     );
     await fireEvent.press(
-      screen.getByRole('button', { name: 'Tijdzone expliciet bevestigen' }),
+      screen.getByRole('button', { name: 'Tijdzone bevestigen' }),
     );
     expect(onSave).toHaveBeenCalledWith('Europe/Brussels', 'manual');
     resolvedOptions.mockRestore();

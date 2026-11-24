@@ -62,7 +62,7 @@ test.each([[null, 1500], ['45', null], ['45', 5000]] as const)('history independ
 test('matching is explicit, exact IDs; separate correction proposal remains pending', async () => {
   const view = await render(host(<ActivitiesScreen {...base} rows={[{ activity: { ...pending, correctionProposal: true }, canCorrect: false, match: { id: 'workout-a', name: 'Exact supplied workout' } }]} pending={null} />));
   await view.findByText('Exact supplied workout. Wombo never links this automatically.'); expect(base.onMatch).not.toHaveBeenCalled();
-  await fireEvent.press(view.getByRole('button', { name: /Explicitly confirm match/ })); expect(base.onMatch).toHaveBeenCalledWith(pending.id, 'workout-a');
+  await fireEvent.press(view.getByRole('button', { name: /Confirm match/ })); expect(base.onMatch).toHaveBeenCalledWith(pending.id, 'workout-a');
   expect(view.getByText('A separate correction proposal is ready. Nothing was adjusted automatically.')).toBeTruthy();
 });
 test('initial entry offers only existing supported fields; sport checked; no editable pace/HR at create', async () => {

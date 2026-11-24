@@ -46,13 +46,13 @@ export default defineDictionary({
   'calibration.reason.zonePendingConfirmation':
     'De drempel en berekende zones wachten op jouw afzonderlijke bevestigingen.',
   'calibration.reason.thresholdNotPermittedSubmaximal':
-    'Historische evaluatie: deze oudere protocolversie produceerde nog geen drempel.',
+    'Deze test is beoordeeld met een oudere versie die nog geen drempel berekende.',
   'calibration.reason.sensorDataMissing':
     'Er waren geen bruikbare sensorgegevens; de RPE-observatie blijft wel bewaard.',
   'calibration.reason.missingSessionRpe': 'De sessie-RPE ontbreekt.',
   'calibration.reason.missingBlockRpe': 'Een verplichte blok-RPE ontbreekt.',
   'calibration.reason.sensorQualityInsufficient': 'De meetkwaliteit was onvoldoende.',
-  'calibration.reason.requiredSegmentMissing': 'Een verplicht protocolblok ontbreekt.',
+  'calibration.reason.requiredSegmentMissing': 'Een verplicht testblok ontbreekt.',
   'calibration.reason.testSegmentIncomplete': 'Een verplicht blok is niet voltooid.',
   'calibration.reason.interrupted': 'Een verplicht blok is onderbroken.',
   'calibration.reason.paceRoundingNotApproved':
@@ -67,8 +67,8 @@ export default defineDictionary({
   'calibration.error.timezoneUnconfirmed':
     'Bevestig eerst je tijdzone in de intake voordat je een kalibratie uitvoert.',
   'calibration.error.loadFailed': 'De kalibratiestatus kon niet worden geladen.',
-  'calibration.error.invalidTimestamp': 'Gebruik een geldig ISO 8601-tijdstip.',
-  'calibration.error.timezoneMissing': 'Vul een IANA-tijdzone in.',
+  'calibration.error.invalidTimestamp': 'Kies een geldige starttijd.',
+  'calibration.error.timezoneMissing': 'Kies eerst je tijdzone in je profiel.',
   'calibration.error.swimConditions':
     'Bevestig badlengte, vrije slag en trainen zonder hulpmiddelen.',
   'calibration.error.runStable': 'Bevestig dat het looptestblok stabiel is uitgevoerd.',
@@ -94,7 +94,7 @@ export default defineDictionary({
   'calibration.field.averagePower': 'Gemiddeld vermogen',
   'calibration.field.elapsedTime': 'Verstreken tijd',
 
-  'calibration.loading': 'Protocolstatus laden…',
+  'calibration.loading': 'Test laden…',
   'calibration.caption': 'Test & kalibratie',
   'calibration.back': 'Terug',
   'calibration.empty.title': 'Geen protocol gekozen',
@@ -137,10 +137,10 @@ export default defineDictionary({
   'calibration.field.repetitionN': 'Herhaling {n}',
   'calibration.field.restN': 'Rust {n}',
   'calibration.averageHeartRateHint':
-    'Verplicht voor de deterministische drempel- en zoneberekening.',
+    'Nodig om je drempel en zones te berekenen.',
   'calibration.retryNotice':
-    'De activiteit is al opgeslagen. Een retry gebruikt exact dezelfde activiteit en immutable segmentidentiteiten.',
-  'calibration.submit': 'Opslaan en deterministisch evalueren',
+    'De activiteit is al opgeslagen. Opnieuw proberen gebruikt dezelfde activiteit, dus niets wordt dubbel opgeslagen.',
+  'calibration.submit': 'Opslaan en resultaat berekenen',
   'calibration.priorOne': '{count} eerdere evaluatie voor dit protocol.',
   'calibration.priorMany': '{count} eerdere evaluaties voor dit protocol.',
   'calibration.viewResult': 'Bekijk {date}',
@@ -172,7 +172,7 @@ export default defineDictionary({
   'calibration.zoneProposalRejected':
     'Je hebt de gemeten drempel behouden en het bijbehorende zonevoorstel afgewezen. Je eerdere actieve zones zijn niet gewijzigd.',
   'calibration.zonesActive':
-    'Je bevestigde zoneprofiel is nu actief. De vorige versie is immutable bewaard als die bestond.',
+    'Je bevestigde zoneprofiel is nu actief. Eventuele vorige zones blijven bewaard.',
   'calibration.newAttempt': 'Nieuwe uitvoering',
 }, {
   'calibration.discipline.swim': 'Swimming',
@@ -219,13 +219,13 @@ export default defineDictionary({
   'calibration.reason.zonePendingConfirmation':
     'The threshold and calculated zones are waiting for your separate confirmations.',
   'calibration.reason.thresholdNotPermittedSubmaximal':
-    'Historical evaluation: this older protocol version did not yet produce a threshold.',
+    'This test was evaluated with an older version that did not calculate a threshold yet.',
   'calibration.reason.sensorDataMissing':
     'There was no usable sensor data; the RPE observation is still kept.',
   'calibration.reason.missingSessionRpe': 'The session RPE is missing.',
   'calibration.reason.missingBlockRpe': 'A required block RPE is missing.',
   'calibration.reason.sensorQualityInsufficient': 'The measurement quality was insufficient.',
-  'calibration.reason.requiredSegmentMissing': 'A required protocol block is missing.',
+  'calibration.reason.requiredSegmentMissing': 'A required test block is missing.',
   'calibration.reason.testSegmentIncomplete': 'A required block was not completed.',
   'calibration.reason.interrupted': 'A required block was interrupted.',
   'calibration.reason.paceRoundingNotApproved':
@@ -240,8 +240,8 @@ export default defineDictionary({
   'calibration.error.timezoneUnconfirmed':
     'Confirm your time zone in the intake before you run a calibration.',
   'calibration.error.loadFailed': 'The calibration status could not be loaded.',
-  'calibration.error.invalidTimestamp': 'Use a valid ISO 8601 timestamp.',
-  'calibration.error.timezoneMissing': 'Enter an IANA time zone.',
+  'calibration.error.invalidTimestamp': 'Choose a valid start time.',
+  'calibration.error.timezoneMissing': 'Choose your time zone in your profile first.',
   'calibration.error.swimConditions':
     'Confirm pool length, freestyle and swimming without aids.',
   'calibration.error.runStable': 'Confirm that the run test block was performed steadily.',
@@ -267,7 +267,7 @@ export default defineDictionary({
   'calibration.field.averagePower': 'Average power',
   'calibration.field.elapsedTime': 'Elapsed time',
 
-  'calibration.loading': 'Loading protocol status…',
+  'calibration.loading': 'Loading test…',
   'calibration.caption': 'Test & calibration',
   'calibration.back': 'Back',
   'calibration.empty.title': 'No protocol chosen',
@@ -310,10 +310,10 @@ export default defineDictionary({
   'calibration.field.repetitionN': 'Repetition {n}',
   'calibration.field.restN': 'Rest {n}',
   'calibration.averageHeartRateHint':
-    'Required for the deterministic threshold and zone calculation.',
+    'Needed to calculate your threshold and zones.',
   'calibration.retryNotice':
-    'The activity is already saved. A retry uses exactly the same activity and immutable segment identities.',
-  'calibration.submit': 'Save and evaluate deterministically',
+    'The activity is already saved. Trying again uses the same activity, so nothing is saved twice.',
+  'calibration.submit': 'Save and calculate result',
   'calibration.priorOne': '{count} earlier evaluation for this protocol.',
   'calibration.priorMany': '{count} earlier evaluations for this protocol.',
   'calibration.viewResult': 'View {date}',
@@ -345,6 +345,6 @@ export default defineDictionary({
   'calibration.zoneProposalRejected':
     'You kept the measured threshold and rejected the related zone proposal. Your previous active zones have not changed.',
   'calibration.zonesActive':
-    'Your confirmed zone profile is now active. The previous version, if there was one, is preserved immutably.',
+    'Your confirmed zone profile is now active. Any previous zones are kept.',
   'calibration.newAttempt': 'New attempt',
 });

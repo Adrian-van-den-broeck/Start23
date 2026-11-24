@@ -106,7 +106,7 @@ describe('ZoneSetupStep', () => {
       screen.getByRole('radio', { name: /Rustig kalibreren/ }),
     );
     expect(
-      screen.getByText(/berekent deterministisch een drempel en vijf zones/),
+      screen.getByText(/berekent daaruit een drempel en vijf zones/),
     ).toBeTruthy();
     await fireEvent.press(
       screen.getByRole('button', { name: 'Week-1-kalibratie kiezen' }),

@@ -60,7 +60,7 @@ describe('move warnings', () => {
     expect(screen.getByText('More recovery needed')).toBeTruthy();
     expect(screen.getByText('Attention point')).toBeTruthy();
     expect(screen.getByText('Server-provided message')).toBeTruthy();
-    expect(screen.getByText(/The server stays authoritative/)).toBeTruthy();
+    expect(screen.getByText(/Wombo checks the move once more/)).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Move anyway' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeTruthy();
     expect(screen.queryByText('Meer herstel nodig')).toBeNull();
