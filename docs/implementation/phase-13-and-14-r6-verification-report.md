@@ -97,6 +97,7 @@ or credential values were committed.
 
 ### Environments and runtime fixes
 
+- As of 2026-11-24, Supabase project `isfumhgqphieoayqahjv` serves the production Railway backend. The non-production label below describes the historical R6 verification.
 - Supabase: **start23-dev**, `isfumhgqphieoayqahjv`, explicitly non-production.
 - Railway: project `c0cf7bc7-abe8-4db5-857a-85cc39850640`, new empty environment
   `r6-staging` (`875b7e64-0f3f-4e42-9efd-973dfb6e295b`), service `r6-api`
