@@ -4,6 +4,7 @@ import asyncio
 import hashlib
 import json
 import logging
+import time
 from collections import OrderedDict
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -566,17 +567,26 @@ class PlanningService:
         injuries: frozenset[Discipline],
         low_only_disciplines: frozenset[Discipline],
         cross_training_opt_ins: frozenset[Discipline] = frozenset(),
+        fetched: tuple[tuple[WorkoutTemplate, ...], tuple[JsonObject, ...]]
+        | None = None,
     ) -> _SwipePlanningContext:
-        """Validate fresh context inputs and reuse identical calculations."""
+        """Validate fresh context inputs and reuse identical calculations.
+
+        `fetched` carries the catalog and load history when the caller already
+        read them for this request; they are never reused across requests.
+        """
 
         snapshot = self._planning_input(input_source)
         timezone_name, race_date, disciplines, capabilities = self._context_values(
             snapshot
         )
-        catalog_rows, history_rows = await asyncio.gather(
-            self._catalog_provider.fetch_catalog(),
-            self._repository.fetch_load_history(athlete_id, week_start),
-        )
+        if fetched is None:
+            catalog_rows, history_rows = await asyncio.gather(
+                self._catalog_provider.fetch_catalog(),
+                self._repository.fetch_load_history(athlete_id, week_start),
+            )
+        else:
+            catalog_rows, history_rows = fetched
         catalog = active_catalog(catalog_rows)
         # Cache only the calculation. Each request still reads and validates
         # ownership, plan binding, onboarding, load history and catalog.
@@ -1488,6 +1498,27 @@ class PlanningService:
         athlete_id: UUID,
         draft_id: UUID,
     ) -> tuple[JsonObject, _SwipePlanningContext]:
+        # Every read below still happens on each request; independent reads
+        # only run concurrently. The catalog does not depend on the draft.
+        catalog_task = asyncio.ensure_future(self._catalog_provider.fetch_catalog())
+        try:
+            return await self._load_swipe_draft_context_with_catalog(
+                access_token, athlete_id, draft_id, catalog_task
+            )
+        finally:
+            if not catalog_task.done():
+                catalog_task.cancel()
+            elif not catalog_task.cancelled():
+                # Mark a failed read as retrieved when an earlier error won.
+                catalog_task.exception()
+
+    async def _load_swipe_draft_context_with_catalog(
+        self,
+        access_token: str,
+        athlete_id: UUID,
+        draft_id: UUID,
+        catalog_task: "asyncio.Future[tuple[WorkoutTemplate, ...]]",
+    ) -> tuple[JsonObject, _SwipePlanningContext]:
         row = await self._repository.fetch_swipe_draft(access_token, draft_id)
         if UUID(str(row["athlete_id"])) != athlete_id:
             raise PlanningConstraintError(
@@ -1521,10 +1552,16 @@ class PlanningService:
             ) from error
 
         source: JsonObject
+        history_read = self._repository.fetch_load_history(athlete_id, week_start)
         if context_revision is not None:
             if plan_id is None:
+                history_read.close()
                 raise PlanningDomainError("Stored swipe draft plan binding is invalid.")
-            source = await self._repository.fetch_plan_context(athlete_id, plan_id)
+            source, history_rows, catalog_rows = await asyncio.gather(
+                self._repository.fetch_plan_context(athlete_id, plan_id),
+                history_read,
+                catalog_task,
+            )
             current_base = int(source.get("active_revision") or 0)
             if (
                 current_base != int(row["base_plan_revision"])
@@ -1536,9 +1573,10 @@ class PlanningService:
                     "The bound plan revision changed. Start a new swipe draft.",
                 )
         else:
-            initial_source = await self._repository.fetch_initial_request(
-                access_token,
-                athlete_id,
+            initial_source, history_rows, catalog_rows = await asyncio.gather(
+                self._repository.fetch_initial_request(access_token, athlete_id),
+                history_read,
+                catalog_task,
             )
             if (
                 initial_source is None
@@ -1576,6 +1614,7 @@ class PlanningService:
                 Discipline(str(value))
                 for value in row.get("cross_training_opt_ins", [])
             ),
+            fetched=(catalog_rows, history_rows),
         )
         if context.context_fingerprint != str(row["context_fingerprint"]):
             raise PlanningConstraintError(
@@ -1724,11 +1763,13 @@ class PlanningService:
     ) -> SwipeWeekDraftResponse:
         """Recalculate and persist exactly one stale-safe swipe transition."""
 
+        started = time.perf_counter()
         row, context = await self._load_swipe_draft_context(
             access_token,
             athlete_id,
             draft_id,
         )
+        loaded = time.perf_counter()
         selection = self._swipe_history(row)
         stored_revision = int(row["revision"])
         if request.expected_revision != stored_revision:
@@ -1850,6 +1891,7 @@ class PlanningService:
                 accepted=selection.accepted_template_ids,
                 passed=selection.passed_template_ids,
             )
+        calculated = time.perf_counter()
         updated = await self._repository.update_swipe_draft(
             athlete_id,
             draft_id,
@@ -1862,7 +1904,22 @@ class PlanningService:
                 state=next_state,
             ),
         )
-        return self._swipe_response(updated, context)
+        saved = time.perf_counter()
+        response = self._swipe_response(updated, context)
+        finished = time.perf_counter()
+        logging.getLogger(__name__).info(
+            "Swipe transition timing",
+            extra={
+                "event": "swipe_transition_timing",
+                "action": request.action,
+                "load_ms": round((loaded - started) * 1000),
+                "calculate_ms": round((calculated - loaded) * 1000),
+                "save_ms": round((saved - calculated) * 1000),
+                "respond_ms": round((finished - saved) * 1000),
+                "total_ms": round((finished - started) * 1000),
+            },
+        )
+        return response
 
     async def place_swipe_workout(
         self,

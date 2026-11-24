@@ -1,5 +1,8 @@
 """Phase 6 API workflow, ownership, approval, and TSS-contract tests."""
 
+import asyncio
+import json
+import logging
 from collections.abc import Iterator
 from dataclasses import replace
 from datetime import date, datetime, timedelta, timezone
@@ -1346,6 +1349,103 @@ def test_eight_hour_run_october_mobile_swipe_and_placement(
         assert len({item["scheduled_date"] for item in plan["workouts"]}) == 3
         assert "tss" not in str(submitted.json()).casefold()
         assert "planned_load" not in str(submitted.json()).casefold()
+
+
+class _OverlapTracker:
+    """Record how many tracked reads are in flight at the same time."""
+
+    def __init__(self) -> None:
+        self.in_flight = 0
+        self.most = 0
+
+    async def track(self) -> None:
+        self.in_flight += 1
+        self.most = max(self.most, self.in_flight)
+        await asyncio.sleep(0.01)
+        self.in_flight -= 1
+
+
+def test_swipe_transition_reads_independent_inputs_concurrently(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Each transition still reads every input, but not one after another."""
+
+    tracker = _OverlapTracker()
+    owners = {"athlete-a": uuid4(), "athlete-b": uuid4()}
+
+    class SlowCatalog(StaticCatalogProvider):
+        async def fetch_catalog(self) -> tuple[WorkoutTemplate, ...]:
+            await tracker.track()
+            return await super().fetch_catalog()
+
+    class SlowRepository(MemoryPlanningRepository):
+        async def fetch_initial_request(
+            self, access_token: str, athlete_id: UUID
+        ) -> JsonObject | None:
+            await tracker.track()
+            return await super().fetch_initial_request(access_token, athlete_id)
+
+        async def fetch_load_history(
+            self, athlete_id: UUID, before_week: date
+        ) -> tuple[JsonObject, ...]:
+            await tracker.track()
+            return await super().fetch_load_history(athlete_id, before_week)
+
+    with TestClient(
+        create_app(
+            Settings(environment="test"),
+            access_token_verifier=PlanningTokenVerifier(owners),
+            onboarding_repository=ZoneRejectStub(),  # type: ignore[arg-type]
+            planning_repository=SlowRepository(owners),
+            planning_catalog_provider=SlowCatalog(),
+        )
+    ) as client:
+        # Creating the app reconfigures root logging; attach the capture again.
+        logging.getLogger().addHandler(caplog.handler)
+        draft = _create_swipe_draft(client)
+        candidate = draft["current_candidate"]
+        tracker.most = 0
+        with caplog.at_level("INFO", logger="app.modules.planning.service"):
+            response = client.post(
+                f"/api/v1/weekly-plans/swipe-drafts/{draft['id']}/transitions",
+                headers=_headers(),
+                json={
+                    "expected_revision": draft["revision"],
+                    "action": "pass",
+                    "candidate_template_id": candidate["id"],
+                    "candidate_occurrence_id": candidate["occurrence_id"],
+                },
+            )
+    logging.getLogger().removeHandler(caplog.handler)
+    assert response.status_code == 200, response.text
+    assert tracker.most == 3
+
+    timings = [
+        record
+        for record in caplog.records
+        if getattr(record, "event", None) == "swipe_transition_timing"
+    ]
+    assert len(timings) == 1
+    logged = {
+        key
+        for key in timings[0].__dict__
+        if key.endswith("_ms") or key in {"event", "action"}
+    }
+    assert logged == {
+        "event",
+        "action",
+        "load_ms",
+        "calculate_ms",
+        "save_ms",
+        "respond_ms",
+        "total_ms",
+    }
+    assert (
+        "tss"
+        not in json.dumps(
+            {key: str(value) for key, value in timings[0].__dict__.items()}
+        ).lower()
+    )
 
 
 def test_swipe_preview_matches_the_card_each_transition_returns(

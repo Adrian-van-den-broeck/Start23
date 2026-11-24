@@ -1,5 +1,6 @@
 """Supabase persistence boundary for weekly planning."""
 
+import asyncio
 from collections.abc import Mapping
 from datetime import date
 from typing import Any, Protocol
@@ -323,39 +324,42 @@ class SupabasePlanningRepository:
         access_token: str,
         athlete_id: UUID,
     ) -> JsonObject | None:
-        payload = await self._request(
-            "GET",
-            "initial_plan_requests",
-            access_token=access_token,
-            params={
-                "select": (
-                    "id,internal_athlete_id,status,onboarding_revision,"
-                    "onboarding_version,ruleset_version,input_snapshot,"
-                    "input_fingerprint,created_at,refreshed_at"
-                ),
-                "internal_athlete_id": f"eq.{athlete_id}",
-                "status": "in.(pending,consumed)",
-                "order": "status.desc,refreshed_at.desc",
-                "limit": "1",
-            },
+        # The two reads are independent; run them together to save a round trip.
+        payload, sessions = await asyncio.gather(
+            self._request(
+                "GET",
+                "initial_plan_requests",
+                access_token=access_token,
+                params={
+                    "select": (
+                        "id,internal_athlete_id,status,onboarding_revision,"
+                        "onboarding_version,ruleset_version,input_snapshot,"
+                        "input_fingerprint,created_at,refreshed_at"
+                    ),
+                    "internal_athlete_id": f"eq.{athlete_id}",
+                    "status": "in.(pending,consumed)",
+                    "order": "status.desc,refreshed_at.desc",
+                    "limit": "1",
+                },
+            ),
+            self._request(
+                "GET",
+                "onboarding_sessions",
+                access_token=access_token,
+                params={
+                    "select": (
+                        "status,completed_onboarding_version,"
+                        "completed_ruleset_version,initial_plan_request_id"
+                    ),
+                    "internal_athlete_id": f"eq.{athlete_id}",
+                    "limit": "1",
+                },
+            ),
         )
         if not isinstance(payload, list):
             raise PlanningRepositoryUnavailableError
         if not payload:
             return None
-        sessions = await self._request(
-            "GET",
-            "onboarding_sessions",
-            access_token=access_token,
-            params={
-                "select": (
-                    "status,completed_onboarding_version,"
-                    "completed_ruleset_version,initial_plan_request_id"
-                ),
-                "internal_athlete_id": f"eq.{athlete_id}",
-                "limit": "1",
-            },
-        )
         if not isinstance(sessions, list):
             raise PlanningRepositoryUnavailableError
         result = dict(payload[0])
