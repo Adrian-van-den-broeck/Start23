@@ -19,6 +19,70 @@ const units: Record<ZoneMetricKind, string> = {
   swim_css_seconds_per_100m: 'sec/100 m', bike_ftp_watts: 'watt',
   bike_threshold_heart_rate_bpm: 'bpm', run_threshold_pace_seconds_per_km: 'min/km', run_lthr_bpm: 'bpm',
 };
+type Translate = ReturnType<typeof useLanguage>['t'];
+type Labels = Partial<Record<string, TranslationKey>>;
+
+// API codes are never shown to the athlete. Every known value has a label; a
+// value this build does not know falls back to a neutral one.
+export function codeLabel(t: Translate, labels: Labels, code: string | null | undefined, fallback: TranslationKey): string {
+  return t((code ? labels[code] : undefined) ?? fallback);
+}
+
+export const protocolLabels: Labels = {
+  start23_run_threshold_30min_v1: 'calibration.protocol.runThreshold30',
+  start23_bike_ftp_30min_v1: 'calibration.protocol.bikeFtp30',
+  start23_bike_fthr_20min_v1: 'calibration.protocol.bikeFthr20',
+  start23_swim_css_400_200_v1: 'calibration.protocol.swimCss',
+  start23_week1_run_calibration_v1: 'calibration.protocol.week1Run',
+  start23_week1_bike_calibration_v1: 'calibration.protocol.week1Bike',
+  start23_week1_swim_calibration_v1: 'calibration.protocol.week1Swim',
+};
+export const profileStatusLabels: Labels = {
+  pending: 'zones.profileStatus.pending', active: 'zones.profileStatus.active', superseded: 'zones.profileStatus.superseded',
+  rejected: 'zones.profileStatus.rejected', expired: 'zones.profileStatus.expired',
+};
+// A zone version made from a protocol evaluation stores that protocol as its method.
+const sourceMethodLabels: Labels = {
+  ...protocolLabels,
+  athlete_entered: 'zones.sourceMethod.athlete_entered', field_test: 'zones.sourceMethod.field_test',
+  wearable_import: 'zones.sourceMethod.wearable_import', estimated: 'zones.sourceMethod.estimated',
+  tanaka_karvonen_age_hrrest: 'zones.sourceMethod.tanaka_karvonen_age_hrrest',
+  physician_or_lab_reported: 'zones.sourceMethod.physician_or_lab_reported',
+};
+const sourceQualityLabels: Labels = {
+  measured_lab: 'zones.sourceQuality.measured_lab', measured_field: 'zones.sourceQuality.measured_field',
+  reviewed_field_threshold: 'zones.sourceQuality.reviewed_field_threshold',
+  submaximal_calibration_estimate: 'zones.sourceQuality.submaximal_calibration_estimate',
+  athlete_entered: 'zones.sourceQuality.athlete_entered', estimated: 'zones.sourceQuality.estimated',
+};
+const reviewLabels: Labels = {
+  pending_athlete_confirmation: 'zones.review.pending_athlete_confirmation', confirmed_by_athlete: 'zones.review.confirmed_by_athlete',
+  rejected_by_athlete: 'zones.review.rejected_by_athlete', unreviewed: 'zones.review.unreviewed', not_applicable: 'zones.review.not_applicable',
+};
+const boundarySourceLabels: Labels = {
+  model_derived: 'zones.boundarySource.model_derived', athlete_entered: 'zones.boundarySource.athlete_entered',
+};
+// Ruleset, zone model and evidence versions keep their provenance under a readable name.
+const versionLabels: Labels = {
+  'start23-zone-model-1.0': 'zones.version.zoneModel1', 'phase-13-joren-ruleset-1': 'zones.version.ruleset1',
+  'start23-calibration-ruleset-v2': 'zones.version.calibrationRuleset2',
+  'voorstel-start23-zone-1-5-rekenmodel-v1.0': 'zones.version.zoneEvidence1',
+};
+export function versionLabel(t: Translate, version: string | null | undefined): string {
+  return codeLabel(t, versionLabels, version, 'zones.version.other');
+}
+export function boundarySourceLabel(t: Translate, source: string): string {
+  return codeLabel(t, boundarySourceLabels, source, 'zones.sourceMethod.other');
+}
+// Method, quality and review state in words; an entered value reads the same
+// as method and as quality, so it is said once.
+function profileSourceLine(t: Translate, profile: ZoneProfileSnapshot): string {
+  return [...new Set([
+    codeLabel(t, sourceMethodLabels, profile.source_method, 'zones.sourceMethod.other'),
+    codeLabel(t, sourceQualityLabels, profile.source_quality, 'zones.sourceQuality.unknown'),
+    codeLabel(t, reviewLabels, profile.review_status, 'zones.review.other'),
+  ])].join(' · ');
+}
 export function zoneValue(kind: ZoneMetricKind | undefined, value: string | null): string {
   if (value === null) return translate('onboarding.zoneVisuals.open');
   if (kind === 'run_threshold_pace_seconds_per_km') return formatRunPace(value);
@@ -54,13 +118,13 @@ export function ZoneProfileValues({ profile }: { profile: ZoneProfileSnapshot })
       {profile.metric_profiles.map(metric => <View key={metric.metric_kind} style={styles.stack}>
         <View style={styles.metric}><Text variant="label">{t(zoneMetricLabels[metric.metric_kind])}{t(metric.is_primary ? 'onboarding.zoneVisuals.primary' : 'onboarding.zoneVisuals.secondary')}</Text><Text tone="primary">{zoneValue(metric.metric_kind, metric.source_value)}</Text></View>
         <ZoneTable boundaries={metric.boundaries} metricKind={metric.metric_kind} />
-        <Text variant="supporting" tone="textMuted">{metric.boundary_source} · {metric.zone_model_version}</Text>
+        <Text variant="supporting" tone="textMuted">{boundarySourceLabel(t, metric.boundary_source)} · {versionLabel(t, metric.zone_model_version)}</Text>
       </View>)}
       {profile.metric_profiles.length === 0 && profile.boundaries.length > 0 ? <ZoneTable boundaries={profile.boundaries} metricKind={profile.metric?.metric_kind} /> : null}
     </>}
-    <ZoneInfoRow icon="document"><Text variant={studioPresentation ? 'caption' : 'label'}>{t('onboarding.zoneVisuals.source')}</Text><Text variant="supporting" tone="textMuted">{profile.source_method} · {profile.source_quality} · {profile.review_status}</Text>
-      {profile.zone_model_version ? <Text variant="supporting" tone="textMuted">{t('onboarding.zoneVisuals.model', { version: profile.zone_model_version })}</Text> : null}
-      {profile.evidence_version ? <Text variant="supporting" tone="textMuted">{t('onboarding.zoneVisuals.evidence', { version: profile.evidence_version })}</Text> : null}
+    <ZoneInfoRow icon="document"><Text variant={studioPresentation ? 'caption' : 'label'}>{t('onboarding.zoneVisuals.source')}</Text><Text variant="supporting" tone="textMuted">{profileSourceLine(t, profile)}</Text>
+      {profile.zone_model_version ? <Text variant="supporting" tone="textMuted">{t('onboarding.zoneVisuals.model', { version: versionLabel(t, profile.zone_model_version) })}</Text> : null}
+      {profile.evidence_version ? <Text variant="supporting" tone="textMuted">{t('onboarding.zoneVisuals.evidence', { version: versionLabel(t, profile.evidence_version) })}</Text> : null}
     </ZoneInfoRow>
   </View>;
 }

@@ -6,6 +6,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import { DatePicker } from '../components/DatePicker';
 import { FormScrollView } from '../components/FormScrollView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -34,9 +35,8 @@ import type {
 } from '../api/types';
 import { FadeInView } from '../components/FadeInView';
 import { type TranslationKey, useLanguage } from '../i18n/LanguageProvider';
-import { ZoneField as FormField } from '../ui-v2/components/ZoneField';
-import { ZoneProfileValues as ProfileValues } from '../ui-v2/components/ZoneVisuals';
-import { formatIsoDateInput } from '../lib/dateInput';
+import { codeLabel, profileStatusLabels, protocolLabels, ZoneProfileValues as ProfileValues } from '../ui-v2/components/ZoneVisuals';
+import { toWallClock } from '../lib/zonedTime';
 import { colors, layout, radius, shadows, space } from '../ui-v2/tokens';
 import { Text } from '../ui-v2/primitives/Text';
 import { Button } from '../ui-v2/primitives/Button';
@@ -44,7 +44,7 @@ import type { IconName } from '../ui-v2/primitives/Icon';
 import { IconTile } from '../ui-v2/primitives/IconTile';
 import { BrandedFormHeader } from '../ui-v2/components/FormComposition';
 import { Notice } from '../ui-v2/primitives/Notice';
-import { ChoiceChips, Heading, Kicker, screenGap, SportTile, Tag } from '../ui-v3/screens/support';
+import { ChoiceChips, formatDate, Heading, Kicker, screenGap, SportTile, Tag } from '../ui-v3/screens/support';
 import { ZoneSetupStep } from './ZoneSetupStep';
 
 type Props = {
@@ -54,7 +54,7 @@ type Props = {
   planContext: { planId: string; revision: number } | null;
 };
 
-// V3 names the setup route instead of printing its API code.
+// The setup route is named, never printed as its API code.
 const routeNames: Record<ZoneSetupRoute, TranslationKey> = {
   known_values: 'zones.route.known_values', field_test: 'zones.route.field_test', calibration_week: 'zones.route.calibration_week', rpe_only: 'zones.route.rpe_only',
 };
@@ -72,6 +72,29 @@ const visibilityLabels: Record<
   week_2_evaluation_pending: 'zones.visibility.week_2_evaluation_pending',
   proposal_confirmation_pending: 'zones.visibility.proposal_confirmation_pending',
 };
+const assignmentStateLabels: Record<TestAssignment['state'], TranslationKey> = {
+  pending_approval: 'zones.assignment.state.pending_approval',
+  scheduled: 'zones.assignment.state.scheduled',
+  completed: 'zones.assignment.state.completed',
+  rejected: 'zones.assignment.state.rejected',
+  cancelled: 'zones.assignment.state.cancelled',
+};
+
+// The backend only refuses a test date before the athlete's own today, so the
+// picker starts there. It has no latest date; the wheel offers this year and next.
+function testDateBounds(timeZone: string | null | undefined): { min: string; max: string } {
+  const now = new Date();
+  let today = { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
+  if (timeZone) {
+    try {
+      today = toWallClock(now, timeZone);
+    } catch {
+      // An unusable time zone keeps the device date; the server still validates.
+    }
+  }
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return { min: `${today.year}-${pad(today.month)}-${pad(today.day)}`, max: `${today.year + 1}-12-31` };
+}
 
 function ActionButton({
   disabled = false,
@@ -101,20 +124,20 @@ function AssignmentCard({
   onApprove: () => void;
   onReject: () => void;
 }) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const canDecide =
     assignment.state === 'pending_approval' &&
     (assignment.scheduling_mode === 'standalone' || canDecideIntegrated);
   return (
     <View style={styles.block}>
       <Text variant="label">
-        {assignment.scheduled_date} ·{' '}
+        {formatDate(assignment.scheduled_date, locale, { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' })} ·{' '}
         {assignment.scheduling_mode === 'standalone'
           ? t('zones.assignment.standalone')
           : t('zones.assignment.weeklyPlan')}
       </Text>
       <Text variant="supporting" tone="textMuted">
-        {assignment.protocol_id} · {t('zones.assignment.status', { state: assignment.state })}
+        {codeLabel(t, protocolLabels, assignment.protocol_id, 'zones.protocol.other')} · {codeLabel(t, assignmentStateLabels, assignment.state, 'zones.assignment.state.other')}
       </Text>
       {canDecide ? (
         <View style={styles.buttonRow}>
@@ -172,6 +195,7 @@ export function ZoneProfileScreen({
   });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const dateBounds = testDateBounds(onboarding?.profile?.timezone);
 
   const load = async () => {
     const [nextProfile, nextOnboarding] = await Promise.all([
@@ -335,7 +359,7 @@ export function ZoneProfileScreen({
                   <Tag label={t(visibilityLabels[state.numeric_zone_visibility])} tone={state.numeric_zone_visibility === 'proposal_confirmation_pending' ? 'warning' : 'primary'} />
                 </View>
               </View>
-              <Text variant="supporting" tone="textMuted">{t('zones.route', { route: state.setup ? studioPresentation ? t(routeNames[state.setup.setup_route]) : state.setup.setup_route : t('zones.route.notSet') })}</Text>
+              <Text variant="supporting" tone="textMuted">{t('zones.route', { route: state.setup ? t(routeNames[state.setup.setup_route]) : t('zones.route.notSet') })}</Text>
               {state.active_profile ? (
                 <View style={styles.block}>
                   <View style={styles.blockHeading}>
@@ -396,7 +420,7 @@ export function ZoneProfileScreen({
                   {state.prior_profiles.map((previous) => (
                     <View key={previous.id} style={styles.prior}>
                       <Text variant="caption" tone="textMuted">
-                        {t('zones.priorVersion', { version: previous.version, status: previous.status })}
+                        {t('zones.priorVersion', { version: previous.version, status: codeLabel(t, profileStatusLabels, previous.status, 'zones.profileStatus.other') })}
                       </Text>
                       <ProfileValues profile={previous} />
                     </View>
@@ -407,18 +431,14 @@ export function ZoneProfileScreen({
               {state.available_test_scheduling_modes.length > 0 ? (
                 <View style={styles.block}>
                   <Text variant="label" accessibilityRole="header">{t('zones.schedule.title')}</Text>
-                  <FormField
-                    autoCapitalize="none"
-                    inputMode="numeric"
+                  <DatePicker
                     label={t('zones.schedule.date')}
-                    maxLength={10}
-                    onChangeText={(value) =>
-                      setDates((current) => ({
-                        ...current,
-                        [state.discipline]: formatIsoDateInput(value),
-                      }))
+                    max={dateBounds.max}
+                    min={dateBounds.min}
+                    onChange={(value) =>
+                      setDates((current) => ({ ...current, [state.discipline]: value }))
                     }
-                    placeholder={t('zones.schedule.datePlaceholder')}
+                    openAt={dateBounds.min}
                     value={dates[state.discipline]}
                   />
                   <ChoiceChips

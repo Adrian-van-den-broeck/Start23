@@ -15,6 +15,16 @@ import { studioPresentation } from '../presentation';
 // Vertical rhythm between the groups of a screen.
 export const screenGap = studioPresentation ? space[16] : space[24];
 
+// A calendar date (YYYY-MM-DD) or timestamp from the API, written in the app
+// language. A calendar date has no time zone, so it is never shifted.
+export function formatDate(value: string, locale: string,
+  options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' }): string {
+  const day = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  const instant = day ? new Date(Date.UTC(Number(day[1]), Number(day[2]) - 1, Number(day[3]))) : new Date(value);
+  if (Number.isNaN(instant.getTime())) return value;
+  return new Intl.DateTimeFormat(locale, day ? { ...options, timeZone: 'UTC' } : options).format(instant);
+}
+
 // One group of a longer screen. V3 keeps it flat on the page and separates
 // groups with a hairline; V2 keeps its card.
 export function Panel({ children, style, divided = true, testID }: {

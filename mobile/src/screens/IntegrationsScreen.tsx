@@ -28,7 +28,7 @@ import { Notice } from '../ui-v2/primitives/Notice';
 import { Text } from '../ui-v2/primitives/Text';
 
 import { colors, layout, space } from '../ui-v2/tokens';
-import { ChoiceChips, Group, Heading, LinkRow, Panel, screenGap, Tag } from '../ui-v3/screens/support';
+import { ChoiceChips, formatDate, Group, Heading, LinkRow, Panel, screenGap, Tag } from '../ui-v3/screens/support';
 
 type IntegrationsScreenProps = {
   accessToken: string;
@@ -57,7 +57,7 @@ function statusLabel(connection: PolarConnection | null): TranslationKey {
   return statusLabels[connection.status];
 }
 
-// V3 shows the import state in the interface language instead of its API code.
+// The import state is shown in the interface language, never as its API code.
 const importStatusNames: Record<PolarImportRun['status'], TranslationKey> = { running: 'integrations.importStatus.running', completed: 'integrations.importStatus.completed', failed: 'integrations.importStatus.failed' };
 
 export function IntegrationsScreen({
@@ -66,7 +66,7 @@ export function IntegrationsScreen({
   onOpenActivities,
   onSignOut,
 }: IntegrationsScreenProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [connection, setConnection] = useState<PolarConnection | null>(null);
   const [imports, setImports] = useState<PolarImportRun[]>([]);
   const [days, setDays] = useState<7 | 14 | 30>(14);
@@ -133,6 +133,11 @@ export function IntegrationsScreen({
   };
 
   const status = connection?.status;
+  const shortDate = (value: string) => formatDate(value, locale, { day: 'numeric', month: 'short', year: 'numeric' });
+  // A webhook import covers one activity and has no date range.
+  const importTitle = (item: PolarImportRun) => item.range_start && item.range_end
+    ? t('integrations.imports.range', { start: shortDate(item.range_start), end: shortDate(item.range_end) })
+    : `${item.range_start ? shortDate(item.range_start) : t('integrations.imports.webhook')} – ${item.range_end ? shortDate(item.range_end) : t('integrations.imports.activity')}`;
   return <SafeAreaView edges={['top']} style={styles.safeArea}>
     <ScrollView contentContainerStyle={styles.content}>
       <BrandedFormHeader caption={t('integrations.title')} backLabel={t('activity.back')} onBack={onBack} onSignOut={onSignOut} />
@@ -161,8 +166,8 @@ export function IntegrationsScreen({
         {imports.length === 0 ? <Text variant={studioPresentation ? 'supporting' : 'body'} tone="textMuted">{t('integrations.imports.empty')}</Text> : null}
         {imports.map(item => <View key={item.id} style={styles.importRow}>
           <View style={styles.identity}>
-            <Text variant="label" style={styles.grow}>{item.range_start ?? t('integrations.imports.webhook')} – {item.range_end ?? t('integrations.imports.activity')}</Text>
-            <Tag label={studioPresentation ? t(importStatusNames[item.status]) : item.status}
+            <Text variant="label" style={styles.grow}>{importTitle(item)}</Text>
+            <Tag label={t(importStatusNames[item.status])}
               tone={item.status === 'failed' ? 'destructive' : item.status === 'completed' ? 'success' : 'neutral'} />
           </View>
           <Text variant="supporting" tone="textMuted">{t('integrations.imports.counts', { imported: item.imported_count, skipped: item.skipped_count })}</Text>

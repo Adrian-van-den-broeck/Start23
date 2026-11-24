@@ -339,6 +339,11 @@ describe('CalibrationScreen Phase 15 flow', () => {
       );
     });
     expect(await screen.findByText('Drempel geschat')).toBeTruthy();
+    // Confidence, zone state and versions are written out, never shown as API codes.
+    expect(screen.getByText('Vertrouwen: gemiddeld')).toBeTruthy();
+    expect(screen.getByText('Zones: wachten op jouw bevestiging')).toBeTruthy();
+    expect(screen.getByText(/^Regels: /)).toBeTruthy();
+    expect(JSON.stringify(screen.toJSON())).not.toMatch(/pending_athlete_confirmation|Vertrouwen: medium|joren|model_derived|start23-zone-model/);
     expect(screen.getByText(/afzonderlijk, nog niet actief zonevoorstel/)).toBeTruthy();
     expect(approveZoneProposal).not.toHaveBeenCalled();
 

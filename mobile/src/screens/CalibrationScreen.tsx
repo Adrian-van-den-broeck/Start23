@@ -32,7 +32,7 @@ import type {
   ZoneMetricKind,
 } from '../api/types';
 import { ZoneField as FormField } from '../ui-v2/components/ZoneField';
-import { ZoneTable, zoneValue } from '../ui-v2/components/ZoneVisuals';
+import { boundarySourceLabel, codeLabel, protocolLabels, versionLabel, ZoneTable, zoneValue } from '../ui-v2/components/ZoneVisuals';
 import { parseRunPace } from '../lib/runPace';
 import { colors, layout, radius, space } from '../ui-v2/tokens';
 import { Text } from '../ui-v2/primitives/Text';
@@ -88,16 +88,6 @@ const disciplineLabels: Record<Discipline, TranslationKey> = {
   run: 'calibration.discipline.run',
 };
 
-const protocolLabels: Partial<Record<string, TranslationKey>> = {
-  start23_run_threshold_30min_v1: 'calibration.protocol.runThreshold30',
-  start23_bike_ftp_30min_v1: 'calibration.protocol.bikeFtp30',
-  start23_bike_fthr_20min_v1: 'calibration.protocol.bikeFthr20',
-  start23_swim_css_400_200_v1: 'calibration.protocol.swimCss',
-  start23_week1_run_calibration_v1: 'calibration.protocol.week1Run',
-  start23_week1_bike_calibration_v1: 'calibration.protocol.week1Bike',
-  start23_week1_swim_calibration_v1: 'calibration.protocol.week1Swim',
-};
-
 const purposeLabels: Partial<Record<string, TranslationKey>> = {
   prepare: 'calibration.purpose.prepare',
   valid_test_segment: 'calibration.purpose.validTestSegment',
@@ -146,9 +136,25 @@ const reasonLabels: Partial<Record<string, TranslationKey>> = {
   pace_rounding_rule_not_approved: 'calibration.reason.paceRoundingNotApproved',
 };
 
-// Server/protocol identifiers without a local label are shown as-is.
-function labelOr(t: Translate, key: TranslationKey | undefined, fallback: string): string {
-  return key ? t(key) : fallback;
+const confidenceLabels: Partial<Record<string, TranslationKey>> = {
+  not_assessed: 'calibration.confidenceLevel.not_assessed',
+  low: 'calibration.confidenceLevel.low',
+  medium: 'calibration.confidenceLevel.medium',
+};
+
+const zoneStateLabels: Partial<Record<string, TranslationKey>> = {
+  unknown: 'calibration.zoneState.unknown',
+  provisionally_calibrated: 'calibration.zoneState.provisionally_calibrated',
+  pending_protocol: 'calibration.zoneState.pending_protocol',
+  pending_athlete_confirmation: 'calibration.zoneState.pending_athlete_confirmation',
+};
+
+// How a block is named in messages: its place in the protocol and its purpose, never its id.
+function blockName(t: Translate, segment: CalibrationProtocolSegment): string {
+  return t('calibration.blockName', {
+    order: segment.order,
+    purpose: codeLabel(t, purposeLabels, segment.purpose, 'calibration.purpose.other'),
+  });
 }
 
 function newIdempotencyKey(): string {
@@ -482,7 +488,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
       const draft = drafts[segment.segment_id];
       if (!draft || !draft.included) continue;
       if (isMainSegment(segment)) {
-        parseRpe(t, draft.blockRpe, t('calibration.field.blockRpe', { segment: segment.segment_id }));
+        parseRpe(t, draft.blockRpe, t('calibration.field.blockRpe', { segment: blockName(t, segment) }));
       }
       if (!draft.completed) continue;
       if (
@@ -562,7 +568,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
       input.reported_block_rpe = parseRpe(
         t,
         draft.blockRpe,
-        t('calibration.field.blockRpe', { segment: segment.segment_id }),
+        t('calibration.field.blockRpe', { segment: blockName(t, segment) }),
       );
       input.steady_execution = draft.steadyExecution;
     }
@@ -855,7 +861,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                     </View>
                     <Heading
                       description={t('calibration.guidanceIntro', { guidance: t(guidanceLabels[selectedSetup.guidance_mode]) })}
-                      title={labelOr(t, protocolLabels[selectedProtocol.protocol_id], selectedProtocol.protocol_id)}
+                      title={codeLabel(t, protocolLabels, selectedProtocol.protocol_id, 'calibration.protocol.other')}
                     />
                     <View style={styles.steps}>
                       {selectedProtocol.segments.map((segment) => (
@@ -865,7 +871,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                           </View>
                           <View style={styles.stepBody}>
                             <Text variant="label">
-                              {labelOr(t, purposeLabels[segment.purpose], segment.purpose)}
+                              {codeLabel(t, purposeLabels, segment.purpose, 'calibration.purpose.other')}
                               {segment.optional ? ' · ' + t('calibration.optional') : ''}
                             </Text>
                             <Text variant="supporting">
@@ -952,7 +958,7 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                               <Text variant="caption" tone="primary">{segment.order}</Text>
                             </View>
                             <Text variant="label" accessibilityRole="header" style={styles.grow}>
-                              {labelOr(t, purposeLabels[segment.purpose], segment.purpose)}
+                              {codeLabel(t, purposeLabels, segment.purpose, 'calibration.purpose.other')}
                             </Text>
                           </View>
                           {segment.optional ? (
@@ -1201,8 +1207,8 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                 <Panel divided={false}>
                   <Heading kicker={t('calibration.result.eyebrow')} title={t(resultLabels[result.status])} />
                   <View style={styles.badges}>
-                    <Tag label={t('calibration.confidence', { value: result.confidence })} />
-                    <Tag label={t('calibration.zoneStatus', { value: result.zone_status })} tone="warning" />
+                    <Tag label={t('calibration.confidence', { value: codeLabel(t, confidenceLabels, result.confidence, 'calibration.confidenceLevel.other') })} />
+                    <Tag label={t('calibration.zoneStatus', { value: codeLabel(t, zoneStateLabels, result.zone_status, 'calibration.zoneState.other') })} tone="warning" />
                   </View>
                   {result.thresholds.map((threshold) => (
                     <View key={threshold.metric_kind} style={styles.resultMetric}>
@@ -1221,15 +1227,15 @@ export function CalibrationScreen({ accessToken, onBack, onSignOut }: Props) {
                         {' · ' + t(profile.is_primary ? 'calibration.primary' : 'calibration.secondary')}
                       </Text>
                       <ZoneTable boundaries={profile.boundaries} metricKind={profile.metric_kind} />
-                      <Text variant="caption" tone="textMuted">{profile.boundary_source} · {profile.zone_model_version}</Text>
+                      <Text variant="caption" tone="textMuted">{boundarySourceLabel(t, profile.boundary_source)} · {versionLabel(t, profile.zone_model_version)}</Text>
                     </View>
                   ))}
-                  <Text variant="caption" tone="textMuted">{t('calibration.rulesProvenance', { version: result.ruleset_version })}{result.zone_model_version ? ' · ' + t('calibration.modelProvenance', { version: result.zone_model_version }) : ''}</Text>
+                  <Text variant="caption" tone="textMuted">{t('calibration.rulesProvenance', { version: versionLabel(t, result.ruleset_version) })}{result.zone_model_version ? ' · ' + t('calibration.modelProvenance', { version: versionLabel(t, result.zone_model_version) }) : ''}</Text>
                   {result.reason_codes.length > 0 ? (
                     <View style={styles.reasons}>
-                      {result.reason_codes.map((reason) => (
+                      {[...new Set(result.reason_codes.map((reason) => codeLabel(t, reasonLabels, reason, 'calibration.reason.other')))].map((reason) => (
                         <Text key={reason} variant="supporting" tone="textMuted">
-                          • {labelOr(t, reasonLabels[reason], reason.replaceAll('_', ' '))}
+                          • {reason}
                         </Text>
                       ))}
                     </View>

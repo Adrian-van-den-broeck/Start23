@@ -1,6 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
 import type { ReactElement } from 'react';
-import { studioPresentation } from '../ui-v3/presentation';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
 import {
@@ -10,7 +9,7 @@ import {
   getZoneProfileState,
   scheduleFieldTest,
 } from '../api/client';
-import type { DisciplineSetup, OnboardingState, ZoneProfileSnapshot, ZoneProfileState } from '../api/types';
+import type { DisciplineSetup, OnboardingState, TestAssignment, ZoneProfileSnapshot, ZoneProfileState } from '../api/types';
 import { ZoneProfileScreen } from './ZoneProfileScreen';
 import { LanguageProvider } from '../i18n/LanguageProvider';
 jest.mock('expo-secure-store', () => ({ getItemAsync: jest.fn(async () => null), setItemAsync: jest.fn(async () => undefined), WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'unlocked' }));
@@ -73,12 +72,13 @@ describe('field-test scheduling regression', () => {
     jest.mocked(scheduleFieldTest).mockResolvedValue({} as never);
   });
 
-  test('setup route is named in V3 and keeps its API code otherwise', async () => {
+  test('setup route is named instead of printed as its API code', async () => {
     jest.mocked(getZoneProfileState).mockResolvedValue(profile(['standalone']));
     const screen = await renderWithLanguage(
       <ZoneProfileScreen accessToken="athlete-token" onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} planContext={null} />,
     );
-    expect(await screen.findByText(studioPresentation ? 'Route: Veldtest' : 'Route: field_test')).toBeTruthy();
+    expect(await screen.findByText('Route: Veldtest')).toBeTruthy();
+    expect(screen.queryByText(/field_test/)).toBeNull();
   });
 
   test('current server-advertised swim protocol schedules through the API', async () => {
@@ -92,10 +92,14 @@ describe('field-test scheduling regression', () => {
       />,
     );
 
-    await fireEvent.changeText(
-      await screen.findByLabelText('Lokale testdatum'),
-      '2099-08-29',
-    );
+    // The date is picked, not typed: the wheel opens on the earliest date the backend accepts (today).
+    const now = new Date();
+    const today = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
+    await fireEvent.press(await screen.findByRole('button', { name: 'Lokale testdatum: nog niet ingesteld' }));
+    expect(screen.queryByRole('radio', { name: String(now.getFullYear() - 1) })).toBeNull();
+    expect(screen.getByRole('radio', { name: String(now.getFullYear() + 1) })).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'Klaar' }));
+    expect(screen.queryByLabelText('Lokale testdatum')).toBeNull();
     await fireEvent.press(screen.getByRole('button', { name: 'Maak voorstel' }));
 
     await waitFor(() =>
@@ -103,9 +107,28 @@ describe('field-test scheduling regression', () => {
         discipline: 'swim',
         protocol_id: 'start23_swim_css_400_200_v1',
         scheduling_mode: 'standalone',
-        scheduled_date: '2099-08-29',
+        scheduled_date: today,
       }),
     );
+  });
+
+  test('a planned test shows its date, protocol and state in words', async () => {
+    const assignment: TestAssignment = {
+      id: 'assignment-1', discipline: 'swim', protocol_id: 'start23_swim_css_400_200_v1', scheduling_mode: 'standalone',
+      scheduled_date: '2026-11-30', state: 'pending_approval', plan_id: null, target_plan_revision_id: null, plan_proposal_id: null,
+      revision: 1, proposal_id: 'proposal-1', proposal_state: 'pending', created_at: '2026-11-24T08:00:00Z',
+      updated_at: '2026-11-24T08:00:00Z', decided_at: null,
+    };
+    const state = profile([]);
+    state.disciplines[0]!.test_assignments = [assignment, { ...assignment, id: 'assignment-2', protocol_id: 'future_protocol_v9', state: 'cancelled' }];
+    jest.mocked(getZoneProfileState).mockResolvedValue(state);
+    const screen = await renderWithLanguage(
+      <ZoneProfileScreen accessToken="athlete-token" onBack={jest.fn()} onSignOut={jest.fn(async () => undefined)} planContext={null} />,
+    );
+    expect(await screen.findByText('CSS 400/200 m-test · Wacht op jouw bevestiging')).toBeTruthy();
+    expect(screen.getByText('Testprotocol · Geannuleerd')).toBeTruthy();
+    expect(screen.getAllByText('ma 30 november 2026 · losse test')).toHaveLength(2);
+    expect(JSON.stringify(screen.toJSON())).not.toMatch(/2026-11-30|pending_approval|start23_swim|future_protocol|cancelled/);
   });
 
   test('historical setup cannot leak a scheduling action into a new session', async () => {
@@ -128,8 +151,8 @@ describe('field-test scheduling regression', () => {
 
 const sourceProfile: ZoneProfileSnapshot = {
   id: 'active-v1', discipline: 'run', version: 1, setup_method: 'manual', status: 'active',
-  source_method: 'original-source', source_quality: 'measured_lab', review_status: 'confirmed_by_athlete',
-  reviewer_id: null, reviewed_at: null, effective_from: null, zone_model_version: 'original-model', evidence_version: 'original-evidence',
+  source_method: 'field_test', source_quality: 'measured_lab', review_status: 'confirmed_by_athlete',
+  reviewer_id: null, reviewed_at: null, effective_from: null, zone_model_version: 'start23-zone-model-1.0', evidence_version: 'voorstel-start23-zone-1-5-rekenmodel-v1.0',
   created_at: '2026-09-01T12:00:00Z', values_hidden: false, metric: { metric_kind: 'run_lthr_bpm', value: '172' },
   metric_profiles: [], boundaries: [{ zone_number: 5, lower_value: '177', upper_value: null }], proposal_id: null, base_zone_profile_id: null,
 };
@@ -150,10 +173,12 @@ describe('Batch 11 Zones versions and decisions', () => {
     const screen = await renderWithLanguage(<ZoneProfileScreen {...props} />);
     await screen.findByText('Nieuw voorstel');
     expect(screen.getByText('Actief profiel')).toBeTruthy();
-    expect(screen.getByText('Versie 0 · superseded')).toBeTruthy();
+    expect(screen.getByText('Versie 0 · vervangen')).toBeTruthy();
     expect(screen.getAllByText('172 bpm')).toHaveLength(3);
     expect(screen.getAllByText('177 bpm – open')).toHaveLength(3);
-    expect(screen.getAllByText('Model: original-model')).toHaveLength(3);
+    expect(screen.getAllByText('Model: Zonemodel 1.0')).toHaveLength(3);
+    expect(screen.getAllByText('Veldtest · Labmeting · Door jou bevestigd')).toHaveLength(3);
+    expect(JSON.stringify(screen.toJSON())).not.toMatch(/field_test|measured_lab|confirmed_by_athlete|start23-zone|superseded/);
     expect(approveZoneProposal).not.toHaveBeenCalled(); expect(rejectZoneProposal).not.toHaveBeenCalled();
     await fireEvent.press(screen.getByRole('button', { name: decision === 'approve' ? 'Zones goedkeuren' : 'Afwijzen' }));
     await waitFor(() => {
@@ -170,7 +195,7 @@ describe('Batch 11 Zones versions and decisions', () => {
     expect(publicTree).not.toContain('172'); expect(publicTree).not.toContain('177');
     expect(screen.getAllByText(/Numerieke waarden blijven verborgen/)).toHaveLength(3);
     expect(screen.getByRole('button', { name: 'Zones goedkeuren' })).toBeTruthy();
-    expect(screen.getByText('Versie 0 · superseded')).toBeTruthy();
+    expect(screen.getByText('Versie 0 · vervangen')).toBeTruthy();
   });
 });
 
@@ -181,7 +206,7 @@ describe('English zone profile', () => {
     jest.mocked(SecureStore.getItemAsync).mockResolvedValueOnce('en');
     jest.mocked(getZoneProfileState).mockResolvedValue(profile(['standalone']));
     const screen = await renderWithLanguage(<ZoneProfileScreen {...props} />);
-    expect(await screen.findByText(studioPresentation ? 'Route: Field test' : 'Route: field_test')).toBeTruthy();
+    expect(await screen.findByText('Route: Field test')).toBeTruthy();
     expect(screen.getByText('Swimming')).toBeTruthy();
     expect(screen.getByText('RPE-guided')).toBeTruthy();
     expect(screen.getByText('Personal profile')).toBeTruthy();
@@ -192,7 +217,7 @@ describe('English zone profile', () => {
     expect(screen.getByRole('radio', { name: 'Standalone test' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Change values or route' })).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Create proposal' }));
-    expect(await screen.findByText('Use YYYY-MM-DD for the test date.')).toBeTruthy();
+    expect(await screen.findByText('Choose a test date first.')).toBeTruthy();
     expect(scheduleFieldTest).not.toHaveBeenCalled();
     expect(screen.queryByText('Veldtest plannen')).toBeNull();
   });
@@ -203,7 +228,7 @@ describe('English zone profile', () => {
     await screen.findByText('New proposal');
     expect(screen.getByText('Active profile')).toBeTruthy();
     expect(screen.getByText('Previous values')).toBeTruthy();
-    expect(screen.getByText('Version 0 · superseded')).toBeTruthy();
+    expect(screen.getByText('Version 0 · replaced')).toBeTruthy();
     expect(screen.getByText('Zone proposal awaiting confirmation')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Approve zones' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Reject' })).toBeTruthy();

@@ -1,6 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
 import type { ReactElement } from 'react';
-import { studioPresentation } from '../ui-v3/presentation';
 import { Alert, Linking } from 'react-native';
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import * as api from '../api/client';
@@ -39,13 +38,15 @@ test('connected history uses exact supported days and idempotency key; retry eli
   await fireEvent.press(view.getByRole('button', { name: 'Nu opnieuw proberen' }));
   await waitFor(() => expect(api.retryPolarImport).toHaveBeenCalledWith('athlete-token', 'inert-import-retry'));
 });
-test('import status shows a Dutch label in V3 and the unchanged API value otherwise', async () => {
+test('import status and date range are written out instead of shown as API values', async () => {
   jest.mocked(api.getPolarConnection).mockResolvedValue(fixtures.connection as PolarConnection);
   jest.mocked(api.listPolarImports).mockResolvedValue(fixtures.imports as PolarImportRun[]);
   const { view } = await surface();
   const failed = fixtures.imports.filter(item => item.status === 'failed').length;
-  expect(view.getAllByText(studioPresentation ? 'Mislukt' : 'failed')).toHaveLength(failed);
-  if (studioPresentation) expect(view.queryByText('failed')).toBeNull();
+  expect(view.getAllByText('Mislukt')).toHaveLength(failed);
+  expect(view.queryByText('failed')).toBeNull();
+  expect(view.getByText('25 sep 2026 t/m 9 okt 2026')).toBeTruthy();
+  expect(view.queryByText(/2026-\d\d-\d\d/)).toBeNull();
 });
 test('disconnect stays behind the existing explicit native confirmation', async () => {
   jest.mocked(api.getPolarConnection).mockResolvedValue(fixtures.connection as PolarConnection);
@@ -84,7 +85,8 @@ test('English preference translates status, history, imports, privacy and the di
   expect(view.getByRole('button', { name: 'Weekly plan' })).toBeTruthy();
   expect(view.getByText(/Disconnecting stops new access/)).toBeTruthy();
   const failed = fixtures.imports.filter(item => item.status === 'failed').length;
-  expect(view.getAllByText(studioPresentation ? 'Failed' : 'failed')).toHaveLength(failed);
+  expect(view.getAllByText('Failed')).toHaveLength(failed);
+  expect(view.getByText('25 Sept 2026 to 9 Oct 2026')).toBeTruthy();
   await fireEvent.press(view.getByRole('button', { name: 'Disconnect' }));
   expect(alert.mock.calls[0][0]).toBe('Disconnect Polar?');
   expect(alert.mock.calls[0][1]).toContain('not deleted automatically');

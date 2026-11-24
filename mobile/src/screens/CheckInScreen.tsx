@@ -38,7 +38,7 @@ import { ChoiceRow } from '../ui-v2/primitives/ChoiceRow';
 import { Notice } from '../ui-v2/primitives/Notice';
 import { Text } from '../ui-v2/primitives/Text';
 import { studioPresentation } from '../ui-v3/presentation';
-import { ChoiceChips, DayToggleStrip, Group, Heading, IconAction, Panel, screenGap, SportTile } from '../ui-v3/screens/support';
+import { ChoiceChips, DayToggleStrip, formatDate, Group, Heading, IconAction, Panel, screenGap, SportTile } from '../ui-v3/screens/support';
 import { colors, layout, radius, space } from '../ui-v2/tokens';
 
 type Props = {
@@ -444,7 +444,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
         {checkIn && !isConfirmed && !isCompleted ? (
           <>
             <Panel divided={false}>
-              <Heading kicker={t('checkin.form.chip')} title={t('checkin.form.title', { date: checkIn.week_start })} />
+              <Heading kicker={t('checkin.form.chip')} title={t('checkin.form.title', { date: formatDate(checkIn.week_start, locale) })} />
               <FormField
                 hint={t('checkin.context.hint')}
                 label={t('checkin.context.label')}
@@ -466,7 +466,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
                   <Text variant="label" accessibilityRole="header">{t('checkin.candidate.title')}</Text>
                   <Text variant="supporting">
                     {t('checkin.candidate.blockedDates', {
-                      dates: contextCandidate.candidate.blocked_dates.join(', ') || t('checkin.candidate.noDates'),
+                      dates: contextCandidate.candidate.blocked_dates.map((value) => formatDate(value, locale, { weekday: 'long', day: 'numeric', month: 'long' })).join(', ') || t('checkin.candidate.noDates'),
                     })}
                     {'\n'}
                     {t('checkin.candidate.fatigue', {
@@ -540,18 +540,25 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
               <Heading title={t('checkin.injuries.title')} description={t('checkin.injuries.body')} />
               {disciplines.map((discipline) => (
                 <View key={discipline} style={styles.subsection}>
-                  <SelectField
-                    label={t(disciplineLabels[discipline])}
-                    onChange={(value) =>
-                      setRestrictions((current) => ({
-                        ...current,
-                        [discipline]: { ...current[discipline], choice: value },
-                      }))
-                    }
-                    options={restrictionChoices.map(([value, label]) => ({ value, label: t(label) }))}
-                    placeholder={t('checkin.restriction.none')}
-                    value={restrictions[discipline].choice}
-                  />
+                  <Group label={t(disciplineLabels[discipline])}>
+                    <ChoiceChips
+                      accessibilityLabel={t(disciplineLabels[discipline])}
+                      isSelected={(value) => restrictions[discipline].choice === value}
+                      mode="radio"
+                      onPress={(value) =>
+                        setRestrictions((current) => ({
+                          ...current,
+                          [discipline]: { ...current[discipline], choice: value },
+                        }))
+                      }
+                      options={restrictionChoices.map(([value, label]) => ({
+                        value,
+                        label: t(label),
+                        // Three groups offer the same choices; the spoken name says which sport.
+                        accessibilityLabel: `${t(disciplineLabels[discipline])}: ${t(label)}`,
+                      }))}
+                    />
+                  </Group>
                   {restrictions[discipline].choice === 'professional' ? (
                     <FormField
                       label={t('checkin.injuries.advice')}
@@ -629,7 +636,8 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
             </Panel>
 
             <Panel>
-              <ActionButton disabled={busy || !recurringConfirmed} label={t('checkin.save')} onPress={save} />
+              {/* One primary action: saving first, confirming once a saved context exists. */}
+              <ActionButton disabled={busy || !recurringConfirmed} label={t('checkin.save')} onPress={save} secondary={Boolean(checkIn.context)} />
               {!recurringConfirmed ? <Text variant="supporting" tone="textMuted">{t('checkin.saveNeedsRecurring')}</Text> : null}
               {checkIn.context ? (
                 <>
@@ -654,7 +662,7 @@ export function CheckInScreen({ accessToken, onBack, onSignOut }: Props) {
               description={t('checkin.proposal.summary', { workouts: proposalPlan.workouts.length, restDays: proposalPlan.rest_days.length })}
               kicker={t('checkin.proposal.chip')}
               kickerTone="warning"
-              title={t('checkin.proposal.title', { date: proposalPlan.week_start })}
+              title={t('checkin.proposal.title', { date: formatDate(proposalPlan.week_start, locale) })}
             />
             {proposalPlan.warnings.map((warning) => (
               <Notice key={warning.id ?? warning.code} tone="warning">{warning.message}</Notice>

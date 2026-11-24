@@ -34,9 +34,36 @@ test.each(['active', 'pending', 'superseded'] as const)('values_hidden blocks ev
   for (const secret of ['991731', '991732', '991733', '991734', '991735', '991736']) expect(rendered).not.toContain(secret);
   expect(rendered).not.toContain('Z4');
   expect(rendered).not.toContain('Z5');
-  expect(screen.getByText(/original-source/)).toBeTruthy();
-  expect(screen.getByText('Model: original-model')).toBeTruthy();
-  expect(screen.getByText('Bewijs: original-evidence')).toBeTruthy();
+  // Provenance stays visible, in words: codes this build does not know get a neutral label.
+  expect(screen.getByText('Andere bron · Labmeting · Beoordeling onbekend')).toBeTruthy();
+  expect(screen.getByText('Model: onbekende versie')).toBeTruthy();
+  expect(screen.getByText('Bewijs: onbekende versie')).toBeTruthy();
+  expect(rendered).not.toMatch(/original-source|measured_lab|pending_review|original-model|original-evidence/);
+});
+
+test('source, review state and versions are named instead of printed as API codes', async () => {
+  const profile = snapshot('run_lthr_bpm');
+  Object.assign(profile, { source_method: 'field_test', source_quality: 'measured_field', review_status: 'confirmed_by_athlete',
+    zone_model_version: 'phase-13-joren-ruleset-1', evidence_version: 'voorstel-start23-zone-1-5-rekenmodel-v1.0' });
+  profile.metric_profiles[0].boundary_source = 'model_derived';
+  const screen = await render(<ZoneProfileValues profile={profile} />);
+  expect(screen.getByText('Veldtest · Gemeten in een veldtest · Door jou bevestigd')).toBeTruthy();
+  expect(screen.getByText('Berekend met het zonemodel · Zonemodel 1.0')).toBeTruthy();
+  expect(screen.getByText('Model: Start23-regelset 1')).toBeTruthy();
+  expect(screen.getByText('Bewijs: Rekenmodel zones 1 tot 5, versie 1.0')).toBeTruthy();
+  expect(JSON.stringify(screen.toJSON())).not.toMatch(/field_test|measured_field|confirmed_by_athlete|model_derived|joren|start23-zone|rekenmodel-v/);
+});
+
+test('a value entered by the athlete names its source once and a protocol source by its name', async () => {
+  const entered = snapshot('bike_ftp_watts');
+  Object.assign(entered, { source_method: 'athlete_entered', source_quality: 'athlete_entered', review_status: 'pending_athlete_confirmation' });
+  const first = await render(<ZoneProfileValues profile={entered} />);
+  expect(first.getByText('Zelf ingevuld · Wacht op jouw bevestiging')).toBeTruthy();
+  await first.unmount();
+  const tested = snapshot('run_lthr_bpm');
+  Object.assign(tested, { source_method: 'start23_run_threshold_30min_v1', source_quality: 'reviewed_field_threshold', review_status: 'confirmed_by_athlete' });
+  const second = await render(<ZoneProfileValues profile={tested} />);
+  expect(second.getByText('30 min loopdrempeltest · Drempel uit veldtest · Door jou bevestigd')).toBeTruthy();
 });
 
 test.each([
@@ -47,7 +74,7 @@ test.each([
   const screen = await render(<ZoneProfileValues profile={snapshot(kind)} />);
   expect(screen.getAllByText(value)).toHaveLength(2);
   expect(screen.getByText('open – ' + value)).toBeTruthy();
-  expect(screen.getByText('athlete_entered · start23-zone-model-1.0')).toBeTruthy();
+  expect(screen.getByText('Zelf ingevuld · Zonemodel 1.0')).toBeTruthy();
 });
 
 test('a numeric-free profile never invents a threshold or zone table', async () => {
@@ -55,5 +82,5 @@ test('a numeric-free profile never invents a threshold or zone table', async () 
   profile.metric = null; profile.metric_profiles = []; profile.boundaries = [];
   const screen = await render(<ZoneProfileValues profile={profile} />);
   expect(screen.queryByText(/300|Z1|Z5/)).toBeNull();
-  expect(screen.getByText(/original-source/)).toBeTruthy();
+  expect(screen.getByText(/^Andere bron · /)).toBeTruthy();
 });
